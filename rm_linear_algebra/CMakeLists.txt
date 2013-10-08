@@ -37,7 +37,7 @@ if (TEST)
 ################################
 # GTest
 ################################
-ADD_SUBDIRECTORY (../gtest-1.7.0 gtest)
+ADD_SUBDIRECTORY (../gtest gtest)
 enable_testing()
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
