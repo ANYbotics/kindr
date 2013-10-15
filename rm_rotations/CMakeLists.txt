@@ -22,3 +22,42 @@ message("   Including robotMath")
 #  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
 #set(ROS_BUILD_TYPE Debug)
 set(ROS_BUILD_TYPE Release)
+
+add_definitions(-std=c++0x)
+
+find_package(Eigen REQUIRED)
+
+include_directories(${EIGEN_INCLUDE_DIRS})
+include_directories(include)
+
+################################
+# Unit Tests
+################################
+################################
+# GTest
+################################
+ADD_SUBDIRECTORY (../gtest gtest)
+enable_testing()
+include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+include_directories(test)
+
+include_directories(
+	../../schweizer-messer/sm_common/include
+	../../schweizer-messer/sm_eigen/include
+	../../schweizer-messer/sm_random/include
+	../../schweizer-messer/sm_timing/include
+)
+set(TEST_SRCS
+	test/test_main.cpp
+	test/QuaternionsTest.cpp
+	test/SimulationSubfunctions.cpp
+	../../schweizer-messer/sm_random/src/random.cpp
+	../../schweizer-messer/sm_eigen/src/random.cpp
+	../../schweizer-messer/sm_timing/src/Timer.cpp
+)
+
+# Add test cpp file
+add_executable( runUnitTestsRotations  ${TEST_SRCS})
+# Link test executable against gtest & gtest_main
+target_link_libraries(runUnitTestsRotations  gtest_main gtest pthread  ${PROJECT_NAME} )
+add_test( runUnitTestsRotations runUnitTestsRotations )

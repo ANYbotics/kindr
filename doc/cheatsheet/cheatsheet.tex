@@ -3,6 +3,7 @@
 \usepackage{calc}
 \usepackage{ifthen}
 \usepackage[landscape]{geometry}
+\usepackage{amsmath}
 
 % To make this come out properly in landscape mode, do one of the following
 % 1.
@@ -81,7 +82,7 @@
 
 \raggedright
 \footnotesize
-\begin{multicols}{3}
+\begin{multicols}{2}
 
 
 % multicol parameters
@@ -102,14 +103,29 @@
 \begin{tabular}{@{}ll@{}}
 \verb!alias!    & The transformation matrix $\vA_{AB}$ transforms the\\ 
 &  coordinates of a vector ${_{B}\vr}$ in a different  coordinate\\
-&   system $A$: ${_{A}\vr} = \vA_{AB} {_{B}\vr}$ \\
+&   system $A$: ${_{A}\vr} = \vA_{AB} {_{B}\vr}$ (\emph{preferred}) \\
 \verb!alibi!   & The rotation matrix ${_C\vR_{BA}}$ rotates a vector ${_C\vx}$ \\ 
 & to a new vector ${_C\vy}$ similar to the rotation from \\
 & coordinate system $A$ to  coordinate system $B$: \\
 & ${_C\vy} = {_C\vR_{BA}} {_C\vx}$ ($\vA_{AB} = {_A\vR^\mathsf{T}_{AB}}$)
 \end{tabular}
 
+\subsection{Kardan angles: Roll-Pitch-Yaw}
+alias, x-y-z
+\begin{equation}
+\begin{split}
+\vA_{CI} &= \vA_{CB} \vA_{BA} \vA_{AI} \\
+         &= \begin{pmatrix} \cos{\gamma} & \sin{\gamma} & 0 \\ -\sin{\gamma} & \cos{\gamma} & 0 \\ 0 & 0 & 1 \end{pmatrix} \begin{pmatrix} \cos{\beta} & 0 & -\sin{\beta} \\ 0 & 1 & 0 \\ \sin{\beta} & 0 & \cos{\beta} \end{pmatrix} \begin{pmatrix} 1 & 0 & 0 \\ 0 & \cos{\alpha} & \sin{\alpha} \\ 0 & -\sin{\alpha} & \cos{\alpha} \end{pmatrix} \\
+         &= \begin{pmatrix} \cos{\beta}\cos{\gamma} & \cos{\alpha}\sin{\gamma}+\sin{\alpha}\sin{\beta}\cos{\gamma} & \sin{\alpha}\sin{\gamma}-\cos{\alpha}\sin{\beta}\cos{\gamma} \\ -\cos{\beta}\sin{\gamma} & \cos{\alpha}\cos{\gamma}-\sin{\alpha}\sin{\beta}\sin{\gamma} & \sin{\alpha}\cos{\gamma}+\cos{\alpha}\sin{\beta}\sin{\gamma} \\ \sin{\beta} & -\sin{\alpha}\cos{\beta} & \cos{\alpha}\cos{\beta} \end{pmatrix} \\
+         &= \begin{pmatrix} 2(e_0^2+e_1^2)-1 & 2(e_1 e_2+e_0 e_3) & 2(e_1 e_3-e_0 e_2) \\ 2(e_1 e_2-e_0 e_3) & 2(e_0^2+e_2^2)-1 & 2(e_2 e_3+e_0 e_1) \\ 2(e_1 e_3+e_0 e_2) & 2(e_2 e_3-e_0 e_1) & 2(e_0^2+e_3^2)-1 \end{pmatrix}
+\end{split}
+\end{equation}
+
 \subsection{Quaternions}
+\begin{tabular}{@{}ll@{}}
+ $\vp_{IB}$ & \verb!Quaterniond p_IB(AngleAxisd(alpha, Vector3d::UnitY()));! \\
+$\vA_{IB}$ & \verb!p_IB.toRotationMatrix();! \\
+\end{tabular}
 
 
 

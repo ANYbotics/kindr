@@ -23,6 +23,8 @@ message("   Including robotMath")
 #set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_BUILD_TYPE Release)
 
+add_definitions(-std=c++0x)
+
 find_package(Eigen REQUIRED)
 
 include_directories(${EIGEN_INCLUDE_DIRS})
