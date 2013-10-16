@@ -158,6 +158,7 @@ TEST (RotationsTest, testRemoQuatToRot) {
 	Vector3d n = Vector3d(sm::random::randLU(-1000,1000), sm::random::randLU(-1000,1000), sm::random::randLU(-1000,1000));
 	n.normalize();
 	double chi = sm::random::randLU(-2*M_PI,2*M_PI);
+	chi = 1.6;
 	Vector4d p_CI = createQuaternion(n, chi);
 	Vector3d n_new;
 	double chi_new;
@@ -171,21 +172,25 @@ TEST (RotationsTest, testRemoQuatToRot) {
 		ASSERT_DOUBLE_MX_EQ(n, -n_new, 1e-6, "n");
 	}
 
+	std::cout << "chi: " << chi << " n: " << n.transpose() << std::endl;
 
-
+	// todo:
 	Matrix3d A_IC = get_A_IB(p_CI);
 	Vector4d p_CI_new = A_to_Quaternion(A_IC);
-	if (boost::math::sign(p_CI(0))==boost::math::sign(p_CI_new(0))) {
-		ASSERT_DOUBLE_MX_EQ(p_CI, p_CI_new, 1e-6, "n");
-	} else {
-		ASSERT_DOUBLE_MX_EQ(p_CI, -p_CI_new, 1e-6, "n");
-	}
+//	if (boost::math::sign(p_CI(0))==boost::math::sign(p_CI_new(0))) {
+		ASSERT_DOUBLE_MX_EQ(p_CI, p_CI_new, 1e-6, "p_CI_new");
+//	} else {
+//		ASSERT_DOUBLE_MX_EQ(p_CI, -p_CI_new, 1e-6, "n");
+//	}
 
 }
 
 
 
-TEST (RotationsTest, testRotateVector) {
+TEST (RotationsTest, testRotatePositionVector) {
+	/* test quaternions to rotate a vector */
+
+
 	using namespace Eigen;
 	// random seed
 	sm::random::seed(static_cast<unsigned int>(std::time(nullptr)));
@@ -246,82 +251,46 @@ TEST (RotationsTest, testRotateVector) {
 	C_r_OC_eA2 = p_CI.toRotationMatrix()*I_r_OC;
 	ASSERT_DOUBLE_MX_EQ(C_r_OC_p, C_r_OC_eA2, 1e-6, "C_r_OC_eA2");
 
+
+
+
+	Quaterniond p_CI_new = Quaterniond(AngleAxisd(A_CI_p));
+	EXPECT_NEAR(p_CI.w(), p_CI_new.w(),1e-6);
+	EXPECT_NEAR(p_CI.x(), p_CI_new.x(),1e-6);
+	EXPECT_NEAR(p_CI.y(), p_CI_new.y(),1e-6);
+	EXPECT_NEAR(p_CI.z(), p_CI_new.z(),1e-6);
 }
 
 
-//
-//TEST (RotationsTest	, play) {
-//	using namespace Eigen;
-//
-//
-////	std::default_random_engine generator;
-////	std::uniform_double_distribution<double> distribution;
-//
-////	   std::default_random_engine rng(std::random_device{}());
-////	   std::uniform_real_distribution<double> dist(-100, 100);  //(min, max)
-////
-////	    //get one
-////	    const double random_num = dist(rng);
-//
-//	double alpha = 90/180.0*M_PI;
-//	double beta = 0;
-//	double gamma = 0;
-//
-////	boost::random::mt19937 gen;
-////	boost::random::uniform_real_distribution<> dist;
-////	alpha = dist(gen);
-//	sm::random::seed(static_cast<unsigned int>(std::time(nullptr)));
-//	alpha = sm::random::randLU(-2.0*M_PI,2.0*M_PI);
-//
-//
-//	std::cout << "alpha=" << alpha << std::endl;
-////	alpha = distribution(generator);
-//
-//	Matrix3d A_CB, A_BA, A_AI;
-//	A_CB << cos(gamma), sin(gamma), 0,
-//			-sin(gamma), cos(gamma), 0,
-//			0, 0, 1;
-//
-//	A_BA << cos(beta), 0, -sin(beta),
-//			0, 1, 0,
-//			sin(beta), 0, cos(beta);
-//
-//	A_AI << 1, 0, 0,
-//			0, cos(alpha), sin(alpha),
-//			0, -sin(alpha), cos(alpha);
-//
-//	Matrix3d A_CI = A_CB*A_BA*A_AI;
-//
-//
-//	Matrix3d  A_IC_rot;
-//	A_IC_rot =	Quaterniond(AngleAxisd(alpha, Vector3d::UnitX()) *
-//			AngleAxisd(beta, Vector3d::UnitY()) *
-//			AngleAxisd(gamma, Vector3d::UnitZ()));
-//
-//	Matrix3d A_CI_rot;
-//
-//	A_CI_rot =	Quaterniond(AngleAxisd(-alpha, Vector3d::UnitX()) *
-//			AngleAxisd(-beta, Vector3d::UnitY()) *
-//			AngleAxisd(-gamma, Vector3d::UnitZ()));
-//
-//	ASSERT_DOUBLE_MX_EQ(A_CI, A_CI_rot, 1e-9, "A_CI");
-//	ASSERT_DOUBLE_MX_EQ(A_CI, A_IC_rot.transpose(), 1e-9, "A_CI=A_IC^T");
-//
-//
-//	Quaterniond p(AngleAxisd(alpha, Vector3d::UnitY()));
-//	Matrix3d A_IB = p.toRotationMatrix();
-//	Vector3d I_r_OB = Vector3d(1.0, 2.0, 3.0);
-//	Vector3d B_r_OB = A_IB.transpose()*I_r_OB;
-//
-//	Matrix3d A_IK = Quaterniond(AngleAxisd(90/180.0*M_PI, Vector3d::UnitX())).toRotationMatrix();
-//	Vector3d K_r_OB = A_IK.transpose()*I_r_OB;
-//
-//	std::cout << "I_r_OB: " << I_r_OB.transpose() << std::endl;
-//	std::cout << "B_r_OB: " << B_r_OB.transpose() << std::endl;
-//	std::cout << "K_r_OB: " << K_r_OB.transpose() << std::endl;
-////	Eigen::Matrix3d skewMatrix;
-////	Eigen::Vector3d vec;
-////	vec << 1, 2, 3;
-////	skewMatrix << 0, -3, 2, 3, 0, -1, -2, 1, 0;
-////	EXPECT_EQ(skewMatrix, rm::linear_algebra::getSkewMatrixFromVector(vec));
-//}
+TEST (RotationsTest, DISABLED_testConvertKardanAnglesToQuaternion) {
+	using namespace Eigen;
+	// random seed
+	sm::random::seed(static_cast<unsigned int>(std::time(nullptr)));
+
+	// Kardan angles
+	double alpha = 90/180.0*M_PI;	// roll
+	double beta = 0;				// pitch
+	double gamma = 0;				// yaw
+
+	// random rotation angles
+	alpha = sm::random::randLU(-1.0*M_PI,1.0*M_PI);
+	beta = sm::random::randLU(-1.0*M_PI,1.0*M_PI);
+	gamma = sm::random::randLU(-1.0*M_PI,1.0*M_PI);
+
+	Quaterniond p_CI =	Quaterniond( AngleAxisd(-gamma, Vector3d::UnitZ())*
+				AngleAxisd(-beta, Vector3d::UnitY()) *
+				AngleAxisd(-alpha, Vector3d::UnitX()));
+
+	Quaterniond p_IC =	Quaterniond(AngleAxisd(alpha, Vector3d::UnitX()) *
+				AngleAxisd(beta, Vector3d::UnitY()) *
+				AngleAxisd(gamma, Vector3d::UnitZ()));
+
+	Vector3d kardanAngles = p_IC.toRotationMatrix().eulerAngles(0,1,2);
+
+
+
+	EXPECT_NEAR(alpha, kardanAngles(0),1e-6);
+	EXPECT_NEAR(beta, kardanAngles(1),1e-6);
+	EXPECT_NEAR(gamma, kardanAngles(2),1e-6);
+}
+
