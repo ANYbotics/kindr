@@ -183,6 +183,8 @@ TEST (RotationsTest, testRemoQuatToRot) {
 
 }
 
+
+
 TEST (RotationsTest, testRotateVector) {
 	using namespace Eigen;
 	// random seed
@@ -199,39 +201,53 @@ TEST (RotationsTest, testRotateVector) {
 	gamma = sm::random::randLU(-2.0*M_PI,2.0*M_PI);
 
 
-	Matrix3d A_CI_proNEu;
+	Matrix3d A_CI_p;
 	const double t44 = cos(gamma);
 	const double t45 = sin(alpha);
 	const double t46 = sin(gamma);
 	const double t47 = cos(alpha);
 	const double t48 = sin(beta);
 	const double t49 = cos(beta);
-	A_CI_proNEu(0,0) = t44*t49;
-	A_CI_proNEu(0,1) = t46*t47+t44*t45*t48;
-	A_CI_proNEu(0,2) = t45*t46-t44*t47*t48;
-	A_CI_proNEu(1,0) = -t46*t49;
-	A_CI_proNEu(1,1) = t44*t47-t45*t46*t48;
-	A_CI_proNEu(1,2) = t44*t45+t46*t47*t48;
-	A_CI_proNEu(2,0) = t48;
-	A_CI_proNEu(2,1) = -t45*t49;
-	A_CI_proNEu(2,2) = t47*t49;
+	A_CI_p(0,0) = t44*t49;
+	A_CI_p(0,1) = t46*t47+t44*t45*t48;
+	A_CI_p(0,2) = t45*t46-t44*t47*t48;
+	A_CI_p(1,0) = -t46*t49;
+	A_CI_p(1,1) = t44*t47-t45*t46*t48;
+	A_CI_p(1,2) = t44*t45+t46*t47*t48;
+	A_CI_p(2,0) = t48;
+	A_CI_p(2,1) = -t45*t49;
+	A_CI_p(2,2) = t47*t49;
 
 	Vector3d I_r_OC = Vector3d(sm::random::randLU(-1000.0,1000.0), sm::random::randLU(-1000.0,1000.0), sm::random::randLU(-1000.0,1000.0));
-	Vector3d C_r_OC = A_CI_proNEu*I_r_OC;
+	Vector3d C_r_OC_p = A_CI_p*I_r_OC;
 
-	Quaterniond p_CI =	Quaterniond(AngleAxisd(-gamma, Vector3d::UnitZ()) *
+	Quaterniond p_IC =	Quaterniond(AngleAxisd(alpha, Vector3d::UnitX()) *
+				AngleAxisd(beta, Vector3d::UnitY()) *
+				AngleAxisd(gamma, Vector3d::UnitZ()));
+
+
+	Vector3d C_r_OC_eq, C_r_OC_eA;
+	C_r_OC_eq = p_IC.inverse()*I_r_OC;
+	ASSERT_DOUBLE_MX_EQ(C_r_OC_p, C_r_OC_eq, 1e-6, "C_r_OC_eq");
+
+	C_r_OC_eA = p_IC.toRotationMatrix().transpose()*I_r_OC;
+	ASSERT_DOUBLE_MX_EQ(C_r_OC_p, C_r_OC_eA, 1e-6, "C_r_OC_eA");
+
+
+	Quaterniond p_CI =	Quaterniond( AngleAxisd(-gamma, Vector3d::UnitZ())*
 				AngleAxisd(-beta, Vector3d::UnitY()) *
 				AngleAxisd(-alpha, Vector3d::UnitX()));
 
+	Vector3d C_r_OC_eq2;
+	C_r_OC_eq2 = p_CI*I_r_OC;
+	ASSERT_DOUBLE_MX_EQ(C_r_OC_p, C_r_OC_eq2, 1e-6, "C_r_OC_eq2");
 
+	Vector3d C_r_OC_eA2;
+	C_r_OC_eA2 = p_CI.toRotationMatrix()*I_r_OC;
+	ASSERT_DOUBLE_MX_EQ(C_r_OC_p, C_r_OC_eA2, 1e-6, "C_r_OC_eA2");
 
-	Vector3d C_r_OC_rot, C_r_OC_rot_A;
-	C_r_OC_rot = p_CI*I_r_OC;
-	ASSERT_DOUBLE_MX_EQ(C_r_OC, C_r_OC_rot, 1e-6, "C_r_OC");
-
-	C_r_OC_rot_A = p_CI.toRotationMatrix()*I_r_OC;
-	ASSERT_DOUBLE_MX_EQ(C_r_OC, C_r_OC_rot_A, 1e-6, "C_r_OC_A");
 }
+
 
 //
 //TEST (RotationsTest	, play) {
