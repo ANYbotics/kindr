@@ -1,10 +1,15 @@
-\documentclass[10pt,landscape]{article}
-\usepackage{multicol}
+\documentclass[10pt,landscape,a4paper]{article}
+\usepackage{nonfloat}
+\usepackage{multicol,caption}
 \usepackage{calc}
 \usepackage{ifthen}
 \usepackage[landscape]{geometry}
 \usepackage{amsmath}
 
+\usepackage{graphics}
+   \usepackage[pdftex]{graphicx}
+\usepackage{epstopdf}
+ \usepackage{ifpdf}
 % To make this come out properly in landscape mode, do one of the following
 % 1.
 %  pdflatex latexsheet.tex
@@ -77,6 +82,14 @@
 
  \input{styles/def}
 % -----------------------------------------------------------------------
+\DeclareGraphicsExtensions{.pdf,.eps}
+
+\newcommand\myfigure[1]{%
+\medskip\noindent\begin{minipage}{\columnwidth}
+\centering%
+#1%
+%figure,caption, and label go here
+\end{minipage}\medskip}
 
 \begin{document}
 
@@ -99,6 +112,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  BEGIN CONTENT
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Definitions}
+
+
+
 \section{Rotations}
 \begin{tabular}{@{}ll@{}}
 \verb!alias!    & The transformation matrix $\vA_{AB}$ transforms the\\ 
@@ -120,6 +137,13 @@ alias, x-y-z
          &= \begin{pmatrix} 2(e_0^2+e_1^2)-1 & 2(e_1 e_2+e_0 e_3) & 2(e_1 e_3-e_0 e_2) \\ 2(e_1 e_2-e_0 e_3) & 2(e_0^2+e_2^2)-1 & 2(e_2 e_3+e_0 e_1) \\ 2(e_1 e_3+e_0 e_2) & 2(e_2 e_3-e_0 e_1) & 2(e_0^2+e_3^2)-1 \end{pmatrix}
 \end{split}
 \end{equation}
+
+\myfigure{\includegraphics[width=1\columnwidth]{coordinate_systems/coordinate_system_ypr-crop.pdf}%
+\figcaption{Rotation from $I$-frame to $C$-frame: (yaw-pitch-roll) -- ($\psi-\theta-\phi$) -- ($z-y'-x''$)}}
+% \begin{figure}
+%    \includegraphics[width=\linewidth]{cycle_we}
+% \end{figure}
+
 
 \subsection{Quaternions}
 \begin{tabular}{@{}ll@{}}
