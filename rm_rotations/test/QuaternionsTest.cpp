@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <rm/rotations/Rotations.hpp>
+#include <RotationsOld.hpp>
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 #include <iostream>

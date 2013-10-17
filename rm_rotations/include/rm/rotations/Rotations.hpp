@@ -1,17 +1,16 @@
 /*!
 * @file 	Rotations.hpp
-* @author 	Michael Blösch, Peter Fankhauser, Christian Gehring
+* @author 	Michael Blösch, Peter Fankhauser, Christian Gehring, Remo Diethelm
 * @date		22 09, 2011
 * @version 	1.0
 * @ingroup 	rm
-* @brief	Rotation stuff... convention:
-* 			roll-pitch-yaw: 	alias
-* 			rotation matrix: 	alibi
-* 			rotation vector: 	alibi
-* 			quaternion:			alibi
+* @brief
 */
 #ifndef RM_ROTATIONS_HPP_
 #define RM_ROTATIONS_HPP_
+
+
+#include <cmath>
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
@@ -19,262 +18,468 @@
 namespace rm {
 namespace rotations {
 
+// todo: quaternion: check norm with .squaredNorm()
 
-/*! Converts vector to sqew matrix
- * @param[in] 	vec		vector
- * @param[out] 	mat		sqew-matrix
- */
-static void vecToSqew(const Eigen::Vector3d& vec, Eigen::Matrix3d& mat){
-	mat << 0, -vec(2), vec(1), vec(2), 0, -vec(0), -vec(1), vec(0), 0;
-}
-/*! Converts quaternions to
- * @param[in] 	q		quaternion
- * @param[out] 	rpy		roll-pitch-yaw
- */
-static void quatToRpy(const Eigen::Quaterniond& q, Eigen::Vector3d& rpy){
-	const double q0 = q.w();
-	const double q1 = q.x();
-	const double q2 = q.y();
-	const double q3 = q.z();
-	rpy(0) = -atan2(2*(q0*q1+q2*q3),1-2*(pow(q1,2)+pow(q2,2)));
-	rpy(1) = -asin(2*(q0*q2-q1*q3));
-	rpy(2) = -atan2(2*(q0*q3+q1*q2),1-2*(pow(q2,2)+pow(q3,2)));
-}
 
-static void rpyToQuat(const Eigen::Vector3d& rpy, Eigen::Quaterniond& q){
-	const double cy = cos(rpy(2)/2);
-	const double sy = sin(rpy(2)/2);
-	const double cc = cos(rpy(1)/2)*cos(rpy(0)/2);
-	const double cs = cos(rpy(1)/2)*sin(rpy(0)/2);
-	const double sc = sin(rpy(1)/2)*cos(rpy(0)/2);
-	const double ss = sin(rpy(1)/2)*sin(rpy(0)/2);
+// 1) Output: AngleAxis
 
-	q.w() = cy*cc-sy*ss;
-	q.x() = -cy*cs-sy*sc;
-	q.y() = -cy*sc+sy*cs;
-	q.z() = -cy*ss-sy*cc;
-	q.normalize();
-}
-
-/*!
- * Converts yaw, pitch and roll angles to a quaternion.
-* Based on the MIRA project (http://www.mira-project.org).
-*
- * @param [in] yaw (first rotation around the Z-Axis (pointing upwards))
- * @param [in] pitch (second rotation around the Y-Axis (pointing left))
- * @param [in] roll (third rotation around the X-Axis (pointing forward))
- * @return quaternion
- */
 template<typename T>
-static Eigen::Quaternion<T> yawPitchRollToQuaternion(const T& yaw, const T& pitch, const T& roll)
+static Eigen::AngleAxis<T> getAngleAxisFromQuaternion(const Eigen::Quaternion<T> p_CI)
 {
-return Eigen::Quaternion<T>(
-	Eigen::AngleAxis<T>(yaw, Eigen::Matrix<T, 3, 1>::UnitZ()) *
-	Eigen::AngleAxis<T>(pitch, Eigen::Matrix<T, 3, 1>::UnitY()) *
-	Eigen::AngleAxis<T>(roll, Eigen::Matrix<T, 3, 1>::UnitX()));
+  return Eigen::AngleAxis<T>(p_CI);
 }
 
-/*!
-* Converts a quaternion back to yaw, pitch, roll angles.
-*
-* This is operation is the opposite of yawPitchRollToQuaternion().
-* Please note: If a quaternion was created using quaternionFromYawPitchRoll()
-* this method may return yaw, pitch, roll angles that may differ from the values
-* used in the quaternionFromYawPitchRoll() call. The reason is that a single
-* rotation can be described by different combinations of yaw, pitch and
-* roll angles. For details see yawPitchRollToQuaternion().
-*
-* Based on the MIRA project (http://www.mira-project.org).
-*
-* @param [in] q the quaternion
-* @return yaw, pitch and roll angle as vector with length 3
+template<typename T>
+static Eigen::AngleAxis<T> getAngleAxisFromRotationMatrix(const Eigen::Matrix<T,3,3> A_CI)
+{
+  return Eigen::AngleAxis<T>(A_CI);
+}
+
+template<typename T>
+static Eigen::AngleAxis<T> getAngleAxisFromRPY(const Eigen::Matrix<T,3,1> rpy_CI)
+{
+  return
+    Eigen::AngleAxis<T>(rpy_CI(0), Eigen::Matrix<T, 3, 1>::UnitX()) *
+    Eigen::AngleAxis<T>(rpy_CI(1), Eigen::Matrix<T, 3, 1>::UnitY()) *
+    Eigen::AngleAxis<T>(rpy_CI(2), Eigen::Matrix<T, 3, 1>::UnitZ());
+}
+
+template<typename T>
+static Eigen::AngleAxis<T> getAngleAxisFromYPR(const Eigen::Matrix<T,3,1> ypr_CI)
+{
+  return
+    Eigen::AngleAxis<T>(ypr_CI(0), Eigen::Matrix<T, 3, 1>::UnitZ()) *
+    Eigen::AngleAxis<T>(ypr_CI(1), Eigen::Matrix<T, 3, 1>::UnitY()) *
+    Eigen::AngleAxis<T>(ypr_CI(2), Eigen::Matrix<T, 3, 1>::UnitX());
+}
+
+
+// 2) Output: Quaternion
+
+template<typename T>
+static Eigen::Quaternion<T> getQuaternionFromAngleAxis(const Eigen::AngleAxis<T> aa_CI)
+{
+  return Eigen::Quaternion<T>(aa_CI);
+}
+
+template<typename T>
+static Eigen::Quaternion<T> getQuaternionFromRotationMatrix(const Eigen::Matrix<T,3,3> A_CI)
+{
+//  // Bad precision!
+//  double w;
+//  double x;
+//  double y;
+//  double z;
+//  w = sqrt(1+mat(0,0)+mat(1,1)+mat(2,2))/2;
+//  if(w>0.02){
+//    x = 1/4/w*(mat(2,1)-mat(1,2));
+//    y = 1/4/w*(mat(0,2)-mat(2,0));
+//    z = 1/4/w*(mat(1,0)-mat(0,1));
+//  } else {
+//    x = sqrt(1+mat(0,0)-mat(1,1)-mat(2,2))/2;
+//    y = 1/4/x*(mat(0,1)+mat(1,0));
+//    z = 1/4/x*(mat(0,2)+mat(2,0));
+//    w = 1/4/x*(mat(2,1)-mat(1,2));
+//  }
+//  q.w() = w;
+//  q.x() = x;
+//  q.y() = y;
+//  q.z() = z;
+//  q.normalize();
+
+  return Eigen::Quaternion<T>(A_CI);  // todo: what does this function?
+}
+
+template<typename T>
+static Eigen::Quaternion<T> getQuaternionFromRPY(const Eigen::Matrix<T,3,1> rpy_CI)
+{
+//  Eigen::Quaternion<T> p_CI;
+//
+//  const T cy = cos(rpy_CI(2)/2);
+//  const T sy = sin(rpy_CI(2)/2);
+//  const T cc = cos(rpy_CI(1)/2)*cos(rpy_CI(0)/2);
+//  const T cs = cos(rpy_CI(1)/2)*sin(rpy_CI(0)/2);
+//  const T sc = sin(rpy_CI(1)/2)*cos(rpy_CI(0)/2);
+//  const T ss = sin(rpy_CI(1)/2)*sin(rpy_CI(0)/2);
+//
+//  p_CI.w() = cy*cc-sy*ss;
+//  p_CI.x() = -cy*cs-sy*sc;
+//  p_CI.y() = -cy*sc+sy*cs;
+//  p_CI.z() = -cy*ss-sy*cc;
+//  p_CI.normalize();
+//
+//  return p_CI;
+
+
+  return Eigen::Quaternion<T>(
+    Eigen::AngleAxis<T>(rpy_CI(0), Eigen::Matrix<T, 3, 1>::UnitX()) *
+    Eigen::AngleAxis<T>(rpy_CI(1), Eigen::Matrix<T, 3, 1>::UnitY()) *
+    Eigen::AngleAxis<T>(rpy_CI(2), Eigen::Matrix<T, 3, 1>::UnitZ())); // todo: correct order?
+}
+
+template<typename T>
+static Eigen::Quaternion<T> getQuaternionFromYPR(const Eigen::Matrix<T,3,1> ypr_CI)
+{
+  return Eigen::Quaternion<T>(
+    Eigen::AngleAxis<T>(ypr_CI(0), Eigen::Matrix<T, 3, 1>::UnitZ()) *
+    Eigen::AngleAxis<T>(ypr_CI(1), Eigen::Matrix<T, 3, 1>::UnitY()) *
+    Eigen::AngleAxis<T>(ypr_CI(2), Eigen::Matrix<T, 3, 1>::UnitX()));
+}
+
+
+// 3) Output: Rotation Matrix
+
+template<typename T>
+static Eigen::Matrix<T,3,3> getRotationMatrixFromAngleAxis(const Eigen::AngleAxis<T> aa_CI)
+{
+  return aa_CI.toRotationMatrix();
+}
+
+template<typename T>
+static Eigen::Matrix<T,3,3> getRotationMatrixFromQuaternion(const Eigen::Quaternion<T> p_CI)
+{
+  return p_CI.toRotationMatrix();
+}
+
+template<typename T>
+static Eigen::Matrix<T,3,3> getRotationMatrixFromRPY(const Eigen::Matrix<T,3,1> rpy_CI)
+{
+  Eigen::Matrix<T,3,3> A_CI;
+
+  const T sr = sin(rpy_CI(0));
+  const T cr = cos(rpy_CI(0));
+  const T sp = sin(rpy_CI(1));
+  const T cp = cos(rpy_CI(1));
+  const T sy = sin(rpy_CI(2));
+  const T cy = cos(rpy_CI(2));
+
+  A_CI(0,0) = cy*cp;
+  A_CI(0,1) = sy*cr+cy*sr*sp;
+  A_CI(0,2) = sr*sy-cy*cr*sp;
+  A_CI(1,0) = -sy*cp;
+  A_CI(1,1) = cy*cr-sr*sy*sp;
+  A_CI(1,2) = cy*sr+sy*cr*sp;
+  A_CI(2,0) = sp;
+  A_CI(2,1) = -sr*cp;
+  A_CI(2,2) = cr*cp;
+
+  return A_CI;
+}
+
+template<typename T>
+static Eigen::Matrix<T,3,3> getRotationMatrixFromYPR(const Eigen::Matrix<T,3,1> ypr_CI)
+{
+  Eigen::Matrix<T,3,3> A_CI;
+
+  const T sy = sin(ypr_CI(0));
+  const T cy = cos(ypr_CI(0));
+  const T sp = sin(ypr_CI(1));
+  const T cp = cos(ypr_CI(1));
+  const T sr = sin(ypr_CI(2));
+  const T cr = cos(ypr_CI(2));
+
+  A_CI(0,0) = cp*cy;
+  A_CI(0,1) = cp*sy;
+  A_CI(0,2) = -sp;
+  A_CI(1,0) = sp*sr*cy-cr*sy;
+  A_CI(1,1) = sp*sr*sy+cr*cy;
+  A_CI(1,2) = cp*sr;
+  A_CI(2,0) = sr*sy+sp*cr*cy;
+  A_CI(2,1) = sp*cr*cy-sr*cy;
+  A_CI(2,2) = cp*cr;
+
+  return A_CI;
+}
+
+
+// 4) Output: Roll-Pitch-Yaw
+
+template<typename T>
+static Eigen::Matrix<T,3,1> getRPYFromAngleAxis(const Eigen::AngleAxis<T> aa_CI)
+{
+  return aa_CI.toRotationMatrix().eulerAngles(0, 1, 2);
+}
+
+template<typename T>
+static Eigen::Matrix<T,3,1> getRPYFromQuaternion(const Eigen::Quaternion<T> p_CI)
+{
+  Eigen::Matrix<T,3,1> rpy_CI;
+
+  const T w = p_CI.w();
+  const T x = p_CI.x();
+  const T y = p_CI.y();
+  const T z = p_CI.z();
+
+  rpy_CI(1) = asin(2*(x*z-w*y));
+
+  if(cos(rpy_CI(1)) == 0) // roll and yaw axis are the same -> yaw angle can be set to zero, roll does the whole rotation
+  {
+    rpy_CI(0) = asin(2*(y*z-w*x));
+    rpy_CI(2) = 0;
+  }
+  else
+  {
+    rpy_CI(0) = -atan2(2*(y*z+w*x),1-2*(x*x+y*y));
+    rpy_CI(2) = -atan2(2*(x*y+w*z),1-2*(y*y+z*z));
+  }
+
+  return rpy_CI;
+
+//  return p_CI.toRotationMatrix().eulerAngles(0, 1, 2);
+}
+
+template<typename T>
+static Eigen::Matrix<T,3,1> getRPYFromRotationMatrix(const Eigen::Matrix<T,3,3> A_CI)
+{
+  return A_CI.eulerAngles(0, 1, 2);
+}
+
+template<typename T>
+static Eigen::Matrix<T,3,1> getRPYFromYPR(const Eigen::Matrix<T,3,1> ypr_CI)
+{
+  return getRPYFromAngleAxis(getAngleAxisFromYPR(ypr_CI));
+}
+
+
+// 5) Output: Yaw-Pitch-Roll
+
+template<typename T>
+static Eigen::Matrix<T,3,1> getYPRFromAngleAxis(const Eigen::AngleAxis<T> aa_CI)
+{
+  return aa_CI.toRotationMatrix().eulerAngles(2, 1, 0);
+}
+
+template<typename T>
+static Eigen::Matrix<T,3,1> getYPRFromQuaternion(const Eigen::Quaternion<T> p_CI)
+{
+  Eigen::Matrix<T,3,1> ypr_CI;
+
+  const T w = p_CI.w();
+  const T x = p_CI.x();
+  const T y = p_CI.y();
+  const T z = p_CI.z();
+
+  ypr_CI(1) = -asin(2*(x*z+w*y));
+
+  if(cos(ypr_CI(1)) == 0) // yaw and roll axis are the same -> roll angle can be set to zero, yaw does the whole rotation
+  {
+    ypr_CI(0) = -asin(2*(y*z+w*x));
+    ypr_CI(2) = 0;
+  }
+  else
+  {
+    ypr_CI(0) = atan2(2*(y*z-w*x),1-2*(x*x+y*y));
+    ypr_CI(2) = atan2(2*(x*y-w*z),1-2*(y*y+z*z));
+  }
+
+  return ypr_CI;
+
+//  return p_CI.toRotationMatrix().eulerAngles(2, 1, 0);
+}
+
+template<typename T>
+static Eigen::Matrix<T,3,1> getYPRFromRotationMatrix(const Eigen::Matrix<T,3,3> A_CI)
+{
+  return A_CI.eulerAngles(2, 1, 0);
+}
+
+template<typename T>
+static Eigen::Matrix<T,3,1> getYPRFromRPY(const Eigen::Matrix<T,3,1> rpy_CI)
+{
+  return getYPRFromAngleAxis(getAngleAxisFromRPY(rpy_CI));
+}
+
+
+// 6) Output: Inverses
+
+template<typename T>
+static Eigen::AngleAxis<T> getInverseAngleAxis(const Eigen::AngleAxis<T> aa_CI)
+{
+  return aa_CI.inverse();
+}
+
+template<typename T>
+static Eigen::Quaternion<T> getInverseQuaternion(const Eigen::Quaternion<T> p_CI)
+{
+  return p_CI.conjugate();
+}
+
+template<typename T>
+static Eigen::Matrix<T,3,3> getInverseRotationMatrix(const Eigen::Matrix<T,3,3> A_CI)
+{
+  return A_CI.transpose();
+}
+
+template<typename T>
+static Eigen::Matrix<T,3,1> getInverseRPY(const Eigen::Matrix<T,3,1> rpy_CI)
+{
+//  return getYPRFromRPY(-rpy_CI);
+
+  return -getYPRFromRPY(rpy_CI); // todo: which one?
+}
+
+template<typename T>
+static Eigen::Matrix<T,3,1> getInverseYPR(const Eigen::Matrix<T,3,1> ypr_CI)
+{
+  return -getRPYFromYPR(ypr_CI);
+}
+
+
+
+
+/*
+
+
+
+Matrix3x4d get_H_bar(const Vector4d &p)
+{
+  Matrix3x4d H_bar = Matrix3x4d::Zero();
+  const double w = p(0);
+  const Vector3d e = p.tail(3);
+  const Matrix3x3d eye3 = Matrix3x3d::Identity();
+
+  H_bar.col(0) = -e;
+  H_bar.block<3,3>(0,1) = -skewsymm(e)+w*eye3;
+
+  return H_bar;
+}
+
+
+MatrixDyn get_F(const VectorDyn &q)
+{
+  const double dim_q = q.rows();
+  const double dim_u = dim_q - 1;
+
+  MatrixDyn F = MatrixDyn::Zero(dim_q,dim_u);
+  const Vector4d p = q.block<4,1>(3,0);
+
+  F.block<3,3>(0,0) = Matrix3x3d::Identity();
+  F.block<4,3>(3,3) = 0.5*get_H_bar(p).transpose();
+  if(dim_u > 6)
+  {
+    F.block(7,6,dim_u-6,dim_u-6) = MatrixDyn::Identity(dim_u-6,dim_u-6);
+  }
+
+  return F;
+}
+
+VectorDyn get_dqdt(const VectorDyn &q, const VectorDyn &u)
+{
+  const double dim_q = q.rows();
+  const double dim_u = dim_q - 1;
+
+  VectorDyn dqdt = VectorDyn::Zero(dim_q);
+  const Vector4d p = q.block<4,1>(3,0);
+
+  dqdt.head(3) = u.head(3);
+  dqdt.block<4,1>(3,0) = 0.5*get_H_bar(p).transpose()*u.block<3,1>(3,0);
+  if(dim_u > 6)
+  {
+    dqdt.tail(dim_u-6) = u.tail(dim_u-6);
+  }
+
+  return dqdt;
+}
+
+VectorDyn get_dqdt_2(const VectorDyn &q, const VectorDyn &u) // older version, slower
+{
+  return get_F(q)*u;
+}
+
+void prox1D(double &y, const double &x, const double &min, const double &max)
+{
+  if     (x < min) {y = min;}
+  else if(x > max) {y = max;}
+  else             {y = x;  }
+}
+
+void prox2D(double &y1, double &y2, const double &x1, const double &x2, const double &max)
+{
+  const double r = sqrt(x1*x1 + x2*x2);
+  if(r > max)
+  {
+    y1 = max*x1/r;
+    y2 = max*x2/r;
+  }
+  else
+  {
+    y1 = x1;
+    y2 = x2;
+  }
+}
+
 */
-template<typename T>
-static Eigen::Matrix<T,3,1> quaternionToYawPitchRoll(const Eigen::Quaternion<T>& q)
+
+/*
+
+
+Vector4d multiplyQuaternion(const Vector4d &p_CB, const Vector4d &p_BA)
 {
-  return q.toRotationMatrix().eulerAngles(2, 1, 0);
+  // p_CA = p_CB*p_BA
+  Vector4d p_CA = Vector4d::Zero();
+
+  p_CA(0) = p_CB(0)*p_BA(0) - p_CB.tail(3).transpose()*p_BA.tail(3);
+  p_CA.tail(3) = p_CB(0)*p_BA.tail(3) + p_BA(0)*p_CB.tail(3) + skewsymm(p_BA.tail(3))*p_CB.tail(3);
+
+  p_CA.normalize();
+
+  return p_CA;
 }
 
-/*!
-* Converts a angle-axis rotation to yaw, pitch, roll angles.
-*
-* @param [in] angleAxis the rotation in angle-axis representation
-* @return yaw, pitch and roll angle as vector with length 3
-*/
-template<typename T>
-static Eigen::Matrix<T,3,1> angleAxisToYawPitchRoll(const Eigen::AngleAxis<T>& angleAxis)
+
+
+
+double w_to_angleVel(const Vector3d &K_w_JK, const Vector3d &n)
 {
-return angleAxis.toRotationMatrix().eulerAngles(2, 1, 0);
-}
+//  if(n(0) == 1) // around x
+//  {
+//    return K_w_JK(0);
+//  }
+//  else
+//  if(n(1) == 1) // around y
+//  {
+//    return K_w_JK(1);
+//  }
+//  else
+//  if(n(2) == 1) // around z
+//  {
+//    return K_w_JK(2);
+//  }
 
-static void rpyToEar(const Eigen::Vector3d& rpy, Eigen::Matrix3d& ear){
-	const double cp = cos(rpy(1));
-	const double sp = sin(rpy(1));
-	const double cy = cos(rpy(2));
-	const double sy = sin(rpy(2));
-	ear << cp*cy, sy, 0, -cp*sy, cy, 0, sp, 0, 1;
-}
+  const Vector3d n_norm = n.normalized();
 
-static void rpyToEarInv(const Eigen::Vector3d& rpy, Eigen::Matrix3d& earInv){
-	const double t2 = cos(rpy(1));
-	const double t3 = 1.0/t2;
-	const double t4 = sin(rpy(2));
-	const double t5 = cos(rpy(2));
-	const double t6 = tan(rpy(1));
-	earInv(0,0) = t3*t5;
-	earInv(0,1) = -t3*t4;
-	earInv(0,2) = 0;
-	earInv(1,0) = t4;
-	earInv(1,1) = t5;
-	earInv(1,2) = 0;
-	earInv(2,0) = -t5*t6;
-	earInv(2,1) = t4*t6;
-	earInv(2,2) = 1;
-}
-
-static void quatToRotMat(const Eigen::Quaterniond& q, Eigen::Matrix3d& mat){
-	const double q0 = q.w();
-	const double q1 = q.x();
-	const double q2 = q.y();
-	const double q3 = q.z();
-	Eigen::Vector3d vec = Eigen::Vector3d(q1,q2,q3);
-	vecToSqew(vec,mat);
-	mat = (2*pow(q0,2)-1)*Eigen::Matrix3d::Identity() + 2*q0*mat + 2 * vec * vec.transpose();
-}
-
-static void quatToRotVec(const Eigen::Quaterniond& q, Eigen::Vector3d& vec){
-	double cos = q.w();
-	if(cos > 1.0){
-		cos = 1;
-	} else if(cos < -1.0){
-		cos = -1.0;
-	}
-	const double angle = 2*acos(cos);
-	vec(0,0) = q.x();
-	vec(1,0) = q.y();
-	vec(2,0) = q.z();
-	double norm = vec.norm();
-	if(norm >= 1e-20){
-		vec = vec*angle/vec.norm();
-	} else {
-		vec.setZero();
-	}
-}
-
-static void rotVecToQuat(const Eigen::Vector3d& vec, Eigen::Quaterniond& q){
-	const double angle = vec.norm();
-	double a;
-	if(angle >= 1e-20){
-		a = sin(angle/2.0)/angle;
-	} else {
-		a = 0;
-	}
-	q.w() = cos(angle/2.0);
-	q.x() = vec(0)*a;
-	q.y() = vec(1)*a;
-	q.z() = vec(2)*a;
-	q.normalize();
-}
-
-static void quatInverse(const Eigen::Quaterniond& q, Eigen::Quaterniond& q2){
-	q2.w() = q.w();
-	q2.x() = -q.x();
-	q2.y() = -q.y();
-	q2.z() = -q.z();
-	q2.normalize();
-}
-
-static void quatLeftMultMat(const Eigen::Matrix<double,4,1>& q, Eigen::Matrix<double,4,4>& M){
-	M.setIdentity();
-	M = M*q(3);
-	M(0,1) = -q(2);
-	M(0,2) = q(1);
-	M(1,0) = q(2);
-	M(1,2) = -q(0);
-	M(2,0) = -q(1);
-	M(2,1) = q(0);
-	M.block<1,4>(3,0) = -q;
-	M.block<4,1>(0,3) = q;
-}
-
-static void quatRightMultMat(const Eigen::Matrix<double,4,1>& q, Eigen::Matrix<double,4,4>& M){
-	M.setIdentity();
-	M = M*q(3);
-	M(0,1) = q(2);
-	M(0,2) = -q(1);
-	M(1,0) = -q(2);
-	M(1,2) = q(0);
-	M(2,0) = q(1);
-	M(2,1) = -q(0);
-	M.block<1,4>(3,0) = -q;
-	M.block<4,1>(0,3) = q;
+  return n_norm.dot(K_w_JK); // attention: dot product doesn't eliminate small errors
 }
 
 
-static void rotMatToQuat(const Eigen::Matrix3d& mat, Eigen::Quaterniond& q){
-	// Bad precision!
-	double w;
-	double x;
-	double y;
-	double z;
-	w = sqrt(1+mat(0,0)+mat(1,1)+mat(2,2))/2;
-	if(w>0.02){
-		x = 1/4/w*(mat(2,1)-mat(1,2));
-		y = 1/4/w*(mat(0,2)-mat(2,0));
-		z = 1/4/w*(mat(1,0)-mat(0,1));
-	} else {
-		x = sqrt(1+mat(0,0)-mat(1,1)-mat(2,2))/2;
-		y = 1/4/x*(mat(0,1)+mat(1,0));
-		z = 1/4/x*(mat(0,2)+mat(2,0));
-		w = 1/4/x*(mat(2,1)-mat(1,2));
-	}
-	q.w() = w;
-	q.x() = x;
-	q.y() = y;
-	q.z() = z;
-	q.normalize();
-}
-
-static void rotMatToRotVec(const Eigen::Matrix3d& mat, Eigen::Vector3d& vec){
-	double cosTheta = 0.5*(mat(0,0)+mat(1,1)+mat(2,2)-1);
-	if(cosTheta > 1.0){
-		cosTheta = 1;
-	} else if(cosTheta < -1.0){
-		cosTheta = -1.0;
-	}
-	double theta = acos(cosTheta);
-	vec(0) = (mat(2,1)-mat(1,2));
-	vec(1) = (mat(0,2)-mat(2,0));
-	vec(2) = (mat(1,0)-mat(0,1));
-	if(std::fabs(theta) > 1e-10){
-		vec *= 0.5/sin(theta)*theta;
-	} else {
-		vec *= 0.5;
-	}
-}
 
 
-static void rpyToRotMat(const Eigen::Vector3d& rpy, Eigen::Matrix3d& mat){
-	const double t1 = cos(rpy(2));
-	const double t2 = sin(rpy(0));
-	const double t3 = sin(rpy(2));
-	const double t4 = cos(rpy(0));
-	const double t5 = sin(rpy(1));
-	const double t6 = cos(rpy(1));
-	mat(0,0) = t1*t6;
-	mat(0,1) = t3*t4+t1*t2*t5;
-	mat(0,2) = t2*t3-t1*t4*t5;
-	mat(1,0) = -t3*t6;
-	mat(1,1) = t1*t4-t2*t3*t5;
-	mat(1,2) = t1*t2+t3*t4*t5;
-	mat(2,0) = t5;
-	mat(2,1) = -t2*t6;
-	mat(2,2) = t4*t6;
-}
+Vector3d omega2kardan(const Vector3d &K_w_IK, const Vector3d &abc) // quaternion: rotation from I to K, kardan: x-y-z with alpha-beta-gamma
+{
+  double alpha = abc(0);
+  double beta = abc(1);
+  double gamma = abc(2);
 
-static void reduceAngle(double& angle){
-	angle = -2.0*M_PI*floor((angle+M_PI)/(2*M_PI))+angle;
-}
+  Vector3d dadbdc = Vector3d::Zero();
+  Matrix3x3d H = Matrix3x3d::Zero();
+
+  if(cos(beta) == 0)
+  {
+    H << std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), 0, sin(gamma), cos(gamma), 0, -cos(gamma)*tan(beta), sin(gamma)*tan(beta), 1;
+  }
+  else
+  {
+    H << cos(gamma)/cos(beta), -sin(gamma)/cos(beta), 0, sin(gamma), cos(gamma), 0, -cos(gamma)*tan(beta), sin(gamma)*tan(beta), 1;
+  }
+
+  dadbdc = H*K_w_IK;
+
+  return dadbdc;
+
+  */
+
+
+
 
 
 } // end namespace rotations
