@@ -6,6 +6,7 @@
 \usepackage{ifthen}
 \usepackage[landscape]{geometry}
 \usepackage{amsmath}
+\usepackage{multirow}
 
 \usepackage{graphics}
    \usepackage[pdftex]{graphicx}
@@ -116,50 +117,50 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  BEGIN CONTENT
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Transformations}
-All transformations are alias (passive) transformations, i.e.\ the coordinates of a point $P$ change due to a rotation of the coordinate system and the vector $\vr_{OP}$ representing $P$ is not rotated.
+\section{Rotations}
+All rotations are alias (passive) transformations, i.e.\ the coordinates of a point $P$ change due to a rotation of the coordinate system and the vector $\vr_{OP}$ representing $P$ is not rotated.
 \begin{tabular}{|l|l|l|}
 \hline
 Coordinate system & ${\ve_x^B,\ve_y^B,\ve_z^B }$ & Cartesian right-hand system $B$ with unit vectors $\ve$  \\ \hline
-Rotation matrix & $\vR_{BI}$ & transforms the coord. of a vector expressed in cs $I$ to cs $B$ \\ 
+\multirow{2}{*}{Rotation matrix} & $\vR_{BI}$ & transforms the coord. of a vector expressed in cs $I$ to cs $B$ \\ 
 & $\vR_{IB} = \vR_{BI}^T$ & ${}_{B}\vr_{OP} = \vR_{BI} {}_{I}\vr_{OP} \Leftrightarrow  {}_{B}\vr_{OP} = \vR_{I}^{B} {}_{I}\vr_{OP}$ \\ \hline
-Unit quaternion & $\vp_{BI}$ &  transforms the coord. of a vector expressed in cs $I$ to cs $B$ \\
+\multirow{2}{*}{Unit quaternion} & $\vp_{BI}$ &  transforms the coord. of a vector expressed in cs $I$ to cs $B$ \\
  & $\vp_{IB} = \vp_{BI}^{-1}$ & $\vp_{BI}=(x,y,z,w)^T=(\va^T, a_0)^T, \left\lVert\vp_{BI}\right\rVert=1$\\ \hline
-Angle axis & $\{\chi, \vn\}_{BI}$ & transforms the coord. of a vector expressed in cs $I$ to cs $B$  \\
+Angle-axis & $\{\chi, \vn\}_{BI}$ & transforms the coord. of a vector expressed in cs $I$ to cs $B$  \\
 & & with angle $\chi$ around vector $n$ \\ \hline
-Yaw-pitch-roll &  $\vth_{BI}=(\psi, \theta, \phi)^T$  & Tait-Bryan angles: $z-y'-x''$ (Singularity: $\theta=\pm\frac{\pi}{2}$) \\
+\multirow{2}{*}{Yaw-pitch-roll} &  $\vth_{BI}=(\psi, \theta, \phi)^T$  & Tait-Bryan angles: $z-y'-x''$ (Singularity: $\theta=\pm\frac{\pi}{2}$) \\
  & & $\psi\in(-\pi,\pi), \theta\in(-\frac{\pi}{2},\frac{\pi}{2}), \phi\in(-\pi,\pi)$  \\  \hline
-Roll-pitch-yaw &  $\vph_{BI}=(\alpha, \beta, \gamma)^T$ & Cardan angles: $x-y'-z''$ (Singularity: $\beta=\pm\frac{\pi}{2}$)  \\
+\multirow{2}{*}{Roll-pitch-yaw} &  $\vph_{BI}=(\alpha, \beta, \gamma)^T$ & Cardan angles: $x-y'-z''$ (Singularity: $\beta=\pm\frac{\pi}{2}$)  \\
  & & $\alpha\in(-\pi,\pi), \beta\in(-\frac{\pi}{2},\frac{\pi}{2}), \gamma\in(-\pi,\pi)$  \\  \hline
 \end{tabular}
 
+\subsection{Quaternion $\Leftrightarrow$ Angle-Axis}
 
+\subsection{Quaternion $\Leftrightarrow$ Rotation Matrix}
 
 \subsection{Kardan angles: Roll-Pitch-Yaw}
 \begin{equation}
 \begin{split}
-\vA_{CI} &= \vA_{CB} \vA_{BA} \vA_{AI} \\
-         &= \begin{pmatrix} \cos{\gamma} & \sin{\gamma} & 0 \\ -\sin{\gamma} & \cos{\gamma} & 0 \\ 0 & 0 & 1 \end{pmatrix} \begin{pmatrix} \cos{\beta} & 0 & -\sin{\beta} \\ 0 & 1 & 0 \\ \sin{\beta} & 0 & \cos{\beta} \end{pmatrix} \begin{pmatrix} 1 & 0 & 0 \\ 0 & \cos{\alpha} & \sin{\alpha} \\ 0 & -\sin{\alpha} & \cos{\alpha} \end{pmatrix} \\
-         &= \begin{pmatrix} \cos{\beta}\cos{\gamma} & \cos{\alpha}\sin{\gamma}+\sin{\alpha}\sin{\beta}\cos{\gamma} & \sin{\alpha}\sin{\gamma}-\cos{\alpha}\sin{\beta}\cos{\gamma} \\ -\cos{\beta}\sin{\gamma} & \cos{\alpha}\cos{\gamma}-\sin{\alpha}\sin{\beta}\sin{\gamma} & \sin{\alpha}\cos{\gamma}+\cos{\alpha}\sin{\beta}\sin{\gamma} \\ \sin{\beta} & -\sin{\alpha}\cos{\beta} & \cos{\alpha}\cos{\beta} \end{pmatrix} \\
-         &= \begin{pmatrix} 2(e_0^2+e_1^2)-1 & 2(e_1 e_2+e_0 e_3) & 2(e_1 e_3-e_0 e_2) \\ 2(e_1 e_2-e_0 e_3) & 2(e_0^2+e_2^2)-1 & 2(e_2 e_3+e_0 e_1) \\ 2(e_1 e_3+e_0 e_2) & 2(e_2 e_3-e_0 e_1) & 2(e_0^2+e_3^2)-1 \end{pmatrix}
+\vR_{BI} &= \begin{pmatrix} 2(e_0^2+e_1^2)-1 & 2(e_1 e_2+e_0 e_3) & 2(e_1 e_3-e_0 e_2) \\ 2(e_1 e_2-e_0 e_3) & 2(e_0^2+e_2^2)-1 & 2(e_2 e_3+e_0 e_1) \\ 2(e_1 e_3+e_0 e_2) & 2(e_2 e_3-e_0 e_1) & 2(e_0^2+e_3^2)-1 \end{pmatrix}
 \end{split}
 \end{equation}
+\subsection{Yaw-Pitch-Roll $\Leftrightarrow$ Rotation Matrix}
 \myfigure{\includegraphics[width=1\columnwidth]{coordinate_systems/coordinate_system_ypr-crop.pdf}\vspace{-3mm}
 \figcaption{Rotation from $I$-frame to $B$-frame: ($z-y'-x''$) -- (yaw-pitch-roll) -- ($\psi-\theta-\phi$) -- ($50^\circ-25^\circ-30^\circ)$}\label{fig:yaw-pitch-roll}}
-% \begin{figure}
-%    \includegraphics[width=\linewidth]{cycle_we}
-% \end{figure}
+\subsection{Roll-Pitch-Yaw $\Leftrightarrow$ Rotation Matrix}
+\myfigure{\includegraphics[width=1\columnwidth]{coordinate_systems/coordinate_system_rpy-crop.pdf}\vspace{-3mm}
+\figcaption{Rotation from $I$-frame to $B$-frame: ($x-y'-z''$) -- (roll-pitch-yaw) -- ($\alpha-\beta-\gamma$) -- ($50^\circ-25^\circ-30^\circ)$}\label{fig:roll-pitch-yaw}}
 
 
-\subsection{Quaternions}
-\begin{tabular}{@{}ll@{}}
- $\vp_{IB}$ & \verb!Quaterniond p_IB(AngleAxisd(alpha, Vector3d::UnitY()));! \\
-$\vA_{IB}$ & \verb!p_IB.toRotationMatrix();! \\
-\end{tabular}
+
+% \begin{tabular}{@{}ll@{}}
+%  $\vp_{IB}$ & \verb!Quaterniond p_IB(AngleAxisd(alpha, Vector3d::UnitY()));! \\
+% $\vA_{IB}$ & \verb!p_IB.toRotationMatrix();! \\
+% \end{tabular}
 
 
-\subsubsection{Eigen}
-If the quaternion is used to rotate several points (>1) then it is much more efficient to first convert it to a 3x3 Matrix.
+% \subsubsection{Eigen}
+% If the quaternion is used to rotate several points (>1) then it is much more efficient to first convert it to a 3x3 Matrix.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
