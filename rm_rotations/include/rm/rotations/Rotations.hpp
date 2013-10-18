@@ -32,25 +32,26 @@ static Eigen::AngleAxis<T> getAngleAxisFromQuaternion(const Eigen::Quaternion<T>
 template<typename T>
 static Eigen::AngleAxis<T> getAngleAxisFromRotationMatrix(const Eigen::Matrix<T,3,3> R_BI)
 {
-  return Eigen::AngleAxis<T>(R_BI);
+  return Eigen::AngleAxis<T>(Eigen::Quaternion<T>(R_BI).conjugate());
+//  return Eigen::AngleAxis<T>(R_BI); // does not work. why?
 }
 
 template<typename T>
 static Eigen::AngleAxis<T> getAngleAxisFromRPY(const Eigen::Matrix<T,3,1> rpy_BI)
 {
-  return
+  return Eigen::AngleAxis<T>(
     Eigen::AngleAxis<T>(rpy_BI(0), Eigen::Matrix<T, 3, 1>::UnitX()) *
     Eigen::AngleAxis<T>(rpy_BI(1), Eigen::Matrix<T, 3, 1>::UnitY()) *
-    Eigen::AngleAxis<T>(rpy_BI(2), Eigen::Matrix<T, 3, 1>::UnitZ());
+    Eigen::AngleAxis<T>(rpy_BI(2), Eigen::Matrix<T, 3, 1>::UnitZ()));
 }
 
 template<typename T>
 static Eigen::AngleAxis<T> getAngleAxisFromYPR(const Eigen::Matrix<T,3,1> ypr_BI)
 {
-  return
+  return Eigen::AngleAxis<T>(
     Eigen::AngleAxis<T>(ypr_BI(0), Eigen::Matrix<T, 3, 1>::UnitZ()) *
     Eigen::AngleAxis<T>(ypr_BI(1), Eigen::Matrix<T, 3, 1>::UnitY()) *
-    Eigen::AngleAxis<T>(ypr_BI(2), Eigen::Matrix<T, 3, 1>::UnitX());
+    Eigen::AngleAxis<T>(ypr_BI(2), Eigen::Matrix<T, 3, 1>::UnitX()));
 }
 
 
@@ -87,7 +88,9 @@ static Eigen::Quaternion<T> getQuaternionFromRotationMatrix(const Eigen::Matrix<
 //  q.z() = z;
 //  q.normalize();
 
-  return Eigen::Quaternion<T>(R_BI);  // todo: what does this function?
+//  Quaternion<T> q_BI =
+
+  return Eigen::Quaternion<T>(R_BI).conjugate();  // todo: what does this function?
 }
 
 template<typename T>
@@ -110,20 +113,19 @@ static Eigen::Quaternion<T> getQuaternionFromRPY(const Eigen::Matrix<T,3,1> rpy_
 //
 //  return p_BI;
 
-
   return Eigen::Quaternion<T>(
-    Eigen::AngleAxis<T>(rpy_BI(0), Eigen::Matrix<T, 3, 1>::UnitX()) *
+    Eigen::AngleAxis<T>(rpy_BI(2), Eigen::Matrix<T, 3, 1>::UnitZ()) *
     Eigen::AngleAxis<T>(rpy_BI(1), Eigen::Matrix<T, 3, 1>::UnitY()) *
-    Eigen::AngleAxis<T>(rpy_BI(2), Eigen::Matrix<T, 3, 1>::UnitZ())); // todo: correct order?
+    Eigen::AngleAxis<T>(rpy_BI(0), Eigen::Matrix<T, 3, 1>::UnitX()));
 }
 
 template<typename T>
 static Eigen::Quaternion<T> getQuaternionFromYPR(const Eigen::Matrix<T,3,1> ypr_BI)
 {
   return Eigen::Quaternion<T>(
-    Eigen::AngleAxis<T>(ypr_BI(0), Eigen::Matrix<T, 3, 1>::UnitZ()) *
+    Eigen::AngleAxis<T>(ypr_BI(2), Eigen::Matrix<T, 3, 1>::UnitX()) *
     Eigen::AngleAxis<T>(ypr_BI(1), Eigen::Matrix<T, 3, 1>::UnitY()) *
-    Eigen::AngleAxis<T>(ypr_BI(2), Eigen::Matrix<T, 3, 1>::UnitX()));
+    Eigen::AngleAxis<T>(ypr_BI(0), Eigen::Matrix<T, 3, 1>::UnitZ()));
 }
 
 
@@ -132,13 +134,13 @@ static Eigen::Quaternion<T> getQuaternionFromYPR(const Eigen::Matrix<T,3,1> ypr_
 template<typename T>
 static Eigen::Matrix<T,3,3> getRotationMatrixFromAngleAxis(const Eigen::AngleAxis<T> aa_BI)
 {
-  return aa_BI.toRotationMatrix();
+  return aa_BI.toRotationMatrix().transpose();
 }
 
 template<typename T>
 static Eigen::Matrix<T,3,3> getRotationMatrixFromQuaternion(const Eigen::Quaternion<T> p_BI)
 {
-  return p_BI.toRotationMatrix();
+  return p_BI.toRotationMatrix().transpose();
 }
 
 template<typename T>
@@ -210,17 +212,17 @@ static Eigen::Matrix<T,3,1> getRPYFromQuaternion(const Eigen::Quaternion<T> p_BI
   const T y = p_BI.y();
   const T z = p_BI.z();
 
-  rpy_BI(1) = asin(2*(x*z-w*y));
+  rpy_BI(1) = -asin(2*(x*z-w*y));
 
   if(cos(rpy_BI(1)) == 0) // roll and yaw axis are the same -> yaw angle can be set to zero, roll does the whole rotation
   {
-    rpy_BI(0) = asin(2*(y*z-w*x));
+    rpy_BI(0) = -asin(2*(y*z-w*x));
     rpy_BI(2) = 0;
   }
   else
   {
-    rpy_BI(0) = -atan2(2*(y*z+w*x),1-2*(x*x+y*y));
-    rpy_BI(2) = -atan2(2*(x*y+w*z),1-2*(y*y+z*z));
+    rpy_BI(0) = atan2(2*(y*z+w*x),1-2*(x*x+y*y));
+    rpy_BI(2) = atan2(2*(x*y+w*z),1-2*(y*y+z*z));
   }
 
   return rpy_BI;
@@ -231,7 +233,7 @@ static Eigen::Matrix<T,3,1> getRPYFromQuaternion(const Eigen::Quaternion<T> p_BI
 template<typename T>
 static Eigen::Matrix<T,3,1> getRPYFromRotationMatrix(const Eigen::Matrix<T,3,3> R_BI)
 {
-  return R_BI.eulerAngles(0, 1, 2);
+  return R_BI.transpose().eulerAngles(0, 1, 2);
 }
 
 template<typename T>
@@ -259,17 +261,17 @@ static Eigen::Matrix<T,3,1> getYPRFromQuaternion(const Eigen::Quaternion<T> p_BI
   const T y = p_BI.y();
   const T z = p_BI.z();
 
-  ypr_BI(1) = -asin(2*(x*z+w*y));
+  ypr_BI(1) = asin(2*(x*z+w*y));
 
   if(cos(ypr_BI(1)) == 0) // yaw and roll axis are the same -> roll angle can be set to zero, yaw does the whole rotation
   {
-    ypr_BI(0) = -asin(2*(y*z+w*x));
+    ypr_BI(0) = asin(2*(y*z+w*x));
     ypr_BI(2) = 0;
   }
   else
   {
-    ypr_BI(0) = atan2(2*(y*z-w*x),1-2*(x*x+y*y));
-    ypr_BI(2) = atan2(2*(x*y-w*z),1-2*(y*y+z*z));
+    ypr_BI(0) = -atan2(2*(x*y-w*z),1-2*(y*y+z*z));
+    ypr_BI(2) = -atan2(2*(y*z-w*x),1-2*(x*x+y*y));
   }
 
   return ypr_BI;
@@ -280,7 +282,7 @@ static Eigen::Matrix<T,3,1> getYPRFromQuaternion(const Eigen::Quaternion<T> p_BI
 template<typename T>
 static Eigen::Matrix<T,3,1> getYPRFromRotationMatrix(const Eigen::Matrix<T,3,3> R_BI)
 {
-  return R_BI.eulerAngles(2, 1, 0);
+  return R_BI.transpose().eulerAngles(2, 1, 0);
 }
 
 template<typename T>
@@ -313,15 +315,13 @@ static Eigen::Matrix<T,3,3> getInverseRotationMatrix(const Eigen::Matrix<T,3,3> 
 template<typename T>
 static Eigen::Matrix<T,3,1> getInverseRPY(const Eigen::Matrix<T,3,1> rpy_BI)
 {
-//  return getYPRFromRPY(-rpy_BI);
-
-  return -getYPRFromRPY(rpy_BI); // todo: which one?
+  return getRPYFromAngleAxis(getInverseAngleAxis(getAngleAxisFromRPY(rpy_BI)));
 }
 
 template<typename T>
 static Eigen::Matrix<T,3,1> getInverseYPR(const Eigen::Matrix<T,3,1> ypr_BI)
 {
-  return -getRPYFromYPR(ypr_BI);
+  return getYPRFromAngleAxis(getInverseAngleAxis(getAngleAxisFromYPR(ypr_BI)));
 }
 
 
