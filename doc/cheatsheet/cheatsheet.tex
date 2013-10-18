@@ -1,6 +1,7 @@
 \documentclass[10pt,landscape,a4paper]{article}
 \usepackage{nonfloat}
-\usepackage{multicol,caption}
+\usepackage{multicol}
+\usepackage[font=scriptsize]{caption}
 \usepackage{calc}
 \usepackage{ifthen}
 \usepackage[landscape]{geometry}
@@ -10,6 +11,9 @@
    \usepackage[pdftex]{graphicx}
 \usepackage{epstopdf}
  \usepackage{ifpdf}
+\usepackage{sectsty}
+\paragraphfont{\small}
+
 % To make this come out properly in landscape mode, do one of the following
 % 1.
 %  pdflatex latexsheet.tex
@@ -112,23 +116,26 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  BEGIN CONTENT
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Definitions}
-
-
-
-\section{Rotations}
-\begin{tabular}{@{}ll@{}}
-\verb!alias!    & The transformation matrix $\vA_{AB}$ transforms the\\ 
-&  coordinates of a vector ${_{B}\vr}$ in a different  coordinate\\
-&   system $A$: ${_{A}\vr} = \vA_{AB} {_{B}\vr}$ (\emph{preferred}) \\
-\verb!alibi!   & The rotation matrix ${_C\vR_{BA}}$ rotates a vector ${_C\vx}$ \\ 
-& to a new vector ${_C\vy}$ similar to the rotation from \\
-& coordinate system $A$ to  coordinate system $B$: \\
-& ${_C\vy} = {_C\vR_{BA}} {_C\vx}$ ($\vA_{AB} = {_A\vR^\mathsf{T}_{AB}}$)
+\section{Transformations}
+All transformations are alias (passive) transformations, i.e.\ the coordinates of a point $P$ change due to a rotation of the coordinate system and the vector $\vr_{OP}$ representing $P$ is not rotated.
+\begin{tabular}{|l|l|l|}
+\hline
+Coordinate system & ${\ve_x^B,\ve_y^B,\ve_z^B }$ & Cartesian right-hand system $B$ with unit vectors $\ve$  \\ \hline
+Rotation matrix & $\vR_{BI}$ & transforms the coord. of a vector expressed in cs $I$ to cs $B$ \\ 
+& $\vR_{IB} = \vR_{BI}^T$ & ${}_{B}\vr_{OP} = \vR_{BI} {}_{I}\vr_{OP} \Leftrightarrow  {}_{B}\vr_{OP} = \vR_{I}^{B} {}_{I}\vr_{OP}$ \\ \hline
+Unit quaternion & $\vp_{BI}$ &  transforms the coord. of a vector expressed in cs $I$ to cs $B$ \\
+ & $\vp_{IB} = \vp_{BI}^{-1}$ & $\vp_{BI}=(x,y,z,w)^T=(\va^T, a_0)^T, \left\lVert\vp_{BI}\right\rVert=1$\\ \hline
+Angle axis & $\{\chi, \vn\}_{BI}$ & transforms the coord. of a vector expressed in cs $I$ to cs $B$  \\
+& & with angle $\chi$ around vector $n$ \\ \hline
+Yaw-pitch-roll &  $\vth_{BI}=(\psi, \theta, \phi)^T$  & Tait-Bryan angles: $z-y'-x''$ (Singularity: $\theta=\pm\frac{\pi}{2}$) \\
+ & & $\psi\in(-\pi,\pi), \theta\in(-\frac{\pi}{2},\frac{\pi}{2}), \phi\in(-\pi,\pi)$  \\  \hline
+Roll-pitch-yaw &  $\vph_{BI}=(\alpha, \beta, \gamma)^T$ & Cardan angles: $x-y'-z''$ (Singularity: $\beta=\pm\frac{\pi}{2}$)  \\
+ & & $\alpha\in(-\pi,\pi), \beta\in(-\frac{\pi}{2},\frac{\pi}{2}), \gamma\in(-\pi,\pi)$  \\  \hline
 \end{tabular}
 
+
+
 \subsection{Kardan angles: Roll-Pitch-Yaw}
-alias, x-y-z
 \begin{equation}
 \begin{split}
 \vA_{CI} &= \vA_{CB} \vA_{BA} \vA_{AI} \\
@@ -137,9 +144,8 @@ alias, x-y-z
          &= \begin{pmatrix} 2(e_0^2+e_1^2)-1 & 2(e_1 e_2+e_0 e_3) & 2(e_1 e_3-e_0 e_2) \\ 2(e_1 e_2-e_0 e_3) & 2(e_0^2+e_2^2)-1 & 2(e_2 e_3+e_0 e_1) \\ 2(e_1 e_3+e_0 e_2) & 2(e_2 e_3-e_0 e_1) & 2(e_0^2+e_3^2)-1 \end{pmatrix}
 \end{split}
 \end{equation}
-
-\myfigure{\includegraphics[width=1\columnwidth]{coordinate_systems/coordinate_system_ypr-crop.pdf}%
-\figcaption{Rotation from $I$-frame to $C$-frame: (yaw-pitch-roll) -- ($\psi-\theta-\phi$) -- ($z-y'-x''$)}}
+\myfigure{\includegraphics[width=1\columnwidth]{coordinate_systems/coordinate_system_ypr-crop.pdf}\vspace{-3mm}
+\figcaption{Rotation from $I$-frame to $B$-frame: ($z-y'-x''$) -- (yaw-pitch-roll) -- ($\psi-\theta-\phi$) -- ($50^\circ-25^\circ-30^\circ)$}\label{fig:yaw-pitch-roll}}
 % \begin{figure}
 %    \includegraphics[width=\linewidth]{cycle_we}
 % \end{figure}

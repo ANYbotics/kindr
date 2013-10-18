@@ -1,11 +1,10 @@
-\documentclass{article}
+\documentclass[landscape]{article}
 \thispagestyle{empty}
 \usepackage{amsmath,amssymb}
 \usepackage{wasysym}
 \usepackage{tikz}
 \usepackage{tikz-3dplot}
 \usepackage{pgfplots}
-
 \usepackage[margin=0cm]{geometry}
    % Workaround for making use of externalization possible
    % -> remove hardcoded pdflatex and replace by lualatex
@@ -86,16 +85,16 @@
 \draw[black, ,->] (0,0,0) -- (1,0,0) node[anchor=north east]{$e_x^{I}$};
 \draw[black, ,->] (0,0,0) -- (0,1,0) node[anchor=north west]{$e_y^{I}$};
 \draw[black, ,->] (0,0,0) -- (0,0,1) node[anchor=west]{$e_z^{I}$,
-    \textcolor{red}{$e_{z'}^H$}}; 
+    \textcolor{red}{$e_{z'}^D$}}; 
 
 % Intermediate frame 1
 \tdplotsetrotatedcoords{\zRot}{0}{0}
-\draw[tdplot_rotated_coords,->, red] (0,0,0) -- (1,0,0) node[anchor=west]{$e_{x'}^H$};
-\draw[tdplot_rotated_coords,->, red] (0,0,0) -- (0,1,0) node[anchor=west]{$e_{y'}^H$};
+\draw[tdplot_rotated_coords,->, red] (0,0,0) -- (1,0,0) node[anchor=west]{$e_{x'}^D$};
+\draw[tdplot_rotated_coords,->, red] (0,0,0) -- (0,1,0) node[anchor=west]{$e_{y'}^D$};
 \draw[thick,tdplot_rotated_coords,->, red] (0,0,0) -- (0,0,1) node[anchor=west]{};
 
 \tdplotsetrotatedthetaplanecoords{0}
-\tdplotdrawarc[dashed,->,color=black]{(0,0,0)}{.5}{0}{\zRot}{anchor=north east,color=black}{$\psi$}
+\tdplotdrawarc[thick,->,color=gray]{(0,0,0)}{.5}{0}{\zRot}{anchor=north,color=gray}{$\psi$}
 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%% Z-Y
@@ -107,35 +106,35 @@
 % Draw main coordinate system
 \draw[black, ,->] (0,0,0) -- (1,0,0) node[anchor=north east]{$e_x^{I}$};
 \draw[black, ,->] (0,0,0) -- (0,1,0) node[anchor=north west]{$e_y^{I}$};
-\draw[black, ,->] (0,0,0) -- (0,0,1) node[anchor=west]{$e_z^{I}$    \textcolor{red}{$e_{z'}^A$}}; 
+\draw[black, ,->] (0,0,0) -- (0,0,1) node[anchor=west]{$e_z^{I}$    \textcolor{red}{$e_{z'}^D$}}; 
 
 % Intermediate frame 1
 \tdplotsetrotatedcoords{\zRot}{0}{0}
-\draw[tdplot_rotated_coords,->, red] (0,0,0) -- (1,0,0) node[anchor=west]{$e_{x'}^A$};
+\draw[tdplot_rotated_coords,->, red] (0,0,0) -- (1,0,0) node[anchor=west]{$e_{x'}^D$};
 \draw[tdplot_rotated_coords,->, red] (0,0,0) -- (0,1,0) node[anchor=west]{};
 \draw[tdplot_rotated_coords,->, red] (0,0,0) -- (0,0,1) node[anchor=west]{};
 
 \tdplotsetrotatedthetaplanecoords{0}
-\tdplotdrawarc[dashed,tdplot_rotated_coords,->,color=red]{(0,0,0)}{0.5}{0}{\yRot}{anchor=south,color=red}{$\theta$}
+\tdplotdrawarc[thick,tdplot_rotated_coords,->,color=gray]{(0,0,0)}{0.5}{0}{\yRot}{anchor=east,color=gray}{$\theta$}
 
 % Intermediate frame 2
 \tdplotsetrotatedcoords{\zRot}{\yRot}{0}
 \draw[tdplot_rotated_coords,->, green!50!black] (0,0,0) -- (1,0,0)
 node[anchor=west ]{$e_{x''}^C$};
 \draw[thick,tdplot_rotated_coords,->, green!50!black] (0,0,0) -- (0,1,0)
-node[anchor=west]{$e_{y''}^C$, \textcolor{red}{$e_{y'}^H$}};
+node[anchor=west]{$e_{y''}^C$, \textcolor{red}{$e_{y'}^D$}};
 \draw[tdplot_rotated_coords,->, green!50!black] (0,0,0) -- (0,0,1)
 node[anchor=west]{$e_{z''}^C$};
 
 \tdplotsetrotatedthetaplanecoords{0}
-\tdplotdrawarc[dashed,->,color=black]{(0,0,0)}{.5}{0}{\zRot}{anchor=north east,color=black}{$\psi$}
+\tdplotdrawarc[thick,->,color=gray]{(0,0,0)}{.5}{0}{\zRot}{anchor=north,color=gray}{$\psi$}
 
 
 \end{tikzpicture}
 %%%%%%%%%%%%% Z-Y-X
 \begin{tikzpicture}[scale=1.5,tdplot_main_coords,baseline=(current bounding box.north)]
-\node(rectangle) at (0,5.5,2.2){$\tiny\begin{aligned}
-\vR_{BI} &= {\color{blue}\vR_{BC}} {\color{green!50!black}\vR_{CH}} {\color{red}\vR_{HI}} \\
+\node(rectangle) at (0,5.7,1.6){$\tiny\begin{aligned}
+\vR_{BI} &= {\color{blue}\vR_{BC}} {\color{green!50!black}\vR_{CD}} {\color{red}\vR_{DI}} \quad \Rightarrow \quad {}_{B}\vr = \vR_{BI} {}_{I}\vr \Leftrightarrow  {}_{B}\vr = \vR_{I}^{B} {}_{I}\vr  \\
          &= {\color{blue}\begin{pmatrix} 1 & 0 & 0 \\ 0 & \cos{\phi} & \sin{\phi} \\ 0 & -\sin{\phi} & \cos{\phi} \end{pmatrix}} {\color{green!50!black}\begin{pmatrix} \cos{\theta} & 0 & -\sin{\theta} \\ 0 & 1 & 0 \\ \sin{\theta} & 0 & \cos{\theta} \end{pmatrix}} {\color{red}\begin{pmatrix} \cos{\psi} & \sin{\psi} & 0 \\ -\sin{\psi} & \cos{\psi} & 0 \\ 0 & 0 & 1 \end{pmatrix}} \\
 	&= \begin{pmatrix} \cos{\psi}\cos{\theta} &                              \cos{\theta}\sin{\psi} &         -\sin{\theta}  \\ 
  \cos{\psi}\sin{\phi}\sin{\theta} - \cos{\phi}\sin{\psi} & \cos{\phi}\cos{\psi} + \sin{\phi}\sin{\psi}\sin{\theta} & \cos{\theta}\sin{\phi} \\
@@ -154,23 +153,23 @@ node[anchor=west]{$e_{z''}^C$};
 % Draw main coordinate system
 \draw[black, ,->] (0,0,0) -- (1,0,0) node[anchor=north east]{$e_x^{I}$};
 \draw[black, ,->] (0,0,0) -- (0,1,0) node[anchor=north west]{$e_y^{I}$};
-\draw[black, ,->] (0,0,0) -- (0,0,1) node[anchor=west]{$e_z^{I}$   \textcolor{red}{$e_{z'}^H$}}; 
+\draw[black, ,->] (0,0,0) -- (0,0,1) node[anchor=west]{$e_z^{I}$   \textcolor{red}{$e_{z'}^D$}}; 
 
 % Intermediate frame 1
 \tdplotsetrotatedcoords{\zRot}{0}{0}
-\draw[tdplot_rotated_coords,->, red] (0,0,0) -- (1,0,0) node[anchor=west]{$e_{x'}^H$};
+\draw[tdplot_rotated_coords,->, red] (0,0,0) -- (1,0,0) node[anchor=west]{$e_{x'}^D$};
 \draw[tdplot_rotated_coords,->, red] (0,0,0) -- (0,1,0) node[anchor=west]{};
 \draw[tdplot_rotated_coords,->, red] (0,0,0) -- (0,0,1) node[anchor=west]{};
 
 \tdplotsetrotatedthetaplanecoords{0}
-\tdplotdrawarc[dashed,tdplot_rotated_coords,->,color=red]{(0,0,0)}{0.5}{0}{\yRot}{anchor=south,color=red}{$\theta$}
+\tdplotdrawarc[thick,tdplot_rotated_coords,->,color=gray]{(0,0,0)}{0.5}{0}{\yRot}{anchor=east,color=gray}{$\theta$}
 
 % Intermediate frame 2
 \tdplotsetrotatedcoords{\zRot}{\yRot}{0}
 \draw[,tdplot_rotated_coords,->, green!50!black] (0,0,0) -- (1,0,0) node[anchor=
 north]{};
 \draw[,tdplot_rotated_coords,->, green!50!black] (0,0,0) -- (0,1,0)
-node[anchor=west]{$e_{y''}^C$, \textcolor{red}{$e_{y'}^H$}};
+node[anchor=west]{$e_{y''}^C$, \textcolor{red}{$e_{y'}^D$}};
 \draw[,tdplot_rotated_coords,->, green!50!black] (0,0,0) -- (0,0,1)
 node[anchor=west]{$e_{z''}^C$};
 
@@ -187,11 +186,11 @@ node[anchor=west]{$e_{x'''}^B$, \textcolor{green!50!black}{$e_{x''}^C$}};
 
 
 \tdplotsetrotatedthetaplanecoords{0}
-\tdplotdrawarc[dashed,->,color=black]{(0,0,0)}{.5}{0}{\zRot}{anchor=north east,color=black}{$\psi$}
+\tdplotdrawarc[thick,->,color=gray]{(0,0,0)}{.5}{0}{\zRot}{anchor=north,color=gray}{$\psi$}
 
 
 \tdplotsetrotatedcoords{\zRot}{\yRot+90}{0}
-\tdplotdrawarc[dashed,tdplot_rotated_coords,->,color=green!50!black]{(0,0,0)}{0.5}{90}{90+\xRot}{anchor= west,color=green!50!black}{$\phi$}
+\tdplotdrawarc[thick,tdplot_rotated_coords,->,color=gray]{(0,0,0)}{0.5}{90}{90+\xRot}{anchor=south,color=gray}{$\phi$}
 
 
 
