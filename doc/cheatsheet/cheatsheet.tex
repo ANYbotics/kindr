@@ -124,10 +124,16 @@
 \section{Notation \& Definitions  }
 \begin{tabular}{|l|l|l|}
 \hline
-Coordinate system (CS) & ${\ve_x^B,\ve_y^B,\ve_z^B }$ & Cartesian right-hand system $B$ with unit vectors $\ve$  \\ \hline
+Coordinate system (CS) & ${\ve_x^B,\ve_y^B,\ve_z^B}$ & Cartesian right-hand system $B$ with unit vectors $\ve$  \\ \hline
 Position vector & ${}_I\vr_{OP} \in \mathbb{R}^3 $ & vector from point $O$ to point $P$ expressed in CS $I$ \\ \hline 
-Skew-symmetric matrix & \multicolumn{2}{l|}{$\tilde{\vv} = \begin{pmatrix} 0 & -v_3 & v_2 \\ v_3 & 0 & -v_1 \\ -v_2 & v_1 & 0 \end{pmatrix}, \vv = \begin{pmatrix} v_1 \\ v_2 \\ v_3\end{pmatrix}$}  \\ \hline
-Euclidean norm & \multicolumn{2}{l|}{$\lVert \vv \rVert = \sqrt{v_1^2 + v_2^2 + v_3^2}$} \\ \hline
+Translational velocity & ${}_I\vv_P \in \mathbb{R}^3 $  & translational velocity of point $P$ expressed in CS $I$ \\ \hline
+Angular velocity & ${}_I\vom_{IB} \in \mathbb{R}^3 $ & ang. velocity of CS $B$ w.r.t. to CS $B$ expressed in CS $I$ \\ \hline
+Ang. vel. of rigid body & ${}_B\vOm = {}_B\vom_{IB}$ & with body-fixed CS $B$ and inertial CS $I$ \\ \hline
+Ang. acc. of rigid body & ${}_B\vPs$ \\ \hline
+Generalized coordinates & $\vq \in \mathbb{Q} \subset \mathbb{R}^{n_q}$ & set of coordinates to describe a multi-rigid-body system\\ \hline
+Generalized velocities & $\vu \in \mathbb{U} \subset \mathbb{R}^{n_u}$ & $\vu$ does not need to be equal to $\dot{\vq}$\\ \hline
+Skew-symmetric matrix & \multicolumn{2}{l|}{$\tilde{\va} = \begin{pmatrix} 0 & -a_3 & a_2 \\ a_3 & 0 & -a_1 \\ -a_2 & a_1 & 0 \end{pmatrix}, \va = \begin{pmatrix} a_1 \\ a_2 \\ a_3\end{pmatrix}$}  \\ \hline
+Euclidean norm & \multicolumn{2}{l|}{$\lVert \va \rVert = \sqrt{a_1^2 + a_2^2 + a_3^2}$} \\ \hline
 Machine precision & $\epsilon$ & \\ \hline
 \end{tabular}
 
@@ -185,6 +191,21 @@ $\vp_{BI} = \begin{pmatrix} \frac{1}{2} \sqrt{1 + \tr(\vR)} \\ \frac{R_{32} - R_
 \figcaption{Rotation from $I$-frame to $B$-frame: ($x-y'-z''$) -- (roll-pitch-yaw) -- ($\alpha-\beta-\gamma$) -- ($50^\circ-25^\circ-30^\circ)$}\label{fig:roll-pitch-yaw}}
 
 
+\section{Translational Velocities}
+\begin{tabular}{@{}ll@{}}
+${}_B\vv_P = {}_B\vv_A  + {}_B\dot{\vr}_{AP} + {}_B\vom_{IB} \times {}_B\vr_{AP}$ & velocity of point $P$ expr. in CS $B$  w.r.t. to the inertial system $I$\\
+${}_B\vv_Q = {}_B\vv_{P} + {}_B\vOm \times {}_B\vr_{PQ}$ &  velocity of point $Q$ on rigid body $B$ from point $P$ on same body\\
+\end{tabular}
+
+\section{Angular Velocities}
+\begin{tabular}{@{}ll@{}}
+${}_B\tilde{\vom}_{BI} = \dot{\vR}_{BI}\vR_{BI}^T$ & angular velocity from rotation matrix expressed in CS $B$  \\
+${}_B\vom_{IB} = 2 \bar{\vH} \dot{\vp}_{BI}$ & $\bar{\vH} = \begin{bmatrix}-\va & -\tilde{\va}+a_0\vI_{3\times 3}\end{bmatrix} \in \mathbb{R}^{3\times4}$ \\
+${}_B\vom_{IB} = - {}_B\vom_{BI}$ & inverse of angular velocity \\
+${}_B\vom_{IB} = {}_B\vom_{ID} + {}_B\vom_{DC} + {}_B\vom_{CB}$ & composition of angular velocity \\
+
+
+\end{tabular}
 
 % \begin{tabular}{@{}ll@{}}
 %  $\vp_{IB}$ & \verb!Quaterniond p_IB(AngleAxisd(alpha, Vector3d::UnitY()));! \\
