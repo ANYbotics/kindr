@@ -86,12 +86,12 @@
 \draw[black, ,->] (0,0,0) -- (1,0,0) node[anchor=north east]{$e_x^{I}$};
 \draw[black, ,->] (0,0,0) -- (0,1,0) node[anchor=north west]{$e_y^{I}$};
 \draw[black, ,->] (0,0,0) -- (0,0,1) node[anchor=west]{$e_z^{I}$,
-    \textcolor{red}{$e_{z'}^A$}}; 
+    \textcolor{red}{$e_{z'}^H$}}; 
 
 % Intermediate frame 1
 \tdplotsetrotatedcoords{\zRot}{0}{0}
-\draw[tdplot_rotated_coords,->, red] (0,0,0) -- (1,0,0) node[anchor=west]{$e_{x'}^A$};
-\draw[tdplot_rotated_coords,->, red] (0,0,0) -- (0,1,0) node[anchor=west]{$e_{y'}^A$};
+\draw[tdplot_rotated_coords,->, red] (0,0,0) -- (1,0,0) node[anchor=west]{$e_{x'}^H$};
+\draw[tdplot_rotated_coords,->, red] (0,0,0) -- (0,1,0) node[anchor=west]{$e_{y'}^H$};
 \draw[thick,tdplot_rotated_coords,->, red] (0,0,0) -- (0,0,1) node[anchor=west]{};
 
 \tdplotsetrotatedthetaplanecoords{0}
@@ -121,11 +121,11 @@
 % Intermediate frame 2
 \tdplotsetrotatedcoords{\zRot}{\yRot}{0}
 \draw[tdplot_rotated_coords,->, green!50!black] (0,0,0) -- (1,0,0)
-node[anchor=west ]{$e_{x''}^B$};
+node[anchor=west ]{$e_{x''}^C$};
 \draw[thick,tdplot_rotated_coords,->, green!50!black] (0,0,0) -- (0,1,0)
-node[anchor=west]{$e_{y''}^B$, \textcolor{red}{$e_{y'}^A$}};
+node[anchor=west]{$e_{y''}^C$, \textcolor{red}{$e_{y'}^H$}};
 \draw[tdplot_rotated_coords,->, green!50!black] (0,0,0) -- (0,0,1)
-node[anchor=west]{$e_{z''}^B$};
+node[anchor=west]{$e_{z''}^C$};
 
 \tdplotsetrotatedthetaplanecoords{0}
 \tdplotdrawarc[dashed,->,color=black]{(0,0,0)}{.5}{0}{\zRot}{anchor=north east,color=black}{$\psi$}
@@ -135,8 +135,8 @@ node[anchor=west]{$e_{z''}^B$};
 %%%%%%%%%%%%% Z-Y-X
 \begin{tikzpicture}[scale=1.5,tdplot_main_coords,baseline=(current bounding box.north)]
 \node(rectangle) at (0,5.5,2.2){$\tiny\begin{aligned}
-\vA_{CI} &= \vA_{CB} \vA_{BA} \vA_{AI} \\
-         &= \begin{pmatrix} 1 & 0 & 0 \\ 0 & \cos{\phi} & \sin{\phi} \\ 0 & -\sin{\phi} & \cos{\phi} \end{pmatrix}  \begin{pmatrix} \cos{\theta} & 0 & -\sin{\theta} \\ 0 & 1 & 0 \\ \sin{\theta} & 0 & \cos{\theta} \end{pmatrix} \begin{pmatrix} \cos{\psi} & \sin{\psi} & 0 \\ -\sin{\psi} & \cos{\psi} & 0 \\ 0 & 0 & 1 \end{pmatrix} \\
+\vR_{BI} &= {\color{blue}\vR_{BC}} {\color{green!50!black}\vR_{CH}} {\color{red}\vR_{HI}} \\
+         &= {\color{blue}\begin{pmatrix} 1 & 0 & 0 \\ 0 & \cos{\phi} & \sin{\phi} \\ 0 & -\sin{\phi} & \cos{\phi} \end{pmatrix}} {\color{green!50!black}\begin{pmatrix} \cos{\theta} & 0 & -\sin{\theta} \\ 0 & 1 & 0 \\ \sin{\theta} & 0 & \cos{\theta} \end{pmatrix}} {\color{red}\begin{pmatrix} \cos{\psi} & \sin{\psi} & 0 \\ -\sin{\psi} & \cos{\psi} & 0 \\ 0 & 0 & 1 \end{pmatrix}} \\
 \end{aligned}$};
 % Set origin of main (body) coordinate system
 \coordinate (O) at (0,0,0);
@@ -145,11 +145,11 @@ node[anchor=west]{$e_{z''}^B$};
 % Draw main coordinate system
 \draw[black, ,->] (0,0,0) -- (1,0,0) node[anchor=north east]{$e_x^{I}$};
 \draw[black, ,->] (0,0,0) -- (0,1,0) node[anchor=north west]{$e_y^{I}$};
-\draw[black, ,->] (0,0,0) -- (0,0,1) node[anchor=west]{$e_z^{I}$   \textcolor{red}{$e_{z'}^A$}}; 
+\draw[black, ,->] (0,0,0) -- (0,0,1) node[anchor=west]{$e_z^{I}$   \textcolor{red}{$e_{z'}^H$}}; 
 
 % Intermediate frame 1
 \tdplotsetrotatedcoords{\zRot}{0}{0}
-\draw[tdplot_rotated_coords,->, red] (0,0,0) -- (1,0,0) node[anchor=west]{$e_{x'}^A$};
+\draw[tdplot_rotated_coords,->, red] (0,0,0) -- (1,0,0) node[anchor=west]{$e_{x'}^H$};
 \draw[tdplot_rotated_coords,->, red] (0,0,0) -- (0,1,0) node[anchor=west]{};
 \draw[tdplot_rotated_coords,->, red] (0,0,0) -- (0,0,1) node[anchor=west]{};
 
@@ -161,17 +161,17 @@ node[anchor=west]{$e_{z''}^B$};
 \draw[,tdplot_rotated_coords,->, green!50!black] (0,0,0) -- (1,0,0) node[anchor=
 north]{};
 \draw[,tdplot_rotated_coords,->, green!50!black] (0,0,0) -- (0,1,0)
-node[anchor=west]{$e_{y''}^B$, \textcolor{red}{$e_{y'}^A$}};
+node[anchor=west]{$e_{y''}^C$, \textcolor{red}{$e_{y'}^H$}};
 \draw[,tdplot_rotated_coords,->, green!50!black] (0,0,0) -- (0,0,1)
-node[anchor=west]{$e_{z''}^B$};
+node[anchor=west]{$e_{z''}^C$};
 
 
 % Rotate to final frame
 \tdplotsetrotatedcoords{\zRot}{\yRot}{\xRot}
 \draw[thick,tdplot_rotated_coords,->, blue] (0,0,0) -- (1,0,0)
-node[anchor=west]{$e_{x'''}^C$, \textcolor{green!50!black}{$e_{x''}^B$}};
-\draw[tdplot_rotated_coords,->, blue] (0,0,0) -- (0,1,0) node[anchor=west]{$e_{y'''}^C$};
-\draw[tdplot_rotated_coords,->, blue] (0,0,0) -- (0,0,1) node[anchor=north east]{$e_{z'''}^C$};
+node[anchor=west]{$e_{x'''}^B$, \textcolor{green!50!black}{$e_{x''}^C$}};
+\draw[tdplot_rotated_coords,->, blue] (0,0,0) -- (0,1,0) node[anchor=west]{$e_{y'''}^B$};
+\draw[tdplot_rotated_coords,->, blue] (0,0,0) -- (0,0,1) node[anchor=north east]{$e_{z'''}^B$};
 
 
 
