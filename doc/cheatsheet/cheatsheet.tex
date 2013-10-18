@@ -6,6 +6,7 @@
 \usepackage{ifthen}
 \usepackage[landscape]{geometry}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{multirow}
 
 \usepackage{graphics}
@@ -88,6 +89,9 @@
  \input{styles/def}
 % -----------------------------------------------------------------------
 \DeclareGraphicsExtensions{.pdf,.eps}
+ \DeclareMathOperator{\tr}{tr}
+
+
 
 \newcommand\myfigure[1]{%
 \medskip\noindent\begin{minipage}{\columnwidth}
@@ -117,33 +121,62 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  BEGIN CONTENT
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Notation \& Definitions  }
+\begin{tabular}{|l|l|l|}
+\hline
+Coordinate system (CS) & ${\ve_x^B,\ve_y^B,\ve_z^B }$ & Cartesian right-hand system $B$ with unit vectors $\ve$  \\ \hline
+Position vector & ${}_I\vr_{OP} \in \mathbb{R}^3 $ & vector from point $O$ to point $P$ expressed in CS $I$ \\ \hline 
+Skew-symmetric matrix & \multicolumn{2}{l|}{$\tilde{\vv} = \begin{pmatrix} 0 & -v_3 & v_2 \\ v_3 & 0 & -v_1 \\ -v_2 & v_1 & 0 \end{pmatrix}, \vv = \begin{pmatrix} v_1 \\ v_2 \\ v_3\end{pmatrix}$}  \\ \hline
+Euclidean norm & \multicolumn{2}{l|}{$\lVert \vv \rVert = \sqrt{v_1^2 + v_2^2 + v_3^2}$} \\ \hline
+Machine precision & $\epsilon$ & \\ \hline
+\end{tabular}
+
 \section{Rotations}
 All rotations are alias (passive) transformations, i.e.\ the coordinates of a point $P$ change due to a rotation of the coordinate system and the vector $\vr_{OP}$ representing $P$ is not rotated.
 \begin{tabular}{|l|l|l|}
 \hline
-Coordinate system & ${\ve_x^B,\ve_y^B,\ve_z^B }$ & Cartesian right-hand system $B$ with unit vectors $\ve$  \\ \hline
-\multirow{2}{*}{Rotation matrix} & $\vR_{BI}$ & transforms the coord. of a vector expressed in cs $I$ to cs $B$ \\ 
+\multirow{2}{*}{Rotation matrix} & $\vR_{BI} \in \mathrm{SO}(3)$ & transforms the coord. of a vector expressed in CS $I$ to CS $B$ \\ 
 & $\vR_{IB} = \vR_{BI}^T$ & ${}_{B}\vr_{OP} = \vR_{BI} {}_{I}\vr_{OP} \Leftrightarrow  {}_{B}\vr_{OP} = \vR_{I}^{B} {}_{I}\vr_{OP}$ \\ \hline
-\multirow{2}{*}{Unit quaternion} & $\vp_{BI}$ &  transforms the coord. of a vector expressed in cs $I$ to cs $B$ \\
- & $\vp_{IB} = \vp_{BI}^{-1}$ & $\vp_{BI}=(x,y,z,w)^T=(\va^T, a_0)^T, \left\lVert\vp_{BI}\right\rVert=1$\\ \hline
-Angle-axis & $\{\chi, \vn\}_{BI}$ & transforms the coord. of a vector expressed in cs $I$ to cs $B$  \\
-& & with angle $\chi$ around vector $n$ \\ \hline
+\multirow{2}{*}{Unit quaternion} & $\vp_{BI}$ &  transforms the coord. of a vector expressed in CS $I$ to CS $B$ \\
+ & $\vp_{IB} = \vp_{BI}^{-1}$ & $\vp_{BI}=(w,x,y,z)^T=(a_0, \va^T)^T, \left\lVert\vp_{BI}\right\rVert=1$\\ \hline
+Angle-axis & $\{\chi, \vn\}_{BI}$ & transforms the coord. of a vector expressed in CS $I$ to CS $B$  \\
+& & with angle $\chi$ around unit vector $\vn$ ($\lVert\vn\rVert=1$)\\ \hline
 \multirow{2}{*}{Yaw-pitch-roll} &  $\vth_{BI}=(\psi, \theta, \phi)^T$  & Tait-Bryan angles: $z-y'-x''$ (Singularity: $\theta=\pm\frac{\pi}{2}$) \\
  & & $\psi\in(-\pi,\pi), \theta\in(-\frac{\pi}{2},\frac{\pi}{2}), \phi\in(-\pi,\pi)$  \\  \hline
 \multirow{2}{*}{Roll-pitch-yaw} &  $\vph_{BI}=(\alpha, \beta, \gamma)^T$ & Cardan angles: $x-y'-z''$ (Singularity: $\beta=\pm\frac{\pi}{2}$)  \\
  & & $\alpha\in(-\pi,\pi), \beta\in(-\frac{\pi}{2},\frac{\pi}{2}), \gamma\in(-\pi,\pi)$  \\  \hline
 \end{tabular}
 
+\subsection{Successive Composition of Rotations}
+$\vp_{BI} = \vp_{BC} \vp_{CD} \vp_{DI} \Leftrightarrow \vR_{BI} = \vR_{BC}\vR_{CD}\vR_{DI}$  ???
+
+\subsection{Transformation of a Vector}
+${}_B\vr_{OP} = \vp_{BI} (0, {}_I\vr_{OP}^T)^T \vp_{BI}^{-1} = {}_I\vr_{OP} + 2a_0\tilde{\va} {}_I\vr_{OP} + 2 \tilde{\va}^2 {}_I\vr_{OP},  \quad \vp_{BI}=(a_0, \va^T)^T$
+
+%$\begin{aligned}{}_B\vr_{OP} &= {}_I\vr_{OP} + 2a_0\tilde{\va} {}_I\vr_{OP} + 2 \tilde{\va}^2 {}_I\vr_{OP}, \quad  \text{(Eigen)} \\
+% &= \vp_{BI} (0, {}_I\vr_{OP}^T)^T \vp_{BI}^{-1} = (a_0, \va^T)^T (0, {}_I\vr_{OP}^T)^T (a_0, -\va^T)^T \end{aligned}$
+
+\section{Unit Quaternion}
+$\vp_{BI}^{-1} = \overline{\vp}_{BI} = (a_0, -\va^T)^T$
+
 \subsection{Quaternion $\Leftrightarrow$ Angle-Axis}
+\begin{tabular}{@{}lll@{}} 
+$\vp_{BI} = \begin{bmatrix} a_0 \\ \va \end{bmatrix} =  \begin{bmatrix} \cos{\frac{\chi}{2}} \\ \vn \sin{\frac{\chi}{2}} \end{bmatrix}$ & $\Leftrightarrow$ & $
+\left\{
+  \begin{array}{l l}
+   \chi = 2\arccos{(a_0)}, \vn=\frac{\va}{\lVert\va\rVert} & \quad \text{if $\lVert \va \rVert^2 \geq \epsilon^2$}\\
+   \chi = 0, \vn= (1, 0, 0)^T  & \quad \text{otherwise}
+  \end{array} \right. $ \\
+\end{tabular}
+\subsection{Rotation Matrix $\Leftrightarrow$ Quaternion}
+$\vR_{BI} =  \vI_{3x3} + 2 a_0\tilde{\va} + 2 \tilde{\va}^2  = \begin{pmatrix} 1 - 2 a_2^2 - 2 a_3^2  &     2 a_1 a_2 - 2 a_0 a_3 &     2 a_0 a_2 + 2 a_1 a_3 \\
+     2 a_0 a_3 + 2 a_1 a_2 & 1 - 2 a_1^2 - 2 a_3^2 &     2 a_2 a_3 - 2 a_0 a_1 \\
+     2 a_1 a_3 - 2 a_0 a_2 &     2 a_0 a_1 + 2 a_2 a_3 & 1 - 2 a_1^2 - 2 a_2^2  \\
+\end{pmatrix}$
 
-\subsection{Quaternion $\Leftrightarrow$ Rotation Matrix}
+$\vp_{BI} = \begin{pmatrix} \frac{1}{2} \sqrt{1 + \tr(\vR)} \\ \frac{R_{32} - R_{23}}{4 a_0} \\ \frac{R_{13} - R_{31}}{4 a_0} \\ \frac{R_{21} - R_{12}}{4 a_0} \end{pmatrix}, \vR = \vR_{BI} \quad \text{(if $\tr{(\vR)} > 0 $)}  $
 
-\subsection{Kardan angles: Roll-Pitch-Yaw}
-\begin{equation}
-\begin{split}
-\vR_{BI} &= \begin{pmatrix} 2(e_0^2+e_1^2)-1 & 2(e_1 e_2+e_0 e_3) & 2(e_1 e_3-e_0 e_2) \\ 2(e_1 e_2-e_0 e_3) & 2(e_0^2+e_2^2)-1 & 2(e_2 e_3+e_0 e_1) \\ 2(e_1 e_3+e_0 e_2) & 2(e_2 e_3-e_0 e_1) & 2(e_0^2+e_3^2)-1 \end{pmatrix}
-\end{split}
-\end{equation}
+
 \subsection{Yaw-Pitch-Roll $\Leftrightarrow$ Rotation Matrix}
 \myfigure{\includegraphics[width=1\columnwidth]{coordinate_systems/coordinate_system_ypr-crop.pdf}\vspace{-3mm}
 \figcaption{Rotation from $I$-frame to $B$-frame: ($z-y'-x''$) -- (yaw-pitch-roll) -- ($\psi-\theta-\phi$) -- ($50^\circ-25^\circ-30^\circ)$}\label{fig:yaw-pitch-roll}}
