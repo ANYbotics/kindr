@@ -121,41 +121,59 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  BEGIN CONTENT
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Notation \& Definitions  }
+\section{Nomenclature }
 \begin{tabular}{|l|l|l|}
 \hline
-Coordinate system (CS) & ${\ve_x^B,\ve_y^B,\ve_z^B}$ & Cartesian right-hand system $B$ with unit vectors $\ve$  \\ \hline
+Coordinate system (CS) & ${\ve_x^B,\ve_y^B,\ve_z^B}$ & Cartesian right-hand system $B$ with basis (unit) vectors $\ve$  \\ \hline
 Position vector & ${}_I\vr_{OP} \in \mathbb{R}^3 $ & vector from point $O$ to point $P$ expressed in CS $I$ \\ \hline 
 Translational velocity & ${}_I\vv_P \in \mathbb{R}^3 $  & translational velocity of point $P$ expressed in CS $I$ \\ \hline
 Angular velocity & ${}_I\vom_{IB} \in \mathbb{R}^3 $ & ang. velocity of CS $B$ w.r.t. to CS $B$ expressed in CS $I$ \\ \hline
 Ang. vel. of rigid body & ${}_B\vOm = {}_B\vom_{IB}$ & with body-fixed CS $B$ and inertial CS $I$ \\ \hline
 Ang. acc. of rigid body & ${}_B\vPs$ \\ \hline
 Generalized coordinates & $\vq \in \mathbb{Q} \subset \mathbb{R}^{n_q}$ & set of coordinates to describe a multi-rigid-body system\\ \hline
-Generalized velocities & $\vu \in \mathbb{U} \subset \mathbb{R}^{n_u}$ & $\vu$ does not need to be equal to $\dot{\vq}$\\ \hline
+Generalized velocities & $\vu \in \mathbb{U} \subset \mathbb{R}^{n_u}$ & gen. velocities of multi-rigid-body system, where $\vu = \vF\dot{\vq}$\\ \hline
 Skew-symmetric matrix & \multicolumn{2}{l|}{$\tilde{\va} = \begin{pmatrix} 0 & -a_3 & a_2 \\ a_3 & 0 & -a_1 \\ -a_2 & a_1 & 0 \end{pmatrix}, \va = \begin{pmatrix} a_1 \\ a_2 \\ a_3\end{pmatrix}$}  \\ \hline
 Euclidean norm & \multicolumn{2}{l|}{$\lVert \va \rVert = \sqrt{a_1^2 + a_2^2 + a_3^2}$} \\ \hline
 Machine precision & $\epsilon$ & \\ \hline
 \end{tabular}
 
-\section{Rotations}
-\begin{tabular}{|l|l@{}|l|}
+\section{Coordinate Transformations and Rotations}
+\begin{tabular}{|l@{}|l@{}|l@{}|}
 \hline
-Transformation & $\vA_{BI} \in \mathrm{SO}(3)$ & Transforms the coord. of a vector expr. in CS $I$ to CS $B$,\\  
-matrix & ${}_{B}\vr_{OP} = \vA_{BI} {}_{I}\vr_{OP}$ &  i.e.\ the coord. of a point $P$ change due to a rotation of \\
-& $\vA_{BI} = \vA_{I}^{B}$ &  the CS and the vector $\vr_{OP}$ representing $P$ is not rotated. \\  
- & $\vA_{IB} = \vA_{BI}^T$ & The tranformation is passive (alias).\\ \hline
-Rotation  & $\vR_{IB} \in \mathrm{SO}(3)$ & Rotates a vector expressed in CS $I$ to CS $B$. \\ 
-matrix & $\vR_{IB} = \vA_{IB}^T= \vA_{BI}$ & The tranformation is active (alibi).\\ \hline
-\multirow{2}{*}{Unit quaternion} & $\vp_{IB}=(a_0, \va^T)^T\in \mathbb{H}$ &  Rotates a vector expr. in CS $I$ to CS $B$. \\
-& $\vp_{IB}=(w,x,y,z)^T$  & The tranformation is active (alibi): $\vp_{IB} \equiv \vR_{IB}$\\ 
+Rotation-  & $\vR_{IB} \in \mathrm{SO}(3)$ & The 3D rotation $\vR_{IB}:\cI \rightarrow \cB$ rotates a vector \\ 
+matrix & ${}_I\vR_{IB} = ({}_I\ve_x^C, {}_I\ve_y^C, {}_I\ve_z^C)$ & by mapping it from $\cI$ to $\cB$. \\
+& & The transformation is active (alibi).\\ \hline
+Transfor- & $\vA_{BI} = \vA_{I}^{B}\in \mathrm{SO}(3)$ & Transforms the coord. of a vector expr. in CS $I$ to CS $B$,\\  
+mationmatrix & ${}_{B}\vr_{OP} = \vA_{BI} {}_{I}\vr_{OP}$ &  i.e.\ the coord. of a point $P$ change due to a rotation of \\
+& &  the CS and the vector $\vr_{OP}$ representing $P$ is not rotated. \\  
+ & $\vA_{IB} = \vA_{BI}^T = {}_I \vR_{IB}^T$ & The transformation is passive (alias).\\ \hline
+ Unit  & $\vp_{IB}=(a_0, \va^T)^T\in \mathbb{H}$ &  Rotates a vector expr. in CS $I$ to CS $B$. \\
+Quaternion& $\vp_{IB}=(w,x,y,z)^T$  & The transformation is active (alibi): $\vp_{IB} \equiv \vR_{IB}$\\ 
  & $\left\lVert\vp_{IB}\right\rVert=1$  & $\vp_{BI} = \vp_{IB}^{-1} = \bar{\vp}_{IB}$,  \\ \hline
 Angle-axis & $\{\chi, \vn\}_{IB}$ & Rotates a vector expressed in CS $I$ to CS $B$ (active, alibi). \\
 & $\lVert\vn\rVert=1$ & with angle $\chi$ around unit vector $\vn$.  $\{\chi, \vn\}_{IB} \equiv \vR_{IB}$\\ \hline
-\multirow{2}{*}{Yaw-pitch-roll} &  $(\psi, \theta, \phi)_{IB}^T$  & Tait-Bryan angles: $z-y'-x''$ (Singularity: $\theta=\pm\frac{\pi}{2}$) \\
- & & $\psi\in(-\pi,\pi), \theta\in(-\frac{\pi}{2},\frac{\pi}{2}), \phi\in(-\pi,\pi)$  \\  \hline
-\multirow{2}{*}{Roll-pitch-yaw} &  $(\alpha, \beta, \gamma)_{IB}^T$ & Cardan angles: $x-y'-z''$ (Singularity: $\beta=\pm\frac{\pi}{2}$)  \\
- & & $\alpha\in(-\pi,\pi), \beta\in(-\frac{\pi}{2},\frac{\pi}{2}), \gamma\in(-\pi,\pi)$  \\  \hline
-\end{tabular}
+Yaw-pitch-roll &  $(\psi, \theta, \phi)_{IB}^T$  & Tait-Bryan angles: $z-y'-x''$ (Singularity: $\theta=\pm\frac{\pi}{2}$) \\
+ (Flight conv.) & & $\psi\in(-\pi,\pi), \theta\in(-\frac{\pi}{2},\frac{\pi}{2}), \phi\in(-\pi,\pi)$  \\  \hline
+Roll-pitch-yaw &  $(\alpha, \beta, \gamma)_{IB}^T$ & Cardan angles: $x-y'-z''$ (Singularity: $\beta=\pm\frac{\pi}{2}$)  \\
+ (Glocker conv.)& & $\alpha\in(-\pi,\pi), \beta\in(-\frac{\pi}{2},\frac{\pi}{2}), \gamma\in(-\pi,\pi)$  \\  \hline
+\end{tabular} % \multirow{2}{*}{}
+\subsection{Unit Quaternions}
+$\vp_{IB}^{-1} = \bar{\vp}_{IB} = (a_0, -\va^T)^T$ \\
+$\begin{aligned}\vp_{CA} &= \vp_{CB} \cdot \vp_{BA} = \vp_\mathrm{m}(\vp_{CB}=\begin{bmatrix} a_0 \\ \va \end{bmatrix}, \vp_{BA}=\begin{bmatrix} b_0 \\ \vb \end{bmatrix}) = \begin{bmatrix} a_0 b_0 - \va^{T} \vb \\ a_{0} \vb + b_0 \va + \tilde{\vb} \va \end{bmatrix}  \\
+	  &= \vQ(\vp_{CB})\vp_{BA} = \begin{bmatrix}a_0 & -\va^T \\  \va & a_0\vI_{3x3}-\tilde{\va} \\ \end{bmatrix} \begin{bmatrix} b_0 \\ b_1 \\ b_2 \\ b_3 \end{bmatrix} 
+	  = \begin{bmatrix} 
+a_0 & -a_1 & -a_2 & -a_3 \\
+a_1 &  a_0 &  a_3 & -a_2 \\
+a_2 & -a_3 &  a_0 &  a_1 \\
+a_3 &  a_2 & -a_1 &  a_0 \\ \end{bmatrix}\begin{bmatrix} b_0 \\ b_1 \\ b_2 \\ b_3 \end{bmatrix}  \\
+ &= \vQ(\vp_{BA})^T \vp_{CB} \\
+\end{aligned}$
+\subsection{Yaw-Pitch-Roll $\Leftrightarrow$ Rotation Matrix}
+\myfigure{\includegraphics[width=1\columnwidth]{coordinate_systems/coordinate_system_ypr-crop.pdf}\vspace{-3mm}
+\figcaption{Rotation from $I$-frame to $B$-frame: ($z-y'-x''$) -- (yaw-pitch-roll) -- ($\psi-\theta-\phi$) -- ($50^\circ-25^\circ-30^\circ)$}\label{fig:yaw-pitch-roll}}
+\subsection{Roll-Pitch-Yaw $\Leftrightarrow$ Rotation Matrix}
+\myfigure{\includegraphics[width=1\columnwidth]{coordinate_systems/coordinate_system_rpy-crop.pdf}\vspace{-3mm}
+\figcaption{Rotation from $I$-frame to $B$-frame: ($x-y'-z''$) -- (roll-pitch-yaw) -- ($\alpha-\beta-\gamma$) -- ($50^\circ-25^\circ-30^\circ)$}\label{fig:roll-pitch-yaw}}
 
 \subsection{Successive Composition of Rotations}
 $\vp_{IB} = \vp_{ID} \vp_{DC} \vp_{CB} \Leftrightarrow \vA_{BI} = \vA_{BC}\vA_{CD}\vA_{DI}$
@@ -164,22 +182,13 @@ $\vp_{IB} = \vp_{ID} \vp_{DC} \vp_{CB} \Leftrightarrow \vA_{BI} = \vA_{BC}\vA_{C
 
 ${}_{B}\vr_{OP} = \vA_{BI} {}_{I}\vr_{OP}$
 
-${}_B\vr_{OP} = \vp_{IB} (0, {}_I\vr_{OP}^T)^T \vp_{BI}^{-1} = {}_I\vr_{OP} + 2a_0\tilde{\va} {}_I\vr_{OP} + 2 \tilde{\va}^2 {}_I\vr_{OP},  \quad \vp_{BI}=(a_0, \va^T)^T$ ????
+$\begin{bmatrix} 0 \\ {}_B\vr_{OP}\end{bmatrix} = \vp_{IB} \begin{bmatrix} 0 \\ {}_I\vr_{OP}\end{bmatrix} \vp_{IB}^{-1}$
 
 
 
 %$\begin{aligned}{}_B\vr_{OP} &= {}_I\vr_{OP} + 2a_0\tilde{\va} {}_I\vr_{OP} + 2 \tilde{\va}^2 {}_I\vr_{OP}, \quad  \text{(Eigen)} \\
 % &= \vp_{BI} (0, {}_I\vr_{OP}^T)^T \vp_{BI}^{-1} = (a_0, \va^T)^T (0, {}_I\vr_{OP}^T)^T (a_0, -\va^T)^T \end{aligned}$
 
-\section{Unit Quaternion}
-$\vp_{IB}^{-1} = \bar{\vp}_{IB} = (a_0, -\va^T)^T$ \\
-$\begin{aligned}\vp_{CA} &= \vp_{CB} \cdot \vp_{BA} = \vp_\mathrm{m}(\vp_{CB}=\begin{bmatrix} a_0 \\ \va \end{bmatrix}, \vp_{BA}=\begin{bmatrix} b_0 \\ \vb \end{bmatrix}) = \begin{bmatrix} a_0 b_0 - \va^{T} \vb \\ a_{0} \vb + b_0 \va + \tilde{\vb} \va \end{bmatrix}  \\
-	  &= \vQ(\vp_{CB})\vp_{BA} = \begin{bmatrix}a_0 & -\va^T \\  \va & a_0\vI_{3x3}-\tilde{\va} \\ \end{bmatrix} \begin{bmatrix} b_0 \\ b_1 \\ b_2 \\ b_3 \end{bmatrix} 
-	  = \begin{bmatrix} 
-a_0 & -a_1 & -a_2 & -a_3 \\
-a_1 &  a_0 &  a_3 & -a_2 \\
-a_2 & -a_3 &  a_0 &  a_1 \\
-a_3 &  a_2 & -a_1 &  a_0 \\ \end{bmatrix}\begin{bmatrix} b_0 \\ b_1 \\ b_2 \\ b_3 \end{bmatrix}  \end{aligned}$
 
 
 \subsection{Quaternion $\Leftrightarrow$ Angle-Axis}
@@ -191,30 +200,46 @@ $\vp_{IB}(\{\chi, \vn\}_{IB}) = \begin{bmatrix} a_0 \\ \va \end{bmatrix} =  \beg
    \{\chi = 0, \vn= (1, 0, 0)^T \}_{IB} & \quad \text{otherwise}
   \end{array} \right. $ \\
 \end{tabular}
-\subsection{Rotation Matrix $\Leftrightarrow$ Quaternion}
-$\vA_{IB} = \vR_{BI} =  \vI_{3x3} + 2 a_0\tilde{\va} + 2 \tilde{\va}^2  = \begin{pmatrix} 1 - 2 a_2^2 - 2 a_3^2  &     2 a_1 a_2 - 2 a_0 a_3 &     2 a_0 a_2 + 2 a_1 a_3 \\
-     2 a_0 a_3 + 2 a_1 a_2 & 1 - 2 a_1^2 - 2 a_3^2 &     2 a_2 a_3 - 2 a_0 a_1 \\
-     2 a_1 a_3 - 2 a_0 a_2 &     2 a_0 a_1 + 2 a_2 a_3 & 1 - 2 a_1^2 - 2 a_2^2  \\
-\end{pmatrix}$
+\subsection{Transformation Matrix $\Leftrightarrow$ Quaternion}
+$\begin{aligned}\vA_{IB} &= {}_I\vR_{IB}^T(\vp_{IB}) =  \vI_{3x3} + 2 a_0\tilde{\va} + 2 \tilde{\va}^2    \\
+&= \begin{pmatrix}
+ a_0^2 + a_1^2 - a_2^2 - a_3^2 &         2a_1a_2 - 2a_0a_3 &         2a_0a_2 + 2a_1a_3 \\
+         2a_0a_3 + 2a_1a_2 & a_0^2 - a_1^2 + a_2^2 - a_3^2 &         2a_2a_3 - 2a_0a_1 \\
+         2a_1a_3 - 2a_0a_2 &         2a_0a_1 + 2a_2a_3 & a_0^2 - a_1^2 - a_2^2 + a_3^2 \\ \end{pmatrix} \\
+\end{aligned}$
+%= \begin{pmatrix} 1 - 2 a_2^2 - 2 a_3^2  &     2 a_1 a_2 - 2 a_0 a_3 &     2 a_0 a_2 + 2 a_1 a_3 \\
+     %2 a_0 a_3 + 2 a_1 a_2 & 1 - 2 a_1^2 - 2 a_3^2 &     2 a_2 a_3 - 2 a_0 a_1 \\
+     %2 a_1 a_3 - 2 a_0 a_2 &     2 a_0 a_1 + 2 a_2 a_3 & 1 - 2 a_1^2 - 2 a_2^2  \\
+%\end{pmatrix}
+
+$\begin{aligned}\vA_{BI} &= {}_B\vR_{BI}^T =  {}_I\vR_{IB}(\vp_{IB}) = \vI_{3x3} - 2 a_0\tilde{\va} + 2 \tilde{\va}^2 \\
+&= \begin{pmatrix}  a_0^2 + a_1^2 - a_2^2 - a_3^2 &         2a_0a_3 + 2a_1a_2 &         2a_1a_3 - 2a_0a_2 \\
+         2a_1a_2 - 2a_0a_3 & a_0^2 - a_1^2 + a_2^2 - a_3^2 &         2a_0a_1 + 2a_2a_3 \\
+         2a_0a_2 + 2a_1a_3 &         2a_2a_3 - 2a_0a_1 & a_0^2 - a_1^2 - a_2^2 + a_3^2 \\ \end{pmatrix}  \\  
+\end{aligned}$
 
 $\vp_{IB} = \begin{pmatrix} \frac{1}{2} \sqrt{1 + \tr(\vA)} \\ \frac{A_{32} - A_{23}}{4 a_0} \\ \frac{A_{13} - A_{31}}{4 a_0} \\ \frac{A_{21} - A_{12}}{4 a_0} \end{pmatrix}, \vA = \vA_{IB} \quad \text{(if $\tr{(\vA	)} > 0 $)}  $
 
+\subsection{Eigen Library}
+\begin{tabular}{@{}ll@{}} 
+ \verb!Vector3d ypr_IB = Vectord(psi,theta, phi);!  \\
+ \verb!aa_IB = AngleAxis(rpy_IB(0), Vector3d::UnitZ())*! \\
+ \verb!        AngleAxis(rpy_IB(1), Vector3d::UnitY())*! \\
+ \verb!        AngleAxis(rpy_IB(2), Vector3d::UnitX());! \\ 
+ \verb!Quaterniond p_IB = Quaterniond(aa_IB);! \\
+ \verb!Matrix3d A_BI = p_IB.toRotationMatrix();! \\
+ \verb!Vector3d B_r_OP = A_BI*I_r_OP! & \\
+\end{tabular}
 
-\subsection{Yaw-Pitch-Roll $\Leftrightarrow$ Rotation Matrix}
-\myfigure{\includegraphics[width=1\columnwidth]{coordinate_systems/coordinate_system_ypr-crop.pdf}\vspace{-3mm}
-\figcaption{Rotation from $I$-frame to $B$-frame: ($z-y'-x''$) -- (yaw-pitch-roll) -- ($\psi-\theta-\phi$) -- ($50^\circ-25^\circ-30^\circ)$}\label{fig:yaw-pitch-roll}}
-\subsection{Roll-Pitch-Yaw $\Leftrightarrow$ Rotation Matrix}
-\myfigure{\includegraphics[width=1\columnwidth]{coordinate_systems/coordinate_system_rpy-crop.pdf}\vspace{-3mm}
-\figcaption{Rotation from $I$-frame to $B$-frame: ($x-y'-z''$) -- (roll-pitch-yaw) -- ($\alpha-\beta-\gamma$) -- ($50^\circ-25^\circ-30^\circ)$}\label{fig:roll-pitch-yaw}}
 
-
-\section{Translational Velocities}
+\section{Velocities}
+\subsection{Translational Velocities}
 \begin{tabular}{@{}ll@{}}
 ${}_B\vv_P = {}_B\vv_A  + {}_B\dot{\vr}_{AP} + {}_B\vom_{IB} \times {}_B\vr_{AP}$ & velocity of point $P$ expr. in CS $B$  w.r.t. to the inertial system $I$\\
 ${}_B\vv_Q = {}_B\vv_{P} + {}_B\vOm \times {}_B\vr_{PQ}$ &  velocity of point $Q$ on rigid body $B$ from point $P$ on same body\\
 \end{tabular}
 
-\section{Angular Velocities}
+\subsection{Angular Velocities}
 \begin{tabular}{@{}ll@{}}
 ${}_B\tilde{\vom}_{IB} = \dot{\vA}_{IB}\vA_{IB}^T$ & angular velocity from rotation matrix expressed in CS $B$  \\
 ${}_B\vom_{IB} = 2 \bar{\vH} \dot{\vp}_{IB} \Leftrightarrow \dot{\vp}_{IB} = \frac{1}{2}\bar{\vH}^T{}_B\vom_{IB}$  & ang. velocity from quaternion with $\bar{\vH} = \begin{bmatrix}-\va & -\tilde{\va}+a_0\vI_{3\times 3}\end{bmatrix} \in \mathbb{R}^{3\times4}$  \\
