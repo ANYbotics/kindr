@@ -18,111 +18,127 @@
   // use no timer
   //typedef sm::timing::DummyTimer MyTimerType;
 
+TEST (RotationsTest, DISABLED_testQuaternionMultiplication ) {
+  using namespace Eigen;
+  using namespace rm::rotations;
+  sm::random::seed(static_cast<unsigned int>(std::time(nullptr)));
 
-TEST (RotationsTest, testRotationMatrixFromKardanAngles ) {
+  Vector3d n1 = Vector3d(sm::random::randLU(-100,100),sm::random::randLU(-100,100),sm::random::randLU(-100,100));
+  n1.normalize();
+  AngleAxisd aa_AI = AngleAxisd(sm::random::randLU(-M_PI,M_PI),n1);
+  Quaterniond p_AI = Quaterniond(aa_AI);
+
+  Vector3d n2 = Vector3d(sm::random::randLU(-100,100),sm::random::randLU(-100,100),sm::random::randLU(-100,100));
+  n2.normalize();
+  AngleAxisd aa_BA = AngleAxisd(sm::random::randLU(-M_PI,M_PI),n2);
+  Quaterniond p_BA = Quaterniond(aa_BA);
+
+  Quaterniond p_BI1 = p_BA*p_AI;
+
+  double w = p_BA.w()*p_AI.w() - p_BA.x()*p_AI.x() - p_BA.y()*p_AI.y() - p_BA.z()*p_AI.z();
+  double x = p_BA.w()*p_AI.x() + p_AI.w()*p_BA.x() + p_BA.y()*p_AI.z() - p_BA.z()*p_AI.y();
+  double y = p_BA.w()*p_AI.y() + p_AI.w()*p_BA.y() + p_BA.z()*p_AI.x() - p_BA.x()*p_AI.z();
+  double z = p_BA.w()*p_AI.z() + p_AI.w()*p_BA.z() + p_BA.x()*p_AI.y() - p_BA.y()*p_AI.x();
+  Quaterniond p_BI2 = Quaterniond(w,x,y,z);
+
+  ASSERT_DOUBLE_MX_EQ(quaternionToVector(p_BI1), quaternionToVector(p_BI2), 1e-6, "p");
+
+  Vector3d I_r = Vector3d(sm::random::randLU(-100,100),sm::random::randLU(-100,100),sm::random::randLU(-100,100));
+
+  Vector3d B_r1 = (p_BA * p_AI) * I_r;
+  Vector3d B_r2 = p_BA * (p_AI * I_r);
+
+  ASSERT_DOUBLE_MX_EQ(B_r1, B_r2, 1e-6, "p");
+}
+
+TEST (RotationsTest, testRotationFunctions ) {
   using namespace Eigen;
   using namespace rm::rotations;
 
   // random seed
     sm::random::seed(static_cast<unsigned int>(std::time(nullptr)));
 
-    Quaterniond p_BI = Quaterniond(cos(1),0,0,sin(1));
-//     std::cout << getRPYFromQuaternion(p_BI).transpose() << std::endl;
-//     std::cout << getYPRFromQuaternion(p_BI).transpose() << std::endl;
+//    Quaterniond p_IB = Quaterniond(cos(M_PI/12),0,0,sin(M_PI/12));
+//     std::cout << getRPYFromQuaternion(p_IB).transpose() << std::endl;
+//     std::cout << getYPRFromQuaternion(p_IB).transpose() << std::endl;
 //
-//     Vector3d rpy_BI2 = Vector3d(0,0,2);
-//     Quaterniond test = getQuaternionFromRPY(rpy_BI2);
+//     Vector3d rpy_IB2 = Vector3d(0,0,2);
+//     Quaterniond test = getQuaternionFromRPY(rpy_IB2);
 //     std::cout << test.w() << test.x() << test.y() << test.z() << std::endl;
 //
-//     Matrix3d R_BI = Matrix3d::Zero();
-//     R_BI << cos(M_PI/6), sin(M_PI/6), 0, -sin(M_PI/6), cos(M_PI/6), 0, 0, 0, 1;
-//     std::cout << getRPYFromRotationMatrix(R_BI) << std::endl;
-//     std::cout << getAngleAxisFromRotationMatrix(R_BI).angle() << std::endl;
-//     std::cout << getAngleAxisFromRotationMatrix(R_BI).axis().transpose() << std::endl;
+//     Matrix3d A_BI = Matrix3d::Zero();
+//     A_BI << cos(M_PI/6), sin(M_PI/6), 0, -sin(M_PI/6), cos(M_PI/6), 0, 0, 0, 1;
+//     std::cout << getRPYFromTransformationMatrix(A_BI) << std::endl;
+//     std::cout << getAngleAxisFromTransformationMatrix(A_BI).angle() << std::endl;
+//     std::cout << getAngleAxisFromTransformationMatrix(A_BI).axis().transpose() << std::endl;
 //
-//     Vector3d rpy_BI2 = Vector3d(0,0,1);
-//     std::cout << getRotationMatrixFromRPY(rpy_BI2) << std::endl;
+//     Vector3d rpy_IB2 = Vector3d(0,0,1);
+//     std::cout << getTransformationMatrixFromRPY(rpy_IB2) << std::endl;
 //
-//     std::cout << getAngleAxisFromRPY(rpy_BI2).axis() << std::endl << getAngleAxisFromRPY(rpy_BI2).angle() << std::endl;
+//     std::cout << getAngleAxisFromRPY(rpy_IB2).axis() << std::endl << getAngleAxisFromRPY(rpy_IB2).angle() << std::endl;
 
-//    std::cout << getRotationMatrixFromAngleAxis(AngleAxisd(M_PI/6,Vector3d(0,0,1))) << std::endl;
+//    std::cout << getTransformationMatrixFromAngleAxis(AngleAxisd(-M_PI/6,Vector3d(0,0,1))) << std::endl;
+//    std::cout << getTransformationMatrixFromQuaternion(Quaterniond(AngleAxisd(-M_PI/6,Vector3d(0,0,1)))) << std::endl;
 
-//     std::cout << getRotationMatrixFromQuaternion(Quaterniond(cos(M_PI/6),0,0,sin(M_PI/6))) << std::endl;
+//    Vector3d I_r = Vector3d(sm::random::randLU(-100,100),sm::random::randLU(-100,100),sm::random::randLU(-100,100));
+//    Vector3d I_r_p =
+//    std::cout << getTransformationMatrixFromQuaternion(Quaterniond(AngleAxisd(M_PI/6,Vector3d(0,0,1))))*I_r << std::endl;
+
+//     std::cout << getTransformationMatrixFromQuaternion(Quaterniond(cos(M_PI/6),0,0,sin(M_PI/6))) << std::endl;
 
 //    std::cout << getQuaternionFromAngleAxis(AngleAxisd(M_PI/3,Vector3d(0,0,1))).w() << std::endl;
 //    std::cout << getQuaternionFromAngleAxis(AngleAxisd(M_PI/3,Vector3d(0,0,1))).x() << std::endl;
 //    std::cout << getQuaternionFromAngleAxis(AngleAxisd(M_PI/3,Vector3d(0,0,1))).y() << std::endl;
 //    std::cout << getQuaternionFromAngleAxis(AngleAxisd(M_PI/3,Vector3d(0,0,1))).z() << std::endl;
 
+//    std::cout << getRPYFromQuaternion(Quaterniond(cos(M_PI/2),0,sin(M_PI/2),0)) << std::endl;
 
 
-
-    for(int i=0; i<10000; i++)
+    for(int i=0; i<1e5; i++)
     {
-      // create random rotation
-      const double roll = sm::random::randLU(-M_PI,M_PI);
-      const double pitch = sm::random::randLU(-M_PI/2,M_PI/2);
-      const double yaw = sm::random::randLU(-M_PI,M_PI);
-      const Vector3d rpy_BI0 = Vector3d(roll,pitch,yaw);
+      Vector3d n0 = Vector3d(sm::random::randLU(-100,100),sm::random::randLU(-100,100),sm::random::randLU(-100,100));
+      n0.normalize();
+      AngleAxisd aa_IB0 = AngleAxisd(sm::random::randLU(-M_PI,M_PI),n0);
+      Quaterniond p_IB0 = Quaterniond(aa_IB0);
+      Matrix3d A_BI0 = p_IB0.toRotationMatrix();
+      Vector3d rpy_IB0 = getRPYFromTransformationMatrix(A_BI0);
+      Vector3d ypr_IB0 = getYPRFromTransformationMatrix(A_BI0);
 
-      ASSERT_DOUBLE_MX_EQ(rpy_BI0, getRPYFromAngleAxis(getAngleAxisFromRPY(rpy_BI0)), 1e-6, "rpy1");
-      ASSERT_DOUBLE_MX_EQ(rpy_BI0, getRPYFromQuaternion(getQuaternionFromRPY(rpy_BI0)), 1e-6, "rpy2");
-      ASSERT_DOUBLE_MX_EQ(rpy_BI0, getRPYFromRotationMatrix(getRotationMatrixFromRPY(rpy_BI0)), 1e-6, "rpy3");
+//      std::cout << std::endl << std::endl;
+//      std::cout << "angle = " << aa_IB0.angle() << ", axis = " << aa_IB0.axis().transpose() << std::endl;
+//      std::cout << "quaternion = " << quaternionToVector(p_IB0).transpose() << std::endl;
+//      std::cout << "trafo = " << std::endl << A_BI0 << std::endl;
+//      std::cout << "rpy = " << rpy_IB0.transpose() << std::endl;
+//      std::cout << "ypr = " << ypr_IB0.transpose() << std::endl;
 
-      const AngleAxisd aa_BI0 = getAngleAxisFromRPY(rpy_BI0);
-      const Quaterniond p_BI0 = getQuaternionFromRPY(rpy_BI0);
-      const Matrix3d R_BI0 = getRotationMatrixFromRPY(rpy_BI0);
-      const Vector3d ypr_BI0 = getYPRFromRPY(rpy_BI0);
+//      std::cout << std::endl << std::endl;
+//      std::cout << "p0 = " << quaternionToVector(p_IB0).transpose() << std::endl;
+//      std::cout << "p1 = " << quaternionToVector(getQuaternionFromTransformationMatrix(getTransformationMatrixFromRPY(rpy_IB0))).transpose() << std::endl;
+//      std::cout << "p2 = " << quaternionToVector(getQuaternionFromRPY(rpy_IB0)).transpose() << std::endl;
 
-      ASSERT_DOUBLE_MX_EQ(aa_BI0.axis()*aa_BI0.angle(), getAngleAxisFromQuaternion(getQuaternionFromAngleAxis(aa_BI0)).axis()*getAngleAxisFromQuaternion(getQuaternionFromAngleAxis(aa_BI0)).angle(), 1e-6, "aa1");
+      ASSERT_DOUBLE_MX_EQ(aa_IB0.axis()*aa_IB0.angle(), getAngleAxisFromQuaternion(p_IB0).axis()*getAngleAxisFromQuaternion(p_IB0).angle(), 1e-4, "aa1"); // ok
+      ASSERT_DOUBLE_MX_EQ(aa_IB0.axis()*aa_IB0.angle(), getAngleAxisFromTransformationMatrix(A_BI0).axis()*correctRangeAngle(getAngleAxisFromTransformationMatrix(A_BI0).angle()), 1e-5, "aa2"); // ok
+      ASSERT_DOUBLE_MX_EQ(aa_IB0.axis()*aa_IB0.angle(), getAngleAxisFromRPY(rpy_IB0).axis()*correctRangeAngle(getAngleAxisFromRPY(rpy_IB0).angle()), 1e-4, "aa3"); // ok
+      ASSERT_DOUBLE_MX_EQ(aa_IB0.axis()*aa_IB0.angle(), getAngleAxisFromYPR(ypr_IB0).axis()*correctRangeAngle(getAngleAxisFromYPR(ypr_IB0).angle()), 1e-4, "aa4"); // ok
 
-      ASSERT_DOUBLE_MX_EQ(R_BI0, getRotationMatrixFromAngleAxis(getAngleAxisFromRotationMatrix(R_BI0)), 1e-6, "rot1");
-      ASSERT_DOUBLE_MX_EQ(R_BI0, getRotationMatrixFromQuaternion(getQuaternionFromRotationMatrix(R_BI0)), 1e-6, "rot2");
+      ASSERT_DOUBLE_MX_EQ(quaternionToVector(p_IB0), quaternionToVector(getQuaternionFromAngleAxis(aa_IB0)), 1e-6, "quat1"); // ok
+      ASSERT_DOUBLE_MX_EQ(quaternionToVector(p_IB0), quaternionToVector(getQuaternionFromTransformationMatrix(A_BI0)), 1e-6, "quat2"); // ok
+      ASSERT_DOUBLE_MX_EQ(quaternionToVector(p_IB0), quaternionToVector(getQuaternionFromRPY(rpy_IB0)), 1e-6, "quat3"); // ok
+      ASSERT_DOUBLE_MX_EQ(quaternionToVector(p_IB0), quaternionToVector(getQuaternionFromYPR(ypr_IB0)), 1e-6, "quat4"); // ok
 
-      ASSERT_DOUBLE_MX_EQ(ypr_BI0, getYPRFromAngleAxis(getAngleAxisFromYPR(ypr_BI0)), 1e-6, "ypr1");
-      ASSERT_DOUBLE_MX_EQ(ypr_BI0, getYPRFromQuaternion(getQuaternionFromYPR(ypr_BI0)), 1e-6, "ypr2");
-      ASSERT_DOUBLE_MX_EQ(ypr_BI0, getYPRFromRotationMatrix(getRotationMatrixFromYPR(ypr_BI0)), 1e-6, "ypr3");
-      ASSERT_DOUBLE_MX_EQ(ypr_BI0, getYPRFromRPY(getRPYFromYPR(ypr_BI0)), 1e-6, "ypr4");
+      ASSERT_DOUBLE_MX_EQ(A_BI0, getTransformationMatrixFromAngleAxis(aa_IB0), 1e-6, "trafo1"); // ok
+      ASSERT_DOUBLE_MX_EQ(A_BI0, getTransformationMatrixFromQuaternion(p_IB0), 1e-6, "trafo2"); // ok
+      ASSERT_DOUBLE_MX_EQ(A_BI0, getTransformationMatrixFromRPY(rpy_IB0), 1e-6, "trafo3"); // ok
+      ASSERT_DOUBLE_MX_EQ(A_BI0, getTransformationMatrixFromYPR(ypr_IB0), 1e-6, "trafo4"); // ok
 
-//      std::cout << aa_BI0.angle() << ", " << getInverseAngleAxis(aa_BI0).angle() << std::endl;
-//      std::cout << aa_BI0.axis().transpose() << ", " << getInverseAngleAxis(aa_BI0).axis().transpose() << std::endl;
-//      std::cout << std::endl;
-//
-//      std::cout << p_BI0.w() << ", " << getInverseQuaternion(p_BI0).w() << std::endl;
-//      std::cout << p_BI0.x() << ", " << getInverseQuaternion(p_BI0).x() << std::endl;
-//      std::cout << p_BI0.y() << ", " << getInverseQuaternion(p_BI0).y() << std::endl;
-//      std::cout << p_BI0.z() << ", " << getInverseQuaternion(p_BI0).z() << std::endl;
-//      std::cout << std::endl;
-//
-//      std::cout << R_BI0 << std::endl;
-//      std::cout << getInverseRotationMatrix(R_BI0) << std::endl;
-//      std::cout << std::endl;
-//
-//      std::cout << rpy_BI0.transpose() << std::endl;
-//      std::cout << getInverseRPY(rpy_BI0).transpose() << std::endl;
-//      std::cout << getInverseRPY(getInverseRPY(rpy_BI0)).transpose() << std::endl;
-//      std::cout << std::endl;
-//
-//      std::cout << rpy_BI0.transpose() << std::endl;
-//      std::cout << getInverseRPY2(rpy_BI0).transpose() << std::endl;
-//      std::cout << getInverseRPY2(getInverseRPY2(rpy_BI0)).transpose() << std::endl;
-//      std::cout << std::endl;
-//
-//      std::cout << ypr_BI0.transpose() << std::endl;
-//      std::cout << getInverseYPR(ypr_BI0).transpose() << std::endl;
-//      std::cout << getInverseYPR(getInverseYPR(ypr_BI0)).transpose() << std::endl;
-//      std::cout << std::endl;
+      ASSERT_DOUBLE_MX_EQ(rpy_IB0, getRPYFromAngleAxis(aa_IB0), 1e-6, "rpy1"); // ok
+      ASSERT_DOUBLE_MX_EQ(rpy_IB0, getRPYFromQuaternion(p_IB0), 1e-6, "rpy2"); // ok
+      ASSERT_DOUBLE_MX_EQ(rpy_IB0, getRPYFromTransformationMatrix(A_BI0), 1e-6, "rpy3"); // ok
+      ASSERT_DOUBLE_MX_EQ(rpy_IB0, getRPYFromYPR(ypr_IB0), 1e-6, "rpy4"); // ok
 
-
-//      std::cout << p_BI0.w() << ", " << p_BI0.x() << ", " << p_BI0.y() << ", " << p_BI0.z() << std::endl;
-//      std::cout << getAngleAxisFromQuaternion(p_BI0).angle() << ", " << getAngleAxisFromQuaternion(p_BI0).axis().transpose() << std::endl;
-
-//      const double chi = 2*acos(p_BI0.w());
-//      const Vector3d n = Vector3d(p_BI0.x()/sin(chi/2),p_BI0.y()/sin(chi/2),p_BI0.z()/sin(chi/2));
-//      std::cout << getAngleAxisFromQuaternion(p_BI0).angle() << ", " << chi << std::endl;
-//      std::cout << getAngleAxisFromQuaternion(p_BI0).axis().transpose() << ", " << n.transpose() << std::endl;
-
-
-//      ASSERT_DOUBLE_MX_EQ(A_BI, A_BI2, 1e-6, "RotationMatrix");
+      ASSERT_DOUBLE_MX_EQ(ypr_IB0, getYPRFromAngleAxis(aa_IB0), 1e-6, "ypr1"); // ok
+      ASSERT_DOUBLE_MX_EQ(ypr_IB0, getYPRFromQuaternion(p_IB0), 1e-6, "ypr2"); // ok
+      ASSERT_DOUBLE_MX_EQ(ypr_IB0, getYPRFromTransformationMatrix(A_BI0), 1e-6, "ypr3"); // ok
+      ASSERT_DOUBLE_MX_EQ(ypr_IB0, getYPRFromRPY(rpy_IB0), 1e-6, "ypr4"); // ok
     }
 }
