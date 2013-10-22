@@ -247,12 +247,12 @@ static Eigen::Matrix<T,3,3> getTransformationMatrixFromYPR(const Eigen::Matrix<T
   const T cysr = cy*sr;
   const T cycr = cy*cr;
 
-  A_BI(0,0) = cp*cy;
-  A_BI(0,1) = sp*sr*cy-cr*sy;
-  A_BI(0,2) = sr*sy+sp*cr*cy;
+  A_BI(0,0) = cy*cp;
+  A_BI(0,1) = cysr*sp-sycr;
+  A_BI(0,2) = sysr+cycr*sp;
   A_BI(1,0) = cp*sy;
-  A_BI(1,1) = sp*sr*sy+cr*cy;
-  A_BI(1,2) = sp*cr*sy-sr*cy;
+  A_BI(1,1) = sysr*sp+cycr;
+  A_BI(1,2) = sycr*sp-cysr;
   A_BI(2,0) = -sp;
   A_BI(2,1) = cp*sr;
   A_BI(2,2) = cp*cr;
