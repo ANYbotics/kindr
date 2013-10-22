@@ -29,6 +29,7 @@ find_package(Eigen REQUIRED)
 
 include_directories(${EIGEN_INCLUDE_DIRS})
 include_directories(include)
+include_directories(../rm_common/include)
 
 #if (TEST)
 ################################
