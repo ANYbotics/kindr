@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include "rm/common/Common.hpp"
 #include "rm/rotations/Rotations.hpp"
 
 #include <Eigen/Core>
@@ -17,6 +18,18 @@
   typedef sm::timing::Timer MyTimerType;
   // use no timer
   //typedef sm::timing::DummyTimer MyTimerType;
+
+TEST (RotationsTest, DISABLED_testWrapAngle ) {
+  using namespace rm::common;
+  sm::random::seed(static_cast<unsigned int>(std::time(nullptr)));
+
+  for(int i=0; i<1e6; i++)
+  {
+    double angle = sm::random::randLU(-100,100);
+
+    EXPECT_EQ(wrapPosNegPI(angle), wrapAngle(angle,-M_PI,M_PI));
+  }
+}
 
 TEST (RotationsTest, DISABLED_testQuaternionMultiplication ) {
   using namespace Eigen;
@@ -99,6 +112,11 @@ TEST (RotationsTest, testRotationFunctions ) {
       Vector3d n0 = Vector3d(sm::random::randLU(-100,100),sm::random::randLU(-100,100),sm::random::randLU(-100,100));
       n0.normalize();
       AngleAxisd aa_IB0 = AngleAxisd(sm::random::randLU(-M_PI,M_PI),n0);
+
+//      Vector3d rpy_IB = Vector3d(sm::random::randLU(-M_PI,M_PI),sm::random::randLU(-M_PI,M_PI),sm::random::randLU(-M_PI,M_PI));
+//      Vector3d rpy_IB = Vector3d(sm::random::randLU(-M_PI,M_PI),M_PI/2,sm::random::randLU(-M_PI,M_PI));
+//      AngleAxisd aa_IB0 = getAngleAxisFromRPY(rpy_IB);
+
       Quaterniond p_IB0 = Quaterniond(aa_IB0);
       Matrix3d A_BI0 = p_IB0.toRotationMatrix();
       Vector3d rpy_IB0 = getRPYFromTransformationMatrix(A_BI0);
@@ -116,10 +134,10 @@ TEST (RotationsTest, testRotationFunctions ) {
 //      std::cout << "p1 = " << quaternionToVector(getQuaternionFromTransformationMatrix(getTransformationMatrixFromRPY(rpy_IB0))).transpose() << std::endl;
 //      std::cout << "p2 = " << quaternionToVector(getQuaternionFromRPY(rpy_IB0)).transpose() << std::endl;
 
-      ASSERT_DOUBLE_MX_EQ(aa_IB0.axis()*aa_IB0.angle(), getAngleAxisFromQuaternion(p_IB0).axis()*getAngleAxisFromQuaternion(p_IB0).angle(), 1e-4, "aa1"); // ok
-      ASSERT_DOUBLE_MX_EQ(aa_IB0.axis()*aa_IB0.angle(), getAngleAxisFromTransformationMatrix(A_BI0).axis()*getAngleAxisFromTransformationMatrix(A_BI0).angle(), 1e-5, "aa2"); // ok
-      ASSERT_DOUBLE_MX_EQ(aa_IB0.axis()*aa_IB0.angle(), getAngleAxisFromRPY(rpy_IB0).axis()*getAngleAxisFromRPY(rpy_IB0).angle(), 1e-4, "aa3"); // ok
-      ASSERT_DOUBLE_MX_EQ(aa_IB0.axis()*aa_IB0.angle(), getAngleAxisFromYPR(ypr_IB0).axis()*getAngleAxisFromYPR(ypr_IB0).angle(), 1e-4, "aa4"); // ok
+      ASSERT_DOUBLE_MX_EQ(aa_IB0.axis()*aa_IB0.angle(), getAngleAxisFromQuaternion(p_IB0).axis()*getAngleAxisFromQuaternion(p_IB0).angle(), 3e-4, "aa1"); // ok
+      ASSERT_DOUBLE_MX_EQ(aa_IB0.axis()*aa_IB0.angle(), getAngleAxisFromTransformationMatrix(A_BI0).axis()*getAngleAxisFromTransformationMatrix(A_BI0).angle(), 3e-4, "aa2"); // ok
+      ASSERT_DOUBLE_MX_EQ(aa_IB0.axis()*aa_IB0.angle(), getAngleAxisFromRPY(rpy_IB0).axis()*getAngleAxisFromRPY(rpy_IB0).angle(), 3e-4, "aa3"); // ok
+      ASSERT_DOUBLE_MX_EQ(aa_IB0.axis()*aa_IB0.angle(), getAngleAxisFromYPR(ypr_IB0).axis()*getAngleAxisFromYPR(ypr_IB0).angle(), 3e-4, "aa4"); // ok
 
       ASSERT_DOUBLE_MX_EQ(quaternionToVector(p_IB0), quaternionToVector(getQuaternionFromAngleAxis(aa_IB0)), 1e-6, "quat1"); // ok
       ASSERT_DOUBLE_MX_EQ(quaternionToVector(p_IB0), quaternionToVector(getQuaternionFromTransformationMatrix(A_BI0)), 1e-6, "quat2"); // ok

@@ -1,7 +1,7 @@
 /*!
-* @file 	Transformations.hpp
+* @file 	  Transformations.hpp
 * @author 	Michael Blösch, Peter Fankhauser, Christian Gehring, Remo Diethelm
-* @date		22 09, 2011
+* @date		  16 10, 2013
 * @version 	1.0
 * @ingroup 	rm
 * @brief
@@ -15,48 +15,15 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
+#include "rm/common/Common.hpp"
+
 namespace rm {
 namespace rotations {
 
 // todo: quaternion: check norm with .squaredNorm()
+// todo: increase speed
 
 // 0) Helping Functions
-
-template<typename T>
-static Eigen::AngleAxis<T> correctAngleRange(const Eigen::AngleAxis<T> aa)
-{
-  // corrects range of angle to [-pi,pi]
-  if(aa.angle() > M_PI)
-  {
-    return Eigen::AngleAxis<T>(aa.angle()-2*M_PI,aa.axis());
-  }
-  if(aa.angle() < -M_PI)
-  {
-    return Eigen::AngleAxis<T>(aa.angle()+2*M_PI,aa.axis());
-  }
-  else
-  {
-    return aa;
-  }
-}
-
-//template<typename T>
-//static Eigen::Matrix<T,3,1> correctEulerRange(const Eigen::Matrix<T,3,1> vec)
-//{
-//  // corrects range of rpy or ypr to [-pi,pi],[-pi/2,pi/2],[-pi,pi]
-//  if(vec(1) > M_PI/2)
-//  {
-//    return Eigen::Matrix<T,3,1>(vec(0)-M_PI, vec(1)-M_PI, vec(2)-M_PI);
-//  }
-//  else if(vec(1) < M_PI/2)
-//  {
-//    return Eigen::Matrix<T,3,1>(vec(0)+M_PI, vec(1)+M_PI, vec(2)+M_PI);
-//  }
-//  else
-//  {
-//    return vec;
-//  }
-//}
 
 template<typename T>
 static Eigen::Matrix<T,4,1> quaternionToVector(const Eigen::Quaternion<T> quat)
@@ -85,7 +52,7 @@ template<typename T>
 static Eigen::AngleAxis<T> getAngleAxisFromTransformationMatrix(const Eigen::Matrix<T,3,3> A_BI)
 {
   // Bad precision!
-  return correctAngleRange(Eigen::AngleAxis<T>(Eigen::Quaternion<T>(A_BI)));
+  return common::wrapAngle(Eigen::AngleAxis<T>(Eigen::Quaternion<T>(A_BI)),-M_PI,M_PI);
 //  return Eigen::AngleAxis<T>(A_BI);
 
 
@@ -96,20 +63,20 @@ template<typename T>
 static Eigen::AngleAxis<T> getAngleAxisFromRPY(const Eigen::Matrix<T,3,1> rpy_IB)
 {
   // Bad precision!
-  return correctAngleRange(Eigen::AngleAxis<T>(
+  return common::wrapAngle(Eigen::AngleAxis<T>(
     Eigen::AngleAxis<T>(rpy_IB(0), Eigen::Matrix<T, 3, 1>::UnitX()) *
     Eigen::AngleAxis<T>(rpy_IB(1), Eigen::Matrix<T, 3, 1>::UnitY()) *
-    Eigen::AngleAxis<T>(rpy_IB(2), Eigen::Matrix<T, 3, 1>::UnitZ())));
+    Eigen::AngleAxis<T>(rpy_IB(2), Eigen::Matrix<T, 3, 1>::UnitZ())),-M_PI,M_PI);
 }
 
 template<typename T>
 static Eigen::AngleAxis<T> getAngleAxisFromYPR(const Eigen::Matrix<T,3,1> ypr_IB)
 {
   // Bad precision!
-  return correctAngleRange(Eigen::AngleAxis<T>(
+  return common::wrapAngle(Eigen::AngleAxis<T>(
     Eigen::AngleAxis<T>(ypr_IB(0), Eigen::Matrix<T, 3, 1>::UnitZ()) *
     Eigen::AngleAxis<T>(ypr_IB(1), Eigen::Matrix<T, 3, 1>::UnitY()) *
-    Eigen::AngleAxis<T>(ypr_IB(2), Eigen::Matrix<T, 3, 1>::UnitX())));
+    Eigen::AngleAxis<T>(ypr_IB(2), Eigen::Matrix<T, 3, 1>::UnitX())),-M_PI,M_PI);
 }
 
 
@@ -148,7 +115,7 @@ static Eigen::Quaternion<T> getQuaternionFromTransformationMatrix(const Eigen::M
 
 //  Quaternion<T> q_BI =
 
-  return Eigen::Quaternion<T>(A_BI);  // todo: what does this function?
+  return Eigen::Quaternion<T>(A_BI);
 }
 
 template<typename T>
