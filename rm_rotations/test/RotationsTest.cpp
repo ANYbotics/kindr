@@ -14,8 +14,6 @@
 #include <iostream>
 #include <random>
 
-#include <boost/math/special_functions/round.hpp>
-
   // use a timer
   typedef sm::timing::Timer MyTimerType;
   // use no timer
@@ -161,31 +159,4 @@ TEST (RotationsTest, DISABLED_testRotationFunctions ) {
       ASSERT_DOUBLE_MX_EQ(ypr_IB0, getYPRFromTransformationMatrix(A_BI0), 1e-6, "ypr3"); // ok
       ASSERT_DOUBLE_MX_EQ(ypr_IB0, getYPRFromRPY(rpy_IB0), 1e-6, "ypr4"); // ok
     }
-}
-
-/*! Bounds value to range [lowerBound, upperBound)
- *
- * @param value
- * @param lowerBound
- * @param upperBound
- * @return
- */
-double boundToRange(double value, double lowerBound, double upperBound){
-	if(lowerBound > upperBound){std::swap(lowerBound, upperBound);}
-	value-=lowerBound; //adjust to 0
-	const double range = upperBound - lowerBound;
-	if(range == 0){return upperBound;} //avoid dividing by 0
-	return (double)(value - (range *boost::math::lround(value / range)) + lowerBound );
-}
-
-
-TEST(RotationsTest, testRange) {
-
-
-//	double input = sm::random::randLU(-10*M_PI,10*M_PI);
-	double input = 9*M_PI;
-	double corrected1 = rm::rotations::correctRangeAngle(input);
-	double corrected2 = boundToRange(input,-M_PI, M_PI);
-	EXPECT_EQ(corrected1, corrected2);
-//	std::cout << angleMod(3*M_PI,-M_PI, M_PI) << std::endl;
 }
