@@ -19,45 +19,44 @@ namespace rm {
 namespace rotations {
 
 // todo: quaternion: check norm with .squaredNorm()
-// todo: genauigkeit deklarieren
 
 // 0) Helping Functions
 
 template<typename T>
-static T correctRangeAngle(const T angle)
+static Eigen::AngleAxis<T> correctAngleRange(const Eigen::AngleAxis<T> aa)
 {
   // corrects range of angle to [-pi,pi]
-  if(angle > M_PI)
+  if(aa.angle() > M_PI)
   {
-    return angle-2*M_PI;
+    return Eigen::AngleAxis<T>(aa.angle()-2*M_PI,aa.axis());
   }
-  if(angle < -M_PI)
+  if(aa.angle() < -M_PI)
   {
-    return angle+2*M_PI;
+    return Eigen::AngleAxis<T>(aa.angle()+2*M_PI,aa.axis());
   }
   else
   {
-    return angle;
+    return aa;
   }
 }
 
-template<typename T>
-static Eigen::Matrix<T,3,1> correctRangeEuler(const Eigen::Matrix<T,3,1> vec)
-{
-  // corrects range of rpy or ypr to [-pi,pi],[-pi/2,pi/2],[-pi,pi]
-  if(vec(1) > M_PI/2)
-  {
-    return Eigen::Matrix<T,3,1>(vec(0)-M_PI, vec(1)-M_PI, vec(2)-M_PI);
-  }
-  else if(vec(1) < M_PI/2)
-  {
-    return Eigen::Matrix<T,3,1>(vec(0)+M_PI, vec(1)+M_PI, vec(2)+M_PI);
-  }
-  else
-  {
-    return vec;
-  }
-}
+//template<typename T>
+//static Eigen::Matrix<T,3,1> correctEulerRange(const Eigen::Matrix<T,3,1> vec)
+//{
+//  // corrects range of rpy or ypr to [-pi,pi],[-pi/2,pi/2],[-pi,pi]
+//  if(vec(1) > M_PI/2)
+//  {
+//    return Eigen::Matrix<T,3,1>(vec(0)-M_PI, vec(1)-M_PI, vec(2)-M_PI);
+//  }
+//  else if(vec(1) < M_PI/2)
+//  {
+//    return Eigen::Matrix<T,3,1>(vec(0)+M_PI, vec(1)+M_PI, vec(2)+M_PI);
+//  }
+//  else
+//  {
+//    return vec;
+//  }
+//}
 
 template<typename T>
 static Eigen::Matrix<T,4,1> quaternionToVector(const Eigen::Quaternion<T> quat)
@@ -78,13 +77,15 @@ static Eigen::Matrix<T,4,1> quaternionToVector(const Eigen::Quaternion<T> quat)
 template<typename T>
 static Eigen::AngleAxis<T> getAngleAxisFromQuaternion(const Eigen::Quaternion<T> p_IB)
 {
+  // Bad precision!
   return Eigen::AngleAxis<T>(p_IB);
 }
 
 template<typename T>
 static Eigen::AngleAxis<T> getAngleAxisFromTransformationMatrix(const Eigen::Matrix<T,3,3> A_BI)
 {
-  return Eigen::AngleAxis<T>(Eigen::Quaternion<T>(A_BI));
+  // Bad precision!
+  return correctAngleRange(Eigen::AngleAxis<T>(Eigen::Quaternion<T>(A_BI)));
 //  return Eigen::AngleAxis<T>(A_BI);
 
 
@@ -94,19 +95,21 @@ static Eigen::AngleAxis<T> getAngleAxisFromTransformationMatrix(const Eigen::Mat
 template<typename T>
 static Eigen::AngleAxis<T> getAngleAxisFromRPY(const Eigen::Matrix<T,3,1> rpy_IB)
 {
-  return Eigen::AngleAxis<T>(
+  // Bad precision!
+  return correctAngleRange(Eigen::AngleAxis<T>(
     Eigen::AngleAxis<T>(rpy_IB(0), Eigen::Matrix<T, 3, 1>::UnitX()) *
     Eigen::AngleAxis<T>(rpy_IB(1), Eigen::Matrix<T, 3, 1>::UnitY()) *
-    Eigen::AngleAxis<T>(rpy_IB(2), Eigen::Matrix<T, 3, 1>::UnitZ()));
+    Eigen::AngleAxis<T>(rpy_IB(2), Eigen::Matrix<T, 3, 1>::UnitZ())));
 }
 
 template<typename T>
 static Eigen::AngleAxis<T> getAngleAxisFromYPR(const Eigen::Matrix<T,3,1> ypr_IB)
 {
-  return Eigen::AngleAxis<T>(
+  // Bad precision!
+  return correctAngleRange(Eigen::AngleAxis<T>(
     Eigen::AngleAxis<T>(ypr_IB(0), Eigen::Matrix<T, 3, 1>::UnitZ()) *
     Eigen::AngleAxis<T>(ypr_IB(1), Eigen::Matrix<T, 3, 1>::UnitY()) *
-    Eigen::AngleAxis<T>(ypr_IB(2), Eigen::Matrix<T, 3, 1>::UnitX()));
+    Eigen::AngleAxis<T>(ypr_IB(2), Eigen::Matrix<T, 3, 1>::UnitX())));
 }
 
 
@@ -483,13 +486,15 @@ static Eigen::Matrix<T,3,3> getInverseTransformationMatrix(const Eigen::Matrix<T
 template<typename T>
 static Eigen::Matrix<T,3,1> getInverseRPY(const Eigen::Matrix<T,3,1> rpy_IB)
 {
-  return getRPYFromAngleAxis(getInverseAngleAxis(getAngleAxisFromRPY(rpy_IB)));
+  return getRPYFromQuaternion(getInverseQuaternion(getQuaternionFromRPY(rpy_IB)));
+//  return getRPYFromAngleAxis(getInverseAngleAxis(getAngleAxisFromRPY(rpy_IB)));
 }
 
 template<typename T>
 static Eigen::Matrix<T,3,1> getInverseYPR(const Eigen::Matrix<T,3,1> ypr_IB)
 {
-  return getYPRFromAngleAxis(getInverseAngleAxis(getAngleAxisFromYPR(ypr_IB)));
+  return getYPRFromQuaternion(getInverseQuaternion(getQuaternionFromYPR(ypr_IB)));
+//  return getYPRFromAngleAxis(getInverseAngleAxis(getAngleAxisFromYPR(ypr_IB)));
 }
 
 
@@ -581,7 +586,7 @@ void prox2D(double &y1, double &y2, const double &x1, const double &x2, const do
 /*
 
 
-Vector4d multiplyQuaternion(const Vector4d &p_CB, const Vector4d &p_BA)
+Vector4d multiplyQuaternion(const Vector4d &p_CB, const Vector4d &p_BA) // same in eigen
 {
   // p_CA = p_CB*p_BA
   Vector4d p_CA = Vector4d::Zero();

@@ -117,9 +117,9 @@ TEST (RotationsTest, testRotationFunctions ) {
 //      std::cout << "p2 = " << quaternionToVector(getQuaternionFromRPY(rpy_IB0)).transpose() << std::endl;
 
       ASSERT_DOUBLE_MX_EQ(aa_IB0.axis()*aa_IB0.angle(), getAngleAxisFromQuaternion(p_IB0).axis()*getAngleAxisFromQuaternion(p_IB0).angle(), 1e-4, "aa1"); // ok
-      ASSERT_DOUBLE_MX_EQ(aa_IB0.axis()*aa_IB0.angle(), getAngleAxisFromTransformationMatrix(A_BI0).axis()*correctRangeAngle(getAngleAxisFromTransformationMatrix(A_BI0).angle()), 1e-5, "aa2"); // ok
-      ASSERT_DOUBLE_MX_EQ(aa_IB0.axis()*aa_IB0.angle(), getAngleAxisFromRPY(rpy_IB0).axis()*correctRangeAngle(getAngleAxisFromRPY(rpy_IB0).angle()), 1e-4, "aa3"); // ok
-      ASSERT_DOUBLE_MX_EQ(aa_IB0.axis()*aa_IB0.angle(), getAngleAxisFromYPR(ypr_IB0).axis()*correctRangeAngle(getAngleAxisFromYPR(ypr_IB0).angle()), 1e-4, "aa4"); // ok
+      ASSERT_DOUBLE_MX_EQ(aa_IB0.axis()*aa_IB0.angle(), getAngleAxisFromTransformationMatrix(A_BI0).axis()*getAngleAxisFromTransformationMatrix(A_BI0).angle(), 1e-5, "aa2"); // ok
+      ASSERT_DOUBLE_MX_EQ(aa_IB0.axis()*aa_IB0.angle(), getAngleAxisFromRPY(rpy_IB0).axis()*getAngleAxisFromRPY(rpy_IB0).angle(), 1e-4, "aa3"); // ok
+      ASSERT_DOUBLE_MX_EQ(aa_IB0.axis()*aa_IB0.angle(), getAngleAxisFromYPR(ypr_IB0).axis()*getAngleAxisFromYPR(ypr_IB0).angle(), 1e-4, "aa4"); // ok
 
       ASSERT_DOUBLE_MX_EQ(quaternionToVector(p_IB0), quaternionToVector(getQuaternionFromAngleAxis(aa_IB0)), 1e-6, "quat1"); // ok
       ASSERT_DOUBLE_MX_EQ(quaternionToVector(p_IB0), quaternionToVector(getQuaternionFromTransformationMatrix(A_BI0)), 1e-6, "quat2"); // ok
