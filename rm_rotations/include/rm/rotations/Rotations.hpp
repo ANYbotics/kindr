@@ -22,11 +22,12 @@ namespace rotations {
 
 // todo: quaternion: check norm with .squaredNorm()
 // todo: increase speed
+// todo: inline static
 
 // 0) Helping Functions
 
 template<typename T>
-static Eigen::Matrix<T,4,1> quaternionToVector(const Eigen::Quaternion<T> quat)
+static Eigen::Matrix<T,4,1> quaternionToVector(const Eigen::Quaternion<T>& quat)
 {
   if(quat.w() < 0)
   {
@@ -38,42 +39,45 @@ static Eigen::Matrix<T,4,1> quaternionToVector(const Eigen::Quaternion<T> quat)
   }
 }
 
+// wrap angle to [x1..x2)
+template<typename T>
+inline Eigen::AngleAxis<T> wrapAngle(const Eigen::AngleAxis<T>& aa, const T& x1, const T& x2)
+{
+    return Eigen::AngleAxis<T>(common::wrapAngle(aa.angle(),x1,x2), aa.axis());
+}
+
 
 // 1) Output: AngleAxis
 
 template<typename T>
-static Eigen::AngleAxis<T> getAngleAxisFromQuaternion(const Eigen::Quaternion<T> p_IB)
+static Eigen::AngleAxis<T> getAngleAxisFromQuaternion(const Eigen::Quaternion<T>& p_IB)
 {
   // Bad precision!
   return Eigen::AngleAxis<T>(p_IB);
 }
 
 template<typename T>
-static Eigen::AngleAxis<T> getAngleAxisFromTransformationMatrix(const Eigen::Matrix<T,3,3> A_BI)
+static Eigen::AngleAxis<T> getAngleAxisFromTransformationMatrix(const Eigen::Matrix<T,3,3>& A_BI)
 {
   // Bad precision!
-  return common::wrapAngle(Eigen::AngleAxis<T>(Eigen::Quaternion<T>(A_BI)),-M_PI,M_PI);
-//  return Eigen::AngleAxis<T>(A_BI);
-
-
-//  return Eigen::AngleAxis<T>(Eigen::Quaternion<T>(A_BI).conjugate()); // old
+  return wrapAngle(Eigen::AngleAxis<T>(A_BI),-M_PI,M_PI);
 }
 
 template<typename T>
-static Eigen::AngleAxis<T> getAngleAxisFromRPY(const Eigen::Matrix<T,3,1> rpy_IB)
+static Eigen::AngleAxis<T> getAngleAxisFromRPY(const Eigen::Matrix<T,3,1>& rpy_IB)
 {
   // Bad precision!
-  return common::wrapAngle(Eigen::AngleAxis<T>(
+  return wrapAngle(Eigen::AngleAxis<T>(
     Eigen::AngleAxis<T>(rpy_IB(0), Eigen::Matrix<T, 3, 1>::UnitX()) *
     Eigen::AngleAxis<T>(rpy_IB(1), Eigen::Matrix<T, 3, 1>::UnitY()) *
     Eigen::AngleAxis<T>(rpy_IB(2), Eigen::Matrix<T, 3, 1>::UnitZ())),-M_PI,M_PI);
 }
 
 template<typename T>
-static Eigen::AngleAxis<T> getAngleAxisFromYPR(const Eigen::Matrix<T,3,1> ypr_IB)
+static Eigen::AngleAxis<T> getAngleAxisFromYPR(const Eigen::Matrix<T,3,1>& ypr_IB)
 {
   // Bad precision!
-  return common::wrapAngle(Eigen::AngleAxis<T>(
+  return wrapAngle(Eigen::AngleAxis<T>(
     Eigen::AngleAxis<T>(ypr_IB(0), Eigen::Matrix<T, 3, 1>::UnitZ()) *
     Eigen::AngleAxis<T>(ypr_IB(1), Eigen::Matrix<T, 3, 1>::UnitY()) *
     Eigen::AngleAxis<T>(ypr_IB(2), Eigen::Matrix<T, 3, 1>::UnitX())),-M_PI,M_PI);
@@ -83,14 +87,15 @@ static Eigen::AngleAxis<T> getAngleAxisFromYPR(const Eigen::Matrix<T,3,1> ypr_IB
 // 2) Output: Quaternion
 
 template<typename T>
-static Eigen::Quaternion<T> getQuaternionFromAngleAxis(const Eigen::AngleAxis<T> aa_IB)
+static Eigen::Quaternion<T> getQuaternionFromAngleAxis(const Eigen::AngleAxis<T>& aa_IB)
 {
   return Eigen::Quaternion<T>(aa_IB);
 }
 
 template<typename T>
-static Eigen::Quaternion<T> getQuaternionFromTransformationMatrix(const Eigen::Matrix<T,3,3> A_BI)
+static Eigen::Quaternion<T> getQuaternionFromTransformationMatrix(const Eigen::Matrix<T,3,3>& A_BI)
 {
+//  // Untested
 //  // Bad precision!
 //  double w;
 //  double x;
@@ -113,93 +118,90 @@ static Eigen::Quaternion<T> getQuaternionFromTransformationMatrix(const Eigen::M
 //  q.z() = z;
 //  q.normalize();
 
-//  Quaternion<T> q_BI =
-
   return Eigen::Quaternion<T>(A_BI);
 }
 
 template<typename T>
-static Eigen::Quaternion<T> getQuaternionFromRPY(const Eigen::Matrix<T,3,1> rpy_IB)
+static Eigen::Quaternion<T> getQuaternionFromRPY(const Eigen::Matrix<T,3,1>& rpy_IB)
 {
-  Eigen::Quaternion<T> p_IB;
+//  // Tested and Working
+//  Eigen::Quaternion<T> p_IB;
+//
+//  const T sr = sin(rpy_IB(0)/2);
+//  const T cr = cos(rpy_IB(0)/2);
+//  const T sp = sin(rpy_IB(1)/2);
+//  const T cp = cos(rpy_IB(1)/2);
+//  const T sy = sin(rpy_IB(2)/2);
+//  const T cy = cos(rpy_IB(2)/2);
+//
+//  const T srsp = sr*sp;
+//  const T srcp = sr*cp;
+//  const T crsp = cr*sp;
+//  const T crcp = cr*cp;
+//
+//  p_IB.w() = -srsp*sy+crcp*cy;
+//  p_IB.x() = crsp*sy+srcp*cy;
+//  p_IB.y() = crsp*cy-srcp*sy;
+//  p_IB.z() = srsp*cy+crcp*sy;
+////  p_IB.normalize();
+//
+//  return p_IB;
 
-  const T sr = sin(rpy_IB(0)/2);
-  const T cr = cos(rpy_IB(0)/2);
-  const T sp = sin(rpy_IB(1)/2);
-  const T cp = cos(rpy_IB(1)/2);
-  const T sy = sin(rpy_IB(2)/2);
-  const T cy = cos(rpy_IB(2)/2);
-
-  const T srsp = sr*sp;
-  const T srcp = sr*cp;
-  const T crsp = cr*sp;
-  const T crcp = cr*cp;
-
-  p_IB.w() = -srsp*sy+crcp*cy;
-  p_IB.x() = crsp*sy+srcp*cy;
-  p_IB.y() = crsp*cy-srcp*sy;
-  p_IB.z() = srsp*cy+crcp*sy;
-//  p_IB.normalize();
-
-  return p_IB;
-
-//  return Eigen::Quaternion<T>(
-//    Eigen::AngleAxis<T>(rpy_IB(2), Eigen::Matrix<T, 3, 1>::UnitZ()) *
-//    Eigen::AngleAxis<T>(rpy_IB(1), Eigen::Matrix<T, 3, 1>::UnitY()) *
-//    Eigen::AngleAxis<T>(rpy_IB(0), Eigen::Matrix<T, 3, 1>::UnitX()));
-
-//  return getQuaternionFromAngleAxis((getAngleAxisFromRPY(rpy_IB)));
+  return Eigen::Quaternion<T>(
+    Eigen::AngleAxis<T>(rpy_IB(0), Eigen::Matrix<T, 3, 1>::UnitX()) *
+    Eigen::AngleAxis<T>(rpy_IB(1), Eigen::Matrix<T, 3, 1>::UnitY()) *
+    Eigen::AngleAxis<T>(rpy_IB(2), Eigen::Matrix<T, 3, 1>::UnitZ()));
 }
 
 template<typename T>
-static Eigen::Quaternion<T> getQuaternionFromYPR(const Eigen::Matrix<T,3,1> ypr_IB)
+static Eigen::Quaternion<T> getQuaternionFromYPR(const Eigen::Matrix<T,3,1>& ypr_IB)
 {
-  Eigen::Quaternion<T> p_IB;
+//  // Tested and Working
+//  Eigen::Quaternion<T> p_IB;
+//
+//  const T sy = sin(ypr_IB(0)/2);
+//  const T cy = cos(ypr_IB(0)/2);
+//  const T sp = sin(ypr_IB(1)/2);
+//  const T cp = cos(ypr_IB(1)/2);
+//  const T sr = sin(ypr_IB(2)/2);
+//  const T cr = cos(ypr_IB(2)/2);
+//
+//  const T sysp = sy*sp;
+//  const T sycp = sy*cp;
+//  const T cysp = cy*sp;
+//  const T cycp = cy*cp;
+//
+//  p_IB.w() = sysp*sr+cycp*cr;
+//  p_IB.x() = -sysp*cr+cycp*sr;
+//  p_IB.y() = sycp*sr+cysp*cr;
+//  p_IB.z() = sycp*cr-cysp*sr;
+////  p_IB.normalize();
+//
+//  return p_IB;
 
-  const T sy = sin(ypr_IB(0)/2);
-  const T cy = cos(ypr_IB(0)/2);
-  const T sp = sin(ypr_IB(1)/2);
-  const T cp = cos(ypr_IB(1)/2);
-  const T sr = sin(ypr_IB(2)/2);
-  const T cr = cos(ypr_IB(2)/2);
-
-  const T sysp = sy*sp;
-  const T sycp = sy*cp;
-  const T cysp = cy*sp;
-  const T cycp = cy*cp;
-
-  p_IB.w() = sysp*sr+cycp*cr;
-  p_IB.x() = -sysp*cr+cycp*sr;
-  p_IB.y() = sycp*sr+cysp*cr;
-  p_IB.z() = sycp*cr-cysp*sr;
-//  p_IB.normalize();
-
-  return p_IB;
-
-
-//  return Eigen::Quaternion<T>(
-//    Eigen::AngleAxis<T>(ypr_IB(2), Eigen::Matrix<T, 3, 1>::UnitX()) *
-//    Eigen::AngleAxis<T>(ypr_IB(1), Eigen::Matrix<T, 3, 1>::UnitY()) *
-//    Eigen::AngleAxis<T>(ypr_IB(0), Eigen::Matrix<T, 3, 1>::UnitZ()));
+  return Eigen::Quaternion<T>(
+    Eigen::AngleAxis<T>(ypr_IB(0), Eigen::Matrix<T, 3, 1>::UnitZ()) *
+    Eigen::AngleAxis<T>(ypr_IB(1), Eigen::Matrix<T, 3, 1>::UnitY()) *
+    Eigen::AngleAxis<T>(ypr_IB(2), Eigen::Matrix<T, 3, 1>::UnitX()));
 }
 
 
 // 3) Output: Transformation Matrix (is equal to the transformation matrix in the Glocker notation)
 
 template<typename T>
-static Eigen::Matrix<T,3,3> getTransformationMatrixFromAngleAxis(const Eigen::AngleAxis<T> aa_IB)
+static Eigen::Matrix<T,3,3> getTransformationMatrixFromAngleAxis(const Eigen::AngleAxis<T>& aa_IB)
 {
   return aa_IB.toRotationMatrix(); // A_BI
 }
 
 template<typename T>
-static Eigen::Matrix<T,3,3> getTransformationMatrixFromQuaternion(const Eigen::Quaternion<T> p_IB)
+static Eigen::Matrix<T,3,3> getTransformationMatrixFromQuaternion(const Eigen::Quaternion<T>& p_IB)
 {
   return p_IB.toRotationMatrix(); // A_BI
 }
 
 template<typename T>
-static Eigen::Matrix<T,3,3> getTransformationMatrixFromRPY(const Eigen::Matrix<T,3,1> rpy_IB)
+static Eigen::Matrix<T,3,3> getTransformationMatrixFromRPY(const Eigen::Matrix<T,3,1>& rpy_IB)
 {
   Eigen::Matrix<T,3,3> A_BI;
 
@@ -210,31 +212,26 @@ static Eigen::Matrix<T,3,3> getTransformationMatrixFromRPY(const Eigen::Matrix<T
   const T sy = sin(rpy_IB(2));
   const T cy = cos(rpy_IB(2));
 
-  A_BI(0,0) = cy*cp;
-  A_BI(0,1) = -sy*cp;
-  A_BI(0,2) = sp;
-  A_BI(1,0) = sy*cr+cy*sr*sp;
-  A_BI(1,1) = cy*cr-sr*sy*sp;
-  A_BI(1,2) = -sr*cp;
-  A_BI(2,0) = sr*sy-cy*cr*sp;
-  A_BI(2,1) = cy*sr+sy*cr*sp;
-  A_BI(2,2) = cr*cp;
+  const T srsy = sr*sy;
+  const T srcy = sr*cy;
+  const T crsy = cr*sy;
+  const T crcy = cr*cy;
 
-//  A_BI(0,0) = cy*cp;
-//  A_BI(0,1) = sy*cr+cy*sr*sp;
-//  A_BI(0,2) = sr*sy-cy*cr*sp;
-//  A_BI(1,0) = -sy*cp;
-//  A_BI(1,1) = cy*cr-sr*sy*sp;
-//  A_BI(1,2) = cy*sr+sy*cr*sp;
-//  A_BI(2,0) = sp;
-//  A_BI(2,1) = -sr*cp;
-//  A_BI(2,2) = cr*cp;
+  A_BI(0,0) = cp*cy;
+  A_BI(0,1) = -cp*sy;
+  A_BI(0,2) = sp;
+  A_BI(1,0) = crsy+srcy*sp;
+  A_BI(1,1) = crcy-srsy*sp;
+  A_BI(1,2) = -sr*cp;
+  A_BI(2,0) = srsy-crcy*sp;
+  A_BI(2,1) = srcy+crsy*sp;
+  A_BI(2,2) = cr*cp;
 
   return A_BI;
 }
 
 template<typename T>
-static Eigen::Matrix<T,3,3> getTransformationMatrixFromYPR(const Eigen::Matrix<T,3,1> ypr_IB)
+static Eigen::Matrix<T,3,3> getTransformationMatrixFromYPR(const Eigen::Matrix<T,3,1>& ypr_IB)
 {
   Eigen::Matrix<T,3,3> A_BI;
 
@@ -244,6 +241,11 @@ static Eigen::Matrix<T,3,3> getTransformationMatrixFromYPR(const Eigen::Matrix<T
   const T cp = cos(ypr_IB(1));
   const T sr = sin(ypr_IB(2));
   const T cr = cos(ypr_IB(2));
+
+  const T sysr = sy*sr;
+  const T sycr = sy*cr;
+  const T cysr = cy*sr;
+  const T cycr = cy*cr;
 
   A_BI(0,0) = cp*cy;
   A_BI(0,1) = sp*sr*cy-cr*sy;
@@ -255,16 +257,6 @@ static Eigen::Matrix<T,3,3> getTransformationMatrixFromYPR(const Eigen::Matrix<T
   A_BI(2,1) = cp*sr;
   A_BI(2,2) = cp*cr;
 
-//  A_BI(0,0) = cp*cy;
-//  A_BI(0,1) = cp*sy;
-//  A_BI(0,2) = -sp;
-//  A_BI(1,0) = sp*sr*cy-cr*sy;
-//  A_BI(1,1) = sp*sr*sy+cr*cy;
-//  A_BI(1,2) = cp*sr;
-//  A_BI(2,0) = sr*sy+sp*cr*cy;
-//  A_BI(2,1) = sp*cr*cy-sr*cy;
-//  A_BI(2,2) = cp*cr;
-
   return A_BI;
 }
 
@@ -272,13 +264,13 @@ static Eigen::Matrix<T,3,3> getTransformationMatrixFromYPR(const Eigen::Matrix<T
 // 4) Output: Roll-Pitch-Yaw
 
 template<typename T>
-static Eigen::Matrix<T,3,1> getRPYFromAngleAxis(const Eigen::AngleAxis<T> aa_IB)
+static Eigen::Matrix<T,3,1> getRPYFromAngleAxis(const Eigen::AngleAxis<T>& aa_IB)
 {
   return aa_IB.toRotationMatrix().eulerAngles(0, 1, 2);
 }
 
 template<typename T>
-static Eigen::Matrix<T,3,1> getRPYFromQuaternion(const Eigen::Quaternion<T> p_IB)
+static Eigen::Matrix<T,3,1> getRPYFromQuaternion(const Eigen::Quaternion<T>& p_IB)
 {
 //  Eigen::Matrix<T,3,1> rpy_IB;
 //
@@ -339,13 +331,13 @@ static Eigen::Matrix<T,3,1> getRPYFromQuaternion(const Eigen::Quaternion<T> p_IB
 }
 
 template<typename T>
-static Eigen::Matrix<T,3,1> getRPYFromTransformationMatrix(const Eigen::Matrix<T,3,3> A_BI)
+static Eigen::Matrix<T,3,1> getRPYFromTransformationMatrix(const Eigen::Matrix<T,3,3>& A_BI)
 {
   return A_BI.eulerAngles(0, 1, 2); // rpy_IB
 }
 
 template<typename T>
-static Eigen::Matrix<T,3,1> getRPYFromYPR(const Eigen::Matrix<T,3,1> ypr_IB)
+static Eigen::Matrix<T,3,1> getRPYFromYPR(const Eigen::Matrix<T,3,1>& ypr_IB)
 {
   return getRPYFromQuaternion(getQuaternionFromYPR(ypr_IB));
 //  return getRPYFromAngleAxis(getAngleAxisFromYPR(ypr_IB));
@@ -355,13 +347,13 @@ static Eigen::Matrix<T,3,1> getRPYFromYPR(const Eigen::Matrix<T,3,1> ypr_IB)
 // 5) Output: Yaw-Pitch-Roll
 
 template<typename T>
-static Eigen::Matrix<T,3,1> getYPRFromAngleAxis(const Eigen::AngleAxis<T> aa_IB)
+static Eigen::Matrix<T,3,1> getYPRFromAngleAxis(const Eigen::AngleAxis<T>& aa_IB)
 {
   return aa_IB.toRotationMatrix().eulerAngles(2, 1, 0);
 }
 
 template<typename T>
-static Eigen::Matrix<T,3,1> getYPRFromQuaternion(const Eigen::Quaternion<T> p_IB)
+static Eigen::Matrix<T,3,1> getYPRFromQuaternion(const Eigen::Quaternion<T>& p_IB)
 {
 //  Eigen::Matrix<T,3,1> ypr_IB;
 //
@@ -416,13 +408,13 @@ static Eigen::Matrix<T,3,1> getYPRFromQuaternion(const Eigen::Quaternion<T> p_IB
 }
 
 template<typename T>
-static Eigen::Matrix<T,3,1> getYPRFromTransformationMatrix(const Eigen::Matrix<T,3,3> A_BI)
+static Eigen::Matrix<T,3,1> getYPRFromTransformationMatrix(const Eigen::Matrix<T,3,3>& A_BI)
 {
   return A_BI.eulerAngles(2, 1, 0); // ypr_IB
 }
 
 template<typename T>
-static Eigen::Matrix<T,3,1> getYPRFromRPY(const Eigen::Matrix<T,3,1> rpy_IB)
+static Eigen::Matrix<T,3,1> getYPRFromRPY(const Eigen::Matrix<T,3,1>& rpy_IB)
 {
   return getYPRFromQuaternion(getQuaternionFromRPY(rpy_IB));
 //  return getYPRFromAngleAxis(getAngleAxisFromRPY(rpy_IB));
@@ -432,33 +424,33 @@ static Eigen::Matrix<T,3,1> getYPRFromRPY(const Eigen::Matrix<T,3,1> rpy_IB)
 // 6) Output: Inverses
 
 template<typename T>
-static Eigen::AngleAxis<T> getInverseAngleAxis(const Eigen::AngleAxis<T> aa_IB)
+static Eigen::AngleAxis<T> getInverseAngleAxis(const Eigen::AngleAxis<T>& aa_IB)
 {
   return aa_IB.inverse();
 }
 
 template<typename T>
-static Eigen::Quaternion<T> getInverseQuaternion(const Eigen::Quaternion<T> p_IB)
+static Eigen::Quaternion<T> getInverseQuaternion(const Eigen::Quaternion<T>& p_IB)
 {
   return p_IB.conjugate();
 //  return p_IB.inverse(); // todo
 }
 
 template<typename T>
-static Eigen::Matrix<T,3,3> getInverseTransformationMatrix(const Eigen::Matrix<T,3,3> A_BI)
+static Eigen::Matrix<T,3,3> getInverseTransformationMatrix(const Eigen::Matrix<T,3,3>& A_BI)
 {
   return A_BI.transpose();
 }
 
 template<typename T>
-static Eigen::Matrix<T,3,1> getInverseRPY(const Eigen::Matrix<T,3,1> rpy_IB)
+static Eigen::Matrix<T,3,1> getInverseRPY(const Eigen::Matrix<T,3,1>& rpy_IB)
 {
   return getRPYFromQuaternion(getInverseQuaternion(getQuaternionFromRPY(rpy_IB)));
 //  return getRPYFromAngleAxis(getInverseAngleAxis(getAngleAxisFromRPY(rpy_IB)));
 }
 
 template<typename T>
-static Eigen::Matrix<T,3,1> getInverseYPR(const Eigen::Matrix<T,3,1> ypr_IB)
+static Eigen::Matrix<T,3,1> getInverseYPR(const Eigen::Matrix<T,3,1>& ypr_IB)
 {
   return getYPRFromQuaternion(getInverseQuaternion(getQuaternionFromYPR(ypr_IB)));
 //  return getYPRFromAngleAxis(getInverseAngleAxis(getAngleAxisFromYPR(ypr_IB)));
