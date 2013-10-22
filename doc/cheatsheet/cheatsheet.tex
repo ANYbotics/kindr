@@ -223,9 +223,9 @@ $\vp_{IB} = \begin{pmatrix} \frac{1}{2} \sqrt{1 + \tr(\vA)} \\ \frac{A_{32} - A_
 \subsection{Eigen Library}
 \begin{tabular}{@{}ll@{}} 
  \verb!Vector3d ypr_IB = Vectord(psi,theta, phi);!  \\
- \verb!aa_IB = AngleAxis(rpy_IB(0), Vector3d::UnitZ())*! \\
- \verb!        AngleAxis(rpy_IB(1), Vector3d::UnitY())*! \\
- \verb!        AngleAxis(rpy_IB(2), Vector3d::UnitX());! \\ 
+ \verb!aa_IB = AngleAxis(ypr_IB(0), Vector3d::UnitZ())*! \\
+ \verb!        AngleAxis(ypr_IB(1), Vector3d::UnitY())*! \\
+ \verb!        AngleAxis(ypr_IB(2), Vector3d::UnitX());! \\ 
  \verb!Quaterniond p_IB = Quaterniond(aa_IB);! \\
  \verb!Matrix3d A_BI = p_IB.toRotationMatrix();! \\
  \verb!Vector3d B_r_OP = A_BI*I_r_OP! & \\
