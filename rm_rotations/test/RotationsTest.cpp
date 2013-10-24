@@ -19,6 +19,29 @@
   // use no timer
   //typedef sm::timing::DummyTimer MyTimerType;
 
+TEST (RotationsTest, DISABLED_testEigenEulerAngleRange ) {
+  using namespace Eigen;
+  using namespace rm::rotations;
+
+  std::cout << getRPYFromQuaternion(getQuaternionFromRPY(Vector3d(M_PI,0,0))).transpose() << std::endl;
+  std::cout << getRPYFromQuaternion(getQuaternionFromRPY(Vector3d(-M_PI,0,0))).transpose() << std::endl;
+  std::cout << getRPYFromQuaternion(getQuaternionFromRPY(Vector3d(0,M_PI/2,0))).transpose() << std::endl;
+  std::cout << getRPYFromQuaternion(getQuaternionFromRPY(Vector3d(0,-M_PI/2,0))).transpose() << std::endl;
+  std::cout << getRPYFromQuaternion(getQuaternionFromRPY(Vector3d(0,0,M_PI))).transpose() << std::endl;
+  std::cout << getRPYFromQuaternion(getQuaternionFromRPY(Vector3d(0,0,-M_PI))).transpose() << std::endl;
+
+  std::cout << std::endl;
+
+  double eps = 0.001;
+
+  std::cout << getRPYFromAngleAxis(AngleAxisd(M_PI,Vector3d(1,0,0))).transpose() << std::endl;
+  std::cout << getRPYFromAngleAxis(AngleAxisd(-M_PI,Vector3d(1,0,0))).transpose() << std::endl;
+  std::cout << getRPYFromAngleAxis(AngleAxisd(M_PI,Vector3d(0,1,0))).transpose() << std::endl;
+  std::cout << getRPYFromAngleAxis(AngleAxisd(-M_PI,Vector3d(0,1,0))).transpose() << std::endl;
+  std::cout << getRPYFromAngleAxis(AngleAxisd(M_PI,Vector3d(0,0,1))).transpose() << std::endl;
+  std::cout << getRPYFromAngleAxis(AngleAxisd(-M_PI,Vector3d(0,0,1))).transpose() << std::endl;
+}
+
 TEST (RotationsTest, DISABLED_testWrapAngle ) {
   using namespace rm::common;
   sm::random::seed(static_cast<unsigned int>(std::time(nullptr)));
