@@ -130,44 +130,52 @@ Translational velocity & ${}_I\vv_P \in \mathbb{R}^3 $  & translational velocity
 Angular velocity & ${}_I\vom_{IB} \in \mathbb{R}^3 $ & ang. velocity of CS $B$ w.r.t. to CS $B$ expressed in CS $I$ \\ \hline
 Ang. vel. of rigid body & ${}_B\vOm = {}_B\vom_{IB}$ & with body-fixed CS $B$ and inertial CS $I$ \\ \hline
 Ang. acc. of rigid body & ${}_B\vPs$ \\ \hline
-Generalized coordinates & $\vq \in \mathbb{Q} \subset \mathbb{R}^{n_q}$ & set of coordinates to describe a multi-rigid-body system\\ \hline
-Generalized velocities & $\vu \in \mathbb{U} \subset \mathbb{R}^{n_u}$ & gen. velocities of multi-rigid-body system, where $\vu = \vF\dot{\vq}$\\ \hline
-Skew-symmetric matrix & \multicolumn{2}{l|}{$\tilde{\va} = \begin{pmatrix} 0 & -a_3 & a_2 \\ a_3 & 0 & -a_1 \\ -a_2 & a_1 & 0 \end{pmatrix}, \va = \begin{pmatrix} a_1 \\ a_2 \\ a_3\end{pmatrix}$}  \\ \hline
-Euclidean norm & \multicolumn{2}{l|}{$\lVert \va \rVert = \sqrt{a_1^2 + a_2^2 + a_3^2}$} \\ \hline
+% Generalized coordinates & $\vq \in \mathbb{Q} \subset \mathbb{R}^{n_q}$ & set of coordinates to describe a multi-rigid-body system\\ \hline
+% Generalized velocities & $\vu \in \mathbb{U} \subset \mathbb{R}^{n_u}$ & gen. velocities of multi-rigid-body system, where $\vu = \vF\dot{\vq}$\\ \hline
+Cross product & \multicolumn{2}{l|}{$\va \times \vb = \begin{pmatrix} a_1 \\ a_2 \\ a_3\end{pmatrix} \times \begin{pmatrix} b_1 \\ b_2 \\ b_3\end{pmatrix} =  \tilde{\va}\vb = \begin{pmatrix} 0 & -a_3 & a_2 \\ a_3 & 0 & -a_1 \\ -a_2 & a_1 & 0 \end{pmatrix} \begin{pmatrix} b_1 \\ b_2 \\ b_3\end{pmatrix}$}  \\ \hline
+Euclidean norm & \multicolumn{2}{l|}{$\lVert \va \rVert = \sqrt{\va^T\va} = \sqrt{a_1^2 + a_2^2 + a_3^2}$} \\ \hline
 Machine precision & $\epsilon$ & \\ \hline
 \end{tabular}
 
 \section{Coordinate Transformations and Rotations}
-\begin{tabular}{|l@{}|l@{}|l@{}|}
+\begin{tabular}{|l|l@{}|l@{}|}
 \hline
-Rotation-  & $\vR_{IB} \in \mathrm{SO}(3)$ & The 3D rotation $\vR_{IB}:\cI \rightarrow \cB$ rotates a vector \\ 
-matrix & ${}_I\vR_{IB} = ({}_I\ve_x^C, {}_I\ve_y^C, {}_I\ve_z^C)$ & by mapping it from $\cI$ to $\cB$. \\
+Rotation  & $\vR_{BI} \in \mathrm{SO}(3)$ & The 3D rotation $\vR_{BI}:\cI \rightarrow \cB$ rotates a vector \\ 
+matrix & ${}_I\vR_{BI} = ({}_I\ve_x^B, {}_I\ve_y^B, {}_I\ve_z^B)$ & by mapping it from $\cI$ to $\cB$. \\
 & & The transformation is active (alibi).\\ \hline
-Transfor- & $\vA_{BI} = \vA_{I}^{B}\in \mathrm{SO}(3)$ & Transforms the coord. of a vector expr. in CS $I$ to CS $B$,\\  
-mationmatrix & ${}_{B}\vr_{OP} = \vA_{BI} {}_{I}\vr_{OP}$ &  i.e.\ the coord. of a point $P$ change due to a rotation of \\
-& &  the CS and the vector $\vr_{OP}$ representing $P$ is not rotated. \\  
- & $\vA_{IB} = \vA_{BI}^T = {}_I \vR_{IB}^T$ & The transformation is passive (alias).\\ \hline
- Unit  & $\vp_{IB}=(a_0, \va^T)^T\in \mathbb{H}$ &  Rotates a vector expr. in CS $I$ to CS $B$. \\
-Quaternion& $\vp_{IB}=(w,x,y,z)^T$  & The transformation is active (alibi): $\vp_{IB} \equiv \vR_{IB}$\\ 
- & $\left\lVert\vp_{IB}\right\rVert=1$  & $\vp_{BI} = \vp_{IB}^{-1} = \bar{\vp}_{IB}$,  \\ \hline
-Angle-axis & $\{\chi, \vn\}_{IB}$ & Rotates a vector expressed in CS $I$ to CS $B$ (active, alibi). \\
-& $\lVert\vn\rVert=1$ & with angle $\chi$ around unit vector $\vn$.  $\{\chi, \vn\}_{IB} \equiv \vR_{IB}$\\ \hline
-Yaw-pitch-roll &  $(\psi, \theta, \phi)_{IB}^T$  & Tait-Bryan angles: $z-y'-x''$ (Singularity: $\theta=\pm\frac{\pi}{2}$) \\
- (Flight conv.) & & $\psi\in(-\pi,\pi), \theta\in(-\frac{\pi}{2},\frac{\pi}{2}), \phi\in(-\pi,\pi)$  \\  \hline
-Roll-pitch-yaw &  $(\alpha, \beta, \gamma)_{IB}^T$ & Cardan angles: $x-y'-z''$ (Singularity: $\beta=\pm\frac{\pi}{2}$)  \\
- (Glocker conv.)& & $\alpha\in(-\pi,\pi), \beta\in(-\frac{\pi}{2},\frac{\pi}{2}), \gamma\in(-\pi,\pi)$  \\  \hline
+Basis-& $\vA_{BI} = \vA_{I}^{B}\in \mathrm{SO}(3)$ & Transforms the coord. of a vector expr. in CS $I$ to CS $B$,\\  
+Transformation  & ${}_{B}\vr_{OP} = \vA_{BI} {}_{I}\vr_{OP}$ &  i.e.\ the coord. of a point $P$ change due to a rotation of \\
+matrix& &  the CS and the vector $\vr_{OP}$ representing $P$ is not rotated. \\  
+ & $\vA_{BI} = \vA_{IB}^T = {}_I \vR_{BI}^T$ & The transformation is passive (alias).\\ \hline
+ Unit  & $\vp_{BI}=(a_0, \va)\in \mathbb{H}$ &  Rotates a vector by mapping it from $\cI$ to $\cB$ (active, alibi). \\
+Quaternion& $\va = (a_1, a_2 ,a_3)^T$  & The transformation is active (alibi). \\ 
+ & $\left\lVert\vp_{BI}\right\rVert=1$  &   \\ \hline
+Angle-axis & $\{\chi, \vn\}_{BI}, \chi \in [-\frac{\pi}{2}, \frac{\pi}{2})$ & Rotates a vector by mapping it from $\cI$ to $\cB$  (active, alibi) \\
+& $\lVert\vn\rVert=1$ & with angle $\chi$ around unit vector \\ \hline
+Yaw-pitch-roll &  $(\psi, \theta, \phi)_{BI}^T$  & Tait-Bryan angles: $z-y'-x''$ (Singularity: $\theta=\pm\frac{\pi}{2}$) \\
+ (Flight conv.) & $\cI \rightarrow \cB$ & $\psi\in(-\pi,\pi), \theta\in(-\frac{\pi}{2},\frac{\pi}{2}), \phi\in(-\pi,\pi)$  \\  \hline
+Roll-pitch-yaw &  $(\alpha, \beta, \gamma)_{BI}^T$ & Cardan angles: $x-y'-z''$ (Singularity: $\beta=\pm\frac{\pi}{2}$)  \\
+ (Glocker conv.)& $\cI \rightarrow \cB$ & $\alpha\in(-\pi,\pi), \beta\in(-\frac{\pi}{2},\frac{\pi}{2}), \gamma\in(-\pi,\pi)$  \\  \hline
 \end{tabular} % \multirow{2}{*}{}
 \subsection{Unit Quaternions}
-$\vp_{IB}^{-1} = \bar{\vp}_{IB} = (a_0, -\va^T)^T$ \\
-$\begin{aligned}\vp_{CA} &= \vp_{CB} \cdot \vp_{BA} = \vp_\mathrm{m}(\vp_{CB}=\begin{bmatrix} a_0 \\ \va \end{bmatrix}, \vp_{BA}=\begin{bmatrix} b_0 \\ \vb \end{bmatrix}) = \begin{bmatrix} a_0 b_0 - \va^{T} \vb \\ a_{0} \vb + b_0 \va + \tilde{\vb} \va \end{bmatrix}  \\
-	  &= \vQ(\vp_{CB})\vp_{BA} = \begin{bmatrix}a_0 & -\va^T \\  \va & a_0\vI_{3x3}-\tilde{\va} \\ \end{bmatrix} \begin{bmatrix} b_0 \\ b_1 \\ b_2 \\ b_3 \end{bmatrix} 
-	  = \begin{bmatrix} 
-a_0 & -a_1 & -a_2 & -a_3 \\
-a_1 &  a_0 &  a_3 & -a_2 \\
-a_2 & -a_3 &  a_0 &  a_1 \\
-a_3 &  a_2 & -a_1 &  a_0 \\ \end{bmatrix}\begin{bmatrix} b_0 \\ b_1 \\ b_2 \\ b_3 \end{bmatrix}  \\
- &= \vQ(\vp_{BA})^T \vp_{CB} \\
-\end{aligned}$
+Hamiltonian convention: 
+$\boxed{\begin{aligned}\vp_{BI} &= a_0 + a_1 i + a_2 j + a_3 k \in \mathbb{H}, \quad a_i \in \mathbb{R}  \\
+i^2 &= j^2=k^2 = ijk = -1 \\
+\| \vp_{BI} \| &= \sqrt{a_0^2 + \va^T\va} = 1
+\end{aligned}}$  \\
+
+Inverse of quaternion: $\vp_{IB} = \vp_{BI}^{-1} = \bar{\vp}_{BI} = (a_0, -\va)$ \\
+Quaternion as a vector: $\Psi: \mathbb{H} \rightarrow \mathbb{R}^4, \Psi\left ( (a_0, \va) \right) = \begin{pmatrix} a_0 \\ \va \end{pmatrix}$ \\
+Quaternion multiplication: $\begin{aligned}\vp_{CA} &= \vp_{CB} \cdot \vp_{BA} = (a_0, \va)\cdot(b_0, \vb) = (a_0 b_0 - \va^{T} \vb, a_{0} \vb + b_0 \va + \tilde{\va} \vb)  \\
+	  &\Leftrightarrow \vQ\left((a_0, \va)\right)\Psi\left((b_0, \vb)\right) = \begin{pmatrix}a_0 & -\va^T \\  \va & a_0\vI_{3x3}+\tilde{\va} \\ \end{pmatrix} \begin{pmatrix} b_0 \\ b_1 \\ b_2 \\ b_3 \end{pmatrix} 
+	  = \begin{pmatrix} 
+ a_0 & -a_1 & -a_2 & -a_3 \\
+ a_1 &  a_0 & -a_3 &  a_2 \\
+ a_2 &  a_3 &  a_0 & -a_1 \\
+ a_3 & -a_2 &  a_1 &  a_0 \\ \end{pmatrix}\begin{pmatrix} b_0 \\ b_1 \\ b_2 \\ b_3 \end{pmatrix}  \\
+ &= \vQ\left((b_0, \vb)\right)^T\Psi\left((a_0, \va)\right) \\
+\end{aligned}$ \\
+$\vp_{BI}$ and $-\vp_{BI}$ yield the same rotation. \\
 \subsection{Yaw-Pitch-Roll $\Leftrightarrow$ Rotation Matrix}
 \myfigure{\includegraphics[width=1\columnwidth]{coordinate_systems/coordinate_system_ypr-crop.pdf}\vspace{-3mm}
 \figcaption{Rotation from $I$-frame to $B$-frame: ($z-y'-x''$) -- (yaw-pitch-roll) -- ($\psi-\theta-\phi$) -- ($50^\circ-25^\circ-30^\circ)$}\label{fig:yaw-pitch-roll}}
@@ -178,11 +186,11 @@ a_3 &  a_2 & -a_1 &  a_0 \\ \end{bmatrix}\begin{bmatrix} b_0 \\ b_1 \\ b_2 \\ b_
 \subsection{Successive Composition of Rotations}
 $\vp_{IB} = \vp_{ID} \vp_{DC} \vp_{CB} \Leftrightarrow \vA_{BI} = \vA_{BC}\vA_{CD}\vA_{DI}$
 
-\subsection{Transformation of a Point}
+\subsection{Transformation of a Vector}
 
 ${}_{B}\vr_{OP} = \vA_{BI} {}_{I}\vr_{OP}$
 
-$\begin{bmatrix} 0 \\ {}_B\vr_{OP}\end{bmatrix} = \vp_{IB} \begin{bmatrix} 0 \\ {}_I\vr_{OP}\end{bmatrix} \vp_{IB}^{-1}$
+$(0, {}_B\vr_{OP}) = \vp_{IB} (0, {}_I\vr_{OP}) \vp_{IB}^{-1}$ ????
 
 
 
@@ -192,12 +200,14 @@ $\begin{bmatrix} 0 \\ {}_B\vr_{OP}\end{bmatrix} = \vp_{IB} \begin{bmatrix} 0 \\ 
 
 
 \subsection{Quaternion $\Leftrightarrow$ Angle-Axis}
+
 \begin{tabular}{@{}lll@{}} 
-$\vp_{IB}(\{\chi, \vn\}_{IB}) = \begin{bmatrix} a_0 \\ \va \end{bmatrix} =  \begin{bmatrix} \cos{\frac{\chi}{2}} \\ \vn \sin{\frac{\chi}{2}} \end{bmatrix}$ & $\Leftrightarrow$ & $
+$\vp_{BI}$ & $\Leftrightarrow$ & $\{\chi, \vn\}_{BI}$ \\
+$\begin{pmatrix} a_0 \\ \va \end{pmatrix} =  \begin{pmatrix} \cos{\frac{\chi}{2}} \\ \vn \sin{\frac{\chi}{2}} \end{pmatrix}$ & $\Leftrightarrow$ & $
 \left\{
   \begin{array}{l l}
-    \{\chi = 2\arccos{(a_0)}, \vn=\frac{\va}{\lVert\va\rVert}\}_{IB} & \quad \text{if $\lVert \va \rVert^2 \geq \epsilon^2$}\\
-   \{\chi = 0, \vn= (1, 0, 0)^T \}_{IB} & \quad \text{otherwise}
+    \chi = 2\arccos{(a_0)}, \vn=\frac{\va}{\lVert\va\rVert} & \quad \text{if $\lVert \va \rVert^2 \geq \epsilon^2$}\\
+   \chi = 0, \vn= (1, 0, 0)^T  & \quad \text{otherwise}
   \end{array} \right. $ \\
 \end{tabular}
 \subsection{Transformation Matrix $\Leftrightarrow$ Quaternion}
@@ -216,19 +226,19 @@ $\begin{aligned}\vA_{BI} &= {}_B\vR_{BI}^T =  {}_I\vR_{IB}(\vp_{IB}) = \vI_{3x3}
 &= \begin{pmatrix}  a_0^2 + a_1^2 - a_2^2 - a_3^2 &         2a_0a_3 + 2a_1a_2 &         2a_1a_3 - 2a_0a_2 \\
          2a_1a_2 - 2a_0a_3 & a_0^2 - a_1^2 + a_2^2 - a_3^2 &         2a_0a_1 + 2a_2a_3 \\
          2a_0a_2 + 2a_1a_3 &         2a_2a_3 - 2a_0a_1 & a_0^2 - a_1^2 - a_2^2 + a_3^2 \\ \end{pmatrix}  \\  
-\end{aligned}$
+\end{aligned}$ \\
 
-$\vp_{IB} = \begin{pmatrix} \frac{1}{2} \sqrt{1 + \tr(\vA)} \\ \frac{A_{32} - A_{23}}{4 a_0} \\ \frac{A_{13} - A_{31}}{4 a_0} \\ \frac{A_{21} - A_{12}}{4 a_0} \end{pmatrix}, \vA = \vA_{IB} \quad \text{(if $\tr{(\vA	)} > 0 $)}  $
+$\Psi\left(\vp_{BI}\right) = \begin{pmatrix} \frac{1}{2} \sqrt{1 + \tr(\vA)} \\ \frac{A_{32} - A_{23}}{4 a_0} \\ \frac{A_{13} - A_{31}}{4 a_0} \\ \frac{A_{21} - A_{12}}{4 a_0} \end{pmatrix}, \vA = \vA_{IB} \quad \text{(if $\tr{(\vA	)} > 0 $)}$ ($\vA_{IB} \rightarrow \vp_{BI}$ is not unique)
 
 \subsection{Eigen Library}
 \begin{tabular}{@{}ll@{}} 
- \verb!Vector3d ypr_IB = Vectord(psi,theta, phi);!  \\
- \verb!aa_IB = AngleAxis(ypr_IB(0), Vector3d::UnitZ())*! \\
- \verb!        AngleAxis(ypr_IB(1), Vector3d::UnitY())*! \\
- \verb!        AngleAxis(ypr_IB(2), Vector3d::UnitX());! \\ 
- \verb!Quaterniond p_IB = Quaterniond(aa_IB);! \\
- \verb!Matrix3d A_BI = p_IB.toRotationMatrix();! \\
- \verb!Vector3d B_r_OP = A_BI*I_r_OP! & \\
+ \verb!Vector3d ypr_BI = Vectord(psi,theta, phi);!  \\
+ \verb!aa_BI = AngleAxis(ypr_BI(0), Vector3d::UnitZ())*! \\
+ \verb!        AngleAxis(ypr_BI(1), Vector3d::UnitY())*! \\
+ \verb!        AngleAxis(ypr_BI(2), Vector3d::UnitX());! \\ 
+ \verb!Quaterniond p_BI = Quaterniond(aa_BI);! \\
+ \verb!Matrix3d A_IB = p_BI.toRotationMatrix();! \\
+ \verb!Vector3d I_r_OP = A_IB*B_r_OP! & \\
 \end{tabular}
 
 
@@ -241,19 +251,76 @@ ${}_B\vv_Q = {}_B\vv_{P} + {}_B\vOm \times {}_B\vr_{PQ}$ &  velocity of point $Q
 
 \subsection{Angular Velocities}
 \begin{tabular}{@{}ll@{}}
-${}_B\tilde{\vom}_{IB} = \dot{\vA}_{IB}\vA_{IB}^T$ & angular velocity from rotation matrix expressed in CS $B$  \\
-${}_B\vom_{IB} = 2 \bar{\vH} \dot{\vp}_{IB} \Leftrightarrow \dot{\vp}_{IB} = \frac{1}{2}\bar{\vH}^T{}_B\vom_{IB}$  & ang. velocity from quaternion with $\bar{\vH} = \begin{bmatrix}-\va & -\tilde{\va}+a_0\vI_{3\times 3}\end{bmatrix} \in \mathbb{R}^{3\times4}$  \\
-${}_B \vom_{IB} = \dot{\chi} {}_B \vn $ & angular velocity from angle-axis $\{\chi,\vn\}_{IB}$ \\
+${}_B\vOm = {}_B\vom_{IB}$ & ang. vel. of rigid body with body-fixed CS $\cB$ w.r.t. to inertial CS $\cI$ \\ 
 ${}_B\vom_{IB} = - {}_B\vom_{BI}$ & inverse of angular velocity \\
+${}_I\vom_{IB} =  \vA_{IB} {}_B\vom_{IB}$  & transformation from $\cB$ to $\cI$ \\
+${}_I\tilde{\vom}_{IB} =  \vA_{IB} {}_B\tilde{\vom}_{IB} \vA_{IB}^T$ & transformation from $\cB$ to $\cI$  \\
 ${}_B\vom_{IB} = {}_B\vom_{ID} + {}_B\vom_{DC} + {}_B\vom_{CB}$ & composition of angular velocity \\
-
-
+${}_I\tilde{\vom}_{IB} = {}_I \dot{\vR}_{BI} {}_I \vR_{BI}^T = \dot{\vA}_{IB}\vA_{IB}^T$ & angular velocity of $\cB$ w.r.t. $\cI$ expressed in CS $\cI$  \\
+${}_B\tilde{\vom}_{IB} = {}_I \vR_{IB}{}_I \dot{\vR}_{IB}^T = \vA_{IB}^T\dot{\vA}_{IB}$ & angular velocity of $\cB$ w.r.t. $\cI$ expressed in CS $\cB$  \\
+${}_B\vom_{IB} = 2 \bar{\vH} \dot{\vp}_{BI}$  & ang. velocity from quaternion with $\bar{\vH} = \begin{pmatrix}-\va & -\tilde{\va}+a_0\vI_{3\times 3}\end{pmatrix} \in \mathbb{R}^{3\times4}$  \\
+$\dot{\vp}_{BI} = \frac{1}{2}\bar{\vH}^T{}_B\vom_{IB}$ & \\
+${}_B \vom_{IB} = \dot{\chi} {}_B \vn $ & angular velocity from angle-axis $\{\chi,\vn\}_{BI}$ \\
 \end{tabular}
 
-% \begin{tabular}{@{}ll@{}}
-%  $\vp_{IB}$ & \verb!Quaterniond p_IB(AngleAxisd(alpha, Vector3d::UnitY()));! \\
-% $\vA_{IB}$ & \verb!p_IB.toRotationMatrix();! \\
-% \end{tabular}
+\section{Dynamics of Multi-Rigid-Body System}
+
+\begin{tabular}{@{}ll@{}}
+  $n$			& Number of bodies in system \\
+  $n_j$ 		& Number of DoFs of the joints \\
+  $n_q$ 		& Number of generalized coordinates \\
+  $n_u$ 		& Number of generalized velocities \\
+  $\vM$			& Mass matrix \\
+  $\vg$			& Gyroscopic and Coriolis forces \\
+  $\vf$			& Generalized external forces and torques \\
+  $\vh$			& Combined force vector \\
+  $\vJ_P$		& Jacobi matrix for translation of point P \\
+  $\vJ_{R}$		& Jacobi matrix for rotation \\
+  $\vF_Q^A$		& External forces on point Q \\
+  $\vM^A$		& External torques \\
+%   $\vp$			& Momentum \\
+%   $\vN_S$		& Spin at center of gravity \\
+  $m$ 			& Mass \\
+  $\vTh$ 		& Intertia tensor \\
+%   $\vv_P$		& Velocity of point P \\
+%   $\va_P$		& Acceleration of point P \\
+%   $\vOm$		& Angular velocity \\
+%   $\vPs$		& Angular acceleration \\
+  $(...)^-$		& Variable before impact \\
+  $(...)^+$		& Variable after impact \\
+  $(...)^\pm$		& Variable before/after impact \\
+  $\mathrm{\Delta} t$	& Time step duration \\
+  $\mathrm{\Delta} \vu$	& Velocity change over one time step \\
+  $\vW$			& Generalized force directions for contact forces \\
+  $\vla$		& Lebesgue-measurable contact forces \\
+  $\vLa$		& Purely atomic impact impulses \\
+  $\vP$			& Contact percussions \\
+\end{tabular}
+
+
+\subsection{Generalized Coordinates of a Floating-Base System}
+\begin{tabular}{@{}lll@{}}
+$\vq = \begin{pmatrix} {}_I \vr_{OB} \\ \vp_{BI} \\ \varphi_1 \\ \vdots \\ \varphi_{n_j} \end{pmatrix} \in \mathbb{R}^{7+n_j} = \mathbb{R}^{n_q}$ & 
+$\vu = \begin{pmatrix} {}_I \vv_B \\ {}_B\vom_{IB} \\ \dot{\varphi}_1 \\ \vdots \\ \dot{\varphi}_{n_j} \end{pmatrix} \in \mathbb{R}^{6+n_j} = \mathbb{R}^{n_u}$  & 
+$\dot{\vu} = \begin{pmatrix} {}_I \va_B \\ {}_B\vps_{IB} \\ \ddot{\varphi}_1 \\ \vdots \\ \ddot{\varphi}_{n_j} \end{pmatrix} \in \mathbb{R}^{6+n_j}$
+\\
+\end{tabular}
+$\dot{\vq} = \vF \vu, \quad \vF = \begin{pmatrix} \vI_{3x3} & \mathbf{0} & \mathbf{0} \\ \mathbf{0} & \frac{1}{2}\bar{\vH}^\mathsf{T} & \mathbf{0} \\ \mathbf{0} & \mathbf{0} & \vI_{n_qxn_q} \end{pmatrix} \quad \Leftrightarrow \quad \vu = \bar{\vF}\dot{\vq}, \quad \bar{\vF} = \begin{pmatrix} \vI_{3x3} & \mathbf{0} & \mathbf{0} \\ \mathbf{0} & 2\bar{\vH} & \mathbf{0} \\ \mathbf{0} & \mathbf{0} & \vI_{n_qxn_q} \end{pmatrix}$ \\
+
+\subsection{Equation of Motion with Contacts and no Impulses}
+\begin{tabular}{@{}ll@{}}
+$\boxed{\vM\dot{\vu} - \vh = \vW\vla}$ with $\vh := \vf - \vg$, and &
+$\begin{aligned}\vM &= \sum_{i=1}^n \left[ (\vJ_S^\mathsf{T} m \vJ_S + \vJ_R^\mathsf{T} \vTh_S \vJ_R) \right]_i \\
+\vg &= \sum_{i=1}^n \left[ (\vJ_S^\mathsf{T} m \dot{\vJ}_S \vu + \vJ_R^\mathsf{T} (\vTh_S \dot{\vJ}_R \vu + \vOm \times \vTh_S \vOm)) \right]_i \\
+\vf &= \sum_{i=1}^n \left[ (\vJ_Q^\mathsf{T} \vF_Q^A + \vJ_R^\mathsf{T} \vM^A) \right]_i \end{aligned}$ \\
+\end{tabular}
+
+
+\subsection{Equation of Motion with Contacts and Impulses}
+$\boxed{\vM \mathrm{\Delta} \vu - \vh \mathrm{\Delta} t = \vW \vP}  \quad \left\{
+  \begin{array}{r l} \vM (\vu^+ - \vu^-) &= \vW \vLa \\
+ \vM \underbrace{(\dot{\vu} \mathrm{d}t + (\vu^+ - \vu^-) \mathrm{d}\eta)}_{\mathrm{d}\vu} - \vh \mathrm{d}t &= \vW \underbrace{(\vla \mathrm{d}t + \vLa \mathrm{d}\eta)}_{\mathrm{d}\vP}\end{array}\right.$ \\
+
 
 
 % \subsubsection{Eigen}
