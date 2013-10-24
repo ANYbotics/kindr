@@ -298,14 +298,14 @@ ${}_B \vom_{IB} = \dot{\chi} {}_B \vn $ & angular velocity from angle-axis $\{\c
 \end{tabular}
 
 
-\subsection{Generalized Coordinates of a Floating-Base System}
+\subsection{Generalized Coordinates of a Floating-Base System with Rotational Joints}
 \begin{tabular}{@{}lll@{}}
 $\vq = \begin{pmatrix} {}_I \vr_{OB} \\ \vp_{BI} \\ \varphi_1 \\ \vdots \\ \varphi_{n_j} \end{pmatrix} \in \mathbb{R}^{7+n_j} = \mathbb{R}^{n_q}$ & 
 $\vu = \begin{pmatrix} {}_I \vv_B \\ {}_B\vom_{IB} \\ \dot{\varphi}_1 \\ \vdots \\ \dot{\varphi}_{n_j} \end{pmatrix} \in \mathbb{R}^{6+n_j} = \mathbb{R}^{n_u}$  & 
 $\dot{\vu} = \begin{pmatrix} {}_I \va_B \\ {}_B\vps_{IB} \\ \ddot{\varphi}_1 \\ \vdots \\ \ddot{\varphi}_{n_j} \end{pmatrix} \in \mathbb{R}^{6+n_j}$
 \\
 \end{tabular}
-$\dot{\vq} = \vF \vu, \quad \vF = \begin{pmatrix} \vI_{3x3} & \mathbf{0} & \mathbf{0} \\ \mathbf{0} & \frac{1}{2}\bar{\vH}^\mathsf{T} & \mathbf{0} \\ \mathbf{0} & \mathbf{0} & \vI_{n_qxn_q} \end{pmatrix} \quad \Leftrightarrow \quad \vu = \bar{\vF}\dot{\vq}, \quad \bar{\vF} = \begin{pmatrix} \vI_{3x3} & \mathbf{0} & \mathbf{0} \\ \mathbf{0} & 2\bar{\vH} & \mathbf{0} \\ \mathbf{0} & \mathbf{0} & \vI_{n_qxn_q} \end{pmatrix}$ \\
+$\dot{\vq} = \vF \vu, \quad \vF = \begin{pmatrix} \vI_{3\times 3} & \mathbf{0} & \mathbf{0} \\ \mathbf{0} & \frac{1}{2}\bar{\vH}^\mathsf{T} & \mathbf{0} \\ \mathbf{0} & \mathbf{0} & \vI_{n_j\times n_j} \end{pmatrix} \quad \Leftrightarrow \quad \vu = \bar{\vF}\dot{\vq}, \quad \bar{\vF} = \begin{pmatrix} \vI_{3x3} & \mathbf{0} & \mathbf{0} \\ \mathbf{0} & 2\bar{\vH} & \mathbf{0} \\ \mathbf{0} & \mathbf{0} & \vI_{n_j \times n_j} \end{pmatrix}$ \\
 
 \subsection{Equation of Motion with Contacts and no Impulses}
 \begin{tabular}{@{}ll@{}}
