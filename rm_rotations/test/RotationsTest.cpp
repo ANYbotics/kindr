@@ -87,7 +87,7 @@ TEST (RotationsTest, DISABLED_testQuaternionMultiplication ) {
   ASSERT_DOUBLE_MX_EQ(B_r1, B_r2, 1e-6, "p");
 }
 
-TEST (RotationsTest, testRotationFunctions ) {
+TEST (RotationsTest, DISABLED_testRotationFunctions ) {
   using namespace Eigen;
   using namespace rm::rotations;
 
