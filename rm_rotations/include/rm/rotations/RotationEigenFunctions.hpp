@@ -6,8 +6,8 @@
 * @ingroup 	rm
 * @brief
 */
-#ifndef RM_ROTATIONS_HPP_
-#define RM_ROTATIONS_HPP_
+#ifndef RM_ROTATION_EIGEN_FUNCTIONS_HPP_
+#define RM_ROTATION_EIGEN_FUNCTIONS_HPP_
 
 
 #include <cmath>
@@ -19,6 +19,7 @@
 
 namespace rm {
 namespace rotations {
+
 
 // todo: quaternion: check norm with .squaredNorm()
 // todo: increase speed
@@ -49,11 +50,11 @@ inline Eigen::AngleAxis<T> wrapAngle(const Eigen::AngleAxis<T>& aa, const T& x1,
 
 // 1) Output: AngleAxis
 
-template<typename T>
-static Eigen::AngleAxis<T> getAngleAxisFromQuaternion(const Eigen::Quaternion<T>& p_BI)
+template<typename T, typename TReturn = T>
+static Eigen::AngleAxis<TReturn> getAngleAxisFromQuaternion(const Eigen::Quaternion<T>& p_BI)
 {
   // Bad precision!
-  return Eigen::AngleAxis<T>(p_BI);
+  return Eigen::AngleAxis<TReturn>(p_BI.template cast<TReturn>());
 }
 
 template<typename T>
@@ -617,4 +618,4 @@ Vector3d omega2kardan(const Vector3d &K_w_IK, const Vector3d &abc) // quaternion
 } // end namespace rotations
 } // end namespace rm
 
-#endif /* RM_ROTATIONS_HPP_ */
+#endif /* RM_ROTATION_EIGEN_FUNCTIONS_HPP_ */

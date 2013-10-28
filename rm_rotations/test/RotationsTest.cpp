@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "rm/common/Common.hpp"
-#include "rm/rotations/Rotations.hpp"
+#include "rm/rotations/RotationEigenFunctions.hpp"
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
@@ -182,4 +182,21 @@ TEST (RotationsTest, DISABLED_testRotationFunctions ) {
       ASSERT_DOUBLE_MX_EQ(ypr_IB0, getYPRFromTransformationMatrix(A_BI0), 1e-6, "ypr3"); // ok
       ASSERT_DOUBLE_MX_EQ(ypr_IB0, getYPRFromRPY(rpy_IB0), 1e-6, "ypr4"); // ok
     }
+}
+
+
+#include <rm/rotations/RotationEigen.hpp>
+
+namespace rot = rm::rotations::eigen_implementation;
+
+TEST (RotationsTest, QuaternionToAxisAngle) {
+  rot::UnitQuaternionD q(Eigen::Quaterniond(0,1,0,0));
+  rot::AngleAxisF af(q * q);
+
+  Eigen::Vector3d v(0, 1, 0);
+
+  Eigen::Vector3d vrot = (q*q).rotate(v);
+
+  std::cout << vrot << std::endl;
+
 }
