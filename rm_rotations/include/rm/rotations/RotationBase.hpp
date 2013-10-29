@@ -12,35 +12,36 @@
 
 namespace rm {
 namespace rotations {
+
 namespace internal {
+
 template<typename DEST, typename SOURCE>
 class ConversionTraits
 {
-  // static DEST convert(const SOURCE & );
+  // inline static DEST convert(const SOURCE & );
 };
 
 template<typename LEFT, typename RIGHT>
 class MultiplicationTraits {
-  // static LEFT mult(const LEFT &, const RIGHT & );
+  // inline static LEFT mult(const LEFT &, const RIGHT & );
 };
 
 template<typename ROTATION>
-class get_vector3d{
+class get_vector3{
   // typedef VECTOR type;
 };
 
 template<typename ROTATION>
 class RotationTraits {
-  // static typename internal::get_vector3d<DERIVED>::type rotate(const ROTATION & r, const typename internal::get_vector3d<DERIVED>::type & );
+  // inline static typename internal::get_vector3<DERIVED>::type rotate(const ROTATION & r, const typename internal::get_vector3<DERIVED>::type & );
 };
 
+} // namespace internal
 
 
-
-}
 
 //template <typename DERIVED>
-//class Vector3d;
+//class Vector3;
 
 template<typename DERIVED>
 class Rotation {
@@ -54,8 +55,8 @@ class Rotation {
     return static_cast<const DERIVED &>(*this);
   }
 
-  typename internal::get_vector3d<DERIVED>::type rotate(typename internal::get_vector3d<DERIVED>::type & a) {
-    return internal::RotationTraits<DERIVED>::rotate(*this, a);
+  typename internal::get_vector3<DERIVED>::type rotate(typename internal::get_vector3<DERIVED>::type & v) {
+    return internal::RotationTraits<DERIVED>::rotate(*this, v);
   }
 
 
@@ -66,6 +67,7 @@ Rotation<DERIVED> operator *(const Rotation<DERIVED> & a,
                              const Rotation<OTHER_DERIVED> & b) {
   internal::MultiplicationTraits<DERIVED, OTHER_DERIVED>::mult(a, b);
 }
+
 
 template<typename Implementation>
 class UnitQuaternionBase : public Rotation<Implementation>, public quaternions::QuaternionBase<Implementation> {
@@ -85,6 +87,7 @@ class UnitQuaternionBase : public Rotation<Implementation>, public quaternions::
 //
 //}
 
+
 template<typename Implementation>
 class AngleAxisBase : public Rotation<Implementation> {
 
@@ -94,7 +97,48 @@ class AngleAxisBase : public Rotation<Implementation> {
   }
 };
 
-}
-}
+
+template<typename Implementation>
+class RotationMatrixBase : public Rotation<Implementation> {
+
+  template<typename OTHER_DERIVED>
+  RotationMatrixBase & operator =(const Rotation<OTHER_DERIVED> & other) {
+    return *this;
+  }
+};
+
+
+template<typename Implementation>
+class EulerAnglesBase : public Rotation<Implementation> {
+
+//  template<typename OTHER_DERIVED> // TODO: necessary?
+//  EulerAnglesBase & operator =(const Rotation<OTHER_DERIVED> & other) {
+//    return *this;
+//  }
+};
+
+
+template<typename Implementation>
+class EulerAnglesRPYBase : public EulerAnglesBase<Implementation> {
+
+  template<typename OTHER_DERIVED>
+  EulerAnglesRPYBase & operator =(const Rotation<OTHER_DERIVED> & other) {
+    return *this;
+  }
+};
+
+
+template<typename Implementation>
+class EulerAnglesYPRBase : public EulerAnglesBase<Implementation> {
+
+  template<typename OTHER_DERIVED>
+  EulerAnglesYPRBase & operator =(const Rotation<OTHER_DERIVED> & other) {
+    return *this;
+  }
+};
+
+
+} // namespace rotations
+} // namespace rm
 
 #endif /* ROTATIONBASE_HPP_ */

@@ -13,6 +13,7 @@ namespace rm {
 namespace quaternions {
 
 namespace internal {
+
 template<typename DEST, typename SOURCE>
 class ConversionTraits
 {
@@ -24,7 +25,7 @@ class MultiplicationTraits {
   // LEFT mult(const LEFT &, const RIGHT & );
 };
 
-}
+} // namespace internal
 
 template<typename DERIVED>
 class QuaternionBase {
@@ -40,7 +41,7 @@ class QuaternionBase {
   }
 };
 
-}
-}
+} // namespace quaternions
+} // namespace rm
 
 #endif /* QUATERNIONBASE_HPP_ */

@@ -192,11 +192,17 @@ namespace rot = rm::rotations::eigen_implementation;
 TEST (RotationsTest, QuaternionToAxisAngle) {
   rot::UnitQuaternionD q(Eigen::Quaterniond(0,1,0,0));
   rot::AngleAxisF af(q * q);
+//  rot::UnitQuaternionD q2(Eigen::AngleAxisd((double)M_PI/6,Eigen::Vector3d(1,0,0)));
+//  rot::UnitQuaternionD q3(Eigen::Quaternionf(0,1,0,0));
+  rot::RotationMatrixD R(Eigen::Quaterniond(0,1,0,0).toRotationMatrix());
 
   Eigen::Vector3d v(0, 1, 0);
 
   Eigen::Vector3d vrot = (q*q).rotate(v);
+  Eigen::Vector3d vrot2 = (R*R).rotate(v);
+//  rot::RotationMatrixD R2 = R*q;
 
-  std::cout << vrot << std::endl;
+  std::cout << vrot.transpose() << std::endl;
+  std::cout << vrot2.transpose() << std::endl;
 
 }
