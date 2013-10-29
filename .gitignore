@@ -27,6 +27,8 @@ install_manifest.txt
 .cproject
 
 build/*
+gtest
+gtest-1.7.0/*
 
 # Latex
 *.acn
