@@ -190,19 +190,32 @@ TEST (RotationsTest, DISABLED_testRotationFunctions ) {
 namespace rot = rm::rotations::eigen_implementation;
 
 TEST (RotationsTest, QuaternionToAxisAngle) {
-  rot::UnitQuaternionD q(Eigen::Quaterniond(0,1,0,0));
-  rot::AngleAxisF af(q * q);
-//  rot::UnitQuaternionD q2(Eigen::AngleAxisd((double)M_PI/6,Eigen::Vector3d(1,0,0)));
-//  rot::UnitQuaternionD q3(Eigen::Quaternionf(0,1,0,0));
-  rot::RotationMatrixD R(Eigen::Quaterniond(0,1,0,0).toRotationMatrix());
+  rot::UnitQuaternionD uqd(Eigen::Quaterniond(0,1,0,0));
+//  rot::UnitQuaternionF uqf(Eigen::Quaterniond(0,1,0,0));
+  rot::RotationMatrixD Rd(Eigen::Quaterniond(0,1,0,0).toRotationMatrix());
+
+  rot::AngleAxisD ad(uqd);
+  rot::AngleAxisF af(uqd * uqd);
+
+  rot::UnitQuaternionD q4(1,2,3,4);
+  rot::UnitQuaternionD qd(ad);
+  rot::UnitQuaternionD q5 = q4;
+  rot::UnitQuaternionD q6(q4);
+
+  rot::AngleAxisD a3 = ad*ad;
+  rot::UnitQuaternionD q7 = qd*qd;
+  rot::AngleAxisD a2 = ad*qd;
 
   Eigen::Vector3d v(0, 1, 0);
 
-  Eigen::Vector3d vrot = (q*q).rotate(v);
-  Eigen::Vector3d vrot2 = (R*R).rotate(v);
-//  rot::RotationMatrixD R2 = R*q;
+  Eigen::Vector3d vrot = (uqd*uqd).rotate(v);
+  Eigen::Vector3d vrot2 = (Rd*Rd).rotate(v);
+  Eigen::Vector3d vrot3 = ad.rotate(v);
+  Eigen::Vector3d vrot4 = (ad*ad).rotate(v);
 
   std::cout << vrot.transpose() << std::endl;
   std::cout << vrot2.transpose() << std::endl;
 
 }
+
+

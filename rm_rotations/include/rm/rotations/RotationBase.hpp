@@ -58,14 +58,12 @@ class Rotation {
   typename internal::get_vector3<DERIVED>::type rotate(typename internal::get_vector3<DERIVED>::type & v) {
     return internal::RotationTraits<DERIVED>::rotate(*this, v);
   }
-
-
 };
 
 template<typename DERIVED, typename OTHER_DERIVED>
 Rotation<DERIVED> operator *(const Rotation<DERIVED> & a,
                              const Rotation<OTHER_DERIVED> & b) {
-  internal::MultiplicationTraits<DERIVED, OTHER_DERIVED>::mult(a, b);
+  internal::MultiplicationTraits<DERIVED, OTHER_DERIVED>::mult(a, b); // TODO: why no return?
 }
 
 
