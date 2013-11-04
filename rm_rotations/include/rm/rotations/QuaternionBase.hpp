@@ -22,7 +22,15 @@ class ConversionTraits
 
 template<typename LEFT, typename RIGHT>
 class MultiplicationTraits {
-  // LEFT mult(const LEFT &, const RIGHT & );
+ public:
+  inline static LEFT mult(const LEFT &l, const RIGHT &r){
+    return LEFT(typename LEFT::Implementation(l.toImplementation() * r.toImplementation()));
+  }
+};
+
+template<typename ROTATION>
+class get_vector3 {
+  // typedef VECTOR type;
 };
 
 } // namespace internal
@@ -30,14 +38,41 @@ class MultiplicationTraits {
 template<typename DERIVED>
 class QuaternionBase {
  public:
-  QuaternionBase inverse();
-  QuaternionBase conjugate();
+  DERIVED inverse();
+  DERIVED conjugate();
 
   operator DERIVED & () {
     return static_cast<DERIVED &>(*this);
   }
   operator const DERIVED & () const {
     return static_cast<const DERIVED &>(*this);
+  }
+
+  //  typename Implementation::ImagVector imagVector();
+
+  //  friend std::ostream & operator <<(std::ostream & out,
+  //                                    const QuaternionBase & quat) {
+  //    out << "(" << quat.real() << ", "
+  //        << static_cast<Implementation&>(quat).imagVector() << ")";
+  //    return out;
+  //  }
+};
+
+
+
+
+template<typename DERIVED, typename OTHER_DERIVED> // TODO: ok?
+QuaternionBase<DERIVED> operator *(const QuaternionBase<DERIVED> & a,
+                                   const QuaternionBase<OTHER_DERIVED> & b) {
+  return internal::MultiplicationTraits<DERIVED, OTHER_DERIVED>::mult(a, b);
+}
+
+
+template<typename DERIVED>
+class UnitQuaternionBase : public QuaternionBase<DERIVED> {
+ public:
+  DERIVED inverse(){
+    return DERIVED::conjugate();
   }
 };
 

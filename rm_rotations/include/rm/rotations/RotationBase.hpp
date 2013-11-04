@@ -16,18 +16,21 @@ namespace rotations {
 namespace internal {
 
 template<typename DEST, typename SOURCE>
-class ConversionTraits
-{
+class ConversionTraits {
   // inline static DEST convert(const SOURCE & );
 };
 
 template<typename LEFT, typename RIGHT>
 class MultiplicationTraits {
-  // inline static LEFT mult(const LEFT &, const RIGHT & );
+ public:
+  inline static LEFT mult(const LEFT &l, const RIGHT &r){
+    return LEFT(typename LEFT::Implementation(l.toImplementation() * r.toImplementation()));
+  }
 };
 
+
 template<typename ROTATION>
-class get_vector3{
+class get_vector3 {
   // typedef VECTOR type;
 };
 
@@ -63,12 +66,19 @@ class Rotation {
 template<typename DERIVED, typename OTHER_DERIVED>
 Rotation<DERIVED> operator *(const Rotation<DERIVED> & a,
                              const Rotation<OTHER_DERIVED> & b) {
-  internal::MultiplicationTraits<DERIVED, OTHER_DERIVED>::mult(a, b); // TODO: why no return?
+  return internal::MultiplicationTraits<DERIVED, OTHER_DERIVED>::mult(a, b);
+}
+
+
+
+template<typename DERIVED, typename OTHER_DERIVED> // todo: ok?
+bool operator ==(const Rotation<DERIVED> & a, const Rotation<OTHER_DERIVED> & b) {
+  return a.toImplementation() == b.toImplementation();
 }
 
 
 template<typename Implementation>
-class UnitQuaternionBase : public Rotation<Implementation>, public quaternions::QuaternionBase<Implementation> {
+class RotationQuaternionBase : public Rotation<Implementation> {
 
 //  typename Implementation::ImagVector imagVector();
 
@@ -78,6 +88,7 @@ class UnitQuaternionBase : public Rotation<Implementation>, public quaternions::
 //        << static_cast<Implementation&>(quat).imagVector() << ")";
 //    return out;
 //  }
+
 };
 
 //template<typename DERIVED>
@@ -101,6 +112,7 @@ class RotationMatrixBase : public Rotation<Implementation> {
 
   template<typename OTHER_DERIVED>
   RotationMatrixBase & operator =(const Rotation<OTHER_DERIVED> & other) {
+
     return *this;
   }
 };
@@ -109,10 +121,6 @@ class RotationMatrixBase : public Rotation<Implementation> {
 template<typename Implementation>
 class EulerAnglesBase : public Rotation<Implementation> {
 
-//  template<typename OTHER_DERIVED> // TODO: necessary?
-//  EulerAnglesBase & operator =(const Rotation<OTHER_DERIVED> & other) {
-//    return *this;
-//  }
 };
 
 

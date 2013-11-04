@@ -189,33 +189,97 @@ TEST (RotationsTest, DISABLED_testRotationFunctions ) {
 
 namespace rot = rm::rotations::eigen_implementation;
 
-TEST (RotationsTest, QuaternionToAxisAngle) {
-  rot::UnitQuaternionD uqd(Eigen::Quaterniond(0,1,0,0));
-//  rot::UnitQuaternionF uqf(Eigen::Quaterniond(0,1,0,0));
-  rot::RotationMatrixD Rd(Eigen::Quaterniond(0,1,0,0).toRotationMatrix());
+template <typename RotationImplementation>
+struct RotationsTest : public ::testing::Test  {
+  typedef typename RotationImplementation::Scalar Scalar;
+  typedef Eigen::Matrix<Scalar, 3, 1> Vector3;
+//  typedef Eigen::Matrix<double,1,1> Vector1d;
 
-  rot::AngleAxisD ad(uqd);
-  rot::AngleAxisF af(uqd * uqd);
+//  typedef typename GenericScalar_::Scalar PrimScalar;
+//  typedef GenericScalarExpression<PrimScalar> TestGenericScalarExpression;
+//  typedef GenericScalar_ TestGenericScalar;
 
-  rot::UnitQuaternionD q4(1,2,3,4);
-  rot::UnitQuaternionD qd(ad);
-  rot::UnitQuaternionD q5 = q4;
-  rot::UnitQuaternionD q6(q4);
+//  static PrimScalar getRandScalar() {
+//    return PrimScalar(sm::random::rand() * 10.0);
+//  }
+  RotationImplementation identity = RotationImplementation(rot::RotationQuaternion<Scalar>(Eigen::Quaterniond(1, 0, 0, 0).cast<Scalar>()));
+  RotationImplementation halfX =    RotationImplementation(rot::RotationQuaternion<Scalar>(Eigen::Quaterniond(0, 1, 0, 0).cast<Scalar>()));
+  RotationImplementation halfY =    RotationImplementation(rot::RotationQuaternion<Scalar>(Eigen::Quaterniond(0, 0, 1, 0).cast<Scalar>()));
+  RotationImplementation halfZ =    RotationImplementation(rot::RotationQuaternion<Scalar>(Eigen::Quaterniond(0, 0, 0, 1).cast<Scalar>()));
 
-  rot::AngleAxisD a3 = ad*ad;
-  rot::UnitQuaternionD q7 = qd*qd;
-  rot::AngleAxisD a2 = ad*qd;
 
-  Eigen::Vector3d v(0, 1, 0);
+  RotationsTest() : X(Vector3::UnitX()), Y(Vector3::UnitY()), Z(Vector3::UnitZ()) {}
+  Vector3 X, Y, Z;
+};
 
-  Eigen::Vector3d vrot = (uqd*uqd).rotate(v);
-  Eigen::Vector3d vrot2 = (Rd*Rd).rotate(v);
-  Eigen::Vector3d vrot3 = ad.rotate(v);
-  Eigen::Vector3d vrot4 = (ad*ad).rotate(v);
+template <typename RotationImplementationPair>
+struct RotationPairsTest : public ::testing::Test  {
 
-  std::cout << vrot.transpose() << std::endl;
-  std::cout << vrot2.transpose() << std::endl;
+  typedef typename RotationImplementationPair::first_t RotationImplementationA;
+  typedef typename RotationImplementationPair::second_t RotationImplementationB;
 
+  RotationsTest<RotationImplementationA> A;
+  RotationsTest<RotationImplementationB> B;
+};
+
+
+typedef ::testing::Types<
+    rot::RotationQuaternionD,
+//    rot::RotationQuaternionF,
+    rot::AngleAxisD
+> Types;
+
+typedef ::testing::Types<
+    std::pair<rot::RotationQuaternionD, rot::AngleAxisD>
+> TypePairs;
+
+TYPED_TEST_CASE(RotationsTest, Types);
+
+TYPED_TEST(RotationsTest, QuaternionToAxisAngle){
+  for(auto & r : {TestFixture::halfX, TestFixture::halfY, TestFixture::halfZ}){
+    ASSERT_EQ(this->identity, r*r);
+
+    ASSERT_EQ(this->X, (r*r).rotate(this->X));
+    ASSERT_EQ(this->Y, (r*r).rotate(this->Y));
+    ASSERT_EQ(this->Z, (r*r).rotate(this->Z));
+  }
+
+  auto r1 = TestFixture::halfX;
+  ASSERT_EQ(this->X, r1.rotate(this->X));
+  ASSERT_EQ(-this->Y, r1.rotate(this->Y));
+  ASSERT_EQ(-this->Z, r1.rotate(this->Z));
+
+
+
+
+//  rot::RotationQuaternionD uqd(Eigen::Quaterniond(0,1,0,0));
+////  rot::UnitQuaternionF uqf(Eigen::Quaterniond(0,1,0,0));
+//  rot::RotationMatrixD Rd(Eigen::Quaterniond(0,1,0,0).toRotationMatrix());
+//
+//  rot::AngleAxisD ad(uqd);
+//  rot::AngleAxisF af(uqd * uqd);
+//
+//  rot::RotationQuaternionD Id(1, 0, 0, 0);
+//  rot::RotationQuaternionD I(0, 1, 0, 0);
+//  rot::RotationQuaternionD J(0, 0, 1, 0);
+//  rot::RotationQuaternionD K(0, 0, 0, 1);
+//  rot::RotationQuaternionD qd(ad);
+//  rot::RotationQuaternionD q5 = I;
+//  rot::RotationQuaternionD q6(I);
+//
+//  rot::AngleAxisD a3 = ad*ad;
+//  rot::RotationQuaternionD q7 = qd*qd;
+//  rot::AngleAxisD a2 = ad*qd;
+//
+//  Eigen::Vector3d v(0, 1, 0);
+//
+//  Eigen::Vector3d vrot = (uqd*uqd).rotate(v);
+//  Eigen::Vector3d vrot2 = (Rd*Rd).rotate(v);
+//  Eigen::Vector3d vrot3 = ad.rotate(v);
+//  Eigen::Vector3d vrot4 = (ad*ad).rotate(v);
+//
+//  std::cout << vrot.transpose() << std::endl;
+//  std::cout << vrot2.transpose() << std::endl;
 }
 
 
