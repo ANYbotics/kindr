@@ -33,6 +33,11 @@ class get_vector3 {
   // typedef VECTOR type;
 };
 
+template<typename ROTATION> // TODO: ok
+class get_matrix3X {
+  // typedef MATRIX type;
+};
+
 } // namespace internal
 
 template<typename DERIVED>

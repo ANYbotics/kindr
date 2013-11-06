@@ -253,6 +253,7 @@ typedef EulerAnglesYPR<double> EulerAnglesYPRD;
 typedef EulerAnglesYPR<float> EulerAnglesYPRF;
 
 
+// todo: overload operator * for rotating vectors?
 
 template<typename PrimType>
 AngleAxis<PrimType> operator *(const AngleAxis<PrimType> & a,
@@ -291,11 +292,38 @@ EulerAnglesYPR<PrimType> operator *(const EulerAnglesYPR<PrimType> & a,
 }
 
 
+template<typename PrimType>
+bool operator ==(const AngleAxis<PrimType> & a, const AngleAxis<PrimType> & b) {
+  return RotationMatrix<PrimType>(a).toImplementation() == RotationMatrix<PrimType>(b).toImplementation();
+}
+
+template<typename PrimType>
+bool operator ==(const RotationQuaternion<PrimType> & a, const RotationQuaternion<PrimType> & b) {
+  return RotationMatrix<PrimType>(a).toImplementation() == RotationMatrix<PrimType>(b).toImplementation();
+}
+
+template<typename PrimType> // ambiguous overload with Eigen operator if not specified
+bool operator ==(const RotationMatrix<PrimType> & a, const RotationMatrix<PrimType> & b) {
+  return a.toImplementation() == b.toImplementation();
+}
+
+template<typename PrimType> // ambiguous overload with Eigen operator if not specified
+bool operator ==(const EulerAnglesRPY<PrimType> & a, const EulerAnglesRPY<PrimType> & b) {
+  return a.toImplementation() == b.toImplementation();
+}
+
+template<typename PrimType> // ambiguous overload with Eigen operator if not specified
+bool operator ==(const EulerAnglesYPR<PrimType> & a, const EulerAnglesYPR<PrimType> & b) {
+  return a.toImplementation() == b.toImplementation();
+}
+
+
 }  // namespace eigen_implementation
 
 
 namespace internal {
 
+// vector
 template<typename PrimType>
 class get_vector3<eigen_implementation::AngleAxis<PrimType>>{
  public:
@@ -325,6 +353,37 @@ class get_vector3<eigen_implementation::EulerAnglesYPR<PrimType>>{
  public:
   typedef Eigen::Matrix<PrimType, 3, 1> type;
 };
+
+//// matrix
+//template<typename PrimType>
+//class get_matrix3X<eigen_implementation::AngleAxis<PrimType>>{
+// public:
+//  typedef Eigen::Matrix<PrimType, 3, Eigen::Dynamic> type;
+//};
+//
+//template<typename PrimType>
+//class get_matrix3X<eigen_implementation::RotationQuaternion<PrimType>>{
+// public:
+//  typedef Eigen::Matrix<PrimType, 3, Eigen::Dynamic> type;
+//};
+//
+//template<typename PrimType>
+//class get_matrix3X<eigen_implementation::RotationMatrix<PrimType>>{
+// public:
+//  typedef Eigen::Matrix<PrimType, 3, Eigen::Dynamic> type;
+//};
+//
+//template<typename PrimType>
+//class get_matrix3X<eigen_implementation::EulerAnglesRPY<PrimType>>{
+// public:
+//  typedef Eigen::Matrix<PrimType, 3, Eigen::Dynamic> type;
+//};
+//
+//template<typename PrimType>
+//class get_matrix3X<eigen_implementation::EulerAnglesYPR<PrimType>>{
+// public:
+//  typedef Eigen::Matrix<PrimType, 3, Eigen::Dynamic> type;
+//};
 
 
 template<typename DestPrimType, typename SourcePrimType>
@@ -544,19 +603,19 @@ template<typename PrimType>
 class MultiplicationTraits<eigen_implementation::EulerAnglesRPY<PrimType>, eigen_implementation::EulerAnglesRPY<PrimType>> {
 public:
   inline static eigen_implementation::EulerAnglesRPY<PrimType> mult(const eigen_implementation::EulerAnglesRPY<PrimType> & a, const eigen_implementation::EulerAnglesRPY<PrimType> & b) {
-    return eigen_implementation::EulerAnglesRPY<PrimType>(eigen_implementation::RotationQuaternion<PrimType>(a).toImplementation()*eigen_implementation::RotationQuaternion<PrimType>(b).toImplementation());
+    return eigen_implementation::EulerAnglesRPY<PrimType>(eigen_implementation::RotationQuaternion<PrimType>(eigen_implementation::RotationQuaternion<PrimType>(a).toImplementation()*eigen_implementation::RotationQuaternion<PrimType>(b).toImplementation()));
   }
 };
 
 template<typename PrimType>
 class MultiplicationTraits<eigen_implementation::EulerAnglesYPR<PrimType>, eigen_implementation::EulerAnglesYPR<PrimType>> {
 public:
-  inline static eigen_implementation::EulerAnglesYPR<PrimType> mult(const eigen_implementation::EulerAnglesYPR<PrimType> & a, const eigen_implementation::EulerAnglesRPY<PrimType> & b) {
-    return eigen_implementation::EulerAnglesYPR<PrimType>(eigen_implementation::RotationQuaternion<PrimType>(a).toImplementation()*eigen_implementation::RotationQuaternion<PrimType>(b).toImplementation());
+  inline static eigen_implementation::EulerAnglesYPR<PrimType> mult(const eigen_implementation::EulerAnglesYPR<PrimType> & a, const eigen_implementation::EulerAnglesYPR<PrimType> & b) {
+    return eigen_implementation::EulerAnglesYPR<PrimType>(eigen_implementation::RotationQuaternion<PrimType>(eigen_implementation::RotationQuaternion<PrimType>(a).toImplementation()*eigen_implementation::RotationQuaternion<PrimType>(b).toImplementation()));
   }
 };
 
-
+// vector
 template<typename PrimType>
 class RotationTraits<eigen_implementation::AngleAxis<PrimType>> {
  public:
@@ -596,6 +655,47 @@ class RotationTraits<eigen_implementation::EulerAnglesYPR<PrimType>> {
      return eigen_implementation::RotationMatrix<PrimType>(ypr).toImplementation() * v;
    }
 };
+
+//// matrix
+//template<typename PrimType>
+//class RotationTraits<eigen_implementation::AngleAxis<PrimType>> {
+// public:
+//   inline static typename Eigen::Matrix<PrimType, 3, Eigen::Dynamic> rotate(const eigen_implementation::AngleAxis<PrimType> & aa, const Eigen::Matrix<PrimType, 3, Eigen::Dynamic> & m){
+//     return aa.toImplementation() * m;
+//   }
+//};
+//
+//template<typename PrimType>
+//class RotationTraits<eigen_implementation::RotationQuaternion<PrimType>> {
+// public:
+//   inline static typename Eigen::Matrix<PrimType, 3, Eigen::Dynamic> rotate(const eigen_implementation::RotationQuaternion<PrimType> & p, const Eigen::Matrix<PrimType, 3, Eigen::Dynamic> & m){
+//     return p.toImplementation() * m;
+//   }
+//};
+//
+//template<typename PrimType>
+//class RotationTraits<eigen_implementation::RotationMatrix<PrimType>> {
+// public:
+//   inline static typename Eigen::Matrix<PrimType, 3, Eigen::Dynamic> rotate(const eigen_implementation::RotationMatrix<PrimType> & R, const Eigen::Matrix<PrimType, 3, Eigen::Dynamic> & m){
+//     return R.toImplementation() * m;
+//   }
+//};
+//
+//template<typename PrimType>
+//class RotationTraits<eigen_implementation::EulerAnglesRPY<PrimType>> {
+// public:
+//   inline static typename Eigen::Matrix<PrimType, 3, Eigen::Dynamic> rotate(const eigen_implementation::EulerAnglesRPY<PrimType> & rpy, const Eigen::Matrix<PrimType, 3, Eigen::Dynamic> & m){
+//     return eigen_implementation::RotationMatrix<PrimType>(rpy).toImplementation() * m;
+//   }
+//};
+//
+//template<typename PrimType>
+//class RotationTraits<eigen_implementation::EulerAnglesYPR<PrimType>> {
+// public:
+//   inline static typename Eigen::Matrix<PrimType, 3, Eigen::Dynamic> rotate(const eigen_implementation::EulerAnglesYPR<PrimType> & ypr, const Eigen::Matrix<PrimType, 3, Eigen::Dynamic> & m){
+//     return eigen_implementation::RotationMatrix<PrimType>(ypr).toImplementation() * m;
+//   }
+//};
 
 } // namespace internal
 } // namespace rotations

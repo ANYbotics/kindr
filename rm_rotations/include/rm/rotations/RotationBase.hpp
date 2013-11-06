@@ -34,6 +34,11 @@ class get_vector3 {
   // typedef VECTOR type;
 };
 
+//template<typename ROTATION> // todo: ok
+//class get_matrix3X {
+//  // typedef MATRIX type;
+//};
+
 template<typename ROTATION>
 class RotationTraits {
   // inline static typename internal::get_vector3<DERIVED>::type rotate(const ROTATION & r, const typename internal::get_vector3<DERIVED>::type & );
@@ -58,9 +63,18 @@ class Rotation {
     return static_cast<const DERIVED &>(*this);
   }
 
+  const DERIVED & derived() const {
+    return static_cast<const DERIVED &>(*this);
+  }
+
+
   typename internal::get_vector3<DERIVED>::type rotate(typename internal::get_vector3<DERIVED>::type & v) {
     return internal::RotationTraits<DERIVED>::rotate(*this, v);
   }
+
+//  typename internal::get_matrix3X<DERIVED>::type rotate(typename internal::get_matrix3X<DERIVED>::type & m) {
+//    return internal::RotationTraits<DERIVED>::rotate(*this, m);
+//  }
 };
 
 template<typename DERIVED, typename OTHER_DERIVED>
@@ -73,7 +87,7 @@ Rotation<DERIVED> operator *(const Rotation<DERIVED> & a,
 
 template<typename DERIVED, typename OTHER_DERIVED> // todo: ok?
 bool operator ==(const Rotation<DERIVED> & a, const Rotation<OTHER_DERIVED> & b) {
-  return a.toImplementation() == b.toImplementation();
+  return a.derived().toImplementation() == Rotation<DERIVED>(b).derived().toImplementation();
 }
 
 

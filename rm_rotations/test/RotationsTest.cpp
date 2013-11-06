@@ -224,9 +224,16 @@ struct RotationPairsTest : public ::testing::Test  {
 
 
 typedef ::testing::Types<
+    rot::AngleAxisD,
+    rot::AngleAxisF,
     rot::RotationQuaternionD,
-//    rot::RotationQuaternionF,
-    rot::AngleAxisD
+    rot::RotationQuaternionF,
+    rot::RotationMatrixD,
+    rot::RotationMatrixF,
+    rot::EulerAnglesRPYD,
+    rot::EulerAnglesRPYF,
+    rot::EulerAnglesYPRD,
+    rot::EulerAnglesYPRF
 > Types;
 
 typedef ::testing::Types<
@@ -237,6 +244,7 @@ TYPED_TEST_CASE(RotationsTest, Types);
 
 TYPED_TEST(RotationsTest, QuaternionToAxisAngle){
   for(auto & r : {TestFixture::halfX, TestFixture::halfY, TestFixture::halfZ}){
+    SCOPED_TRACE("");
     ASSERT_EQ(this->identity, r*r);
 
     ASSERT_EQ(this->X, (r*r).rotate(this->X));

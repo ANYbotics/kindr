@@ -84,6 +84,7 @@ class UnitQuaternion : public QuaternionBase<UnitQuaternion<PrimType>>, public Q
   typedef Base Implementation;
   typedef PrimType Scalar;
   typedef typename internal::get_vector3<UnitQuaternion>::type Vector3;
+  typedef typename internal::get_matrix3X<UnitQuaternion>::type Matrix3X;
 
   UnitQuaternion() = default;
 
@@ -122,16 +123,23 @@ typedef UnitQuaternion<float> UnitQuaternionF;
 }
 
 namespace internal {
+
 template<typename PrimType>
 class get_vector3<eigen_implementation::UnitQuaternion<PrimType>>{
  public:
   typedef Eigen::Matrix<PrimType, 3, 1> type;
 };
 
+template<typename PrimType>
+class get_matrix3X<eigen_implementation::UnitQuaternion<PrimType>>{
+ public:
+  typedef Eigen::Matrix<PrimType, 3, Eigen::Dynamic> type;
+};
 
-}
-}
-}
+
+} // namespace internal
+} // namespace rotations
+} // namespace rm
 
 
 #endif /* QUATERNIONEIGEN_HPP_ */
