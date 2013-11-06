@@ -65,7 +65,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
  private:
   typedef quaternions::eigen_implementation::UnitQuaternion<PrimType> Base;
  public:
-  typedef typename Base::Implementation Implementation;
+  typedef typename Base::Implementation::Implementation Implementation; // TODO: ok?
   typedef PrimType Scalar;
 
 //  typedef typename internal::get_vector3<RotationQuaternion>::type Vector3;
@@ -269,7 +269,7 @@ AngleAxis<PrimType> operator *(const AngleAxis<PrimType> & a,
 template<typename PrimType> // todo: ok?
 RotationQuaternion<PrimType> operator *(const RotationQuaternion<PrimType> & a,
                                         const RotationQuaternion<PrimType> & b) {
-  return RotationQuaternion<PrimType> (quaternions::internal::MultiplicationTraits<quaternions::eigen_implementation::Quaternion<PrimType>, quaternions::eigen_implementation::Quaternion<PrimType>>::mult(a, b));
+  return RotationQuaternion<PrimType> (quaternions::internal::MultiplicationTraits<RotationQuaternion<PrimType>, RotationQuaternion<PrimType>>::mult(a, b));
 }
 
 template<typename PrimType>
@@ -532,19 +532,19 @@ public:
 };
 
 
-template<typename PrimType>
-class MultiplicationTraits<eigen_implementation::AngleAxis<PrimType>, eigen_implementation::AngleAxis<PrimType>> {
-public:
-  inline static eigen_implementation::AngleAxis<PrimType> mult(const eigen_implementation::AngleAxis<PrimType> & a, const eigen_implementation::AngleAxis<PrimType> & b) {
-    return eigen_implementation::AngleAxis<PrimType>(Eigen::AngleAxis<PrimType>(a.toImplementation()*b.toImplementation()));
-  }
-};
+//template<typename PrimType>
+//class MultiplicationTraits<eigen_implementation::AngleAxis<PrimType>, eigen_implementation::AngleAxis<PrimType>> {
+//public:
+//  inline static eigen_implementation::AngleAxis<PrimType> mult(const eigen_implementation::AngleAxis<PrimType> & a, const eigen_implementation::AngleAxis<PrimType> & b) {
+//    return eigen_implementation::AngleAxis<PrimType>(Eigen::AngleAxis<PrimType>(a.toImplementation()*b.toImplementation()));
+//  }
+//};
 
 template<typename PrimType>
 class MultiplicationTraits<eigen_implementation::EulerAnglesRPY<PrimType>, eigen_implementation::EulerAnglesRPY<PrimType>> {
 public:
   inline static eigen_implementation::EulerAnglesRPY<PrimType> mult(const eigen_implementation::EulerAnglesRPY<PrimType> & a, const eigen_implementation::EulerAnglesRPY<PrimType> & b) {
-    return a.toImplementation()*b.toImplementation();
+    return eigen_implementation::EulerAnglesRPY<PrimType>(eigen_implementation::RotationQuaternion<PrimType>(a).toImplementation()*eigen_implementation::RotationQuaternion<PrimType>(b).toImplementation());
   }
 };
 
@@ -552,7 +552,7 @@ template<typename PrimType>
 class MultiplicationTraits<eigen_implementation::EulerAnglesYPR<PrimType>, eigen_implementation::EulerAnglesYPR<PrimType>> {
 public:
   inline static eigen_implementation::EulerAnglesYPR<PrimType> mult(const eigen_implementation::EulerAnglesYPR<PrimType> & a, const eigen_implementation::EulerAnglesRPY<PrimType> & b) {
-    return a.toImplementation()*b.toImplementation();
+    return eigen_implementation::EulerAnglesYPR<PrimType>(eigen_implementation::RotationQuaternion<PrimType>(a).toImplementation()*eigen_implementation::RotationQuaternion<PrimType>(b).toImplementation());
   }
 };
 
@@ -568,8 +568,8 @@ class RotationTraits<eigen_implementation::AngleAxis<PrimType>> {
 template<typename PrimType>
 class RotationTraits<eigen_implementation::RotationQuaternion<PrimType>> {
  public:
-   inline static typename Eigen::Matrix<PrimType, 3, 1> rotate(const eigen_implementation::RotationQuaternion<PrimType> & r, const Eigen::Matrix<PrimType, 3, 1> & v){
-     return r.toImplementation() * v;
+   inline static typename Eigen::Matrix<PrimType, 3, 1> rotate(const eigen_implementation::RotationQuaternion<PrimType> & p, const Eigen::Matrix<PrimType, 3, 1> & v){
+     return p.toImplementation() * v;
    }
 };
 
