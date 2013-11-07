@@ -44,6 +44,14 @@ class RotationTraits {
   // inline static typename internal::get_vector3<DERIVED>::type rotate(const ROTATION & r, const typename internal::get_vector3<DERIVED>::type & );
 };
 
+template<typename ROTATION>
+class ComparisonTraits {
+ public:
+  inline static bool isequal(const ROTATION & a, const ROTATION & b) {
+    return a.toImplementation() == b.toImplemenentation();
+  }
+};
+
 } // namespace internal
 
 
@@ -85,9 +93,16 @@ Rotation<DERIVED> operator *(const Rotation<DERIVED> & a,
 
 
 
+//template<typename DERIVED, typename OTHER_DERIVED> // todo: ok?
+//bool operator ==(const Rotation<DERIVED> & a, const Rotation<OTHER_DERIVED> & b) {
+////  return a.derived().toImplementation() == Rotation<DERIVED>(b).derived().toImplementation();
+//  return a.derived().toImplementation() == DERIVED(b).toImplementation();
+//}
+
 template<typename DERIVED, typename OTHER_DERIVED> // todo: ok?
 bool operator ==(const Rotation<DERIVED> & a, const Rotation<OTHER_DERIVED> & b) {
-  return a.derived().toImplementation() == Rotation<DERIVED>(b).derived().toImplementation();
+//  return a.derived().toImplementation() == Rotation<DERIVED>(b).derived().toImplementation();
+  return internal::ComparisonTraits<DERIVED>::isequal(a.derived(), DERIVED(b));
 }
 
 

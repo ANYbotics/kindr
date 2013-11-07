@@ -17,6 +17,7 @@ namespace rotations {
 
 namespace eigen_implementation {
 
+
 template<typename PrimType>
 class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::AngleAxis<PrimType> {
   typedef Eigen::AngleAxis<PrimType> Base;
@@ -24,7 +25,9 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::Angl
   typedef Base Implementation;
   typedef PrimType Scalar;
 
-  AngleAxis() = default;
+  AngleAxis()
+    : Base(Base::Identity()) {
+  }
 
   // create from Eigen::AngleAxis
   explicit AngleAxis(const Base & other)
@@ -39,9 +42,14 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::Angl
 
   template<typename OTHER_DERIVED>
   AngleAxis & operator =(const Rotation<OTHER_DERIVED> & other) {
-
+    *this = internal::ConversionTraits<AngleAxis, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other)); // todo: ok?
     return *this;
   }
+
+//  AngleAxis<PrimType> & operator =(const RotationQuaternion<PrimType> & other) {
+//    Base(internal::ConversionTraits<AngleAxis<PrimType>, RotationQuaternion<PrimType> >::convert(RotationQuaternion<PrimType>));
+//    return *this;
+//  }
 
   AngleAxis inverse() {
     return AngleAxis(Base::inverse());
@@ -52,6 +60,11 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::Angl
   }
   inline const Base & toImplementation() const {
     return static_cast<const Base &>(*this);
+  }
+
+  friend std::ostream & operator << (std::ostream & out, const AngleAxis & a) {
+    out << a.toImplementation().angle() << ", " << a.toImplementation().axis().transpose();
+    return out;
   }
 };
 
@@ -70,7 +83,9 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
 
 //  typedef typename internal::get_vector3<RotationQuaternion>::type Vector3;
 
-  RotationQuaternion() = default;
+  RotationQuaternion()
+    : Base(Implementation::Identity()) { // todo: difference between base and implementation?
+  }
 
   RotationQuaternion(const PrimType & w, const PrimType & x, const PrimType & y, const PrimType & z)
     : Base(w,x,y,z) {
@@ -78,40 +93,51 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
 
   // create from Quaternion
   explicit RotationQuaternion(const Base & other)
-      : Base(other) {
+    : Base(other) {
   }
 
   // create from Eigen::Quaternion
   explicit RotationQuaternion(const Implementation & other)
-      : Base(other) {
+    : Base(other) {
   }
 
   // create from other rotation
   template<typename DERIVED>
   inline RotationQuaternion(const Rotation<DERIVED> & other)
-      : Base(internal::ConversionTraits<RotationQuaternion, DERIVED>::convert(other)) {
+    : Base(internal::ConversionTraits<RotationQuaternion, DERIVED>::convert(static_cast<const DERIVED &>(other))) {
   }
 
   template<typename OTHER_DERIVED>
   RotationQuaternion & operator =(const Rotation<OTHER_DERIVED> & other) {
-    Base(internal::ConversionTraits<RotationQuaternion, OTHER_DERIVED>::convert(other)); // todo: ok?
+    *this = internal::ConversionTraits<RotationQuaternion, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other)); // todo: ok?
     return *this;
   }
 
-
-  bool operator == (const RotationQuaternion & other) {
-    return toImplementation() == other.toImplementation() || toImplementation() == -other.toImplementation();
-  }
+//  template<typename DERIVED>
+//  inline RotationQuaternion(const Rotation<DERIVED> & other)
+//      : Base(internal::ConversionTraits<RotationQuaternion, DERIVED>::convert(other)) {
+//  }
+//
+//  template<typename OTHER_DERIVED>
+//  RotationQuaternion & operator =(const Rotation<OTHER_DERIVED> & other) {
+//    Base(internal::ConversionTraits<RotationQuaternion, OTHER_DERIVED>::convert(other)); // todo: ok?
+//    return *this;
+//  }
 
 //  using Base::inverse; // TODO: necessary?
 
   RotationQuaternion inverse() {
-    return RotationQuaternion(Base::conjugate());
+    return RotationQuaternion(Implementation::conjugate());
   }
 
 //  Vector<3> imag();
 
   using Base::toImplementation;
+
+  friend std::ostream & operator << (std::ostream & out, const RotationQuaternion & quat) {
+    out << quat.toImplementation().w() << " " << quat.toImplementation().x() << " " << quat.toImplementation().y() << " " << quat.toImplementation().z();
+    return out;
+  }
 };
 
 typedef RotationQuaternion<double> RotationQuaternionD;
@@ -126,7 +152,9 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType>>, priv
   typedef Base Implementation;
   typedef PrimType Scalar;
 
-  RotationMatrix() = default;
+  RotationMatrix()
+    : Base(Base::Identity()) {
+  }
 
   // create from Eigen::Matrix
   explicit RotationMatrix(const Base & other)
@@ -135,12 +163,13 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType>>, priv
 
   // create from other rotation
   template<typename DERIVED>
-  inline explicit RotationMatrix(const Rotation<DERIVED> & other)
+  inline RotationMatrix(const Rotation<DERIVED> & other) // TODO not explicit anymore
       : Base(internal::ConversionTraits<RotationMatrix, DERIVED>::convert(static_cast<const DERIVED &>(other))) {
   }
 
   template<typename OTHER_DERIVED>
   RotationMatrix & operator =(const Rotation<OTHER_DERIVED> & other) {
+    *this = internal::ConversionTraits<RotationMatrix, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other)); // todo: ok?
     return *this;
   }
 
@@ -153,6 +182,18 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType>>, priv
   }
   inline const Implementation & toImplementation() const {
     return static_cast<const Implementation &>(*this);
+  }
+
+//  using Implementation::operator ==;
+
+  template<typename OTHER_DERIVED> // todo ambiguous overload with Eigen operator if not specified
+  bool operator ==(const Rotation<OTHER_DERIVED> & b) {
+    return internal::ComparisonTraits<RotationMatrix>::isequal(*this, b);
+  }
+
+  friend std::ostream & operator << (std::ostream & out, const RotationMatrix & R) {
+    out << R.toImplementation();
+    return out;
   }
 };
 
@@ -168,7 +209,9 @@ class EulerAnglesRPY : public EulerAnglesRPYBase<EulerAnglesRPY<PrimType>>, priv
   typedef Base Implementation;
   typedef PrimType Scalar;
 
-  EulerAnglesRPY() = default;
+  EulerAnglesRPY()
+    : Base(Base::Zero()) {
+  }
 
   EulerAnglesRPY(const PrimType & r, const PrimType & p, const PrimType & y)
     : Base(r,p,y) {
@@ -187,7 +230,7 @@ class EulerAnglesRPY : public EulerAnglesRPYBase<EulerAnglesRPY<PrimType>>, priv
 
   template<typename OTHER_DERIVED>
   EulerAnglesRPY & operator =(const Rotation<OTHER_DERIVED> & other) {
-
+    *this = internal::ConversionTraits<EulerAnglesRPY, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other)); // todo: ok?
     return *this;
   }
 
@@ -201,10 +244,23 @@ class EulerAnglesRPY : public EulerAnglesRPYBase<EulerAnglesRPY<PrimType>>, priv
   inline const Base & toImplementation() const {
     return static_cast<const Base &>(*this);
   }
+
+//  using Implementation::operator ==;
+
+  template<typename OTHER_DERIVED> // todo ambiguous overload with Eigen operator if not specified
+  bool operator ==(const Rotation<OTHER_DERIVED> & b) {
+    return internal::ComparisonTraits<EulerAnglesRPY>::isequal(*this, b);
+  }
+
+  friend std::ostream & operator << (std::ostream & out, const EulerAnglesRPY & rpy) {
+    out << rpy.toImplementation().transpose();
+    return out;
+  }
 };
 
 typedef EulerAnglesRPY<double> EulerAnglesRPYD;
 typedef EulerAnglesRPY<float> EulerAnglesRPYF;
+
 
 template<typename PrimType>
 class EulerAnglesYPR : public EulerAnglesYPRBase<EulerAnglesYPR<PrimType>>, private Eigen::Matrix<PrimType, 3, 1> {
@@ -214,7 +270,9 @@ class EulerAnglesYPR : public EulerAnglesYPRBase<EulerAnglesYPR<PrimType>>, priv
   typedef Base Implementation;
   typedef PrimType Scalar;
 
-  EulerAnglesYPR() = default;
+  EulerAnglesYPR()
+    : Base(Base::Zero()) {
+  }
 
   EulerAnglesYPR(const PrimType & y, const PrimType & p, const PrimType & r)
     : Base(y,p,r) {
@@ -233,7 +291,7 @@ class EulerAnglesYPR : public EulerAnglesYPRBase<EulerAnglesYPR<PrimType>>, priv
 
   template<typename OTHER_DERIVED>
   EulerAnglesYPR & operator =(const Rotation<OTHER_DERIVED> & other) {
-
+    *this = internal::ConversionTraits<EulerAnglesYPR, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other)); // todo: ok?
     return *this;
   }
 
@@ -247,10 +305,25 @@ class EulerAnglesYPR : public EulerAnglesYPRBase<EulerAnglesYPR<PrimType>>, priv
   inline const Base & toImplementation() const {
     return static_cast<const Base &>(*this);
   }
+
+//  using Implementation::operator ==;
+
+  template<typename OTHER_DERIVED> // todo ambiguous overload with Eigen operator if not specified
+  bool operator ==(const Rotation<OTHER_DERIVED> & b) {
+    return internal::ComparisonTraits<EulerAnglesYPR>::isequal(*this, b);
+  }
+
+  friend std::ostream & operator << (std::ostream & out, const EulerAnglesYPR & ypr) {
+    out << ypr.toImplementation().transpose();
+    return out;
+  }
 };
 
 typedef EulerAnglesYPR<double> EulerAnglesYPRD;
 typedef EulerAnglesYPR<float> EulerAnglesYPRF;
+
+
+
 
 
 // todo: overload operator * for rotating vectors?
@@ -292,30 +365,34 @@ EulerAnglesYPR<PrimType> operator *(const EulerAnglesYPR<PrimType> & a,
 }
 
 
-template<typename PrimType>
-bool operator ==(const AngleAxis<PrimType> & a, const AngleAxis<PrimType> & b) {
-  return RotationMatrix<PrimType>(a).toImplementation() == RotationMatrix<PrimType>(b).toImplementation();
-}
+//template<typename PrimType>
+//bool operator ==(const AngleAxis<PrimType> & a, const AngleAxis<PrimType> & b) {
+////  return RotationMatrix<PrimType>(a).toImplementation() == RotationMatrix<PrimType>(b).toImplementation();
+//  return internal::ComparisonTraits<AngleAxis<PrimType>>::isequal(a, b);
+//}
+//
+//template<typename PrimType>
+//bool operator ==(const RotationQuaternion<PrimType> & a, const RotationQuaternion<PrimType> & b) {
+//  return RotationMatrix<PrimType>(a).toImplementation() == RotationMatrix<PrimType>(b).toImplementation();
+//}
+//
+//template<typename PrimType> // ambiguous overload with Eigen operator if not specified
+//bool operator ==(const RotationMatrix<PrimType> & a, const RotationMatrix<PrimType> & b) {
+//  return a.toImplementation() == b.toImplementation();
+//}
+//
+//template<typename PrimType> // ambiguous overload with Eigen operator if not specified
+//bool operator ==(const EulerAnglesRPY<PrimType> & a, const EulerAnglesRPY<PrimType> & b) {
+//  return a.toImplementation() == b.toImplementation();
+//}
+//
+//template<typename PrimType> // ambiguous overload with Eigen operator if not specified
+//bool operator ==(const EulerAnglesYPR<PrimType> & a, const EulerAnglesYPR<PrimType> & b) {
+//  return a.toImplementation() == b.toImplementation();
+//}
 
-template<typename PrimType>
-bool operator ==(const RotationQuaternion<PrimType> & a, const RotationQuaternion<PrimType> & b) {
-  return RotationMatrix<PrimType>(a).toImplementation() == RotationMatrix<PrimType>(b).toImplementation();
-}
 
-template<typename PrimType> // ambiguous overload with Eigen operator if not specified
-bool operator ==(const RotationMatrix<PrimType> & a, const RotationMatrix<PrimType> & b) {
-  return a.toImplementation() == b.toImplementation();
-}
 
-template<typename PrimType> // ambiguous overload with Eigen operator if not specified
-bool operator ==(const EulerAnglesRPY<PrimType> & a, const EulerAnglesRPY<PrimType> & b) {
-  return a.toImplementation() == b.toImplementation();
-}
-
-template<typename PrimType> // ambiguous overload with Eigen operator if not specified
-bool operator ==(const EulerAnglesYPR<PrimType> & a, const EulerAnglesYPR<PrimType> & b) {
-  return a.toImplementation() == b.toImplementation();
-}
 
 
 }  // namespace eigen_implementation
@@ -616,7 +693,7 @@ public:
 };
 
 // vector
-template<typename PrimType>
+template<typename PrimType> // todo: replace with standard function
 class RotationTraits<eigen_implementation::AngleAxis<PrimType>> {
  public:
    inline static typename Eigen::Matrix<PrimType, 3, 1> rotate(const eigen_implementation::AngleAxis<PrimType> & aa, const Eigen::Matrix<PrimType, 3, 1> & v){
@@ -696,6 +773,62 @@ class RotationTraits<eigen_implementation::EulerAnglesYPR<PrimType>> {
 //     return eigen_implementation::RotationMatrix<PrimType>(ypr).toImplementation() * m;
 //   }
 //};
+
+
+
+template<typename PrimType>
+class ComparisonTraits<eigen_implementation::AngleAxis<PrimType>> {
+ public:
+   inline static bool isequal(const eigen_implementation::AngleAxis<PrimType> & a, const eigen_implementation::AngleAxis<PrimType> & b){
+     return (a.toImplementation().angle() ==  b.toImplementation().angle() && a.toImplementation().axis() ==  b.toImplementation().axis()) ||
+            (a.toImplementation().angle() == -b.toImplementation().angle() && a.toImplementation().axis() == -b.toImplementation().axis());
+   }
+};
+
+template<typename PrimType>
+class ComparisonTraits<eigen_implementation::RotationQuaternion<PrimType>> {
+ public:
+   inline static bool isequal(const eigen_implementation::RotationQuaternion<PrimType> & a, const eigen_implementation::RotationQuaternion<PrimType> & b){
+     return (a.toImplementation().w() ==  b.toImplementation().w() &&
+             a.toImplementation().x() ==  b.toImplementation().x() &&
+             a.toImplementation().y() ==  b.toImplementation().y() &&
+             a.toImplementation().z() ==  b.toImplementation().z()) ||
+            (a.toImplementation().w() == -b.toImplementation().w() &&
+             a.toImplementation().x() == -b.toImplementation().x() &&
+             a.toImplementation().y() == -b.toImplementation().y() &&
+             a.toImplementation().z() == -b.toImplementation().z());
+   }
+};
+
+//bool operator == (const RotationQuaternion & other) {
+//  return toImplementation() == other.toImplementation() || toImplementation() == -other.toImplementation();
+//}
+
+template<typename PrimType>
+class ComparisonTraits<eigen_implementation::RotationMatrix<PrimType>> {
+ public:
+   inline static bool isequal(const eigen_implementation::RotationMatrix<PrimType> & a, const eigen_implementation::RotationMatrix<PrimType> & b){
+     return a.toImplementation() == b.toImplementation();
+   }
+};
+
+template<typename PrimType>
+class ComparisonTraits<eigen_implementation::EulerAnglesRPY<PrimType>> {
+ public:
+   inline static bool isequal(const eigen_implementation::EulerAnglesRPY<PrimType> & a, const eigen_implementation::EulerAnglesRPY<PrimType> & b){
+     return a.toImplementation() == b.toImplementation();
+   }
+};
+
+template<typename PrimType>
+class ComparisonTraits<eigen_implementation::EulerAnglesYPR<PrimType>> {
+ public:
+   inline static bool isequal(const eigen_implementation::EulerAnglesYPR<PrimType> & a, const eigen_implementation::EulerAnglesYPR<PrimType> & b){
+     return a.toImplementation() == b.toImplementation();
+   }
+};
+
+
 
 } // namespace internal
 } // namespace rotations
