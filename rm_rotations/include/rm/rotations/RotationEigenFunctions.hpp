@@ -561,43 +561,40 @@ static Eigen::Matrix<TReturn,3,1> getYPRFromRPY(const Eigen::Matrix<T,3,1>& rpy_
 
 // 7) Output: Inverses
 
-template<typename T, typename TReturn = T>
-static Eigen::AngleAxis<TReturn> getInverseAngleAxis(const Eigen::AngleAxis<T>& aa_BI)
-{
-  return (aa_BI.template cast<TReturn>()).inverse();
-}
-
+//template<typename T, typename TReturn = T>
+//static Eigen::AngleAxis<TReturn> getInverseAngleAxis(const Eigen::AngleAxis<T>& aa_BI)
+//{
+//  return (aa_BI.template cast<TReturn>()).inverse();
+//}
+//
 template<typename T, typename TReturn = T>
 static Eigen::Quaternion<TReturn> getInverseQuaternion(const Eigen::Quaternion<T>& p_BI)
 {
   return (p_BI.conjugate()).template cast<TReturn>();
-//  return p_BI.inverse(); // todo
 }
-
-template<typename T, typename TReturn = T>
-static Eigen::Matrix<TReturn,3,3> getInverseTransformationMatrix(const Eigen::Matrix<T,3,3>& A_IB)
-{
-  return (A_IB.template cast<TReturn>()).transpose();
-}
-
-template<typename T, typename TReturn = T>
-static Eigen::Matrix<TReturn,3,3> getInverseRotationMatrix(const Eigen::Matrix<T,3,3>& R_BI)
-{
-  return (R_BI.template cast<TReturn>()).transpose();
-}
+//
+//template<typename T, typename TReturn = T>
+//static Eigen::Matrix<TReturn,3,3> getInverseTransformationMatrix(const Eigen::Matrix<T,3,3>& A_IB)
+//{
+//  return (A_IB.template cast<TReturn>()).transpose();
+//}
+//
+//template<typename T, typename TReturn = T>
+//static Eigen::Matrix<TReturn,3,3> getInverseRotationMatrix(const Eigen::Matrix<T,3,3>& R_BI)
+//{
+//  return (R_BI.template cast<TReturn>()).transpose();
+//}
 
 template<typename T, typename TReturn = T>
 static Eigen::Matrix<TReturn,3,1> getInverseRPY(const Eigen::Matrix<T,3,1>& rpy_BI)
 {
   return getRPYFromQuaternion(getInverseQuaternion(getQuaternionFromRPY(rpy_BI.template cast<TReturn>())));
-//  return getRPYFromAngleAxis(getInverseAngleAxis(getAngleAxisFromRPY(rpy_BI)));
 }
 
 template<typename T, typename TReturn = T>
 static Eigen::Matrix<TReturn,3,1> getInverseYPR(const Eigen::Matrix<T,3,1>& ypr_BI)
 {
   return getYPRFromQuaternion(getInverseQuaternion(getQuaternionFromYPR(ypr_BI.template cast<TReturn>())));
-//  return getYPRFromAngleAxis(getInverseAngleAxis(getAngleAxisFromYPR(ypr_BI)));
 }
 
 

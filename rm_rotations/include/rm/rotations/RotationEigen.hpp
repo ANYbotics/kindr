@@ -20,6 +20,7 @@ namespace eigen_implementation {
 
 template<typename PrimType>
 class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::AngleAxis<PrimType> {
+ private:
   typedef Eigen::AngleAxis<PrimType> Base;
  public:
   typedef Base Implementation;
@@ -107,7 +108,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
 
   // create from other rotation
   template<typename DERIVED>
-  inline RotationQuaternion(const Rotation<DERIVED> & other)
+  inline explicit RotationQuaternion(const Rotation<DERIVED> & other)
     : Base(internal::ConversionTraits<RotationQuaternion, DERIVED>::convert(static_cast<const DERIVED &>(other))) {
   }
 
@@ -177,7 +178,7 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType>>, priv
 
   // create from other rotation
   template<typename DERIVED>
-  inline RotationMatrix(const Rotation<DERIVED> & other) // TODO not explicit anymore
+  inline explicit RotationMatrix(const Rotation<DERIVED> & other) // TODO not explicit anymore
       : Base(internal::ConversionTraits<RotationMatrix, DERIVED>::convert(static_cast<const DERIVED &>(other))) {
   }
 
@@ -198,12 +199,14 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType>>, priv
     return static_cast<const Implementation &>(*this);
   }
 
-//  using Implementation::operator ==;
+//  using Implementation::operator ==; // todo: is inaccessible base
 
   template<typename OTHER_DERIVED> // todo ambiguous overload with Eigen operator if not specified
   bool operator ==(const Rotation<OTHER_DERIVED> & b) {
-    return internal::ComparisonTraits<RotationMatrix>::isequal(*this, b);
+    return internal::ComparisonTraits<RotationMatrix>::isequal(*this, (RotationMatrix)b);
   }
+
+//  using Rotation<RotationMatrix>::operator*;
 
   friend std::ostream & operator << (std::ostream & out, const RotationMatrix & R) {
     out << R.toImplementation();
@@ -249,7 +252,7 @@ class EulerAnglesRPY : public EulerAnglesRPYBase<EulerAnglesRPY<PrimType>>, priv
   }
 
   EulerAnglesRPY inverse() {
-    return getRPYFromQuaternion<PrimType, PrimType>(getInverseQuaternion<PrimType, PrimType>(getQuaternionFromRPY<PrimType, PrimType>(*this)));
+    return (EulerAnglesRPY)getInverseRPY<PrimType, PrimType>(*this);
   }
 
   inline Base & toImplementation() {
@@ -310,7 +313,7 @@ class EulerAnglesYPR : public EulerAnglesYPRBase<EulerAnglesYPR<PrimType>>, priv
   }
 
   EulerAnglesYPR inverse() {
-    return getYPRFromQuaternion<PrimType, PrimType>(getInverseQuaternion<PrimType, PrimType>(getQuaternionFromYPR<PrimType, PrimType>(*this)));
+    return (EulerAnglesYPR)getInverseYPR<PrimType, PrimType>(*this);
   }
 
   inline Base & toImplementation() {

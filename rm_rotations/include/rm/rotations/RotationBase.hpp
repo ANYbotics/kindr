@@ -34,7 +34,7 @@ class get_vector3 {
   // typedef VECTOR type;
 };
 
-//template<typename ROTATION> // todo: ok
+//template<typename ROTATION> // todo
 //class get_matrix3X {
 //  // typedef MATRIX type;
 //};
@@ -102,30 +102,12 @@ Rotation<DERIVED> operator *(const Rotation<DERIVED> & a,
 template<typename DERIVED, typename OTHER_DERIVED> // todo: ok?
 bool operator ==(const Rotation<DERIVED> & a, const Rotation<OTHER_DERIVED> & b) {
 //  return a.derived().toImplementation() == Rotation<DERIVED>(b).derived().toImplementation();
-  return internal::ComparisonTraits<DERIVED>::isequal(a.derived(), (DERIVED)b);
+  return internal::ComparisonTraits<DERIVED>::isequal(a.derived(), DERIVED(b));
 }
 
 
-template<typename Implementation>
-class RotationQuaternionBase : public Rotation<Implementation> {
 
-//  typename Implementation::ImagVector imagVector();
-
-//  friend std::ostream & operator <<(std::ostream & out,
-//                                    const QuaternionBase & quat) {
-//    out << "(" << quat.real() << ", "
-//        << static_cast<Implementation&>(quat).imagVector() << ")";
-//    return out;
-//  }
-
-};
-
-//template<typename DERIVED>
-//void foo(const UnitQuaternionBase<DERIVED> & q) {
-//
-//}
-
-
+// todo: no return values?
 template<typename Implementation>
 class AngleAxisBase : public Rotation<Implementation> {
 
@@ -135,23 +117,29 @@ class AngleAxisBase : public Rotation<Implementation> {
   }
 };
 
+template<typename Implementation>
+class RotationQuaternionBase : public Rotation<Implementation> {
+
+  template<typename OTHER_DERIVED>
+  RotationQuaternionBase & operator =(const Rotation<OTHER_DERIVED> & other) {
+    return *this;
+  }
+
+};
 
 template<typename Implementation>
 class RotationMatrixBase : public Rotation<Implementation> {
 
   template<typename OTHER_DERIVED>
   RotationMatrixBase & operator =(const Rotation<OTHER_DERIVED> & other) {
-
     return *this;
   }
 };
-
 
 template<typename Implementation>
 class EulerAnglesBase : public Rotation<Implementation> {
 
 };
-
 
 template<typename Implementation>
 class EulerAnglesRPYBase : public EulerAnglesBase<Implementation> {
@@ -161,7 +149,6 @@ class EulerAnglesRPYBase : public EulerAnglesBase<Implementation> {
     return *this;
   }
 };
-
 
 template<typename Implementation>
 class EulerAnglesYPRBase : public EulerAnglesBase<Implementation> {

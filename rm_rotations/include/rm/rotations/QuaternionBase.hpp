@@ -35,15 +35,15 @@ class ComparisonTraits {
 //  }
 };
 
-template<typename ROTATION>
-class get_vector3 {
-  // typedef VECTOR type;
-};
+//template<typename ROTATION>
+//class get_vector3 {
+//  // typedef VECTOR type;
+//};
 
-template<typename ROTATION> // TODO: ok
-class get_matrix3X {
-  // typedef MATRIX type;
-};
+//template<typename ROTATION>
+//class get_matrix3X {
+//  // typedef MATRIX type;
+//};
 
 } // namespace internal
 
@@ -63,15 +63,6 @@ class QuaternionBase {
   const DERIVED & derived() const {
     return static_cast<const DERIVED &>(*this);
   }
-
-  //  typename Implementation::ImagVector imagVector();
-
-  //  friend std::ostream & operator <<(std::ostream & out,
-  //                                    const QuaternionBase & quat) {
-  //    out << "(" << quat.real() << ", "
-  //        << static_cast<Implementation&>(quat).imagVector() << ")";
-  //    return out;
-  //  }
 };
 
 
@@ -96,6 +87,13 @@ class UnitQuaternionBase : public QuaternionBase<DERIVED> {
     return DERIVED::conjugate();
   }
 };
+
+
+
+//template<typename DERIVED, typename OTHER_DERIVED> // todo: ok?
+//bool operator ==(const UnitQuaternionBase<DERIVED> & a, const UnitQuaternionBase<OTHER_DERIVED> & b) {
+//  return internal::ComparisonTraits<DERIVED>::isequal(a.derived(), DERIVED(b));
+//}
 
 } // namespace quaternions
 } // namespace rm
