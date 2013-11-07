@@ -29,6 +29,10 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::Angl
     : Base(Base::Identity()) {
   }
 
+  AngleAxis(const PrimType & chi, const PrimType & v1, const PrimType & v2, const PrimType & v3)
+    : Base(chi,Eigen::Matrix<PrimType,3,1>(v1,v2,v3)) {
+  }
+
   // create from Eigen::AngleAxis
   explicit AngleAxis(const Base & other)
       : Base(other) {
@@ -124,11 +128,15 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
 //    return *this;
 //  }
 
-//  using Base::inverse; // TODO: necessary?
-
   RotationQuaternion inverse() {
-    return RotationQuaternion(Implementation::conjugate());
+    return RotationQuaternion(Base::inverse());
   }
+
+  RotationQuaternion conjugate() {
+    return RotationQuaternion(Base::conjugate());
+  }
+
+//  using Base::inverse; todo: if this is used, the result is a unitquaternion, which cannot be further used
 
 //  Vector<3> imag();
 
@@ -154,6 +162,12 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType>>, priv
 
   RotationMatrix()
     : Base(Base::Identity()) {
+  }
+
+  RotationMatrix(const PrimType & r11, const PrimType & r12, const PrimType & r13,
+                 const PrimType & r21, const PrimType & r22, const PrimType & r23,
+                 const PrimType & r31, const PrimType & r32, const PrimType & r33) {
+    *this << r11,r12,r13,r21,r22,r23,r31,r32,r33;
   }
 
   // create from Eigen::Matrix
@@ -324,9 +338,6 @@ typedef EulerAnglesYPR<float> EulerAnglesYPRF;
 
 
 
-
-
-// todo: overload operator * for rotating vectors?
 
 template<typename PrimType>
 AngleAxis<PrimType> operator *(const AngleAxis<PrimType> & a,
@@ -799,10 +810,6 @@ class ComparisonTraits<eigen_implementation::RotationQuaternion<PrimType>> {
              a.toImplementation().z() == -b.toImplementation().z());
    }
 };
-
-//bool operator == (const RotationQuaternion & other) {
-//  return toImplementation() == other.toImplementation() || toImplementation() == -other.toImplementation();
-//}
 
 template<typename PrimType>
 class ComparisonTraits<eigen_implementation::RotationMatrix<PrimType>> {

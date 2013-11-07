@@ -69,6 +69,11 @@ class Quaternion : public quaternions::QuaternionBase<Quaternion<PrimType>>, pri
   inline const Base & toImplementation() const {
     return static_cast<const Base &>(*this);
   }
+
+  friend std::ostream & operator << (std::ostream & out, const Quaternion & quat) {
+    out << quat.toImplementation().w() << " " << quat.toImplementation().x() << " " << quat.toImplementation().y() << " " << quat.toImplementation().z();
+    return out;
+  }
 };
 
 
@@ -113,7 +118,15 @@ class UnitQuaternion : public QuaternionBase<UnitQuaternion<PrimType>>, public Q
     return *this;
   }
 
-//  using Base::inverse; // TODO: necessary?
+  //  using Base::conjugate;
+
+  UnitQuaternion conjugate() {
+    return UnitQuaternion(Implementation::conjugate());
+  }
+
+  UnitQuaternion inverse() {
+    return UnitQuaternion(Implementation::conjugate());
+  }
 
   using Base::toImplementation;
 };
@@ -134,6 +147,19 @@ template<typename PrimType>
 class get_matrix3X<eigen_implementation::UnitQuaternion<PrimType>>{
  public:
   typedef Eigen::Matrix<PrimType, 3, Eigen::Dynamic> type;
+};
+
+
+
+template<typename PrimType>
+class ComparisonTraits<eigen_implementation::Quaternion<PrimType>> {
+ public:
+   inline static bool isequal(const eigen_implementation::Quaternion<PrimType> & a, const eigen_implementation::Quaternion<PrimType> & b){
+     return (a.toImplementation().w() ==  b.toImplementation().w() &&
+             a.toImplementation().x() ==  b.toImplementation().x() &&
+             a.toImplementation().y() ==  b.toImplementation().y() &&
+             a.toImplementation().z() ==  b.toImplementation().z());
+   }
 };
 
 

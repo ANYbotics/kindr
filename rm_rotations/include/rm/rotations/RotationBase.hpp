@@ -48,7 +48,7 @@ template<typename ROTATION>
 class ComparisonTraits {
  public:
   inline static bool isequal(const ROTATION & a, const ROTATION & b) {
-    return a.toImplementation() == b.toImplemenentation();
+    return a.toImplementation() == b.toImplementation();
   }
 };
 
@@ -102,7 +102,7 @@ Rotation<DERIVED> operator *(const Rotation<DERIVED> & a,
 template<typename DERIVED, typename OTHER_DERIVED> // todo: ok?
 bool operator ==(const Rotation<DERIVED> & a, const Rotation<OTHER_DERIVED> & b) {
 //  return a.derived().toImplementation() == Rotation<DERIVED>(b).derived().toImplementation();
-  return internal::ComparisonTraits<DERIVED>::isequal(a.derived(), DERIVED(b));
+  return internal::ComparisonTraits<DERIVED>::isequal(a.derived(), (DERIVED)b);
 }
 
 

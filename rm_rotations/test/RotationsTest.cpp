@@ -185,8 +185,10 @@ TEST (RotationsTest, DISABLED_testRotationFunctions ) {
 }
 
 
+#include <rm/rotations/QuaternionEigen.hpp>
 #include <rm/rotations/RotationEigen.hpp>
 
+namespace quat = rm::quaternions::eigen_implementation;
 namespace rot = rm::rotations::eigen_implementation;
 
 template <typename RotationImplementation>
@@ -297,7 +299,11 @@ TEST (RotationsTest, testRotationVarious ) {
   // inverse, conjugate quaternion
   // make functions of rotationquaternion generally available
   // rotation of matrices
+  // debug: check unitquaternion length
   // test
+  // overload operator * for rotating vectors?
+  // interaction quaternion - unitquaternion - rotationquaternion
+  // interaction double - float
 
   rot::AngleAxis<double> a1 = rot::AngleAxis<double>(Eigen::AngleAxisd(1,Eigen::Vector3d(1,0,0)));
   rot::RotationQuaternion<double> q1 = a1; // calls q1(a1)
@@ -314,7 +320,6 @@ TEST (RotationsTest, testRotationVarious ) {
   rot::EulerAnglesRPY<double> rpy1(a1);
   rot::EulerAnglesYPR<double> ypr1(a1);
 
-//  ASSERT_EQ(a1==q1,true);
 //  std::cout << a1 << std::endl;
 //  std::cout << q1 << std::endl;
 //  std::cout << R1 << std::endl;
@@ -327,15 +332,38 @@ TEST (RotationsTest, testRotationVarious ) {
 
   std::cout << (a1==q1) << std::endl;
   std::cout << (q1==a1) << std::endl;
-//  std::cout << (q1.inverse()==a1) << std::endl;
+  std::cout << (q1.inverse()==a1) << std::endl;
   std::cout << (R1==q1) << std::endl;
   std::cout << (a1==rpy1) << std::endl;
   std::cout << (a1==ypr1) << std::endl;
-//
-//  rot::RotationQuaternion<double> q2 = rot::RotationQuaternion<double>(Eigen::Quaterniond(1,0,0,0));
-//  rot::AngleAxis<double> a2 = q2;
-//
-//  ASSERT_EQ(a2,q2);
+
+  rot::RotationQuaternion<double> q0(1,0,0,0);
+  rot::AngleAxis<double> a0(1,1,0,0);
+  rot::RotationMatrix<double> R0(0,1,0,1,0,0,0,0,1);
+  rot::EulerAnglesRPY<double> rpy0(1,-2,3);
+  rot::EulerAnglesYPR<double> ypr0(-1,3,2);
+  std::cout << q0 << std::endl;
+  std::cout << a0 << std::endl;
+  std::cout << R0 << std::endl;
+  std::cout << rpy0 << std::endl;
+  std::cout << ypr0 << std::endl;
+
+
+
+
+
+
+//  quat::Quaternion<double> quat1(1,2,3,4);
+//  quat::Quaternion<double> quat2(quat1);
+//  quat::Quaternion<double> quat3;
+//  quat3 = quat1;
+//  std::cout << quat1 << std::endl;
+//  std::cout << quat2 << std::endl;
+//  std::cout << quat3 << std::endl;
+//  std::cout << quat1.conjugate() << std::endl;
+//  std::cout << quat1.inverse() << std::endl;
+//  std::cout << (quat1==quat2) << std::endl;
+
 
 }
 
