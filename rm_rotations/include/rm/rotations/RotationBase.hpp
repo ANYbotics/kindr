@@ -24,6 +24,7 @@ template<typename LEFT, typename RIGHT>
 class MultiplicationTraits {
  public:
   inline static LEFT mult(const LEFT &l, const RIGHT &r){
+//    std::cout << "HERE2: " << std::endl << l << std::endl << r << std::endl;
     return LEFT(typename LEFT::Implementation(l.toImplementation() * r.toImplementation()));
   }
 };
@@ -83,13 +84,27 @@ class Rotation {
 //  typename internal::get_matrix3X<DERIVED>::type rotate(typename internal::get_matrix3X<DERIVED>::type & m) {
 //    return internal::RotationTraits<DERIVED>::rotate(*this, m);
 //  }
+
+
+  template<typename OTHER_DERIVED>
+  Rotation<DERIVED> operator *(const Rotation<OTHER_DERIVED> & other) {
+//    std::cout << "HERE1: " << std::endl << *this << std::endl << other << std::endl;
+    return internal::MultiplicationTraits<DERIVED,DERIVED>::mult((DERIVED)*this, (DERIVED)other);
+  }
+
+
+  template<typename OTHER_DERIVED> // todo: ok?
+  bool operator ==(const Rotation<OTHER_DERIVED> & other) {
+  //  return a.derived().toImplementation() == Rotation<DERIVED>(b).derived().toImplementation();
+    return internal::ComparisonTraits<DERIVED>::isequal((DERIVED)*this, (DERIVED)other);
+  }
 };
 
-template<typename DERIVED, typename OTHER_DERIVED>
-Rotation<DERIVED> operator *(const Rotation<DERIVED> & a,
-                             const Rotation<OTHER_DERIVED> & b) {
-  return internal::MultiplicationTraits<DERIVED, OTHER_DERIVED>::mult(a, b);
-}
+//template<typename DERIVED, typename OTHER_DERIVED>
+//Rotation<DERIVED> operator *(const Rotation<DERIVED> & a,
+//                             const Rotation<OTHER_DERIVED> & b) {
+//  return internal::MultiplicationTraits<DERIVED, OTHER_DERIVED>::mult(a, b);
+//}
 
 
 
@@ -99,11 +114,11 @@ Rotation<DERIVED> operator *(const Rotation<DERIVED> & a,
 //  return a.derived().toImplementation() == DERIVED(b).toImplementation();
 //}
 
-template<typename DERIVED, typename OTHER_DERIVED> // todo: ok?
-bool operator ==(const Rotation<DERIVED> & a, const Rotation<OTHER_DERIVED> & b) {
-//  return a.derived().toImplementation() == Rotation<DERIVED>(b).derived().toImplementation();
-  return internal::ComparisonTraits<DERIVED>::isequal(a.derived(), DERIVED(b));
-}
+//template<typename DERIVED, typename OTHER_DERIVED> // todo: ok?
+//bool operator ==(const Rotation<DERIVED> & a, const Rotation<OTHER_DERIVED> & b) {
+////  return a.derived().toImplementation() == Rotation<DERIVED>(b).derived().toImplementation();
+//  return internal::ComparisonTraits<DERIVED>::isequal(a.derived(), (DERIVED)b);
+//}
 
 
 

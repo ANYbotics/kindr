@@ -67,6 +67,8 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::Angl
     return static_cast<const Base &>(*this);
   }
 
+  using AngleAxisBase<AngleAxis<PrimType>>::operator*;
+
   friend std::ostream & operator << (std::ostream & out, const AngleAxis & a) {
     out << a.toImplementation().angle() << ", " << a.toImplementation().axis().transpose();
     return out;
@@ -143,6 +145,9 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
 
   using Base::toImplementation;
 
+  using RotationQuaternionBase<RotationQuaternion<PrimType>>::operator*;
+//  using RotationQuaternionBase<RotationQuaternion<PrimType>>::operator==;
+
   friend std::ostream & operator << (std::ostream & out, const RotationQuaternion & quat) {
     out << quat.toImplementation().w() << " " << quat.toImplementation().x() << " " << quat.toImplementation().y() << " " << quat.toImplementation().z();
     return out;
@@ -201,12 +206,20 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType>>, priv
 
 //  using Implementation::operator ==; // todo: is inaccessible base
 
-  template<typename OTHER_DERIVED> // todo ambiguous overload with Eigen operator if not specified
-  bool operator ==(const Rotation<OTHER_DERIVED> & b) {
-    return internal::ComparisonTraits<RotationMatrix>::isequal(*this, (RotationMatrix)b);
-  }
+//  template<typename OTHER_DERIVED> // todo ambiguous overload with Eigen operator if not specified
+//  bool operator ==(const Rotation<OTHER_DERIVED> & b) {
+//    return internal::ComparisonTraits<RotationMatrix>::isequal(*this, (RotationMatrix)b);
+//  }
 
 //  using Rotation<RotationMatrix>::operator*;
+  using RotationMatrixBase<RotationMatrix<PrimType>>::operator*;
+  using RotationMatrixBase<RotationMatrix<PrimType>>::operator==;
+
+//  template<typename DERIVED, typename OTHER_DERIVED>
+//  Rotation<DERIVED> operator *(const Rotation<DERIVED> & a,
+//                               const Rotation<OTHER_DERIVED> & b) {
+//    return internal::MultiplicationTraits<DERIVED, OTHER_DERIVED>::mult(a, b);
+//  }
 
   friend std::ostream & operator << (std::ostream & out, const RotationMatrix & R) {
     out << R.toImplementation();
@@ -264,10 +277,13 @@ class EulerAnglesRPY : public EulerAnglesRPYBase<EulerAnglesRPY<PrimType>>, priv
 
 //  using Implementation::operator ==;
 
-  template<typename OTHER_DERIVED> // todo ambiguous overload with Eigen operator if not specified
-  bool operator ==(const Rotation<OTHER_DERIVED> & b) {
-    return internal::ComparisonTraits<EulerAnglesRPY>::isequal(*this, b);
-  }
+//  template<typename OTHER_DERIVED> // todo ambiguous overload with Eigen operator if not specified
+//  bool operator ==(const Rotation<OTHER_DERIVED> & b) {
+//    return internal::ComparisonTraits<EulerAnglesRPY>::isequal(*this, b);
+//  }
+
+  using EulerAnglesRPYBase<EulerAnglesRPY<PrimType>>::operator*;
+  using EulerAnglesRPYBase<EulerAnglesRPY<PrimType>>::operator==;
 
   friend std::ostream & operator << (std::ostream & out, const EulerAnglesRPY & rpy) {
     out << rpy.toImplementation().transpose();
@@ -325,10 +341,13 @@ class EulerAnglesYPR : public EulerAnglesYPRBase<EulerAnglesYPR<PrimType>>, priv
 
 //  using Implementation::operator ==;
 
-  template<typename OTHER_DERIVED> // todo ambiguous overload with Eigen operator if not specified
-  bool operator ==(const Rotation<OTHER_DERIVED> & b) {
-    return internal::ComparisonTraits<EulerAnglesYPR>::isequal(*this, b);
-  }
+//  template<typename OTHER_DERIVED> // todo ambiguous overload with Eigen operator if not specified
+//  bool operator ==(const Rotation<OTHER_DERIVED> & b) {
+//    return internal::ComparisonTraits<EulerAnglesYPR>::isequal(*this, b);
+//  }
+
+  using EulerAnglesYPRBase<EulerAnglesYPR<PrimType>>::operator*;
+  using EulerAnglesYPRBase<EulerAnglesYPR<PrimType>>::operator==;
 
   friend std::ostream & operator << (std::ostream & out, const EulerAnglesYPR & ypr) {
     out << ypr.toImplementation().transpose();
@@ -342,41 +361,41 @@ typedef EulerAnglesYPR<float> EulerAnglesYPRF;
 
 
 
-template<typename PrimType>
-AngleAxis<PrimType> operator *(const AngleAxis<PrimType> & a,
-                               const AngleAxis<PrimType> & b) {
-  return internal::MultiplicationTraits<AngleAxis<PrimType>, AngleAxis<PrimType>>::mult(a, b);
-}
+//template<typename PrimType>
+//AngleAxis<PrimType> operator *(const AngleAxis<PrimType> & a,
+//                               const AngleAxis<PrimType> & b) {
+//  return internal::MultiplicationTraits<AngleAxis<PrimType>, AngleAxis<PrimType>>::mult(a, b);
+//}
 
-template<typename PrimType>
-AngleAxis<PrimType> operator *(const AngleAxis<PrimType> & a,
-                               const RotationQuaternion<PrimType> & b) {
-  return internal::MultiplicationTraits<AngleAxis<PrimType>, RotationQuaternion<PrimType>>::mult(a, b);
-}
-
-template<typename PrimType> // todo: ok?
-RotationQuaternion<PrimType> operator *(const RotationQuaternion<PrimType> & a,
-                                        const RotationQuaternion<PrimType> & b) {
-  return RotationQuaternion<PrimType> (quaternions::internal::MultiplicationTraits<RotationQuaternion<PrimType>, RotationQuaternion<PrimType>>::mult(a, b));
-}
-
-template<typename PrimType>
-RotationMatrix<PrimType> operator *(const RotationMatrix<PrimType> & a,
-                                    const RotationMatrix<PrimType> & b) {
-  return internal::MultiplicationTraits<RotationMatrix<PrimType>, RotationMatrix<PrimType>>::mult(a, b);
-}
-
-template<typename PrimType>
-EulerAnglesRPY<PrimType> operator *(const EulerAnglesRPY<PrimType> & a,
-                                    const EulerAnglesRPY<PrimType> & b) {
-  return internal::MultiplicationTraits<EulerAnglesRPY<PrimType>, EulerAnglesRPY<PrimType>>::mult(a, b);
-}
-
-template<typename PrimType>
-EulerAnglesYPR<PrimType> operator *(const EulerAnglesYPR<PrimType> & a,
-                                    const EulerAnglesYPR<PrimType> & b) {
-  return internal::MultiplicationTraits<EulerAnglesYPR<PrimType>, EulerAnglesYPR<PrimType>>::mult(a, b);
-}
+//template<typename PrimType>
+//AngleAxis<PrimType> operator *(const AngleAxis<PrimType> & a,
+//                               const RotationQuaternion<PrimType> & b) {
+//  return internal::MultiplicationTraits<AngleAxis<PrimType>, RotationQuaternion<PrimType>>::mult(a, b);
+//}
+//
+//template<typename PrimType> // todo: ok?
+//RotationQuaternion<PrimType> operator *(const RotationQuaternion<PrimType> & a,
+//                                        const RotationQuaternion<PrimType> & b) {
+//  return RotationQuaternion<PrimType> (quaternions::internal::MultiplicationTraits<RotationQuaternion<PrimType>, RotationQuaternion<PrimType>>::mult(a, b));
+//}
+//
+//template<typename PrimType>
+//RotationMatrix<PrimType> operator *(const RotationMatrix<PrimType> & a,
+//                                    const RotationMatrix<PrimType> & b) {
+//  return internal::MultiplicationTraits<RotationMatrix<PrimType>, RotationMatrix<PrimType>>::mult(a, b);
+//}
+//
+//template<typename PrimType>
+//EulerAnglesRPY<PrimType> operator *(const EulerAnglesRPY<PrimType> & a,
+//                                    const EulerAnglesRPY<PrimType> & b) {
+//  return internal::MultiplicationTraits<EulerAnglesRPY<PrimType>, EulerAnglesRPY<PrimType>>::mult(a, b);
+//}
+//
+//template<typename PrimType>
+//EulerAnglesYPR<PrimType> operator *(const EulerAnglesYPR<PrimType> & a,
+//                                    const EulerAnglesYPR<PrimType> & b) {
+//  return internal::MultiplicationTraits<EulerAnglesYPR<PrimType>, EulerAnglesYPR<PrimType>>::mult(a, b);
+//}
 
 
 //template<typename PrimType>
