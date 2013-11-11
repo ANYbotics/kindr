@@ -185,7 +185,7 @@ TEST (RotationsTest, DISABLED_testRotationFunctions ) {
 }
 
 
-#include <rm/rotations/QuaternionEigen.hpp>
+#include <rm/quaternions/QuaternionEigen.hpp>
 #include <rm/rotations/RotationEigen.hpp>
 
 namespace quat = rm::quaternions::eigen_implementation;

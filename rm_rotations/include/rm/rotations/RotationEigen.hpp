@@ -8,7 +8,7 @@
 #ifndef ROTATIONEIGEN_HPP_
 #define ROTATIONEIGEN_HPP_
 
-#include "QuaternionEigen.hpp"
+#include "rm/quaternions/QuaternionEigen.hpp"
 #include "RotationBase.hpp"
 #include "RotationEigenFunctions.hpp"
 

@@ -8,7 +8,7 @@
 #ifndef ROTATIONBASE_HPP_
 #define ROTATIONBASE_HPP_
 
-#include "QuaternionBase.hpp"
+#include "rm/quaternions/QuaternionBase.hpp"
 
 namespace rm {
 namespace rotations {
