@@ -68,13 +68,12 @@ class UnitQuaternion : public QuaternionBase<UnitQuaternion<PrimType>>, public Q
  public:
   typedef Base Implementation;
   typedef PrimType Scalar;
-//  typedef typename internal::get_vector3<UnitQuaternion>::type Vector3;
-//  typedef typename internal::get_matrix3X<UnitQuaternion>::type Matrix3X;
 
   UnitQuaternion() = default;
 
   UnitQuaternion(const PrimType & w, const PrimType & x, const PrimType & y, const PrimType & z)
     : Base(w,x,y,z) {
+//    assert(near(getNorm(), PrimType(1), 1E-9), "input has not unit length"); // todo
   }
 
   // create from Quaternion

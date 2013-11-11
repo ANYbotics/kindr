@@ -297,10 +297,9 @@ TEST (RotationsTest, testRotationVarious ) {
   // todo:
   // make functions of rotationquaternion generally available
   // rotation of matrices
-  // range wrapper for angle axis and euler angles
+  // range wrapper for angle axis and euler angles -> only in get functions and ==
   // debug: check unitquaternion length
   // test
-  // overload operator * for rotating vectors?
   // inverse rotate / transform
   // interaction quaternion - unitquaternion - rotationquaternion
   // interaction double - float
@@ -330,6 +329,11 @@ TEST (RotationsTest, testRotationVarious ) {
   rot::RotationMatrix<double> R0(0,1,0,1,0,0,0,0,1);
   rot::EulerAnglesRPY<double> rpy0(1,-2,3);
   rot::EulerAnglesYPR<double> ypr0(-1,3,2);
+
+  Eigen::Matrix<double, 3, 1> v;
+  v << 1,2,3;
+  Eigen::Matrix<double, 3, 5> M;
+  M << 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15;
 
   std::cout << a0 << std::endl;
   std::cout << q0 << std::endl;
@@ -372,6 +376,9 @@ TEST (RotationsTest, testRotationVarious ) {
   std::cout << (rpy0==ypr0) << std::endl;
   std::cout << (ypr0==a0) << std::endl;
   std::cout << std::endl;
+
+  std::cout << q0.rotate(v) << std::endl;
+  std::cout << q0.rotate(M) << std::endl;
 
 
 

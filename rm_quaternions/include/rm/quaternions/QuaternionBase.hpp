@@ -63,6 +63,8 @@ class QuaternionBase {
   const DERIVED & derived() const {
     return static_cast<const DERIVED &>(*this);
   }
+
+  // const PrimType w();
 };
 
 
