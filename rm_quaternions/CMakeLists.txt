@@ -13,23 +13,21 @@
 # Project configuration
 cmake_minimum_required (VERSION 2.8)
 
+add_definitions(-std=c++0x)
+
 # Set the build type.  Options are:
 #  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
 #  Debug          : w/ debug symbols, w/o optimization
 #  Release        : w/o debug symbols, w/ optimization
 #  RelWithDebInfo : w/ debug symbols, w/ optimization
 #  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
-#set(ROS_BUILD_TYPE Debug)
-set(ROS_BUILD_TYPE Release)
+set(ROS_BUILD_TYPE Debug)
 
-add_definitions(-std=c++0x)
 
 find_package(Eigen REQUIRED)
 
 include_directories(${EIGEN_INCLUDE_DIRS})
 include_directories(include)
-include_directories(../rm_quaternions/include)
-include_directories(../rm_common/include)
 
 #if (TEST)
 ################################
@@ -51,17 +49,12 @@ include_directories(
 )
 set(TEST_SRCS
 	test/test_main.cpp
-	test/RotationsTest.cpp
-	#test/QuaternionsTest.cpp
-	#test/SimulationSubfunctions.cpp
-	../../schweizer-messer/sm_random/src/random.cpp
-	../../schweizer-messer/sm_eigen/src/random.cpp
-	../../schweizer-messer/sm_timing/src/Timer.cpp
+	test/QuaternionsTest.cpp
 )
 
 # Add test cpp file
-add_executable( runUnitTestsRotations  ${TEST_SRCS})
+add_executable( runUnitTestsQuaternions  ${TEST_SRCS})
 # Link test executable against gtest & gtest_main
-target_link_libraries(runUnitTestsRotations  gtest_main gtest pthread  ${PROJECT_NAME} )
-add_test( runUnitTestsRotations runUnitTestsRotations )
+target_link_libraries(runUnitTestsQuaternions  gtest_main gtest pthread  ${PROJECT_NAME} )
+add_test( runUnitTestsQuaternions runUnitTestsQuaternions )
 #endif()

@@ -9,6 +9,7 @@
 #define QUATERNIONEIGEN_HPP_
 
 #include "QuaternionBase.hpp"
+#include <Eigen/Geometry>
 
 namespace rm {
 namespace quaternions {
@@ -24,6 +25,7 @@ class Quaternion : public quaternions::QuaternionBase<Quaternion<PrimType>>, pri
 
 
   Quaternion() = default;
+//  Quaternion(const Quaternion & other) = default; // todo: valid?
 
   Quaternion(const PrimType & w, const PrimType & x, const PrimType & y, const PrimType & z)
     : Base(w,x,y,z) {
