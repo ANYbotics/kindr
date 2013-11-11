@@ -15,8 +15,7 @@ namespace quaternions {
 namespace internal {
 
 template<typename DEST, typename SOURCE>
-class ConversionTraits
-{
+class ConversionTraits {
   // DEST convert(const SOURCE & );
 };
 
@@ -28,10 +27,23 @@ class MultiplicationTraits {
   }
 };
 
-template<typename ROTATION>
-class get_vector3 {
-  // typedef VECTOR type;
+template<typename QUATERNION>
+class ComparisonTraits {
+// public:
+//  inline static bool isequal(const QUATERNION & a, const QUATERNION & b) {
+//    return a.toImplementation() == b.toImplemenentation();
+//  }
 };
+
+//template<typename ROTATION>
+//class get_vector3 {
+//  // typedef VECTOR type;
+//};
+
+//template<typename ROTATION>
+//class get_matrix3X {
+//  // typedef MATRIX type;
+//};
 
 } // namespace internal
 
@@ -48,14 +60,9 @@ class QuaternionBase {
     return static_cast<const DERIVED &>(*this);
   }
 
-  //  typename Implementation::ImagVector imagVector();
-
-  //  friend std::ostream & operator <<(std::ostream & out,
-  //                                    const QuaternionBase & quat) {
-  //    out << "(" << quat.real() << ", "
-  //        << static_cast<Implementation&>(quat).imagVector() << ")";
-  //    return out;
-  //  }
+  const DERIVED & derived() const {
+    return static_cast<const DERIVED &>(*this);
+  }
 };
 
 
@@ -67,6 +74,11 @@ QuaternionBase<DERIVED> operator *(const QuaternionBase<DERIVED> & a,
   return internal::MultiplicationTraits<DERIVED, OTHER_DERIVED>::mult(a, b);
 }
 
+template<typename DERIVED, typename OTHER_DERIVED> // todo: ok?
+bool operator ==(const QuaternionBase<DERIVED> & a, const QuaternionBase<OTHER_DERIVED> & b) {
+  return internal::ComparisonTraits<DERIVED>::isequal(a.derived(), DERIVED(b));
+}
+
 
 template<typename DERIVED>
 class UnitQuaternionBase : public QuaternionBase<DERIVED> {
@@ -75,6 +87,13 @@ class UnitQuaternionBase : public QuaternionBase<DERIVED> {
     return DERIVED::conjugate();
   }
 };
+
+
+
+//template<typename DERIVED, typename OTHER_DERIVED> // todo: ok?
+//bool operator ==(const UnitQuaternionBase<DERIVED> & a, const UnitQuaternionBase<OTHER_DERIVED> & b) {
+//  return internal::ComparisonTraits<DERIVED>::isequal(a.derived(), DERIVED(b));
+//}
 
 } // namespace quaternions
 } // namespace rm

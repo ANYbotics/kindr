@@ -24,6 +24,7 @@ template<typename LEFT, typename RIGHT>
 class MultiplicationTraits {
  public:
   inline static LEFT mult(const LEFT &l, const RIGHT &r){
+//    std::cout << "HERE2: " << std::endl << l << std::endl << r << std::endl;
     return LEFT(typename LEFT::Implementation(l.toImplementation() * r.toImplementation()));
   }
 };
@@ -34,9 +35,22 @@ class get_vector3 {
   // typedef VECTOR type;
 };
 
+//template<typename ROTATION> // todo
+//class get_matrix3X {
+//  // typedef MATRIX type;
+//};
+
 template<typename ROTATION>
 class RotationTraits {
   // inline static typename internal::get_vector3<DERIVED>::type rotate(const ROTATION & r, const typename internal::get_vector3<DERIVED>::type & );
+};
+
+template<typename ROTATION>
+class ComparisonTraits {
+ public:
+  inline static bool isequal(const ROTATION & a, const ROTATION & b) {
+    return a.toImplementation() == b.toImplementation();
+  }
 };
 
 } // namespace internal
@@ -58,45 +72,57 @@ class Rotation {
     return static_cast<const DERIVED &>(*this);
   }
 
+  const DERIVED & derived() const {
+    return static_cast<const DERIVED &>(*this);
+  }
+
+
   typename internal::get_vector3<DERIVED>::type rotate(typename internal::get_vector3<DERIVED>::type & v) {
     return internal::RotationTraits<DERIVED>::rotate(*this, v);
   }
-};
 
-template<typename DERIVED, typename OTHER_DERIVED>
-Rotation<DERIVED> operator *(const Rotation<DERIVED> & a,
-                             const Rotation<OTHER_DERIVED> & b) {
-  return internal::MultiplicationTraits<DERIVED, OTHER_DERIVED>::mult(a, b);
-}
-
-
-
-template<typename DERIVED, typename OTHER_DERIVED> // todo: ok?
-bool operator ==(const Rotation<DERIVED> & a, const Rotation<OTHER_DERIVED> & b) {
-  return a.toImplementation() == b.toImplementation();
-}
-
-
-template<typename Implementation>
-class RotationQuaternionBase : public Rotation<Implementation> {
-
-//  typename Implementation::ImagVector imagVector();
-
-//  friend std::ostream & operator <<(std::ostream & out,
-//                                    const QuaternionBase & quat) {
-//    out << "(" << quat.real() << ", "
-//        << static_cast<Implementation&>(quat).imagVector() << ")";
-//    return out;
+//  typename internal::get_matrix3X<DERIVED>::type rotate(typename internal::get_matrix3X<DERIVED>::type & m) {
+//    return internal::RotationTraits<DERIVED>::rotate(*this, m);
 //  }
 
+
+  template<typename OTHER_DERIVED>
+  Rotation<DERIVED> operator *(const Rotation<OTHER_DERIVED> & other) {
+//    std::cout << "HERE1: " << std::endl << *this << std::endl << other << std::endl;
+    return internal::MultiplicationTraits<DERIVED,DERIVED>::mult((DERIVED)*this, (DERIVED)other);
+  }
+
+
+  template<typename OTHER_DERIVED> // todo: ok?
+  bool operator ==(const Rotation<OTHER_DERIVED> & other) {
+  //  return a.derived().toImplementation() == Rotation<DERIVED>(b).derived().toImplementation();
+    return internal::ComparisonTraits<DERIVED>::isequal((DERIVED)*this, (DERIVED)other);
+  }
 };
 
-//template<typename DERIVED>
-//void foo(const UnitQuaternionBase<DERIVED> & q) {
-//
+//template<typename DERIVED, typename OTHER_DERIVED>
+//Rotation<DERIVED> operator *(const Rotation<DERIVED> & a,
+//                             const Rotation<OTHER_DERIVED> & b) {
+//  return internal::MultiplicationTraits<DERIVED, OTHER_DERIVED>::mult(a, b);
 //}
 
 
+
+//template<typename DERIVED, typename OTHER_DERIVED> // todo: ok?
+//bool operator ==(const Rotation<DERIVED> & a, const Rotation<OTHER_DERIVED> & b) {
+////  return a.derived().toImplementation() == Rotation<DERIVED>(b).derived().toImplementation();
+//  return a.derived().toImplementation() == DERIVED(b).toImplementation();
+//}
+
+//template<typename DERIVED, typename OTHER_DERIVED> // todo: ok?
+//bool operator ==(const Rotation<DERIVED> & a, const Rotation<OTHER_DERIVED> & b) {
+////  return a.derived().toImplementation() == Rotation<DERIVED>(b).derived().toImplementation();
+//  return internal::ComparisonTraits<DERIVED>::isequal(a.derived(), (DERIVED)b);
+//}
+
+
+
+// todo: no return values?
 template<typename Implementation>
 class AngleAxisBase : public Rotation<Implementation> {
 
@@ -106,23 +132,29 @@ class AngleAxisBase : public Rotation<Implementation> {
   }
 };
 
+template<typename Implementation>
+class RotationQuaternionBase : public Rotation<Implementation> {
+
+  template<typename OTHER_DERIVED>
+  RotationQuaternionBase & operator =(const Rotation<OTHER_DERIVED> & other) {
+    return *this;
+  }
+
+};
 
 template<typename Implementation>
 class RotationMatrixBase : public Rotation<Implementation> {
 
   template<typename OTHER_DERIVED>
   RotationMatrixBase & operator =(const Rotation<OTHER_DERIVED> & other) {
-
     return *this;
   }
 };
-
 
 template<typename Implementation>
 class EulerAnglesBase : public Rotation<Implementation> {
 
 };
-
 
 template<typename Implementation>
 class EulerAnglesRPYBase : public EulerAnglesBase<Implementation> {
@@ -132,7 +164,6 @@ class EulerAnglesRPYBase : public EulerAnglesBase<Implementation> {
     return *this;
   }
 };
-
 
 template<typename Implementation>
 class EulerAnglesYPRBase : public EulerAnglesBase<Implementation> {
