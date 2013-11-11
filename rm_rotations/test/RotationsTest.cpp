@@ -246,11 +246,11 @@ TYPED_TEST_CASE(RotationsTest, Types);
 
 TYPED_TEST(RotationsTest, DISABLED_QuaternionToAxisAngle){
   for(auto & r : {TestFixture::halfX, TestFixture::halfY, TestFixture::halfZ}){
-//    ASSERT_EQ(this->identity, r*r) << r*r; // TODO ASSERT_NEAR
-//
-//    ASSERT_EQ(this->X, (r*r).rotate(this->X));
-//    ASSERT_EQ(this->Y, (r*r).rotate(this->Y));
-//    ASSERT_EQ(this->Z, (r*r).rotate(this->Z));
+    ASSERT_EQ(this->identity, r*r) << r*r; // TODO ASSERT_NEAR
+
+    ASSERT_EQ(this->X, (r*r).rotate(this->X));
+    ASSERT_EQ(this->Y, (r*r).rotate(this->Y));
+    ASSERT_EQ(this->Z, (r*r).rotate(this->Z));
   }
 
   auto r1 = TestFixture::halfX;
@@ -295,14 +295,17 @@ TYPED_TEST(RotationsTest, DISABLED_QuaternionToAxisAngle){
 TEST (RotationsTest, testRotationVarious ) {
 
   // todo:
-  // inverse, conjugate quaternion
   // make functions of rotationquaternion generally available
   // rotation of matrices
+  // range wrapper for angle axis and euler angles
   // debug: check unitquaternion length
   // test
   // overload operator * for rotating vectors?
+  // inverse rotate / transform
   // interaction quaternion - unitquaternion - rotationquaternion
   // interaction double - float
+  // exponential function
+  // doxygen documentation
 
   rot::AngleAxis<double> a1 = rot::AngleAxis<double>(Eigen::AngleAxisd(1,Eigen::Vector3d(1,0,0)));
 //  rot::RotationQuaternion<double> q1 = a1; // calls q1(a1) implicitely
@@ -337,7 +340,7 @@ TEST (RotationsTest, testRotationVarious ) {
 
   std::cout << a0*a0 << std::endl;
   std::cout << q0*q0 << std::endl;
-  std::cout << R0*R0 << std::endl;
+  std::cout << (R0*R0) << std::endl;
   std::cout << rpy0*rpy0 << std::endl;
   std::cout << ypr0*ypr0 << std::endl;
   std::cout << std::endl;

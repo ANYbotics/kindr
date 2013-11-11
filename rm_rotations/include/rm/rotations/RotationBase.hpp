@@ -24,7 +24,10 @@ template<typename LEFT, typename RIGHT>
 class MultiplicationTraits {
  public:
   inline static LEFT mult(const LEFT &l, const RIGHT &r){
-//    std::cout << "HERE2: " << std::endl << l << std::endl << r << std::endl;
+    std::cout << "HERE2: " << std::endl << l << std::endl << r << std::endl;
+    std::cout << "HERE3: " << (l.toImplementation() * r.toImplementation()).matrix() << std::endl;
+    std::cout << "HERE4: " << typename LEFT::Implementation(l.toImplementation() * r.toImplementation()).matrix() << std::endl;
+    std::cout << "HERE5: " << LEFT(typename LEFT::Implementation(l.toImplementation() * r.toImplementation())) << std::endl;
     return LEFT(typename LEFT::Implementation(l.toImplementation() * r.toImplementation()));
   }
 };
@@ -35,10 +38,14 @@ class get_vector3 {
   // typedef VECTOR type;
 };
 
-//template<typename ROTATION> // todo
-//class get_matrix3X {
-//  // typedef MATRIX type;
-//};
+template<typename ROTATION>
+class get_matrix3X {
+//  typedef int IndexType;// todo find type of COls (e.g. Eigen::Dynamic)
+//  template <IndexType Cols> Matrix3X {
+//    typedef E ...
+//  }
+  // typedef MATRIX type;
+};
 
 template<typename ROTATION>
 class RotationTraits {
@@ -65,6 +72,9 @@ class Rotation {
  public:
   Rotation inverse();
 
+  Rotation() = default;
+  Rotation(const DERIVED &) = delete; // on purpose!!
+
   operator DERIVED & () {
     return static_cast<DERIVED &>(*this);
   }
@@ -81,20 +91,21 @@ class Rotation {
     return internal::RotationTraits<DERIVED>::rotate(*this, v);
   }
 
-//  typename internal::get_matrix3X<DERIVED>::type rotate(typename internal::get_matrix3X<DERIVED>::type & m) {
-//    return internal::RotationTraits<DERIVED>::rotate(*this, m);
-//  }
+  template <typename internal::get_matrix3X<DERIVED>::IndexType Cols>
+  typename internal::get_matrix3X<DERIVED>::Matrix3X<Cols>::type rotate(typename internal::get_matrix3X<DERIVED>::Matrix3X<Cols>::type & m) {
+    return internal::RotationTraits<DERIVED>::rotate(*this, m);
+  }
 
 
   template<typename OTHER_DERIVED>
-  Rotation<DERIVED> operator *(const Rotation<OTHER_DERIVED> & other) {
+  DERIVED operator *(const Rotation<OTHER_DERIVED> & other) const {
 //    std::cout << "HERE1: " << std::endl << *this << std::endl << other << std::endl;
     return internal::MultiplicationTraits<DERIVED,DERIVED>::mult((DERIVED)*this, (DERIVED)other);
   }
 
 
   template<typename OTHER_DERIVED> // todo: ok?
-  bool operator ==(const Rotation<OTHER_DERIVED> & other) {
+  bool operator ==(const Rotation<OTHER_DERIVED> & other) const {
   //  return a.derived().toImplementation() == Rotation<DERIVED>(b).derived().toImplementation();
     return internal::ComparisonTraits<DERIVED>::isequal((DERIVED)*this, (DERIVED)other);
   }
@@ -122,7 +133,6 @@ class Rotation {
 
 
 
-// todo: no return values?
 template<typename Implementation>
 class AngleAxisBase : public Rotation<Implementation> {
 

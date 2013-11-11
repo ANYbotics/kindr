@@ -465,35 +465,38 @@ class get_vector3<eigen_implementation::EulerAnglesYPR<PrimType>>{
 };
 
 //// matrix
-//template<typename PrimType>
-//class get_matrix3X<eigen_implementation::AngleAxis<PrimType>>{
-// public:
-//  typedef Eigen::Matrix<PrimType, 3, Eigen::Dynamic> type;
-//};
-//
-//template<typename PrimType>
-//class get_matrix3X<eigen_implementation::RotationQuaternion<PrimType>>{
-// public:
-//  typedef Eigen::Matrix<PrimType, 3, Eigen::Dynamic> type;
-//};
-//
-//template<typename PrimType>
-//class get_matrix3X<eigen_implementation::RotationMatrix<PrimType>>{
-// public:
-//  typedef Eigen::Matrix<PrimType, 3, Eigen::Dynamic> type;
-//};
-//
-//template<typename PrimType>
-//class get_matrix3X<eigen_implementation::EulerAnglesRPY<PrimType>>{
-// public:
-//  typedef Eigen::Matrix<PrimType, 3, Eigen::Dynamic> type;
-//};
-//
-//template<typename PrimType>
-//class get_matrix3X<eigen_implementation::EulerAnglesYPR<PrimType>>{
-// public:
-//  typedef Eigen::Matrix<PrimType, 3, Eigen::Dynamic> type;
-//};
+template<typename PrimType, int Cols>
+class get_matrix3X<eigen_implementation::AngleAxis<PrimType>>{
+ public:
+    typedef int IndexType;// todo find type of COls (e.g. Eigen::Dynamic)
+    template <IndexType Cols> class Matrix3X {
+      typedef Eigen::Matrix<PrimType, 3, Cols> type;
+    };
+};
+
+template<typename PrimType>
+class get_matrix3X<eigen_implementation::RotationQuaternion<PrimType>>{
+ public:
+  typedef Eigen::Matrix<PrimType, 3, Eigen::Dynamic> type;
+};
+
+template<typename PrimType>
+class get_matrix3X<eigen_implementation::RotationMatrix<PrimType>>{
+ public:
+  typedef Eigen::Matrix<PrimType, 3, Eigen::Dynamic> type;
+};
+
+template<typename PrimType>
+class get_matrix3X<eigen_implementation::EulerAnglesRPY<PrimType>>{
+ public:
+  typedef Eigen::Matrix<PrimType, 3, Eigen::Dynamic> type;
+};
+
+template<typename PrimType>
+class get_matrix3X<eigen_implementation::EulerAnglesYPR<PrimType>>{
+ public:
+  typedef Eigen::Matrix<PrimType, 3, Eigen::Dynamic> type;
+};
 
 
 template<typename DestPrimType, typename SourcePrimType>

@@ -10,9 +10,11 @@
 # Date     : 18-Jan-2013
 #
 #-------------------------------------------------------------------------------
+
 # Project configuration
 cmake_minimum_required (VERSION 2.8)
 project(robotMath)
+set(CMAKE_BUILD_TYPE Debug)
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
