@@ -188,7 +188,6 @@ TEST (RotationsTest, DISABLED_testRotationFunctions ) {
 #include <rm/quaternions/QuaternionEigen.hpp>
 #include <rm/rotations/RotationEigen.hpp>
 
-namespace quat = rm::quaternions::eigen_implementation;
 namespace rot = rm::rotations::eigen_implementation;
 
 template <typename RotationImplementation>
@@ -296,16 +295,14 @@ TEST (RotationsTest, testRotationVarious ) {
 
   // todo:
   // make functions of rotationquaternion generally available
-  // rotation of matrices
-  // range wrapper for angle axis and euler angles -> only in get functions and ==
+  // range wrapper for angle axis and euler angles etc -> only in get functions and ==
   // debug: check unitquaternion length
   // test
-  // inverse rotate / transform
   // interaction quaternion - unitquaternion - rotationquaternion
   // interaction double - float
   // exponential function
   // doxygen documentation
-  // access w(), angle() etc
+  // copy paste for transformations
 
   rot::AngleAxis<double> a1 = rot::AngleAxis<double>(Eigen::AngleAxisd(1,Eigen::Vector3d(1,0,0)));
 //  rot::RotationQuaternion<double> q1 = a1; // calls q1(a1) implicitely
@@ -426,30 +423,7 @@ TEST (RotationsTest, testRotationVarious ) {
 
 
 
-//  quat::UnitQuaternion<double> uquat1(1,2,3,4);
-//  quat::Quaternion<double> uquat2(uquat1);
-//  quat::Quaternion<double> uquat3;
-//  uquat3 = uquat1;
-//  std::cout << uquat1 << std::endl;
-//  std::cout << uquat2 << std::endl;
-//  std::cout << uquat3 << std::endl;
-//  std::cout << uquat1.conjugate() << std::endl;
-//  std::cout << uquat1.inverse() << std::endl;
-//  std::cout << uquat1*uquat2 << std::endl;
-////  std::cout << (uquat1==uquat2) << std::endl; // todo
-//
-//
-//  quat::Quaternion<double> quat1(1,2,3,4);
-//  quat::Quaternion<double> quat2(quat1);
-//  quat::Quaternion<double> quat3;
-//  quat3 = quat1;
-//  std::cout << quat1 << std::endl;
-//  std::cout << quat2 << std::endl;
-//  std::cout << quat3 << std::endl;
-//  std::cout << quat1.conjugate() << std::endl;
-//  std::cout << quat1.inverse() << std::endl;
-//  std::cout << quat1*quat2 << std::endl;
-//  std::cout << (quat1==quat2) << std::endl;
+
 
 
 }

@@ -16,16 +16,16 @@ namespace quaternions {
 namespace eigen_implementation {
 
 template<typename PrimType>
-class Quaternion : public quaternions::QuaternionBase<Quaternion<PrimType>>, private Eigen::Quaternion<PrimType> {
+class Quaternion : public QuaternionBase<Quaternion<PrimType>>, private Eigen::Quaternion<PrimType> {
  private:
   typedef Eigen::Quaternion<PrimType> Base;
  public:
   typedef Base Implementation;
   typedef PrimType Scalar;
 
-
-  Quaternion() = default;
-//  Quaternion(const Quaternion & other) = default; // todo: valid?
+  Quaternion()
+    : Base(Implementation(0,0,0,0)) {
+  }
 
   Quaternion(const PrimType & w, const PrimType & x, const PrimType & y, const PrimType & z)
     : Base(w,x,y,z) {
@@ -33,15 +33,21 @@ class Quaternion : public quaternions::QuaternionBase<Quaternion<PrimType>>, pri
 
   // create from Eigen::Quaternion
   explicit Quaternion(const Base & other)
-      : Base(other) {
+    : Base(other) {
   }
 
-  Quaternion inverse() {
+  Quaternion inverse() const {
     return Quaternion(Base::inverse());
   }
 
-  Quaternion conjugate() {
+  Quaternion conjugate() const {
     return Quaternion(Base::conjugate());
+  }
+
+  template<typename OTHER_DERIVED>
+  Quaternion & operator =(const QuaternionBase<OTHER_DERIVED> & other) {
+    *this = (Quaternion)other;
+    return *this;
   }
 
   inline Base & toImplementation() {
@@ -50,6 +56,9 @@ class Quaternion : public quaternions::QuaternionBase<Quaternion<PrimType>>, pri
   inline const Base & toImplementation() const {
     return static_cast<const Base &>(*this);
   }
+
+//  using QuaternionBase<Quaternion<PrimType>>::operator==;
+//  using QuaternionBase<Quaternion<PrimType>>::operator*;
 
   inline PrimType w() const {
     return Base::w();
@@ -94,14 +103,16 @@ typedef Quaternion<float> QuaternionF;
 
 
 template<typename PrimType>
-class UnitQuaternion : public QuaternionBase<UnitQuaternion<PrimType>>, public Quaternion<PrimType> {
+class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>>, public Quaternion<PrimType> {
  private:
   typedef Quaternion<PrimType> Base;
  public:
-  typedef Base Implementation;
+  typedef typename Base::Implementation Implementation;
   typedef PrimType Scalar;
 
-  UnitQuaternion() = default;
+  UnitQuaternion()
+    : Base(Implementation::Identity()) {
+  }
 
   UnitQuaternion(const PrimType & w, const PrimType & x, const PrimType & y, const PrimType & z)
     : Base(w,x,y,z) {
@@ -110,33 +121,38 @@ class UnitQuaternion : public QuaternionBase<UnitQuaternion<PrimType>>, public Q
 
   // create from Quaternion
   explicit UnitQuaternion(const Base & other)
-      : Base(other) {
+    : Base(other) {
+    //    assert(near(getNorm(), PrimType(1), 1E-9), "input has not unit length"); // todo
   }
 
   // create from Eigen::Quaternion
-  explicit UnitQuaternion(const typename Implementation::Implementation & other)
-      : Base(other) {
-  }
-
-  // create from other rotation
-  template<typename DERIVED>
-  inline UnitQuaternion(const QuaternionBase<DERIVED> & other)
-      : Base(internal::ConversionTraits<UnitQuaternion, DERIVED>::convert(other)) {
+  explicit UnitQuaternion(const Implementation & other)
+    : Base(other) {
   }
 
   template<typename OTHER_DERIVED>
   UnitQuaternion & operator =(const QuaternionBase<OTHER_DERIVED> & other) {
+    //    assert(near(getNorm(), PrimType(1), 1E-9), "input has not unit length"); // todo
+    *this = (UnitQuaternion)other;
     return *this;
   }
 
-  //  using Base::conjugate;
+//  using QuaternionBase<Quaternion<PrimType>>::operator*;
+//  using UnitQuaternionBase<UnitQuaternion<PrimType>>::operator==;
 
-  UnitQuaternion conjugate() {
-    return UnitQuaternion(Implementation::conjugate());
+//  template<typename OTHER_DERIVED>
+//  UnitQuaternion & operator =(const QuaternionBase<OTHER_DERIVED> & other) {
+//    return *this;
+//  }
+
+  //  using Base::conjugate; // will have Base as output
+
+  UnitQuaternion conjugate() const {
+    return UnitQuaternion(Base::conjugate());
   }
 
-  UnitQuaternion inverse() {
-    return UnitQuaternion(Implementation::conjugate());
+  UnitQuaternion inverse() const {
+    return UnitQuaternion(Base::conjugate());
   }
 
   using Base::toImplementation;
@@ -147,35 +163,28 @@ typedef UnitQuaternion<float> UnitQuaternionF;
 
 
 
-template<typename PrimType> // todo: ok?
-Quaternion<PrimType> operator *(const Quaternion<PrimType> & a,
-                                const Quaternion<PrimType> & b) {
+template<typename PrimType>
+Quaternion<PrimType> operator *(const Quaternion<PrimType> & a, const Quaternion<PrimType> & b) {
   return internal::MultiplicationTraits<Quaternion<PrimType>, Quaternion<PrimType>>::mult(a, b);
 }
+//
+//template<typename PrimType>
+//UnitQuaternion<PrimType> operator *(const UnitQuaternion<PrimType> & a,
+//                                    const UnitQuaternion<PrimType> & b) {
+//  return internal::MultiplicationTraits<UnitQuaternion<PrimType>, UnitQuaternion<PrimType>>::mult(a, b);
+//}
 
-template<typename PrimType> // todo: ok?
-UnitQuaternion<PrimType> operator *(const UnitQuaternion<PrimType> & a,
-                                    const UnitQuaternion<PrimType> & b) {
-  return internal::MultiplicationTraits<UnitQuaternion<PrimType>, UnitQuaternion<PrimType>>::mult(a, b);
+
+template<typename PrimType>
+bool operator ==(const Quaternion<PrimType> & a, const Quaternion<PrimType> & b) {
+  return internal::ComparisonTraits<Quaternion<PrimType>>::isequal((Quaternion<PrimType>)a, (Quaternion<PrimType>)b);
 }
-
 
 
 } // namespace eigen_implementation
 
 namespace internal {
 
-//template<typename PrimType>
-//class get_vector3<eigen_implementation::UnitQuaternion<PrimType>>{
-// public:
-//  typedef Eigen::Matrix<PrimType, 3, 1> type;
-//};
-
-//template<typename PrimType>
-//class get_matrix3X<eigen_implementation::UnitQuaternion<PrimType>>{
-// public:
-//  typedef Eigen::Matrix<PrimType, 3, Eigen::Dynamic> type;
-//};
 
 template<typename PrimType>
 class MultiplicationTraits<eigen_implementation::Quaternion<PrimType>, eigen_implementation::Quaternion<PrimType>> {
@@ -199,7 +208,7 @@ class ComparisonTraits<eigen_implementation::Quaternion<PrimType>> {
 
 
 } // namespace internal
-} // namespace rotations
+} // namespace quaternions
 } // namespace rm
 
 

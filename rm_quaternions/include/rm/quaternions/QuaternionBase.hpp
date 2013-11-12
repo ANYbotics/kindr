@@ -64,30 +64,42 @@ class QuaternionBase {
     return static_cast<const DERIVED &>(*this);
   }
 
-  // const PrimType w();
+//  Quaternion<PrimType> operator *(const Quaternion<PrimType> & a,
+//                                  const Quaternion<PrimType> & b) {
+//    return internal::MultiplicationTraits<Quaternion<PrimType>, Quaternion<PrimType>>::mult(a, b);
+//  }
+//
+//  UnitQuaternion<PrimType> operator *(const UnitQuaternion<PrimType> & a,
+//                                      const UnitQuaternion<PrimType> & b) {
+//    return internal::MultiplicationTraits<UnitQuaternion<PrimType>, UnitQuaternion<PrimType>>::mult(a, b);
+//  }
+
+//  template<typename OTHER_DERIVED>
+//  DERIVED operator *(const QuaternionBase<OTHER_DERIVED> & other) const {
+//    return internal::MultiplicationTraits<DERIVED, OTHER_DERIVED>::mult((DERIVED)*this, (DERIVED)other);
+//  }
+
+//  template<typename OTHER_DERIVED> // todo: ambiguous for eigen_implementation::UnitQuaternion (inheritance diamond)
+//  bool operator ==(const QuaternionBase<OTHER_DERIVED> & other) const {
+//    return internal::ComparisonTraits<DERIVED>::isequal((DERIVED)*this, (DERIVED)other); // cast to Quaternion
+//  }
+
 };
 
 
 
 
-template<typename DERIVED, typename OTHER_DERIVED> // TODO: ok?
-QuaternionBase<DERIVED> operator *(const QuaternionBase<DERIVED> & a,
-                                   const QuaternionBase<OTHER_DERIVED> & b) {
-  return internal::MultiplicationTraits<DERIVED, OTHER_DERIVED>::mult(a, b);
-}
-
-template<typename DERIVED, typename OTHER_DERIVED> // todo: ok?
-bool operator ==(const QuaternionBase<DERIVED> & a, const QuaternionBase<OTHER_DERIVED> & b) {
-  return internal::ComparisonTraits<DERIVED>::isequal(a.derived(), DERIVED(b));
-}
-
 
 template<typename DERIVED>
 class UnitQuaternionBase : public QuaternionBase<DERIVED> {
  public:
+  typedef QuaternionBase<DERIVED> Base;
+
   DERIVED inverse(){
     return DERIVED::conjugate();
   }
+
+//  using Base::operator==;
 };
 
 

@@ -23,7 +23,7 @@ class ConversionTraits {
 template<typename LEFT, typename RIGHT>
 class MultiplicationTraits {
  public:
-  inline static LEFT mult(const LEFT &l, const RIGHT &r){
+  inline static LEFT mult(const LEFT &l, const RIGHT &r) {
     return LEFT(typename LEFT::Implementation(l.toImplementation() * r.toImplementation()));
   }
 };
@@ -65,7 +65,7 @@ template<typename DERIVED>
 class Rotation {
  public:
 
-  /*! Inverses the rotation
+  /*! Inverts the rotation
    *
    * @return inverse of the rotation
    */
@@ -86,12 +86,12 @@ class Rotation {
   }
 
   template <typename internal::get_matrix3X<DERIVED>::IndexType Cols>
-  typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> rotate(typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> & m) {
+  typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> rotate(typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> & m) const {
     return internal::RotationTraits<DERIVED>::rotate((DERIVED)*this, m);
   }
 
   template <typename internal::get_matrix3X<DERIVED>::IndexType Cols>
-  typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> inverserotate(typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> & m) {
+  typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> inverserotate(typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> & m) const {
     return internal::RotationTraits<DERIVED>::rotate(((DERIVED)*this).inverse(), m); // todo: may be optimized
   }
 

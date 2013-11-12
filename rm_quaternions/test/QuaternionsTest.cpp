@@ -5,7 +5,7 @@
  *      Author: gech
  */
 
-
+#include <iostream>
 
 #include <gtest/gtest.h>
 
@@ -46,5 +46,46 @@ TYPED_TEST (QuaternionsTest, testQuatenionMultiplication ) {
 
 //	std::cout << q1.toImplementation.x() << std::endl;
 //	ASSERT_EQ(q2.toImplementatio	n.x() ==this->genericInverse.toImplementation.x(),"inverse");
+
+}
+
+
+
+
+TEST (RotationsTest, testQuaternionVarious ) {
+
+  quat::UnitQuaternion<double> uquat1(1,2,3,4);
+  quat::UnitQuaternion<double> uquat2(uquat1);
+  quat::UnitQuaternion<double> uquat3;
+  uquat3 = uquat1;
+  std::cout << uquat1 << std::endl;
+  std::cout << uquat2 << std::endl;
+  std::cout << uquat3 << std::endl;
+  std::cout << uquat1.conjugate() << std::endl;
+  std::cout << uquat1.inverse() << std::endl;
+  std::cout << uquat1*uquat2 << std::endl;
+  std::cout << (uquat1==uquat2) << std::endl;
+  std::cout << std::endl;
+
+
+  quat::Quaternion<double> quat1(1,2,3,4);
+  quat::Quaternion<double> quat2(quat1);
+  quat::Quaternion<double> quat3;
+  quat3 = quat1;
+  std::cout << quat1 << std::endl;
+  std::cout << quat2 << std::endl;
+  std::cout << quat3 << std::endl;
+  std::cout << quat1.conjugate() << std::endl;
+  std::cout << quat1.inverse() << std::endl;
+  std::cout << quat1*quat2 << std::endl;
+  std::cout << (quat1==quat2) << std::endl;
+  std::cout << std::endl;
+
+
+  std::cout << uquat1*quat2 << std::endl;
+  std::cout << (uquat1==quat2) << std::endl;
+  std::cout << std::endl;
+
+
 
 }
