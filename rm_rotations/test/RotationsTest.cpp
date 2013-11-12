@@ -377,8 +377,16 @@ TEST (RotationsTest, testRotationVarious ) {
   std::cout << (ypr0==a0) << std::endl;
   std::cout << std::endl;
 
+  std::cout << a0.rotate(v) << std::endl;
+  std::cout << a0.rotate(M) << std::endl;
   std::cout << q0.rotate(v) << std::endl;
   std::cout << q0.rotate(M) << std::endl;
+  std::cout << R0.rotate(v) << std::endl;
+  std::cout << R0.rotate(M) << std::endl;
+  std::cout << rpy0.rotate(v) << std::endl;
+  std::cout << rpy0.rotate(M) << std::endl;
+  std::cout << ypr0.rotate(v) << std::endl;
+  std::cout << ypr0.rotate(M) << std::endl;
 
 
 

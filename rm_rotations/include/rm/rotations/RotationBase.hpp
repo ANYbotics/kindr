@@ -90,7 +90,7 @@ class Rotation {
 //  }
 
   template <typename internal::get_matrix3X<DERIVED>::IndexType Cols> // todo: ok with templates?
-  typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols>::type rotate(typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols>::type & m) {
+  typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> rotate(typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> & m) {
     return internal::RotationTraits<DERIVED>::rotate(*this, m);
   }
 
