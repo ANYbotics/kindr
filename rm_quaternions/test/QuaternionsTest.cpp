@@ -10,8 +10,10 @@
 #include <gtest/gtest.h>
 
 #include <rm/quaternions/QuaternionEigen.hpp>
+#include <rm/rotations/RotationEigen.hpp>
 
 namespace quat = rm::quaternions::eigen_implementation;
+namespace rot = rm::rotations::eigen_implementation;
 
 
 template <typename QuaternionImplementation>
@@ -54,6 +56,19 @@ TYPED_TEST (QuaternionsTest, testQuatenionMultiplication ) {
 
 TEST (RotationsTest, testQuaternionVarious ) {
 
+  rot::RotationQuaternion<double> rquat1(1,2,3,4);
+  rot::RotationQuaternion<double> rquat2(rquat1);
+  rot::RotationQuaternion<double> rquat3;
+  rquat3 = rquat1;
+  std::cout << rquat1 << std::endl;
+  std::cout << rquat2 << std::endl;
+  std::cout << rquat3 << std::endl;
+  std::cout << rquat1.conjugate() << std::endl;
+  std::cout << rquat1.inverse() << std::endl;
+  std::cout << rquat1*rquat2 << std::endl;
+  std::cout << (rquat1==rquat2) << std::endl;
+  std::cout << std::endl;
+
   quat::UnitQuaternion<double> uquat1(1,2,3,4);
   quat::UnitQuaternion<double> uquat2(uquat1);
   quat::UnitQuaternion<double> uquat3;
@@ -82,7 +97,11 @@ TEST (RotationsTest, testQuaternionVarious ) {
   std::cout << std::endl;
 
 
+  std::cout << rquat1*uquat2 << std::endl;
+  std::cout << rquat1*quat2 << std::endl;
   std::cout << uquat1*quat2 << std::endl;
+  std::cout << (rquat1==uquat2) << std::endl;
+  std::cout << (rquat1==quat2) << std::endl;
   std::cout << (uquat1==quat2) << std::endl;
   std::cout << std::endl;
 

@@ -35,16 +35,6 @@ class ComparisonTraits {
 //  }
 };
 
-//template<typename ROTATION>
-//class get_vector3 {
-//  // typedef VECTOR type;
-//};
-
-//template<typename ROTATION>
-//class get_matrix3X {
-//  // typedef MATRIX type;
-//};
-
 } // namespace internal
 
 template<typename DERIVED>
@@ -64,16 +54,6 @@ class QuaternionBase {
     return static_cast<const DERIVED &>(*this);
   }
 
-//  Quaternion<PrimType> operator *(const Quaternion<PrimType> & a,
-//                                  const Quaternion<PrimType> & b) {
-//    return internal::MultiplicationTraits<Quaternion<PrimType>, Quaternion<PrimType>>::mult(a, b);
-//  }
-//
-//  UnitQuaternion<PrimType> operator *(const UnitQuaternion<PrimType> & a,
-//                                      const UnitQuaternion<PrimType> & b) {
-//    return internal::MultiplicationTraits<UnitQuaternion<PrimType>, UnitQuaternion<PrimType>>::mult(a, b);
-//  }
-
 //  template<typename OTHER_DERIVED>
 //  DERIVED operator *(const QuaternionBase<OTHER_DERIVED> & other) const {
 //    return internal::MultiplicationTraits<DERIVED, OTHER_DERIVED>::mult((DERIVED)*this, (DERIVED)other);
@@ -85,8 +65,6 @@ class QuaternionBase {
 //  }
 
 };
-
-
 
 
 
@@ -104,10 +82,6 @@ class UnitQuaternionBase : public QuaternionBase<DERIVED> {
 
 
 
-//template<typename DERIVED, typename OTHER_DERIVED> // todo: ok?
-//bool operator ==(const UnitQuaternionBase<DERIVED> & a, const UnitQuaternionBase<OTHER_DERIVED> & b) {
-//  return internal::ComparisonTraits<DERIVED>::isequal(a.derived(), DERIVED(b));
-//}
 
 } // namespace quaternions
 } // namespace rm

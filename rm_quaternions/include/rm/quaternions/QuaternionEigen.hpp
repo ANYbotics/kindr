@@ -137,14 +137,6 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>>, publ
     return *this;
   }
 
-//  using QuaternionBase<Quaternion<PrimType>>::operator*;
-//  using UnitQuaternionBase<UnitQuaternion<PrimType>>::operator==;
-
-//  template<typename OTHER_DERIVED>
-//  UnitQuaternion & operator =(const QuaternionBase<OTHER_DERIVED> & other) {
-//    return *this;
-//  }
-
   //  using Base::conjugate; // will have Base as output
 
   UnitQuaternion conjugate() const {
@@ -167,13 +159,6 @@ template<typename PrimType>
 Quaternion<PrimType> operator *(const Quaternion<PrimType> & a, const Quaternion<PrimType> & b) {
   return internal::MultiplicationTraits<Quaternion<PrimType>, Quaternion<PrimType>>::mult(a, b);
 }
-//
-//template<typename PrimType>
-//UnitQuaternion<PrimType> operator *(const UnitQuaternion<PrimType> & a,
-//                                    const UnitQuaternion<PrimType> & b) {
-//  return internal::MultiplicationTraits<UnitQuaternion<PrimType>, UnitQuaternion<PrimType>>::mult(a, b);
-//}
-
 
 template<typename PrimType>
 bool operator ==(const Quaternion<PrimType> & a, const Quaternion<PrimType> & b) {
@@ -199,10 +184,10 @@ template<typename PrimType>
 class ComparisonTraits<eigen_implementation::Quaternion<PrimType>> {
  public:
    inline static bool isequal(const eigen_implementation::Quaternion<PrimType> & a, const eigen_implementation::Quaternion<PrimType> & b){
-     return (a.toImplementation().w() ==  b.toImplementation().w() &&
-             a.toImplementation().x() ==  b.toImplementation().x() &&
-             a.toImplementation().y() ==  b.toImplementation().y() &&
-             a.toImplementation().z() ==  b.toImplementation().z());
+     return (a.w() ==  b.w() &&
+             a.x() ==  b.x() &&
+             a.y() ==  b.y() &&
+             a.z() ==  b.z());
    }
 };
 
