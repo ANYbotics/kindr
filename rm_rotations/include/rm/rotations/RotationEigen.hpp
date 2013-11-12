@@ -359,7 +359,7 @@ class get_vector3<eigen_implementation::EulerAnglesYPR<PrimType>>{
 template<typename PrimType>
 class get_matrix3X<eigen_implementation::AngleAxis<PrimType>>{
  public:
-  typedef int IndexType;
+  typedef typename Eigen::Matrix<PrimType, 1, 1>::Index  IndexType;
 
   template <IndexType Cols>
   class Matrix3X {
@@ -371,7 +371,7 @@ class get_matrix3X<eigen_implementation::AngleAxis<PrimType>>{
 template<typename PrimType>
 class get_matrix3X<eigen_implementation::RotationQuaternion<PrimType>>{
  public:
-  typedef int IndexType;
+  typedef typename Eigen::Matrix<PrimType, 1, 1>::Index IndexType;
 
   template <IndexType Cols>
   class Matrix3X {
@@ -383,7 +383,7 @@ class get_matrix3X<eigen_implementation::RotationQuaternion<PrimType>>{
 template<typename PrimType>
 class get_matrix3X<eigen_implementation::RotationMatrix<PrimType>>{
  public:
-  typedef int IndexType;
+  typedef typename Eigen::Matrix<PrimType, 1, 1>::Index IndexType;
 
   template <IndexType Cols>
   class Matrix3X {
@@ -395,7 +395,7 @@ class get_matrix3X<eigen_implementation::RotationMatrix<PrimType>>{
 template<typename PrimType>
 class get_matrix3X<eigen_implementation::EulerAnglesRPY<PrimType>>{
  public:
-  typedef int IndexType;
+  typedef typename Eigen::Matrix<PrimType, 1, 1>::Index IndexType;
 
   template <IndexType Cols>
   class Matrix3X {
@@ -407,7 +407,7 @@ class get_matrix3X<eigen_implementation::EulerAnglesRPY<PrimType>>{
 template<typename PrimType>
 class get_matrix3X<eigen_implementation::EulerAnglesYPR<PrimType>>{
  public:
-  typedef int IndexType;
+  typedef typename Eigen::Matrix<PrimType, 1, 1>::Index IndexType;
 
   template <IndexType Cols>
   class Matrix3X {

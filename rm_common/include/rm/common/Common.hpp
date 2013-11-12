@@ -30,7 +30,6 @@ T Mod(const T& x, const T& y)
     if (y == 0.0)
         return x;
 
-    fmod()
     double m= x - y * floor(x/y);
 
     // handle boundary cases resulted from floating-point cut off:
