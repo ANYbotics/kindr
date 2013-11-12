@@ -89,9 +89,14 @@ class Rotation {
 //    return internal::RotationTraits<DERIVED>::rotate(*this, v);
 //  }
 
-  template <typename internal::get_matrix3X<DERIVED>::IndexType Cols> // todo: ok with templates?
+  template <typename internal::get_matrix3X<DERIVED>::IndexType Cols>
   typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> rotate(typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> & m) {
-    return internal::RotationTraits<DERIVED>::rotate(*this, m);
+    return internal::RotationTraits<DERIVED>::rotate((DERIVED)*this, m);
+  }
+
+  template <typename internal::get_matrix3X<DERIVED>::IndexType Cols>
+  typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> inverserotate(typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> & m) {
+    return internal::RotationTraits<DERIVED>::rotate(((DERIVED)*this).inverse(), m); // todo: may be optimized
   }
 
   template<typename OTHER_DERIVED>

@@ -305,6 +305,7 @@ TEST (RotationsTest, testRotationVarious ) {
   // interaction double - float
   // exponential function
   // doxygen documentation
+  // access w(), angle() etc
 
   rot::AngleAxis<double> a1 = rot::AngleAxis<double>(Eigen::AngleAxisd(1,Eigen::Vector3d(1,0,0)));
 //  rot::RotationQuaternion<double> q1 = a1; // calls q1(a1) implicitely
@@ -344,7 +345,7 @@ TEST (RotationsTest, testRotationVarious ) {
 
   std::cout << a0*a0 << std::endl;
   std::cout << q0*q0 << std::endl;
-  std::cout << (R0*R0) << std::endl;
+  std::cout << R0*R0 << std::endl;
   std::cout << rpy0*rpy0 << std::endl;
   std::cout << ypr0*ypr0 << std::endl;
   std::cout << std::endl;
@@ -387,6 +388,19 @@ TEST (RotationsTest, testRotationVarious ) {
   std::cout << rpy0.rotate(M) << std::endl;
   std::cout << ypr0.rotate(v) << std::endl;
   std::cout << ypr0.rotate(M) << std::endl;
+  std::cout << std::endl;
+
+  std::cout << a0.inverserotate(v) << std::endl;
+  std::cout << a0.inverserotate(M) << std::endl;
+  std::cout << q0.inverserotate(v) << std::endl;
+  std::cout << q0.inverserotate(M) << std::endl;
+  std::cout << R0.inverserotate(v) << std::endl;
+  std::cout << R0.inverserotate(M) << std::endl;
+  std::cout << rpy0.inverserotate(v) << std::endl;
+  std::cout << rpy0.inverserotate(M) << std::endl;
+  std::cout << ypr0.inverserotate(v) << std::endl;
+  std::cout << ypr0.inverserotate(M) << std::endl;
+  std::cout << std::endl;
 
 
 
