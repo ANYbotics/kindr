@@ -25,6 +25,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::Angl
  public:
   typedef Base Implementation;
   typedef PrimType Scalar;
+  typedef Eigen::Matrix<PrimType, 3, 1> Vector3;
 
   AngleAxis()
     : Base(Base::Identity()) {
@@ -64,6 +65,22 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::Angl
 
   using AngleAxisBase<AngleAxis<PrimType>>::operator*;
 
+  inline PrimType angle() const {
+    return Base::angle();
+  }
+
+  inline const Vector3 & axis() const {
+    return Base::axis();
+  }
+
+  inline PrimType & angle() {
+    return Base::angle();
+  }
+
+  inline Vector3 & axis() {
+    return Base::axis();
+  }
+
   friend std::ostream & operator << (std::ostream & out, const AngleAxis & a) {
     out << a.toImplementation().angle() << ", " << a.toImplementation().axis().transpose();
     return out;
@@ -91,7 +108,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
     : Base(w,x,y,z) {
   }
 
-//  w();
+
 //  wWithRealScalarGreaterOrEqualZero();
 //  xWithRealScalarGreaterOrEqualZero();
 //  yWithRealScalarGreaterOrEqualZero();
@@ -194,6 +211,14 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType>>, priv
   using RotationMatrixBase<RotationMatrix<PrimType>>::operator*;
   using RotationMatrixBase<RotationMatrix<PrimType>>::operator==;
 
+  inline const Implementation & matrix() const {
+    return toImplementation();
+  }
+
+  inline Implementation & matrix() {
+    return toImplementation();
+  }
+
   friend std::ostream & operator << (std::ostream & out, const RotationMatrix & R) {
     out << R.toImplementation();
     return out;
@@ -251,6 +276,30 @@ class EulerAnglesRPY : public EulerAnglesRPYBase<EulerAnglesRPY<PrimType>>, priv
   using EulerAnglesRPYBase<EulerAnglesRPY<PrimType>>::operator*;
   using EulerAnglesRPYBase<EulerAnglesRPY<PrimType>>::operator==;
 
+  inline PrimType roll() const {
+    return toImplementation()(0);
+  }
+
+  inline PrimType pitch() const {
+    return toImplementation()(1);
+  }
+
+  inline PrimType yaw() const {
+    return toImplementation()(2);
+  }
+
+  inline PrimType & roll() {
+    return toImplementation()(0);
+  }
+
+  inline PrimType & pitch() {
+    return toImplementation()(1);
+  }
+
+  inline PrimType & yaw() {
+    return toImplementation()(2);
+  }
+
   friend std::ostream & operator << (std::ostream & out, const EulerAnglesRPY & rpy) {
     out << rpy.toImplementation().transpose();
     return out;
@@ -307,6 +356,30 @@ class EulerAnglesYPR : public EulerAnglesYPRBase<EulerAnglesYPR<PrimType>>, priv
 
   using EulerAnglesYPRBase<EulerAnglesYPR<PrimType>>::operator*;
   using EulerAnglesYPRBase<EulerAnglesYPR<PrimType>>::operator==;
+
+  inline PrimType yaw() const {
+    return toImplementation()(0);
+  }
+
+  inline PrimType pitch() const {
+    return toImplementation()(1);
+  }
+
+  inline PrimType roll() const {
+    return toImplementation()(2);
+  }
+
+  inline PrimType & yaw() {
+    return toImplementation()(0);
+  }
+
+  inline PrimType & pitch() {
+    return toImplementation()(1);
+  }
+
+  inline PrimType & roll() {
+    return toImplementation()(2);
+  }
 
   friend std::ostream & operator << (std::ostream & out, const EulerAnglesYPR & ypr) {
     out << ypr.toImplementation().transpose();

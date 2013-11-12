@@ -36,8 +36,6 @@ class Quaternion : public quaternions::QuaternionBase<Quaternion<PrimType>>, pri
       : Base(other) {
   }
 
-//  using Base::inverse; // TODO: necessary?
-
   Quaternion inverse() {
     return Quaternion(Base::inverse());
   }
@@ -51,6 +49,38 @@ class Quaternion : public quaternions::QuaternionBase<Quaternion<PrimType>>, pri
   }
   inline const Base & toImplementation() const {
     return static_cast<const Base &>(*this);
+  }
+
+  inline PrimType w() const {
+    return Base::w();
+  }
+
+  inline PrimType x() const {
+    return Base::x();
+  }
+
+  inline PrimType y() const {
+    return Base::y();
+  }
+
+  inline PrimType z() const {
+    return Base::z();
+  }
+
+  inline PrimType & w() { // todo: attention: no assertion for unitquaternions!
+    return Base::w();
+  }
+
+  inline PrimType & x() {
+    return Base::x();
+  }
+
+  inline PrimType & y() {
+    return Base::y();
+  }
+
+  inline PrimType & z() {
+    return Base::z();
   }
 
   friend std::ostream & operator << (std::ostream & out, const Quaternion & quat) {

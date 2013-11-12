@@ -85,10 +85,6 @@ class Rotation {
     return static_cast<const DERIVED &>(*this);
   }
 
-//  typename internal::get_vector3<DERIVED>::type rotate(const typename internal::get_vector3<DERIVED>::type & v) {
-//    return internal::RotationTraits<DERIVED>::rotate(*this, v);
-//  }
-
   template <typename internal::get_matrix3X<DERIVED>::IndexType Cols>
   typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> rotate(typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> & m) {
     return internal::RotationTraits<DERIVED>::rotate((DERIVED)*this, m);

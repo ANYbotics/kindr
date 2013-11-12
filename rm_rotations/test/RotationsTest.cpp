@@ -323,7 +323,7 @@ TEST (RotationsTest, testRotationVarious ) {
   rot::EulerAnglesYPR<double> ypr1(a1);
 
 
-
+  typedef Eigen::Matrix<double,3,1> Vector3d;
 
   rot::AngleAxis<double> a0(1,1,0,0);
   rot::RotationQuaternion<double> q0(1,0,0,0);
@@ -400,6 +400,27 @@ TEST (RotationsTest, testRotationVarious ) {
   std::cout << rpy0.inverserotate(M) << std::endl;
   std::cout << ypr0.inverserotate(v) << std::endl;
   std::cout << ypr0.inverserotate(M) << std::endl;
+  std::cout << std::endl;
+
+  std::cout << q0.w() << std::endl;
+  std::cout << q0.x() << std::endl;
+  std::cout << q0.y() << std::endl;
+  std::cout << q0.z() << std::endl;
+  std::cout << std::endl;
+
+  std::cout << a0.angle() << std::endl;
+  std::cout << a0.axis() << std::endl;
+  a0.angle() = 2;
+  a0.axis() = Vector3d(0,0,1);
+  std::cout << a0 << std::endl;
+  std::cout << std::endl;
+
+  R0.matrix().setIdentity();
+//  R0.setIdentity(); // is inaccessible because of private implementation
+  std::cout << R0.matrix() << std::endl;
+  std::cout << std::endl;
+
+  std::cout << rpy0.roll() << std::endl;
   std::cout << std::endl;
 
 
