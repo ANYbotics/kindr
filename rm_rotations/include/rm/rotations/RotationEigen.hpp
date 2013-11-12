@@ -689,10 +689,12 @@ public:
 //};
 //
 template<typename PrimType>
-class RotationTraits<eigen_implementation::RotationQuaternion<PrimType>, typename get_matrix3X<eigen_implementation::RotationQuaternion<PrimType>>::IndexType Cols> {
+class RotationTraits<eigen_implementation::RotationQuaternion<PrimType>> {
  public:
+  template<typename get_matrix3X<eigen_implementation::RotationQuaternion<PrimType>>::IndexType Cols>
    inline static typename get_matrix3X<eigen_implementation::RotationQuaternion<PrimType>>::template Matrix3X<Cols>::type rotate(const eigen_implementation::RotationQuaternion<PrimType> & p, const typename get_matrix3X<eigen_implementation::RotationQuaternion<PrimType>>::template Matrix3X<Cols>::type & m){
-     return p.toImplementation() * m;
+    std::cout << "here" << std::endl;
+    return p.toImplementation() * m;
    }
 };
 //

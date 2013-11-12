@@ -27,6 +27,9 @@ set(CMAKE_BUILD_TYPE Debug)
 
 add_definitions(-std=c++0x)
 
+ADD_SUBDIRECTORY (gtest gtest)
+enable_testing()
+
 # Add CMake module path
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
@@ -37,7 +40,7 @@ add_subdirectory(rm_linear_algebra)
 add_subdirectory(rm_quaternions)
 
 # Add rotations
-#add_subdirectory(rm_rotations)
+add_subdirectory(rm_rotations)
 
 # Add Doxygen documentation
 add_subdirectory(rm_doc)

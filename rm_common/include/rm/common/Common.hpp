@@ -30,6 +30,7 @@ T Mod(const T& x, const T& y)
     if (y == 0.0)
         return x;
 
+    fmod()
     double m= x - y * floor(x/y);
 
     // handle boundary cases resulted from floating-point cut off:
@@ -86,6 +87,12 @@ inline T wrapTwoPI(const T& angle)
 }
 
 
+
+#ifdef NDEBUG
+#define ASSERT_MATRIX_NEAR(A, B, MESSAGE)
+#else
+#define ASSERT_MATRIX_NEAR(A, B, MESSAGE) sm::eigen::assertNear( ...);
+#endif
 
 
 } // end namespace common

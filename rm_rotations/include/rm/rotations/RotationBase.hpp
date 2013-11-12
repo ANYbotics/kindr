@@ -57,10 +57,18 @@ class ComparisonTraits {
 } // namespace internal
 
 
-
+//! Representation of a generic rotation
+/*!
+ * @ingroup rotations
+ */
 template<typename DERIVED>
 class Rotation {
  public:
+
+  /*! Inverses the rotation
+   *
+   * @return inverse of the rotation
+   */
   Rotation inverse();
 
   Rotation() = default;
@@ -83,7 +91,7 @@ class Rotation {
 
   template <typename internal::get_matrix3X<DERIVED>::IndexType Cols> // todo: ok with templates?
   typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols>::type rotate(typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols>::type & m) {
-    return internal::RotationTraits<DERIVED,Cols>::rotate(*this, m);
+    return internal::RotationTraits<DERIVED>::rotate(*this, m);
   }
 
   template<typename OTHER_DERIVED>
