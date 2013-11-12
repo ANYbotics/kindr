@@ -23,7 +23,8 @@ struct QuaternionsTest : public ::testing::Test  {
   QuaternionImplementation halfX =    QuaternionImplementation(quat::Quaternion<Scalar>(Eigen::Quaterniond(0, 1, 0, 0).cast<Scalar>()));
   QuaternionImplementation halfY =    QuaternionImplementation(quat::Quaternion<Scalar>(Eigen::Quaterniond(0, 0, 1, 0).cast<Scalar>()));
   QuaternionImplementation halfZ =    QuaternionImplementation(quat::Quaternion<Scalar>(Eigen::Quaterniond(0, 0, 0, 1).cast<Scalar>()));
-
+  QuaternionImplementation generic =  QuaternionImplementation(quat::Quaternion<Scalar>(Eigen::Quaterniond(1, 2, 3, 4).cast<Scalar>()));
+  QuaternionImplementation genericInverse =  QuaternionImplementation(quat::Quaternion<Scalar>(Eigen::Quaterniond(1, -2, -3, -4).cast<Scalar>()));
 
   QuaternionsTest() : X(Vector3::UnitX()), Y(Vector3::UnitY()), Z(Vector3::UnitZ()) {}
   Vector3 X, Y, Z;
@@ -40,5 +41,10 @@ TYPED_TEST_CASE(QuaternionsTest, Types);
 
 TYPED_TEST (QuaternionsTest, testQuatenionMultiplication ) {
 
-//	TestFixture::QuaternionImplementation q1 = TestFixture::identity;
+	auto q1 = this->generic;
+	auto q2 = q1.inverse();
+
+//	std::cout << q1.toImplementation.x() << std::endl;
+//	ASSERT_EQ(q2.toImplementatio	n.x() ==this->genericInverse.toImplementation.x(),"inverse");
+
 }
