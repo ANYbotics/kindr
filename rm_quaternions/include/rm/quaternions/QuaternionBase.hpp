@@ -40,8 +40,8 @@ class ComparisonTraits {
 template<typename DERIVED>
 class QuaternionBase {
  public:
-  DERIVED inverse();
-  DERIVED conjugate();
+  DERIVED inverse() const;
+  DERIVED conjugate() const;
 
   operator DERIVED & () {
     return static_cast<DERIVED &>(*this);
@@ -73,11 +73,15 @@ class UnitQuaternionBase : public QuaternionBase<DERIVED> {
  public:
   typedef QuaternionBase<DERIVED> Base;
 
-  DERIVED inverse(){
-    return DERIVED::conjugate();
-  }
+//  todo: how is it possible to use this?
+//  DERIVED conjugate() const {
+//    return DERIVED::conjugate();
+//  }
+//
+//  DERIVED inverse() const {
+//    return DERIVED::conjugate();
+//  }
 
-//  using Base::operator==;
 };
 
 

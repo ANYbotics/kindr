@@ -82,7 +82,6 @@ TEST (RotationsTest, testQuaternionVarious ) {
   std::cout << (uquat1==uquat2) << std::endl;
   std::cout << std::endl;
 
-
   quat::Quaternion<double> quat1(1,2,3,4);
   quat::Quaternion<double> quat2(quat1);
   quat::Quaternion<double> quat3;
@@ -96,7 +95,6 @@ TEST (RotationsTest, testQuaternionVarious ) {
   std::cout << (quat1==quat2) << std::endl;
   std::cout << std::endl;
 
-
   std::cout << rquat1*uquat2 << std::endl;
   std::cout << rquat1*quat2 << std::endl;
   std::cout << uquat1*quat2 << std::endl;
@@ -105,6 +103,48 @@ TEST (RotationsTest, testQuaternionVarious ) {
   std::cout << (uquat1==quat2) << std::endl;
   std::cout << std::endl;
 
-
+//rquat1 = uquat1; // not allowed
+//rquat1 = quat1; // not allowed
+  uquat1 = rquat1; // allowed
+//uquat1 = quat1; // not allowed
+  quat1  = rquat1; // allowed
+  quat1  = uquat1; // allowed
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

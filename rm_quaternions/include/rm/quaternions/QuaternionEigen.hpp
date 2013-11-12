@@ -130,14 +130,15 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>>, publ
     : Base(other) {
   }
 
-  template<typename OTHER_DERIVED>
-  UnitQuaternion & operator =(const QuaternionBase<OTHER_DERIVED> & other) {
+  // operator= is must only work with UnitQuaternions or derived classes
+  UnitQuaternion & operator =(const UnitQuaternion & other) {
     //    assert(near(getNorm(), PrimType(1), 1E-9), "input has not unit length"); // todo
     *this = (UnitQuaternion)other;
     return *this;
   }
 
-  //  using Base::conjugate; // will have Base as output
+//  using UnitQuaternionBase<UnitQuaternion<PrimType>>::conjugate;
+//  using UnitQuaternionBase<UnitQuaternion<PrimType>>::inverse;
 
   UnitQuaternion conjugate() const {
     return UnitQuaternion(Base::conjugate());
