@@ -302,6 +302,7 @@ TEST (RotationsTest, testRotationVarious ) {
   // exponential function
   // doxygen documentation
   // copy paste for transformations
+  // conjugate(d), inverse(d)
 
   rot::AngleAxis<double> a1 = rot::AngleAxis<double>(Eigen::AngleAxisd(1,Eigen::Vector3d(1,0,0)));
 //  rot::RotationQuaternion<double> q1 = a1; // calls q1(a1) implicitely
@@ -407,6 +408,13 @@ TEST (RotationsTest, testRotationVarious ) {
   std::cout << ypr0.inverserotate(M) << std::endl;
   std::cout << std::endl;
 
+  std::cout << a0.setIdentity() << std::endl;
+  std::cout << (a0 = q0.setIdentity()) << std::endl;
+  std::cout << R0.setIdentity() << std::endl;
+  std::cout << rpy0.setIdentity() << std::endl;
+  std::cout << ypr0.setIdentity() << std::endl;
+  std::cout << std::endl;
+
   std::cout << q0.w() << std::endl;
   std::cout << q0.x() << std::endl;
   std::cout << q0.y() << std::endl;
@@ -420,12 +428,17 @@ TEST (RotationsTest, testRotationVarious ) {
   std::cout << a0 << std::endl;
   std::cout << std::endl;
 
-  R0.matrix().setIdentity();
-//  R0.setIdentity(); // is inaccessible because of private implementation
   std::cout << R0.matrix() << std::endl;
   std::cout << std::endl;
 
   std::cout << rpy0.roll() << std::endl;
+  std::cout << rpy0.pitch() << std::endl;
+  std::cout << rpy0.yaw() << std::endl;
+  std::cout << std::endl;
+
+  std::cout << ypr0.yaw() << std::endl;
+  std::cout << ypr0.pitch() << std::endl;
+  std::cout << ypr0.roll() << std::endl;
   std::cout << std::endl;
 
 

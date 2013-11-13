@@ -82,6 +82,12 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::Angl
     return Base::axis();
   }
 
+  AngleAxis & setIdentity() {
+	  this->angle() = 0;
+	  this->axis() << 1,0,0;
+	  return *this;
+  }
+
   friend std::ostream & operator << (std::ostream & out, const AngleAxis & a) {
     out << a.angle() << ", " << a.axis().transpose();
     return out;
@@ -188,6 +194,15 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
     return RotationQuaternion(Base::conjugate());
   }
 
+  RotationQuaternion & setIdentity() {
+//	  this->Implementation::setIdentity(); // inaccessible
+	this->w() = 1;
+	this->x() = 0;
+	this->y() = 0;
+	this->z() = 0;
+	return *this;
+  }
+
   using Base::norm;
   using Base::toImplementation;
 
@@ -257,7 +272,10 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType>>, priv
     return toImplementation();
   }
 
-//  const RotationMatrix & setIdentity
+  RotationMatrix & setIdentity() {
+	  this->Implementation::setIdentity();
+	  return *this;
+  }
 
   friend std::ostream & operator << (std::ostream & out, const RotationMatrix & R) {
     out << R.toImplementation();
@@ -340,6 +358,11 @@ class EulerAnglesRPY : public EulerAnglesRPYBase<EulerAnglesRPY<PrimType>>, priv
     return toImplementation()(2);
   }
 
+  EulerAnglesRPY & setIdentity() {
+	  this->Implementation::setZero();
+	  return *this;
+  }
+
   friend std::ostream & operator << (std::ostream & out, const EulerAnglesRPY & rpy) {
     out << rpy.toImplementation().transpose();
     return out;
@@ -419,6 +442,11 @@ class EulerAnglesYPR : public EulerAnglesYPRBase<EulerAnglesYPR<PrimType>>, priv
 
   inline Scalar & roll() {
     return toImplementation()(2);
+  }
+
+  EulerAnglesYPR & setIdentity() {
+	  this->Implementation::setZero();
+	  return *this;
   }
 
   friend std::ostream & operator << (std::ostream & out, const EulerAnglesYPR & ypr) {

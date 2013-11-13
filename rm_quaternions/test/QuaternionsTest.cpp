@@ -67,6 +67,7 @@ TEST (RotationsTest, testQuaternionVarious ) {
   std::cout << rquat1.inverse() << std::endl;
   std::cout << rquat1*rquat2 << std::endl;
   std::cout << (rquat1==rquat2) << std::endl;
+  std::cout << rquat3.setIdentity() << std::endl;
   std::cout << std::endl;
 
   quat::UnitQuaternion<double> uquat1(0,1,0,0);
