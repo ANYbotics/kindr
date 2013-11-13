@@ -294,11 +294,10 @@ TYPED_TEST(RotationsTest, DISABLED_QuaternionToAxisAngle){
 TEST (RotationsTest, testRotationVarious ) {
 
   // todo:
-  // make functions of rotationquaternion generally available
+  // go through todos in source code
   // range wrapper for angle axis and euler angles etc -> only in get functions and ==
   // debug: check unitquaternion length
   // test
-  // interaction quaternion - unitquaternion - rotationquaternion
   // interaction double - float
   // exponential function
   // doxygen documentation
@@ -310,11 +309,20 @@ TEST (RotationsTest, testRotationVarious ) {
 
   rot::RotationQuaternion<double> q2(a1);
   rot::RotationMatrix<double> R2(a1);
+  rot::RotationMatrix<double> a2(a1);
 
   rot::RotationQuaternion<double> q3;
   rot::RotationMatrix<double> R3;
+  std::cout << "\n";
   q3 = a1;
+  q3 = q2;
+  q3 = R2;
   R3 = a1;
+  R3 = R2;
+  R3 = q3;
+  a1 = R3;
+  a1 = q3;
+  a1 = a2;
 
   rot::EulerAnglesRPY<double> rpy1(a1);
   rot::EulerAnglesYPR<double> ypr1(a1);

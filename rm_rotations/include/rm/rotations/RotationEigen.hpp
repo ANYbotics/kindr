@@ -8,6 +8,7 @@
 #ifndef ROTATIONEIGEN_HPP_
 #define ROTATIONEIGEN_HPP_
 
+#include "rm/common/Common.hpp"
 #include "rm/quaternions/QuaternionEigen.hpp"
 #include "RotationBase.hpp"
 #include "RotationEigenFunctions.hpp"
@@ -31,8 +32,8 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::Angl
     : Base(Base::Identity()) {
   }
 
-  AngleAxis(const PrimType & chi, const PrimType & v1, const PrimType & v2, const PrimType & v3)
-    : Base(chi,Eigen::Matrix<PrimType,3,1>(v1,v2,v3)) {
+  AngleAxis(const Scalar & chi, const Scalar & v1, const Scalar & v2, const Scalar & v3)
+    : Base(chi,Eigen::Matrix<Scalar,3,1>(v1,v2,v3)) {
   }
 
   // create from Eigen::AngleAxis
@@ -41,9 +42,9 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::Angl
   }
 
   // create from other rotation
-  template<typename DERIVED>
-  inline explicit AngleAxis(const Rotation<DERIVED> & other)
-    : Base(internal::ConversionTraits<AngleAxis, DERIVED>::convert(static_cast<const DERIVED &>(other))) {
+  template<typename OTHER_DERIVED>
+  inline explicit AngleAxis(const Rotation<OTHER_DERIVED> & other)
+    : Base(internal::ConversionTraits<AngleAxis, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other))) {
   }
 
   template<typename OTHER_DERIVED>
@@ -65,7 +66,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::Angl
 
   using AngleAxisBase<AngleAxis<PrimType>>::operator*; // otherwise ambiguous RotationBase and Eigen
 
-  inline PrimType angle() const {
+  inline Scalar angle() const {
     return Base::angle();
   }
 
@@ -73,7 +74,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::Angl
     return Base::axis();
   }
 
-  inline PrimType & angle() {
+  inline Scalar & angle() {
     return Base::angle();
   }
 
@@ -104,8 +105,9 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
     : Base(Implementation::Identity()) {
   }
 
-  RotationQuaternion(const PrimType & w, const PrimType & x, const PrimType & y, const PrimType & z)
+  RotationQuaternion(const Scalar & w, const Scalar & x, const Scalar & y, const Scalar & z)
     : Base(w,x,y,z) {
+    ASSERT_SCALAR_NEAR(norm(), 1, 1e-6, "Input quaternion has not unit length.");
   }
 
 //  wWithRealScalarGreaterOrEqualZero();
@@ -115,26 +117,65 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
 //  const quaternions::eigen_implementation::UnitQuaternion<PrimType> & getUnitQuaternion() const;
 //  quaternions::eigen_implementation::UnitQuaternion<PrimType> getUnitQuaternionWithRealScalarGreaterOrEqualZero() const;
 
-  // create from Quaternion
+  // create from UnitQuaternion
   explicit RotationQuaternion(const Base & other)
     : Base(other) {
   }
 
+//  // create from Quaternion
+//  explicit RotationQuaternion(const typename Base::Base & other)
+//    : Base(other) {
+//    ASSERT_SCALAR_NEAR(norm(), 1, 1e-6, "Input quaternion has not unit length.");
+//  }
+
   // create from Eigen::Quaternion
   explicit RotationQuaternion(const Implementation & other)
     : Base(other) {
+    ASSERT_SCALAR_NEAR(norm(), 1, 1e-6, "Input quaternion has not unit length.");
   }
 
   // create from other rotation
-  template<typename DERIVED>
-  inline explicit RotationQuaternion(const Rotation<DERIVED> & other)
-    : Base(internal::ConversionTraits<RotationQuaternion, DERIVED>::convert(static_cast<const DERIVED &>(other))) {
+  template<typename OTHER_DERIVED>
+  inline explicit RotationQuaternion(const Rotation<OTHER_DERIVED> & other)
+    : Base(internal::ConversionTraits<RotationQuaternion, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other))) {
+  }
+
+  template<typename PrimTypeIn>
+  RotationQuaternion & operator =(const quaternions::eigen_implementation::UnitQuaternion<PrimTypeIn> & quat) {
+	this->w() = quat.w();
+	this->x() = quat.x();
+	this->y() = quat.y();
+	this->z() = quat.z();
+    return *this;
   }
 
   template<typename OTHER_DERIVED>
   RotationQuaternion & operator =(const Rotation<OTHER_DERIVED> & other) {
-    *this = internal::ConversionTraits<RotationQuaternion, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other));
+    RotationQuaternion result = internal::ConversionTraits<RotationQuaternion, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other));
+    this->w() = result.w();
+    this->x() = result.x();
+    this->y() = result.y();
+    this->z() = result.z();
     return *this;
+  }
+
+  template<typename PrimTypeIn>
+  RotationQuaternion & operator ()(const quaternions::eigen_implementation::UnitQuaternion<PrimTypeIn> & quat) {
+	this->w() = quat.w();
+	this->x() = quat.x();
+	this->y() = quat.y();
+	this->z() = quat.z();
+	return *this;
+  }
+
+  template<typename PrimTypeIn>
+  RotationQuaternion & operator ()(const quaternions::eigen_implementation::Quaternion<PrimTypeIn> & quat) {
+	this->w() = quat.w();
+	this->x() = quat.x();
+	this->y() = quat.y();
+	this->z() = quat.z();
+    ASSERT_SCALAR_NEAR(norm(), 1, 1e-6, "Input quaternion has not unit length.");
+	return *this;
   }
 
 //  using Base::inverse(); // todo: will have Base as output
@@ -147,15 +188,11 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
     return RotationQuaternion(Base::conjugate());
   }
 
+  using Base::norm;
   using Base::toImplementation;
 
   using RotationQuaternionBase<RotationQuaternion<PrimType>>::operator*; // otherwise ambiguous RotationBase and QuaternionBase
   using RotationQuaternionBase<RotationQuaternion<PrimType>>::operator==; // otherwise ambiguous RotationBase and Eigen
-
-  friend std::ostream & operator << (std::ostream & out, const RotationQuaternion & quat) {
-    out << quat.w() << " " << quat.x() << " " << quat.y() << " " << quat.z();
-    return out;
-  }
 };
 
 typedef RotationQuaternion<double> RotationQuaternionD;
@@ -174,11 +211,11 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType>>, priv
     : Base(Base::Identity()) {
   }
 
-  RotationMatrix(const PrimType & r11, const PrimType & r12, const PrimType & r13,
-                 const PrimType & r21, const PrimType & r22, const PrimType & r23,
-                 const PrimType & r31, const PrimType & r32, const PrimType & r33) {
+  RotationMatrix(const Scalar & r11, const Scalar & r12, const Scalar & r13,
+                 const Scalar & r21, const Scalar & r22, const Scalar & r23,
+                 const Scalar & r31, const Scalar & r32, const Scalar & r33) {
     *this << r11,r12,r13,r21,r22,r23,r31,r32,r33;
-//    assert(near(*this * this->inverse(), Base::Identity(), 1E-9), "input is not a rotation matrix"); // todo
+    ASSERT_MATRIX_NEAR(*this * this->inverse(), Base::Identity(), 1e-6, "Input matrix is not orthogonal.");
   }
 
   // create from Eigen::Matrix
@@ -187,9 +224,9 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType>>, priv
   }
 
   // create from other rotation
-  template<typename DERIVED>
-  inline explicit RotationMatrix(const Rotation<DERIVED> & other)
-      : Base(internal::ConversionTraits<RotationMatrix, DERIVED>::convert(static_cast<const DERIVED &>(other))) {
+  template<typename OTHER_DERIVED>
+  inline explicit RotationMatrix(const Rotation<OTHER_DERIVED> & other)
+      : Base(internal::ConversionTraits<RotationMatrix, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other))) {
   }
 
   template<typename OTHER_DERIVED>
@@ -220,6 +257,8 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType>>, priv
     return toImplementation();
   }
 
+//  const RotationMatrix & setIdentity
+
   friend std::ostream & operator << (std::ostream & out, const RotationMatrix & R) {
     out << R.toImplementation();
     return out;
@@ -242,7 +281,7 @@ class EulerAnglesRPY : public EulerAnglesRPYBase<EulerAnglesRPY<PrimType>>, priv
     : Base(Base::Zero()) {
   }
 
-  EulerAnglesRPY(const PrimType & r, const PrimType & p, const PrimType & y)
+  EulerAnglesRPY(const Scalar & r, const Scalar & p, const Scalar & y)
     : Base(r,p,y) {
   }
 
@@ -252,9 +291,9 @@ class EulerAnglesRPY : public EulerAnglesRPYBase<EulerAnglesRPY<PrimType>>, priv
   }
 
   // create from other rotation
-  template<typename DERIVED>
-  inline explicit EulerAnglesRPY(const Rotation<DERIVED> & other)
-    : Base(internal::ConversionTraits<EulerAnglesRPY, DERIVED>::convert(static_cast<const DERIVED &>(other))) {
+  template<typename OTHER_DERIVED>
+  inline explicit EulerAnglesRPY(const Rotation<OTHER_DERIVED> & other)
+    : Base(internal::ConversionTraits<EulerAnglesRPY, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other))) {
   }
 
   template<typename OTHER_DERIVED>
@@ -277,27 +316,27 @@ class EulerAnglesRPY : public EulerAnglesRPYBase<EulerAnglesRPY<PrimType>>, priv
   using EulerAnglesRPYBase<EulerAnglesRPY<PrimType>>::operator*; // otherwise ambiguous RotationBase and Eigen
   using EulerAnglesRPYBase<EulerAnglesRPY<PrimType>>::operator==; // otherwise ambiguous RotationBase and Eigen
 
-  inline PrimType roll() const {
+  inline Scalar roll() const {
     return toImplementation()(0);
   }
 
-  inline PrimType pitch() const {
+  inline Scalar pitch() const {
     return toImplementation()(1);
   }
 
-  inline PrimType yaw() const {
+  inline Scalar yaw() const {
     return toImplementation()(2);
   }
 
-  inline PrimType & roll() {
+  inline Scalar & roll() {
     return toImplementation()(0);
   }
 
-  inline PrimType & pitch() {
+  inline Scalar & pitch() {
     return toImplementation()(1);
   }
 
-  inline PrimType & yaw() {
+  inline Scalar & yaw() {
     return toImplementation()(2);
   }
 
@@ -323,7 +362,7 @@ class EulerAnglesYPR : public EulerAnglesYPRBase<EulerAnglesYPR<PrimType>>, priv
     : Base(Base::Zero()) {
   }
 
-  EulerAnglesYPR(const PrimType & y, const PrimType & p, const PrimType & r)
+  EulerAnglesYPR(const Scalar & y, const Scalar & p, const Scalar & r)
     : Base(y,p,r) {
   }
 
@@ -333,9 +372,9 @@ class EulerAnglesYPR : public EulerAnglesYPRBase<EulerAnglesYPR<PrimType>>, priv
   }
 
   // create from other rotation
-  template<typename DERIVED>
-  inline explicit EulerAnglesYPR(const Rotation<DERIVED> & other)
-    : Base(internal::ConversionTraits<EulerAnglesYPR, DERIVED>::convert(static_cast<const DERIVED &>(other))) {
+  template<typename OTHER_DERIVED>
+  inline explicit EulerAnglesYPR(const Rotation<OTHER_DERIVED> & other)
+    : Base(internal::ConversionTraits<EulerAnglesYPR, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other))) {
   }
 
   template<typename OTHER_DERIVED>
@@ -358,27 +397,27 @@ class EulerAnglesYPR : public EulerAnglesYPRBase<EulerAnglesYPR<PrimType>>, priv
   using EulerAnglesYPRBase<EulerAnglesYPR<PrimType>>::operator*; // otherwise ambiguous RotationBase and Eigen
   using EulerAnglesYPRBase<EulerAnglesYPR<PrimType>>::operator==; // otherwise ambiguous RotationBase and Eigen
 
-  inline PrimType yaw() const {
+  inline Scalar yaw() const {
     return toImplementation()(0);
   }
 
-  inline PrimType pitch() const {
+  inline Scalar pitch() const {
     return toImplementation()(1);
   }
 
-  inline PrimType roll() const {
+  inline Scalar roll() const {
     return toImplementation()(2);
   }
 
-  inline PrimType & yaw() {
+  inline Scalar & yaw() {
     return toImplementation()(0);
   }
 
-  inline PrimType & pitch() {
+  inline Scalar & pitch() {
     return toImplementation()(1);
   }
 
-  inline PrimType & roll() {
+  inline Scalar & roll() {
     return toImplementation()(2);
   }
 

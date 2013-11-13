@@ -56,7 +56,7 @@ TYPED_TEST (QuaternionsTest, testQuatenionMultiplication ) {
 
 TEST (RotationsTest, testQuaternionVarious ) {
 
-  rot::RotationQuaternion<double> rquat1(1,2,3,4);
+  rot::RotationQuaternion<double> rquat1(0,0,0,1);
   rot::RotationQuaternion<double> rquat2(rquat1);
   rot::RotationQuaternion<double> rquat3;
   rquat3 = rquat1;
@@ -69,7 +69,7 @@ TEST (RotationsTest, testQuaternionVarious ) {
   std::cout << (rquat1==rquat2) << std::endl;
   std::cout << std::endl;
 
-  quat::UnitQuaternion<double> uquat1(1,2,3,4);
+  quat::UnitQuaternion<double> uquat1(0,1,0,0);
   quat::UnitQuaternion<double> uquat2(uquat1);
   quat::UnitQuaternion<double> uquat3;
   uquat3 = uquat1;
@@ -103,12 +103,27 @@ TEST (RotationsTest, testQuaternionVarious ) {
   std::cout << (uquat1==quat2) << std::endl;
   std::cout << std::endl;
 
-//rquat1 = uquat1; // not allowed
-//rquat1 = quat1; // not allowed
-  uquat1 = rquat1; // allowed
-//uquat1 = quat1; // not allowed
-  quat1  = rquat1; // allowed
-  quat1  = uquat1; // allowed
+  rquat1 = rquat2; // allowed
+  rquat1 = uquat2; // allowed
+//rquat1 = quat2; // not allowed
+  uquat1 = rquat2; // allowed
+  uquat1 = uquat2; // allowed
+//uquat1 = quat2; // not allowed
+  quat1  = rquat2; // allowed
+  quat1  = uquat2; // allowed
+  quat1  = quat2; // allowed
+
+  rquat1(rquat2); // allowed
+  rquat1(uquat2); // allowed
+  rquat1(quat2.normalized()); // allowed, checks length in debug mode
+  uquat1(rquat2); // allowed
+  uquat1(uquat2); // allowed
+  uquat1(quat2.normalized()); // allowed, checks length in debug mode
+  quat1(rquat2); // allowed
+  quat1(uquat2); // allowed
+  quat1(quat2); // allowed
+
+  uquat1 = quat2.toUnitQuaternion();
 
 }
 

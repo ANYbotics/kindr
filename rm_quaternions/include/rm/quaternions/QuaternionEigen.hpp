@@ -8,8 +8,36 @@
 #ifndef QUATERNIONEIGEN_HPP_
 #define QUATERNIONEIGEN_HPP_
 
+#include "rm/common/Common.hpp"
 #include "QuaternionBase.hpp"
+
 #include <Eigen/Geometry>
+
+
+// forward declarations
+
+namespace rm {
+namespace quaternions {
+namespace eigen_implementation {
+
+template<typename PrimTypeIn>
+class UnitQuaternion;
+
+} // namespace eigen_implementation
+} // namespace quaternions
+
+namespace rotations {
+namespace eigen_implementation {
+
+template<typename PrimTypeIn>
+class RotationQuaternion;
+
+} // namespace eigen_implementation
+} // namespace rotations
+} // namespace rm
+
+
+
 
 namespace rm {
 namespace quaternions {
@@ -48,6 +76,15 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType>>, private Eigen::Q
   Quaternion & operator =(const QuaternionBase<OTHER_DERIVED> & other) {
     *this = (Quaternion)other;
     return *this;
+  }
+
+  template<typename PrimTypeIn>
+  Quaternion & operator ()(const Quaternion<PrimTypeIn> & quat) {
+	this->w() = quat.w();
+	this->x() = quat.x();
+	this->y() = quat.y();
+	this->z() = quat.z();
+	return *this;
   }
 
   inline Base & toImplementation() {
@@ -92,8 +129,25 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType>>, private Eigen::Q
     return Base::z();
   }
 
+  inline PrimType norm() {
+    return Implementation::norm();
+  }
+
+  Quaternion & normalize() {
+	  this->Implementation::normalize();
+	  return *this;
+  }
+
+  Quaternion normalized() const {
+	  return Quaternion(this->Implementation::normalized());
+  }
+
+  UnitQuaternion<PrimType> toUnitQuaternion() const {
+	return UnitQuaternion<PrimType>(this->Implementation::normalized());
+  }
+
   friend std::ostream & operator << (std::ostream & out, const Quaternion & quat) {
-    out << quat.toImplementation().w() << " " << quat.toImplementation().x() << " " << quat.toImplementation().y() << " " << quat.toImplementation().z();
+    out << quat.w() << " " << quat.x() << " " << quat.y() << " " << quat.z();
     return out;
   }
 };
@@ -116,13 +170,12 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>>, publ
 
   UnitQuaternion(const PrimType & w, const PrimType & x, const PrimType & y, const PrimType & z)
     : Base(w,x,y,z) {
-//    assert(near(getNorm(), PrimType(1), 1E-9), "input has not unit length"); // todo
+    ASSERT_SCALAR_NEAR(norm(), 1, 1e-6, "Input quaternion has not unit length.");
   }
 
   // create from Quaternion
   explicit UnitQuaternion(const Base & other)
     : Base(other) {
-    //    assert(near(getNorm(), PrimType(1), 1E-9), "input has not unit length"); // todo
   }
 
   // create from Eigen::Quaternion
@@ -132,9 +185,28 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>>, publ
 
   // operator= is must only work with UnitQuaternions or derived classes
   UnitQuaternion & operator =(const UnitQuaternion & other) {
-    //    assert(near(getNorm(), PrimType(1), 1E-9), "input has not unit length"); // todo
-    *this = (UnitQuaternion)other;
+    this->w() = other.w();
+    this->x() = other.x();
+    this->y() = other.y();
+    this->z() = other.z();
     return *this;
+  }
+
+  template<typename PrimTypeIn>
+  UnitQuaternion & operator ()(const UnitQuaternion<PrimTypeIn> & quat) {
+	*this = (UnitQuaternion)quat;
+	return *this;
+  }
+
+  template<typename PrimTypeIn>
+  UnitQuaternion & operator ()(const Quaternion<PrimTypeIn> & quat) {
+//		*this = (UnitQuaternion)quat;
+	this->w() = quat.w();
+	this->x() = quat.x();
+	this->y() = quat.y();
+	this->z() = quat.z();
+    ASSERT_SCALAR_NEAR(norm(), 1, 1e-6, "Input quaternion has not unit length.");
+	return *this;
   }
 
 //  using UnitQuaternionBase<UnitQuaternion<PrimType>>::conjugate;
@@ -148,6 +220,7 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>>, publ
     return UnitQuaternion(Base::conjugate());
   }
 
+  using Base::norm;
   using Base::toImplementation;
 };
 

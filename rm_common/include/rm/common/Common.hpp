@@ -10,8 +10,11 @@
 #ifndef COMMON_HPP_
 #define COMMON_HPP_
 
-
 #include <cmath>
+#include <cassert>
+#include <iostream>
+
+#include <sm/eigen/gtest.hpp>
 
 //#include <Eigen/Core>
 //#include <Eigen/Geometry>
@@ -19,7 +22,6 @@
 namespace rm {
 namespace common {
 
-// todo: static?
 
 
 template<typename T>
@@ -86,16 +88,60 @@ inline T wrapTwoPI(const T& angle)
 }
 
 
+namespace eigen_implementation {
+
+// sm::eigen::assertNear((A),(B),1e-6,(MESSAGE))
+/*          std::cout << MESSAGE << std::endl << "Difference between " << #A << " and " << #B << " exceeds tolerance of " << TOL << "." << std::endl; \
+          std::cout << #A << "(" << i << "," << j << ") = " << (A)(i,j) << std::endl; \
+          std::cout << #B << "(" << i << "," << j << ") = " << (B)(i,j) << std::endl; \ */
+/*    std::cout << MESSAGE << std::endl << "Matrix " << #A << std::endl << A << std::endl << "and matrix " << #B << std::endl << B << std::endl << "have different sizes."; \ */
 
 #ifdef NDEBUG
-#define ASSERT_MATRIX_NEAR(A, B, MESSAGE)
+#define ASSERT_MATRIX_NEAR(A, B, TOL, MESSAGE)
+#define ASSERT_SCALAR_NEAR(A, B, TOL, MESSAGE)
 #else
-#define ASSERT_MATRIX_NEAR(A, B, MESSAGE) sm::eigen::assertNear( ...);
+#define ASSERT_MATRIX_NEAR(A, B, TOL, MESSAGE) \
+  if((A).rows() == (B).rows() && (A).cols() == (B).cols()) \
+  { \
+    for(int i=0; i<(A).rows(); i++) \
+    { \
+      for(int j=0; j<(B).rows(); j++) \
+      { \
+        if(abs((A)(i,j)-(B)(i,j)) > TOL) \
+        { \
+          std::cout << MESSAGE << std::endl; \
+          std::cout << "Difference between the two matrices exceeds tolerance." << std::endl; \
+          std::cout << "Assertion in file " << __FILE__ << ", line " << __LINE__ << "." << std::endl; \
+          std::cout << "Matrix1(" << i << "," << j << ") = " << (A)(i,j) << std::endl; \
+          std::cout << "Matrix2(" << i << "," << j << ") = " << (B)(i,j) << std::endl; \
+          std::cout << (A) << std::endl; \
+          std::cout << (B) << std::endl; \
+          exit(-1); \
+        } \
+      } \
+    } \
+  } \
+  else \
+  { \
+    std::cout << MESSAGE << std::endl; \
+    std::cout << "The two matrices have different sizes."; \
+    exit(-1); \
+  }
+#define ASSERT_SCALAR_NEAR(A, B, TOL, MESSAGE) \
+  if(abs((A)-(B)) > TOL) \
+  { \
+    std::cout << MESSAGE << std::endl; \
+    std::cout << "Difference between the two scalars exceeds tolerance." << std::endl; \
+    std::cout << "Assertion in file " << __FILE__ << ", line " << __LINE__ << "." << std::endl; \
+    std::cout << "Scalar1 = " << (A) << std::endl; \
+    std::cout << "Scalar2 = " << (B) << std::endl; \
+    exit(-1); \
+  }
 #endif
 
-
-} // end namespace common
-} // end namespace rm
+} // namespace eigen_implementation
+} // namespace common
+} // namespace rm
 
 
 

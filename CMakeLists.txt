@@ -26,6 +26,7 @@ project(robotMath)
 set(CMAKE_BUILD_TYPE Debug)
 
 add_definitions(-std=c++0x)
+SET(CMAKE_BUILD_TYPE Debug)
 
 ADD_SUBDIRECTORY (gtest gtest)
 enable_testing()
