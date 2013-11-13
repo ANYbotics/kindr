@@ -33,7 +33,11 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::Angl
   }
 
   AngleAxis(const Scalar & chi, const Scalar & v1, const Scalar & v2, const Scalar & v3)
-    : Base(chi,Eigen::Matrix<Scalar,3,1>(v1,v2,v3)) {
+    : Base(chi,Vector3(v1,v2,v3)) {
+  }
+
+  AngleAxis(const Scalar & chi, const Vector3 & v)
+    : Base(chi,v) {
   }
 
   // create from Eigen::AngleAxis
@@ -83,9 +87,13 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::Angl
   }
 
   AngleAxis & setIdentity() {
-	  this->angle() = 0;
-	  this->axis() << 1,0,0;
-	  return *this;
+	this->angle() = 0;
+	this->axis() << 1,0,0;
+	return *this;
+  }
+
+  const AngleAxis & getUnique() {
+	return AngleAxis(Mod(angle()+M_PI,2*M_PI)-M_PI, axis());
   }
 
   friend std::ostream & operator << (std::ostream & out, const AngleAxis & a) {
@@ -203,6 +211,14 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
 	return *this;
   }
 
+  const RotationQuaternion & getUnique() {
+	if(this->w() >= 0) {
+		return *this;
+	} else {
+		return RotationQuaternion(-this->w(),-this->x(),-this->y(),-this->z());
+	}
+  }
+
   using Base::norm;
   using Base::toImplementation;
 
@@ -275,6 +291,10 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType>>, priv
   RotationMatrix & setIdentity() {
 	  this->Implementation::setIdentity();
 	  return *this;
+  }
+
+  const RotationMatrix & getUnique() {
+	return *this;
   }
 
   friend std::ostream & operator << (std::ostream & out, const RotationMatrix & R) {
@@ -363,6 +383,10 @@ class EulerAnglesRPY : public EulerAnglesRPYBase<EulerAnglesRPY<PrimType>>, priv
 	  return *this;
   }
 
+  const EulerAnglesRPY & getUnique() {
+	return *this; // todo
+  }
+
   friend std::ostream & operator << (std::ostream & out, const EulerAnglesRPY & rpy) {
     out << rpy.toImplementation().transpose();
     return out;
@@ -447,6 +471,10 @@ class EulerAnglesYPR : public EulerAnglesYPRBase<EulerAnglesYPR<PrimType>>, priv
   EulerAnglesYPR & setIdentity() {
 	  this->Implementation::setZero();
 	  return *this;
+  }
+
+  const EulerAnglesYPR & getUnique() {
+	return *this; // todo
   }
 
   friend std::ostream & operator << (std::ostream & out, const EulerAnglesYPR & ypr) {
