@@ -15,7 +15,7 @@
 
 namespace rm {
 namespace rotations {
-
+//! Implementation of rotations based on the C++ Eigen library
 namespace eigen_implementation {
 
 

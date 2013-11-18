@@ -11,8 +11,15 @@
 #include "rm/quaternions/QuaternionBase.hpp"
 
 namespace rm {
-namespace rotations {
 
+/*!
+ *  \addtogroup Rotations
+ *  @{
+ */
+
+//! Generic rotation interface
+namespace rotations {
+//! Internal stuff (only for developers)
 namespace internal {
 
 template<typename DEST, typename SOURCE>
@@ -160,6 +167,7 @@ class EulerAnglesYPRBase : public EulerAnglesBase<Implementation> {
 
 
 } // namespace rotations
+/*! @} End of Doxygen Groups*/
 } // namespace rm
 
 #endif /* ROTATIONBASE_HPP_ */

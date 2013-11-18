@@ -10,8 +10,13 @@
 
 
 namespace rm {
+/*!
+ *  \addtogroup Quaternions
+ *  @{
+ */
+//! Generic quaternion interface
 namespace quaternions {
-
+//! Internal stuff (only for developers)
 namespace internal {
 
 template<typename DEST, typename SOURCE>
@@ -37,6 +42,10 @@ class ComparisonTraits {
 
 } // namespace internal
 
+//! Base class that defines the interface of a quaternion
+/*!
+ * \see rm::rotations::RotationQuaternionBase for quaternions that represent a rotation
+ */
 template<typename DERIVED>
 class QuaternionBase {
  public:
@@ -67,7 +76,10 @@ class QuaternionBase {
 };
 
 
-
+//! Base class that defines the interface of a unit quaternion
+/*!
+ * \see rm::rotations::RotationQuaternionBase for quaternions that represent a rotation
+ */
 template<typename DERIVED>
 class UnitQuaternionBase : public QuaternionBase<DERIVED> {
  public:
@@ -88,6 +100,7 @@ class UnitQuaternionBase : public QuaternionBase<DERIVED> {
 
 
 } // namespace quaternions
+/*! @} End of Doxygen Groups*/
 } // namespace rm
 
 #endif /* QUATERNIONBASE_HPP_ */

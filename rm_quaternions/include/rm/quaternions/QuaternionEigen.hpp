@@ -14,16 +14,54 @@
 #include <Eigen/Geometry>
 
 
+// forward declarations
+
+namespace rm {
+namespace quaternions {
+//! Implementation of quaternions based on the C++ Eigen library
+namespace eigen_implementation {
+
+template<typename PrimTypeIn>
+class UnitQuaternion;
+
+} // namespace eigen_implementation
+} // namespace quaternions
+
+namespace rotations {
+namespace eigen_implementation {
+
+template<typename PrimTypeIn>
+class RotationQuaternion;
+
+} // namespace eigen_implementation
+} // namespace rotations
+} // namespace rm
+
+
+
+
 namespace rm {
 namespace quaternions {
 namespace eigen_implementation {
 
+
+//! Implementation of a Quaternion based on Eigen::Quaternion
+/*!
+ * The following two typedefs are provided for convenience:
+ *   - QuaternionF for float
+ *   - QuaternionD for double
+ *
+ * \see rm::quaternions::eigen_implementation::UnitQuaternion for an implementation of a unit quaternion
+ * \see rm::rotations::eigen_implementation::RotationQuaternion for quaternions that represent a rotation
+ */
 template<typename PrimType>
 class Quaternion : public QuaternionBase<Quaternion<PrimType>>, private Eigen::Quaternion<PrimType> {
  private:
   typedef Eigen::Quaternion<PrimType> Base;
  public:
+  //! the implementation type, i.e., Eigen::Quaternion<>
   typedef Base Implementation;
+  //! the scalar type, i.e., the type of the coefficients
   typedef PrimType Scalar;
 
   Quaternion()
@@ -130,32 +168,55 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType>>, private Eigen::Q
 typedef Quaternion<double> QuaternionD;
 typedef Quaternion<float> QuaternionF;
 
-
+//! Implementation of a unit quaternion based on Eigen::Quaternion
+/*!
+ * The following two typedefs are provided for convenience:
+ *   - UnitQuaternionF for float
+ *   - UnitQuaternionD for double
+ *
+ * \see rm::quaternions::eigen_implementation::Quaternion for an implementation of a generic quaternion
+ * \see rm::rotations::eigen_implementation::RotationQuaternion for quaternions that represent a rotation
+ */
 template<typename PrimType>
 class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>>, public Quaternion<PrimType> {
  private:
   typedef Quaternion<PrimType> Base;
  public:
+  //! the implementation type, i.e., Eigen::Quaternion<>
   typedef typename Base::Implementation Implementation;
+  //! the scalar type, i.e., the type of the coefficients
   typedef PrimType Scalar;
 
+  //! Default Constructor initializes the unit quaternion to identity
   UnitQuaternion()
     : Base(Implementation::Identity()) {
   }
 
+  //! Constructor to create unit quaternion from coefficients
+  /*! Q = w + x*i + y*j + z*k
+   * \param   w   scalar
+   * \param   x   vector index 1
+   * \param   y   vector index 2
+   * \param   z   vector index 3
+   */
   UnitQuaternion(const PrimType & w, const PrimType & x, const PrimType & y, const PrimType & z)
     : Base(w,x,y,z) {
     ASSERT_SCALAR_NEAR(norm(), 1, 1e-6, "Input quaternion has not unit length.");
   }
 
-  // create from Quaternion
+  //! Constructor to create unit quaternion from Quaternion
   explicit UnitQuaternion(const Base & other)
     : Base(other) {
+    ASSERT_SCALAR_NEAR(norm(), 1, 1e-6, "Input quaternion has not unit length.");
   }
 
-  // create from Eigen::Quaternion
+  //! Constructor to create unit quaternion from Eigen::Quaternion
+  /*!
+   * \param other Eigen::Quaternion
+   */
   explicit UnitQuaternion(const Implementation & other)
     : Base(other) {
+    ASSERT_SCALAR_NEAR(norm(), 1, 1e-6, "Input quaternion has not unit length.");
   }
 
   template<typename PrimTypeIn>
