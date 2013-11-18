@@ -129,7 +129,7 @@ TYPED_TEST (QuaternionsPairsTest, testQuaternionInversion ) {
 
 
 
-TEST (RotationsTest, DISABLED_testQuaternionVarious ) {
+TEST (RotationsTest, testQuaternionVarious ) {
 
   rot::RotationQuaternion<double> rquat1(0,0,0,1);
   rot::RotationQuaternion<double> rquat2(rquat1);

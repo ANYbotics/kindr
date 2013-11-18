@@ -14,31 +14,6 @@
 #include <Eigen/Geometry>
 
 
-// forward declarations
-
-namespace rm {
-namespace quaternions {
-namespace eigen_implementation {
-
-template<typename PrimTypeIn>
-class UnitQuaternion;
-
-} // namespace eigen_implementation
-} // namespace quaternions
-
-namespace rotations {
-namespace eigen_implementation {
-
-template<typename PrimTypeIn>
-class RotationQuaternion;
-
-} // namespace eigen_implementation
-} // namespace rotations
-} // namespace rm
-
-
-
-
 namespace rm {
 namespace quaternions {
 namespace eigen_implementation {
@@ -74,16 +49,16 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType>>, private Eigen::Q
 
   template<typename OTHER_DERIVED>
   Quaternion & operator =(const QuaternionBase<OTHER_DERIVED> & other) {
-    *this = (Quaternion)other;
+    *this = static_cast<Quaternion>(other);
     return *this;
   }
 
   template<typename PrimTypeIn>
   Quaternion & operator ()(const Quaternion<PrimTypeIn> & quat) {
-	this->w() = quat.w();
-	this->x() = quat.x();
-	this->y() = quat.y();
-	this->z() = quat.z();
+	this->w() = static_cast<PrimType>(quat.w());
+	this->x() = static_cast<PrimType>(quat.x());
+	this->y() = static_cast<PrimType>(quat.y());
+	this->z() = static_cast<PrimType>(quat.z());
 	return *this;
   }
 
@@ -183,18 +158,18 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>>, publ
     : Base(other) {
   }
 
-  // operator= is must only work with UnitQuaternions or derived classes
-  UnitQuaternion & operator =(const UnitQuaternion & other) {
-    this->w() = other.w();
-    this->x() = other.x();
-    this->y() = other.y();
-    this->z() = other.z();
+  template<typename PrimTypeIn>
+  UnitQuaternion & operator =(const UnitQuaternion<PrimTypeIn> & other) {
+    this->w() = static_cast<PrimType>(other.w());
+    this->x() = static_cast<PrimType>(other.x());
+    this->y() = static_cast<PrimType>(other.y());
+    this->z() = static_cast<PrimType>(other.z());
     return *this;
   }
 
   template<typename PrimTypeIn>
   UnitQuaternion & operator ()(const UnitQuaternion<PrimTypeIn> & quat) {
-	*this = (UnitQuaternion)quat;
+	*this = static_cast<UnitQuaternion>(quat);
 	return *this;
   }
 

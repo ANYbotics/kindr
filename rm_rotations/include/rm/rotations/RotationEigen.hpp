@@ -136,12 +136,6 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
     : Base(other) {
   }
 
-//  // create from Quaternion
-//  explicit RotationQuaternion(const typename Base::Base & other)
-//    : Base(other) {
-//    ASSERT_SCALAR_NEAR(norm(), 1, 1e-6, "Input quaternion has not unit length.");
-//  }
-
   // create from Eigen::Quaternion
   explicit RotationQuaternion(const Implementation & other)
     : Base(other) {
@@ -204,7 +198,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
 
   RotationQuaternion & setIdentity() {
 //	  this->Implementation::setIdentity(); // inaccessible
-	this->w() = 1;
+	this->w() = static_cast<int>(1);
 	this->x() = 0;
 	this->y() = 0;
 	this->z() = 0;
@@ -247,6 +241,7 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType>>, priv
                  const Scalar & r31, const Scalar & r32, const Scalar & r33) {
     *this << r11,r12,r13,r21,r22,r23,r31,r32,r33;
     ASSERT_MATRIX_NEAR(*this * this->inverse(), Base::Identity(), 1e-6, "Input matrix is not orthogonal.");
+    ASSERT_SCALAR_NEAR(this->determinant(), 1, 1e-6, "Input matrix determinant is not 1.");
   }
 
   // create from Eigen::Matrix
@@ -268,6 +263,10 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType>>, priv
 
   RotationMatrix inverse() const {
     return RotationMatrix(toImplementation().transpose());
+  }
+
+  Scalar determinant() const {
+	  return toImplementation().determinant();
   }
 
   inline Implementation & toImplementation() {
@@ -488,7 +487,7 @@ typedef EulerAnglesYPR<float> EulerAnglesYPRF;
 
 
 
-}  // namespace eigen_implementation
+} // namespace eigen_implementation
 
 
 namespace internal {

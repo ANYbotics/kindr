@@ -23,14 +23,12 @@ class ConversionTraits {
 template<typename LEFT, typename RIGHT>
 class MultiplicationTraits {
  public:
+//  inline static LEFT mult(const LEFT &l, const RIGHT &r) {
+//    return LEFT(typename LEFT::Implementation(l.toImplementation() * ((const LEFT &)r).toImplementation())); // does not work in every situation
+//  }
   inline static LEFT mult(const LEFT &l, const RIGHT &r) {
-    return LEFT(typename LEFT::Implementation(l.toImplementation() * r.toImplementation()));
+    return LEFT(typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar>((((const typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar> &)l).toImplementation() * ((const typename eigen_implementation::RotationQuaternion<typename RIGHT::Scalar> &)r).toImplementation())));
   }
-};
-
-template<typename ROTATION>
-class get_vector3 {
-  // typedef VECTOR type;
 };
 
 template<typename ROTATION>
@@ -46,7 +44,7 @@ class RotationTraits {
   // inline static typename internal::get_vector3<DERIVED>::type rotate(const ROTATION & r, const typename internal::get_vector3<DERIVED>::type & );
 };
 
-template<typename ROTATION>
+template<typename ROTATION> // only works with the same rotation representation
 class ComparisonTraits {
  public:
   inline static bool isequal(const ROTATION & a, const ROTATION & b) {
@@ -87,22 +85,22 @@ class Rotation {
 
   template <typename internal::get_matrix3X<DERIVED>::IndexType Cols>
   typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> rotate(typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> & m) const {
-    return internal::RotationTraits<DERIVED>::rotate((DERIVED)*this, m);
+    return internal::RotationTraits<DERIVED>::rotate(this->derived(), m);
   }
 
   template <typename internal::get_matrix3X<DERIVED>::IndexType Cols>
   typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> inverserotate(typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> & m) const {
-    return internal::RotationTraits<DERIVED>::rotate(((DERIVED)*this).inverse(), m); // todo: may be optimized
+    return internal::RotationTraits<DERIVED>::rotate(this->derived().inverse(), m); // todo: may be optimized
   }
 
   template<typename OTHER_DERIVED>
   DERIVED operator *(const Rotation<OTHER_DERIVED> & other) const {
-    return internal::MultiplicationTraits<DERIVED,DERIVED>::mult((DERIVED)*this, (DERIVED)other);
+    return internal::MultiplicationTraits<DERIVED,OTHER_DERIVED>::mult(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
   }
 
   template<typename OTHER_DERIVED>
   bool operator ==(const Rotation<OTHER_DERIVED> & other) const {
-    return internal::ComparisonTraits<DERIVED>::isequal((DERIVED)*this, (DERIVED)other);
+    return internal::ComparisonTraits<DERIVED>::isequal(this->derived(), (const DERIVED &)other); // todo: 1. ok? 2. may be optimized
   }
 };
 

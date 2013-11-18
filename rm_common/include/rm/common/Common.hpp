@@ -19,9 +19,33 @@
 //#include <Eigen/Core>
 //#include <Eigen/Geometry>
 
+
+// forward declarations
+
+namespace rm {
+namespace quaternions {
+namespace eigen_implementation {
+
+template<typename PrimType>
+class UnitQuaternion;
+
+} // namespace eigen_implementation
+} // namespace quaternions
+
+namespace rotations {
+namespace eigen_implementation {
+
+template<typename PrimType>
+class RotationQuaternion;
+
+} // namespace eigen_implementation
+} // namespace rotations
+} // namespace rm
+
+
+
 namespace rm {
 namespace common {
-
 
 
 template<typename T>
