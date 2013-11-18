@@ -296,13 +296,11 @@ TEST (RotationsTest, testRotationVarious ) {
   // todo:
   // go through todos in source code
   // range wrapper for angle axis and euler angles etc -> only in get functions and ==
-  // debug: check unitquaternion length
   // test
   // interaction double - float
   // exponential function
   // doxygen documentation
   // copy paste for transformations
-  // conjugate(d), inverse(d)
 
   rot::AngleAxis<double> a1 = rot::AngleAxis<double>(Eigen::AngleAxisd(1,Eigen::Vector3d(1,0,0)));
 //  rot::RotationQuaternion<double> q1 = a1; // calls q1(a1) implicitely

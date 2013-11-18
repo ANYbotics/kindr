@@ -835,30 +835,6 @@ class ComparisonTraits<eigen_implementation::RotationQuaternion<PrimType>> {
    }
 };
 
-template<typename PrimType>
-class ComparisonTraits<eigen_implementation::RotationMatrix<PrimType>> {
- public:
-   inline static bool isequal(const eigen_implementation::RotationMatrix<PrimType> & a, const eigen_implementation::RotationMatrix<PrimType> & b){
-     return a.toImplementation() == b.toImplementation();
-   }
-};
-
-template<typename PrimType>
-class ComparisonTraits<eigen_implementation::EulerAnglesRPY<PrimType>> {
- public:
-   inline static bool isequal(const eigen_implementation::EulerAnglesRPY<PrimType> & a, const eigen_implementation::EulerAnglesRPY<PrimType> & b){
-     return a.toImplementation() == b.toImplementation();
-   }
-};
-
-template<typename PrimType>
-class ComparisonTraits<eigen_implementation::EulerAnglesYPR<PrimType>> {
- public:
-   inline static bool isequal(const eigen_implementation::EulerAnglesYPR<PrimType> & a, const eigen_implementation::EulerAnglesYPR<PrimType> & b){
-     return a.toImplementation() == b.toImplementation();
-   }
-};
-
 
 
 } // namespace internal
