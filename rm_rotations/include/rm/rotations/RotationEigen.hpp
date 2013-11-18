@@ -18,37 +18,62 @@ namespace rotations {
 //! Implementation of rotations based on the C++ Eigen library
 namespace eigen_implementation {
 
-
+//!  Angle-axis rotation
 template<typename PrimType>
 class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::AngleAxis<PrimType> {
  private:
+  //! the base type, i.e., Eigen::AngleAxis
   typedef Eigen::AngleAxis<PrimType> Base;
  public:
+  //! the implementation type, i.e., Eigen::AngleAxis
   typedef Base Implementation;
+  //! the scalar type, i.e., the type of the coefficients
   typedef PrimType Scalar;
+  //! the type of a 3D vector
   typedef Eigen::Matrix<PrimType, 3, 1> Vector3;
 
+  //! Default constructor initializes the angle-axis rotation to the identity rotation
   AngleAxis()
     : Base(Base::Identity()) {
   }
 
+  //! Constructor initializes the angle and the vector
+  /*!
+   * In debug mode, an assertion is thrown if the rotation vector has not unit length.
+   * \param chi     rotation angle
+   * \param v1      first entry of rotation axis vector
+   * \param v2      second entry of rotation axis vector
+   * \param v3      third entry of rotation axis vector
+   */
   AngleAxis(const Scalar & chi, const Scalar & v1, const Scalar & v2, const Scalar & v3)
     : Base(chi,Vector3(v1,v2,v3)) {
-	ASSERT_SCALAR_NEAR(this->axis().norm(), 1, 1e-6, "Input rotation axis has not unit length.");
+    ASSERT_SCALAR_NEAR(this->axis().norm(), 1, 1e-6, "Input rotation axis has not unit length.");
   }
 
+  //! Constructor initializes the angle and the vector from an Eigen::Vector3
+  /*!
+   * In debug mode, an assertion is thrown if the rotation vector has not unit length.
+   * \param chi   rotation angle
+   * \param v     rotation vector with unit length
+   */
   AngleAxis(const Scalar & chi, const Vector3 & v)
     : Base(chi,v) {
-	ASSERT_SCALAR_NEAR(this->axis().norm(), 1, 1e-6, "Input rotation axis has not unit length.");
+    ASSERT_SCALAR_NEAR(this->axis().norm(), 1, 1e-6, "Input rotation axis has not unit length.");
   }
 
-  // create from Eigen::AngleAxis
+  //! Constructor initializes from Eigen::AngleAxis
+  /*! In debug mode, an assertion is thrown if the rotation vector has not unit length.
+   * \param other   Eigen::AngleAxis
+   */
   explicit AngleAxis(const Base & other)
     : Base(other) {
-	ASSERT_SCALAR_NEAR(this->axis().norm(), 1, 1e-6, "Input rotation axis has not unit length.");
+    ASSERT_SCALAR_NEAR(this->axis().norm(), 1, 1e-6, "Input rotation axis has not unit length.");
   }
 
-  // create from other rotation
+  //! Constructor initializes from another rotation
+  /*!
+   * \param other   other rotation
+   */
   template<typename OTHER_DERIVED>
   inline explicit AngleAxis(const Rotation<OTHER_DERIVED> & other)
     : Base(internal::ConversionTraits<AngleAxis, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other))) {
@@ -60,31 +85,47 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::Angl
     return *this;
   }
 
+  /*! \returns the inverse
+   */
   AngleAxis inverse() const {
     return AngleAxis(Base::inverse());
   }
 
+  /*! \returns the implementation for direct manipulation (only for advanced users recommended)
+   */
   inline Base & toImplementation() {
     return static_cast<Base &>(*this);
   }
+
+  /*! \returns the implementation
+   */
   inline const Base & toImplementation() const {
     return static_cast<const Base &>(*this);
   }
 
   using AngleAxisBase<AngleAxis<PrimType>>::operator*; // otherwise ambiguous RotationBase and Eigen
 
+  /*! \returns the rotation angle
+   */
   inline Scalar angle() const {
     return Base::angle();
   }
 
+  /*! \returns the vector representing the rotation axis with unit length
+   */
   inline const Vector3 & axis() const {
     return Base::axis();
   }
 
+  /*! \returns the rotation angle for manipulation
+    */
   inline Scalar & angle() {
     return Base::angle();
   }
 
+  /*! Note that the vector needs to have unit length!
+   * \returns the vector representing the rotation axis with unit length for manipulation
+   */
   inline Vector3 & axis() {
     return Base::axis();
   }
@@ -104,18 +145,22 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::Angl
     return out;
   }
 };
-
+//! Angle-axis rotation with double
 typedef AngleAxis<double> AngleAxisD;
+//! Angle-axis rotation with float
 typedef AngleAxis<float> AngleAxisF;
 
 
-
+//! Quaternion rotation
 template<typename PrimType>
 class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<PrimType>>, public quaternions::eigen_implementation::UnitQuaternion<PrimType> {
  private:
+  //! the base type, i.e., quaternions::eigen_implementation::UnitQuaternion
   typedef quaternions::eigen_implementation::UnitQuaternion<PrimType> Base;
  public:
+  //! the implementation type, i.e., Eigen::Quaternion
   typedef typename Base::Implementation Implementation;
+  //! the scalar type, i.e., the type of the coefficients
   typedef PrimType Scalar;
 
   RotationQuaternion()
@@ -226,13 +271,16 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
 typedef RotationQuaternion<double> RotationQuaternionD;
 typedef RotationQuaternion<float> RotationQuaternionF;
 
-
+//! Rotation matrix
 template<typename PrimType>
 class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType>>, private Eigen::Matrix<PrimType, 3, 3> {
  private:
+  //! the base type, i.e., Eigen::Matrix
   typedef Eigen::Matrix<PrimType, 3, 3> Base;
  public:
+  //! the implementation type, i.e., Eigen::Matrix
   typedef Base Implementation;
+  //! the scalar type, i.e., the type of the coefficients
   typedef PrimType Scalar;
 
   RotationMatrix()
@@ -308,13 +356,16 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType>>, priv
 typedef RotationMatrix<double> RotationMatrixD;
 typedef RotationMatrix<float> RotationMatrixF;
 
-
+//! Euler angles with X-Y''-Z''' convention
 template<typename PrimType>
 class EulerAnglesRPY : public EulerAnglesRPYBase<EulerAnglesRPY<PrimType>>, private Eigen::Matrix<PrimType, 3, 1> {
  private:
+  //! the base type, i.e., Eigen::Matrix
   typedef Eigen::Matrix<PrimType, 3, 1> Base;
  public:
+  //! the implementation type, i.e., Eigen::Matrix
   typedef Base Implementation;
+  //! the scalar type, i.e., the type of the coefficients
   typedef PrimType Scalar;
 
   EulerAnglesRPY()
@@ -398,29 +449,45 @@ class EulerAnglesRPY : public EulerAnglesRPYBase<EulerAnglesRPY<PrimType>>, priv
 typedef EulerAnglesRPY<double> EulerAnglesRPYD;
 typedef EulerAnglesRPY<float> EulerAnglesRPYF;
 
-
+//! Euler angles with Z-Y''-X''' convention
 template<typename PrimType>
 class EulerAnglesYPR : public EulerAnglesYPRBase<EulerAnglesYPR<PrimType>>, private Eigen::Matrix<PrimType, 3, 1> {
  private:
+  //! the base type, i.e., Eigen::Matrix
   typedef Eigen::Matrix<PrimType, 3, 1> Base;
  public:
+  //! the implementation type, i.e., Eigen::Matrix
   typedef Base Implementation;
+  //! the scalar type, i.e., the type of the coefficients
   typedef PrimType Scalar;
 
+  //! Default constructor initializes all angles with zero
   EulerAnglesYPR()
     : Base(Base::Zero()) {
   }
 
-  EulerAnglesYPR(const Scalar & y, const Scalar & p, const Scalar & r)
-    : Base(y,p,r) {
+  //! Constructor initializes all three angles
+  /*!
+   * \param yaw     yaw angle
+   * \param pitch   pitch angle
+   * \param roll    roll angle
+   */
+  EulerAnglesYPR(const Scalar & yaw, const Scalar & pitch, const Scalar & roll)
+    : Base(yaw,pitch,roll) {
   }
 
-  // create from Eigen::Matrix
+  //! Creates from Eigen::Matrix
+  /*!
+   * \param other   Eigen::Matrix [yaw; pitch; roll]
+   */
   explicit EulerAnglesYPR(const Base & other)
     : Base(other) {
   }
 
-  // create from other rotation
+  //! Creates from other rotation
+  /*!
+   * \param other rotation
+   */
   template<typename OTHER_DERIVED>
   inline explicit EulerAnglesYPR(const Rotation<OTHER_DERIVED> & other)
     : Base(internal::ConversionTraits<EulerAnglesYPR, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other))) {
