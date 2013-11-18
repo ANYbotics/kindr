@@ -259,39 +259,21 @@ TYPED_TEST(RotationsTest, DISABLED_QuaternionToAxisAngle){
   ASSERT_EQ(-this->Z, r1.rotate(this->Z));
 
 
-
-
-//  rot::RotationQuaternionD uqd(Eigen::Quaterniond(0,1,0,0));
-////  rot::UnitQuaternionF uqf(Eigen::Quaterniond(0,1,0,0));
-//  rot::RotationMatrixD Rd(Eigen::Quaterniond(0,1,0,0).toRotationMatrix());
-//
-//  rot::AngleAxisD ad(uqd);
-//  rot::AngleAxisF af(uqd * uqd);
-//
-//  rot::RotationQuaternionD Id(1, 0, 0, 0);
-//  rot::RotationQuaternionD I(0, 1, 0, 0);
-//  rot::RotationQuaternionD J(0, 0, 1, 0);
-//  rot::RotationQuaternionD K(0, 0, 0, 1);
-//  rot::RotationQuaternionD qd(ad);
-//  rot::RotationQuaternionD q5 = I;
-//  rot::RotationQuaternionD q6(I);
-//
-//  rot::AngleAxisD a3 = ad*ad;
-//  rot::RotationQuaternionD q7 = qd*qd;
-//  rot::AngleAxisD a2 = ad*qd;
-//
-//  Eigen::Vector3d v(0, 1, 0);
-//
-//  Eigen::Vector3d vrot = (uqd*uqd).rotate(v);
-//  Eigen::Vector3d vrot2 = (Rd*Rd).rotate(v);
-//  Eigen::Vector3d vrot3 = ad.rotate(v);
-//  Eigen::Vector3d vrot4 = (ad*ad).rotate(v);
-//
-//  std::cout << vrot.transpose() << std::endl;
-//  std::cout << vrot2.transpose() << std::endl;
 }
 
-TEST (RotationsTest, testRotationVarious ) {
+
+TEST (RotationsTest, testRotationWrapper) {
+
+  rot::AngleAxis<double> a1(1,Eigen::Vector3d(1,0,0));
+
+  rot::AngleAxis<double> a2(1,1,0,0);
+
+}
+
+
+
+
+TEST (RotationsTest, DISABLED_testRotationVarious ) {
 
   // todo:
   // go through todos in source code

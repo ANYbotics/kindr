@@ -30,15 +30,9 @@ class ConversionTraits {
 template<typename LEFT, typename RIGHT>
 class MultiplicationTraits {
  public:
-//  inline static LEFT mult(const LEFT & l, const RIGHT & r) {
-//	return dynamic_cast<LEFT>(typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar>(
-//							 (dynamic_cast<const typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar > &> (l)).toImplementation() *
-//							 (dynamic_cast<const typename eigen_implementation::RotationQuaternion<typename RIGHT::Scalar> &> (r)).toImplementation()
-//							 ));
-//  }
   inline static LEFT mult(const LEFT & l, const RIGHT & r) {
 	return LEFT(typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar>(
-		       (typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar >(l)).toImplementation() *
+		       (typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar>(l)).toImplementation() *
 		       (typename eigen_implementation::RotationQuaternion<typename RIGHT::Scalar>(r)).toImplementation()
 		       ));
   }
@@ -112,8 +106,8 @@ class Rotation {
   }
 
   template<typename OTHER_DERIVED>
-  bool operator ==(const Rotation<OTHER_DERIVED> & other) const {
-    return internal::ComparisonTraits<DERIVED>::isequal(this->derived(), (const DERIVED &)other); // todo: 1. ok? 2. may be optimized
+  bool operator ==(const Rotation<OTHER_DERIVED> & other) const { // todo: may be optimized
+    return internal::ComparisonTraits<DERIVED>::isequal(this->derived().getUnique(), DERIVED(other).getUnique()); // the type conversion must already take place here to ensure the specialised isequal function is called more often
   }
 };
 

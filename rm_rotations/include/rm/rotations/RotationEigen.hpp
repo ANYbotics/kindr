@@ -95,8 +95,8 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::Angl
 	return *this;
   }
 
-  const AngleAxis & getUnique() {
-	return AngleAxis(Mod(angle()+M_PI,2*M_PI)-M_PI, axis());
+  AngleAxis getUnique() const {
+	return AngleAxis(rm::common::Mod(angle()+M_PI,2*M_PI)-M_PI, axis()); // todo: also axis?
   }
 
   friend std::ostream & operator << (std::ostream & out, const AngleAxis & a) {
@@ -208,7 +208,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
 	return *this;
   }
 
-  const RotationQuaternion & getUnique() {
+  RotationQuaternion getUnique() const {
 	if(this->w() >= 0) {
 		return *this;
 	} else {
@@ -295,7 +295,7 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType>>, priv
 	  return *this;
   }
 
-  const RotationMatrix & getUnique() {
+  RotationMatrix getUnique() const {
 	return *this;
   }
 
@@ -385,7 +385,7 @@ class EulerAnglesRPY : public EulerAnglesRPYBase<EulerAnglesRPY<PrimType>>, priv
 	  return *this;
   }
 
-  const EulerAnglesRPY & getUnique() {
+  EulerAnglesRPY getUnique() const {
 	return *this; // todo
   }
 
@@ -475,7 +475,7 @@ class EulerAnglesYPR : public EulerAnglesYPRBase<EulerAnglesYPR<PrimType>>, priv
 	  return *this;
   }
 
-  const EulerAnglesYPR & getUnique() {
+  EulerAnglesYPR getUnique() const {
 	return *this; // todo
   }
 
@@ -748,27 +748,13 @@ public:
 };
 
 
+// todo: specify more multiplication traits?
+
 template<typename PrimType>
 class MultiplicationTraits<eigen_implementation::RotationMatrix<PrimType>, eigen_implementation::RotationMatrix<PrimType>> {
 public:
   inline static eigen_implementation::RotationMatrix<PrimType> mult(const eigen_implementation::RotationMatrix<PrimType> & a, const eigen_implementation::RotationMatrix<PrimType> & b) {
     return eigen_implementation::RotationMatrix<PrimType>(a.toImplementation()*b.toImplementation());
-  }
-};
-
-template<typename PrimType>
-class MultiplicationTraits<eigen_implementation::EulerAnglesRPY<PrimType>, eigen_implementation::EulerAnglesRPY<PrimType>> {
-public:
-  inline static eigen_implementation::EulerAnglesRPY<PrimType> mult(const eigen_implementation::EulerAnglesRPY<PrimType> & a, const eigen_implementation::EulerAnglesRPY<PrimType> & b) {
-    return eigen_implementation::EulerAnglesRPY<PrimType>(eigen_implementation::RotationQuaternion<PrimType>(eigen_implementation::RotationQuaternion<PrimType>(a).toImplementation()*eigen_implementation::RotationQuaternion<PrimType>(b).toImplementation()));
-  }
-};
-
-template<typename PrimType>
-class MultiplicationTraits<eigen_implementation::EulerAnglesYPR<PrimType>, eigen_implementation::EulerAnglesYPR<PrimType>> {
-public:
-  inline static eigen_implementation::EulerAnglesYPR<PrimType> mult(const eigen_implementation::EulerAnglesYPR<PrimType> & a, const eigen_implementation::EulerAnglesYPR<PrimType> & b) {
-    return eigen_implementation::EulerAnglesYPR<PrimType>(eigen_implementation::RotationQuaternion<PrimType>(eigen_implementation::RotationQuaternion<PrimType>(a).toImplementation()*eigen_implementation::RotationQuaternion<PrimType>(b).toImplementation()));
   }
 };
 
@@ -825,8 +811,8 @@ template<typename PrimType>
 class ComparisonTraits<eigen_implementation::AngleAxis<PrimType>> {
  public:
    inline static bool isequal(const eigen_implementation::AngleAxis<PrimType> & a, const eigen_implementation::AngleAxis<PrimType> & b){
-     return (a.toImplementation().angle() ==  b.toImplementation().angle() && a.toImplementation().axis() ==  b.toImplementation().axis()) ||
-            (a.toImplementation().angle() == -b.toImplementation().angle() && a.toImplementation().axis() == -b.toImplementation().axis());
+     return a.toImplementation().angle() ==  b.toImplementation().angle() &&
+    		a.toImplementation().axis()  ==  b.toImplementation().axis();
    }
 };
 
@@ -834,14 +820,10 @@ template<typename PrimType>
 class ComparisonTraits<eigen_implementation::RotationQuaternion<PrimType>> {
  public:
    inline static bool isequal(const eigen_implementation::RotationQuaternion<PrimType> & a, const eigen_implementation::RotationQuaternion<PrimType> & b){
-     return (a.toImplementation().w() ==  b.toImplementation().w() &&
-             a.toImplementation().x() ==  b.toImplementation().x() &&
-             a.toImplementation().y() ==  b.toImplementation().y() &&
-             a.toImplementation().z() ==  b.toImplementation().z()) ||
-            (a.toImplementation().w() == -b.toImplementation().w() &&
-             a.toImplementation().x() == -b.toImplementation().x() &&
-             a.toImplementation().y() == -b.toImplementation().y() &&
-             a.toImplementation().z() == -b.toImplementation().z());
+     return a.toImplementation().w() ==  b.toImplementation().w() &&
+            a.toImplementation().x() ==  b.toImplementation().x() &&
+            a.toImplementation().y() ==  b.toImplementation().y() &&
+            a.toImplementation().z() ==  b.toImplementation().z();
    }
 };
 
