@@ -31,6 +31,8 @@ include_directories(include)
 include_directories(../rm_common/include)
 include_directories(../rm_quaternions/include)
 
+add_executable( rot_example  ./src/example.cpp)
+
 #if (TEST)
 ################################
 # Unit Tests
