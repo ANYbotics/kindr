@@ -349,17 +349,17 @@ TEST (RotationsTest, testRotationVarious ) {
 
   std::cout << a0*a0 << std::endl;
   std::cout << q0*q0 << std::endl;
-//  std::cout << R0*R0 << std::endl;
-//  std::cout << rpy0*rpy0 << std::endl;
-//  std::cout << ypr0*ypr0 << std::endl;
-//  std::cout << std::endl;
-//
-//  std::cout << a0*q0 << std::endl;
-//  std::cout << q0*q0 << std::endl;
-//  std::cout << R0*q0 << std::endl;
-//  std::cout << rpy0*q0 << std::endl;
-//  std::cout << ypr0*q0 << std::endl;
-//  std::cout << std::endl;
+  std::cout << R0*R0 << std::endl;
+  std::cout << rpy0*rpy0 << std::endl;
+  std::cout << ypr0*ypr0 << std::endl;
+  std::cout << std::endl;
+
+  std::cout << a0*q0 << std::endl;
+  std::cout << q0*q0 << std::endl;
+  std::cout << R0*q0 << std::endl;
+  std::cout << rpy0*q0 << std::endl;
+  std::cout << ypr0*q0 << std::endl;
+  std::cout << std::endl;
 
   std::cout << a0.inverse() << std::endl;
   std::cout << q0.inverse() << std::endl;

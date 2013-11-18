@@ -30,11 +30,17 @@ class ConversionTraits {
 template<typename LEFT, typename RIGHT>
 class MultiplicationTraits {
  public:
-//  inline static LEFT mult(const LEFT &l, const RIGHT &r) {
-//    return LEFT(typename LEFT::Implementation(l.toImplementation() * ((const LEFT &)r).toImplementation())); // does not work in every situation
+//  inline static LEFT mult(const LEFT & l, const RIGHT & r) {
+//	return dynamic_cast<LEFT>(typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar>(
+//							 (dynamic_cast<const typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar > &> (l)).toImplementation() *
+//							 (dynamic_cast<const typename eigen_implementation::RotationQuaternion<typename RIGHT::Scalar> &> (r)).toImplementation()
+//							 ));
 //  }
-  inline static LEFT mult(const LEFT &l, const RIGHT &r) {
-    return LEFT(typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar>((((const typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar> &)l).toImplementation() * ((const typename eigen_implementation::RotationQuaternion<typename RIGHT::Scalar> &)r).toImplementation())));
+  inline static LEFT mult(const LEFT & l, const RIGHT & r) {
+	return LEFT(typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar>(
+		       (typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar >(l)).toImplementation() *
+		       (typename eigen_implementation::RotationQuaternion<typename RIGHT::Scalar>(r)).toImplementation()
+		       ));
   }
 };
 
