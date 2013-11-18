@@ -123,6 +123,7 @@ namespace eigen_implementation {
 #ifdef NDEBUG
 #define ASSERT_MATRIX_NEAR(A, B, TOL, MESSAGE)
 #define ASSERT_SCALAR_NEAR(A, B, TOL, MESSAGE)
+#define PRINT(MESSAGE)
 #else
 #define ASSERT_MATRIX_NEAR(A, B, TOL, MESSAGE) \
   if((A).rows() == (B).rows() && (A).cols() == (B).cols()) \
@@ -161,6 +162,7 @@ namespace eigen_implementation {
     std::cout << "Scalar2 = " << (B) << std::endl; \
     exit(-1); \
   }
+#define PRINT(MESSAGE) std::cout << MESSAGE << std::endl;
 #endif
 
 } // namespace eigen_implementation

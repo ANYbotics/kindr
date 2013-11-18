@@ -176,10 +176,10 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>>, publ
   template<typename PrimTypeIn>
   UnitQuaternion & operator ()(const Quaternion<PrimTypeIn> & quat) {
 //		*this = (UnitQuaternion)quat;
-	this->w() = quat.w();
-	this->x() = quat.x();
-	this->y() = quat.y();
-	this->z() = quat.z();
+	this->w() = static_cast<PrimType>(quat.w());
+	this->x() = static_cast<PrimType>(quat.x());
+	this->y() = static_cast<PrimType>(quat.y());
+	this->z() = static_cast<PrimType>(quat.z());
     ASSERT_SCALAR_NEAR(norm(), 1, 1e-6, "Input quaternion has not unit length.");
 	return *this;
   }

@@ -331,7 +331,7 @@ TEST (RotationsTest, testRotationVarious ) {
 
   rot::AngleAxis<double> a0(1,1,0,0);
   rot::RotationQuaternion<double> q0(1,0,0,0);
-  rot::RotationMatrix<double> R0(0,1,0,1,0,0,0,0,1);
+  rot::RotationMatrix<double> R0(0,-1,0,1,0,0,0,0,1);
   rot::EulerAnglesRPY<double> rpy0(1,-2,3);
   rot::EulerAnglesYPR<double> ypr0(-1,3,2);
 
@@ -349,17 +349,17 @@ TEST (RotationsTest, testRotationVarious ) {
 
   std::cout << a0*a0 << std::endl;
   std::cout << q0*q0 << std::endl;
-  std::cout << R0*R0 << std::endl;
-  std::cout << rpy0*rpy0 << std::endl;
-  std::cout << ypr0*ypr0 << std::endl;
-  std::cout << std::endl;
-
-  std::cout << a0*q0 << std::endl;
-  std::cout << q0*q0 << std::endl;
-  std::cout << R0*q0 << std::endl;
-  std::cout << rpy0*q0 << std::endl;
-  std::cout << ypr0*q0 << std::endl;
-  std::cout << std::endl;
+//  std::cout << R0*R0 << std::endl;
+//  std::cout << rpy0*rpy0 << std::endl;
+//  std::cout << ypr0*ypr0 << std::endl;
+//  std::cout << std::endl;
+//
+//  std::cout << a0*q0 << std::endl;
+//  std::cout << q0*q0 << std::endl;
+//  std::cout << R0*q0 << std::endl;
+//  std::cout << rpy0*q0 << std::endl;
+//  std::cout << ypr0*q0 << std::endl;
+//  std::cout << std::endl;
 
   std::cout << a0.inverse() << std::endl;
   std::cout << q0.inverse() << std::endl;
@@ -427,6 +427,7 @@ TEST (RotationsTest, testRotationVarious ) {
   std::cout << std::endl;
 
   std::cout << R0.matrix() << std::endl;
+  std::cout << R0.determinant() << std::endl;
   std::cout << std::endl;
 
   std::cout << rpy0.roll() << std::endl;

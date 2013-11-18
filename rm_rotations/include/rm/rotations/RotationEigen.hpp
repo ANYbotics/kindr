@@ -34,15 +34,18 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::Angl
 
   AngleAxis(const Scalar & chi, const Scalar & v1, const Scalar & v2, const Scalar & v3)
     : Base(chi,Vector3(v1,v2,v3)) {
+	ASSERT_SCALAR_NEAR(this->axis().norm(), 1, 1e-6, "Input rotation axis has not unit length.");
   }
 
   AngleAxis(const Scalar & chi, const Vector3 & v)
     : Base(chi,v) {
+	ASSERT_SCALAR_NEAR(this->axis().norm(), 1, 1e-6, "Input rotation axis has not unit length.");
   }
 
   // create from Eigen::AngleAxis
   explicit AngleAxis(const Base & other)
     : Base(other) {
+	ASSERT_SCALAR_NEAR(this->axis().norm(), 1, 1e-6, "Input rotation axis has not unit length.");
   }
 
   // create from other rotation
@@ -744,6 +747,14 @@ public:
   }
 };
 
+
+template<typename PrimType>
+class MultiplicationTraits<eigen_implementation::RotationMatrix<PrimType>, eigen_implementation::RotationMatrix<PrimType>> {
+public:
+  inline static eigen_implementation::RotationMatrix<PrimType> mult(const eigen_implementation::RotationMatrix<PrimType> & a, const eigen_implementation::RotationMatrix<PrimType> & b) {
+    return eigen_implementation::RotationMatrix<PrimType>(a.toImplementation()*b.toImplementation());
+  }
+};
 
 template<typename PrimType>
 class MultiplicationTraits<eigen_implementation::EulerAnglesRPY<PrimType>, eigen_implementation::EulerAnglesRPY<PrimType>> {
