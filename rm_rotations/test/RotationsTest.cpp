@@ -1,7 +1,8 @@
 #include <gtest/gtest.h>
 
 #include "rm/common/Common.hpp"
-#include "rm/rotations/RotationEigenFunctions.hpp"
+#include "rm/rotations/RotationEigen.hpp"
+#include "rm/quaternions/QuaternionEigen.hpp"
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
@@ -185,10 +186,8 @@ TEST (RotationsTest, DISABLED_testRotationFunctions ) {
 }
 
 
-#include <rm/quaternions/QuaternionEigen.hpp>
-#include <rm/rotations/RotationEigen.hpp>
-
 namespace rot = rm::rotations::eigen_implementation;
+namespace quat = rm::quaternions::eigen_implementation;
 
 template <typename RotationImplementation>
 struct RotationsTest : public ::testing::Test  {
@@ -264,10 +263,127 @@ TYPED_TEST(RotationsTest, DISABLED_QuaternionToAxisAngle){
 
 TEST (RotationsTest, testRotationWrapper) {
 
-  rot::AngleAxis<double> a1(1,Eigen::Vector3d(1,0,0));
+  sm::random::seed(static_cast<unsigned int>(std::time(nullptr)));
 
-  rot::AngleAxis<double> a2(1,1,0,0);
+  for(int i=0; i<1e4; i++)
+  {
+	double p0 = sm::random::randLU(-100,100);
+	double p1 = sm::random::randLU(-100,100);
+	double p2 = sm::random::randLU(-100,100);
+	double p3 = sm::random::randLU(-100,100);
+	quat::QuaternionD q(p0,p1,p2,p3);
+	rot::RotationQuaternionD rq(q.toUnitQuaternion());
 
+	rot::EulerAnglesRPYD rpy(rq);
+	ASSERT_GE(rpy.roll(),  0);
+	ASSERT_LE(rpy.roll(),  M_PI);
+	ASSERT_GE(rpy.pitch(),-M_PI);
+	ASSERT_LE(rpy.pitch(), M_PI);
+	ASSERT_GE(rpy.yaw(),  -M_PI);
+	ASSERT_LE(rpy.yaw(),   M_PI);
+
+	rot::EulerAnglesYPRD ypr(rq);
+	ASSERT_GE(ypr.yaw(),   0);
+	ASSERT_LE(ypr.yaw(),   M_PI);
+	ASSERT_GE(ypr.pitch(),-M_PI);
+	ASSERT_LE(ypr.pitch(), M_PI);
+	ASSERT_GE(ypr.roll(), -M_PI);
+	ASSERT_LE(ypr.roll(),  M_PI);
+
+//	rot::EulerAnglesRPYD rpy_unit;
+//	rot::EulerAnglesRPYD rpy_unit_pi;
+//	rpy_unit_pi.roll()  = M_PI;
+//	rpy_unit_pi.pitch() = M_PI;
+//	rpy_unit_pi.yaw()   = M_PI;
+//	rot::RotationMatrixD rot_unit(rpy_unit);
+//	rot::RotationMatrixD rot_unit_pi(rpy_unit_pi);
+//	ASSERT_DOUBLE_MX_EQ(rot_unit.toImplementation(), rot_unit_pi.toImplementation(), 1e-6, "rot_unit");
+
+//	rot::EulerAnglesRPYD rpy_mod(rq);
+//	rpy_mod.roll()  = rpy.roll()  + M_PI;
+//	rpy_mod.pitch() = rpy.pitch() + M_PI;
+//	rpy_mod.yaw()   = rpy.yaw()   + M_PI;
+//	rot::RotationMatrixD rot(rpy);
+//	rot::RotationMatrixD rot_mod(rpy_mod);
+//	ASSERT_DOUBLE_MX_EQ(rot.toImplementation(), rot_mod.toImplementation(), 1e-6, "rot");
+
+//	rot::EulerAnglesRPYD rpy_mod(rq);
+//	if(rpy.pitch() >= M_PI/2)
+//	{
+//	  if(rpy.roll() >= 0) {
+//		rpy.roll() -= M_PI;
+//	  } else {
+//		rpy.roll() += M_PI;
+//	  }
+//
+//      rpy.pitch() = -(rpy.pitch()-M_PI);
+//
+//      if(rpy.yaw() >= 0) {
+//    	rpy.yaw() -= M_PI;
+//      } else {
+//    	rpy.yaw() += M_PI;
+//      }
+//	}
+//	else
+//	if(rpy.pitch() < -M_PI/2)
+//	{
+//	  if(rpy.roll() >= 0) {
+//		rpy.roll() -= M_PI;
+//	  } else {
+//		rpy.roll() += M_PI;
+//	  }
+//
+//	  rpy.pitch() = -(rpy.pitch()+M_PI);
+//
+//	  if(rpy.yaw() >= 0) {
+//		rpy.yaw() -= M_PI;
+//	  } else {
+//		rpy.yaw() += M_PI;
+//	  }
+//	}
+//	rot::RotationMatrixD rot(rpy);
+//	rot::RotationMatrixD rot_mod(rpy_mod);
+//	ASSERT_DOUBLE_MX_EQ(rot.toImplementation(), rot_mod.toImplementation(), 1e-6, "rot");
+
+
+//	rot::EulerAnglesYPRD ypr_mod(rq);
+//	if(ypr.pitch() >= M_PI/2)
+//	{
+//	  if(ypr.yaw() >= 0) {
+//		ypr.yaw() -= M_PI;
+//	  } else {
+//		ypr.yaw() += M_PI;
+//	  }
+//
+//      ypr.pitch() = -(ypr.pitch()-M_PI);
+//
+//	  if(ypr.roll() >= 0) {
+//		ypr.roll() -= M_PI;
+//	  } else {
+//		ypr.roll() += M_PI;
+//	  }
+//	}
+//	else
+//	if(ypr.pitch() < -M_PI/2)
+//	{
+//	  if(ypr.yaw() >= 0) {
+//		ypr.yaw() -= M_PI;
+//	  } else {
+//		ypr.yaw() += M_PI;
+//	  }
+//
+//	  ypr.pitch() = -(ypr.pitch()+M_PI);
+//
+//	  if(ypr.roll() >= 0) {
+//		ypr.roll() -= M_PI;
+//	  } else {
+//		ypr.roll() += M_PI;
+//	  }
+//	}
+//	rot::RotationMatrixD rot(ypr);
+//	rot::RotationMatrixD rot_mod(ypr_mod);
+//	ASSERT_DOUBLE_MX_EQ(rot.toImplementation(), rot_mod.toImplementation(), 1e-6, "rot");
+  }
 }
 
 

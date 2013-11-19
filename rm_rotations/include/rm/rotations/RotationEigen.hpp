@@ -96,7 +96,12 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::Angl
   }
 
   AngleAxis getUnique() const {
-	return AngleAxis(rm::common::Mod(angle()+M_PI,2*M_PI)-M_PI, axis()); // todo: also axis?
+	AngleAxis aa(rm::common::Mod(angle()+M_PI,2*M_PI)-M_PI, axis()); // wraps angle into [-pi,pi)
+	if(aa.angle() >= 0)	{
+		return aa;
+	} else {
+		return AngleAxis(-aa.angle(),-aa.axis());
+	}
   }
 
   friend std::ostream & operator << (std::ostream & out, const AngleAxis & a) {
@@ -210,9 +215,9 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
 
   RotationQuaternion getUnique() const {
 	if(this->w() >= 0) {
-		return *this;
+	  return *this;
 	} else {
-		return RotationQuaternion(-this->w(),-this->x(),-this->y(),-this->z());
+	  return RotationQuaternion(-this->w(),-this->x(),-this->y(),-this->z());
 	}
   }
 
@@ -243,19 +248,21 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType>>, priv
                  const Scalar & r21, const Scalar & r22, const Scalar & r23,
                  const Scalar & r31, const Scalar & r32, const Scalar & r33) {
     *this << r11,r12,r13,r21,r22,r23,r31,r32,r33;
-    ASSERT_MATRIX_NEAR(*this * this->inverse(), Base::Identity(), 1e-6, "Input matrix is not orthogonal.");
+    ASSERT_MATRIX_NEAR(*this * this->transpose(), Base::Identity(), 1e-6, "Input matrix is not orthogonal.");
     ASSERT_SCALAR_NEAR(this->determinant(), 1, 1e-6, "Input matrix determinant is not 1.");
   }
 
   // create from Eigen::Matrix
   explicit RotationMatrix(const Base & other)
-      : Base(other) {
+    : Base(other) {
+	ASSERT_MATRIX_NEAR(other * other.transpose(), Base::Identity(), 1e-6, "Input matrix is not orthogonal.");
+	ASSERT_SCALAR_NEAR(other.determinant(), 1, 1e-6, "Input matrix determinant is not 1.");
   }
 
   // create from other rotation
   template<typename OTHER_DERIVED>
   inline explicit RotationMatrix(const Rotation<OTHER_DERIVED> & other)
-      : Base(internal::ConversionTraits<RotationMatrix, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other))) {
+    : Base(internal::ConversionTraits<RotationMatrix, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other))) {
   }
 
   template<typename OTHER_DERIVED>
@@ -268,8 +275,12 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType>>, priv
     return RotationMatrix(toImplementation().transpose());
   }
 
+  RotationMatrix transpose() const {
+    return RotationMatrix(toImplementation().transpose());
+  }
+
   Scalar determinant() const {
-	  return toImplementation().determinant();
+	return toImplementation().determinant();
   }
 
   inline Implementation & toImplementation() {
@@ -291,8 +302,8 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType>>, priv
   }
 
   RotationMatrix & setIdentity() {
-	  this->Implementation::setIdentity();
-	  return *this;
+	this->Implementation::setIdentity();
+	return *this;
   }
 
   RotationMatrix getUnique() const {
@@ -385,8 +396,44 @@ class EulerAnglesRPY : public EulerAnglesRPYBase<EulerAnglesRPY<PrimType>>, priv
 	  return *this;
   }
 
-  EulerAnglesRPY getUnique() const {
-	return *this; // todo
+  EulerAnglesRPY getUnique() const {  // wraps angles into [-pi,pi),[-pi/2,pi/2),[-pi,pi)
+	EulerAnglesRPY rpy(rm::common::Mod(roll() +M_PI,2*M_PI)-M_PI,
+			           rm::common::Mod(pitch()+M_PI,2*M_PI)-M_PI,
+			           rm::common::Mod(yaw()  +M_PI,2*M_PI)-M_PI); // wraps all angles into [-pi,pi)
+	if(rpy.pitch() >= M_PI/2)
+	{
+	  if(rpy.roll() >= 0) {
+		rpy.roll() -= M_PI;
+	  } else {
+		rpy.roll() += M_PI;
+	  }
+
+      rpy.pitch() = -(rpy.pitch()-M_PI);
+
+      if(rpy.yaw() >= 0) {
+    	rpy.yaw() -= M_PI;
+      } else {
+    	rpy.yaw() += M_PI;
+      }
+	}
+	else
+	if(rpy.pitch() < -M_PI/2)
+	{
+	  if(rpy.roll() >= 0) {
+		rpy.roll() -= M_PI;
+	  } else {
+		rpy.roll() += M_PI;
+	  }
+
+	  rpy.pitch() = -(rpy.pitch()+M_PI);
+
+	  if(rpy.yaw() >= 0) {
+		rpy.yaw() -= M_PI;
+	  } else {
+		rpy.yaw() += M_PI;
+	  }
+	}
+	return rpy;
   }
 
   friend std::ostream & operator << (std::ostream & out, const EulerAnglesRPY & rpy) {
@@ -475,8 +522,44 @@ class EulerAnglesYPR : public EulerAnglesYPRBase<EulerAnglesYPR<PrimType>>, priv
 	  return *this;
   }
 
-  EulerAnglesYPR getUnique() const {
-	return *this; // todo
+  EulerAnglesYPR getUnique() const {  // wraps angles into [-pi,pi),[-pi/2,pi/2),[-pi,pi)
+	EulerAnglesYPR ypr(rm::common::Mod(yaw()  +M_PI,2*M_PI)-M_PI,
+					   rm::common::Mod(pitch()+M_PI,2*M_PI)-M_PI,
+					   rm::common::Mod(roll() +M_PI,2*M_PI)-M_PI); // wraps all angles into [-pi,pi)
+	if(ypr.pitch() >= M_PI/2)
+	{
+	  if(ypr.yaw() >= 0) {
+		ypr.yaw() -= M_PI;
+	  } else {
+		ypr.yaw() += M_PI;
+	  }
+
+      ypr.pitch() = -(ypr.pitch()-M_PI);
+
+	  if(ypr.roll() >= 0) {
+		ypr.roll() -= M_PI;
+	  } else {
+		ypr.roll() += M_PI;
+	  }
+	}
+	else
+	if(ypr.pitch() < -M_PI/2)
+	{
+	  if(ypr.yaw() >= 0) {
+		ypr.yaw() -= M_PI;
+	  } else {
+		ypr.yaw() += M_PI;
+	  }
+
+	  ypr.pitch() = -(ypr.pitch()+M_PI);
+
+	  if(ypr.roll() >= 0) {
+		ypr.roll() -= M_PI;
+	  } else {
+		ypr.roll() += M_PI;
+	  }
+	}
+	return ypr;
   }
 
   friend std::ostream & operator << (std::ostream & out, const EulerAnglesYPR & ypr) {
