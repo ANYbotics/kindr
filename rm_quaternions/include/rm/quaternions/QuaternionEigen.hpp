@@ -47,6 +47,9 @@ namespace eigen_implementation {
 
 //! Implementation of a Quaternion based on Eigen::Quaternion
 /*!
+ * The Hamiltonian convention is used, where
+ * Q = w + x*i + y*j + z*k and i*i=j*j=k*k=ijk=-1.
+ *
  * The following two typedefs are provided for convenience:
  *   - QuaternionF for float
  *   - QuaternionD for double
@@ -64,6 +67,7 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType>>, private Eigen::Q
   //! the scalar type, i.e., the type of the coefficients
   typedef PrimType Scalar;
 
+  //! Default constructor creates a quaternion with all coefficients equal to zero
   Quaternion()
     : Base(Implementation(0,0,0,0)) {
   }
@@ -77,10 +81,14 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType>>, private Eigen::Q
     : Base(other) {
   }
 
+  /*! \returns the inverse of the quaternion
+    */
   Quaternion inverse() const {
     return Quaternion(Base::inverse());
   }
 
+  /*! \returns the conjugate of the quaternion
+    */
   Quaternion conjugate() const {
     return Quaternion(Base::conjugate());
   }
@@ -169,7 +177,9 @@ typedef Quaternion<double> QuaternionD;
 typedef Quaternion<float> QuaternionF;
 
 //! Implementation of a unit quaternion based on Eigen::Quaternion
-/*!
+/*! The Hamiltonian convention is used, where
+ * Q = w + x*i + y*j + z*k and i*i=j*j=k*k=ijk=-1.
+ *
  * The following two typedefs are provided for convenience:
  *   - UnitQuaternionF for float
  *   - UnitQuaternionD for double
@@ -248,10 +258,14 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>>, publ
 //  using UnitQuaternionBase<UnitQuaternion<PrimType>>::conjugate;
 //  using UnitQuaternionBase<UnitQuaternion<PrimType>>::inverse;
 
+  /*! \returns the conjugate of the quaternion
+    */
   UnitQuaternion conjugate() const {
     return UnitQuaternion(Base::conjugate());
   }
 
+  /*! \returns the inverse of the quaternion which is the conjugate for unit quaternions
+    */
   UnitQuaternion inverse() const {
     return UnitQuaternion(Base::conjugate());
   }

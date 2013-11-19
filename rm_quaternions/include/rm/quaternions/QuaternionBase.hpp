@@ -49,7 +49,12 @@ class ComparisonTraits {
 template<typename DERIVED>
 class QuaternionBase {
  public:
+  /*! \returns the inverse of the quaternion
+    */
   DERIVED inverse() const;
+
+  /*! \returns the conjugate of the quaternion
+    */
   DERIVED conjugate() const;
 
   operator DERIVED & () {
