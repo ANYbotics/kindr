@@ -15,7 +15,7 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
-#include "rm/common/Common.hpp"
+#include "rm/common/common.hpp"
 
 namespace rm {
 namespace rotations {

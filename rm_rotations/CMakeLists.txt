@@ -45,19 +45,19 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 include_directories(test)
 
 include_directories(
-	../../schweizer-messer/sm_common/include
-	../../schweizer-messer/sm_eigen/include
-	../../schweizer-messer/sm_random/include
-	../../schweizer-messer/sm_timing/include
+	#../../schweizer-messer/sm_common/include
+	#../../schweizer-messer/sm_eigen/include
+	#../../schweizer-messer/sm_random/include
+	#../../schweizer-messer/sm_timing/include
 )
 set(TEST_SRCS
 	test/test_main.cpp
 	test/RotationsTest.cpp
 	#test/QuaternionsTest.cpp
 	#test/SimulationSubfunctions.cpp
-	../../schweizer-messer/sm_random/src/random.cpp
-	../../schweizer-messer/sm_eigen/src/random.cpp
-	../../schweizer-messer/sm_timing/src/Timer.cpp
+	#../../schweizer-messer/sm_random/src/random.cpp
+	#../../schweizer-messer/sm_eigen/src/random.cpp
+	#../../schweizer-messer/sm_timing/src/Timer.cpp
 )
 
 # Add test cpp file

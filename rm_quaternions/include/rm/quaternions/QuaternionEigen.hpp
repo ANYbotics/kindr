@@ -8,9 +8,9 @@
 #ifndef QUATERNIONEIGEN_HPP_
 #define QUATERNIONEIGEN_HPP_
 
-#include "rm/common/Common.hpp"
+#include "rm/common/common.hpp"
 #include "QuaternionBase.hpp"
-
+#include "rm/common/assert_macros_eigen.hpp"
 #include <Eigen/Geometry>
 
 namespace rm {
@@ -200,13 +200,13 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>> {
    */
   UnitQuaternion(const PrimType & w, const PrimType & x, const PrimType & y, const PrimType & z)
     : uq(w,x,y,z) {
-    ASSERT_SCALAR_NEAR(norm(), 1, 1e-6, "Input quaternion has not unit length.");
+    RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-6, "Input quaternion has not unit length.");
   }
 
   //! Constructor to create unit quaternion from Quaternion
   explicit UnitQuaternion(const Base & other)
     : uq(other.toImplementation()) {
-    ASSERT_SCALAR_NEAR(norm(), 1, 1e-6, "Input quaternion has not unit length.");
+    RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-6, "Input quaternion has not unit length.");
   }
 
   //! Constructor to create unit quaternion from Eigen::Quaternion
@@ -215,7 +215,7 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>> {
    */
   explicit UnitQuaternion(const Implementation & other)
     : uq(other) {
-    ASSERT_SCALAR_NEAR(norm(), 1, 1e-6, "Input quaternion has not unit length.");
+    RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-6, "Input quaternion has not unit length.");
   }
 
   template<typename PrimTypeIn>
@@ -242,7 +242,7 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>> {
 	this->x() = static_cast<PrimType>(other.x());
 	this->y() = static_cast<PrimType>(other.y());
 	this->z() = static_cast<PrimType>(other.z());
-    ASSERT_SCALAR_NEAR(norm(), 1, 1e-6, "Input quaternion has not unit length.");
+    RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-6, "Input quaternion has not unit length.");
 	return *this;
   }
 

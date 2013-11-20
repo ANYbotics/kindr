@@ -8,7 +8,7 @@
 #ifndef ROTATIONBASE_HPP_
 #define ROTATIONBASE_HPP_
 
-#include "rm/common/Common.hpp"
+#include "rm/common/common.hpp"
 #include "rm/quaternions/QuaternionBase.hpp"
 
 namespace rm {

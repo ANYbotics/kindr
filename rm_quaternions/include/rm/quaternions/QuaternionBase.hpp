@@ -8,7 +8,7 @@
 #ifndef QUATERNIONBASE_HPP_
 #define QUATERNIONBASE_HPP_
 
-#include "rm/common/Common.hpp"
+#include "rm/common/common.hpp"
 
 namespace rm {
 /*!

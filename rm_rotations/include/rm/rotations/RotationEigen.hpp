@@ -8,7 +8,8 @@
 #ifndef ROTATIONEIGEN_HPP_
 #define ROTATIONEIGEN_HPP_
 
-#include "rm/common/Common.hpp"
+#include "rm/common/common.hpp"
+#include "rm/common/assert_macros_eigen.hpp"
 #include "rm/quaternions/QuaternionEigen.hpp"
 #include "RotationBase.hpp"
 #include "RotationEigenFunctions.hpp"
@@ -47,7 +48,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType, Usage>, Usage>, priva
    */
   AngleAxis(const Scalar & chi, const Scalar & v1, const Scalar & v2, const Scalar & v3)
     : Base(chi,Vector3(v1,v2,v3)) {
-    ASSERT_SCALAR_NEAR(this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input rotation axis has not unit length.");
+    RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input rotation axis has not unit length.");
   }
 
   //! Constructor initializes the angle and the vector from an Eigen::Vector3
@@ -58,7 +59,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType, Usage>, Usage>, priva
    */
   AngleAxis(const Scalar & chi, const Vector3 & v)
     : Base(chi,v) {
-    ASSERT_SCALAR_NEAR(this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input rotation axis has not unit length.");
+    RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input rotation axis has not unit length.");
   }
 
   //! Constructor initializes from Eigen::AngleAxis
@@ -67,7 +68,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType, Usage>, Usage>, priva
    */
   explicit AngleAxis(const Base & other)
     : Base(other) {
-    ASSERT_SCALAR_NEAR(this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input rotation axis has not unit length.");
+    RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input rotation axis has not unit length.");
   }
 
   //! Constructor initializes from another rotation
@@ -179,7 +180,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
 
   RotationQuaternion(const Scalar & w, const Scalar & x, const Scalar & y, const Scalar & z)
     : Base(w,x,y,z) {
-    ASSERT_SCALAR_NEAR(norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input quaternion has not unit length.");
+    RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input quaternion has not unit length.");
   }
 
 //  wWithRealScalarGreaterOrEqualZero();
@@ -201,7 +202,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
   // create from Eigen::Quaternion
   explicit RotationQuaternion(const Implementation & other)
     : Base(other) {
-    ASSERT_SCALAR_NEAR(norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input quaternion has not unit length.");
+    RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input quaternion has not unit length.");
   }
 
   // create from other rotation
@@ -245,7 +246,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
     this->x() = quat.x();
     this->y() = quat.y();
     this->z() = quat.z();
-    ASSERT_SCALAR_NEAR(norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input quaternion has not unit length.");
+    RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input quaternion has not unit length.");
     return *this;
   }
 
@@ -326,15 +327,15 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType, Usage>
                  const Scalar & r21, const Scalar & r22, const Scalar & r23,
                  const Scalar & r31, const Scalar & r32, const Scalar & r33) {
     *this << r11,r12,r13,r21,r22,r23,r31,r32,r33;
-    ASSERT_MATRIX_NEAR(*this * this->transpose(), Base::Identity(), static_cast<Scalar>(1e-6), "Input matrix is not orthogonal.");
-    ASSERT_SCALAR_NEAR(this->determinant(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input matrix determinant is not 1.");
+    RM_ASSERT_MATRIX_NEAR_DBG(std::runtime_error, *this * this->transpose(), Base::Identity(), static_cast<Scalar>(1e-6), "Input matrix is not orthogonal.");
+    RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->determinant(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input matrix determinant is not 1.");
   }
 
   // create from Eigen::Matrix
   explicit RotationMatrix(const Base & other)
     : Base(other) {
-	ASSERT_MATRIX_NEAR(other * other.transpose(), Base::Identity(), static_cast<Scalar>(1e-6), "Input matrix is not orthogonal.");
-	ASSERT_SCALAR_NEAR(other.determinant(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input matrix determinant is not 1.");
+	RM_ASSERT_MATRIX_NEAR_DBG(std::runtime_error, other * other.transpose(), Base::Identity(), static_cast<Scalar>(1e-6), "Input matrix is not orthogonal.");
+	RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, other.determinant(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input matrix determinant is not 1.");
   }
 
   // create from other rotation

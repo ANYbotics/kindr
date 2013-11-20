@@ -8,12 +8,22 @@
 #include <iostream>
 
 #include <gtest/gtest.h>
-
+#include <rm/common/assert_macros_eigen.hpp>
 #include <rm/quaternions/QuaternionEigen.hpp>
 #include <rm/rotations/RotationEigen.hpp>
 
 namespace quat = rm::quaternions::eigen_implementation;
 namespace rot = rm::rotations::eigen_implementation;
+
+TEST (RotationsTest, testDEBUG ) {
+  Eigen::Vector3d test1(1.0,2.0,3.0);
+  Eigen::Vector3d test2(1.0,2.0,3.0);
+
+  quat::UnitQuaternionD(1,0,0,0);
+  RM_ASSERT_MATRIX_NEAR_DBG(std::runtime_error, test1, test2, 1e-6, "Hello");
+
+}
+
 
 
 template <typename QuaternionImplementation>
@@ -123,9 +133,6 @@ TYPED_TEST (QuaternionsPairsTest, testQuaternionInversion ) {
 	ASSERT_NEAR(TestFixture::quat.generic.inverse().y(), TestFixture::quat.genericInverse.y(),1e-6);
 	ASSERT_NEAR(TestFixture::quat.generic.inverse().z(), TestFixture::quat.genericInverse.z(),1e-6);
 }
-
-
-
 
 
 
