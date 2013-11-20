@@ -21,33 +21,6 @@ namespace rm {
 namespace rotations {
 
 
-// todo: quaternion: check norm with .squaredNorm()
-// todo: increase speed
-// todo: inline static
-
-// 0) Helping Functions
-
-template<typename T>
-static Eigen::Matrix<T,4,1> quaternionToVector(const Eigen::Quaternion<T>& quat)
-{
-  if(quat.w() < 0)
-  {
-    return Eigen::Matrix<T,4,1>(-quat.w(),-quat.x(),-quat.y(),-quat.z());
-  }
-  else
-  {
-    return Eigen::Matrix<T,4,1>(quat.w(),quat.x(),quat.y(),quat.z());
-  }
-}
-
-// wrap angle to [x1..x2)
-template<typename T>
-inline Eigen::AngleAxis<T> wrapAngle(const Eigen::AngleAxis<T>& aa, const T& x1, const T& x2)
-{
-    return Eigen::AngleAxis<T>(common::wrapAngle(aa.angle(),x1,x2), aa.axis());
-}
-
-
 // 1) Output: AngleAxis
 
 template<typename T, typename TReturn = T>
@@ -61,34 +34,34 @@ template<typename T, typename TReturn = T>
 static Eigen::AngleAxis<TReturn> getAngleAxisFromTransformationMatrix(const Eigen::Matrix<T,3,3>& A_IB)
 {
   // Bad precision!
-  return wrapAngle(Eigen::AngleAxis<TReturn>(A_IB.template cast<TReturn>()),-M_PI,M_PI);
+  return Eigen::AngleAxis<TReturn>(A_IB.template cast<TReturn>());
 }
 
 template<typename T, typename TReturn = T>
 static Eigen::AngleAxis<TReturn> getAngleAxisFromRotationMatrix(const Eigen::Matrix<T,3,3>& R_BI)
 {
   // Bad precision!
-  return wrapAngle(Eigen::AngleAxis<TReturn>(R_BI.template cast<TReturn>()),-M_PI,M_PI);
+  return Eigen::AngleAxis<TReturn>(R_BI.template cast<TReturn>());
 }
 
 template<typename T, typename TReturn = T>
 static Eigen::AngleAxis<TReturn> getAngleAxisFromRPY(const Eigen::Matrix<T,3,1>& rpy_BI)
 {
   // Bad precision!
-  return wrapAngle(Eigen::AngleAxis<TReturn>(
+  return Eigen::AngleAxis<TReturn>(
     Eigen::AngleAxis<TReturn>((TReturn)rpy_BI(0), Eigen::Matrix<TReturn, 3, 1>::UnitX()) *
     Eigen::AngleAxis<TReturn>((TReturn)rpy_BI(1), Eigen::Matrix<TReturn, 3, 1>::UnitY()) *
-    Eigen::AngleAxis<TReturn>((TReturn)rpy_BI(2), Eigen::Matrix<TReturn, 3, 1>::UnitZ())),-M_PI,M_PI);
+    Eigen::AngleAxis<TReturn>((TReturn)rpy_BI(2), Eigen::Matrix<TReturn, 3, 1>::UnitZ()));
 }
 
 template<typename T, typename TReturn = T>
 static Eigen::AngleAxis<TReturn> getAngleAxisFromYPR(const Eigen::Matrix<T,3,1>& ypr_BI)
 {
   // Bad precision!
-  return wrapAngle(Eigen::AngleAxis<TReturn>(
+  return Eigen::AngleAxis<TReturn>(
     Eigen::AngleAxis<TReturn>((TReturn)ypr_BI(0), Eigen::Matrix<TReturn, 3, 1>::UnitZ()) *
     Eigen::AngleAxis<TReturn>((TReturn)ypr_BI(1), Eigen::Matrix<TReturn, 3, 1>::UnitY()) *
-    Eigen::AngleAxis<TReturn>((TReturn)ypr_BI(2), Eigen::Matrix<TReturn, 3, 1>::UnitX())),-M_PI,M_PI);
+    Eigen::AngleAxis<TReturn>((TReturn)ypr_BI(2), Eigen::Matrix<TReturn, 3, 1>::UnitX()));
 }
 
 

@@ -30,7 +30,7 @@ class ConversionTraits {
 template<typename LEFT, typename RIGHT>
 class MultiplicationTraits {
  public:
-  inline static LEFT mult(const LEFT & l, const RIGHT & r) {
+  inline static LEFT mult(const LEFT & l, const RIGHT & r) { // todo: improve
 	return LEFT(typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar>(
 		       (typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar>(l)).toImplementation() *
 		       (typename eigen_implementation::RotationQuaternion<typename RIGHT::Scalar>(r)).toImplementation()
@@ -54,9 +54,11 @@ class RotationTraits {
 template<typename ROTATION> // only works with the same rotation representation
 class ComparisonTraits {
  public:
-  inline static bool isequal(const ROTATION & a, const ROTATION & b) {
+  inline static bool areEqual(const ROTATION & a, const ROTATION & b) {
     return a.toImplementation() == b.toImplementation();
   }
+
+//  inline static bool areNearlyEqual(const eigen_implementation::RotationQuaternion<PrimType> & a, const eigen_implementation::RotationQuaternion<PrimType> & b, PrimType tol)
 };
 
 } // namespace internal
@@ -96,7 +98,7 @@ class Rotation {
   }
 
   template <typename internal::get_matrix3X<DERIVED>::IndexType Cols>
-  typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> inverserotate(typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> & m) const {
+  typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> inverseRotate(typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> & m) const {
     return internal::RotationTraits<DERIVED>::rotate(this->derived().inverse(), m); // todo: may be optimized
   }
 
@@ -107,10 +109,24 @@ class Rotation {
 
   template<typename OTHER_DERIVED>
   bool operator ==(const Rotation<OTHER_DERIVED> & other) const { // todo: may be optimized
-    return internal::ComparisonTraits<DERIVED>::isequal(this->derived().getUnique(), DERIVED(other).getUnique()); // the type conversion must already take place here to ensure the specialised isequal function is called more often
+    return internal::ComparisonTraits<DERIVED>::isEqual(this->derived().getUnique(), DERIVED(other).getUnique()); // the type conversion must already take place here to ensure the specialised isequal function is called more often
   }
+
+//  template<typename OTHER_DERIVED>
+//  bool isNear(const Rotation<OTHER_DERIVED> & other, typename DERIVED::Scalar tol) { // todo: may be optimized
+//    return internal::ComparisonTraits<DERIVED>::isNear(typename eigen_implementation::RotationQuaternion<typename DERIVED::Scalar>(this->derived()).getUnique(),
+//                                                       typename eigen_implementation::RotationQuaternion<typename DERIVED::Scalar>(other.derived()).getUnique(),
+//                                                       tol);
+//  }
 };
 
+
+//template<typename DERIVED, typename OTHER_DERIVED>
+//bool isNear(const Rotation<DERIVED> & a, const Rotation<OTHER_DERIVED> & b, typename DERIVED::Scalar tol) { // todo: may be optimized
+//  return internal::ComparisonTraits<DERIVED>::isNear(typename eigen_implementation::RotationQuaternion<typename DERIVED::Scalar>(a.derived()).getUnique(),
+//                                                     typename eigen_implementation::RotationQuaternion<typename DERIVED::Scalar>(b.derived()).getUnique(),
+//                                                     tol);
+//}
 
 
 
@@ -148,19 +164,19 @@ class EulerAnglesBase : public Rotation<Implementation> {
 };
 
 template<typename Implementation>
-class EulerAnglesRPYBase : public EulerAnglesBase<Implementation> {
+class EulerAnglesXYZBase : public EulerAnglesBase<Implementation> {
 
   template<typename OTHER_DERIVED>
-  EulerAnglesRPYBase & operator =(const Rotation<OTHER_DERIVED> & other) {
+  EulerAnglesXYZBase & operator =(const Rotation<OTHER_DERIVED> & other) {
     return *this;
   }
 };
 
 template<typename Implementation>
-class EulerAnglesYPRBase : public EulerAnglesBase<Implementation> {
+class EulerAnglesZYXBase : public EulerAnglesBase<Implementation> {
 
   template<typename OTHER_DERIVED>
-  EulerAnglesYPRBase & operator =(const Rotation<OTHER_DERIVED> & other) {
+  EulerAnglesZYXBase & operator =(const Rotation<OTHER_DERIVED> & other) {
     return *this;
   }
 };

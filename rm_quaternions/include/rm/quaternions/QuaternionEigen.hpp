@@ -101,10 +101,21 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType>>, private Eigen::Q
 
   template<typename PrimTypeIn>
   Quaternion & operator ()(const Quaternion<PrimTypeIn> & quat) {
-	this->w() = static_cast<PrimType>(quat.w());
-	this->x() = static_cast<PrimType>(quat.x());
-	this->y() = static_cast<PrimType>(quat.y());
-	this->z() = static_cast<PrimType>(quat.z());
+	*this = quat.template cast<PrimType>();
+//	this->w() = static_cast<PrimType>(quat.w());
+//	this->x() = static_cast<PrimType>(quat.x());
+//	this->y() = static_cast<PrimType>(quat.y());
+//	this->z() = static_cast<PrimType>(quat.z());
+	return *this;
+  }
+
+  template<typename PrimTypeIn>
+  Quaternion & operator ()(const UnitQuaternion<PrimTypeIn> & quat) {
+	*this = quat.uq.template cast<PrimType>();
+//	this->w() = static_cast<PrimType>(quat.w());
+//	this->x() = static_cast<PrimType>(quat.x());
+//	this->y() = static_cast<PrimType>(quat.y());
+//	this->z() = static_cast<PrimType>(quat.z());
 	return *this;
   }
 
@@ -115,8 +126,8 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType>>, private Eigen::Q
     return static_cast<const Base &>(*this);
   }
 
-//  using QuaternionBase<Quaternion<PrimType>>::operator==;
-//  using QuaternionBase<Quaternion<PrimType>>::operator*;
+  using QuaternionBase<Quaternion<PrimType>>::operator==;
+  using QuaternionBase<Quaternion<PrimType>>::operator*;
 
   inline PrimType w() const {
     return Base::w();
@@ -166,11 +177,6 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType>>, private Eigen::Q
   UnitQuaternion<PrimType> toUnitQuaternion() const {
 	return UnitQuaternion<PrimType>(this->Implementation::normalized());
   }
-
-  friend std::ostream & operator << (std::ostream & out, const Quaternion & quat) {
-    out << quat.w() << " " << quat.x() << " " << quat.y() << " " << quat.z();
-    return out;
-  }
 };
 
 typedef Quaternion<double> QuaternionD;
@@ -188,8 +194,9 @@ typedef Quaternion<float> QuaternionF;
  * \see rm::rotations::eigen_implementation::RotationQuaternion for quaternions that represent a rotation
  */
 template<typename PrimType>
-class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>>, public Quaternion<PrimType> {
+class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>> {
  private:
+  Quaternion<PrimType> uq;
   typedef Quaternion<PrimType> Base;
  public:
   //! the implementation type, i.e., Eigen::Quaternion<>
@@ -197,9 +204,10 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>>, publ
   //! the scalar type, i.e., the type of the coefficients
   typedef PrimType Scalar;
 
+
   //! Default Constructor initializes the unit quaternion to identity
   UnitQuaternion()
-    : Base(Implementation::Identity()) {
+    : uq(Implementation::Identity()) {
   }
 
   //! Constructor to create unit quaternion from coefficients
@@ -210,13 +218,13 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>>, publ
    * \param   z   vector index 3
    */
   UnitQuaternion(const PrimType & w, const PrimType & x, const PrimType & y, const PrimType & z)
-    : Base(w,x,y,z) {
+    : uq(w,x,y,z) {
     ASSERT_SCALAR_NEAR(norm(), 1, 1e-6, "Input quaternion has not unit length.");
   }
 
   //! Constructor to create unit quaternion from Quaternion
   explicit UnitQuaternion(const Base & other)
-    : Base(other) {
+    : uq(other.toImplementation()) {
     ASSERT_SCALAR_NEAR(norm(), 1, 1e-6, "Input quaternion has not unit length.");
   }
 
@@ -225,35 +233,75 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>>, publ
    * \param other Eigen::Quaternion
    */
   explicit UnitQuaternion(const Implementation & other)
-    : Base(other) {
+    : uq(other) {
     ASSERT_SCALAR_NEAR(norm(), 1, 1e-6, "Input quaternion has not unit length.");
   }
 
   template<typename PrimTypeIn>
   UnitQuaternion & operator =(const UnitQuaternion<PrimTypeIn> & other) {
-    this->w() = static_cast<PrimType>(other.w());
-    this->x() = static_cast<PrimType>(other.x());
-    this->y() = static_cast<PrimType>(other.y());
-    this->z() = static_cast<PrimType>(other.z());
+	uq = other.template cast<PrimType>();
+//    this->w() = static_cast<PrimType>(other.w());
+//    this->x() = static_cast<PrimType>(other.x());
+//    this->y() = static_cast<PrimType>(other.y());
+//    this->z() = static_cast<PrimType>(other.z());
     return *this;
   }
 
   template<typename PrimTypeIn>
   UnitQuaternion & operator ()(const UnitQuaternion<PrimTypeIn> & quat) {
-	*this = static_cast<UnitQuaternion>(quat);
+	uq = quat.template cast<PrimType>();
 	return *this;
   }
 
   template<typename PrimTypeIn>
   UnitQuaternion & operator ()(const Quaternion<PrimTypeIn> & quat) {
 //		*this = (UnitQuaternion)quat;
-	this->w() = static_cast<PrimType>(quat.w());
-	this->x() = static_cast<PrimType>(quat.x());
-	this->y() = static_cast<PrimType>(quat.y());
-	this->z() = static_cast<PrimType>(quat.z());
+	uq = quat.template cast<PrimType>();
     ASSERT_SCALAR_NEAR(norm(), 1, 1e-6, "Input quaternion has not unit length.");
 	return *this;
   }
+
+  UnitQuaternion<PrimType> operator *(const UnitQuaternion<PrimType> & other) {
+	  return UnitQuaternion<PrimType>(this->uq * other.uq);
+  }
+
+  Quaternion<PrimType> operator *(const Quaternion<PrimType> & other) {
+	  return Quaternion<PrimType>(this->uq * other);
+  }
+
+  inline PrimType w() const {
+    return uq.w();
+  }
+
+  inline PrimType x() const {
+    return uq.x();
+  }
+
+  inline PrimType y() const {
+    return uq.y();
+  }
+
+  inline PrimType z() const {
+    return uq.z();
+  }
+
+  inline PrimType & w() { // todo: attention: no assertion for unitquaternions!
+    return uq.w();
+  }
+
+  inline PrimType & x() {
+    return uq.x();
+  }
+
+  inline PrimType & y() {
+    return uq.y();
+  }
+
+  inline PrimType & z() {
+    return uq.z();
+  }
+
+//  using Base::operator*;
 
 //  using UnitQuaternionBase<UnitQuaternion<PrimType>>::conjugate;
 //  using UnitQuaternionBase<UnitQuaternion<PrimType>>::inverse;
@@ -261,17 +309,22 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>>, publ
   /*! \returns the conjugate of the quaternion
     */
   UnitQuaternion conjugate() const {
-    return UnitQuaternion(Base::conjugate());
+    return UnitQuaternion(uq.conjugate());
   }
 
-  /*! \returns the inverse of the quaternion which is the conjugate for unit quaternions
-    */
-  UnitQuaternion inverse() const {
-    return UnitQuaternion(Base::conjugate());
+//  /*! \returns the inverse of the quaternion which is the conjugate for unit quaternions
+//    */
+//  UnitQuaternion inverse() const {
+//    return UnitQuaternion(Base::conjugate());
+//  }
+
+  PrimType norm() const {
+	return uq.norm();
   }
 
-  using Base::norm;
-  using Base::toImplementation;
+  const Implementation & toImplementation() {
+	return uq;
+  }
 };
 
 typedef UnitQuaternion<double> UnitQuaternionD;
@@ -279,15 +332,15 @@ typedef UnitQuaternion<float> UnitQuaternionF;
 
 
 
-template<typename PrimType>
-Quaternion<PrimType> operator *(const Quaternion<PrimType> & a, const Quaternion<PrimType> & b) {
-  return internal::MultiplicationTraits<Quaternion<PrimType>, Quaternion<PrimType>>::mult(a, b);
-}
-
-template<typename PrimType>
-bool operator ==(const Quaternion<PrimType> & a, const Quaternion<PrimType> & b) {
-  return internal::ComparisonTraits<Quaternion<PrimType>>::isequal((Quaternion<PrimType>)a, (Quaternion<PrimType>)b);
-}
+//template<typename PrimType>
+//Quaternion<PrimType> operator *(const Quaternion<PrimType> & a, const Quaternion<PrimType> & b) {
+//  return internal::MultiplicationTraits<Quaternion<PrimType>, Quaternion<PrimType>>::mult(a, b);
+//}
+//
+//template<typename PrimType>
+//bool operator ==(const Quaternion<PrimType> & a, const Quaternion<PrimType> & b) {
+//  return internal::ComparisonTraits<Quaternion<PrimType>>::isequal((Quaternion<PrimType>)a, (Quaternion<PrimType>)b);
+//}
 
 
 } // namespace eigen_implementation
@@ -307,7 +360,7 @@ public:
 template<typename PrimType>
 class ComparisonTraits<eigen_implementation::Quaternion<PrimType>> {
  public:
-   inline static bool isequal(const eigen_implementation::Quaternion<PrimType> & a, const eigen_implementation::Quaternion<PrimType> & b){
+   inline static bool isEqual(const eigen_implementation::Quaternion<PrimType> & a, const eigen_implementation::Quaternion<PrimType> & b){
      return (a.w() ==  b.w() &&
              a.x() ==  b.x() &&
              a.y() ==  b.y() &&

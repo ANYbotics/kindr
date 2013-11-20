@@ -68,16 +68,20 @@ class QuaternionBase {
     return static_cast<const DERIVED &>(*this);
   }
 
-//  template<typename OTHER_DERIVED>
-//  DERIVED operator *(const QuaternionBase<OTHER_DERIVED> & other) const {
-//    return internal::MultiplicationTraits<DERIVED, OTHER_DERIVED>::mult((DERIVED)*this, (DERIVED)other);
-//  }
+  template<typename OTHER_DERIVED>
+  DERIVED operator *(const QuaternionBase<OTHER_DERIVED> & other) const {
+    return internal::MultiplicationTraits<DERIVED, OTHER_DERIVED>::mult(this->derived(), static_cast<DERIVED>(other));
+  }
 
-//  template<typename OTHER_DERIVED> // todo: ambiguous for eigen_implementation::UnitQuaternion (inheritance diamond)
-//  bool operator ==(const QuaternionBase<OTHER_DERIVED> & other) const {
-//    return internal::ComparisonTraits<DERIVED>::isequal((DERIVED)*this, (DERIVED)other); // cast to Quaternion
-//  }
+  template<typename OTHER_DERIVED>
+  bool operator ==(const QuaternionBase<OTHER_DERIVED> & other) const {
+    return internal::ComparisonTraits<DERIVED>::isEqual(this->derived(), static_cast<DERIVED>(other)); // cast to Quaternion
+  }
 
+  friend std::ostream & operator << (std::ostream & out, const QuaternionBase<DERIVED> & quat) {
+    out << quat.derived().w() << " " << quat.derived().x() << " " << quat.derived().y() << " " << quat.derived().z();
+    return out;
+  }
 };
 
 
@@ -90,15 +94,11 @@ class UnitQuaternionBase : public QuaternionBase<DERIVED> {
  public:
   typedef QuaternionBase<DERIVED> Base;
 
-//  todo: how is it possible to use this?
-//  DERIVED conjugate() const {
-//    return DERIVED::conjugate();
-//  }
-//
-//  DERIVED inverse() const {
-//    return DERIVED::conjugate();
-//  }
+  DERIVED conjugate() const;
 
+  DERIVED inverse() const {
+    return Base::derived().conjugate();
+  }
 };
 
 
