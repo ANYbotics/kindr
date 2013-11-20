@@ -31,9 +31,11 @@ include_directories(include)
 include_directories(../rm_common/include)
 include_directories(../rm_quaternions/include)
 
-add_executable( rot_example  ./src/example.cpp)
+add_executable( rot_example EXCLUDE_FROM_ALL ./src/example.cpp)
+ADD_CUSTOM_TARGET(demo_rotations rot_example DEPENDS rot_example) 
 
-#if (TEST)
+ 
+if (BUILD_GTEST)
 ################################
 # Unit Tests
 ################################
@@ -61,8 +63,9 @@ set(TEST_SRCS
 )
 
 # Add test cpp file
-add_executable( runUnitTestsRotations  ${TEST_SRCS})
+add_executable( runUnitTestsRotations ${TEST_SRCS})
 # Link test executable against gtest & gtest_main
-target_link_libraries(runUnitTestsRotations  gtest_main gtest pthread  ${PROJECT_NAME} )
-add_test( runUnitTestsRotations runUnitTestsRotations )
-#endif()
+target_link_libraries(runUnitTestsRotations gtest_main gtest pthread  ${PROJECT_NAME} )
+add_test(runUnitTestsRotations runUnitTestsRotations )
+ADD_CUSTOM_TARGET(test_rotations runUnitTestsRotations DEPENDS runUnitTestsRotations) 
+endif()

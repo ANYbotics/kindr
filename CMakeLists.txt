@@ -28,8 +28,13 @@ set(CMAKE_BUILD_TYPE Debug)
 add_definitions(-std=c++0x)
 SET(CMAKE_BUILD_TYPE Debug)
 
-ADD_SUBDIRECTORY (gtest gtest)
-enable_testing()
+
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/gtest/")
+	message(STATUS "Building GTests!")
+	option(BUILD_GTEST "build gtest" ON)
+	add_subdirectory(gtest gtest)
+	enable_testing()
+endif()
 
 # Add CMake module path
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
@@ -45,3 +50,6 @@ add_subdirectory(rm_rotations)
 
 # Add Doxygen documentation
 add_subdirectory(rm_doc)
+
+ADD_CUSTOM_TARGET(demo DEPENDS demo_rotations)
+
