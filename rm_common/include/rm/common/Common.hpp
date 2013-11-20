@@ -33,9 +33,15 @@ class UnitQuaternion;
 } // namespace quaternions
 
 namespace rotations {
+
+enum class RotationUsage {
+	ACTIVE,
+	PASSIVE
+};
+
 namespace eigen_implementation {
 
-template<typename PrimType>
+template<typename PrimType, enum RotationUsage Usage>
 class RotationQuaternion;
 
 } // namespace eigen_implementation

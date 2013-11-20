@@ -8,6 +8,7 @@
 #ifndef QUATERNIONBASE_HPP_
 #define QUATERNIONBASE_HPP_
 
+#include "rm/common/Common.hpp"
 
 namespace rm {
 /*!
@@ -27,17 +28,20 @@ class ConversionTraits {
 template<typename LEFT, typename RIGHT>
 class MultiplicationTraits {
  public:
-  inline static LEFT mult(const LEFT &l, const RIGHT &r){
-    return LEFT(typename LEFT::Implementation(l.toImplementation() * r.toImplementation()));
+  inline static typename LEFT::Implementation mult(const LEFT &l, const RIGHT &r){
+    return typename LEFT::Implementation(l.toImplementation() * r.toImplementation());
   }
 };
 
 template<typename QUATERNION>
 class ComparisonTraits {
-// public:
-//  inline static bool isequal(const QUATERNION & a, const QUATERNION & b) {
-//    return a.toImplementation() == b.toImplemenentation();
-//  }
+ public:
+  inline static bool isEqual(const QUATERNION & a, const QUATERNION & b){
+    return (a.w() ==  b.w() &&
+	        a.x() ==  b.x() &&
+	        a.y() ==  b.y() &&
+	        a.z() ==  b.z());
+  }
 };
 
 } // namespace internal
@@ -70,8 +74,13 @@ class QuaternionBase {
 
   template<typename OTHER_DERIVED>
   DERIVED operator *(const QuaternionBase<OTHER_DERIVED> & other) const {
-    return internal::MultiplicationTraits<DERIVED, OTHER_DERIVED>::mult(this->derived(), static_cast<DERIVED>(other));
+    return DERIVED(internal::MultiplicationTraits<DERIVED, OTHER_DERIVED>::mult(this->derived(), other.derived()));
   }
+
+//  template<typename OTHER_DERIVED>
+//  DERIVED operator *(const QuaternionBase<OTHER_DERIVED> & other) const {
+//    return internal::MultiplicationTraits<DERIVED, OTHER_DERIVED>::mult(this->derived(), static_cast<DERIVED>(other));
+//  }
 
   template<typename OTHER_DERIVED>
   bool operator ==(const QuaternionBase<OTHER_DERIVED> & other) const {
@@ -98,6 +107,16 @@ class UnitQuaternionBase : public QuaternionBase<DERIVED> {
 
   DERIVED inverse() const {
     return Base::derived().conjugate();
+  }
+
+  template<typename OTHER_DERIVED>
+  DERIVED operator *(const UnitQuaternionBase<OTHER_DERIVED> & other) const {
+    return DERIVED(internal::MultiplicationTraits<DERIVED, OTHER_DERIVED>::mult(this->derived(), other.derived()));
+  }
+
+  template<typename OTHER_DERIVED>
+  OTHER_DERIVED operator *(const QuaternionBase<OTHER_DERIVED> & other) const {
+    return OTHER_DERIVED(internal::MultiplicationTraits<DERIVED, OTHER_DERIVED>::mult(this->derived(), other.derived()));
   }
 };
 

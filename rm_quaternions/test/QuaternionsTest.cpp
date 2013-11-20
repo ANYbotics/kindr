@@ -131,9 +131,9 @@ TYPED_TEST (QuaternionsPairsTest, testQuaternionInversion ) {
 
 TEST (RotationsTest, testQuaternionVarious ) {
 
-  rot::RotationQuaternion<double> rquat1(0,0,0,1);
-  rot::RotationQuaternion<double> rquat2(rquat1);
-  rot::RotationQuaternion<double> rquat3;
+  rot::RotationQuaternionPD rquat1(0,0,0,1);
+  rot::RotationQuaternionPD rquat2(rquat1);
+  rot::RotationQuaternionPD rquat3;
   rquat3 = rquat1;
   std::cout << rquat1 << std::endl;
   std::cout << rquat2 << std::endl;
@@ -171,11 +171,11 @@ TEST (RotationsTest, testQuaternionVarious ) {
   std::cout << (quat1==quat2) << std::endl;
   std::cout << std::endl;
 
-  std::cout << rquat1*uquat2 << std::endl;
-  std::cout << rquat1*quat2 << std::endl;
+  std::cout << rquat1.toUnitQuaternion()*uquat2 << std::endl;
+  std::cout << rquat1.toUnitQuaternion()*quat2 << std::endl;
   std::cout << uquat1*quat2 << std::endl;
-  std::cout << (rquat1==uquat2) << std::endl;
-  std::cout << (rquat1==quat2) << std::endl;
+  std::cout << (rquat1.toUnitQuaternion()==uquat2) << std::endl;
+  std::cout << (rquat1.toUnitQuaternion()==quat2) << std::endl;
   std::cout << (uquat1==quat2) << std::endl;
   std::cout << std::endl;
 

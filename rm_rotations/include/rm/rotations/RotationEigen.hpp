@@ -19,8 +19,8 @@ namespace rotations {
 namespace eigen_implementation {
 
 //!  Angle-axis rotation
-template<typename PrimType>
-class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::AngleAxis<PrimType> {
+template<typename PrimType, enum RotationUsage Usage>
+class AngleAxis : public AngleAxisBase<AngleAxis<PrimType, Usage>, Usage>, private Eigen::AngleAxis<PrimType> {
  private:
   //! the base type, i.e., Eigen::AngleAxis
   typedef Eigen::AngleAxis<PrimType> Base;
@@ -47,7 +47,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::Angl
    */
   AngleAxis(const Scalar & chi, const Scalar & v1, const Scalar & v2, const Scalar & v3)
     : Base(chi,Vector3(v1,v2,v3)) {
-    ASSERT_SCALAR_NEAR(this->axis().norm(), 1, 1e-6, "Input rotation axis has not unit length.");
+    ASSERT_SCALAR_NEAR(this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input rotation axis has not unit length.");
   }
 
   //! Constructor initializes the angle and the vector from an Eigen::Vector3
@@ -58,7 +58,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::Angl
    */
   AngleAxis(const Scalar & chi, const Vector3 & v)
     : Base(chi,v) {
-    ASSERT_SCALAR_NEAR(this->axis().norm(), 1, 1e-6, "Input rotation axis has not unit length.");
+    ASSERT_SCALAR_NEAR(this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input rotation axis has not unit length.");
   }
 
   //! Constructor initializes from Eigen::AngleAxis
@@ -67,7 +67,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::Angl
    */
   explicit AngleAxis(const Base & other)
     : Base(other) {
-    ASSERT_SCALAR_NEAR(this->axis().norm(), 1, 1e-6, "Input rotation axis has not unit length.");
+    ASSERT_SCALAR_NEAR(this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input rotation axis has not unit length.");
   }
 
   //! Constructor initializes from another rotation
@@ -75,12 +75,12 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::Angl
    * \param other   other rotation
    */
   template<typename OTHER_DERIVED>
-  inline explicit AngleAxis(const Rotation<OTHER_DERIVED> & other)
+  inline explicit AngleAxis(const RotationBase<OTHER_DERIVED, Usage> & other)
     : Base(internal::ConversionTraits<AngleAxis, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other))) {
   }
 
   template<typename OTHER_DERIVED>
-  AngleAxis & operator =(const Rotation<OTHER_DERIVED> & other) {
+  AngleAxis & operator =(const RotationBase<OTHER_DERIVED, Usage> & other) {
     *this = internal::ConversionTraits<AngleAxis, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other));
     return *this;
   }
@@ -103,7 +103,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::Angl
     return static_cast<const Base &>(*this);
   }
 
-  using AngleAxisBase<AngleAxis<PrimType>>::operator*; // otherwise ambiguous RotationBase and Eigen
+  using AngleAxisBase<AngleAxis<PrimType, Usage>, Usage>::operator*; // otherwise ambiguous RotationBase and Eigen
 
   /*! \returns the rotation angle
    */
@@ -131,8 +131,8 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::Angl
   }
 
   AngleAxis & setIdentity() {
-	this->angle() = 0;
-	this->axis() << 1,0,0;
+	this->angle() = static_cast<Scalar>(0);
+	this->axis() << static_cast<Scalar>(1), static_cast<Scalar>(0), static_cast<Scalar>(0);
 	return *this;
   }
 
@@ -151,14 +151,19 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType>>, private Eigen::Angl
   }
 };
 //! Angle-axis rotation with double
-typedef AngleAxis<double> AngleAxisD;
+typedef AngleAxis<double, RotationUsage::ACTIVE>  AngleAxisAD;
 //! Angle-axis rotation with float
-typedef AngleAxis<float> AngleAxisF;
+typedef AngleAxis<float,  RotationUsage::ACTIVE>  AngleAxisAF;
+//! Angle-axis rotation with double
+typedef AngleAxis<double, RotationUsage::PASSIVE> AngleAxisPD;
+//! Angle-axis rotation with float
+typedef AngleAxis<float,  RotationUsage::PASSIVE> AngleAxisPF;
+
 
 
 //! Quaternion rotation
-template<typename PrimType>
-class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<PrimType>>, public quaternions::eigen_implementation::UnitQuaternion<PrimType> {
+template<typename PrimType, enum RotationUsage Usage>
+class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<PrimType, Usage>, Usage>, public quaternions::eigen_implementation::UnitQuaternion<PrimType> {
  private:
   //! the base type, i.e., quaternions::eigen_implementation::UnitQuaternion
   typedef quaternions::eigen_implementation::UnitQuaternion<PrimType> Base;
@@ -174,69 +179,74 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
 
   RotationQuaternion(const Scalar & w, const Scalar & x, const Scalar & y, const Scalar & z)
     : Base(w,x,y,z) {
-    ASSERT_SCALAR_NEAR(norm(), 1, 1e-6, "Input quaternion has not unit length.");
+    ASSERT_SCALAR_NEAR(norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input quaternion has not unit length.");
   }
 
 //  wWithRealScalarGreaterOrEqualZero();
 //  xWithRealScalarGreaterOrEqualZero();
 //  yWithRealScalarGreaterOrEqualZero();
 
-//  const quaternions::eigen_implementation::UnitQuaternion<PrimType> & getUnitQuaternion() const;
-//  quaternions::eigen_implementation::UnitQuaternion<PrimType> getUnitQuaternionWithRealScalarGreaterOrEqualZero() const;
+//  const quaternions::eigen_implementation::UnitQuaternion<PrimType, Usage> & getUnitQuaternion() const;
+//  quaternions::eigen_implementation::UnitQuaternion<PrimType, Usage> getUnitQuaternionWithRealScalarGreaterOrEqualZero() const;
 
   // create from UnitQuaternion
   explicit RotationQuaternion(const Base & other)
     : Base(other) {
   }
 
+  Base toUnitQuaternion() const {
+    return Base(*this);
+  }
+
   // create from Eigen::Quaternion
   explicit RotationQuaternion(const Implementation & other)
     : Base(other) {
-    ASSERT_SCALAR_NEAR(norm(), 1, 1e-6, "Input quaternion has not unit length.");
+    ASSERT_SCALAR_NEAR(norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input quaternion has not unit length.");
   }
 
   // create from other rotation
   template<typename OTHER_DERIVED>
-  inline explicit RotationQuaternion(const Rotation<OTHER_DERIVED> & other)
+  inline explicit RotationQuaternion(const RotationBase<OTHER_DERIVED, Usage> & other)
     : Base(internal::ConversionTraits<RotationQuaternion, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other))) {
   }
 
   template<typename PrimTypeIn>
   RotationQuaternion & operator =(const quaternions::eigen_implementation::UnitQuaternion<PrimTypeIn> & quat) {
-	this->w() = quat.w();
-	this->x() = quat.x();
-	this->y() = quat.y();
-	this->z() = quat.z();
+    this->w() = quat.w();
+    this->x() = quat.x();
+    this->y() = quat.y();
+    this->z() = quat.z();
     return *this;
   }
 
   template<typename OTHER_DERIVED>
-  RotationQuaternion & operator =(const Rotation<OTHER_DERIVED> & other) {
-    RotationQuaternion result = internal::ConversionTraits<RotationQuaternion, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other));
-    this->w() = result.w();
-    this->x() = result.x();
-    this->y() = result.y();
-    this->z() = result.z();
+  RotationQuaternion & operator =(const RotationBase<OTHER_DERIVED, Usage> & other) {
+    *this = internal::ConversionTraits<RotationQuaternion, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other));
+//    RotationQuaternion result = internal::ConversionTraits<RotationQuaternion, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other));
+//    this->w() = result.w();
+//    this->x() = result.x();
+//    this->y() = result.y();
+//    this->z() = result.z();
     return *this;
   }
 
   template<typename PrimTypeIn>
   RotationQuaternion & operator ()(const quaternions::eigen_implementation::UnitQuaternion<PrimTypeIn> & quat) {
-	this->w() = quat.w();
-	this->x() = quat.x();
-	this->y() = quat.y();
-	this->z() = quat.z();
-	return *this;
+    this->w() = quat.w();
+    this->x() = quat.x();
+    this->y() = quat.y();
+    this->z() = quat.z();
+    return *this;
   }
 
   template<typename PrimTypeIn>
   RotationQuaternion & operator ()(const quaternions::eigen_implementation::Quaternion<PrimTypeIn> & quat) {
-	this->w() = quat.w();
-	this->x() = quat.x();
-	this->y() = quat.y();
-	this->z() = quat.z();
-    ASSERT_SCALAR_NEAR(norm(), 1, 1e-6, "Input quaternion has not unit length.");
-	return *this;
+    this->w() = quat.w();
+    this->x() = quat.x();
+    this->y() = quat.y();
+    this->z() = quat.z();
+    ASSERT_SCALAR_NEAR(norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input quaternion has not unit length.");
+    return *this;
   }
 
 //  using Base::inverse(); // todo: will have Base as output
@@ -251,36 +261,54 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
 
   RotationQuaternion & setIdentity() {
 //	  this->Implementation::setIdentity(); // inaccessible
-	this->w() = static_cast<Scalar>(1); // todo
-	this->x() = 0;
-	this->y() = 0;
-	this->z() = 0;
-	return *this;
+    this->w() = static_cast<Scalar>(1); // todo
+    this->x() = static_cast<Scalar>(0);
+    this->y() = static_cast<Scalar>(0);
+    this->z() = static_cast<Scalar>(0);
+    return *this;
   }
 
   RotationQuaternion getUnique() const {
-	if(this->w() >= 0) {
-	  return *this;
-	} else {
-	  return RotationQuaternion(-this->w(),-this->x(),-this->y(),-this->z());
-	}
+    if(this->w() >= 0) {
+      return *this;
+    } else {
+      return RotationQuaternion(-this->w(),-this->x(),-this->y(),-this->z());
+    }
   }
 
   using Base::norm;
   using Base::toImplementation;
 
-  using Base::operator *;
-  using Base::operator ==;
-//  using RotationQuaternionBase<RotationQuaternion<PrimType>>::operator*; // otherwise ambiguous RotationBase and QuaternionBase
-//  using RotationQuaternionBase<RotationQuaternion<PrimType>>::operator==; // otherwise ambiguous RotationBase and Eigen
+//  using Base::operator *;
+  using RotationQuaternionBase<RotationQuaternion<PrimType, Usage>, Usage> ::operator *;
+  using RotationQuaternionBase<RotationQuaternion<PrimType, Usage>, Usage> ::operator ==;
+
+
+
+
+//  bool operator ==(const quaternions::eigen_implementation::UnitQuaternion<PrimType> & other) {
+//    return Base::operator == (static_cast<const Base &>(other));
+//  }
+
+//  RotationQuaternion operator *(const quaternions::eigen_implementation::Quaternion<PrimType> & other) const {
+//	  return RotationQuaternion(Base::operator*(other));
+//  }
+
+//  using Base::operator ==;
+//  using RotationQuaternionBase<RotationQuaternion<PrimType, Usage>>::operator*; // otherwise ambiguous RotationBase and QuaternionBase
+//  using RotationQuaternionBase<RotationQuaternion<PrimType, Usage>>::operator==; // otherwise ambiguous RotationBase and Eigen
 };
 
-typedef RotationQuaternion<double> RotationQuaternionD;
-typedef RotationQuaternion<float> RotationQuaternionF;
+typedef RotationQuaternion<double, RotationUsage::ACTIVE>  RotationQuaternionAD;
+typedef RotationQuaternion<float,  RotationUsage::ACTIVE>  RotationQuaternionAF;
+typedef RotationQuaternion<double, RotationUsage::PASSIVE> RotationQuaternionPD;
+typedef RotationQuaternion<float,  RotationUsage::PASSIVE> RotationQuaternionPF;
+
+
 
 //! Rotation matrix
-template<typename PrimType>
-class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType>>, private Eigen::Matrix<PrimType, 3, 3> {
+template<typename PrimType, enum RotationUsage Usage>
+class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType, Usage>, Usage>, private Eigen::Matrix<PrimType, 3, 3> {
  private:
   //! the base type, i.e., Eigen::Matrix
   typedef Eigen::Matrix<PrimType, 3, 3> Base;
@@ -298,25 +326,25 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType>>, priv
                  const Scalar & r21, const Scalar & r22, const Scalar & r23,
                  const Scalar & r31, const Scalar & r32, const Scalar & r33) {
     *this << r11,r12,r13,r21,r22,r23,r31,r32,r33;
-    ASSERT_MATRIX_NEAR(*this * this->transpose(), Base::Identity(), 1e-6, "Input matrix is not orthogonal.");
-    ASSERT_SCALAR_NEAR(this->determinant(), 1, 1e-6, "Input matrix determinant is not 1.");
+    ASSERT_MATRIX_NEAR(*this * this->transpose(), Base::Identity(), static_cast<Scalar>(1e-6), "Input matrix is not orthogonal.");
+    ASSERT_SCALAR_NEAR(this->determinant(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input matrix determinant is not 1.");
   }
 
   // create from Eigen::Matrix
   explicit RotationMatrix(const Base & other)
     : Base(other) {
-	ASSERT_MATRIX_NEAR(other * other.transpose(), Base::Identity(), 1e-6, "Input matrix is not orthogonal.");
-	ASSERT_SCALAR_NEAR(other.determinant(), 1, 1e-6, "Input matrix determinant is not 1.");
+	ASSERT_MATRIX_NEAR(other * other.transpose(), Base::Identity(), static_cast<Scalar>(1e-6), "Input matrix is not orthogonal.");
+	ASSERT_SCALAR_NEAR(other.determinant(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input matrix determinant is not 1.");
   }
 
   // create from other rotation
   template<typename OTHER_DERIVED>
-  inline explicit RotationMatrix(const Rotation<OTHER_DERIVED> & other)
+  inline explicit RotationMatrix(const RotationBase<OTHER_DERIVED, Usage> & other)
     : Base(internal::ConversionTraits<RotationMatrix, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other))) {
   }
 
   template<typename OTHER_DERIVED>
-  RotationMatrix & operator =(const Rotation<OTHER_DERIVED> & other) {
+  RotationMatrix & operator =(const RotationBase<OTHER_DERIVED, Usage> & other) {
     *this = internal::ConversionTraits<RotationMatrix, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other));
     return *this;
   }
@@ -340,8 +368,8 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType>>, priv
     return static_cast<const Implementation &>(*this);
   }
 
-  using RotationMatrixBase<RotationMatrix<PrimType>>::operator*; // otherwise ambiguous RotationBase and Eigen
-  using RotationMatrixBase<RotationMatrix<PrimType>>::operator==; // otherwise ambiguous RotationBase and Eigen
+  using RotationMatrixBase<RotationMatrix<PrimType, Usage>, Usage>::operator*; // otherwise ambiguous RotationBase and Eigen
+  using RotationMatrixBase<RotationMatrix<PrimType, Usage>, Usage>::operator==; // otherwise ambiguous RotationBase and Eigen
 
   inline const Implementation & matrix() const {
     return toImplementation();
@@ -366,12 +394,16 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType>>, priv
   }
 };
 
-typedef RotationMatrix<double> RotationMatrixD;
-typedef RotationMatrix<float> RotationMatrixF;
+typedef RotationMatrix<double, RotationUsage::ACTIVE>  RotationMatrixAD;
+typedef RotationMatrix<float,  RotationUsage::ACTIVE>  RotationMatrixAF;
+typedef RotationMatrix<double, RotationUsage::PASSIVE> RotationMatrixPD;
+typedef RotationMatrix<float,  RotationUsage::PASSIVE> RotationMatrixPF;
+
+
 
 //! Euler angles with X-Y''-Z''' convention
-template<typename PrimType>
-class EulerAnglesXYZ : public EulerAnglesXYZBase<EulerAnglesXYZ<PrimType>>, private Eigen::Matrix<PrimType, 3, 1> {
+template<typename PrimType, enum RotationUsage Usage>
+class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType, Usage>, Usage>, private Eigen::Matrix<PrimType, 3, 1> {
  private:
   //! the base type, i.e., Eigen::Matrix
   typedef Eigen::Matrix<PrimType, 3, 1> Base;
@@ -381,33 +413,33 @@ class EulerAnglesXYZ : public EulerAnglesXYZBase<EulerAnglesXYZ<PrimType>>, priv
   //! the scalar type, i.e., the type of the coefficients
   typedef PrimType Scalar;
 
-  EulerAnglesXYZ()
+  EulerAnglesXyz()
     : Base(Base::Zero()) {
   }
 
-  EulerAnglesXYZ(const Scalar & r, const Scalar & p, const Scalar & y)
+  EulerAnglesXyz(const Scalar & r, const Scalar & p, const Scalar & y)
     : Base(r,p,y) {
   }
 
   // create from Eigen::Matrix
-  explicit EulerAnglesXYZ(const Base & other)
+  explicit EulerAnglesXyz(const Base & other)
     : Base(other) {
   }
 
   // create from other rotation
   template<typename OTHER_DERIVED>
-  inline explicit EulerAnglesXYZ(const Rotation<OTHER_DERIVED> & other)
-    : Base(internal::ConversionTraits<EulerAnglesXYZ, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other))) {
+  inline explicit EulerAnglesXyz(const RotationBase<OTHER_DERIVED, Usage> & other)
+    : Base(internal::ConversionTraits<EulerAnglesXyz, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other))) {
   }
 
   template<typename OTHER_DERIVED>
-  EulerAnglesXYZ & operator =(const Rotation<OTHER_DERIVED> & other) {
-    *this = internal::ConversionTraits<EulerAnglesXYZ, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other));
+  EulerAnglesXyz & operator =(const RotationBase<OTHER_DERIVED, Usage> & other) {
+    *this = internal::ConversionTraits<EulerAnglesXyz, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other));
     return *this;
   }
 
-  EulerAnglesXYZ inverse() const {
-    return (EulerAnglesXYZ)getInverseRPY<PrimType, PrimType>(*this);
+  EulerAnglesXyz inverse() const {
+    return (EulerAnglesXyz)getInverseRpy<PrimType, PrimType>(*this);
   }
 
   inline Base & toImplementation() {
@@ -417,8 +449,8 @@ class EulerAnglesXYZ : public EulerAnglesXYZBase<EulerAnglesXYZ<PrimType>>, priv
     return static_cast<const Base &>(*this);
   }
 
-  using EulerAnglesXYZBase<EulerAnglesXYZ<PrimType>>::operator*; // otherwise ambiguous RotationBase and Eigen
-  using EulerAnglesXYZBase<EulerAnglesXYZ<PrimType>>::operator==; // otherwise ambiguous RotationBase and Eigen
+  using EulerAnglesXyzBase<EulerAnglesXyz<PrimType, Usage>, Usage>::operator*; // otherwise ambiguous RotationBase and Eigen
+  using EulerAnglesXyzBase<EulerAnglesXyz<PrimType, Usage>, Usage>::operator==; // otherwise ambiguous RotationBase and Eigen
 
   inline Scalar roll() const {
     return toImplementation()(0);
@@ -444,13 +476,13 @@ class EulerAnglesXYZ : public EulerAnglesXYZBase<EulerAnglesXYZ<PrimType>>, priv
     return toImplementation()(2);
   }
 
-  EulerAnglesXYZ & setIdentity() {
+  EulerAnglesXyz & setIdentity() {
 	  this->Implementation::setZero();
 	  return *this;
   }
 
-  EulerAnglesXYZ getUnique() const {  // wraps angles into [-pi,pi),[-pi/2,pi/2),[-pi,pi)
-	EulerAnglesXYZ rpy(rm::common::Mod(roll() +M_PI,2*M_PI)-M_PI,
+  EulerAnglesXyz getUnique() const {  // wraps angles into [-pi,pi),[-pi/2,pi/2),[-pi,pi)
+	EulerAnglesXyz rpy(rm::common::Mod(roll() +M_PI,2*M_PI)-M_PI,
 			           rm::common::Mod(pitch()+M_PI,2*M_PI)-M_PI,
 			           rm::common::Mod(yaw()  +M_PI,2*M_PI)-M_PI); // wraps all angles into [-pi,pi)
 	if(rpy.pitch() >= M_PI/2)
@@ -489,24 +521,30 @@ class EulerAnglesXYZ : public EulerAnglesXYZBase<EulerAnglesXYZ<PrimType>>, priv
 	return rpy;
   }
 
-  friend std::ostream & operator << (std::ostream & out, const EulerAnglesXYZ & rpy) {
+  friend std::ostream & operator << (std::ostream & out, const EulerAnglesXyz & rpy) {
     out << rpy.toImplementation().transpose();
     return out;
   }
 };
 
-typedef EulerAnglesXYZ<double> EulerAnglesXYZD;
-typedef EulerAnglesXYZ<float> EulerAnglesXYZF;
+typedef EulerAnglesXyz<double, RotationUsage::ACTIVE>  EulerAnglesXyzAD;
+typedef EulerAnglesXyz<float,  RotationUsage::ACTIVE>  EulerAnglesXyzAF;
+typedef EulerAnglesXyz<double, RotationUsage::PASSIVE> EulerAnglesXyzPD;
+typedef EulerAnglesXyz<float,  RotationUsage::PASSIVE> EulerAnglesXyzPF;
 
-template <typename PrimType>
-using EulerAnglesRPY = EulerAnglesXYZ<PrimType>;
-typedef EulerAnglesRPY<double> EulerAnglesRPYD;
-typedef EulerAnglesRPY<float> EulerAnglesRPYF;
+template <typename PrimType, enum RotationUsage Usage>
+using EulerAnglesRpy = EulerAnglesXyz<PrimType, Usage>;
+
+typedef EulerAnglesRpy<double, RotationUsage::ACTIVE>  EulerAnglesRpyAD;
+typedef EulerAnglesRpy<float,  RotationUsage::ACTIVE>  EulerAnglesRpyAF;
+typedef EulerAnglesRpy<double, RotationUsage::PASSIVE> EulerAnglesRpyPD;
+typedef EulerAnglesRpy<float,  RotationUsage::PASSIVE> EulerAnglesRpyPF;
+
 
 
 //! Euler angles with Z-Y''-X''' convention
-template<typename PrimType>
-class EulerAnglesZYX : public EulerAnglesZYXBase<EulerAnglesZYX<PrimType>>, private Eigen::Matrix<PrimType, 3, 1> {
+template<typename PrimType, enum RotationUsage Usage>
+class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType, Usage>, Usage>, private Eigen::Matrix<PrimType, 3, 1> {
  private:
   //! the base type, i.e., Eigen::Matrix
   typedef Eigen::Matrix<PrimType, 3, 1> Base;
@@ -517,7 +555,7 @@ class EulerAnglesZYX : public EulerAnglesZYXBase<EulerAnglesZYX<PrimType>>, priv
   typedef PrimType Scalar;
 
   //! Default constructor initializes all angles with zero
-  EulerAnglesZYX()
+  EulerAnglesZyx()
     : Base(Base::Zero()) {
   }
 
@@ -527,7 +565,7 @@ class EulerAnglesZYX : public EulerAnglesZYXBase<EulerAnglesZYX<PrimType>>, priv
    * \param pitch   pitch angle
    * \param roll    roll angle
    */
-  EulerAnglesZYX(const Scalar & yaw, const Scalar & pitch, const Scalar & roll)
+  EulerAnglesZyx(const Scalar & yaw, const Scalar & pitch, const Scalar & roll)
     : Base(yaw,pitch,roll) {
   }
 
@@ -535,7 +573,7 @@ class EulerAnglesZYX : public EulerAnglesZYXBase<EulerAnglesZYX<PrimType>>, priv
   /*!
    * \param other   Eigen::Matrix [yaw; pitch; roll]
    */
-  explicit EulerAnglesZYX(const Base & other)
+  explicit EulerAnglesZyx(const Base & other)
     : Base(other) {
   }
 
@@ -544,18 +582,18 @@ class EulerAnglesZYX : public EulerAnglesZYXBase<EulerAnglesZYX<PrimType>>, priv
    * \param other rotation
    */
   template<typename OTHER_DERIVED>
-  inline explicit EulerAnglesZYX(const Rotation<OTHER_DERIVED> & other)
-    : Base(internal::ConversionTraits<EulerAnglesZYX, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other))) {
+  inline explicit EulerAnglesZyx(const RotationBase<OTHER_DERIVED, Usage> & other)
+    : Base(internal::ConversionTraits<EulerAnglesZyx, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other))) {
   }
 
   template<typename OTHER_DERIVED>
-  EulerAnglesZYX & operator =(const Rotation<OTHER_DERIVED> & other) {
-    *this = internal::ConversionTraits<EulerAnglesZYX, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other));
+  EulerAnglesZyx & operator =(const RotationBase<OTHER_DERIVED, Usage> & other) {
+    *this = internal::ConversionTraits<EulerAnglesZyx, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other));
     return *this;
   }
 
-  EulerAnglesZYX inverse() const {
-    return (EulerAnglesZYX)getInverseYPR<PrimType, PrimType>(*this);
+  EulerAnglesZyx inverse() const {
+    return (EulerAnglesZyx)getInverseYpr<PrimType, PrimType>(*this);
   }
 
   inline Base & toImplementation() {
@@ -565,8 +603,8 @@ class EulerAnglesZYX : public EulerAnglesZYXBase<EulerAnglesZYX<PrimType>>, priv
     return static_cast<const Base &>(*this);
   }
 
-  using EulerAnglesZYXBase<EulerAnglesZYX<PrimType>>::operator*; // otherwise ambiguous RotationBase and Eigen
-  using EulerAnglesZYXBase<EulerAnglesZYX<PrimType>>::operator==; // otherwise ambiguous RotationBase and Eigen
+  using EulerAnglesZyxBase<EulerAnglesZyx<PrimType, Usage>, Usage>::operator*; // otherwise ambiguous RotationBase and Eigen
+  using EulerAnglesZyxBase<EulerAnglesZyx<PrimType, Usage>, Usage>::operator==; // otherwise ambiguous RotationBase and Eigen
 
   inline Scalar yaw() const {
     return toImplementation()(0);
@@ -592,13 +630,13 @@ class EulerAnglesZYX : public EulerAnglesZYXBase<EulerAnglesZYX<PrimType>>, priv
     return toImplementation()(2);
   }
 
-  EulerAnglesZYX & setIdentity() {
+  EulerAnglesZyx & setIdentity() {
 	  this->Implementation::setZero();
 	  return *this;
   }
 
-  EulerAnglesZYX getUnique() const {  // wraps angles into [-pi,pi),[-pi/2,pi/2),[-pi,pi)
-	EulerAnglesZYX ypr(rm::common::Mod(yaw()  +M_PI,2*M_PI)-M_PI,
+  EulerAnglesZyx getUnique() const {  // wraps angles into [-pi,pi),[-pi/2,pi/2),[-pi,pi)
+	EulerAnglesZyx ypr(rm::common::Mod(yaw()  +M_PI,2*M_PI)-M_PI,
 					   rm::common::Mod(pitch()+M_PI,2*M_PI)-M_PI,
 					   rm::common::Mod(roll() +M_PI,2*M_PI)-M_PI); // wraps all angles into [-pi,pi)
 	if(ypr.pitch() >= M_PI/2)
@@ -637,20 +675,24 @@ class EulerAnglesZYX : public EulerAnglesZYXBase<EulerAnglesZYX<PrimType>>, priv
 	return ypr;
   }
 
-  friend std::ostream & operator << (std::ostream & out, const EulerAnglesZYX & ypr) {
+  friend std::ostream & operator << (std::ostream & out, const EulerAnglesZyx & ypr) {
     out << ypr.toImplementation().transpose();
     return out;
   }
 };
 
-typedef EulerAnglesZYX<double> EulerAnglesZYXD;
-typedef EulerAnglesZYX<float> EulerAnglesZYXF;
+typedef EulerAnglesZyx<double, RotationUsage::ACTIVE>  EulerAnglesZyxAD;
+typedef EulerAnglesZyx<float,  RotationUsage::ACTIVE>  EulerAnglesZyxAF;
+typedef EulerAnglesZyx<double, RotationUsage::PASSIVE> EulerAnglesZyxPD;
+typedef EulerAnglesZyx<float,  RotationUsage::PASSIVE> EulerAnglesZyxPF;
 
-template <typename PrimType>
-using EulerAnglesYPR = EulerAnglesZYX<PrimType>;
-typedef EulerAnglesYPR<double> EulerAnglesYPRD;
-typedef EulerAnglesYPR<float> EulerAnglesYPRF;
+template <typename PrimType, enum RotationUsage Usage>
+using EulerAnglesYpr = EulerAnglesZyx<PrimType, Usage>;
 
+typedef EulerAnglesYpr<double, RotationUsage::ACTIVE>  EulerAnglesYprAD;
+typedef EulerAnglesYpr<float,  RotationUsage::ACTIVE>  EulerAnglesYprAF;
+typedef EulerAnglesYpr<double, RotationUsage::PASSIVE> EulerAnglesYprPD;
+typedef EulerAnglesYpr<float,  RotationUsage::PASSIVE> EulerAnglesYprPF;
 
 
 } // namespace eigen_implementation
@@ -659,8 +701,8 @@ typedef EulerAnglesYPR<float> EulerAnglesYPRF;
 namespace internal {
 
 
-template<typename PrimType>
-class get_matrix3X<eigen_implementation::AngleAxis<PrimType>>{
+template<typename PrimType, enum RotationUsage Usage>
+class get_matrix3X<eigen_implementation::AngleAxis<PrimType, Usage>>{
  public:
   typedef int  IndexType;
 
@@ -668,8 +710,8 @@ class get_matrix3X<eigen_implementation::AngleAxis<PrimType>>{
   using Matrix3X = Eigen::Matrix<PrimType, 3, Cols>;
 };
 
-template<typename PrimType>
-class get_matrix3X<eigen_implementation::RotationQuaternion<PrimType>>{
+template<typename PrimType, enum RotationUsage Usage>
+class get_matrix3X<eigen_implementation::RotationQuaternion<PrimType, Usage>>{
  public:
   typedef int IndexType;
 
@@ -677,8 +719,8 @@ class get_matrix3X<eigen_implementation::RotationQuaternion<PrimType>>{
   using Matrix3X = Eigen::Matrix<PrimType, 3, Cols>;
 };
 
-template<typename PrimType>
-class get_matrix3X<eigen_implementation::RotationMatrix<PrimType>>{
+template<typename PrimType, enum RotationUsage Usage>
+class get_matrix3X<eigen_implementation::RotationMatrix<PrimType, Usage>>{
  public:
   typedef int  IndexType;
 
@@ -686,8 +728,8 @@ class get_matrix3X<eigen_implementation::RotationMatrix<PrimType>>{
   using Matrix3X = Eigen::Matrix<PrimType, 3, Cols>;
 };
 
-template<typename PrimType>
-class get_matrix3X<eigen_implementation::EulerAnglesXYZ<PrimType>>{
+template<typename PrimType, enum RotationUsage Usage>
+class get_matrix3X<eigen_implementation::EulerAnglesXyz<PrimType, Usage>>{
  public:
   typedef int  IndexType;
 
@@ -695,8 +737,8 @@ class get_matrix3X<eigen_implementation::EulerAnglesXYZ<PrimType>>{
   using Matrix3X = Eigen::Matrix<PrimType, 3, Cols>;
 };
 
-template<typename PrimType>
-class get_matrix3X<eigen_implementation::EulerAnglesZYX<PrimType>>{
+template<typename PrimType, enum RotationUsage Usage>
+class get_matrix3X<eigen_implementation::EulerAnglesZyx<PrimType, Usage>>{
  public:
   typedef int  IndexType;
 
@@ -706,294 +748,347 @@ class get_matrix3X<eigen_implementation::EulerAnglesZYX<PrimType>>{
 
 
 
-template<typename DestPrimType, typename SourcePrimType>
-class ConversionTraits<eigen_implementation::AngleAxis<DestPrimType>, eigen_implementation::AngleAxis<SourcePrimType>> {
-public:
-  inline static eigen_implementation::AngleAxis<DestPrimType> convert(const eigen_implementation::AngleAxis<SourcePrimType> & a) {
-    return eigen_implementation::AngleAxis<DestPrimType>(a.toImplementation().template cast<DestPrimType>());
-  }
-};
-
-template<typename DestPrimType, typename SourcePrimType>
-class ConversionTraits<eigen_implementation::AngleAxis<DestPrimType>, eigen_implementation::RotationQuaternion<SourcePrimType>> {
-public:
-  inline static eigen_implementation::AngleAxis<DestPrimType> convert(const eigen_implementation::RotationQuaternion<SourcePrimType> & q) {
-    return eigen_implementation::AngleAxis<DestPrimType>(getAngleAxisFromQuaternion<SourcePrimType, DestPrimType>(q.toImplementation()));
-  }
-};
-
-template<typename DestPrimType, typename SourcePrimType>
-class ConversionTraits<eigen_implementation::AngleAxis<DestPrimType>, eigen_implementation::RotationMatrix<SourcePrimType>> {
-public:
-  inline static eigen_implementation::AngleAxis<DestPrimType> convert(const eigen_implementation::RotationMatrix<SourcePrimType> & R) {
-    return eigen_implementation::AngleAxis<DestPrimType>(getAngleAxisFromRotationMatrix<SourcePrimType, DestPrimType>(R.toImplementation()));
-  }
-};
-
-template<typename DestPrimType, typename SourcePrimType>
-class ConversionTraits<eigen_implementation::AngleAxis<DestPrimType>, eigen_implementation::EulerAnglesXYZ<SourcePrimType>> {
-public:
-  inline static eigen_implementation::AngleAxis<DestPrimType> convert(const eigen_implementation::EulerAnglesXYZ<SourcePrimType> & rpy) {
-    return eigen_implementation::AngleAxis<DestPrimType>(getAngleAxisFromRPY<SourcePrimType, DestPrimType>(rpy.toImplementation()));
-  }
-};
-
-template<typename DestPrimType, typename SourcePrimType>
-class ConversionTraits<eigen_implementation::AngleAxis<DestPrimType>, eigen_implementation::EulerAnglesZYX<SourcePrimType>> {
-public:
-  inline static eigen_implementation::AngleAxis<DestPrimType> convert(const eigen_implementation::EulerAnglesZYX<SourcePrimType> & ypr) {
-    return eigen_implementation::AngleAxis<DestPrimType>(getAngleAxisFromYPR<SourcePrimType, DestPrimType>(ypr.toImplementation()));
-  }
-};
-
-
-template<typename DestPrimType, typename SourcePrimType>
-class ConversionTraits<eigen_implementation::RotationQuaternion<DestPrimType>, eigen_implementation::AngleAxis<SourcePrimType>> {
-public:
-  inline static eigen_implementation::RotationQuaternion<DestPrimType> convert(const eigen_implementation::AngleAxis<SourcePrimType> & aa) {
-    return eigen_implementation::RotationQuaternion<DestPrimType>(getQuaternionFromAngleAxis<SourcePrimType, DestPrimType>(aa.toImplementation()));
-  }
-};
-
-template<typename DestPrimType, typename SourcePrimType>
-class ConversionTraits<eigen_implementation::RotationQuaternion<DestPrimType>, eigen_implementation::RotationQuaternion<SourcePrimType>> {
-public:
-  inline static eigen_implementation::RotationQuaternion<DestPrimType> convert(const eigen_implementation::RotationQuaternion<SourcePrimType> & q) {
-    return eigen_implementation::RotationQuaternion<DestPrimType>(q.toImplementation().template cast<DestPrimType>());
-  }
-};
-
-template<typename DestPrimType, typename SourcePrimType>
-class ConversionTraits<eigen_implementation::RotationQuaternion<DestPrimType>, eigen_implementation::RotationMatrix<SourcePrimType>> {
-public:
-  inline static eigen_implementation::RotationQuaternion<DestPrimType> convert(const eigen_implementation::RotationMatrix<SourcePrimType> & R) {
-    return eigen_implementation::RotationQuaternion<DestPrimType>(getQuaternionFromRotationMatrix<SourcePrimType, DestPrimType>(R.toImplementation()));
-  }
-};
-
-template<typename DestPrimType, typename SourcePrimType>
-class ConversionTraits<eigen_implementation::RotationQuaternion<DestPrimType>, eigen_implementation::EulerAnglesXYZ<SourcePrimType>> {
-public:
-  inline static eigen_implementation::RotationQuaternion<DestPrimType> convert(const eigen_implementation::EulerAnglesXYZ<SourcePrimType> & rpy) {
-    return eigen_implementation::RotationQuaternion<DestPrimType>(getQuaternionFromRPY<SourcePrimType, DestPrimType>(rpy.toImplementation()));
-  }
-};
-
-template<typename DestPrimType, typename SourcePrimType>
-class ConversionTraits<eigen_implementation::RotationQuaternion<DestPrimType>, eigen_implementation::EulerAnglesZYX<SourcePrimType>> {
-public:
-  inline static eigen_implementation::RotationQuaternion<DestPrimType> convert(const eigen_implementation::EulerAnglesZYX<SourcePrimType> & ypr) {
-    return eigen_implementation::RotationQuaternion<DestPrimType>(getQuaternionFromYPR<SourcePrimType, DestPrimType>(ypr.toImplementation()));
-  }
-};
-
-
-template<typename DestPrimType, typename SourcePrimType>
-class ConversionTraits<eigen_implementation::RotationMatrix<DestPrimType>, eigen_implementation::AngleAxis<SourcePrimType>> {
-public:
-  inline static eigen_implementation::RotationMatrix<DestPrimType> convert(const eigen_implementation::AngleAxis<SourcePrimType> & aa) {
-    return eigen_implementation::RotationMatrix<DestPrimType>(getRotationMatrixFromAngleAxis<SourcePrimType, DestPrimType>(aa.toImplementation()));
-  }
-};
-
-template<typename DestPrimType, typename SourcePrimType>
-class ConversionTraits<eigen_implementation::RotationMatrix<DestPrimType>, eigen_implementation::RotationQuaternion<SourcePrimType>> {
-public:
-  inline static eigen_implementation::RotationMatrix<DestPrimType> convert(const eigen_implementation::RotationQuaternion<SourcePrimType> & q) {
-    return eigen_implementation::RotationMatrix<DestPrimType>(getRotationMatrixFromQuaternion<SourcePrimType, DestPrimType>(q.toImplementation()));
-  }
-};
-
-template<typename DestPrimType, typename SourcePrimType>
-class ConversionTraits<eigen_implementation::RotationMatrix<DestPrimType>, eigen_implementation::RotationMatrix<SourcePrimType>> {
-public:
-  inline static eigen_implementation::RotationMatrix<DestPrimType> convert(const eigen_implementation::RotationMatrix<SourcePrimType> & R) {
-    return eigen_implementation::RotationMatrix<DestPrimType>(R.toImplementation().template cast<DestPrimType>());
-  }
-};
-
-template<typename DestPrimType, typename SourcePrimType>
-class ConversionTraits<eigen_implementation::RotationMatrix<DestPrimType>, eigen_implementation::EulerAnglesXYZ<SourcePrimType>> {
-public:
-  inline static eigen_implementation::RotationMatrix<DestPrimType> convert(const eigen_implementation::EulerAnglesXYZ<SourcePrimType> & rpy) {
-    return eigen_implementation::RotationMatrix<DestPrimType>(getRotationMatrixFromRPY<SourcePrimType, DestPrimType>(rpy.toImplementation()));
-  }
-};
-
-template<typename DestPrimType, typename SourcePrimType>
-class ConversionTraits<eigen_implementation::RotationMatrix<DestPrimType>, eigen_implementation::EulerAnglesZYX<SourcePrimType>> {
-public:
-  inline static eigen_implementation::RotationMatrix<DestPrimType> convert(const eigen_implementation::EulerAnglesZYX<SourcePrimType> & ypr) {
-    return eigen_implementation::RotationMatrix<DestPrimType>(getRotationMatrixFromYPR<SourcePrimType, DestPrimType>(ypr.toImplementation()));
-  }
-};
-
-
-template<typename DestPrimType, typename SourcePrimType>
-class ConversionTraits<eigen_implementation::EulerAnglesXYZ<DestPrimType>, eigen_implementation::AngleAxis<SourcePrimType>> {
-public:
-  inline static eigen_implementation::EulerAnglesXYZ<DestPrimType> convert(const eigen_implementation::AngleAxis<SourcePrimType> & aa) {
-    return eigen_implementation::EulerAnglesXYZ<DestPrimType>(getRPYFromAngleAxis<SourcePrimType, DestPrimType>(aa.toImplementation()));
-  }
-};
-
-template<typename DestPrimType, typename SourcePrimType>
-class ConversionTraits<eigen_implementation::EulerAnglesXYZ<DestPrimType>, eigen_implementation::RotationQuaternion<SourcePrimType>> {
-public:
-  inline static eigen_implementation::EulerAnglesXYZ<DestPrimType> convert(const eigen_implementation::RotationQuaternion<SourcePrimType> & q) {
-    return eigen_implementation::EulerAnglesXYZ<DestPrimType>(getRPYFromQuaternion<SourcePrimType, DestPrimType>(q.toImplementation()));
-  }
-};
-
-template<typename DestPrimType, typename SourcePrimType>
-class ConversionTraits<eigen_implementation::EulerAnglesXYZ<DestPrimType>, eigen_implementation::RotationMatrix<SourcePrimType>> {
-public:
-  inline static eigen_implementation::EulerAnglesXYZ<DestPrimType> convert(const eigen_implementation::RotationMatrix<SourcePrimType> & R) {
-    return eigen_implementation::EulerAnglesXYZ<DestPrimType>(getRPYFromRotationMatrix<SourcePrimType, DestPrimType>(R.toImplementation()));
-  }
-};
-
-template<typename DestPrimType, typename SourcePrimType>
-class ConversionTraits<eigen_implementation::EulerAnglesXYZ<DestPrimType>, eigen_implementation::EulerAnglesXYZ<SourcePrimType>> {
-public:
-  inline static eigen_implementation::EulerAnglesXYZ<DestPrimType> convert(const eigen_implementation::EulerAnglesXYZ<SourcePrimType> & rpy) {
-    return eigen_implementation::EulerAnglesXYZ<DestPrimType>(rpy.toImplementation().template cast<DestPrimType>());
-  }
-};
-
-template<typename DestPrimType, typename SourcePrimType>
-class ConversionTraits<eigen_implementation::EulerAnglesXYZ<DestPrimType>, eigen_implementation::EulerAnglesZYX<SourcePrimType>> {
-public:
-  inline static eigen_implementation::EulerAnglesXYZ<DestPrimType> convert(const eigen_implementation::EulerAnglesZYX<SourcePrimType> & ypr) {
-    return eigen_implementation::EulerAnglesXYZ<DestPrimType>(getRPYFromYPR<SourcePrimType, DestPrimType>(ypr.toImplementation()));
-  }
-};
-
-
-template<typename DestPrimType, typename SourcePrimType>
-class ConversionTraits<eigen_implementation::EulerAnglesZYX<DestPrimType>, eigen_implementation::AngleAxis<SourcePrimType>> {
-public:
-  inline static eigen_implementation::EulerAnglesZYX<DestPrimType> convert(const eigen_implementation::AngleAxis<SourcePrimType> & aa) {
-    return eigen_implementation::EulerAnglesZYX<DestPrimType>(getYPRFromAngleAxis<SourcePrimType, DestPrimType>(aa.toImplementation()));
-  }
-};
-
-template<typename DestPrimType, typename SourcePrimType>
-class ConversionTraits<eigen_implementation::EulerAnglesZYX<DestPrimType>, eigen_implementation::RotationQuaternion<SourcePrimType>> {
-public:
-  inline static eigen_implementation::EulerAnglesZYX<DestPrimType> convert(const eigen_implementation::RotationQuaternion<SourcePrimType> & q) {
-    return eigen_implementation::EulerAnglesZYX<DestPrimType>(getYPRFromQuaternion<SourcePrimType, DestPrimType>(q.toImplementation()));
-  }
-};
-
-template<typename DestPrimType, typename SourcePrimType>
-class ConversionTraits<eigen_implementation::EulerAnglesZYX<DestPrimType>, eigen_implementation::RotationMatrix<SourcePrimType>> {
-public:
-  inline static eigen_implementation::EulerAnglesZYX<DestPrimType> convert(const eigen_implementation::RotationMatrix<SourcePrimType> & R) {
-    return eigen_implementation::EulerAnglesZYX<DestPrimType>(getYPRFromRotationMatrix<SourcePrimType, DestPrimType>(R.toImplementation()));
-  }
-};
-
-template<typename DestPrimType, typename SourcePrimType>
-class ConversionTraits<eigen_implementation::EulerAnglesZYX<DestPrimType>, eigen_implementation::EulerAnglesXYZ<SourcePrimType>> {
-public:
-  inline static eigen_implementation::EulerAnglesZYX<DestPrimType> convert(const eigen_implementation::EulerAnglesXYZ<SourcePrimType> & rpy) {
-    return eigen_implementation::EulerAnglesZYX<DestPrimType>(getYPRFromRPY<SourcePrimType, DestPrimType>(rpy.toImplementation()));
-  }
-};
-
-template<typename DestPrimType, typename SourcePrimType>
-class ConversionTraits<eigen_implementation::EulerAnglesZYX<DestPrimType>, eigen_implementation::EulerAnglesZYX<SourcePrimType>> {
-public:
-  inline static eigen_implementation::EulerAnglesZYX<DestPrimType> convert(const eigen_implementation::EulerAnglesZYX<SourcePrimType> & ypr) {
-    return eigen_implementation::EulerAnglesZYX<DestPrimType>(ypr.toImplementation().template cast<DestPrimType>());
-  }
-};
-
-
-// todo: specify more multiplication traits?
-
-template<typename PrimType>
-class MultiplicationTraits<eigen_implementation::RotationMatrix<PrimType>, eigen_implementation::RotationMatrix<PrimType>> {
-public:
-  inline static eigen_implementation::RotationMatrix<PrimType> mult(const eigen_implementation::RotationMatrix<PrimType> & a, const eigen_implementation::RotationMatrix<PrimType> & b) {
-    return eigen_implementation::RotationMatrix<PrimType>(a.toImplementation()*b.toImplementation());
-  }
-};
-
-
-
-template<typename PrimType>
-class RotationTraits<eigen_implementation::AngleAxis<PrimType>> {
+template<typename DestPrimType, typename SourcePrimType, enum RotationUsage Usage>
+class ConversionTraits<eigen_implementation::AngleAxis<DestPrimType, Usage>, eigen_implementation::AngleAxis<SourcePrimType, Usage>> {
  public:
-  template<typename get_matrix3X<eigen_implementation::AngleAxis<PrimType>>::IndexType Cols>
-   inline static typename get_matrix3X<eigen_implementation::AngleAxis<PrimType>>::template Matrix3X<Cols> rotate(const eigen_implementation::AngleAxis<PrimType> & aa, const typename get_matrix3X<eigen_implementation::AngleAxis<PrimType>>::template Matrix3X<Cols> & m){
-    return eigen_implementation::RotationMatrix<PrimType>(aa).toImplementation() * m;
-   }
+  inline static eigen_implementation::AngleAxis<DestPrimType, Usage> convert(const eigen_implementation::AngleAxis<SourcePrimType, Usage> & a) {
+    return eigen_implementation::AngleAxis<DestPrimType, Usage>(a.toImplementation().template cast<DestPrimType>());
+  }
+};
+
+template<typename DestPrimType, typename SourcePrimType, enum RotationUsage Usage>
+class ConversionTraits<eigen_implementation::AngleAxis<DestPrimType, Usage>, eigen_implementation::RotationQuaternion<SourcePrimType, Usage>> {
+ public:
+  inline static eigen_implementation::AngleAxis<DestPrimType, Usage> convert(const eigen_implementation::RotationQuaternion<SourcePrimType, Usage> & q) {
+    return eigen_implementation::AngleAxis<DestPrimType, Usage>(eigen_implementation::getAngleAxisFromQuaternion<SourcePrimType, DestPrimType>(q.toImplementation()));
+  }
+};
+
+template<typename DestPrimType, typename SourcePrimType, enum RotationUsage Usage>
+class ConversionTraits<eigen_implementation::AngleAxis<DestPrimType, Usage>, eigen_implementation::RotationMatrix<SourcePrimType, Usage>> {
+ public:
+  inline static eigen_implementation::AngleAxis<DestPrimType, Usage> convert(const eigen_implementation::RotationMatrix<SourcePrimType, Usage> & R) {
+    return eigen_implementation::AngleAxis<DestPrimType, Usage>(eigen_implementation::getAngleAxisFromRotationMatrix<SourcePrimType, DestPrimType>(R.toImplementation()));
+  }
+};
+
+template<typename DestPrimType, typename SourcePrimType, enum RotationUsage Usage>
+class ConversionTraits<eigen_implementation::AngleAxis<DestPrimType, Usage>, eigen_implementation::EulerAnglesXyz<SourcePrimType, Usage>> {
+ public:
+  inline static eigen_implementation::AngleAxis<DestPrimType, Usage> convert(const eigen_implementation::EulerAnglesXyz<SourcePrimType, Usage> & rpy) {
+    return eigen_implementation::AngleAxis<DestPrimType, Usage>(eigen_implementation::getAngleAxisFromRpy<SourcePrimType, DestPrimType>(rpy.toImplementation()));
+  }
+};
+
+template<typename DestPrimType, typename SourcePrimType, enum RotationUsage Usage>
+class ConversionTraits<eigen_implementation::AngleAxis<DestPrimType, Usage>, eigen_implementation::EulerAnglesZyx<SourcePrimType, Usage>> {
+ public:
+  inline static eigen_implementation::AngleAxis<DestPrimType, Usage> convert(const eigen_implementation::EulerAnglesZyx<SourcePrimType, Usage> & ypr) {
+    return eigen_implementation::AngleAxis<DestPrimType, Usage>(eigen_implementation::getAngleAxisFromYpr<SourcePrimType, DestPrimType>(ypr.toImplementation()));
+  }
+};
+
+
+template<typename DestPrimType, typename SourcePrimType, enum RotationUsage Usage>
+class ConversionTraits<eigen_implementation::RotationQuaternion<DestPrimType, Usage>, eigen_implementation::AngleAxis<SourcePrimType, Usage>> {
+ public:
+  inline static eigen_implementation::RotationQuaternion<DestPrimType, Usage> convert(const eigen_implementation::AngleAxis<SourcePrimType, Usage> & aa) {
+    return eigen_implementation::RotationQuaternion<DestPrimType, Usage>(eigen_implementation::getQuaternionFromAngleAxis<SourcePrimType, DestPrimType>(aa.toImplementation()));
+  }
+};
+
+template<typename DestPrimType, typename SourcePrimType, enum RotationUsage Usage>
+class ConversionTraits<eigen_implementation::RotationQuaternion<DestPrimType, Usage>, eigen_implementation::RotationQuaternion<SourcePrimType, Usage>> {
+ public:
+  inline static eigen_implementation::RotationQuaternion<DestPrimType, Usage> convert(const eigen_implementation::RotationQuaternion<SourcePrimType, Usage> & q) {
+    return eigen_implementation::RotationQuaternion<DestPrimType, Usage>(q.toImplementation().template cast<DestPrimType>());
+  }
+};
+
+template<typename DestPrimType, typename SourcePrimType, enum RotationUsage Usage>
+class ConversionTraits<eigen_implementation::RotationQuaternion<DestPrimType, Usage>, eigen_implementation::RotationMatrix<SourcePrimType, Usage>> {
+ public:
+  inline static eigen_implementation::RotationQuaternion<DestPrimType, Usage> convert(const eigen_implementation::RotationMatrix<SourcePrimType, Usage> & R) {
+    return eigen_implementation::RotationQuaternion<DestPrimType, Usage>(eigen_implementation::getQuaternionFromRotationMatrix<SourcePrimType, DestPrimType>(R.toImplementation()));
+  }
+};
+
+template<typename DestPrimType, typename SourcePrimType, enum RotationUsage Usage>
+class ConversionTraits<eigen_implementation::RotationQuaternion<DestPrimType, Usage>, eigen_implementation::EulerAnglesXyz<SourcePrimType, Usage>> {
+ public:
+  inline static eigen_implementation::RotationQuaternion<DestPrimType, Usage> convert(const eigen_implementation::EulerAnglesXyz<SourcePrimType, Usage> & rpy) {
+    return eigen_implementation::RotationQuaternion<DestPrimType, Usage>(eigen_implementation::getQuaternionFromRpy<SourcePrimType, DestPrimType>(rpy.toImplementation()));
+  }
+};
+
+template<typename DestPrimType, typename SourcePrimType, enum RotationUsage Usage>
+class ConversionTraits<eigen_implementation::RotationQuaternion<DestPrimType, Usage>, eigen_implementation::EulerAnglesZyx<SourcePrimType, Usage>> {
+ public:
+  inline static eigen_implementation::RotationQuaternion<DestPrimType, Usage> convert(const eigen_implementation::EulerAnglesZyx<SourcePrimType, Usage> & ypr) {
+    return eigen_implementation::RotationQuaternion<DestPrimType, Usage>(eigen_implementation::getQuaternionFromYpr<SourcePrimType, DestPrimType>(ypr.toImplementation()));
+  }
+};
+
+
+template<typename DestPrimType, typename SourcePrimType, enum RotationUsage Usage>
+class ConversionTraits<eigen_implementation::RotationMatrix<DestPrimType, Usage>, eigen_implementation::AngleAxis<SourcePrimType, Usage>> {
+ public:
+  inline static eigen_implementation::RotationMatrix<DestPrimType, Usage> convert(const eigen_implementation::AngleAxis<SourcePrimType, Usage> & aa) {
+    return eigen_implementation::RotationMatrix<DestPrimType, Usage>(eigen_implementation::getRotationMatrixFromAngleAxis<SourcePrimType, DestPrimType>(aa.toImplementation()));
+  }
+};
+
+template<typename DestPrimType, typename SourcePrimType, enum RotationUsage Usage>
+class ConversionTraits<eigen_implementation::RotationMatrix<DestPrimType, Usage>, eigen_implementation::RotationQuaternion<SourcePrimType, Usage>> {
+ public:
+  inline static eigen_implementation::RotationMatrix<DestPrimType, Usage> convert(const eigen_implementation::RotationQuaternion<SourcePrimType, Usage> & q) {
+    return eigen_implementation::RotationMatrix<DestPrimType, Usage>(eigen_implementation::getRotationMatrixFromQuaternion<SourcePrimType, DestPrimType>(q.toImplementation()));
+  }
+};
+
+template<typename DestPrimType, typename SourcePrimType, enum RotationUsage Usage>
+class ConversionTraits<eigen_implementation::RotationMatrix<DestPrimType, Usage>, eigen_implementation::RotationMatrix<SourcePrimType, Usage>> {
+ public:
+  inline static eigen_implementation::RotationMatrix<DestPrimType, Usage> convert(const eigen_implementation::RotationMatrix<SourcePrimType, Usage> & R) {
+    return eigen_implementation::RotationMatrix<DestPrimType, Usage>(R.toImplementation().template cast<DestPrimType>());
+  }
+};
+
+template<typename DestPrimType, typename SourcePrimType, enum RotationUsage Usage>
+class ConversionTraits<eigen_implementation::RotationMatrix<DestPrimType, Usage>, eigen_implementation::EulerAnglesXyz<SourcePrimType, Usage>> {
+ public:
+  inline static eigen_implementation::RotationMatrix<DestPrimType, Usage> convert(const eigen_implementation::EulerAnglesXyz<SourcePrimType, Usage> & rpy) {
+    return eigen_implementation::RotationMatrix<DestPrimType, Usage>(eigen_implementation::getRotationMatrixFromRpy<SourcePrimType, DestPrimType>(rpy.toImplementation()));
+  }
+};
+
+template<typename DestPrimType, typename SourcePrimType, enum RotationUsage Usage>
+class ConversionTraits<eigen_implementation::RotationMatrix<DestPrimType, Usage>, eigen_implementation::EulerAnglesZyx<SourcePrimType, Usage>> {
+ public:
+  inline static eigen_implementation::RotationMatrix<DestPrimType, Usage> convert(const eigen_implementation::EulerAnglesZyx<SourcePrimType, Usage> & ypr) {
+    return eigen_implementation::RotationMatrix<DestPrimType, Usage>(eigen_implementation::getRotationMatrixFromYpr<SourcePrimType, DestPrimType>(ypr.toImplementation()));
+  }
+};
+
+
+template<typename DestPrimType, typename SourcePrimType, enum RotationUsage Usage>
+class ConversionTraits<eigen_implementation::EulerAnglesXyz<DestPrimType, Usage>, eigen_implementation::AngleAxis<SourcePrimType, Usage>> {
+ public:
+  inline static eigen_implementation::EulerAnglesXyz<DestPrimType, Usage> convert(const eigen_implementation::AngleAxis<SourcePrimType, Usage> & aa) {
+    return eigen_implementation::EulerAnglesXyz<DestPrimType, Usage>(eigen_implementation::getRpyFromAngleAxis<SourcePrimType, DestPrimType>(aa.toImplementation()));
+  }
+};
+
+template<typename DestPrimType, typename SourcePrimType, enum RotationUsage Usage>
+class ConversionTraits<eigen_implementation::EulerAnglesXyz<DestPrimType, Usage>, eigen_implementation::RotationQuaternion<SourcePrimType, Usage>> {
+ public:
+  inline static eigen_implementation::EulerAnglesXyz<DestPrimType, Usage> convert(const eigen_implementation::RotationQuaternion<SourcePrimType, Usage> & q) {
+    return eigen_implementation::EulerAnglesXyz<DestPrimType, Usage>(eigen_implementation::getRpyFromQuaternion<SourcePrimType, DestPrimType>(q.toImplementation()));
+  }
+};
+
+template<typename DestPrimType, typename SourcePrimType, enum RotationUsage Usage>
+class ConversionTraits<eigen_implementation::EulerAnglesXyz<DestPrimType, Usage>, eigen_implementation::RotationMatrix<SourcePrimType, Usage>> {
+ public:
+  inline static eigen_implementation::EulerAnglesXyz<DestPrimType, Usage> convert(const eigen_implementation::RotationMatrix<SourcePrimType, Usage> & R) {
+    return eigen_implementation::EulerAnglesXyz<DestPrimType, Usage>(eigen_implementation::getRpyFromRotationMatrix<SourcePrimType, DestPrimType>(R.toImplementation()));
+  }
+};
+
+template<typename DestPrimType, typename SourcePrimType, enum RotationUsage Usage>
+class ConversionTraits<eigen_implementation::EulerAnglesXyz<DestPrimType, Usage>, eigen_implementation::EulerAnglesXyz<SourcePrimType, Usage>> {
+ public:
+  inline static eigen_implementation::EulerAnglesXyz<DestPrimType, Usage> convert(const eigen_implementation::EulerAnglesXyz<SourcePrimType, Usage> & rpy) {
+    return eigen_implementation::EulerAnglesXyz<DestPrimType, Usage>(rpy.toImplementation().template cast<DestPrimType>());
+  }
+};
+
+template<typename DestPrimType, typename SourcePrimType, enum RotationUsage Usage>
+class ConversionTraits<eigen_implementation::EulerAnglesXyz<DestPrimType, Usage>, eigen_implementation::EulerAnglesZyx<SourcePrimType, Usage>> {
+ public:
+  inline static eigen_implementation::EulerAnglesXyz<DestPrimType, Usage> convert(const eigen_implementation::EulerAnglesZyx<SourcePrimType, Usage> & ypr) {
+    return eigen_implementation::EulerAnglesXyz<DestPrimType, Usage>(eigen_implementation::getRpyFromYpr<SourcePrimType, DestPrimType>(ypr.toImplementation()));
+  }
+};
+
+
+template<typename DestPrimType, typename SourcePrimType, enum RotationUsage Usage>
+class ConversionTraits<eigen_implementation::EulerAnglesZyx<DestPrimType, Usage>, eigen_implementation::AngleAxis<SourcePrimType, Usage>> {
+ public:
+  inline static eigen_implementation::EulerAnglesZyx<DestPrimType, Usage> convert(const eigen_implementation::AngleAxis<SourcePrimType, Usage> & aa) {
+    return eigen_implementation::EulerAnglesZyx<DestPrimType, Usage>(eigen_implementation::getYprFromAngleAxis<SourcePrimType, DestPrimType>(aa.toImplementation()));
+  }
+};
+
+template<typename DestPrimType, typename SourcePrimType, enum RotationUsage Usage>
+class ConversionTraits<eigen_implementation::EulerAnglesZyx<DestPrimType, Usage>, eigen_implementation::RotationQuaternion<SourcePrimType, Usage>> {
+ public:
+  inline static eigen_implementation::EulerAnglesZyx<DestPrimType, Usage> convert(const eigen_implementation::RotationQuaternion<SourcePrimType, Usage> & q) {
+    return eigen_implementation::EulerAnglesZyx<DestPrimType, Usage>(eigen_implementation::getYprFromQuaternion<SourcePrimType, DestPrimType>(q.toImplementation()));
+  }
+};
+
+template<typename DestPrimType, typename SourcePrimType, enum RotationUsage Usage>
+class ConversionTraits<eigen_implementation::EulerAnglesZyx<DestPrimType, Usage>, eigen_implementation::RotationMatrix<SourcePrimType, Usage>> {
+ public:
+  inline static eigen_implementation::EulerAnglesZyx<DestPrimType, Usage> convert(const eigen_implementation::RotationMatrix<SourcePrimType, Usage> & R) {
+    return eigen_implementation::EulerAnglesZyx<DestPrimType, Usage>(eigen_implementation::getYprFromRotationMatrix<SourcePrimType, DestPrimType>(R.toImplementation()));
+  }
+};
+
+template<typename DestPrimType, typename SourcePrimType, enum RotationUsage Usage>
+class ConversionTraits<eigen_implementation::EulerAnglesZyx<DestPrimType, Usage>, eigen_implementation::EulerAnglesXyz<SourcePrimType, Usage>> {
+ public:
+  inline static eigen_implementation::EulerAnglesZyx<DestPrimType, Usage> convert(const eigen_implementation::EulerAnglesXyz<SourcePrimType, Usage> & rpy) {
+    return eigen_implementation::EulerAnglesZyx<DestPrimType, Usage>(eigen_implementation::getYprFromRpy<SourcePrimType, DestPrimType>(rpy.toImplementation()));
+  }
+};
+
+template<typename DestPrimType, typename SourcePrimType, enum RotationUsage Usage>
+class ConversionTraits<eigen_implementation::EulerAnglesZyx<DestPrimType, Usage>, eigen_implementation::EulerAnglesZyx<SourcePrimType, Usage>> {
+ public:
+  inline static eigen_implementation::EulerAnglesZyx<DestPrimType, Usage> convert(const eigen_implementation::EulerAnglesZyx<SourcePrimType, Usage> & ypr) {
+    return eigen_implementation::EulerAnglesZyx<DestPrimType, Usage>(ypr.toImplementation().template cast<DestPrimType>());
+  }
+};
+
+
+
+
+template<typename PrimType>
+class MultiplicationTraits<RotationBase<eigen_implementation::EulerAnglesXyz<PrimType, RotationUsage::ACTIVE>, RotationUsage::ACTIVE>, RotationBase<eigen_implementation::EulerAnglesXyz<PrimType, RotationUsage::ACTIVE>, RotationUsage::ACTIVE>> {
+ public:
+  inline static eigen_implementation::EulerAnglesXyz<PrimType, RotationUsage::ACTIVE> mult(const eigen_implementation::EulerAnglesXyz<PrimType, RotationUsage::ACTIVE> & a, const eigen_implementation::EulerAnglesXyz<PrimType, RotationUsage::ACTIVE> & b) {
+    return eigen_implementation::EulerAnglesXyz<PrimType, RotationUsage::ACTIVE>(eigen_implementation::RotationQuaternion<PrimType, RotationUsage::ACTIVE>(
+                                                                 eigen_implementation::RotationQuaternion<PrimType, RotationUsage::ACTIVE>(a).toImplementation()*
+                                                                 eigen_implementation::RotationQuaternion<PrimType, RotationUsage::ACTIVE>(b).toImplementation()));
+  }
 };
 
 template<typename PrimType>
-class RotationTraits<eigen_implementation::RotationQuaternion<PrimType>> {
+class MultiplicationTraits<RotationBase<eigen_implementation::EulerAnglesXyz<PrimType, RotationUsage::PASSIVE>, RotationUsage::PASSIVE>, RotationBase<eigen_implementation::EulerAnglesXyz<PrimType, RotationUsage::PASSIVE>, RotationUsage::PASSIVE>> {
  public:
-  template<typename get_matrix3X<eigen_implementation::RotationQuaternion<PrimType>>::IndexType Cols>
-   inline static typename get_matrix3X<eigen_implementation::RotationQuaternion<PrimType>>::template Matrix3X<Cols> rotate(const eigen_implementation::RotationQuaternion<PrimType> & p, const typename get_matrix3X<eigen_implementation::RotationQuaternion<PrimType>>::template Matrix3X<Cols> & m){
-    return eigen_implementation::RotationMatrix<PrimType>(p).toImplementation() * m;
-   }
+  inline static eigen_implementation::EulerAnglesXyz<PrimType, RotationUsage::PASSIVE> mult(const eigen_implementation::EulerAnglesXyz<PrimType, RotationUsage::PASSIVE> & a, const eigen_implementation::EulerAnglesXyz<PrimType, RotationUsage::PASSIVE> & b) {
+    return eigen_implementation::EulerAnglesXyz<PrimType, RotationUsage::PASSIVE>(eigen_implementation::RotationQuaternion<PrimType, RotationUsage::PASSIVE>(
+                                                                 eigen_implementation::RotationQuaternion<PrimType, RotationUsage::PASSIVE>(a).toImplementation()*
+                                                                 eigen_implementation::RotationQuaternion<PrimType, RotationUsage::PASSIVE>(b).toImplementation()));
+  }
 };
 
 template<typename PrimType>
-class RotationTraits<eigen_implementation::RotationMatrix<PrimType>> {
+class MultiplicationTraits<RotationBase<eigen_implementation::EulerAnglesZyx<PrimType, RotationUsage::ACTIVE>, RotationUsage::ACTIVE>, RotationBase<eigen_implementation::EulerAnglesZyx<PrimType, RotationUsage::ACTIVE>, RotationUsage::ACTIVE>> {
  public:
-  template<typename get_matrix3X<eigen_implementation::RotationMatrix<PrimType>>::IndexType Cols>
-   inline static typename get_matrix3X<eigen_implementation::RotationMatrix<PrimType>>::template Matrix3X<Cols> rotate(const eigen_implementation::RotationMatrix<PrimType> & R, const typename get_matrix3X<eigen_implementation::RotationMatrix<PrimType>>::template Matrix3X<Cols> & m){
+  inline static eigen_implementation::EulerAnglesZyx<PrimType, RotationUsage::ACTIVE> mult(const eigen_implementation::EulerAnglesZyx<PrimType, RotationUsage::ACTIVE> & a, const eigen_implementation::EulerAnglesZyx<PrimType, RotationUsage::ACTIVE> & b) {
+    return eigen_implementation::EulerAnglesZyx<PrimType, RotationUsage::ACTIVE>(eigen_implementation::RotationQuaternion<PrimType, RotationUsage::ACTIVE>(
+                                                                 eigen_implementation::RotationQuaternion<PrimType, RotationUsage::ACTIVE>(a).toImplementation()*
+                                                                 eigen_implementation::RotationQuaternion<PrimType, RotationUsage::ACTIVE>(b).toImplementation()));
+  }
+};
+
+template<typename PrimType>
+class MultiplicationTraits<RotationBase<eigen_implementation::EulerAnglesZyx<PrimType, RotationUsage::PASSIVE>, RotationUsage::PASSIVE>, RotationBase<eigen_implementation::EulerAnglesZyx<PrimType, RotationUsage::PASSIVE>, RotationUsage::PASSIVE>> {
+ public:
+  inline static eigen_implementation::EulerAnglesZyx<PrimType, RotationUsage::PASSIVE> mult(const eigen_implementation::EulerAnglesZyx<PrimType, RotationUsage::PASSIVE> & a, const eigen_implementation::EulerAnglesZyx<PrimType, RotationUsage::PASSIVE> & b) {
+    return eigen_implementation::EulerAnglesZyx<PrimType, RotationUsage::PASSIVE>(eigen_implementation::RotationQuaternion<PrimType, RotationUsage::PASSIVE>(
+                                                                 eigen_implementation::RotationQuaternion<PrimType, RotationUsage::PASSIVE>(a).toImplementation()*
+                                                                 eigen_implementation::RotationQuaternion<PrimType, RotationUsage::PASSIVE>(b).toImplementation()));
+  }
+};
+
+
+//template<typename PrimType, enum RotationUsage Usage>
+//class MultiplicationTraits<RotationBase<eigen_implementation::EulerAnglesXyz<PrimType, Usage>, Usage>, RotationBase<eigen_implementation::EulerAnglesXyz<PrimType, Usage>, Usage>> {
+// public:
+//  inline static eigen_implementation::EulerAnglesXyz<PrimType, Usage> mult(const eigen_implementation::EulerAnglesXyz<PrimType, Usage> & a, const eigen_implementation::EulerAnglesXyz<PrimType, Usage> & b) {
+//    return eigen_implementation::EulerAnglesXyz<PrimType, Usage>(eigen_implementation::RotationQuaternion<PrimType, Usage>(
+//                                                                 eigen_implementation::RotationQuaternion<PrimType, Usage>(a).toImplementation()*
+//                                                                 eigen_implementation::RotationQuaternion<PrimType, Usage>(b).toImplementation()));
+//  }
+//};
+//
+//template<typename PrimType, enum RotationUsage Usage>
+//class MultiplicationTraits<RotationBase<eigen_implementation::EulerAnglesZyx<PrimType, Usage>, Usage>, RotationBase<eigen_implementation::EulerAnglesZyx<PrimType, Usage>, Usage>> {
+// public:
+//  inline static eigen_implementation::EulerAnglesZyx<PrimType, Usage> mult(const eigen_implementation::EulerAnglesZyx<PrimType, Usage> & a, const eigen_implementation::EulerAnglesZyx<PrimType, Usage> & b) {
+//    return eigen_implementation::EulerAnglesZyx<PrimType, Usage>(eigen_implementation::RotationQuaternion<PrimType, Usage>(
+//                                                                 eigen_implementation::RotationQuaternion<PrimType, Usage>(a).toImplementation()*
+//                                                                 eigen_implementation::RotationQuaternion<PrimType, Usage>(b).toImplementation()));
+//  }
+//};
+
+
+
+template<typename PrimType, enum RotationUsage Usage>
+class RotationTraits<eigen_implementation::AngleAxis<PrimType, Usage>> {
+ public:
+  template<typename get_matrix3X<eigen_implementation::AngleAxis<PrimType, Usage>>::IndexType Cols>
+  inline static typename get_matrix3X<eigen_implementation::AngleAxis<PrimType, Usage>>::template Matrix3X<Cols> rotate(const eigen_implementation::AngleAxis<PrimType, Usage> & aa, const typename get_matrix3X<eigen_implementation::AngleAxis<PrimType, Usage>>::template Matrix3X<Cols> & m){
+    return eigen_implementation::RotationMatrix<PrimType, Usage>(aa).toImplementation() * m;
+  }
+};
+
+template<typename PrimType, enum RotationUsage Usage>
+class RotationTraits<eigen_implementation::RotationQuaternion<PrimType, Usage>> {
+ public:
+  template<typename get_matrix3X<eigen_implementation::RotationQuaternion<PrimType, Usage>>::IndexType Cols>
+  inline static typename get_matrix3X<eigen_implementation::RotationQuaternion<PrimType, Usage>>::template Matrix3X<Cols> rotate(const eigen_implementation::RotationQuaternion<PrimType, Usage> & p, const typename get_matrix3X<eigen_implementation::RotationQuaternion<PrimType, Usage>>::template Matrix3X<Cols> & m){
+    return eigen_implementation::RotationMatrix<PrimType, Usage>(p).toImplementation() * m;
+  }
+};
+
+template<typename PrimType, enum RotationUsage Usage>
+class RotationTraits<eigen_implementation::RotationMatrix<PrimType, Usage>> {
+ public:
+  template<typename get_matrix3X<eigen_implementation::RotationMatrix<PrimType, Usage>>::IndexType Cols>
+  inline static typename get_matrix3X<eigen_implementation::RotationMatrix<PrimType, Usage>>::template Matrix3X<Cols> rotate(const eigen_implementation::RotationMatrix<PrimType, Usage> & R, const typename get_matrix3X<eigen_implementation::RotationMatrix<PrimType, Usage>>::template Matrix3X<Cols> & m){
     return R.toImplementation() * m;
-   }
+  }
 };
 
-template<typename PrimType>
-class RotationTraits<eigen_implementation::EulerAnglesXYZ<PrimType>> {
+template<typename PrimType, enum RotationUsage Usage>
+class RotationTraits<eigen_implementation::EulerAnglesXyz<PrimType, Usage>> {
  public:
-  template<typename get_matrix3X<eigen_implementation::EulerAnglesXYZ<PrimType>>::IndexType Cols>
-   inline static typename get_matrix3X<eigen_implementation::EulerAnglesXYZ<PrimType>>::template Matrix3X<Cols> rotate(const eigen_implementation::EulerAnglesXYZ<PrimType> & rpy, const typename get_matrix3X<eigen_implementation::EulerAnglesXYZ<PrimType>>::template Matrix3X<Cols> & m){
-    return eigen_implementation::RotationMatrix<PrimType>(rpy).toImplementation() * m;
-   }
+  template<typename get_matrix3X<eigen_implementation::EulerAnglesXyz<PrimType, Usage>>::IndexType Cols>
+  inline static typename get_matrix3X<eigen_implementation::EulerAnglesXyz<PrimType, Usage>>::template Matrix3X<Cols> rotate(const eigen_implementation::EulerAnglesXyz<PrimType, Usage> & rpy, const typename get_matrix3X<eigen_implementation::EulerAnglesXyz<PrimType, Usage>>::template Matrix3X<Cols> & m){
+    return eigen_implementation::RotationMatrix<PrimType, Usage>(rpy).toImplementation() * m;
+  }
 };
 
-template<typename PrimType>
-class RotationTraits<eigen_implementation::EulerAnglesZYX<PrimType>> {
+template<typename PrimType, enum RotationUsage Usage>
+class RotationTraits<eigen_implementation::EulerAnglesZyx<PrimType, Usage>> {
  public:
-  template<typename get_matrix3X<eigen_implementation::EulerAnglesZYX<PrimType>>::IndexType Cols>
-   inline static typename get_matrix3X<eigen_implementation::EulerAnglesZYX<PrimType>>::template Matrix3X<Cols> rotate(const eigen_implementation::EulerAnglesZYX<PrimType> & ypr, const typename get_matrix3X<eigen_implementation::EulerAnglesZYX<PrimType>>::template Matrix3X<Cols> & m){
-    return eigen_implementation::RotationMatrix<PrimType>(ypr).toImplementation() * m;
-   }
+  template<typename get_matrix3X<eigen_implementation::EulerAnglesZyx<PrimType, Usage>>::IndexType Cols>
+  inline static typename get_matrix3X<eigen_implementation::EulerAnglesZyx<PrimType, Usage>>::template Matrix3X<Cols> rotate(const eigen_implementation::EulerAnglesZyx<PrimType, Usage> & ypr, const typename get_matrix3X<eigen_implementation::EulerAnglesZyx<PrimType, Usage>>::template Matrix3X<Cols> & m){
+    return eigen_implementation::RotationMatrix<PrimType, Usage>(ypr).toImplementation() * m;
+  }
 };
 
 
 
-template<typename PrimType>
-class ComparisonTraits<eigen_implementation::AngleAxis<PrimType>> {
+template<typename PrimType, enum RotationUsage Usage>
+class ComparisonTraits<eigen_implementation::AngleAxis<PrimType, Usage>> {
  public:
-   inline static bool isEqual(const eigen_implementation::AngleAxis<PrimType> & a, const eigen_implementation::AngleAxis<PrimType> & b){
-     return a.toImplementation().angle() ==  b.toImplementation().angle() &&
-    		a.toImplementation().axis()  ==  b.toImplementation().axis();
-   }
+  inline static bool isEqual(const eigen_implementation::AngleAxis<PrimType, Usage> & a, const eigen_implementation::AngleAxis<PrimType, Usage> & b){
+    return a.toImplementation().angle() ==  b.toImplementation().angle() &&
+           a.toImplementation().axis()  ==  b.toImplementation().axis();
+  }
 };
 
-template<typename PrimType>
-class ComparisonTraits<eigen_implementation::RotationQuaternion<PrimType>> {
+template<typename PrimType, enum RotationUsage Usage>
+class ComparisonTraits<eigen_implementation::RotationQuaternion<PrimType, Usage>> {
  public:
-   inline static bool isEqual(const eigen_implementation::RotationQuaternion<PrimType> & a, const eigen_implementation::RotationQuaternion<PrimType> & b){
+   inline static bool isEqual(const eigen_implementation::RotationQuaternion<PrimType, Usage> & a, const eigen_implementation::RotationQuaternion<PrimType, Usage> & b){
      return a.toImplementation().w() ==  b.toImplementation().w() &&
             a.toImplementation().x() ==  b.toImplementation().x() &&
             a.toImplementation().y() ==  b.toImplementation().y() &&
             a.toImplementation().z() ==  b.toImplementation().z();
    }
 
-   inline static bool isNear(const eigen_implementation::RotationQuaternion<PrimType> & a, const eigen_implementation::RotationQuaternion<PrimType> & b, PrimType tol){
+   inline static bool isNear(const eigen_implementation::RotationQuaternion<PrimType, Usage> & a, const eigen_implementation::RotationQuaternion<PrimType, Usage> & b, PrimType tol){
      return abs(a.toImplementation().w() - b.toImplementation().w() < tol) &&
-    		abs(a.toImplementation().x() - b.toImplementation().x() < tol) &&
-    		abs(a.toImplementation().y() - b.toImplementation().y() < tol) &&
-    		abs(a.toImplementation().z() - b.toImplementation().z() < tol);
+    		    abs(a.toImplementation().x() - b.toImplementation().x() < tol) &&
+    	    	abs(a.toImplementation().y() - b.toImplementation().y() < tol) &&
+    	    	abs(a.toImplementation().z() - b.toImplementation().z() < tol);
    }
 };
 
