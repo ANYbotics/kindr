@@ -163,10 +163,11 @@ Machine precision & $\epsilon$ & \\ \hline
 % Generalized velocities & $\vu \in \mathbb{U} \subset \mathbb{R}^{n_u}$ & gen. velocities of multi-rigid-body system, where $\vu = \vF\dot{\vq}$\\ \hline
 \end{tabular}
 \section{Operators}
-\begin{tabular}{|l|l|l|}
+\begin{tabular}{|l|l|}
 \hline
-Cross product & \multicolumn{2}{l|}{$\va \times \vb = \begin{bmatrix} a_1 \\ a_2 \\ a_3\end{bmatrix} \times \begin{bmatrix} b_1 \\ b_2 \\ b_3\end{bmatrix} \Leftrightarrow (\va)^\wedge \vb = \hat{\va}\vb = \begin{bmatrix} 0 & -a_3 & a_2 \\ a_3 & 0 & -a_1 \\ -a_2 & a_1 & 0 \end{bmatrix} \begin{bmatrix} b_1 \\ b_2 \\ b_3\end{bmatrix}$}  \\ \hline
-Euclidean norm & \multicolumn{2}{l|}{$\norm{\va} = \sqrt{\va^T\va} = \sqrt{a_1^2 + \ldots + a_n^2}$} \\ \hline
+Cross product & $\va \times \vb = \begin{bmatrix} a_1 \\ a_2 \\ a_3\end{bmatrix} \times \begin{bmatrix} b_1 \\ b_2 \\ b_3\end{bmatrix} \Leftrightarrow (\va)^\wedge \vb = \hat{\va}\vb = \begin{bmatrix} 0 & -a_3 & a_2 \\ a_3 & 0 & -a_1 \\ -a_2 & a_1 & 0 \end{bmatrix} \begin{bmatrix} b_1 \\ b_2 \\ b_3\end{bmatrix}$ \\ \hline
+Euclidean norm & $\norm{\va} = \sqrt{\va^T\va} = \sqrt{a_1^2 + \ldots + a_n^2}$ \\ \hline
+Quaternion multiplicator & $ \vq\otimes\vp$ \\ \hline
 \end{tabular}
 
 \section{Pose (Position \& Orientation)}
@@ -204,7 +205,7 @@ Euler Angles RPY & & roll-pitch-yaw. Singularities are at $\beta=\pm\frac{\pi}{2
 \end{tabular} % \multirow{2}{*}{}
 
 \subsubsection{Rotation Quaternion}
-A rotation quaternion is defined as a unit quaternion with the Hamiltonian convention: \\
+A rotation quaternion is defined as a Hamiltonian unit quaternion: \\
 $\boxed{\begin{aligned}P &= p_0 + p_1 i + p_2 j + p_3 k \in \mathbb{H}, \quad p_i \in \mathbb{R} \\
 i^2 &= j^2=k^2 = ijk = -1, \quad \norm{P}= \sqrt{p_0^2 + p_1^2 + p_2^2 + p_3^2} = 1 \\
 \end{aligned}}$   \\
@@ -219,7 +220,7 @@ Rot. quaternion as vector: $\vp = \begin{bmatrix} p_0 & p_1 & p_2 & p_3 \end{bma
 Conjugate: $P^\ast = (p_0, -\imquatvec{p})$ \\
 Inverse: $P^{-1} = P^\ast = (p_0, -\imquatvec{p})$ \\
 Quaternion multiplication: $\begin{aligned}Q \cdot P &= (q_0, \imquatvec{q})\cdot(p_0, \imquatvec{p}) = (q_0 p_0 - \imquatvec{q}^\transpose \imquatvec{p}, q_{0} \imquatvec{p} + p_0 \imquatvec{q} + \imquatvec{q} \times \imquatvec{p}) \quad \Leftrightarrow \\
-	   \vq\cdot\vp &= \vQ(\vq)\vp = \begin{pmatrix}q_0 & -\imquatvec{q}^\transpose \\  \imquatvec{q} & q_0\identity_{3 \times 3}+\hat{\imquatvec{p}} \\ \end{pmatrix} \begin{pmatrix} p_0 \\ p_1 \\ p_2 \\ p_3 \end{pmatrix} 
+	   \vq^\otimes \vp &= \vQ(\vq)\vp = \begin{pmatrix}q_0 & -\imquatvec{q}^\transpose \\  \imquatvec{q} & q_0\identity_{3 \times 3}+\hat{\imquatvec{p}} \\ \end{pmatrix} \begin{pmatrix} p_0 \\ p_1 \\ p_2 \\ p_3 \end{pmatrix} 
 	  = \begin{pmatrix} 
  q_0 & -q_1 & -q_2 & -q_3 \\
  q_1 &  q_0 & -q_3 &  q_2 \\
