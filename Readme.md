@@ -11,3 +11,29 @@ Author(s): Christian Gehring, Remo Diethelm, Hannes Sommer, Peter Fankhauser, Mi
 email    : leggedrobotics@ethz.ch
 Date     : 08-Aug-2013
 
+
+INSTALLATION
+-----------------------------------------------------------------
+Building the library:
+-----------------------------
+mkdir build
+cd build
+cmake ..
+make
+
+Building the documentation:
+-----------------------------
+mkdir build
+cd build
+cmake ..
+make doc
+
+The doxygen documentation can be found here:
+rm_doc/doc/html/index.html
+
+Building examples
+-----------------------------
+mkdir build
+cd build
+cmake ..
+make demo
