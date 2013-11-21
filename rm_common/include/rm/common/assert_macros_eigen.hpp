@@ -14,6 +14,7 @@
 
 
 namespace rm {
+namespace common {
 namespace eigen {
 
 
@@ -40,7 +41,7 @@ return true;
 }
 
 
-// rm::eigen::assertNear((A),(B),1e-6,(MESSAGE))
+// rm::common::eigen::assertNear((A),(B),1e-6,(MESSAGE))
 /*          std::cout << MESSAGE << std::endl << "Difference between " << #A << " and " << #B << " exceeds tolerance of " << TOL << "." << std::endl; \
           std::cout << #A << "(" << i << "," << j << ") = " << (A)(i,j) << std::endl; \
           std::cout << #B << "(" << i << "," << j << ") = " << (B)(i,j) << std::endl; \ */
@@ -55,39 +56,39 @@ return true;
     if ((size_t)(A).rows() != (size_t)(B).rows()) { \
       std::stringstream rm_assert_stringstream;  \
       rm_assert_stringstream << MSG << "\nMatrix " << #A << ":\n" << A << "\nand matrix " << #B << "\n" << B << "\nare not the same size"; \
-      rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,rm_assert_stringstream.str()); \
+      rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,rm_assert_stringstream.str()); \
     } \
     if ((size_t)(A).cols() != (size_t)(B).cols()) { \
       std::stringstream rm_assert_stringstream;  \
       rm_assert_stringstream << MSG << "\nMatrix " << #A << ":\n" << A << "\nand matrix " << #B << "\n" << B << "\nare not the same size"; \
-      rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,rm_assert_stringstream.str()); \
+      rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,rm_assert_stringstream.str()); \
     } \
     for(int r = 0; r < (A).rows(); r++)                 \
     {                                 \
       for(int c = 0; c < (A).cols(); c++)               \
       {                               \
         double percentError = 0.0;                  \
-        if(!rm::eigen::compareRelative( (A)(r,c), (B)(r,c), PERCENT_TOLERANCE, &percentError)) { \
+        if(!rm::common::eigen::compareRelative( (A)(r,c), (B)(r,c), PERCENT_TOLERANCE, &percentError)) { \
           std::stringstream rm_assert_stringstream;  \
           rm_assert_stringstream << MSG << "\nComparing:\n"                \
           << #A << "(" << r << "," << c << ") = " << (A)(r,c) << std::endl \
           << #B << "(" << r << "," << c << ") = " << (B)(r,c) << std::endl \
           << "Error was " << percentError << "% > " << PERCENT_TOLERANCE << "%\n" \
           << "\nMatrix " << #A << ":\n" << A << "\nand matrix " << #B << "\n" << B; \
-          rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,rm_assert_stringstream.str()); \
+          rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,rm_assert_stringstream.str()); \
         } \
       } \
     }
 #define RM_ASSERT_SCALAR_NEAR_DBG(exceptionType, A, B, PERCENT_TOLERANCE, MESSAGE) \
   double percentError = 0.0; \
-  if(!rm::eigen::compareRelative( (A), (B), PERCENT_TOLERANCE, &percentError)) \
+  if(!rm::common::eigen::compareRelative( (A), (B), PERCENT_TOLERANCE, &percentError)) \
   { \
     std::stringstream rm_assert_stringstream;  \
     rm_assert_stringstream << MESSAGE << "\nComparing Scalars:\n"  \
     << "Scalar 1: " << #A << " = " << (A) << std::endl \
     << "Scalar 2: " << #B << " = " << (B) << std::endl \
     << "Error was " << percentError << "% > " << PERCENT_TOLERANCE << "%\n"; \
-    rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,rm_assert_stringstream.str()); \
+    rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,rm_assert_stringstream.str()); \
   }
 #define PRINT(MESSAGE) std::cout << MESSAGE << std::endl;
 #endif
@@ -105,7 +106,7 @@ return true;
       {               \
         std::stringstream rm_assert_stringstream;   \
         rm_assert_stringstream << "debug assert( isfinite(" << #matrix << "(" << r << ", " << c << ") ) failed. [ isfinite(" << matrix(r,c) << " ) ]" << message << std::endl << matrix; \
-        rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,rm_assert_stringstream.str()); \
+        rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,rm_assert_stringstream.str()); \
       }               \
   }               \
      }                  \
@@ -124,7 +125,7 @@ return true;
       {               \
         std::stringstream rm_assert_stringstream;   \
         rm_assert_stringstream << "assert( isfinite(" << #matrix << "(" << r << ", " << c << ") ) failed. [ isfinite(" << matrix(r,c) << " ) ]" << message << std::endl << matrix; \
-        rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,rm_assert_stringstream.str()); \
+        rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,rm_assert_stringstream.str()); \
       }               \
   }               \
      }                  \
@@ -139,6 +140,7 @@ return true;
 
 
 } // namespace eigen
+} // namespace common
 } // namespace rm
 
 
