@@ -70,14 +70,20 @@ class RotationBase {
  public:
   static constexpr enum RotationUsage Usage = Usage_;
 
-  /*! Inverts the rotation
-   *
-   * @return inverse of the rotation
-   */
-  RotationBase inverse();
-
   RotationBase() = default;
   RotationBase(const DERIVED &) = delete; // on purpose!!
+
+  /*! Inverted of the rotation
+   *
+   * @returns inverse of the rotation
+   */
+  RotationBase inverted() const;
+
+  /*! Inverts the rotation
+   *
+   * @inverts the rotation
+   */
+  RotationBase & invert();
 
   operator DERIVED & () {
     return static_cast<DERIVED &>(*this);

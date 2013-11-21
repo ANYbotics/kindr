@@ -87,10 +87,17 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType, Usage>, Usage>, priva
     return *this;
   }
 
-  /*! \returns the inverse
+  /*! \returns the inverse of the rotation
    */
-  AngleAxis inverse() const {
+  AngleAxis inverted() const {
     return AngleAxis(Base::inverse());
+  }
+
+  /*! \inverts the rotation
+   */
+  AngleAxis & invert() {
+    *this = AngleAxis(Base::inverse());
+    return *this;
   }
 
   /*! \returns the implementation for direct manipulation (only for advanced users recommended)
@@ -256,14 +263,30 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
     return *this;
   }
 
-//  using Base::inverse(); // todo: will have Base as output
-
-  RotationQuaternion inverse() const {
-    return RotationQuaternion(Base::inverse());
+  /*! \returns the inverse of the rotation
+   */
+  RotationQuaternion inverted() const {
+    return RotationQuaternion(Base::inverted());
   }
 
-  RotationQuaternion conjugate() const {
-    return RotationQuaternion(Base::conjugate());
+  /*! \inverts the rotation
+   */
+  RotationQuaternion & invert() {
+    *this = inverted();
+    return *this;
+  }
+
+  /*! \returns the conjugated of the rotation
+   */
+  RotationQuaternion conjugated() const {
+    return RotationQuaternion(Base::conjugated());
+  }
+
+  /*! \conjugates the rotation
+   */
+  RotationQuaternion & conjugate() {
+    *this = conjugated();
+    return *this;
   }
 
   RotationQuaternion & setIdentity() {
@@ -356,12 +379,30 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType, Usage>
     return *this;
   }
 
-  RotationMatrix inverse() const {
+  /*! \returns the inverse of the rotation
+   */
+  RotationMatrix inverted() const {
     return RotationMatrix(toImplementation().transpose());
   }
 
-  RotationMatrix transpose() const {
+  /*! \inverts the rotation
+   */
+  RotationMatrix & invert() {
+    *this = RotationMatrix(toImplementation().transpose());
+    return *this;
+  }
+
+  /*! \returns the transpose of the rotation matrix
+   */
+  RotationMatrix transposed() const {
     return RotationMatrix(toImplementation().transpose());
+  }
+
+  /*! \transposes the rotation matrix
+   */
+  RotationMatrix & transpose() {
+    *this = RotationMatrix(toImplementation().transpose());
+    return *this;
   }
 
   Scalar determinant() const {
@@ -445,8 +486,17 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType, Usage>
     return *this;
   }
 
-  EulerAnglesXyz inverse() const {
+  /*! \returns the inverse of the rotation
+   */
+  EulerAnglesXyz inverted() const {
     return (EulerAnglesXyz)getInverseRpy<PrimType, PrimType>(*this);
+  }
+
+  /*! \inverts the rotation
+   */
+  EulerAnglesXyz & inverted() {
+    *this = (EulerAnglesXyz)getInverseRpy<PrimType, PrimType>(*this);
+    return *this;
   }
 
   inline Base & toImplementation() {
@@ -623,8 +673,17 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType, Usage>
     return *this;
   }
 
-  EulerAnglesZyx inverse() const {
-    return (EulerAnglesZyx)getInverseYpr<PrimType, PrimType>(*this);
+  /*! \returns the inverse of the rotation
+   */
+  EulerAnglesZyx inverted() const {
+    return (EulerAnglesZyx)getInverseRpy<PrimType, PrimType>(*this);
+  }
+
+  /*! \inverts the rotation
+   */
+  EulerAnglesZyx & inverted() {
+    *this = (EulerAnglesZyx)getInverseRpy<PrimType, PrimType>(*this);
+    return *this;
   }
 
   inline Base & toImplementation() {
