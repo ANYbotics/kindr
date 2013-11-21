@@ -2,3 +2,52 @@
  * \defgroup quaternions Quaternions
  *  Provides quaternions.
  */
+ 
+ /*! \page page_quaternions Quaternions
+\section quaternion_interface Interface
+\subsection generic_quaternion Generic Quaternion
+The class rm::quaternions::QuaternionBase defines the \em interface for a Hamiltonian generic quaternion defined as:
+
+\f$\boxed{\begin{aligned}Q &= q_0 + q_1 i + q_2 j + q_3 k \in \mathbb{H}, \quad q_i \in \mathbb{R} \\
+i^2 &= j^2=k^2 = ijk = -1 \\
+\end{aligned}}\f$
+
+\subsection unit_quternion Unit Quaternion
+The class rm::quaternions::UnitQuaternionBase defines the \em interface for a Hamiltonian unit quaternion defined as:
+
+\f$\boxed{\begin{aligned}P &= p_0 + p_1 i + p_2 j + p_3 k \in \mathbb{H}, \quad p_i \in \mathbb{R} \\
+i^2 &= j^2=k^2 = ijk = -1, \quad \lVert P \rVert= \sqrt{p_0^2 + p_1^2 + p_2^2 + p_3^2} = 1 \\
+\end{aligned}}\f$
+
+\section quaternion_implementations Implementations
+All implementations should lie in its own namspace, such that the implementation can be changed later very easily if a namespace alias is used.
+For example: 
+\code{.cpp}
+namespace quat = rm::quaternions::eigen_implementation; // select implementation based on Eigen
+quat::Quaternion myQuaternion();				// create quaternion
+\endcode
+\subsection quaternion_eigen Eigen
+The library comes along with an implementation based on the C++ Eigen library.
+
+\subsubsection generic_quaternion_eigen Generic Quaternion
+
+The class rm::quaternions::eigen_implementation::Quaternion implements a Hamiltonian generic quaternion.
+
+The coefficients are defined as
+
+\f$\boxed{Q = w + x i + yj + z k}\f$
+
+Example code to create a quaternion:
+\code{.cpp}
+namespace quat = rm::quaternions::eigen_implementation; // select implementation based on Eigen
+quat::Quaternion quat1;				// creates a quaternion with all coefficients equal to zero
+quat::Quaternion quat2(1.0, 2.0, 3.0, 4.0); //creates a quaternion with w=1, x=2, y=3, z=4	
+\endcode
+
+\subsubsection unit_quaternion_eigen Unit Quaternion
+
+The class rm::quaternions::eigen_implementation::UnitQuaternion implements a Hamiltonian unit quaternion.
+
+The class only checks if the quaternion has unit length if the code is built with debugging symbols, i.e. #define NDEBUG exists. If the unit quaternion has not unit length, an exception will be thrown.  
+
+*/
