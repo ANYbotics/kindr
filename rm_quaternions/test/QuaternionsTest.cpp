@@ -136,7 +136,7 @@ TYPED_TEST (QuaternionsPairsTest, testQuaternionInversion ) {
 
 
 
-TEST (RotationsTest, testQuaternionVarious ) {
+TEST (RotationsTest, DISABLED_testQuaternionVarious ) {
 
   rot::RotationQuaternionPD rquat1(0,0,0,1);
   rot::RotationQuaternionPD rquat2(rquat1);
@@ -145,8 +145,8 @@ TEST (RotationsTest, testQuaternionVarious ) {
   std::cout << rquat1 << std::endl;
   std::cout << rquat2 << std::endl;
   std::cout << rquat3 << std::endl;
-  std::cout << rquat1.conjugate() << std::endl;
-  std::cout << rquat1.inverse() << std::endl;
+  std::cout << rquat1.conjugated() << std::endl;
+  std::cout << rquat1.inverted() << std::endl;
   std::cout << rquat1*rquat2 << std::endl;
   std::cout << (rquat1==rquat2) << std::endl;
   std::cout << rquat3.setIdentity() << std::endl;
@@ -159,8 +159,8 @@ TEST (RotationsTest, testQuaternionVarious ) {
   std::cout << uquat1 << std::endl;
   std::cout << uquat2 << std::endl;
   std::cout << uquat3 << std::endl;
-  std::cout << uquat1.conjugate() << std::endl;
-  std::cout << uquat1.inverse() << std::endl;
+  std::cout << uquat1.conjugated() << std::endl;
+  std::cout << uquat1.inverted() << std::endl;
   std::cout << uquat1*uquat2 << std::endl;
   std::cout << (uquat1==uquat2) << std::endl;
   std::cout << std::endl;
@@ -172,8 +172,8 @@ TEST (RotationsTest, testQuaternionVarious ) {
   std::cout << quat1 << std::endl;
   std::cout << quat2 << std::endl;
   std::cout << quat3 << std::endl;
-  std::cout << quat1.conjugate() << std::endl;
-  std::cout << quat1.inverse() << std::endl;
+  std::cout << quat1.conjugated() << std::endl;
+  std::cout << quat1.inverted() << std::endl;
   std::cout << quat1*quat2 << std::endl;
   std::cout << (quat1==quat2) << std::endl;
   std::cout << std::endl;
@@ -213,18 +213,38 @@ TEST (RotationsTest, testQuaternionVarious ) {
 
 
 
+TEST (RotationsTest, DISABLED_testQuaternionInverseConjugate ) {
+
+  quat::QuaternionD q1(1,2,3,4);
+  std::cout << q1 << std::endl;
+  std::cout << q1.conjugated() << std::endl;
+  std::cout << q1 << std::endl;
+  q1.conjugate();
+  std::cout << q1 << std::endl;
+  std::cout << std::endl;
+  std::cout << q1 << std::endl;
+  std::cout << q1.inverted() << std::endl;
+  std::cout << q1 << std::endl;
+  q1.invert();
+  std::cout << q1 << std::endl;
+  std::cout << std::endl;
 
 
+  quat::UnitQuaternionD uq1(q1.toUnitQuaternion());
+  std::cout << uq1 << std::endl;
+  std::cout << uq1.conjugated() << std::endl;
+  std::cout << uq1 << std::endl;
+  uq1.conjugate();
+  std::cout << uq1 << std::endl;
+  std::cout << std::endl;
+  std::cout << uq1 << std::endl;
+  std::cout << uq1.inverted() << std::endl;
+  std::cout << uq1 << std::endl;
+  uq1.invert();
+  std::cout << uq1 << std::endl;
+  std::cout << std::endl;
 
-
-
-
-
-
-
-
-
-
+}
 
 
 

@@ -31,7 +31,7 @@ namespace eigen_implementation {
  * \see rm::rotations::eigen_implementation::RotationQuaternion for quaternions that represent a rotation
  */
 template<typename PrimType>
-class Quaternion : public QuaternionBase<Quaternion<PrimType>>, private Eigen::Quaternion<PrimType> {
+class Quaternion : public QuaternionBase<Quaternion<PrimType>>, public Eigen::Quaternion<PrimType> { // todo: should be private, error
  private:
   typedef Eigen::Quaternion<PrimType> Base;
  public:
@@ -56,15 +56,30 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType>>, private Eigen::Q
 
   /*! \returns the inverse of the quaternion
     */
-  Quaternion inverse() const {
-    return Quaternion(Base::inverse());
+  Quaternion inverted() const {
+    return Quaternion(Implementation::inverse());
+  }
+
+  /*! \inverts the quaternion
+    */
+  Quaternion & invert() {
+    *this = Quaternion(Implementation::inverse());
+    return *this;
   }
 
   /*! \returns the conjugate of the quaternion
     */
-  Quaternion conjugate() const {
-    return Quaternion(Base::conjugate());
+  Quaternion conjugated() const {
+    return Quaternion(Implementation::conjugate());
   }
+
+  /*! \conjugates the quaternion
+    */
+  Quaternion & conjugate() {
+    *this = Quaternion(Implementation::conjugate());
+    return *this;
+  }
+
 
   Quaternion & operator =(const Quaternion<PrimType> & other) {
     this->w() = other.w();
@@ -149,13 +164,13 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType>>, private Eigen::Q
     return Base::norm();
   }
 
+  Quaternion normalized() const {
+    return Quaternion(this->Base::normalized());
+  }
+
   Quaternion & normalize() {
 	  this->Base::normalize();
 	  return *this;
-  }
-
-  Quaternion normalized() const {
-	  return Quaternion(this->Base::normalized());
   }
 
   UnitQuaternion<PrimType> toUnitQuaternion() const {
@@ -181,10 +196,10 @@ template<typename PrimType>
 class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>> {
  private:
   Quaternion<PrimType> uq;
-  typedef Quaternion<PrimType> Base;
+  typedef UnitQuaternionBase<UnitQuaternion<PrimType>> Base;
  public:
   //! the implementation type, i.e., Eigen::Quaternion<>
-  typedef typename Base::Implementation Implementation;
+  typedef typename Quaternion<PrimType>::Implementation Implementation;
   //! the scalar type, i.e., the type of the coefficients
   typedef PrimType Scalar;
 
@@ -207,7 +222,7 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>> {
   }
 
   //! Constructor to create unit quaternion from Quaternion
-  explicit UnitQuaternion(const Base & other)
+  explicit UnitQuaternion(const Quaternion<PrimType> & other)
     : uq(other.toImplementation()) {
     RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-6, "Input quaternion has not unit length.");
   }
@@ -299,13 +314,22 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>> {
 //  using Base::operator*;
 
 //  using UnitQuaternionBase<UnitQuaternion<PrimType>>::conjugate;
-//  using UnitQuaternionBase<UnitQuaternion<PrimType>>::inverse;
 
   /*! \returns the conjugate of the quaternion
     */
-  UnitQuaternion conjugate() const {
-    return UnitQuaternion(uq.conjugate());
+  UnitQuaternion conjugated() const {
+    return UnitQuaternion(uq.conjugated());
   }
+
+  /*! \conjugates the quaternion
+    */
+  UnitQuaternion & conjugate() {
+    uq.conjugate();
+    return *this;
+  }
+
+//  using Base::inverted;
+//  using Base::invert;
 
 //  /*! \returns the inverse of the quaternion which is the conjugate for unit quaternions
 //    */

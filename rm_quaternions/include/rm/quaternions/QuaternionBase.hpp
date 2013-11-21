@@ -38,9 +38,9 @@ class ComparisonTraits {
  public:
   inline static bool isEqual(const QUATERNION & a, const QUATERNION & b){
     return (a.w() ==  b.w() &&
-	        a.x() ==  b.x() &&
-	        a.y() ==  b.y() &&
-	        a.z() ==  b.z());
+	          a.x() ==  b.x() &&
+	          a.y() ==  b.y() &&
+	          a.z() ==  b.z());
   }
 };
 
@@ -53,13 +53,21 @@ class ComparisonTraits {
 template<typename DERIVED>
 class QuaternionBase {
  public:
+  /*! \inverts the quaternion
+    */
+  DERIVED & invert();
+
   /*! \returns the inverse of the quaternion
     */
-  DERIVED inverse() const;
+  DERIVED inverted() const;
+
+  /*! \conjugates the quaternion
+    */
+  DERIVED & conjugate();
 
   /*! \returns the conjugate of the quaternion
     */
-  DERIVED conjugate() const;
+  DERIVED conjugated() const;
 
   operator DERIVED & () {
     return static_cast<DERIVED &>(*this);
@@ -68,6 +76,9 @@ class QuaternionBase {
     return static_cast<const DERIVED &>(*this);
   }
 
+  DERIVED & derived() {
+    return static_cast<DERIVED &>(*this);
+  }
   const DERIVED & derived() const {
     return static_cast<const DERIVED &>(*this);
   }
@@ -103,11 +114,17 @@ class UnitQuaternionBase : public QuaternionBase<DERIVED> {
  public:
   typedef QuaternionBase<DERIVED> Base;
 
-  DERIVED conjugate() const;
+  DERIVED inverted() const {
+    return Base::derived().conjugated();
+  }
 
-  DERIVED inverse() const {
+  DERIVED & invert() {
     return Base::derived().conjugate();
   }
+
+  DERIVED conjugated() const;
+
+  DERIVED & conjugate();
 
   template<typename OTHER_DERIVED>
   DERIVED operator *(const UnitQuaternionBase<OTHER_DERIVED> & other) const {
