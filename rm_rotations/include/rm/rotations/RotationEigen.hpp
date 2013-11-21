@@ -326,31 +326,8 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
   using Base::norm;
   using Base::toImplementation;
 
-//  using Base::operator *;
   using RotationQuaternionBase<RotationQuaternion<PrimType, Usage>, Usage> ::operator *;
   using RotationQuaternionBase<RotationQuaternion<PrimType, Usage>, Usage> ::operator ==;
-
-
-//  RotationQuaternion<PrimType,RotationUsage::PASSIVE> getPassive() const {
-//    return RotationQuaternion<PrimType,RotationUsage::PASSIVE>(this->inverted().w(),this->inverted().x(),this->inverted().y(),this->inverted().z());
-//  }
-//
-//  RotationQuaternion<PrimType,RotationUsage::ACTIVE> getActive() const {
-//    return RotationQuaternion<PrimType,RotationUsage::ACTIVE>(this->inverted().w(),this->inverted().x(),this->inverted().y(),this->inverted().z());
-//  }
-
-
-//  bool operator ==(const quaternions::eigen_implementation::UnitQuaternion<PrimType> & other) {
-//    return Base::operator == (static_cast<const Base &>(other));
-//  }
-
-//  RotationQuaternion operator *(const quaternions::eigen_implementation::Quaternion<PrimType> & other) const {
-//	  return RotationQuaternion(Base::operator*(other));
-//  }
-
-//  using Base::operator ==;
-//  using RotationQuaternionBase<RotationQuaternion<PrimType, Usage>>::operator*; // otherwise ambiguous RotationBase and QuaternionBase
-//  using RotationQuaternionBase<RotationQuaternion<PrimType, Usage>>::operator==; // otherwise ambiguous RotationBase and Eigen
 };
 
 typedef RotationQuaternion<double, RotationUsage::ACTIVE>  RotationQuaternionAD;
@@ -386,9 +363,9 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType, Usage>
 
   // create from Eigen::Matrix
   explicit RotationMatrix(const Base & other)
-    : Base(other) {
-	RM_ASSERT_MATRIX_NEAR_DBG(std::runtime_error, other * other.transpose(), Base::Identity(), static_cast<Scalar>(1e-6), "Input matrix is not orthogonal.");
-	RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, other.determinant(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input matrix determinant is not 1.");
+  : Base(other) {
+    RM_ASSERT_MATRIX_NEAR_DBG(std::runtime_error, other * other.transpose(), Base::Identity(), static_cast<Scalar>(1e-6), "Input matrix is not orthogonal.");
+    RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, other.determinant(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input matrix determinant is not 1.");
   }
 
   // create from other rotation

@@ -19,43 +19,41 @@ namespace rotations {
 //! Internal stuff (only for developers)
 namespace internal {
 
+/*! \brief Usage conversion traits for converting active and passive rotations into each other
+ *  \class UsageConversionTraits
+ *  (only for advanced users)
+ */
 template<typename DERIVED, enum RotationUsage Usage_>
 class UsageConversionTraits {
  public:
-  //
+//  inline static typename get_other_usage<DERIVED>::OtherUsage getActive(const RotationBase<DERIVED,RotationUsage::PASSIVE> & in);
+//  inline static typename get_other_usage<DERIVED>::OtherUsage getPassive(const RotationBase<DERIVED,RotationUsage::ACTIVE> & in);
 };
 
+/*! \brief This class determines the alternative usage type for each rotation
+ *  \class get_matrix3X
+ *  (only for advanced users)
+ */
+template<typename ROTATION>
+class get_other_usage {
+ public:
+//  typedef eigen_implementation::AngleAxis<PrimType, RotationUsage::PASSIVE> OtherUsage;
+};
+
+/*! \brief Conversion traits for converting rotations into each other
+ *  \class ConversionTraits
+ *  (only for advanced users)
+ */
 template<typename DEST, typename SOURCE>
 class ConversionTraits {
  public:
   // inline static DEST convert(const SOURCE & );
 };
 
-template<typename LEFT, typename RIGHT>
-class MultiplicationTraits {
- public:
-//  inline static LEFT mult(const LEFT & l, const RIGHT & r);
-};
-
-
-template<typename ROTATION>
-class get_matrix3X {
-  //  typedef int IndexType; // find type of Cols (e.g. Eigen::Dynamic)
-  //  template <IndexType Cols> Matrix3X {
-  //    typedef MATRIX type;
-  //  }
-};
-
-template<typename ROTATION>
-class get_other_usage {
-
-};
-
-template<typename ROTATION>
-class RotationTraits {
-  // inline static typename internal::get_vector3<DERIVED>::type rotate(const ROTATION & r, const typename internal::get_vector3<DERIVED>::type & );
-};
-
+/*! \brief Comparison traits for comparing different rotations
+ *  \class ComparisonTraits
+ *  (only for advanced users)
+ */
 template<typename ROTATION> // only works with the same rotation representation
 class ComparisonTraits {
  public:
@@ -66,58 +64,127 @@ class ComparisonTraits {
 //  inline static bool areNearlyEqual(const eigen_implementation::RotationQuaternion<PrimType, Usage> & a, const eigen_implementation::RotationQuaternion<PrimType, Usage> & b, PrimType tol)
 };
 
+/*! \brief Multiplication traits for concenating rotations
+ *  \class MultiplicationTraits
+ *  (only for advanced users)
+ */
+template<typename LEFT, typename RIGHT>
+class MultiplicationTraits {
+ public:
+//  inline static LEFT mult(const LEFT & l, const RIGHT & r);
+};
+
+/*! \brief Rotation traits for rotating vectors and matrices
+ *  \class RotationTraits
+ *  (only for advanced users)
+ */
+template<typename ROTATION>
+class RotationTraits {
+ public:
+// inline static typename internal::get_vector3<DERIVED>::type rotate(const ROTATION & r, const typename internal::get_vector3<DERIVED>::type & );
+};
+
+/*! \brief This class determines the correct matrix type for each rotation which is used for matrix rotations
+ *  \class get_matrix3X
+ *  (only for advanced users)
+ */
+template<typename ROTATION>
+class get_matrix3X {
+ public:
+//  typedef int IndexType; // find type of Cols (e.g. Eigen::Dynamic)
+//  template <IndexType Cols> Matrix3X {
+//    typedef MATRIX type;
+//  }
+};
+
 } // namespace internal
 
-//! Representation of a generic rotation
-/*!
- * @ingroup rotations
+
+
+/*! \brief Representation of a generic rotation
+ *  \ingroup rotations
+ *  \class RotationBase
+ *  This class defines the generic interface for a rotation.
+ *  \tparam DERIVED the derived class that should implement the rotation
+ *  \tparam Usage_ the rotation usage which is either active or passive
  */
 template<typename DERIVED, enum RotationUsage Usage_>
 class RotationBase {
  public:
+  /*! \brief Rotation usage.
+   *  The rotation usage is either active (rotation of an object) or passive (transformation of its coordinates)
+   */
   static constexpr enum RotationUsage Usage = Usage_;
 
+  /*! \brief Standard constructor.
+   *  Creates an empty generic rotation object
+   */
   RotationBase() = default;
+
+  /*! \brief Constructor from derived rotation.
+   *  This constructor been deleted because the abstract class does not contain any data.
+   */
   RotationBase(const DERIVED &) = delete; // on purpose!!
 
-  /*! Inverted of the rotation
-   *
-   * @returns inverse of the rotation
+  /*! \brief Returns the inverse of the rotation
+   *  \returns inverse of the rotation
    */
   RotationBase inverted() const;
 
-  /*! Inverts the rotation
+  /*! \brief Inverts the rotation.
    *
-   * @inverts the rotation
    */
   RotationBase & invert();
 
+  /*! \brief Gets the derived rotation.
+   *  (only for advanced users)
+   *  \returns the derived rotation
+   */
   operator DERIVED & () {
     return static_cast<DERIVED &>(*this);
   }
+
+  /*! \brief Gets the derived rotation.
+   *  (only for advanced users)
+   *  \returns the derived rotation
+   */
   operator const DERIVED & () const {
     return static_cast<const DERIVED &>(*this);
   }
 
+  /*! \brief Gets the derived rotation.
+   *  (only for advanced users)
+   *  \returns the derived rotation
+   */
   const DERIVED & derived() const {
     return static_cast<const DERIVED &>(*this);
   }
 
-  template <typename internal::get_matrix3X<DERIVED>::IndexType Cols>
-  typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> rotate(typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> & m) const {
-    return internal::RotationTraits<DERIVED>::rotate(this->derived(), m);
+  /*! \brief Gets passive from active rotation.
+   *  \returns the passive rotation
+   */
+  inline typename internal::get_other_usage<DERIVED>::OtherUsage getPassive() const {
+    return internal::UsageConversionTraits<DERIVED,Usage>::getPassive(*this);
   }
 
-  template <typename internal::get_matrix3X<DERIVED>::IndexType Cols>
-  typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> inverseRotate(typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> & m) const {
-    return internal::RotationTraits<DERIVED>::rotate(this->derived().inverse(), m); // todo: may be optimized
+  /*! \brief Gets active from passive rotation.
+   *  \returns the active rotation
+   */
+  inline typename internal::get_other_usage<DERIVED>::OtherUsage getActive() const {
+    return internal::UsageConversionTraits<DERIVED,Usage>::getActive(*this);
   }
 
+  /*! \brief Concenates two rotations.
+   *  \returns the concenations of two rotations
+   */
   template<typename OTHER_DERIVED>
   DERIVED operator *(const RotationBase<OTHER_DERIVED,Usage> & other) const {
     return internal::MultiplicationTraits<RotationBase<DERIVED,Usage>,RotationBase<OTHER_DERIVED,Usage>>::mult(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
   }
 
+  /*! \brief Compares two rotations.
+   *  \returns true if the rotations are exactly equal
+   */
   template<typename OTHER_DERIVED>
   bool operator ==(const RotationBase<OTHER_DERIVED,Usage> & other) const { // todo: may be optimized
     return internal::ComparisonTraits<DERIVED>::isEqual(this->derived().getUnique(), DERIVED(other).getUnique()); // the type conversion must already take place here to ensure the specialised isequal function is called more often
@@ -130,12 +197,20 @@ class RotationBase {
 //                                                       tol);
 //  }
 
-  inline typename internal::get_other_usage<DERIVED>::OtherUsage getPassive() const {
-    return internal::UsageConversionTraits<DERIVED,Usage>::getPassive(*this);
+  /*! \brief Rotates a vector or matrix.
+   *  \returns the rotated vector or matrix
+   */
+  template <typename internal::get_matrix3X<DERIVED>::IndexType Cols>
+  typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> rotate(typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> & m) const {
+    return internal::RotationTraits<DERIVED>::rotate(this->derived(), m);
   }
 
-  inline typename internal::get_other_usage<DERIVED>::OtherUsage getActive() const {
-    return internal::UsageConversionTraits<DERIVED,Usage>::getActive(*this);
+  /*! \brief Rotates a vector or matrix in reverse.
+   *  \returns the reverse rotated vector or matrix
+   */
+  template <typename internal::get_matrix3X<DERIVED>::IndexType Cols>
+  typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> inverseRotate(typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> & m) const {
+    return internal::RotationTraits<DERIVED>::rotate(this->derived().inverse(), m); // todo: may be optimized
   }
 };
 
@@ -148,16 +223,29 @@ class RotationBase {
 //}
 
 
-
+/*! \brief Representation of a generic angle axis rotation
+ *  \ingroup rotations
+ *  \class AngleAxisBase
+ *  This class defines the generic interface for an angle axis rotation.
+ *  \tparam Implementation the derived class that should implement the rotation
+ *  \tparam Usage_ the rotation usage which is either active or passive
+ */
 template<typename Implementation, enum RotationUsage Usage>
 class AngleAxisBase : public RotationBase<Implementation, Usage> {
 
-  template<typename OTHER_DERIVED>
+  template<typename OTHER_DERIVED> // todo: necessary?
   AngleAxisBase & operator =(const RotationBase<OTHER_DERIVED, Usage> & other) {
     return *this;
   }
 };
 
+/*! \brief Representation of a generic quaternion rotation
+ *  \ingroup rotations
+ *  \class RotationQuaternionBase
+ *  This class defines the generic interface for a quaternion rotation.
+ *  \tparam Implementation the derived class that should implement the rotation
+ *  \tparam Usage_ the rotation usage which is either active or passive
+ */
 template<typename Implementation, enum RotationUsage Usage>
 class RotationQuaternionBase : public RotationBase<Implementation, Usage> {
 
@@ -167,6 +255,13 @@ class RotationQuaternionBase : public RotationBase<Implementation, Usage> {
   }
 };
 
+/*! \brief Representation of a generic matrix rotation
+ *  \ingroup rotations
+ *  \class RotationMatrixBase
+ *  This class defines the generic interface for a matrix rotation.
+ *  \tparam Implementation the derived class that should implement the rotation
+ *  \tparam Usage_ the rotation usage which is either active or passive
+ */
 template<typename Implementation, enum RotationUsage Usage>
 class RotationMatrixBase : public RotationBase<Implementation, Usage> {
 
@@ -176,11 +271,25 @@ class RotationMatrixBase : public RotationBase<Implementation, Usage> {
   }
 };
 
+/*! \brief Representation of a generic euler angles rotation
+ *  \ingroup rotations
+ *  \class EulerAnglesBase
+ *  This class defines the generic interface for a euler angles rotation.
+ *  \tparam Implementation the derived class that should implement the rotation
+ *  \tparam Usage_ the rotation usage which is either active or passive
+ */
 template<typename Implementation, enum RotationUsage Usage>
 class EulerAnglesBase : public RotationBase<Implementation, Usage> {
 
 };
 
+/*! \brief Representation of a generic euler angles xyz rotation
+ *  \ingroup rotations
+ *  \class EulerAnglesXyzBase
+ *  This class defines the generic interface for a euler angles (x,y',z'' / roll,pitch,yaw) rotation.
+ *  \tparam Implementation the derived class that should implement the rotation
+ *  \tparam Usage_ the rotation usage which is either active or passive
+ */
 template<typename Implementation, enum RotationUsage Usage>
 class EulerAnglesXyzBase : public EulerAnglesBase<Implementation, Usage> {
 
@@ -190,6 +299,13 @@ class EulerAnglesXyzBase : public EulerAnglesBase<Implementation, Usage> {
   }
 };
 
+/*! \brief Representation of a generic euler angles zyx rotation
+ *  \ingroup rotations
+ *  \class EulerAnglesZyxBase
+ *  This class defines the generic interface for a euler angles (z,y',x'' / yaw,pitch,roll) rotation.
+ *  \tparam Implementation the derived class that should implement the rotation
+ *  \tparam Usage_ the rotation usage which is either active or passive
+ */
 template<typename Implementation, enum RotationUsage Usage>
 class EulerAnglesZyxBase : public EulerAnglesBase<Implementation, Usage> {
 
@@ -206,8 +322,8 @@ namespace internal {
 template<typename DERIVED>
 class UsageConversionTraits<DERIVED,RotationUsage::PASSIVE> {
  public:
-  inline static typename internal::get_other_usage<DERIVED>::OtherUsage getActive(const RotationBase<DERIVED,RotationUsage::PASSIVE> & in) {
-    return typename internal::get_other_usage<DERIVED>::OtherUsage(in.derived().inverted());
+  inline static typename get_other_usage<DERIVED>::OtherUsage getActive(const RotationBase<DERIVED,RotationUsage::PASSIVE> & in) {
+    return typename get_other_usage<DERIVED>::OtherUsage(in.derived().inverted());
   }
 
   // getPassive() does not exist (on purpose)
@@ -216,8 +332,8 @@ class UsageConversionTraits<DERIVED,RotationUsage::PASSIVE> {
 template<typename DERIVED>
 class UsageConversionTraits<DERIVED,RotationUsage::ACTIVE> {
  public:
-  inline static typename internal::get_other_usage<DERIVED>::OtherUsage getPassive(const RotationBase<DERIVED,RotationUsage::ACTIVE> & in) {
-    return typename internal::get_other_usage<DERIVED>::OtherUsage(in.derived().inverted());
+  inline static typename get_other_usage<DERIVED>::OtherUsage getPassive(const RotationBase<DERIVED,RotationUsage::ACTIVE> & in) {
+    return typename get_other_usage<DERIVED>::OtherUsage(in.derived().inverted());
   }
 
   // getActive() does not exist (on purpose)
