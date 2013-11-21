@@ -192,16 +192,16 @@ Direct Cosine& $\comat{B}{A} \in \mathrm{SO}(3)$ & The coordinate tranformation 
 & $\comat{B}{A} = \rotmat{B}{A}^\transpose$ & The rotation is passive (alias). \\  \hline 
  Rotation  & $\quat{B}{A}$ & The rotation is active (alibi). \\
 Quaternion &   $\quat{B}{A} \Leftrightarrow \rotmat{B}{A} $ &  \\ \hline
-Rotation & $\angleaxis{B}{A}$ &   Rotation with unit rotation axis $\vn$ and angle $\theta \in [-\frac{\pi}{2}, \frac{\pi}{2})$. \\
+Rotation & $\angleaxis{B}{A}$ &   Rotation with unit rotation axis $\vn$ and angle $\theta \in [-\pi, \pi)$. \\
 Angle-axis & $\angleaxis{B}{A} \Leftrightarrow \rotmat{B}{A}$  & The rotation is active (alibi). \\ \hline
 Rotation vector & $ \rotvec{B}{A} $  &  Rotation with rotation axis $\vn = \frac{\vvph}{\norm{\vvph}}$ and angle $\theta = \norm{\vvph}$. \\ 
  & $\rotvec{B}{A} \Leftrightarrow \rotmat{B}{A} $ &  The rotation is active (alibi). \\ \hline
 Euler Angles ZYX &  $(\psi, \theta, \phi)_{B\!A}$  & Tait-Bryan angles (Flight conv.): $z-y'-x''$, i.e.\   \\
 Euler Angles YPR & & yaw-pitch-roll. Singularities are at $\theta=\pm\frac{\pi}{2}$. \\
- &  & $\psi\in(-\pi,\pi), \theta\in(-\frac{\pi}{2},\frac{\pi}{2}), \phi\in(-\pi,\pi)$  \\  \hline
+ &  & $\psi\in[-\pi,\pi), \theta\in[-\frac{\pi}{2},\frac{\pi}{2}), \phi\in[-\pi,\pi)$  \\  \hline
 Euler Angles XYZ &  $(\alpha, \beta, \gamma)_{B\!A}$ & Cardan angles (Glocker conv.): $x-y'-z''$, i.e.\ \\
 Euler Angles RPY & & roll-pitch-yaw. Singularities are at $\beta=\pm\frac{\pi}{2}$.  \\
- &  & $\alpha\in(-\pi,\pi), \beta\in(-\frac{\pi}{2},\frac{\pi}{2}), \gamma\in(-\pi,\pi)$  \\  \hline
+ &  & $\alpha\in[-\pi,\pi), \beta\in[-\frac{\pi}{2},\frac{\pi}{2}), \gamma\in[-\pi,\pi)$  \\  \hline
 \end{tabular} % \multirow{2}{*}{}
 
 \subsubsection{Rotation Quaternion}
