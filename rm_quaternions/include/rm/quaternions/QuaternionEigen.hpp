@@ -15,6 +15,7 @@
 
 namespace rm {
 namespace quaternions {
+//! Implementation based on the C++ Eigen library
 namespace eigen_implementation {
 
 
@@ -178,7 +179,9 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType>>, public Eigen::Qu
   }
 };
 
+//! Quaternion using double
 typedef Quaternion<double> QuaternionD;
+//! Quaternion using float
 typedef Quaternion<float> QuaternionF;
 
 //! Implementation of a unit quaternion based on Eigen::Quaternion
@@ -350,7 +353,9 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>> {
   }
 };
 
+//! Unit quaternion using double
 typedef UnitQuaternion<double> UnitQuaternionD;
+//! Unit quaternion using float
 typedef UnitQuaternion<float> UnitQuaternionF;
 
 

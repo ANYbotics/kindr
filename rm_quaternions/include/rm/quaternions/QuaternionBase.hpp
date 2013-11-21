@@ -18,11 +18,13 @@ namespace quaternions {
 //! Internal stuff (only for developers)
 namespace internal {
 
+//! Conversion trait to implement conversions between different types
 template<typename DEST, typename SOURCE>
 class ConversionTraits {
   // DEST convert(const SOURCE & );
 };
 
+//! Multiplication trait to implement quaternion multiplication
 template<typename LEFT, typename RIGHT>
 class MultiplicationTraits {
  public:
@@ -31,6 +33,7 @@ class MultiplicationTraits {
   }
 };
 
+//! Comparision trait to implement to compare two quaterionsn
 template<typename QUATERNION>
 class ComparisonTraits {
  public:
@@ -44,43 +47,70 @@ class ComparisonTraits {
 
 } // namespace internal
 
-//! Base class that defines the interface of a quaternion
 /*! \ingroup quaternions
+ * \class QuaternionBase
+ * \brief Base class that defines the interface of a quaternion
+ *  This class defines a generic interface for a quaternion.
+ * \tparam DERIVED the derived class that should implement the quaternion
  * \see rm::rotations::RotationQuaternionBase for quaternions that represent a rotation
  */
 template<typename DERIVED>
 class QuaternionBase {
  public:
-  /*! \inverts the quaternion
-    */
+  /*!\brief inverts the quaternion
+   * \returns the inverted quaternion
+   */
   DERIVED & invert();
 
-  /*! \returns the inverse of the quaternion
+  /*! \brief gets the inverse of the quaternion
+   * \returns the inverse of the quaternion
     */
   DERIVED inverted() const;
 
-  /*! \conjugates the quaternion
-    */
+  /*! \brief conjugates the quaternion
+   *  \returns the conjugate of the quaternion
+   */
   DERIVED & conjugate();
 
-  /*! \returns the conjugate of the quaternion
-    */
+  /*!\brief gets the conjugate of the quaternion
+   * \returns the conjugate of the quaternion
+   */
   DERIVED conjugated() const;
 
+  /*! \brief gets the derived quaternion
+   *  (only for advanced users)
+   * \returns the derived quaternion
+   */
   operator DERIVED & () {
     return static_cast<DERIVED &>(*this);
   }
+
+  /*! \brief gets the derived quaternion
+   *  (only for advanced users)
+   * \returns the derived quaternion
+   */
   operator const DERIVED & () const {
     return static_cast<const DERIVED &>(*this);
   }
-
+  /*! \brief gets the derived quaternion
+   *  (only for advanced users)
+   * \returns the derived quaternion
+   */
   DERIVED & derived() {
     return static_cast<DERIVED &>(*this);
   }
+  /*! \brief gets the derived quaternion
+   *  (only for advanced users)
+   * \returns the derived quaternion
+   */
   const DERIVED & derived() const {
     return static_cast<const DERIVED &>(*this);
   }
 
+  /*! \brief multiplies the quaternion with another quaternion
+   * \return the product of two quaternions
+   * \param other   other  other quaternion
+   */
   template<typename OTHER_DERIVED>
   DERIVED operator *(const QuaternionBase<OTHER_DERIVED> & other) const {
     return DERIVED(internal::MultiplicationTraits<DERIVED, OTHER_DERIVED>::mult(this->derived(), other.derived()));
@@ -91,11 +121,17 @@ class QuaternionBase {
 //    return internal::MultiplicationTraits<DERIVED, OTHER_DERIVED>::mult(this->derived(), static_cast<DERIVED>(other));
 //  }
 
+  /*! \brief compares the quaternion with another quaternion
+   * \returns true if the quaternions are equal
+   */
   template<typename OTHER_DERIVED>
   bool operator ==(const QuaternionBase<OTHER_DERIVED> & other) const {
     return internal::ComparisonTraits<DERIVED>::isEqual(this->derived(), static_cast<DERIVED>(other)); // cast to Quaternion
   }
 
+  /*! \brief prints the coefficients of the quaternion
+   * \returns w x y z
+   */
   friend std::ostream & operator << (std::ostream & out, const QuaternionBase<DERIVED> & quat) {
     out << quat.derived().w() << " " << quat.derived().x() << " " << quat.derived().y() << " " << quat.derived().z();
     return out;
@@ -103,8 +139,11 @@ class QuaternionBase {
 };
 
 
-//! Base class that defines the interface of a unit quaternion
+
 /*! \ingroup quaternions
+ * \class UnitQuaternionBase
+ * \brief Base class that defines the interface of a unit quaternion
+ * This class defines a generic interface for a unit quaternion.
  * \see rm::rotations::RotationQuaternionBase for quaternions that represent a rotation
  */
 template<typename DERIVED>
@@ -112,23 +151,42 @@ class UnitQuaternionBase : public QuaternionBase<DERIVED> {
  public:
   typedef QuaternionBase<DERIVED> Base;
 
+  /*! \brief gets the inverse of the unit quaternion using the conjugate
+   * \returns the inverse of the unit quaternion
+    */
   DERIVED inverted() const {
     return Base::derived().conjugated();
   }
 
+  /*!\brief inverts the unit quaternion using the conjugate
+   * \returns the inverted unit quaternion
+   */
   DERIVED & invert() {
     return Base::derived().conjugate();
   }
-
+  /*!\brief gets the conjugate of the quaternion
+   * \returns the conjugate of the quaternion
+   */
   DERIVED conjugated() const;
 
+  /*! \brief conjugates the unit quaternion
+   *  \returns the conjugate of the unit quaternion
+   */
   DERIVED & conjugate();
 
+  /*! \brief multiplies the unit quaternion with another unit quaternion
+   * \return the product of two unit quaternions
+   * \param other   other unit quaternion
+   */
   template<typename OTHER_DERIVED>
   DERIVED operator *(const UnitQuaternionBase<OTHER_DERIVED> & other) const {
     return DERIVED(internal::MultiplicationTraits<DERIVED, OTHER_DERIVED>::mult(this->derived(), other.derived()));
   }
 
+  /*! \brief multiplies the unit quaternion with a quaternion
+   * \returns the product of two quaternions
+   * \param other   other  quaternion
+   */
   template<typename OTHER_DERIVED>
   OTHER_DERIVED operator *(const QuaternionBase<OTHER_DERIVED> & other) const {
     return OTHER_DERIVED(internal::MultiplicationTraits<DERIVED, OTHER_DERIVED>::mult(this->derived(), other.derived()));
