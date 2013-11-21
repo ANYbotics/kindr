@@ -210,7 +210,7 @@ class UsageConversionTraits<DERIVED,RotationUsage::PASSIVE> {
     return typename internal::get_other_usage<DERIVED>::OtherUsage(in.derived().inverted());
   }
 
-  // getPassive() does not exist
+  // getPassive() does not exist (on purpose)
 };
 
 template<typename DERIVED>
@@ -220,7 +220,7 @@ class UsageConversionTraits<DERIVED,RotationUsage::ACTIVE> {
     return typename internal::get_other_usage<DERIVED>::OtherUsage(in.derived().inverted());
   }
 
-  // getActive() does not exist
+  // getActive() does not exist (on purpose)
 };
 
 //template<typename LEFT, typename RIGHT, enum RotationUsage Usage>

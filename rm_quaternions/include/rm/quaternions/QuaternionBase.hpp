@@ -24,7 +24,9 @@ class ConversionTraits {
   // DEST convert(const SOURCE & );
 };
 
-//! Multiplication trait to implement quaternion multiplication
+/*! \brief Multiplication trait to implement quaternion multiplication
+ * \class MultiplicationTraits
+ */
 template<typename LEFT, typename RIGHT>
 class MultiplicationTraits {
  public:
@@ -122,6 +124,7 @@ class QuaternionBase {
 //  }
 
   /*! \brief compares the quaternion with another quaternion
+   * \param other   other quaternion
    * \returns true if the quaternions are equal
    */
   template<typename OTHER_DERIVED>
