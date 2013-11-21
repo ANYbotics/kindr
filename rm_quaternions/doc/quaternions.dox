@@ -1,16 +1,25 @@
 /**
  * \defgroup quaternions Quaternions
- *  Provides quaternions.
+ *  \see \ref page_quaternions "Chapter Quaternions" 
  */
  
  /*! \page page_quaternions Quaternions
-\section quaternion_interface Interface
+This library defines an \ref quaternion_interface "interface" for quaternions to enable different \ref quaternion_implementations "implementations".
+
+ 
+\section quaternion_interface Interfaces
 \subsection generic_quaternion Generic Quaternion
 The class rm::quaternions::QuaternionBase defines the \em interface for a Hamiltonian generic quaternion defined as:
 
 \f$\boxed{\begin{aligned}Q &= q_0 + q_1 i + q_2 j + q_3 k \in \mathbb{H}, \quad q_i \in \mathbb{R} \\
 i^2 &= j^2=k^2 = ijk = -1 \\
 \end{aligned}}\f$
+
+The interface defines generic functions, such as:
+- inversion (rm::quaternions::QuaternionBase::invert())
+- conjugation (rm::quaternions::QuaternionBase::conjugate())
+- multiplication (rm::quaternions::QuaternionBase::operator*())
+- comparison (rm::quaternions::QuaternionBase::operator==())
 
 \subsection unit_quternion Unit Quaternion
 The class rm::quaternions::UnitQuaternionBase defines the \em interface for a Hamiltonian unit quaternion defined as:
@@ -19,15 +28,24 @@ The class rm::quaternions::UnitQuaternionBase defines the \em interface for a Ha
 i^2 &= j^2=k^2 = ijk = -1, \quad \lVert P \rVert= \sqrt{p_0^2 + p_1^2 + p_2^2 + p_3^2} = 1 \\
 \end{aligned}}\f$
 
+There are two reasons why there is an extra class for unit quaternions:
+- Mathematical properties of a unit quaternion, such as the inverse is equal to the conjugate, can be exploited to increase computational speed.
+- The unit length can be guaranteed.
+
 \section quaternion_implementations Implementations
-All implementations should lie in its own namspace, such that the implementation can be changed later very easily if a namespace alias is used.
+An implementation should lie in its own namspace, such that the implementation can be altered later very easily via namespace alias.
 For example: 
 \code{.cpp}
 namespace quat = rm::quaternions::eigen_implementation; // select implementation based on Eigen
-quat::Quaternion myQuaternion();				// create quaternion
+quat::QuaternionD myQuaternion();				// create a quaternion
+\endcode
+If the implementation needs to be changed, only one line of code has to be changed:
+\code{.cpp}
+namespace quat = rm::quaternions::bullet_implementation; // select implementation based on bullet	
 \endcode
 \subsection quaternion_eigen Eigen
 The library comes along with an implementation based on the C++ Eigen library.
+Eigen provides a Eigen::Quaternion, which is used as a primitive for a quaternion.
 
 \subsubsection generic_quaternion_eigen Generic Quaternion
 
@@ -37,17 +55,45 @@ The coefficients are defined as
 
 \f$\boxed{Q = w + x i + yj + z k}\f$
 
+The following two typedefs are provided for convenience:
+ - \ref rm::quaternions::eigen_implementation::QuaternionF "QuaternionF" for float
+ - \ref rm::quaternions::eigen_implementation::QuaternionD "QuaternionD" for double
+
 Example code to create a quaternion:
 \code{.cpp}
 namespace quat = rm::quaternions::eigen_implementation; // select implementation based on Eigen
-quat::Quaternion quat1;				// creates a quaternion with all coefficients equal to zero
-quat::Quaternion quat2(1.0, 2.0, 3.0, 4.0); //creates a quaternion with w=1, x=2, y=3, z=4	
+quat::QuaternionD quat1;				// creates a quaternion with all coefficients equal to zero
+quat::QuaternionD quat2(1.0, 2.0, 3.0, 4.0); //creates a quaternion with w=1, x=2, y=3, z=4	
 \endcode
 
 \subsubsection unit_quaternion_eigen Unit Quaternion
 
 The class rm::quaternions::eigen_implementation::UnitQuaternion implements a Hamiltonian unit quaternion.
 
+The following two typedefs are provided for convenience:
+ - \ref rm::quaternions::eigen_implementation::UnitQuaternionF "UnitQuaternionF" for float
+ - \ref rm::quaternions::eigen_implementation::UnitQuaternionD "UnitQuaternionD" for double
+
+
 The class only checks if the quaternion has unit length if the code is built with debugging symbols, i.e. #define NDEBUG exists. If the unit quaternion has not unit length, an exception will be thrown.  
+
+\subsubsection generic_unit_quaternion_eigen Conversion between Generic Quaternion and Unit Quaternion
+
+Conversion by constructor:
+\code{.cpp}
+UnitQuaternionD uquat;
+QuaternionD quat(uquat);
+UnitQuaternionD uquat2(quat); // error (not allowed)
+UnitQuaternionD uquat3(quat.toUnitQuaternion()); // normalizes the quaternion
+\endcode
+
+Conversion by assignment:
+\code{.cpp}
+UnitQuaternionD uquat;
+QuaternionD quat;
+quat = uquat;
+uquat = quat; // error (not allowed)
+uquat = quat.toUnitQuaternion();  // normalizes the quaternion
+\endcode
 
 */

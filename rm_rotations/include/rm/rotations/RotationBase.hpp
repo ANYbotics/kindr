@@ -122,7 +122,7 @@ class RotationBase {
   RotationBase() = default;
 
   /*! \brief Constructor from derived rotation.
-   *  This constructor been deleted because the abstract class does not contain any data.
+   *  This constructor has been deleted because the abstract class does not contain any data.
    */
   RotationBase(const DERIVED &) = delete; // on purpose!!
 
