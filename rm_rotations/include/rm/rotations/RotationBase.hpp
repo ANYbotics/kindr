@@ -286,7 +286,7 @@ class EulerAnglesBase : public RotationBase<Implementation, Usage> {
 /*! \brief Representation of a generic euler angles xyz rotation
  *  \ingroup rotations
  *  \class EulerAnglesXyzBase
- *  This class defines the generic interface for a euler angles (x,y',z'' / roll,pitch,yaw) rotation.
+ *  This class defines the generic interface for a euler angles (X,Y',Z'' / roll,pitch,yaw) rotation.
  *  \tparam Implementation the derived class that should implement the rotation
  *  \tparam Usage_ the rotation usage which is either active or passive
  */
@@ -302,7 +302,7 @@ class EulerAnglesXyzBase : public EulerAnglesBase<Implementation, Usage> {
 /*! \brief Representation of a generic euler angles zyx rotation
  *  \ingroup rotations
  *  \class EulerAnglesZyxBase
- *  This class defines the generic interface for a euler angles (z,y',x'' / yaw,pitch,roll) rotation.
+ *  This class defines the generic interface for a euler angles (Z,Y',X'' / yaw,pitch,roll) rotation.
  *  \tparam Implementation the derived class that should implement the rotation
  *  \tparam Usage_ the rotation usage which is either active or passive
  */

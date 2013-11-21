@@ -495,11 +495,11 @@ TEST (RotationsTest, testRotationVarious ) {
 //  std::cout << ypr0*q0 << std::endl;
 //  std::cout << std::endl;
 //
-//  std::cout << a0.inverse() << std::endl;
-//  std::cout << q0.inverse() << std::endl;
-//  std::cout << R0.inverse() << std::endl;
-//  std::cout << rpy0.inverse() << std::endl;
-//  std::cout << ypr0.inverse() << std::endl;
+//  std::cout << a0.inverted() << std::endl;
+//  std::cout << q0.inverted() << std::endl;
+//  std::cout << R0.inverted() << std::endl;
+//  std::cout << rpy0.inverted() << std::endl;
+//  std::cout << ypr0.inverted() << std::endl;
 //  std::cout << std::endl;
 //
 //  std::cout << (a0==a0) << std::endl;

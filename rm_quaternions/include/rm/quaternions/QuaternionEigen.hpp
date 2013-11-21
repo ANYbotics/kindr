@@ -32,7 +32,7 @@ namespace eigen_implementation {
  * \see rm::rotations::eigen_implementation::RotationQuaternion for quaternions that represent a rotation
  */
 template<typename PrimType>
-class Quaternion : public QuaternionBase<Quaternion<PrimType>>, public Eigen::Quaternion<PrimType> { // todo: should be private, error
+class Quaternion : public QuaternionBase<Quaternion<PrimType>>, private Eigen::Quaternion<PrimType> {
  private:
   typedef Eigen::Quaternion<PrimType> Base;
  public:

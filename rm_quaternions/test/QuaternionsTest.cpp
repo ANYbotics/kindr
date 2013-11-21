@@ -128,10 +128,10 @@ TYPED_TEST (QuaternionsPairsTest, testQuaternionInversion ) {
 	typedef typename TestFixture::UnitQuaternionImplementation::Scalar UnitQuaternionScalar;
 	typedef typename TestFixture::QuaternionImplementation::Scalar QuaternionScalar;
 
-	ASSERT_NEAR(TestFixture::quat.generic.inverse().w(), TestFixture::quat.genericInverse.w(),1e-6);
-	ASSERT_NEAR(TestFixture::quat.generic.inverse().x(), TestFixture::quat.genericInverse.x(),1e-6);
-	ASSERT_NEAR(TestFixture::quat.generic.inverse().y(), TestFixture::quat.genericInverse.y(),1e-6);
-	ASSERT_NEAR(TestFixture::quat.generic.inverse().z(), TestFixture::quat.genericInverse.z(),1e-6);
+	ASSERT_NEAR(TestFixture::quat.generic.inverted().w(), TestFixture::quat.genericInverse.w(),1e-6);
+	ASSERT_NEAR(TestFixture::quat.generic.inverted().x(), TestFixture::quat.genericInverse.x(),1e-6);
+	ASSERT_NEAR(TestFixture::quat.generic.inverted().y(), TestFixture::quat.genericInverse.y(),1e-6);
+	ASSERT_NEAR(TestFixture::quat.generic.inverted().z(), TestFixture::quat.genericInverse.z(),1e-6);
 }
 
 
