@@ -19,9 +19,15 @@ namespace rotations {
 //! Internal stuff (only for developers)
 namespace internal {
 
+template<typename DERIVED, enum RotationUsage Usage_>
+class UsageConversionTraits {
+ public:
+  //
+};
+
 template<typename DEST, typename SOURCE>
 class ConversionTraits {
-public:
+ public:
   // inline static DEST convert(const SOURCE & );
 };
 
@@ -38,6 +44,11 @@ class get_matrix3X {
   //  template <IndexType Cols> Matrix3X {
   //    typedef MATRIX type;
   //  }
+};
+
+template<typename ROTATION>
+class get_other_usage {
+
 };
 
 template<typename ROTATION>
@@ -118,6 +129,14 @@ class RotationBase {
 //                                                       typename eigen_implementation::RotationQuaternion<typename DERIVED::Scalar>(other.derived()).getUnique(),
 //                                                       tol);
 //  }
+
+  inline typename internal::get_other_usage<DERIVED>::OtherUsage getPassive() const {
+    return internal::UsageConversionTraits<DERIVED,Usage>::getPassive(*this);
+  }
+
+  inline typename internal::get_other_usage<DERIVED>::OtherUsage getActive() const {
+    return internal::UsageConversionTraits<DERIVED,Usage>::getActive(*this);
+  }
 };
 
 
@@ -183,6 +202,27 @@ class EulerAnglesZyxBase : public EulerAnglesBase<Implementation, Usage> {
 
 namespace internal {
 
+
+template<typename DERIVED>
+class UsageConversionTraits<DERIVED,RotationUsage::PASSIVE> {
+ public:
+  inline static typename internal::get_other_usage<DERIVED>::OtherUsage getActive(const RotationBase<DERIVED,RotationUsage::PASSIVE> & in) {
+    return typename internal::get_other_usage<DERIVED>::OtherUsage(in.derived().inverted());
+  }
+
+  // getPassive() does not exist
+};
+
+template<typename DERIVED>
+class UsageConversionTraits<DERIVED,RotationUsage::ACTIVE> {
+ public:
+  inline static typename internal::get_other_usage<DERIVED>::OtherUsage getPassive(const RotationBase<DERIVED,RotationUsage::ACTIVE> & in) {
+    return typename internal::get_other_usage<DERIVED>::OtherUsage(in.derived().inverted());
+  }
+
+  // getActive() does not exist
+};
+
 //template<typename LEFT, typename RIGHT, enum RotationUsage Usage>
 //class MultiplicationTraits<RotationBase<LEFT, Usage>, RotationBase<RIGHT, Usage>> {
 //// public:
@@ -239,8 +279,6 @@ namespace internal {
 //    return LEFT_AND_RIGHT(typename LEFT_AND_RIGHT::Implementation(l.derived().toImplementation() * r.derived().toImplementation()));
 //  }
 //};
-
-
 
 template<typename LEFT, typename RIGHT, enum RotationUsage Usage>
 class MultiplicationTraits<RotationBase<LEFT, Usage>, RotationBase<RIGHT, Usage>> {

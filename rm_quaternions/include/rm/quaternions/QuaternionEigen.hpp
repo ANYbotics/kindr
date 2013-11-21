@@ -80,7 +80,6 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType>>, public Eigen::Qu
     return *this;
   }
 
-
   Quaternion & operator =(const Quaternion<PrimType> & other) {
     this->w() = other.w();
     this->x() = other.x();

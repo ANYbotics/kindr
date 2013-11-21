@@ -331,6 +331,13 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
   using RotationQuaternionBase<RotationQuaternion<PrimType, Usage>, Usage> ::operator ==;
 
 
+//  RotationQuaternion<PrimType,RotationUsage::PASSIVE> getPassive() const {
+//    return RotationQuaternion<PrimType,RotationUsage::PASSIVE>(this->inverted().w(),this->inverted().x(),this->inverted().y(),this->inverted().z());
+//  }
+//
+//  RotationQuaternion<PrimType,RotationUsage::ACTIVE> getActive() const {
+//    return RotationQuaternion<PrimType,RotationUsage::ACTIVE>(this->inverted().w(),this->inverted().x(),this->inverted().y(),this->inverted().z());
+//  }
 
 
 //  bool operator ==(const quaternions::eigen_implementation::UnitQuaternion<PrimType> & other) {
@@ -887,6 +894,69 @@ class get_matrix3X<eigen_implementation::EulerAnglesZyx<PrimType, Usage>>{
 
   template <IndexType Cols>
   using Matrix3X = Eigen::Matrix<PrimType, 3, Cols>;
+};
+
+
+
+
+template<typename PrimType>
+class get_other_usage<eigen_implementation::AngleAxis<PrimType, RotationUsage::ACTIVE>> {
+ public:
+  typedef eigen_implementation::AngleAxis<PrimType, RotationUsage::PASSIVE> OtherUsage;
+};
+
+template<typename PrimType>
+class get_other_usage<eigen_implementation::AngleAxis<PrimType, RotationUsage::PASSIVE>> {
+ public:
+  typedef eigen_implementation::AngleAxis<PrimType, RotationUsage::ACTIVE> OtherUsage;
+};
+
+template<typename PrimType>
+class get_other_usage<eigen_implementation::RotationQuaternion<PrimType, RotationUsage::ACTIVE>> {
+ public:
+  typedef eigen_implementation::RotationQuaternion<PrimType, RotationUsage::PASSIVE> OtherUsage;
+};
+
+template<typename PrimType>
+class get_other_usage<eigen_implementation::RotationQuaternion<PrimType, RotationUsage::PASSIVE>> {
+ public:
+  typedef eigen_implementation::RotationQuaternion<PrimType, RotationUsage::ACTIVE> OtherUsage;
+};
+
+template<typename PrimType>
+class get_other_usage<eigen_implementation::RotationMatrix<PrimType, RotationUsage::ACTIVE>> {
+ public:
+  typedef eigen_implementation::RotationMatrix<PrimType, RotationUsage::PASSIVE> OtherUsage;
+};
+
+template<typename PrimType>
+class get_other_usage<eigen_implementation::RotationMatrix<PrimType, RotationUsage::PASSIVE>> {
+ public:
+  typedef eigen_implementation::RotationMatrix<PrimType, RotationUsage::ACTIVE> OtherUsage;
+};
+
+template<typename PrimType>
+class get_other_usage<eigen_implementation::EulerAnglesXyz<PrimType, RotationUsage::ACTIVE>> {
+ public:
+  typedef eigen_implementation::EulerAnglesXyz<PrimType, RotationUsage::PASSIVE> OtherUsage;
+};
+
+template<typename PrimType>
+class get_other_usage<eigen_implementation::EulerAnglesXyz<PrimType, RotationUsage::PASSIVE>> {
+ public:
+  typedef eigen_implementation::EulerAnglesXyz<PrimType, RotationUsage::ACTIVE> OtherUsage;
+};
+
+template<typename PrimType>
+class get_other_usage<eigen_implementation::EulerAnglesZyx<PrimType, RotationUsage::ACTIVE>> {
+ public:
+  typedef eigen_implementation::EulerAnglesZyx<PrimType, RotationUsage::PASSIVE> OtherUsage;
+};
+
+template<typename PrimType>
+class get_other_usage<eigen_implementation::EulerAnglesZyx<PrimType, RotationUsage::PASSIVE>> {
+ public:
+  typedef eigen_implementation::EulerAnglesZyx<PrimType, RotationUsage::ACTIVE> OtherUsage;
 };
 
 

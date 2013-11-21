@@ -575,10 +575,14 @@ TEST (RotationsTest, testRotationVarious ) {
 //  std::cout << std::endl;
 
 
+}
 
+TEST (RotationsTest, testActivePassive) {
 
-
-
+  rot::RotationQuaternionPD qp1(0,1,0,0);
+  rot::RotationQuaternionAD qa1 = qp1.getActive();
+  rot::RotationQuaternionPD qp2 = qa1.getPassive();
+//  rot::RotationQuaternionPD qp3 = qp2.getPassive();
 
 }
 
