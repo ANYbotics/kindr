@@ -181,83 +181,83 @@ class EulerAnglesZyxBase : public EulerAnglesBase<Implementation, Usage> {
 
 namespace internal {
 
-template<typename LEFT, typename RIGHT, enum RotationUsage Usage>
-class MultiplicationTraits<RotationBase<LEFT, Usage>, RotationBase<RIGHT, Usage>> {
-// public:
-//  inline static LEFT mult(const RotationBase<LEFT, Usage> & l, const RotationBase<RIGHT, Usage> & r) {
-//    return LEFT(typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar,  Usage>(
-//               (typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar,  Usage>(l.derived())).toImplementation() *
-//               (typename eigen_implementation::RotationQuaternion<typename RIGHT::Scalar, Usage>(r.derived())).toImplementation()
-//               ));
-//  }
-};
-
-template<typename LEFT, typename RIGHT>
-class MultiplicationTraits<RotationBase<LEFT, RotationUsage::ACTIVE>, RotationBase<RIGHT, RotationUsage::ACTIVE>> {
- public:
-  inline static LEFT mult(const RotationBase<LEFT, RotationUsage::ACTIVE> & l, const RotationBase<RIGHT, RotationUsage::ACTIVE> & r) {
-    return LEFT(typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar,  RotationUsage::ACTIVE>(
-               (typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar,  RotationUsage::ACTIVE>(l.derived())).toImplementation() *
-               (typename eigen_implementation::RotationQuaternion<typename RIGHT::Scalar, RotationUsage::ACTIVE>(r.derived())).toImplementation()
-               ));
-  }
-};
-
-template<typename LEFT, typename RIGHT>
-class MultiplicationTraits<RotationBase<LEFT, RotationUsage::PASSIVE>, RotationBase<RIGHT, RotationUsage::PASSIVE>> {
- public:
-  inline static LEFT mult(const RotationBase<LEFT, RotationUsage::PASSIVE> & l, const RotationBase<RIGHT, RotationUsage::PASSIVE> & r) {
-    return LEFT(typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar,  RotationUsage::PASSIVE>(
-               (typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar,  RotationUsage::PASSIVE>(l.derived())).toImplementation() *
-               (typename eigen_implementation::RotationQuaternion<typename RIGHT::Scalar, RotationUsage::PASSIVE>(r.derived())).toImplementation()
-               ));
-  }
-};
-
-template<typename LEFT_AND_RIGHT, enum RotationUsage Usage>
-class MultiplicationTraits<RotationBase<LEFT_AND_RIGHT, Usage>, RotationBase<LEFT_AND_RIGHT, Usage>> {
-// public:
-//  inline static LEFT_AND_RIGHT mult(const RotationBase<LEFT_AND_RIGHT, Usage> & l, const RotationBase<LEFT_AND_RIGHT, Usage> & r) {
-//    return LEFT_AND_RIGHT(typename LEFT_AND_RIGHT::Implementation(l.derived().toImplementation() * r.derived().toImplementation()));
-//  }
-};
-
-template<typename LEFT_AND_RIGHT>
-class MultiplicationTraits<RotationBase<LEFT_AND_RIGHT, RotationUsage::ACTIVE>, RotationBase<LEFT_AND_RIGHT, RotationUsage::ACTIVE>> {
- public:
-  inline static LEFT_AND_RIGHT mult(const RotationBase<LEFT_AND_RIGHT, RotationUsage::ACTIVE> & l, const RotationBase<LEFT_AND_RIGHT, RotationUsage::ACTIVE> & r) {
-    return LEFT_AND_RIGHT(typename LEFT_AND_RIGHT::Implementation(l.derived().toImplementation() * r.derived().toImplementation()));
-  }
-};
-
-template<typename LEFT_AND_RIGHT>
-class MultiplicationTraits<RotationBase<LEFT_AND_RIGHT, RotationUsage::PASSIVE>, RotationBase<LEFT_AND_RIGHT, RotationUsage::PASSIVE>> {
- public:
-  inline static LEFT_AND_RIGHT mult(const RotationBase<LEFT_AND_RIGHT, RotationUsage::PASSIVE> & l, const RotationBase<LEFT_AND_RIGHT, RotationUsage::PASSIVE> & r) {
-    return LEFT_AND_RIGHT(typename LEFT_AND_RIGHT::Implementation(l.derived().toImplementation() * r.derived().toImplementation()));
-  }
-};
-
-
-
 //template<typename LEFT, typename RIGHT, enum RotationUsage Usage>
 //class MultiplicationTraits<RotationBase<LEFT, Usage>, RotationBase<RIGHT, Usage>> {
+//// public:
+////  inline static LEFT mult(const RotationBase<LEFT, Usage> & l, const RotationBase<RIGHT, Usage> & r) {
+////    return LEFT(typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar,  Usage>(
+////               (typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar,  Usage>(l.derived())).toImplementation() *
+////               (typename eigen_implementation::RotationQuaternion<typename RIGHT::Scalar, Usage>(r.derived())).toImplementation()
+////               ));
+////  }
+//};
+//
+//template<typename LEFT, typename RIGHT>
+//class MultiplicationTraits<RotationBase<LEFT, RotationUsage::ACTIVE>, RotationBase<RIGHT, RotationUsage::ACTIVE>> {
 // public:
-//  inline static LEFT mult(const RotationBase<LEFT, Usage> & l, const RotationBase<RIGHT, Usage> & r) {
-//    return LEFT(typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar,  Usage>(
-//               (typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar,  Usage>(l.derived())).toImplementation() *
-//               (typename eigen_implementation::RotationQuaternion<typename RIGHT::Scalar, Usage>(r.derived())).toImplementation()
+//  inline static LEFT mult(const RotationBase<LEFT, RotationUsage::ACTIVE> & l, const RotationBase<RIGHT, RotationUsage::ACTIVE> & r) {
+//    return LEFT(typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar,  RotationUsage::ACTIVE>(
+//               (typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar,  RotationUsage::ACTIVE>(l.derived())).toImplementation() *
+//               (typename eigen_implementation::RotationQuaternion<typename RIGHT::Scalar, RotationUsage::ACTIVE>(r.derived())).toImplementation()
+//               ));
+//  }
+//};
+//
+//template<typename LEFT, typename RIGHT>
+//class MultiplicationTraits<RotationBase<LEFT, RotationUsage::PASSIVE>, RotationBase<RIGHT, RotationUsage::PASSIVE>> {
+// public:
+//  inline static LEFT mult(const RotationBase<LEFT, RotationUsage::PASSIVE> & l, const RotationBase<RIGHT, RotationUsage::PASSIVE> & r) {
+//    return LEFT(typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar,  RotationUsage::PASSIVE>(
+//               (typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar,  RotationUsage::PASSIVE>(l.derived())).toImplementation() *
+//               (typename eigen_implementation::RotationQuaternion<typename RIGHT::Scalar, RotationUsage::PASSIVE>(r.derived())).toImplementation()
 //               ));
 //  }
 //};
 //
 //template<typename LEFT_AND_RIGHT, enum RotationUsage Usage>
 //class MultiplicationTraits<RotationBase<LEFT_AND_RIGHT, Usage>, RotationBase<LEFT_AND_RIGHT, Usage>> {
+//// public:
+////  inline static LEFT_AND_RIGHT mult(const RotationBase<LEFT_AND_RIGHT, Usage> & l, const RotationBase<LEFT_AND_RIGHT, Usage> & r) {
+////    return LEFT_AND_RIGHT(typename LEFT_AND_RIGHT::Implementation(l.derived().toImplementation() * r.derived().toImplementation()));
+////  }
+//};
+//
+//template<typename LEFT_AND_RIGHT>
+//class MultiplicationTraits<RotationBase<LEFT_AND_RIGHT, RotationUsage::ACTIVE>, RotationBase<LEFT_AND_RIGHT, RotationUsage::ACTIVE>> {
 // public:
-//  inline static LEFT_AND_RIGHT mult(const RotationBase<LEFT_AND_RIGHT, Usage> & l, const RotationBase<LEFT_AND_RIGHT, Usage> & r) {
+//  inline static LEFT_AND_RIGHT mult(const RotationBase<LEFT_AND_RIGHT, RotationUsage::ACTIVE> & l, const RotationBase<LEFT_AND_RIGHT, RotationUsage::ACTIVE> & r) {
 //    return LEFT_AND_RIGHT(typename LEFT_AND_RIGHT::Implementation(l.derived().toImplementation() * r.derived().toImplementation()));
 //  }
 //};
+//
+//template<typename LEFT_AND_RIGHT>
+//class MultiplicationTraits<RotationBase<LEFT_AND_RIGHT, RotationUsage::PASSIVE>, RotationBase<LEFT_AND_RIGHT, RotationUsage::PASSIVE>> {
+// public:
+//  inline static LEFT_AND_RIGHT mult(const RotationBase<LEFT_AND_RIGHT, RotationUsage::PASSIVE> & l, const RotationBase<LEFT_AND_RIGHT, RotationUsage::PASSIVE> & r) {
+//    return LEFT_AND_RIGHT(typename LEFT_AND_RIGHT::Implementation(l.derived().toImplementation() * r.derived().toImplementation()));
+//  }
+//};
+
+
+
+template<typename LEFT, typename RIGHT, enum RotationUsage Usage>
+class MultiplicationTraits<RotationBase<LEFT, Usage>, RotationBase<RIGHT, Usage>> {
+ public:
+  inline static LEFT mult(const RotationBase<LEFT, Usage> & l, const RotationBase<RIGHT, Usage> & r) {
+    return LEFT(typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar,  Usage>(
+               (typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar,  Usage>(l.derived())).toImplementation() *
+               (typename eigen_implementation::RotationQuaternion<typename RIGHT::Scalar, Usage>(r.derived())).toImplementation()
+               ));
+  }
+};
+
+template<typename LEFT_AND_RIGHT, enum RotationUsage Usage>
+class MultiplicationTraits<RotationBase<LEFT_AND_RIGHT, Usage>, RotationBase<LEFT_AND_RIGHT, Usage>> {
+ public:
+  inline static LEFT_AND_RIGHT mult(const RotationBase<LEFT_AND_RIGHT, Usage> & l, const RotationBase<LEFT_AND_RIGHT, Usage> & r) {
+    return LEFT_AND_RIGHT(typename LEFT_AND_RIGHT::Implementation(l.derived().toImplementation() * r.derived().toImplementation()));
+  }
+};
 
 } // namespace internal
 

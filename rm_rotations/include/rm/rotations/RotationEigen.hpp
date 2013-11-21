@@ -82,7 +82,8 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType, Usage>, Usage>, priva
 
   template<typename OTHER_DERIVED>
   AngleAxis & operator =(const RotationBase<OTHER_DERIVED, Usage> & other) {
-    *this = internal::ConversionTraits<AngleAxis, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other));
+    this->angle() = internal::ConversionTraits<AngleAxis, OTHER_DERIVED>::convert(other.derived()).angle();
+    this->axis()  = internal::ConversionTraits<AngleAxis, OTHER_DERIVED>::convert(other.derived()).axis();
     return *this;
   }
 
@@ -222,12 +223,17 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
 
   template<typename OTHER_DERIVED>
   RotationQuaternion & operator =(const RotationBase<OTHER_DERIVED, Usage> & other) {
-    *this = internal::ConversionTraits<RotationQuaternion, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other));
+//    *this = internal::ConversionTraits<RotationQuaternion, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other));
 //    RotationQuaternion result = internal::ConversionTraits<RotationQuaternion, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other));
 //    this->w() = result.w();
 //    this->x() = result.x();
 //    this->y() = result.y();
 //    this->z() = result.z();
+
+    this->w() = internal::ConversionTraits<RotationQuaternion, OTHER_DERIVED>::convert(other.derived()).w();
+    this->x() = internal::ConversionTraits<RotationQuaternion, OTHER_DERIVED>::convert(other.derived()).x();
+    this->y() = internal::ConversionTraits<RotationQuaternion, OTHER_DERIVED>::convert(other.derived()).y();
+    this->z() = internal::ConversionTraits<RotationQuaternion, OTHER_DERIVED>::convert(other.derived()).z();
     return *this;
   }
 
@@ -477,49 +483,73 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType, Usage>
     return toImplementation()(2);
   }
 
+  inline Scalar x() const {
+    return toImplementation()(0);
+  }
+
+  inline Scalar y() const {
+    return toImplementation()(1);
+  }
+
+  inline Scalar z() const {
+    return toImplementation()(2);
+  }
+
+  inline Scalar & x() {
+    return toImplementation()(0);
+  }
+
+  inline Scalar & y() {
+    return toImplementation()(1);
+  }
+
+  inline Scalar & z() {
+    return toImplementation()(2);
+  }
+
   EulerAnglesXyz & setIdentity() {
 	  this->Implementation::setZero();
 	  return *this;
   }
 
   EulerAnglesXyz getUnique() const {  // wraps angles into [-pi,pi),[-pi/2,pi/2),[-pi,pi)
-	EulerAnglesXyz rpy(rm::common::Mod(roll() +M_PI,2*M_PI)-M_PI,
-			           rm::common::Mod(pitch()+M_PI,2*M_PI)-M_PI,
-			           rm::common::Mod(yaw()  +M_PI,2*M_PI)-M_PI); // wraps all angles into [-pi,pi)
-	if(rpy.pitch() >= M_PI/2)
-	{
-	  if(rpy.roll() >= 0) {
-		rpy.roll() -= M_PI;
-	  } else {
-		rpy.roll() += M_PI;
-	  }
+    EulerAnglesXyz rpy(rm::common::Mod(roll() +M_PI,2*M_PI)-M_PI,
+                       rm::common::Mod(pitch()+M_PI,2*M_PI)-M_PI,
+                       rm::common::Mod(yaw()  +M_PI,2*M_PI)-M_PI); // wraps all angles into [-pi,pi)
+    if(rpy.pitch() >= M_PI/2)
+    {
+      if(rpy.roll() >= 0) {
+        rpy.roll() -= M_PI;
+      } else {
+        rpy.roll() += M_PI;
+      }
 
       rpy.pitch() = -(rpy.pitch()-M_PI);
 
       if(rpy.yaw() >= 0) {
-    	rpy.yaw() -= M_PI;
+        rpy.yaw() -= M_PI;
       } else {
-    	rpy.yaw() += M_PI;
+        rpy.yaw() += M_PI;
       }
-	}
-	else
-	if(rpy.pitch() < -M_PI/2)
-	{
-	  if(rpy.roll() >= 0) {
-		rpy.roll() -= M_PI;
-	  } else {
-		rpy.roll() += M_PI;
-	  }
+    }
+    else
+      if(rpy.pitch() < -M_PI/2)
+      {
+        if(rpy.roll() >= 0) {
+          rpy.roll() -= M_PI;
+        } else {
+          rpy.roll() += M_PI;
+        }
 
-	  rpy.pitch() = -(rpy.pitch()+M_PI);
+        rpy.pitch() = -(rpy.pitch()+M_PI);
 
-	  if(rpy.yaw() >= 0) {
-		rpy.yaw() -= M_PI;
-	  } else {
-		rpy.yaw() += M_PI;
-	  }
-	}
-	return rpy;
+        if(rpy.yaw() >= 0) {
+          rpy.yaw() -= M_PI;
+        } else {
+          rpy.yaw() += M_PI;
+        }
+      }
+    return rpy;
   }
 
   friend std::ostream & operator << (std::ostream & out, const EulerAnglesXyz & rpy) {
@@ -631,49 +661,73 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType, Usage>
     return toImplementation()(2);
   }
 
+  inline Scalar z() const {
+    return toImplementation()(0);
+  }
+
+  inline Scalar y() const {
+    return toImplementation()(1);
+  }
+
+  inline Scalar x() const {
+    return toImplementation()(2);
+  }
+
+  inline Scalar & z() {
+    return toImplementation()(0);
+  }
+
+  inline Scalar & y() {
+    return toImplementation()(1);
+  }
+
+  inline Scalar & x() {
+    return toImplementation()(2);
+  }
+
   EulerAnglesZyx & setIdentity() {
 	  this->Implementation::setZero();
 	  return *this;
   }
 
   EulerAnglesZyx getUnique() const {  // wraps angles into [-pi,pi),[-pi/2,pi/2),[-pi,pi)
-	EulerAnglesZyx ypr(rm::common::Mod(yaw()  +M_PI,2*M_PI)-M_PI,
-					   rm::common::Mod(pitch()+M_PI,2*M_PI)-M_PI,
-					   rm::common::Mod(roll() +M_PI,2*M_PI)-M_PI); // wraps all angles into [-pi,pi)
-	if(ypr.pitch() >= M_PI/2)
-	{
-	  if(ypr.yaw() >= 0) {
-		ypr.yaw() -= M_PI;
-	  } else {
-		ypr.yaw() += M_PI;
-	  }
+    EulerAnglesZyx ypr(rm::common::Mod(yaw()  +M_PI,2*M_PI)-M_PI,
+                       rm::common::Mod(pitch()+M_PI,2*M_PI)-M_PI,
+                       rm::common::Mod(roll() +M_PI,2*M_PI)-M_PI); // wraps all angles into [-pi,pi)
+    if(ypr.pitch() >= M_PI/2)
+    {
+      if(ypr.yaw() >= 0) {
+        ypr.yaw() -= M_PI;
+      } else {
+        ypr.yaw() += M_PI;
+      }
 
       ypr.pitch() = -(ypr.pitch()-M_PI);
 
-	  if(ypr.roll() >= 0) {
-		ypr.roll() -= M_PI;
-	  } else {
-		ypr.roll() += M_PI;
-	  }
-	}
-	else
-	if(ypr.pitch() < -M_PI/2)
-	{
-	  if(ypr.yaw() >= 0) {
-		ypr.yaw() -= M_PI;
-	  } else {
-		ypr.yaw() += M_PI;
-	  }
+      if(ypr.roll() >= 0) {
+        ypr.roll() -= M_PI;
+      } else {
+        ypr.roll() += M_PI;
+      }
+    }
+    else
+      if(ypr.pitch() < -M_PI/2)
+      {
+        if(ypr.yaw() >= 0) {
+          ypr.yaw() -= M_PI;
+        } else {
+          ypr.yaw() += M_PI;
+        }
 
-	  ypr.pitch() = -(ypr.pitch()+M_PI);
+        ypr.pitch() = -(ypr.pitch()+M_PI);
 
-	  if(ypr.roll() >= 0) {
-		ypr.roll() -= M_PI;
-	  } else {
-		ypr.roll() += M_PI;
-	  }
-	}
-	return ypr;
+        if(ypr.roll() >= 0) {
+          ypr.roll() -= M_PI;
+        } else {
+          ypr.roll() += M_PI;
+        }
+      }
+    return ypr;
   }
 
   friend std::ostream & operator << (std::ostream & out, const EulerAnglesZyx & ypr) {
