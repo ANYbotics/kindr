@@ -27,8 +27,8 @@
 
 
 namespace rm {
-
-  namespace detail {
+namespace common {
+  namespace internal {
 
     template<typename RM_EXCEPTION_T>
     inline void rm_throw_exception(std::string const & exceptionType, rm::source_file_pos sfp, std::string const & message)
@@ -51,18 +51,18 @@ namespace rm {
     }
 
 
-  } // namespace rm::detail
+  } // namespace internal
 
   template<typename RM_EXCEPTION_T>
-  inline void RM_assert_throw(bool assert_condition, std::string message, rm::source_file_pos sfp) {
+  inline void rm_assert_throw(bool assert_condition, std::string message, rm::source_file_pos sfp) {
     if(!assert_condition)
       {
-    detail::rm_throw_exception<RM_EXCEPTION_T>("", sfp,message);
+    internal::rm_throw_exception<RM_EXCEPTION_T>("", sfp,message);
       }
   }
 
 
-
+} // namespace common
 } // namespace rm
 
 
@@ -71,14 +71,14 @@ namespace rm {
 #define RM_THROW(exceptionType, message) {                \
     std::stringstream RM_assert_stringstream;             \
     RM_assert_stringstream << message;                  \
-    rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__, RM_assert_stringstream.str()); \
+    rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__, RM_assert_stringstream.str()); \
   }
 
 
 #define RM_THROW_SFP(exceptionType, SourceFilePos, message){      \
     std::stringstream RM_assert_stringstream;             \
     RM_assert_stringstream << message;                  \
-    rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", SourceFilePos, RM_assert_stringstream.str()); \
+    rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", SourceFilePos, RM_assert_stringstream.str()); \
   }
 
 #define RM_ASSERT_TRUE(exceptionType, condition, message)       \
@@ -86,7 +86,7 @@ namespace rm {
     {                                 \
       std::stringstream RM_assert_stringstream;             \
       RM_assert_stringstream << "assert(" << #condition << ") failed: " << message; \
-      rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__, RM_assert_stringstream.str()); \
+      rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__, RM_assert_stringstream.str()); \
     }
 
 #define RM_ASSERT_FALSE(exceptionType, condition, message)        \
@@ -94,7 +94,7 @@ namespace rm {
     {                                 \
       std::stringstream RM_assert_stringstream;             \
       RM_assert_stringstream << "assert( not " << #condition << ") failed: " << message; \
-      rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__, RM_assert_stringstream.str()); \
+      rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__, RM_assert_stringstream.str()); \
     }
 
 
@@ -104,7 +104,7 @@ namespace rm {
     {                                 \
       std::stringstream RM_assert_stringstream;             \
       RM_assert_stringstream << "assert(" << #lowerBound << " <= " << #value << " < " << #upperBound << ") failed [" << (lowerBound) << " <= " << (value) << " < " << (upperBound) << "]: " << message; \
-      rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
+      rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
     }
 
 
@@ -114,7 +114,7 @@ namespace rm {
     {                                 \
       std::stringstream RM_assert_stringstream;             \
       RM_assert_stringstream << "assert(" << #value << " < " << #upperBound << ") failed [" << (value) << " < " << (upperBound) << "]: " <<  message; \
-      rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
+      rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
     }
 
 #define RM_ASSERT_GE(exceptionType, value, lowerBound, message)     \
@@ -122,7 +122,7 @@ namespace rm {
     {                                 \
       std::stringstream RM_assert_stringstream;             \
       RM_assert_stringstream << "assert(" << #value << " >= " << #lowerBound << ") failed [" << (value) << " >= " << (lowerBound) << "]: " <<  message; \
-      rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
+      rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
     }
 
 
@@ -132,7 +132,7 @@ namespace rm {
     {                                 \
       std::stringstream RM_assert_stringstream;             \
       RM_assert_stringstream << "assert(" << #value << " <= " << #upperBound << ") failed [" << (value) << " <= " << (upperBound) << "]: " <<  message; \
-      rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
+      rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
     }
 
 #define RM_ASSERT_GT(exceptionType, value, lowerBound, message)     \
@@ -140,7 +140,7 @@ namespace rm {
     {                                 \
       std::stringstream RM_assert_stringstream;             \
       RM_assert_stringstream << "assert(" << #value << " > " << #lowerBound << ") failed [" << (value) << " > " << (lowerBound) << "]: " <<  message; \
-      rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
+      rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
     }
 
 
@@ -150,7 +150,7 @@ namespace rm {
     {                                 \
       std::stringstream RM_assert_stringstream;             \
       RM_assert_stringstream << "assert(" << #value << " == " << #testValue << ") failed [" << (value) << " == " << (testValue) << "]: " <<  message; \
-      rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
+      rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
     }
 
 #define RM_ASSERT_NE(exceptionType, value, testValue, message)      \
@@ -158,7 +158,7 @@ namespace rm {
     {                                 \
       std::stringstream RM_assert_stringstream;             \
       RM_assert_stringstream << "assert(" << #value << " != " << #testValue << ") failed [" << (value) << " != " << (testValue) << "]: " <<  message; \
-      rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
+      rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
     }
 
 #define RM_ASSERT_NEAR(exceptionType, value, testValue, abs_error, message) \
@@ -166,7 +166,7 @@ namespace rm {
     {                                 \
       std::stringstream RM_assert_stringstream;             \
       RM_assert_stringstream << "assert(" << #value << " == " << #testValue << ") failed [" << (value) << " == " << (testValue) << " (" << fabs((testValue) - (value)) << " > " << fabs(abs_error) << ")]: " <<  message; \
-      rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
+      rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
     }
 
 
@@ -176,7 +176,7 @@ namespace rm {
 #define RM_THROW_DBG(exceptionType, message){             \
     std::stringstream RM_assert_stringstream;             \
     RM_assert_stringstream << message;                  \
-    rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__, RM_assert_stringstream.str()); \
+    rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__, RM_assert_stringstream.str()); \
   }
 
 
@@ -186,7 +186,7 @@ namespace rm {
     {                                 \
       std::stringstream RM_assert_stringstream;             \
       RM_assert_stringstream << "debug assert(" << #condition << ") failed: " << message; \
-      rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__, RM_assert_stringstream.str()); \
+      rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__, RM_assert_stringstream.str()); \
     }
 
 #define RM_ASSERT_FALSE_DBG(exceptionType, condition, message)      \
@@ -194,7 +194,7 @@ namespace rm {
     {                                 \
       std::stringstream RM_assert_stringstream;             \
       RM_assert_stringstream << "debug assert( not " << #condition << ") failed: " << message; \
-      rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__, RM_assert_stringstream.str()); \
+      rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__, RM_assert_stringstream.str()); \
     }
 
 
@@ -205,7 +205,7 @@ namespace rm {
     {                                 \
       std::stringstream RM_assert_stringstream;             \
       RM_assert_stringstream << "debug assert(" << #lowerBound << " <= " << #value << " < " << #upperBound << ") failed [" << (lowerBound) << " <= " << (value) << " < " << (upperBound) << "]: " << message; \
-      rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
+      rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
     }
 
 
@@ -215,7 +215,7 @@ namespace rm {
     {                                 \
       std::stringstream RM_assert_stringstream;             \
       RM_assert_stringstream << "debug assert(" << #value << " < " << #upperBound << ") failed [" << (value) << " < " << (upperBound) << "]: " <<  message; \
-      rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
+      rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
     }
 
 
@@ -225,7 +225,7 @@ namespace rm {
     {                                 \
       std::stringstream RM_assert_stringstream;             \
       RM_assert_stringstream << "debug assert(" << #value << " >= " << #lowerBound << ") failed [" << (value) << " >= " << (lowerBound) << "]: " <<  message; \
-      rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
+      rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
     }
 
 
@@ -235,7 +235,7 @@ namespace rm {
     {                                 \
       std::stringstream RM_assert_stringstream;             \
       RM_assert_stringstream << "debug assert(" << #value << " <= " << #upperBound << ") failed [" << (value) << " <= " << (upperBound) << "]: " <<  message; \
-      rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
+      rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
     }
 
 #define RM_ASSERT_GT_DBG(exceptionType, value, lowerBound, message)   \
@@ -243,7 +243,7 @@ namespace rm {
     {                                 \
       std::stringstream RM_assert_stringstream;             \
       RM_assert_stringstream << "debug assert(" << #value << " > " << #lowerBound << ") failed [" << (value) << " > " << (lowerBound) << "]: " <<  message; \
-      rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
+      rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
     }
 
 
@@ -253,7 +253,7 @@ namespace rm {
     {                                 \
       std::stringstream RM_assert_stringstream;             \
       RM_assert_stringstream << "debug assert(" << #value << " == " << #testValue << ") failed [" << (value) << " == " << (testValue) << "]: " <<  message; \
-      rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
+      rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
     }
 
 
@@ -262,7 +262,7 @@ namespace rm {
     {                                 \
       std::stringstream RM_assert_stringstream;             \
       RM_assert_stringstream << "debug assert(" << #value << " != " << #testValue << ") failed [" << (value) << " != " << (testValue) << "]: " <<  message; \
-      rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
+      rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
     }
 
 
@@ -272,7 +272,7 @@ namespace rm {
     {                                 \
       std::stringstream RM_assert_stringstream;             \
       RM_assert_stringstream << "debug assert(" << #value << " == " << #testValue << ") failed [" << (value) << " == " << (testValue) << " (" << fabs((testValue) - (value)) << " > " << fabs(abs_error) << ")]: " <<  message; \
-      rm::detail::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
+      rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,RM_assert_stringstream.str()); \
     }
 
 

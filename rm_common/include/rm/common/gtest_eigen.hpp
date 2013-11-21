@@ -13,7 +13,9 @@
 #include <rm/common/assert_macros_eigen.hpp>
 #include <Eigen/Core>
 
-namespace rm { namespace eigen {
+namespace rm {
+namespace common {
+namespace eigen {
 
 
 //    template<int N>
@@ -121,7 +123,9 @@ namespace rm { namespace eigen {
 
 
 
-  }} // namespace rm::eigen
+} // namespace eigen
+} // namespace common
+} // namespace rm
 
 
 
