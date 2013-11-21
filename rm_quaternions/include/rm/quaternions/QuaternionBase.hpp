@@ -11,11 +11,9 @@
 #include "rm/common/common.hpp"
 
 namespace rm {
-/*!
- *  \addtogroup Quaternions
- *  @{
- */
 //! Generic quaternion interface
+/*! \ingroup quaternions
+ */
 namespace quaternions {
 //! Internal stuff (only for developers)
 namespace internal {
@@ -47,7 +45,7 @@ class ComparisonTraits {
 } // namespace internal
 
 //! Base class that defines the interface of a quaternion
-/*!
+/*! \ingroup quaternions
  * \see rm::rotations::RotationQuaternionBase for quaternions that represent a rotation
  */
 template<typename DERIVED>
@@ -95,7 +93,7 @@ class QuaternionBase {
 
 
 //! Base class that defines the interface of a unit quaternion
-/*!
+/*! \ingroup quaternions
  * \see rm::rotations::RotationQuaternionBase for quaternions that represent a rotation
  */
 template<typename DERIVED>
@@ -124,7 +122,6 @@ class UnitQuaternionBase : public QuaternionBase<DERIVED> {
 
 
 } // namespace quaternions
-/*! @} End of Doxygen Groups*/
 } // namespace rm
 
 #endif /* QUATERNIONBASE_HPP_ */

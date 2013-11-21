@@ -12,13 +12,9 @@
 #include "rm/quaternions/QuaternionBase.hpp"
 
 namespace rm {
-
-/*!
- *  \addtogroup Rotations
- *  @{
- */
-
 //! Generic rotation interface
+/*! \ingroup rotations
+ */
 namespace rotations {
 //! Internal stuff (only for developers)
 namespace internal {
@@ -260,9 +256,7 @@ class MultiplicationTraits<RotationBase<LEFT_AND_RIGHT, RotationUsage::PASSIVE>,
 //};
 
 } // namespace internal
-
 } // namespace rotations
-/*! @} End of Doxygen Groups*/
 } // namespace rm
 
 #endif /* ROTATIONBASE_HPP_ */

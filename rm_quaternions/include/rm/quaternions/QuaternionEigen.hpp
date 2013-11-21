@@ -26,7 +26,7 @@ namespace eigen_implementation {
  * The following two typedefs are provided for convenience:
  *   - QuaternionF for float
  *   - QuaternionD for double
- *
+ * \ingroup quaternions
  * \see rm::quaternions::eigen_implementation::UnitQuaternion for an implementation of a unit quaternion
  * \see rm::rotations::eigen_implementation::RotationQuaternion for quaternions that represent a rotation
  */
@@ -170,7 +170,7 @@ typedef Quaternion<float> QuaternionF;
  * The following two typedefs are provided for convenience:
  *   - UnitQuaternionF for float
  *   - UnitQuaternionD for double
- *
+ * \ingroup quaternions
  * \see rm::quaternions::eigen_implementation::Quaternion for an implementation of a generic quaternion
  * \see rm::rotations::eigen_implementation::RotationQuaternion for quaternions that represent a rotation
  */
