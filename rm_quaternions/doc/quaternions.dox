@@ -1,0 +1,4 @@
+/**
+ * \defgroup quaternions Quaternions
+ *  Provides quaternions.
+ */
