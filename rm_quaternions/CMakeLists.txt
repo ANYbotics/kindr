@@ -63,7 +63,7 @@ include_directories(
 )
 set(TEST_SRCS
 	test/test_main.cpp
-	test/QuaternionsTest.cpp
+	test/QuaternionEigenTest.cpp
 )
 
 # Add test cpp file

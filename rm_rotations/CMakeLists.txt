@@ -67,7 +67,7 @@ include_directories(
 )
 set(TEST_SRCS
 	test/test_main.cpp
-	test/RotationsTest.cpp
+	test/RotationEigenTest.cpp
 	#test/QuaternionsTest.cpp
 	#test/SimulationSubfunctions.cpp
 	#../../schweizer-messer/sm_random/src/random.cpp
