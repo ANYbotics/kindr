@@ -1,13 +1,19 @@
-/**
-\mainpage Chapters
+/*!
+\mainpage Overview
 
- - \subpage getting_started
- - \subpage page_quaternions 
- - \subpage page_rotations 
- - \subpage acknowledgement
+\section license License
+This library is <a href="http://www.gnu.org/philosophy/free-sw.html">Free Software</a> and is licensed under <a href="http://opensource.org/licenses/BSD-3-Clause">BSD 3-Clause</a>.
 
-
+\section acknowledgement Acknowledgement
+Involved people:
+ - Michael Bloesch
+ - Remo Diethelm
+ - Peter Fankhauser
+ - Paul Furgale
+ - Christian Gehring
+ - Hannes Sommer
 */
+
 
 
 //-----------------------------------------------------------
@@ -17,14 +23,20 @@ This is a very short guide on how to get started with this library.
 
 \section math_notation Mathematical Notation
 See <a href="cheatsheet_latest.pdf" target="_blank"><b>Cheatsheet</b></a>.
+
+
 */
 
 //-----------------------------------------------------------
 
-/*! \page acknowledgement Acknowledgement
-Involved people:
- - Remo Diethelm
- - Paul Furgale
- - Christian Gehring
- - Hannes Sommer
+/*!
+\page chapters Chapters
+
+ - \subpage page_quaternions 
+ - \subpage page_rotations 
+
+
 */
+
+//-----------------------------------------------------------
+
