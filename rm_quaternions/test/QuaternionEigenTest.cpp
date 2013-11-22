@@ -55,8 +55,8 @@ struct QuaternionsPairsTest : public ::testing::Test  {
   typedef Eigen::Matrix<QuaternionScalar, 3, 1> Vector3;
   typedef Eigen::Matrix<QuaternionScalar, 3, 3> Matrix3x4;
 
-  Quaternion quatZero =     Quaternion(quat::Quaternion<QuaternionScalar>(Eigen::Quaterniond(0, 0, 0, 0).cast<QuaternionScalar>()));
-  Quaternion quatIdentity = Quaternion(quat::Quaternion<QuaternionScalar>(Eigen::Quaterniond(1, 0, 0, 0).cast<QuaternionScalar>()));
+  Quaternion quatZero =     Quaternion(Eigen::Quaterniond(0, 0, 0, 0).cast<QuaternionScalar>());
+  Quaternion quatIdentity = Quaternion(Eigen::Quaterniond(1, 0, 0, 0).cast<QuaternionScalar>());
   UnitQuaternion uquatIdentity = UnitQuaternion(quat::Quaternion<QuaternionScalar>(Eigen::Quaterniond(1, 0, 0, 0).cast<QuaternionScalar>()));
   Quaternion quatGeneric =  Quaternion(quat::Quaternion<QuaternionScalar>(Eigen::Quaterniond(1, 2, 3, 4).cast<QuaternionScalar>()));
   Quaternion quatGenericInverse =  Quaternion(quat::Quaternion<QuaternionScalar>(Eigen::Quaterniond(   0.033333333333333, -0.066666666666667, -0.1, -0.133333333333333).cast<QuaternionScalar>()));
@@ -78,7 +78,7 @@ TYPED_TEST (QuaternionsPairsTest, testQuaternionConstructor ) {
 
   // default constructor of quaternion needs to set all coefficients to zero
   Quaternion quat;
-  ASSERT_EQ(quat.w(),QuaternionScalar(0));
+  ASSERT_EQ(quat.w(),QuaternionScalar(1));
   ASSERT_EQ(quat.x(),QuaternionScalar(0));
   ASSERT_EQ(quat.y(),QuaternionScalar(0));
   ASSERT_EQ(quat.z(),QuaternionScalar(0));

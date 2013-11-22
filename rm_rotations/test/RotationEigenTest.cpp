@@ -34,7 +34,9 @@ namespace quat = rm::quaternions::eigen_implementation;
 
 template <typename RotationImplementation>
 struct RotationTest {
+  typedef RotationImplementation Rotation;
   typedef typename RotationImplementation::Scalar Scalar;
+
   static constexpr rm::rotations::RotationUsage Usage = RotationImplementation::Usage;
   typedef Eigen::Matrix<Scalar, 3, 1> Vector3;
   typedef Eigen::Matrix<Scalar, 3, 4> Matrix3x4;
@@ -46,6 +48,7 @@ struct RotationTest {
   RotationImplementation halfX =    RotationImplementation(rot::RotationQuaternion<Scalar, Usage>(Eigen::Quaterniond(0, 1, 0, 0).cast<Scalar>()));
   RotationImplementation halfY =    RotationImplementation(rot::RotationQuaternion<Scalar, Usage>(Eigen::Quaterniond(0, 0, 1, 0).cast<Scalar>()));
   RotationImplementation halfZ =    RotationImplementation(rot::RotationQuaternion<Scalar, Usage>(Eigen::Quaterniond(0, 0, 0, 1).cast<Scalar>()));
+  RotationImplementation rotGeneric =    RotationImplementation(rot::RotationQuaternion<Scalar, Usage>(Eigen::Quaterniond(1, 0, 0, 0).cast<Scalar>()));
 
 
   RotationTest() : tol(1e-6),
@@ -62,8 +65,8 @@ struct RotationPairsTest : public ::testing::Test  {
   typedef typename RotationImplementationPair::first_type RotationImplementationA;
   typedef typename RotationImplementationPair::second_type RotationImplementationB;
 
-  RotationTest<RotationImplementationA> rotA;
-  RotationTest<RotationImplementationB> rotB;
+  RotationTest<RotationImplementationA> rotTestA;
+  RotationTest<RotationImplementationB> rotTestB;
 };
 
 template <typename RotationImplementation>
@@ -93,8 +96,19 @@ TYPED_TEST(RotationSingleTest, testConstructor){
 
 TYPED_TEST(RotationSingleTest, testRotateVector){
   ASSERT_EQ(this->vecGeneric, this->rotDefaultConstructor.rotate(this->vecGeneric));
+//	  for(auto & r : {TestFixture::halfX, TestFixture::halfY, TestFixture::halfZ}){
+//	    ASSERT_EQ(this->identity, r*r) << r*r; // TODO ASSERT_NEAR
+//		  ASSERT_TRUE(rm::rotations::areNearlyEqual(this->identity, r*r, this->tol)); // TODO ASSERT_NEAR
+//
+//	    ASSERT_EQ(this->vecX, this->identity.rotate(this->vecX));
+//	    ASSERT_EQ(this->vecY, this->identity.rotate(this->vecY));
+//	    ASSERT_EQ(this->vecZ, this->identity.rotate(this->vecZ));
+//	  }
 }
 
-TYPED_TEST(RotationPairsTest, testQuaternionToAxisAngle){
+TYPED_TEST(RotationPairsTest, testConversion){
+
+
+
 
 }
