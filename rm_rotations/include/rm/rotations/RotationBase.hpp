@@ -132,7 +132,7 @@ class RotationBase {
   RotationBase inverted() const;
 
   /*! \brief Inverts the rotation.
-   *
+   *  \returns reference
    */
   RotationBase & invert();
 
