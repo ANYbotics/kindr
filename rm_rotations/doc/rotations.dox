@@ -1,4 +1,38 @@
 /**
  * \defgroup rotations Rotations
- *  Provides rotations.
+ *  \see \ref page_rotations "Chapter Rotations" 
  */
+ 
+ //-----------------------------------------------------------
+
+/*! \page page_rotations Rotations
+\section rotations_interfaces Interfaces
+\subsection rotations_interfaces_rotation Generic Rotation
+The class rm::rotations::RotationBase represents a generic rotation between two rigid bodies.
+\subsubsection rotations_interfaces_rotation_ap Active vs. Passive
+A rotation can be either active (alibi) or passive (alias).
+The class is therefore templated by the enumeration rm::rotations::RotationUsage which indicates the usage type of rotation:
+- RotationUsage::ACTIVE
+- RotationUsage::PASSIVE
+
+The usage type of a rotation can be identified by \ref rm::rotations::RotationBase::Usage "RotationBase::Usage"
+
+An active rotation can be obtained from a passive rotation by the function \ref rm::rotations::RotationBase::getPassive() "RotationBase::getPassive()", and a passive from an active by \ref rm::rotations::RotationBase::getActive() "RotationBase::getActive()"
+
+\subsubsection rotations_interfaces_rotation_inverse Inverse of a Rotation
+
+\subsubsection rotations_interfaces_rotation_composition Composition of a Rotation
+
+\subsection rotations_interfaces_angleaxis Angle-Axis
+
+\subsection rotations_interfaces_quaternion Rotation Quaternion
+
+\subsection rotations_interfaces_rotationmatrix Rotation Matrix
+
+\subsection rotations_interfaces_eulerangles Euler Angles
+
+
+\section rotations_implementations Implementations
+\subsection rotations_eigen Eigen
+
+*/

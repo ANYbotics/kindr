@@ -1,7 +1,9 @@
 /**
 \mainpage Chapters
 
- - \subpage getting_started 
+ - \subpage getting_started
+ - \subpage page_quaternions 
+ - \subpage page_rotations 
  - \subpage acknowledgement
 
 
