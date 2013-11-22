@@ -6,7 +6,9 @@
  //-----------------------------------------------------------
 
 /*! \page page_rotations Rotations
-\section rotations_interfaces Interfaces
+This library defines an \ref rotations_interfaces "interface" for a rotation between two rigid bodies to enable different representations of a rotation and different \ref rotations_implementations "implementations".
+
+\section rotations_interfaces Interface
 \subsection rotations_interfaces_rotation Generic Rotation
 The class rm::rotations::RotationBase represents a generic rotation between two rigid bodies.
 \subsubsection rotations_interfaces_rotation_ap Active vs. Passive
@@ -15,13 +17,39 @@ The class is therefore templated by the enumeration rm::rotations::RotationUsage
 - RotationUsage::ACTIVE
 - RotationUsage::PASSIVE
 
-The usage type of a rotation can be identified by \ref rm::rotations::RotationBase::Usage "RotationBase::Usage"
+The usage type of a rotation can be identified by the typedef \ref rm::rotations::RotationBase::Usage "RotationBase::Usage".
 
-An active rotation can be obtained from a passive rotation by the function \ref rm::rotations::RotationBase::getPassive() "RotationBase::getPassive()", and a passive from an active by \ref rm::rotations::RotationBase::getActive() "RotationBase::getActive()"
+An active rotation can be obtained from a passive rotation by the function \ref rm::rotations::RotationBase::getPassive() "getPassive()", and a passive from an active by \ref rm::rotations::RotationBase::getActive() "getActive()"
+
+\subsubsection rotations_interfaces_rotation_identity Identity Rotation
+The default constructor of a rotation always creates an identity rotation.
+
+Any rotation can be set equal to the identity rotation by the function \ref rm::rotations::RotationBase::setIdentity() "setIdentity()".
+
+\subsubsection rotations_interfaces_rotation_unique Unique Rotation
+A rotation can be represented in different ways. The quaternion 
+\f$Q = q_0 + q_1 i + q_2 j + q_3 k\f$ and the quaternion \f$Q = -q_0 - q_1 i - q_2 j - q_3 k\f$, for instance, represent the same rotation. However, sometimes a unique representation is desired, e.g. to compare two rotations.
+
+A unique representation is obtained by
+- \ref rm::rotations::RotationBase::getUnique() "getUnique()": gets a copy of the presentation, which is unique, and
+- \ref rm::rotations::RotationBase::setUnique() "setUnique()": sets the representation to the unique representation.
 
 \subsubsection rotations_interfaces_rotation_inverse Inverse of a Rotation
+The inverse of a rotation is provided by two methods:
+ - \ref rm::rotations::RotationBase::invert() "invert()" returns and stores the inverse
+ - \ref rm::rotations::RotationBase::inverted() "inverted()" returns only the inverse
 
 \subsubsection rotations_interfaces_rotation_composition Composition of a Rotation
+A rotation can be composed of other rotations.
+The multiplication operator enables the composition for passive rotations as follows:
+\code{.cpp}
+C_DA = C_DC*C_CB*C_BA;
+\endcode
+Note that the composition of an active rotation would look like:
+\code{.cpp}
+R_AD = R_CD*R_BC*R_AB;
+\endcode
+
 
 \subsection rotations_interfaces_angleaxis Angle-Axis
 
@@ -33,6 +61,16 @@ An active rotation can be obtained from a passive rotation by the function \ref 
 
 
 \section rotations_implementations Implementations
+Each implementation lies in its own namespace, such that the implementation can be altered later very easily via namespace alias.
+For example: 
+\code{.cpp}
+namespace rot = rm::rotations::eigen_implementation; // select implementation based on Eigen
+rot::RotationQuaternionAD rquat();		     // create an active rotation quaternion
+\endcode
+If the implementation needs to be changed, only one line of code has to be changed:
+\code{.cpp}
+namespace rot = rm::rotations::bullet_implementation; // select implementation based on bullet	
+\endcode
 \subsection rotations_eigen Eigen
 
 */

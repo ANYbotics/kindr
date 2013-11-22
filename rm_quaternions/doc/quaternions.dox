@@ -35,7 +35,7 @@ There are two reasons why there is an extra class for unit quaternions:
 - The unit length can be guaranteed.
 
 \section quaternion_implementations Implementations
-Each implementation should lie in its own namspace, such that the implementation can be altered later very easily via namespace alias.
+Each implementation lies in its own namespace, such that the implementation can be altered later very easily via namespace alias.
 For example: 
 \code{.cpp}
 namespace quat = rm::quaternions::eigen_implementation; // select implementation based on Eigen

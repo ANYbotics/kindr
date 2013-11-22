@@ -181,6 +181,22 @@ class RotationBase {
     return static_cast<const DERIVED &>(*this);
   }
 
+  /*! \brief Sets the rotation to the identity rotation.
+   *  \returns reference
+   */
+  DERIVED & setIdentity();
+
+  /*! \brief Returns the rotation in a unique form
+   *  This function is used to compare different rotations.
+   *  \returns copy of the rotation which is unique
+   */
+  DERIVED getUnique() const;
+
+  /*! \brief  Modifies the rotation such that it is in its unique form
+   *  \returns reference
+   */
+  DERIVED & setUnique();
+
   /*! \brief Gets passive from active rotation.
    *  \returns the passive rotation
    */
