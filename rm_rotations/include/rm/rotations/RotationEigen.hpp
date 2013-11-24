@@ -268,7 +268,9 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  The implementation type is always an Eigen object.
    */
   typedef typename Base::Implementation Implementation;
-  /*! \brief The axis type is a 3D vector.
+
+  /*! \brief The primary type.
+   *  Float/Double
    */
   typedef PrimType Scalar;
 

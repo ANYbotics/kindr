@@ -78,7 +78,7 @@ TYPED_TEST (QuaternionsPairsTest, testQuaternionConstructor ) {
 
   // default constructor of quaternion needs to set all coefficients to zero
   Quaternion quat;
-  ASSERT_EQ(quat.w(),QuaternionScalar(1));
+  ASSERT_EQ(quat.w(),QuaternionScalar(0));
   ASSERT_EQ(quat.x(),QuaternionScalar(0));
   ASSERT_EQ(quat.y(),QuaternionScalar(0));
   ASSERT_EQ(quat.z(),QuaternionScalar(0));
