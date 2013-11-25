@@ -78,23 +78,23 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType, Usage>, Usage>, priva
 
   /*! \brief Constructor using four scalars.
    *  In debug mode, an assertion is thrown if the rotation vector has not unit length.
-   *  \param chi     rotation angle
+   *  \param angle     rotation angle
    *  \param v1      first entry of the rotation axis vector
    *  \param v2      second entry of the rotation axis vector
    *  \param v3      third entry of the rotation axis vector
    */
-  AngleAxis(const Scalar & chi, const Scalar & v1, const Scalar & v2, const Scalar & v3)
-    : Base(chi,Vector3(v1,v2,v3)) {
+  AngleAxis(const Scalar & angle, const Scalar & v1, const Scalar & v2, const Scalar & v3)
+    : Base(angle,Vector3(v1,v2,v3)) {
     RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input rotation axis has not unit length.");
   }
 
   /*! \brief Constructor using angle and axis.
    * In debug mode, an assertion is thrown if the rotation vector has not unit length.
-   * \param chi   rotation angle
-   * \param v     rotation vector with unit length (Eigen vector)
+   * \param angle   rotation angle
+   * \param vector     rotation vector with unit length (Eigen vector)
    */
-  AngleAxis(const Scalar & chi, const Vector3 & v)
-    : Base(chi,v) {
+  AngleAxis(const Scalar & angle, const Vector3 & vector)
+    : Base(angle,vector) {
     RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input rotation axis has not unit length.");
   }
 
