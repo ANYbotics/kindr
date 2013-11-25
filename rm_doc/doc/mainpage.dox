@@ -1,6 +1,8 @@
 /*!
 \mainpage Overview
 
+
+
 \section license License
 This library is <a href="http://www.gnu.org/philosophy/free-sw.html">Free Software</a> and is licensed under <a href="http://opensource.org/licenses/BSD-3-Clause">BSD 3-Clause</a>.
 
@@ -21,9 +23,66 @@ Involved people:
 /*! \page getting_started Getting started 
 This is a very short guide on how to get started with this library.
 
+\section requirements Requirements
+This library is written in C++11.
+
+\subsection linux Linux
+GCC 4.7 is required at the minimum.
+
+\section install Installation
+\subsection build_lib Buid the Library
+
+Build the library with CMake:
+\code{.sh}
+mkdir build
+cd build
+cmake ..
+make
+\endcode
+
+\subsection build_doc Build this Documentation
+<a href="http://www.stack.nl/~dimitri/doxygen/" >Doxygen</a> needs to be installed to create this documentation.
+
+\code{.sh}
+mkdir build
+cd build
+cmake ..
+make doc
+\endcode
+The doxygen documentation can be found here:
+rm_doc/doc/html/index.html
+
+
+\subsection build_examples Build  Examples
+\code{.sh}
+mkdir build
+cd build
+cmake ..
+make demo
+\endcode
+
+\subsection build_tests Build Unit Tests
+The unit tests depend on <a href="http://code.google.com/p/googletest/">google tests</a>.
+The GTests are built as soon as the folder gtest exists in the root folder.
+
+Download and use GTest:
+\code{.sh}
+wget http://googletest.googlecode.com/files/gtest-1.7.0.zip
+unzip gtest-1.7.0.zip
+ln -s gtest-1.7.0 gtest
+mkdir build
+cd build
+cmake ..
+make
+\endcode
+
+
+
 \section math_notation Mathematical Notation
 This library comes a long with a <a href="cheatsheet_latest.pdf" target="_blank"><b>Cheatsheet</b></a>, which shows the mathematical notation.
 
+\section sec_continue How to Continue
+See \ref chapters "Chapters" to learn how to use this library.
 
 */
 
