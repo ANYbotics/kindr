@@ -33,7 +33,7 @@ SET(DOCSOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/doc)
 FIND_PACKAGE(Doxygen)
 IF(DOXYGEN)
   Set(DOCSOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/doc)
-  SET(DOXYGEN_IMAGE_DIRS "\"${DOCSOURCE_DIR}/figs/\"")
+  SET(DOXYGEN_IMAGE_DIRS "\"${DOCSOURCE_DIR}/figs/\" \"${CMAKE_CURRENT_SOURCE_DIR}/../rm_rotations/doc/\" ")
   SET(DOXYGEN_SOURCE_DIRS "\"${CMAKE_CURRENT_SOURCE_DIR}/doc\" \"${CMAKE_CURRENT_SOURCE_DIR}/../rm_rotations/doc\" \"${CMAKE_CURRENT_SOURCE_DIR}/../rm_rotations/include/\" \"${CMAKE_CURRENT_SOURCE_DIR}/../rm_common/include/\" \"${CMAKE_CURRENT_SOURCE_DIR}/../rm_quaternions/doc\" \"${CMAKE_CURRENT_SOURCE_DIR}/../rm_quaternions/include/\" \"${CMAKE_CURRENT_SOURCE_DIR}/../rm_linear_algebra/include/\" ")
 
   Set(HTML_DIR ${CMAKE_CURRENT_SOURCE_DIR}/doc/html)

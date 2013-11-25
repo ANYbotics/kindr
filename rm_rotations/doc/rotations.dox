@@ -61,14 +61,45 @@ angleAxis = quaternion;
 
 \subsection rotations_interfaces_representations Representations of a Rotation
 The following representations are currently provided by the library:
-\subsubsection rotations_interfaces_angleaxis Angle-Axis
 
+\subsubsection rotations_interfaces_angleaxis Angle-Axis
+The class rm::rotations::AngleAxisBase defines an interface for an angle-axis representation of a rotation:
+
+\f$\boxed{(\theta, \mathbf{n}), \quad \lVert \mathbf{n} \rVert = 1,}\f$
+
+where \f$\theta\f$ is the rotation angle and \f$\mathbf{n}\f$ is the rotation axis with unit length.
 \subsubsection rotations_interfaces_quaternion Rotation Quaternion
+The class rm::rotations::RotationQuaternionBase defines the interface for a Hamiltonian unit quaternion representation of a rotation:
+
+\f$\boxed{\begin{aligned}P &= p_0 + p_1 i + p_2 j + p_3 k \in \mathbb{H}, \quad p_i \in \mathbb{R} \\
+i^2 &= j^2=k^2 = ijk = -1, \quad \lVert P \rVert= \sqrt{p_0^2 + p_1^2 + p_2^2 + p_3^2} = 1 \\
+\end{aligned}}\f$
 
 \subsubsection rotations_interfaces_rotationmatrix Rotation Matrix
+The class rm::rotations::RotationMatrixBase defines the interface for a 3x3 rotation matrix representation of a rotation:
+
+\f$\boxed{R = \begin{bmatrix} r_{11} & r_{12} & r_{13} \\  r_{21} & r_{22} & r_{23} \\ r_{31} & r_{32} & r_{33} \end{bmatrix} \in SO(3)}\f$
 
 \subsubsection rotations_interfaces_eulerangles Euler Angles
+The class rm::rotations::EulerAnglesBase defines the interface for a tuple of three angles to represent a rotation.
 
+\subsubsection rotations_interfaces_eulerangles_zyx Euler Angles ZYX
+The class rm::rotations::EulerAnglesZyxBase defines the interface for the Z-Y-X convention:
+
+\f$\boxed{(\psi, \theta, \phi ),}\f$
+
+where \f$\psi\f$ is the yaw angle, \f$\theta\f$ is the pitch angle, and \f$\phi\f$ is the roll angle.
+The consecutive rotations are shown in the following picture:
+\image html EulerAnglesZyx.png
+
+\subsubsection rotations_interfaces_eulerangles_xyz Euler Angles XYZ
+The class rm::rotations::EulerAnglesXyzBase defines the interface for the X-Y-Z convention:
+
+\f$\boxed{(\alpha, \beta, \gamma ),}\f$
+
+where \f$\gamma\f$ is the yaw angle, \f$\beta\f$ is the pitch angle, and \f$\alpha\f$ is the roll angle.
+The consecutive rotations are shown in the following picture:
+\image html EulerAnglesXyz.png
 
 \section rotations_implementations Implementations
 Each implementation lies in its own namespace, such that the implementation can be altered later very easily via namespace alias.
