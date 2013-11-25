@@ -51,6 +51,11 @@ The multiplication operator enables the composition for passive rotations as fol
 C_DA = C_DC*C_CB*C_BA;
 \endcode
 
+\subsubsection rotations_interfaces_rotation_rotate Rotation of a Vector or a Matrix
+To rotate a vector or a matrix columnwise, the following methods are provided:
+- \ref rm::rotations::RotationBase::rotate() "rotate()": rotates a vector or a matrix columnwise
+- \ref rm::rotations::RotationBase::inverseRotate() "inverseRotate()": reverse rotates a vector or a matrix columnwise
+
 \subsubsection rotations_interfaces_conversion Conversion between Rotations
 The constructor and the assignment operator allow to convert between different representations of a rotation:
 \code{.cpp}
@@ -113,5 +118,114 @@ If the implementation needs to be changed, only one line of code has to be chang
 namespace rot = rm::rotations::bullet_implementation; // select implementation based on bullet	
 \endcode
 \subsection rotations_eigen Eigen
+The library comes along with an implementation based on the <a href="http://eigen.tuxfamily.org">C++ Eigen library</a>.
 
+All types can be included by
+\code{.cpp}
+#include <rm/rotations/RotationEigen.hpp>
+\endcode
+and lie within the namespace rm::rotations::eigen_implementation.
+
+\subsubsection rotations_implementation_angleaxis Angle-Axis
+The class \ref rm::rotations::eigen_implementation::AngleAxis "AngleAxis" stores the angle and rotation axis in Eigen::AngleAxis.
+
+The following four typedefs are provided for convenience:
+ - \ref rm::rotations::eigen_implementation::AngleAxisAD "AngleAxisAD" for active rotation and double primary type
+ - \ref rm::rotations::eigen_implementation::AngleAxisAF "AngleAxisAF" for active rotation and float primary type
+ - \ref rm::rotations::eigen_implementation::AngleAxisPD "AngleAxisPD" for passive rotation and double primary type
+ - \ref rm::rotations::eigen_implementation::AngleAxisPF "AngleAxisPF" for passive rotation and float primary type
+ 
+ \paragraph rotations_implementation_angleaxis_create Create an Angle-Axis
+ \code{.cpp}
+ double angle = 0.2;
+ double n_1 = 1.0;
+ double n_2 = 0.0;
+ double n_3 = 0.0;
+ Eigen::Vector3d axis(n_1, n_2, n_3);
+ AngleAxisPD angleAxis1; // identity rotation: angle = 0.0 axis = (1.0, 0.0, 0.0)
+ AngleAxisPD angleAxis2(angle, axis);
+ AngleAxisPD angleAxis3(angle, n_1, n_2, n_3);
+ AngleAxisPD angleAxis4(angle, 1.0, 1.0, 1.0); // will create an error in debug mode
+ \endcode
+ 
+ \paragraph rotations_implementation_angleaxis_use Use an Angle-Axis
+  \code{.cpp}
+    double angle = angleAxis.angle();									// get rotation angle 
+    Eigen::Vector3d axis = angleAxis.axis();								// get rotation axis
+    Eigen::AngleAxisd angleAxisEigen = angleAxis.toImplementation();					// get Eigen angle-axis
+    Eigen::Vector3d vector_rotated = angleAxis.rotate(Eigen::Vector3d(1.0,2.0,3.0));			// rotate a vector
+    Eigen::Vector3d vector_invrotated = angleAxis.inverseRotate(Eigen::Vector3d(1.0,2.0,3.0));		// reverse rotate a vector
+    angleAxis.setUnique(); 										// Modifies the angle such that it is in [0,PI)
+    std::cout << "Angle-Axis: " << angleAxis << std::endl:						// output angle-axis
+    if (angleAxis == AngleAxisPD(M_PI/2.0, 1.0, 0.0, 0.0)) 						   	// compare angle-axis
+	std::cout << "Rotation is about x-axis with angle M_PI/2.0\n"; 
+  \endcode
+ 
+ 
+\subsubsection rotations_implementation_quaternion Rotation Quaternion
+The class \ref rm::rotations::eigen_implementation::RotationQuaternion "RotationQuaternion" stores the coefficients according to the rm::quaterions::UnitQuaternion.
+See also \ref page_quaternions "Chapter Quternions" for more information.
+
+The following four typedefs are provided for convenience:
+ - \ref rm::rotations::eigen_implementation::RotationQuaternionAD "RotationQuaternionAD" for active rotation and double primary type
+ - \ref rm::rotations::eigen_implementation::RotationQuaternionAF "RotationQuaternionAF" for active rotation and float primary type
+ - \ref rm::rotations::eigen_implementation::RotationQuaternionPD "RotationQuaternionPD" for passive rotation and double primary type
+ - \ref rm::rotations::eigen_implementation::RotationQuaternionPF "RotationQuaternionPF" for passive rotation and float primary type
+
+ 
+\paragraph rotations_implementation_quaternion_create Create a Quaternion
+\code{.cpp}
+double p_0 = 1.0;
+double p_1 = 0.0;
+double p_2 = 0.0;
+double p_3 = 0.0;
+RotationQuaternionPD rquat1; // identity rotation: (1.0, 0.0, 0.0, 0.0)
+RotationQuaternionPD rquat2(p_0, p_1, p_2, p_3);
+RotationQuaternionPD rquat3(Eigen::Quaterniond(p_0, p_1, p_2, p_3));
+RotationQuaternionPD rquat4(1.0, 1.0, 1.0, 1.0); // will create an error in debug mode
+\endcode
+
+\paragraph rotations_implementation_quaternion_use Use a Quaternion
+\code{.cpp}
+  double p_0 = rquat.w();									
+  double p_1 = rquat.x();
+  double p_2 = rquat.y();
+  double p_3 = rquat.z();
+  Eigen::Quaterniond quatEigen = rquat.toImplementation();						// get Eigen quaternion
+  Eigen::Vector3d vector_rotated = rquat.rotate(Eigen::Vector3d(1.0,2.0,3.0));				// rotate a vector
+  rquat.toUnitQuaternion();
+  Eigen::Vector3d vector_invrotated = rquat.inverseRotate(Eigen::Vector3d(1.0,2.0,3.0));		// reverse rotate a vector
+  rquat.setUnique(); 											// Modifies the quaternion such that p_0 >= 0
+  std::cout << "Quaternion: " << rquat << std::endl:							// output quaternion
+  if (rquat == RotationQuaternionPD()) 						 			// compare 
+      std::cout << "Rotation is identity\n"; 
+\endcode
+ 
+\subsubsection rotations_implementation_rotationmatrix Rotation Matrix
+The class \ref rm::rotations::eigen_implementation::RotationMatrix "RotationMatrix" stores the coefficients in Eigen::Matrix.
+
+The following four typedefs are provided for convenience:
+ - \ref rm::rotations::eigen_implementation::RotationMatrixAD "RotationMatrixAD" for active rotation and double primary type
+ - \ref rm::rotations::eigen_implementation::RotationMatrixAF "RotationMatrixAF" for active rotation and float primary type
+ - \ref rm::rotations::eigen_implementation::RotationMatrixPD "RotationMatrixPD" for passive rotation and double primary type
+ - \ref rm::rotations::eigen_implementation::RotationMatrixPF "RotationMatrixPF" for passive rotation and float primary type
+ 
+\subsubsection rotations_implementation_eulerangles_zyx Euler Angles ZYX
+The class \ref rm::rotations::eigen_implementation::EulerAnglesZyx "EulerAnglesZyx" stores the coefficients in Eigen::Vector3.
+
+The following four typedefs are provided for convenience:
+ - \ref rm::rotations::eigen_implementation::EulerAnglesZyxAD "EulerAnglesZyxAD" for active rotation and double primary type
+ - \ref rm::rotations::eigen_implementation::EulerAnglesZyxAF "EulerAnglesZyxAF" for active rotation and float primary type
+ - \ref rm::rotations::eigen_implementation::EulerAnglesZyxPD "EulerAnglesZyxPD" for passive rotation and double primary type
+ - \ref rm::rotations::eigen_implementation::EulerAnglesZyxPF "EulerAnglesZyxPF" for passive rotation and float primary type
+
+\subsubsection rotations_implementation_eulerangles_xyz Euler Angles XYZ
+The class \ref rm::rotations::eigen_implementation::EulerAnglesZyx "EulerAnglesZyx" stores the coefficients in Eigen::Vector3.
+
+The following four typedefs are provided for convenience:
+ - \ref rm::rotations::eigen_implementation::EulerAnglesXyzAD "EulerAnglesXyzAD" for active rotation and double primary type
+ - \ref rm::rotations::eigen_implementation::EulerAnglesXyzAF "EulerAnglesXyzAF" for active rotation and float primary type
+ - \ref rm::rotations::eigen_implementation::EulerAnglesXyzPD "EulerAnglesXyzPD" for passive rotation and double primary type
+ - \ref rm::rotations::eigen_implementation::EulerAnglesXyzPF "EulerAnglesXyzPF" for passive rotation and float primary type
+ 
 */
