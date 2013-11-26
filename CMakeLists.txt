@@ -26,7 +26,7 @@
 # Project configuration
 cmake_minimum_required (VERSION 2.8)
 
-project(robotMath)
+project(kinder)
 
 
 # Set Build Type
@@ -51,17 +51,20 @@ endif()
 # Add CMake module path
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
+# Add common
+add_subdirectory(common)
+
 # Add linear algebra 
-add_subdirectory(rm_linear_algebra)
+add_subdirectory(linear_algebra)
 
 # Add quaternions
-add_subdirectory(rm_quaternions)
+add_subdirectory(quaternions)
 
 # Add rotations
-add_subdirectory(rm_rotations)
+add_subdirectory(rotations)
 
 # Add Doxygen documentation
-add_subdirectory(rm_doc)
+add_subdirectory(doc/doxygen)
 
 ADD_CUSTOM_TARGET(demo DEPENDS demo_rotations)
 

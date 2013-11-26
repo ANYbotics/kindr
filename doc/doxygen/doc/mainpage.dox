@@ -50,7 +50,7 @@ cmake ..
 make doc
 \endcode
 The doxygen documentation can be found here:
-rm_doc/doc/html/index.html
+doc/doxygen/doc/html/index.html
 
 
 \subsection build_examples Build  Examples
