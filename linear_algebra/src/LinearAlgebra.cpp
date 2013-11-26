@@ -25,7 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
 */
-#include <rm/linear_algebra/LinearAlgebra.hpp>
+#include <kinder/linear_algebra/LinearAlgebra.hpp>
 
 namespace rm {
 namespace linear_algebra {

@@ -31,10 +31,10 @@
 
 #include <gtest/gtest.h>
 
-#include <rm/common/assert_macros_eigen.hpp>
-#include <rm/common/gtest_eigen.hpp>
+#include <kinder/common/assert_macros_eigen.hpp>
+#include <kinder/common/gtest_eigen.hpp>
 
-#include <rm/quaternions/QuaternionEigen.hpp>
+#include <kinder/quaternions/QuaternionEigen.hpp>
 
 namespace quat = rm::quaternions::eigen_implementation;
 

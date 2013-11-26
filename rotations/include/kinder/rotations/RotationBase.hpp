@@ -29,8 +29,8 @@
 #ifndef ROTATIONBASE_HPP_
 #define ROTATIONBASE_HPP_
 
-#include "rm/common/common.hpp"
-#include "rm/quaternions/QuaternionBase.hpp"
+#include "kinder/common/common.hpp"
+#include "kinder/quaternions/QuaternionBase.hpp"
 
 namespace rm {
 //! Generic rotation interface

@@ -29,9 +29,9 @@
 #ifndef ROTATIONEIGEN_HPP_
 #define ROTATIONEIGEN_HPP_
 
-#include "rm/common/common.hpp"
-#include "rm/common/assert_macros_eigen.hpp"
-#include "rm/quaternions/QuaternionEigen.hpp"
+#include "kinder/common/common.hpp"
+#include "kinder/common/assert_macros_eigen.hpp"
+#include "kinder/quaternions/QuaternionEigen.hpp"
 #include "RotationBase.hpp"
 #include "RotationEigenFunctions.hpp"
 

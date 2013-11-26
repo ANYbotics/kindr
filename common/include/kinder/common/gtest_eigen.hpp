@@ -29,8 +29,8 @@
 #define GTEST_EIGEN_HPP_
 
 #include <gtest/gtest.h>
-#include <rm/common/source_file_pos.hpp>
-#include <rm/common/assert_macros_eigen.hpp>
+#include "source_file_pos.hpp"
+#include "assert_macros_eigen.hpp"
 #include <Eigen/Core>
 
 namespace rm {

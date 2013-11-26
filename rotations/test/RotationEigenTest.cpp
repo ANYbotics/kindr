@@ -26,8 +26,8 @@
  *
 */
 
-#include "rm/common/gtest_eigen.hpp"
-#include "rm/rotations/RotationEigen.hpp"
+#include "kinder/common/gtest_eigen.hpp"
+#include "kinder/rotations/RotationEigen.hpp"
 
 namespace rot = rm::rotations::eigen_implementation;
 namespace quat = rm::quaternions::eigen_implementation;

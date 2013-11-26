@@ -28,9 +28,9 @@
 #ifndef QUATERNIONEIGEN_HPP_
 #define QUATERNIONEIGEN_HPP_
 
-#include "rm/common/common.hpp"
+#include "kinder/common/common.hpp"
 #include "QuaternionBase.hpp"
-#include "rm/common/assert_macros_eigen.hpp"
+#include "kinder/common/assert_macros_eigen.hpp"
 #include <Eigen/Geometry>
 
 namespace rm {

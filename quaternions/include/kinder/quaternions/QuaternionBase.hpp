@@ -28,7 +28,7 @@
 #ifndef QUATERNIONBASE_HPP_
 #define QUATERNIONBASE_HPP_
 
-#include "rm/common/common.hpp"
+#include "kinder/common/common.hpp"
 
 namespace rm {
 //! Generic quaternion interface

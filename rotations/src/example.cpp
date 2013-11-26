@@ -25,8 +25,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
 */
-#include "rm/quaternions/QuaternionEigen.hpp"
-#include "rm/rotations/RotationEigen.hpp"
+#include "kinder/quaternions/QuaternionEigen.hpp"
+#include "kinder/rotations/RotationEigen.hpp"
 
 int main(int argc, char **argv){
   using namespace rm::rotations::eigen_implementation;

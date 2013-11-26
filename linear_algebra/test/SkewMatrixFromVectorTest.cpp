@@ -28,7 +28,7 @@
 
 
 #include <gtest/gtest.h>
-#include <rm/linear_algebra/LinearAlgebra.hpp>
+#include <kinder/linear_algebra/LinearAlgebra.hpp>
 
 TEST (SkewMatrixFromVectorTest, testVector) {
 	Eigen::Matrix3d skewMatrix;

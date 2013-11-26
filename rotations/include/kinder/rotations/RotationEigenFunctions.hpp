@@ -34,7 +34,7 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
-#include "rm/common/common.hpp"
+#include "kinder/common/common.hpp"
 
 namespace rm {
 namespace rotations {
