@@ -33,7 +33,7 @@
 #include <sstream>
 // A class and macro that gives you the current file position.
 
-namespace rm {
+namespace kinder {
 
   class source_file_pos
   {
@@ -61,14 +61,14 @@ namespace rm {
 
 }// namespace rm
 
-inline std::ostream & operator<<(std::ostream & out, const rm::source_file_pos & sfp)
+inline std::ostream & operator<<(std::ostream & out, const kinder::source_file_pos & sfp)
 {
   out << sfp.file << ":" << sfp.line << ": " << sfp.function << "()";
   return out;
 }
 
 
-#define RM_SOURCE_FILE_POS rm::source_file_pos(__FUNCTION__,__FILE__,__LINE__)
+#define KINDER_SOURCE_FILE_POS rm::source_file_pos(__FUNCTION__,__FILE__,__LINE__)
 
 #endif
 

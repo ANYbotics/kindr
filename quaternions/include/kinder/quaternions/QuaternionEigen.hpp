@@ -33,7 +33,7 @@
 #include "kinder/common/assert_macros_eigen.hpp"
 #include <Eigen/Geometry>
 
-namespace rm {
+namespace kinder {
 namespace quaternions {
 //! Implementation based on the C++ Eigen library
 namespace eigen_implementation {
@@ -240,13 +240,13 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>> {
    */
   UnitQuaternion(const PrimType & w, const PrimType & x, const PrimType & y, const PrimType & z)
     : uq(w,x,y,z) {
-    RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-6, "Input quaternion has not unit length.");
+    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-6, "Input quaternion has not unit length.");
   }
 
   //! Constructor to create unit quaternion from Quaternion
   explicit UnitQuaternion(const Quaternion<PrimType> & other)
     : uq(other.toImplementation()) {
-    RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-6, "Input quaternion has not unit length.");
+    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-6, "Input quaternion has not unit length.");
   }
 
   //! Constructor to create unit quaternion from Eigen::Quaternion
@@ -255,7 +255,7 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>> {
    */
   explicit UnitQuaternion(const Implementation & other)
     : uq(other) {
-    RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-6, "Input quaternion has not unit length.");
+    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-6, "Input quaternion has not unit length.");
   }
 
   template<typename PrimTypeIn>
@@ -282,7 +282,7 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>> {
 	this->x() = static_cast<PrimType>(other.x());
 	this->y() = static_cast<PrimType>(other.y());
 	this->z() = static_cast<PrimType>(other.z());
-    RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-6, "Input quaternion has not unit length.");
+    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-6, "Input quaternion has not unit length.");
 	return *this;
   }
 

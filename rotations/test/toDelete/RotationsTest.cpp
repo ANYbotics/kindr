@@ -47,7 +47,7 @@
 
 TEST (RotationsTest, DISABLED_testEigenEulerAngleRange ) {
   using namespace Eigen;
-  using namespace rm::rotations;
+  using namespace kinder::rotations;
 
 //  std::cout << getRpyFromQuaternion(getQuaternionFromRpy(Vector3d(M_PI,0,0))).transpose() << std::endl;
 //  std::cout << getRpyFromQuaternion(getQuaternionFromRpy(Vector3d(-M_PI,0,0))).transpose() << std::endl;
@@ -211,13 +211,13 @@ TEST (RotationsTest, DISABLED_testEigenEulerAngleRange ) {
 //}
 
 
-namespace rot = rm::rotations::eigen_implementation;
-namespace quat = rm::quaternions::eigen_implementation;
+namespace rot = kinder::rotations::eigen_implementation;
+namespace quat = kinder::quaternions::eigen_implementation;
 
 template <typename RotationImplementation>
 struct RotationsTest : public ::testing::Test  {
   typedef typename RotationImplementation::Scalar Scalar;
-  static constexpr rm::rotations::RotationUsage Usage = RotationImplementation::Usage;
+  static constexpr kinder::rotations::RotationUsage Usage = RotationImplementation::Usage;
   typedef Eigen::Matrix<Scalar, 3, 1> Vector3;
   Scalar tol;
   Vector3 X, Y, Z, Vgeneric;

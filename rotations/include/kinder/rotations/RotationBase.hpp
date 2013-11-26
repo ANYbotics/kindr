@@ -32,7 +32,7 @@
 #include "kinder/common/common.hpp"
 #include "kinder/quaternions/QuaternionBase.hpp"
 
-namespace rm {
+namespace kinder {
 //! Generic rotation interface
 /*! \ingroup rotations
  */

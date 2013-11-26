@@ -25,12 +25,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
 */
-#ifndef RM_LINEARALGEBRA_HPP_
+#ifndef KINDER_LINEARALGEBRA_HPP_
 #define RMLINEARALGEBRA_HPP_
 
 #include <Eigen/SVD>
 
-namespace rm {
+namespace kinder {
 namespace linear_algebra {
 
 /*!
@@ -68,4 +68,4 @@ bool pseudoInverse(const _Matrix_Type_ &a, _Matrix_Type_ &result, double epsilon
 } // end namespace linear_algebra
 } // end namespace rm
 
-#endif /* RM_LINEARALGEBRA_HPP_ */
+#endif /* KINDER_LINEARALGEBRA_HPP_ */

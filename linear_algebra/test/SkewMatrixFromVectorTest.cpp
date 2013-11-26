@@ -35,5 +35,5 @@ TEST (SkewMatrixFromVectorTest, testVector) {
 	Eigen::Vector3d vec;
 	vec << 1, 2, 3;
 	skewMatrix << 0, -3, 2, 3, 0, -1, -2, 1, 0;
-	EXPECT_EQ(skewMatrix, rm::linear_algebra::getSkewMatrixFromVector(vec));
+	EXPECT_EQ(skewMatrix, kinder::linear_algebra::getSkewMatrixFromVector(vec));
 }

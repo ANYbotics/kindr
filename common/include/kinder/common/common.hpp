@@ -38,7 +38,7 @@
 
 // forward declarations
 
-namespace rm {
+namespace kinder {
 namespace quaternions {
 namespace eigen_implementation {
 
@@ -66,7 +66,7 @@ class RotationQuaternion;
 
 
 
-namespace rm {
+namespace kinder {
 namespace common {
 
 

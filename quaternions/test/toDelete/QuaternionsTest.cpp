@@ -33,15 +33,15 @@
 #include <rm/quaternions/QuaternionEigen.hpp>
 #include <rm/rotations/RotationEigen.hpp>
 
-namespace quat = rm::quaternions::eigen_implementation;
-namespace rot = rm::rotations::eigen_implementation;
+namespace quat = kinder::quaternions::eigen_implementation;
+namespace rot = kinder::rotations::eigen_implementation;
 
 TEST (RotationsTest, testDEBUG ) {
   Eigen::Vector3d test1(1.0,2.0,3.0);
   Eigen::Vector3d test2(1.0,2.0,3.0);
 
   quat::UnitQuaternionD(1,0,0,0);
-  RM_ASSERT_MATRIX_NEAR_DBG(std::runtime_error, test1, test2, 1e-6, "Hello");
+  KINDER_ASSERT_MATRIX_NEAR_DBG(std::runtime_error, test1, test2, 1e-6, "Hello");
 
 }
 

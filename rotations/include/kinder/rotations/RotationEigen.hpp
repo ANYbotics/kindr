@@ -35,7 +35,7 @@
 #include "RotationBase.hpp"
 #include "RotationEigenFunctions.hpp"
 
-namespace rm {
+namespace kinder {
 namespace rotations {
 //! Implementation of rotations based on the C++ Eigen library
 namespace eigen_implementation {
@@ -85,7 +85,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType, Usage>, Usage>, priva
    */
   AngleAxis(const Scalar & angle, const Scalar & v1, const Scalar & v2, const Scalar & v3)
     : Base(angle,Vector3(v1,v2,v3)) {
-    RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input rotation axis has not unit length.");
+    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input rotation axis has not unit length.");
   }
 
   /*! \brief Constructor using angle and axis.
@@ -95,7 +95,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType, Usage>, Usage>, priva
    */
   AngleAxis(const Scalar & angle, const Vector3 & vector)
     : Base(angle,vector) {
-    RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input rotation axis has not unit length.");
+    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input rotation axis has not unit length.");
   }
 
   /*! \brief Constructor using Eigen::AngleAxis.
@@ -104,7 +104,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType, Usage>, Usage>, priva
    */
   explicit AngleAxis(const Base & other)
     : Base(other) {
-    RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input rotation axis has not unit length.");
+    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input rotation axis has not unit length.");
   }
 
   /*! \brief Constructor using another rotation.
@@ -198,7 +198,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType, Usage>, Usage>, priva
    *  \returns copy of the angle axis rotation which is unique
    */
   AngleAxis getUnique() const {
-    AngleAxis aa(rm::common::Mod(angle()+M_PI,2*M_PI)-M_PI, axis()); // wraps angle into [-pi,pi)
+    AngleAxis aa(kinder::common::Mod(angle()+M_PI,2*M_PI)-M_PI, axis()); // wraps angle into [-pi,pi)
     if(aa.angle() >= 0)	{
       return aa;
     } else {
@@ -210,7 +210,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType, Usage>, Usage>, priva
    *  \returns reference
    */
   AngleAxis & setUnique() {
-    AngleAxis aa(rm::common::Mod(angle()+M_PI,2*M_PI)-M_PI, axis()); // wraps angle into [-pi,pi)
+    AngleAxis aa(kinder::common::Mod(angle()+M_PI,2*M_PI)-M_PI, axis()); // wraps angle into [-pi,pi)
     if(aa.angle() >= 0) { // wraps angle into [0,pi)
       *this = aa;
     } else {
@@ -289,7 +289,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    */
   RotationQuaternion(const Scalar & w, const Scalar & x, const Scalar & y, const Scalar & z)
     : Base(w,x,y,z) {
-    RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input quaternion has not unit length.");
+    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input quaternion has not unit length.");
   }
 
   /*! \brief Constructor using UnitQuaternion.
@@ -312,7 +312,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    */
   explicit RotationQuaternion(const Implementation & other)
     : Base(other) {
-    RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input quaternion has not unit length.");
+    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input quaternion has not unit length.");
   }
 
   /*! \brief Constructor using another rotation.
@@ -373,7 +373,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
     this->x() = quat.x();
     this->y() = quat.y();
     this->z() = quat.z();
-    RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input quaternion has not unit length.");
+    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input quaternion has not unit length.");
     return *this;
   }
 
@@ -520,8 +520,8 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType, Usage>
                  const Scalar & r21, const Scalar & r22, const Scalar & r23,
                  const Scalar & r31, const Scalar & r32, const Scalar & r33) {
     *this << r11,r12,r13,r21,r22,r23,r31,r32,r33;
-    RM_ASSERT_MATRIX_NEAR_DBG(std::runtime_error, *this * this->transpose(), Base::Identity(), static_cast<Scalar>(1e-6), "Input matrix is not orthogonal.");
-    RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->determinant(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input matrix determinant is not 1.");
+    KINDER_ASSERT_MATRIX_NEAR_DBG(std::runtime_error, *this * this->transpose(), Base::Identity(), static_cast<Scalar>(1e-6), "Input matrix is not orthogonal.");
+    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->determinant(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input matrix determinant is not 1.");
   }
 
   /*! \brief Constructor using Eigen::Matrix.
@@ -530,8 +530,8 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType, Usage>
    */
   explicit RotationMatrix(const Base & other)
   : Base(other) {
-    RM_ASSERT_MATRIX_NEAR_DBG(std::runtime_error, other * other.transpose(), Base::Identity(), static_cast<Scalar>(1e-6), "Input matrix is not orthogonal.");
-    RM_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, other.determinant(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input matrix determinant is not 1.");
+    KINDER_ASSERT_MATRIX_NEAR_DBG(std::runtime_error, other * other.transpose(), Base::Identity(), static_cast<Scalar>(1e-6), "Input matrix is not orthogonal.");
+    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, other.determinant(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input matrix determinant is not 1.");
   }
 
   /*! \brief Constructor using another rotation.
@@ -871,9 +871,9 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType, Usage>
    *  \returns copy of the euler angles rotation which is unique
    */
   EulerAnglesXyz getUnique() const {
-    EulerAnglesXyz xyz(rm::common::Mod(roll() +M_PI,2*M_PI)-M_PI,
-                       rm::common::Mod(pitch()+M_PI,2*M_PI)-M_PI,
-                       rm::common::Mod(yaw()  +M_PI,2*M_PI)-M_PI); // wraps all angles into [-pi,pi)
+    EulerAnglesXyz xyz(kinder::common::Mod(roll() +M_PI,2*M_PI)-M_PI,
+                       kinder::common::Mod(pitch()+M_PI,2*M_PI)-M_PI,
+                       kinder::common::Mod(yaw()  +M_PI,2*M_PI)-M_PI); // wraps all angles into [-pi,pi)
     if(xyz.pitch() >= M_PI/2)  // wraps angles into [-pi,pi),[-pi/2,pi/2),[-pi,pi)
     {
       if(xyz.roll() >= 0) {
@@ -1159,9 +1159,9 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType, Usage>
    *  \returns copy of the euler angles rotation which is unique
    */
   EulerAnglesZyx getUnique() const {  // wraps angles into [-pi,pi),[-pi/2,pi/2),[-pi,pi)
-    EulerAnglesZyx zyx(rm::common::Mod(yaw()  +M_PI,2*M_PI)-M_PI,
-                       rm::common::Mod(pitch()+M_PI,2*M_PI)-M_PI,
-                       rm::common::Mod(roll() +M_PI,2*M_PI)-M_PI); // wraps all angles into [-pi,pi)
+    EulerAnglesZyx zyx(kinder::common::Mod(yaw()  +M_PI,2*M_PI)-M_PI,
+                       kinder::common::Mod(pitch()+M_PI,2*M_PI)-M_PI,
+                       kinder::common::Mod(roll() +M_PI,2*M_PI)-M_PI); // wraps all angles into [-pi,pi)
     if(zyx.pitch() >= M_PI/2)
     {
       if(zyx.yaw() >= 0) {

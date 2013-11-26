@@ -30,7 +30,7 @@
 
 #include "kinder/common/common.hpp"
 
-namespace rm {
+namespace kinder {
 //! Generic quaternion interface
 /*! \ingroup quaternions
  */

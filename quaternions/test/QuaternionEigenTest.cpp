@@ -36,7 +36,7 @@
 
 #include <kinder/quaternions/QuaternionEigen.hpp>
 
-namespace quat = rm::quaternions::eigen_implementation;
+namespace quat = kinder::quaternions::eigen_implementation;
 
 typedef ::testing::Types<
     std::pair<quat::QuaternionD, quat::UnitQuaternionD>,

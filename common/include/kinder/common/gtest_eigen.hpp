@@ -33,7 +33,7 @@
 #include "assert_macros_eigen.hpp"
 #include <Eigen/Core>
 
-namespace rm {
+namespace kinder {
 namespace common {
 namespace eigen {
 
@@ -57,7 +57,7 @@ namespace eigen {
 
 
     template<typename M1, typename M2>
-    void assertEqual(const M1 & A, const M2 & B, rm::source_file_pos const & sfp, std::string const & message = "")
+    void assertEqual(const M1 & A, const M2 & B, kinder::source_file_pos const & sfp, std::string const & message = "")
     {
         ASSERT_EQ((size_t)A.rows(),(size_t)B.rows()) << message << "\nMatrix A:\n" << A << "\nand matrix B\n" << B << "\nare not the same\n" << sfp.toString();
       ASSERT_EQ((size_t)A.cols(),(size_t)B.cols()) << message << "\nMatrix A:\n" << A << "\nand matrix B\n" << B << "\nare not the same\n" << sfp.toString();
@@ -74,7 +74,7 @@ namespace eigen {
 
 
     template<typename M1, typename M2, typename T>
-    void assertNear(const M1 & A, const M2 & B, T tolerance, rm::source_file_pos const & sfp, std::string const & message = "")
+    void assertNear(const M1 & A, const M2 & B, T tolerance, kinder::source_file_pos const & sfp, std::string const & message = "")
     {
       // Note: If these assertions fail, they only abort this subroutine.
       // see: http://code.google.com/p/googletest/wiki/AdvancedGuide#Using_Assertions_in_Sub-routines
@@ -93,7 +93,7 @@ namespace eigen {
     }
 
     template<typename M1, typename M2, typename T>
-    void expectNear(const M1 & A, const M2 & B, T tolerance, rm::source_file_pos const & sfp, std::string const & message = "")
+    void expectNear(const M1 & A, const M2 & B, T tolerance, kinder::source_file_pos const & sfp, std::string const & message = "")
     {
       EXPECT_EQ((size_t)A.rows(),(size_t)B.rows()) << message << "\nMatrix A:\n" << A << "\nand matrix B\n" << B << "\nare not the same\n" << sfp.toString();
       EXPECT_EQ((size_t)A.cols(),(size_t)B.cols()) << message << "\nMatrix A:\n" << A << "\nand matrix B\n" << B << "\nare not the same\n" << sfp.toString();
@@ -110,7 +110,7 @@ namespace eigen {
 
 
     template<typename M1>
-    void assertFinite(const M1 & A, rm::source_file_pos const & sfp, std::string const & message = "")
+    void assertFinite(const M1 & A, kinder::source_file_pos const & sfp, std::string const & message = "")
     {
       for(int r = 0; r < A.rows(); r++)
     {

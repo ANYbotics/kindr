@@ -27,7 +27,7 @@
 */
 #include <kinder/linear_algebra/LinearAlgebra.hpp>
 
-namespace rm {
+namespace kinder {
 namespace linear_algebra {
 
 

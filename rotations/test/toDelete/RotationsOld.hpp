@@ -10,13 +10,13 @@
 * 			rotation vector: 	alibi
 * 			quaternion:			alibi
 */
-#ifndef RM_ROTATIONS_HPP_
-#define RM_ROTATIONS_HPP_
+#ifndef KINDER_ROTATIONS_HPP_
+#define KINDER_ROTATIONS_HPP_
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
-namespace rm {
+namespace kinder {
 namespace rotationsOld {
 
 
@@ -280,4 +280,4 @@ static void reduceAngle(double& angle){
 } // end namespace rotations
 } // end namespace rm
 
-#endif /* RM_ROTATIONS_HPP_ */
+#endif /* KINDER_ROTATIONS_HPP_ */

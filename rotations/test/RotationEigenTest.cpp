@@ -29,15 +29,15 @@
 #include "kinder/common/gtest_eigen.hpp"
 #include "kinder/rotations/RotationEigen.hpp"
 
-namespace rot = rm::rotations::eigen_implementation;
-namespace quat = rm::quaternions::eigen_implementation;
+namespace rot = kinder::rotations::eigen_implementation;
+namespace quat = kinder::quaternions::eigen_implementation;
 
 template <typename RotationImplementation>
 struct RotationTest {
   typedef RotationImplementation Rotation;
   typedef typename RotationImplementation::Scalar Scalar;
 
-  static constexpr rm::rotations::RotationUsage Usage = RotationImplementation::Usage;
+  static constexpr kinder::rotations::RotationUsage Usage = RotationImplementation::Usage;
   typedef Eigen::Matrix<Scalar, 3, 1> Vector3;
   typedef Eigen::Matrix<Scalar, 3, 4> Matrix3x4;
   Scalar tol;

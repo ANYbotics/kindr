@@ -34,7 +34,7 @@
 #include <Eigen/Core>
 
 
-namespace rm {
+namespace kinder {
 namespace common {
 namespace eigen {
 
@@ -62,54 +62,54 @@ return true;
 }
 
 
-// rm::common::eigen::assertNear((A),(B),1e-6,(MESSAGE))
+// kinder::common::eigen::assertNear((A),(B),1e-6,(MESSAGE))
 /*          std::cout << MESSAGE << std::endl << "Difference between " << #A << " and " << #B << " exceeds tolerance of " << TOL << "." << std::endl; \
           std::cout << #A << "(" << i << "," << j << ") = " << (A)(i,j) << std::endl; \
           std::cout << #B << "(" << i << "," << j << ") = " << (B)(i,j) << std::endl; \ */
 /*    std::cout << MESSAGE << std::endl << "Matrix " << #A << std::endl << A << std::endl << "and matrix " << #B << std::endl << B << std::endl << "have different sizes."; \ */
 
 #ifdef NDEBUG
-#define RM_ASSERT_MATRIX_NEAR_DBG(exceptionType, A, B, PERCENT_TOLERANCE, MSG)
-#define RM_ASSERT_SCALAR_NEAR_DBG(exceptionType, A, B, PERCENT_TOLERANCE, MESSAGE)
+#define KINDER_ASSERT_MATRIX_NEAR_DBG(exceptionType, A, B, PERCENT_TOLERANCE, MSG)
+#define KINDER_ASSERT_SCALAR_NEAR_DBG(exceptionType, A, B, PERCENT_TOLERANCE, MESSAGE)
 #define PRINT(MESSAGE)
 #else
-#define RM_ASSERT_MATRIX_NEAR_DBG(exceptionType, A, B, PERCENT_TOLERANCE, MSG)       \
+#define KINDER_ASSERT_MATRIX_NEAR_DBG(exceptionType, A, B, PERCENT_TOLERANCE, MSG)       \
     if ((size_t)(A).rows() != (size_t)(B).rows()) { \
-      std::stringstream rm_assert_stringstream;  \
-      rm_assert_stringstream << MSG << "\nMatrix " << #A << ":\n" << A << "\nand matrix " << #B << "\n" << B << "\nare not the same size"; \
-      rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,rm_assert_stringstream.str()); \
+      std::stringstream kinder_assert_stringstream;  \
+      kinder_assert_stringstream << MSG << "\nMatrix " << #A << ":\n" << A << "\nand matrix " << #B << "\n" << B << "\nare not the same size"; \
+      kinder::common::internal::kinder_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kinder_assert_stringstream.str()); \
     } \
     if ((size_t)(A).cols() != (size_t)(B).cols()) { \
-      std::stringstream rm_assert_stringstream;  \
-      rm_assert_stringstream << MSG << "\nMatrix " << #A << ":\n" << A << "\nand matrix " << #B << "\n" << B << "\nare not the same size"; \
-      rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,rm_assert_stringstream.str()); \
+      std::stringstream kinder_assert_stringstream;  \
+      kinder_assert_stringstream << MSG << "\nMatrix " << #A << ":\n" << A << "\nand matrix " << #B << "\n" << B << "\nare not the same size"; \
+      kinder::common::internal::kinder_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kinder_assert_stringstream.str()); \
     } \
     for(int r = 0; r < (A).rows(); r++)                 \
     {                                 \
       for(int c = 0; c < (A).cols(); c++)               \
       {                               \
         double percentError = 0.0;                  \
-        if(!rm::common::eigen::compareRelative( (A)(r,c), (B)(r,c), PERCENT_TOLERANCE, &percentError)) { \
-          std::stringstream rm_assert_stringstream;  \
-          rm_assert_stringstream << MSG << "\nComparing:\n"                \
+        if(!kinder::common::eigen::compareRelative( (A)(r,c), (B)(r,c), PERCENT_TOLERANCE, &percentError)) { \
+          std::stringstream kinder_assert_stringstream;  \
+          kinder_assert_stringstream << MSG << "\nComparing:\n"                \
           << #A << "(" << r << "," << c << ") = " << (A)(r,c) << std::endl \
           << #B << "(" << r << "," << c << ") = " << (B)(r,c) << std::endl \
           << "Error was " << percentError << "% > " << PERCENT_TOLERANCE << "%\n" \
           << "\nMatrix " << #A << ":\n" << A << "\nand matrix " << #B << "\n" << B; \
-          rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,rm_assert_stringstream.str()); \
+          kinder::common::internal::kinder_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kinder_assert_stringstream.str()); \
         } \
       } \
     }
-#define RM_ASSERT_SCALAR_NEAR_DBG(exceptionType, A, B, PERCENT_TOLERANCE, MESSAGE) \
+#define KINDER_ASSERT_SCALAR_NEAR_DBG(exceptionType, A, B, PERCENT_TOLERANCE, MESSAGE) \
   double percentError = 0.0; \
-  if(!rm::common::eigen::compareRelative( (A), (B), PERCENT_TOLERANCE, &percentError)) \
+  if(!kinder::common::eigen::compareRelative( (A), (B), PERCENT_TOLERANCE, &percentError)) \
   { \
-    std::stringstream rm_assert_stringstream;  \
-    rm_assert_stringstream << MESSAGE << "\nComparing Scalars:\n"  \
+    std::stringstream kinder_assert_stringstream;  \
+    kinder_assert_stringstream << MESSAGE << "\nComparing Scalars:\n"  \
     << "Scalar 1: " << #A << " = " << (A) << std::endl \
     << "Scalar 2: " << #B << " = " << (B) << std::endl \
     << "Error was " << percentError << "% > " << PERCENT_TOLERANCE << "%\n"; \
-    rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,rm_assert_stringstream.str()); \
+    kinder::common::internal::kinder_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kinder_assert_stringstream.str()); \
   }
 #define PRINT(MESSAGE) std::cout << MESSAGE << std::endl;
 #endif
@@ -117,7 +117,7 @@ return true;
 
 
 
-#define RM_ASSERT_MAT_IS_FINITE(exceptionType, matrix, message)   \
+#define KINDER_ASSERT_MAT_IS_FINITE(exceptionType, matrix, message)   \
   {                 \
   for(int r = 0; r < matrix.rows(); ++r)        \
     {                 \
@@ -125,9 +125,9 @@ return true;
   {               \
     if(!std::isfinite(matrix(r,c)))       \
       {               \
-        std::stringstream rm_assert_stringstream;   \
-        rm_assert_stringstream << "debug assert( isfinite(" << #matrix << "(" << r << ", " << c << ") ) failed. [ isfinite(" << matrix(r,c) << " ) ]" << message << std::endl << matrix; \
-        rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,rm_assert_stringstream.str()); \
+        std::stringstream kinder_assert_stringstream;   \
+        kinder_assert_stringstream << "debug assert( isfinite(" << #matrix << "(" << r << ", " << c << ") ) failed. [ isfinite(" << matrix(r,c) << " ) ]" << message << std::endl << matrix; \
+        kinder::common::internal::kinder_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kinder_assert_stringstream.str()); \
       }               \
   }               \
      }                  \
@@ -136,7 +136,7 @@ return true;
 
 #ifndef NDEBUG
 
-#define RM_ASSERT_MAT_IS_FINITE_DBG(exceptionType, matrix, message)   \
+#define KINDER_ASSERT_MAT_IS_FINITE_DBG(exceptionType, matrix, message)   \
   {                 \
   for(int r = 0; r < matrix.rows(); ++r)        \
     {                 \
@@ -144,9 +144,9 @@ return true;
   {               \
     if(!std::isfinite(matrix(r,c)))       \
       {               \
-        std::stringstream rm_assert_stringstream;   \
-        rm_assert_stringstream << "assert( isfinite(" << #matrix << "(" << r << ", " << c << ") ) failed. [ isfinite(" << matrix(r,c) << " ) ]" << message << std::endl << matrix; \
-        rm::common::internal::rm_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,rm_assert_stringstream.str()); \
+        std::stringstream kinder_assert_stringstream;   \
+        kinder_assert_stringstream << "assert( isfinite(" << #matrix << "(" << r << ", " << c << ") ) failed. [ isfinite(" << matrix(r,c) << " ) ]" << message << std::endl << matrix; \
+        kinder::common::internal::kinder_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kinder_assert_stringstream.str()); \
       }               \
   }               \
      }                  \
@@ -155,7 +155,7 @@ return true;
 
 #else
 
-#define RM_ASSERT_MAT_IS_FINITE_DBG(exceptionType, matrix, message)
+#define KINDER_ASSERT_MAT_IS_FINITE_DBG(exceptionType, matrix, message)
 
 #endif
 
