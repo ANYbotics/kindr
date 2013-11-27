@@ -26,8 +26,8 @@
  *
 */
 
-#ifndef ROTATIONEIGEN_HPP_
-#define ROTATIONEIGEN_HPP_
+#ifndef KINDER_ROTATIONEIGEN_HPP_
+#define KINDER_ROTATIONEIGEN_HPP_
 
 #include "kinder/common/common.hpp"
 #include "kinder/common/assert_macros_eigen.hpp"
@@ -1715,4 +1715,4 @@ class ComparisonTraits<eigen_implementation::RotationQuaternion<PrimType, Usage>
 } // namespace rotations
 } // namespace rm
 
-#endif /* ROTATIONEIGEN_HPP_ */
+#endif /* KINDER_ROTATIONEIGEN_HPP_ */

@@ -6,7 +6,7 @@
  /*! \page page_quaternions Quaternions
 This library defines an \ref quaternion_interface "interface" for quaternions to enable different \ref quaternion_implementations "implementations".
 
-Note that these quaternions should not be used to represent quaternions! Use a \ref kinder::rotations::RotationQuaternionBase "RotationQuaternion" instead as explained on page \ref page_rotations "Rotations".
+Note that these quaternions should not be used to represent rotations! Use a \ref kinder::rotations::RotationQuaternionBase "RotationQuaternion" instead as explained on page \ref page_rotations "Rotations".
  
 \section quaternion_interface Interfaces
 The interfaces are declared in \ref QuaternionBase.hpp.
@@ -102,5 +102,25 @@ quat = uquat;
 uquat = quat; // error (not allowed)
 uquat = quat.toUnitQuaternion();  // normalizes the quaternion
 \endcode
+
+
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+
 
 */
