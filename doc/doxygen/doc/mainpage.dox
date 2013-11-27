@@ -98,6 +98,7 @@ See \ref chapters "Chapters" to learn how to use this library.
  - \subpage page_quaternions 
  - \subpage page_rotations 
  - \subpage page_positions
+ - \subpage page_poses
 
 */
 
