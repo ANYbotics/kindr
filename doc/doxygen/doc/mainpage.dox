@@ -1,7 +1,11 @@
 /*!
 \mainpage Overview
 
+\section kinder Kinder - the kinematics and dynamics library
+This library provides interfaces and implementations of kinematic and dynamic quantities for robotics.
 
+\section source_code Source Code
+The source code is available at <a href="http://bitbucket.org/ethz-asl-lr/c_kinder">http://bitbucket.org/ethz-asl-lr/c_kinder</a>
 
 \section license License
 This library is <a href="http://www.gnu.org/philosophy/free-sw.html">Free Software</a> and is licensed under <a href="http://opensource.org/licenses/BSD-3-Clause">BSD 3-Clause</a>.
@@ -93,7 +97,7 @@ See \ref chapters "Chapters" to learn how to use this library.
 
  - \subpage page_quaternions 
  - \subpage page_rotations 
-
+ - \subpage page_positions
 
 */
 

@@ -222,15 +222,15 @@ Angle-axis & $\angleaxis{B}{A} \Leftrightarrow \rotmat{B}{A}$  & The rotation is
 Rotation vector & $ \rotvec{B}{A} $  &  Rotation with rotation axis $\vn = \frac{\vvph}{\norm{\vvph}}$ and angle $\theta = \norm{\vvph}$. \\ 
  & $\rotvec{B}{A} \Leftrightarrow \rotmat{B}{A} $ &  The rotation is active (alibi). \\ \hline
 Euler Angles ZYX &  $(\psi, \theta, \phi)_{B\!A}$  & Tait-Bryan angles (Flight conv.): $z-y'-x''$, i.e.\   \\
-Euler Angles YPR & & yaw-pitch-roll. Singularities are at $\theta=\pm\frac{\pi}{2}$. \\
+Euler Angles YPR & $(\psi, \theta, \phi)_{B\!A} \Leftrightarrow \comat{B}{A} $ & yaw-pitch-roll. Singularities are at $\theta=\pm\frac{\pi}{2}$. \\
  &  & $\psi\in[-\pi,\pi), \theta\in[-\frac{\pi}{2},\frac{\pi}{2}), \phi\in[-\pi,\pi)$  \\  \hline
 Euler Angles XYZ &  $(\alpha, \beta, \gamma)_{B\!A}$ & Cardan angles (Glocker conv.): $x-y'-z''$, i.e.\ \\
-Euler Angles RPY & & roll-pitch-yaw. Singularities are at $\beta=\pm\frac{\pi}{2}$.  \\
+Euler Angles RPY & $(\alpha, \beta, \gamma)_{B\!A} \Leftrightarrow \comat{B}{A}$ & roll-pitch-yaw. Singularities are at $\beta=\pm\frac{\pi}{2}$.  \\
  &  & $\alpha\in[-\pi,\pi), \beta\in[-\frac{\pi}{2},\frac{\pi}{2}), \gamma\in[-\pi,\pi)$  \\  \hline
 \end{tabular} % \multirow{2}{*}{}
 
 \subsubsection{Rotation Quaternion}
-A rotation quaternion is defined as a Hamiltonian unit quaternion: \\
+A rotation quaternion is a Hamiltonian unit quaternion: \\
 $\boxed{\begin{aligned}P &= p_0 + p_1 i + p_2 j + p_3 k \in \mathbb{H}, \quad p_i \in \mathbb{R} \\
 i^2 &= j^2=k^2 = ijk = -1, \quad \norm{P}= \sqrt{p_0^2 + p_1^2 + p_2^2 + p_3^2} = 1 \\
 \end{aligned}}$   \\
@@ -245,7 +245,7 @@ Rot. quaternion as vector: $\vp = \begin{bmatrix} p_0 & p_1 & p_2 & p_3 \end{bma
 Conjugate: $P^\ast = (p_0, -\imquatvec{p})$ \\
 Inverse: $P^{-1} = P^\ast = (p_0, -\imquatvec{p})$ \\
 Quaternion multiplication: $\begin{aligned}Q \cdot P &= (q_0, \imquatvec{q})\cdot(p_0, \imquatvec{p}) = (q_0 p_0 - \imquatvec{q}^\transpose \imquatvec{p}, q_{0} \imquatvec{p} + p_0 \imquatvec{q} + \imquatvec{q} \times \imquatvec{p}) \quad \Leftrightarrow \\
-	   \vq^\otimes \vp &= \vQ(\vq)\vp = \begin{pmatrix}q_0 & -\imquatvec{q}^\transpose \\  \imquatvec{q} & q_0\identity_{3 \times 3}+\hat{\imquatvec{p}} \\ \end{pmatrix} \begin{pmatrix} p_0 \\ p_1 \\ p_2 \\ p_3 \end{pmatrix} 
+	   \vq \otimes \vp &= \vQ(\vq)\vp = \begin{pmatrix}q_0 & -\imquatvec{q}^\transpose \\  \imquatvec{q} & q_0\identity_{3 \times 3}+\hat{\imquatvec{p}} \\ \end{pmatrix} \begin{pmatrix} p_0 \\ p_1 \\ p_2 \\ p_3 \end{pmatrix} 
 	  = \begin{pmatrix} 
  q_0 & -q_1 & -q_2 & -q_3 \\
  q_1 &  q_0 & -q_3 &  q_2 \\

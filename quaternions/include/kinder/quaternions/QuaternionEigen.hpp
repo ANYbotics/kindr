@@ -25,8 +25,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
 */
-#ifndef QUATERNIONEIGEN_HPP_
-#define QUATERNIONEIGEN_HPP_
+#ifndef KINDER_QUATERNIONEIGEN_HPP_
+#define KINDER_QUATERNIONEIGEN_HPP_
 
 #include "kinder/common/common.hpp"
 #include "QuaternionBase.hpp"
@@ -445,4 +445,4 @@ namespace internal {
 } // namespace rm
 
 
-#endif /* QUATERNIONEIGEN_HPP_ */
+#endif /* KINDER_QUATERNIONEIGEN_HPP_ */
