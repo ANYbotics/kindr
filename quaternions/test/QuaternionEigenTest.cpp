@@ -103,6 +103,28 @@ TYPED_TEST (QuaternionsPairsTest, testQuaternionConstructor ) {
   ASSERT_EQ(uquat1.x(),this->uquatGeneric.x());
   ASSERT_EQ(uquat1.y(),this->uquatGeneric.y());
   ASSERT_EQ(uquat1.z(),this->uquatGeneric.z());
+
+  // constructor of real and imaginary part
+  Quaternion quat2(this->quatGeneric.w(),typename Quaternion::Imaginary(this->quatGeneric.x(), this->quatGeneric.y(), this->quatGeneric.z()));
+  ASSERT_EQ(quat2.w(),this->quatGeneric.w());
+  ASSERT_EQ(quat2.x(),this->quatGeneric.x());
+  ASSERT_EQ(quat2.y(),this->quatGeneric.y());
+  ASSERT_EQ(quat2.z(),this->quatGeneric.z());
+  ASSERT_EQ(quat2.getReal(),this->quatGeneric.w());
+  ASSERT_EQ(quat2.getImaginary()(0),this->quatGeneric.x());
+  ASSERT_EQ(quat2.getImaginary()(1),this->quatGeneric.y());
+  ASSERT_EQ(quat2.getImaginary()(2),this->quatGeneric.z());
+
+  // constructor of real and imaginary part
+  UnitQuaternion uquat2(this->uquatGeneric.w(),typename UnitQuaternion::Imaginary(this->uquatGeneric.x(), this->uquatGeneric.y(), this->uquatGeneric.z()));
+  ASSERT_EQ(uquat2.w(),this->uquatGeneric.w());
+  ASSERT_EQ(uquat2.x(),this->uquatGeneric.x());
+  ASSERT_EQ(uquat2.y(),this->uquatGeneric.y());
+  ASSERT_EQ(uquat2.z(),this->uquatGeneric.z());
+  ASSERT_EQ(uquat2.getReal(),this->uquatGeneric.w());
+  ASSERT_EQ(uquat2.getImaginary()(0),this->uquatGeneric.x());
+  ASSERT_EQ(uquat2.getImaginary()(1),this->uquatGeneric.y());
+  ASSERT_EQ(uquat2.getImaginary()(2),this->uquatGeneric.z());
 }
 
 

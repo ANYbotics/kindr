@@ -60,6 +60,8 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType>>, private Eigen::Q
   typedef Base Implementation;
   //! the scalar type, i.e., the type of the coefficients
   typedef PrimType Scalar;
+  //! the imaginary type, i.e., Eigen::Quaternion<>
+  typedef Eigen::Matrix<PrimType,3,1> Imaginary;
 
   //! Default constructor creates a quaternion with all coefficients equal to zero
   Quaternion()
@@ -68,6 +70,10 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType>>, private Eigen::Q
 
   Quaternion(const PrimType & w, const PrimType & x, const PrimType & y, const PrimType & z)
     : Base(w,x,y,z) {
+  }
+
+  Quaternion(const PrimType & w, const Imaginary & imag)
+    : Base(w,imag(0),imag(1),imag(2)) {
   }
 
   // create from Eigen::Quaternion
@@ -180,6 +186,14 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType>>, private Eigen::Q
     return Base::z();
   }
 
+  inline PrimType getReal() const {
+    return Base::w();
+  }
+
+  inline Imaginary getImaginary() const {
+    return Imaginary(Base::x(),Base::y(),Base::z());
+  }
+
   inline PrimType norm() const {
     return Base::norm();
   }
@@ -224,6 +238,8 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>> {
   typedef typename Quaternion<PrimType>::Implementation Implementation;
   //! the scalar type, i.e., the type of the coefficients
   typedef PrimType Scalar;
+  //! the imaginary type, i.e., Eigen::Quaternion<>
+  typedef Eigen::Matrix<PrimType,3,1> Imaginary;
 
 
   //! Default Constructor initializes the unit quaternion to identity
@@ -240,6 +256,11 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>> {
    */
   UnitQuaternion(const PrimType & w, const PrimType & x, const PrimType & y, const PrimType & z)
     : uq(w,x,y,z) {
+    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-6, "Input quaternion has not unit length.");
+  }
+
+  UnitQuaternion(const PrimType & w, const Imaginary & imag)
+    : uq(w,imag) {
     KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-6, "Input quaternion has not unit length.");
   }
 
@@ -331,6 +352,14 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>> {
 
   inline PrimType & z() {
     return uq.z();
+  }
+
+  inline PrimType getReal() const {
+    return uq.w();
+  }
+
+  inline Imaginary getImaginary() const {
+    return Imaginary(uq.x(),uq.y(),uq.z());
   }
 
 //  using Base::operator*;
