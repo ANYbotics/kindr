@@ -291,7 +291,11 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>> {
 
   template<typename PrimTypeIn>
   UnitQuaternion & operator ()(const UnitQuaternion<PrimTypeIn> & other) {
-	uq = other.uq;
+//	uq = other.uq;
+	this->w() = static_cast<PrimType>(other.w());
+	this->x() = static_cast<PrimType>(other.x());
+	this->y() = static_cast<PrimType>(other.y());
+	this->z() = static_cast<PrimType>(other.z());
 	return *this;
   }
 
