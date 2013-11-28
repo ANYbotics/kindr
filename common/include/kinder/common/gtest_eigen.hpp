@@ -122,7 +122,7 @@ namespace eigen {
     }
 
 
-#define ASSERT_DOUBLE_MX_EQ(A, B, PERCENT_TOLERANCE, MSG)       \
+#define KINDER_ASSERT_DOUBLE_MX_EQ(A, B, PERCENT_TOLERANCE, MSG)       \
     ASSERT_EQ((size_t)(A).rows(), (size_t)(B).rows())  << MSG << "\nMatrix " << #A << ":\n" << A << "\nand matrix " << #B << "\n" << B << "\nare not the same size"; \
     ASSERT_EQ((size_t)(A).cols(), (size_t)(B).cols())  << MSG << "\nMatrix " << #A << ":\n" << A << "\nand matrix " << #B << "\n" << B << "\nare not the same size"; \
     for(int r = 0; r < (A).rows(); r++)                 \

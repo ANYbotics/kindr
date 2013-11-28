@@ -136,18 +136,20 @@ template<typename DERIVED>
 class Position3Base : public PositionBase<DERIVED> {
  public:
   typedef PositionBase<DERIVED> Base;
-  Position3Base() = default;
-  Position3Base(const Base& other);
+  typedef typename internal::get_scalar<DERIVED>::Scalar Scalar;
+//  Position3Base() = default;
+//  Position3Base(const Base& other);
 
-  Position3Base(const typename internal::get_scalar<DERIVED>::Scalar & x, const typename internal::get_scalar<DERIVED>::Scalar & y, const typename internal::get_scalar<DERIVED>::Scalar & z);
-  inline const typename internal::get_scalar<DERIVED>::Scalar& x() const;
-  inline typename internal::get_scalar<DERIVED>::Scalar& x();
+//  Position3Base(const typename internal::get_scalar<DERIVED>::Scalar & x, const typename internal::get_scalar<DERIVED>::Scalar & y, const typename internal::get_scalar<DERIVED>::Scalar & z);
 
-  inline const typename internal::get_scalar<DERIVED>::Scalar& y() const;
-  inline typename internal::get_scalar<DERIVED>::Scalar& y();
+  inline const Scalar & x() const;
+  inline Scalar& x();
 
-  inline const typename internal::get_scalar<DERIVED>::Scalar& z() const;
-  inline typename internal::get_scalar<DERIVED>::Scalar& z();
+  inline const Scalar& y() const;
+  inline Scalar& y();
+
+  inline Scalar& z() const;
+  inline Scalar& z();
 
 };
 

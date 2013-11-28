@@ -29,8 +29,21 @@
 #ifndef KINDER_POSESEIGEN_HPP_
 #define KINDER_POSESEIGEN_HPP_
 
+#include "kinder/common/common.hpp"
+#include "kinder/common/assert_macros_eigen.hpp"
+#include "PoseBase.hpp"
 
 
+namespace kinder {
+namespace poses {
+//! Implementation of rotations based on the C++ Eigen library
+namespace eigen_implementation {
 
+} // namespace eigen_implementation
+namespace internal {
+
+} // namespace internal
+} // namespace poses
+} // namespace kinder
 
 #endif /* KINDER_POSESEIGEN_HPP_ */

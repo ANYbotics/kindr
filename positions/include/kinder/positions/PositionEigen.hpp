@@ -87,6 +87,10 @@ class Position3 : public Position3Base<Position3<PrimType>>, private Eigen::Matr
     return static_cast<const Implementation &>(*this);
   }
 
+  using Base::x;
+  using Base::y;
+  using Base::z;
+
   using Position3Base<Position3<PrimType>>::operator+; // otherwise ambiguous PositionBase and Eigen
   using Position3Base<Position3<PrimType>>::operator-; // otherwise ambiguous PositionBase and Eigen
 
@@ -103,33 +107,12 @@ class Position3 : public Position3Base<Position3<PrimType>>, private Eigen::Matr
     return *this;
   }
 
-  Position3 & setZero() {
+  Position3<PrimType> & setZero() {
     Base::setZero();
+    return *this;
   }
 
-  inline const Scalar& x() const {
-    return Base::x();
-  }
 
-  inline Scalar& x() {
-    return Base::x();
-  }
-
-  inline const Scalar& y() const {
-    return Base::y();
-  }
-
-  inline Scalar& y() {
-    return Base::y();
-  }
-
-  inline const Scalar& z() const {
-    return Base::z();
-  }
-
-  inline Scalar& z() {
-    return Base::z();
-  }
 
   /*! \brief Used for printing the object with std::cout.
    *  \returns std::stream object

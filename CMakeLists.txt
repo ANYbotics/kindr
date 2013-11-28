@@ -66,6 +66,9 @@ add_subdirectory(rotations)
 # Add positions
 add_subdirectory(positions)
 
+# Add poses
+add_subdirectory(poses)
+
 # Add Doxygen documentation
 add_subdirectory(doc/doxygen)
 

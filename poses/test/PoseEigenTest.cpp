@@ -28,8 +28,8 @@
 */
 
 #include <gtest/gtest.h>
-#include <kinder/positions/PoseEigen.hpp>
-#include <kinder/positions/PoseBase.hpp>
+#include <kinder/poses/PoseEigen.hpp>
+#include <kinder/poses/PoseBase.hpp>
 #include <Eigen/Core>
 #include <iostream>
 

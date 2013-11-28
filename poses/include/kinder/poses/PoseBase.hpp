@@ -29,7 +29,69 @@
 #define KINDER_POSESBASE_HPP_
 
 
+#include "kinder/common/common.hpp"
+//#include "kinder/positions/PositionBase.hpp"
 
+namespace kinder {
+//! Generic pose interface
+/*! \ingroup poses
+ */
+namespace poses {
+//! Internal stuff (only for developers)
+namespace internal {
+
+} // namespace internal
+
+
+
+template<typename DERIVED>
+class PoseBase {
+ public:
+  /*! \brief Standard constructor.
+    *  Creates an empty generic pose object
+    */
+  PoseBase() = default;
+
+  /*! \brief Constructor from derived pose.
+   *  This constructor has been deleted because the abstract class does not contain any data.
+   */
+  PoseBase(const DERIVED &) = delete; // on purpose!!
+
+  /*! \brief Gets the derived pose.
+   *  (only for advanced users)
+   *  \returns the derived pose
+   */
+  operator DERIVED & () {
+    return static_cast<DERIVED &>(*this);
+  }
+
+  /*! \brief Gets the derived pose.
+   *  (only for advanced users)
+   *  \returns the derived pose
+   */
+  operator const DERIVED & () const {
+    return static_cast<const DERIVED &>(*this);
+  }
+
+  /*! \brief Gets the derived pose.
+   *  (only for advanced users)
+   *  \returns the derived pose
+   */
+  const DERIVED & derived() const {
+    return static_cast<const DERIVED &>(*this);
+  }
+
+
+
+
+};
+
+} // namespace internal
+
+namespace internal {
+
+} // namespace poses
+} // namespace kinder
 
 
 #endif /* KINDER_POSESBASE_HPP_ */
