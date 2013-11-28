@@ -54,12 +54,16 @@ typedef ::testing::Types<
 > TypePairs;
 
 typedef ::testing::Types<
+	std::pair<quat::QuaternionD, quat::QuaternionD>,
 	std::pair<quat::QuaternionD, quat::QuaternionF>,
+	std::pair<quat::QuaternionF, quat::QuaternionF>,
 	std::pair<quat::UnitQuaternionD, quat::UnitQuaternionF>,
 	std::pair<quat::UnitQuaternionD, quat::QuaternionD>,
+	std::pair<quat::UnitQuaternionD, quat::UnitQuaternionD>,
 	std::pair<quat::UnitQuaternionF, quat::QuaternionF>,
 	std::pair<quat::UnitQuaternionD, quat::QuaternionF>,
-	std::pair<quat::UnitQuaternionF, quat::QuaternionD>
+	std::pair<quat::UnitQuaternionF, quat::QuaternionD>,
+	std::pair<quat::UnitQuaternionF, quat::UnitQuaternionF>
 > TypePrimeTypePairs;
 
 template <typename QuaternionImplementation>
@@ -75,6 +79,8 @@ struct QuaternionsSingleTest : public ::testing::Test{
 	  const Quaternion quat1 = Quaternion(eigenQuat1);
 	  const Quaternion quat2 = Quaternion(eigenQuat2);
 	  const Quaternion quatIdentity = Quaternion(eigenQuatIdentity);
+	  const QuaternionScalar norm1 = 5.477225575051661;
+	  const QuaternionScalar norm2 = 9.196357974763703;
 };
 
 template <typename QuaternionImplementationPrimeTypePair>
@@ -197,20 +203,25 @@ TYPED_TEST (QuaternionsSingleTest, testQuaternionSingleConjugation) {
   Quaternion testQuat2;
 
   // Check conjugation
-  testQuat1 = this->quat1.conjugated();
-  ASSERT_EQ(testQuat1.w(),this->eigenQuat1Conj.w());
-  ASSERT_EQ(testQuat1.x(),this->eigenQuat1Conj.x());
-  ASSERT_EQ(testQuat1.y(),this->eigenQuat1Conj.y());
-  ASSERT_EQ(testQuat1.z(),this->eigenQuat1Conj.z());
+  testQuat1 = this->quat1;
+  testQuat2 = testQuat1.conjugated();
+  ASSERT_NEAR(testQuat1.w(),this->quat1.w(),1e-6);
+  ASSERT_NEAR(testQuat1.x(),this->quat1.x(),1e-6);
+  ASSERT_NEAR(testQuat1.y(),this->quat1.y(),1e-6);
+  ASSERT_NEAR(testQuat1.z(),this->quat1.z(),1e-6);
+  ASSERT_NEAR(testQuat2.w(),this->eigenQuat1Conj.w(),1e-6);
+  ASSERT_NEAR(testQuat2.x(),this->eigenQuat1Conj.x(),1e-6);
+  ASSERT_NEAR(testQuat2.y(),this->eigenQuat1Conj.y(),1e-6);
+  ASSERT_NEAR(testQuat2.z(),this->eigenQuat1Conj.z(),1e-6);
   testQuat2 = testQuat1.conjugate();
-  ASSERT_EQ(testQuat1.w(),this->eigenQuat1.w());
-  ASSERT_EQ(testQuat1.x(),this->eigenQuat1.x());
-  ASSERT_EQ(testQuat1.y(),this->eigenQuat1.y());
-  ASSERT_EQ(testQuat1.z(),this->eigenQuat1.z());
-  ASSERT_EQ(testQuat2.w(),this->eigenQuat1.w());
-  ASSERT_EQ(testQuat2.x(),this->eigenQuat1.x());
-  ASSERT_EQ(testQuat2.y(),this->eigenQuat1.y());
-  ASSERT_EQ(testQuat2.z(),this->eigenQuat1.z());
+  ASSERT_NEAR(testQuat1.w(),this->eigenQuat1Conj.w(),1e-6);
+  ASSERT_NEAR(testQuat1.x(),this->eigenQuat1Conj.x(),1e-6);
+  ASSERT_NEAR(testQuat1.y(),this->eigenQuat1Conj.y(),1e-6);
+  ASSERT_NEAR(testQuat1.z(),this->eigenQuat1Conj.z(),1e-6);
+  ASSERT_NEAR(testQuat2.w(),this->eigenQuat1Conj.w(),1e-6);
+  ASSERT_NEAR(testQuat2.x(),this->eigenQuat1Conj.x(),1e-6);
+  ASSERT_NEAR(testQuat2.y(),this->eigenQuat1Conj.y(),1e-6);
+  ASSERT_NEAR(testQuat2.z(),this->eigenQuat1Conj.z(),1e-6);
 }
 
 // Testing of Quaternion inversion
@@ -253,6 +264,54 @@ TYPED_TEST (QuaternionsSingleTest, testQuaternionSingleComparison) {
   ASSERT_EQ(testQuat==this->quat2,false);
 }
 
+// Testing of Norm and Normalization
+TYPED_TEST (QuaternionsSingleTest, testQuaternionSingleNormalization) {
+  typedef typename TestFixture::Quaternion Quaternion;
+  typedef typename TestFixture::QuaternionScalar QuaternionScalar;
+  typedef typename TestFixture::EigenQuat EigenQuat;
+  Quaternion testQuat1;
+  Quaternion testQuat2;
+  QuaternionScalar scalar;
+
+  // Check norm and normalization
+  testQuat1 = this->quat1;
+  scalar = testQuat1.norm();
+  ASSERT_NEAR(scalar,this->norm1,1e-6);
+  testQuat2 = testQuat1.normalized();
+  ASSERT_NEAR(testQuat1.w(),this->quat1.w(),1e-6);
+  ASSERT_NEAR(testQuat1.x(),this->quat1.x(),1e-6);
+  ASSERT_NEAR(testQuat1.y(),this->quat1.y(),1e-6);
+  ASSERT_NEAR(testQuat1.z(),this->quat1.z(),1e-6);
+  ASSERT_NEAR(testQuat2.w(),this->quat1.w()/this->norm1,1e-6);
+  ASSERT_NEAR(testQuat2.x(),this->quat1.x()/this->norm1,1e-6);
+  ASSERT_NEAR(testQuat2.y(),this->quat1.y()/this->norm1,1e-6);
+  ASSERT_NEAR(testQuat2.z(),this->quat1.z()/this->norm1,1e-6);
+  testQuat2 = testQuat1.normalize();
+  ASSERT_NEAR(testQuat1.w(),this->quat1.w()/this->norm1,1e-6);
+  ASSERT_NEAR(testQuat1.x(),this->quat1.x()/this->norm1,1e-6);
+  ASSERT_NEAR(testQuat1.y(),this->quat1.y()/this->norm1,1e-6);
+  ASSERT_NEAR(testQuat1.z(),this->quat1.z()/this->norm1,1e-6);
+  ASSERT_NEAR(testQuat2.w(),this->quat1.w()/this->norm1,1e-6);
+  ASSERT_NEAR(testQuat2.x(),this->quat1.x()/this->norm1,1e-6);
+  ASSERT_NEAR(testQuat2.y(),this->quat1.y()/this->norm1,1e-6);
+  ASSERT_NEAR(testQuat2.z(),this->quat1.z()/this->norm1,1e-6);
+}
+
+// Testing of casting to implementation
+TYPED_TEST (QuaternionsSingleTest, testQuaternionSinglImplementationCast) {
+  typedef typename TestFixture::Quaternion Quaternion;
+  typedef typename TestFixture::QuaternionScalar QuaternionScalar;
+  typedef typename TestFixture::EigenQuat EigenQuat;
+  EigenQuat testEigenQuat;
+
+  // Check casting to implementation
+  testEigenQuat = this->quat1.toImplementation();
+  ASSERT_EQ(testEigenQuat.w(),this->eigenQuat1.w());
+  ASSERT_EQ(testEigenQuat.x(),this->eigenQuat1.x());
+  ASSERT_EQ(testEigenQuat.y(),this->eigenQuat1.y());
+  ASSERT_EQ(testEigenQuat.z(),this->eigenQuat1.z());
+}
+
 // Test simple casting (()-operator) between type and non-unit and unit quaternions
 TYPED_TEST (QuaternionsPrimeTypePairsTest, testQuaternionPrimeTypeCasting ) {
   typedef typename TestFixture::QuaternionFirstPrimeType QuaternionFirstPrimeType;
@@ -260,6 +319,9 @@ TYPED_TEST (QuaternionsPrimeTypePairsTest, testQuaternionPrimeTypeCasting ) {
   QuaternionFirstPrimeType testQuatFirst;
   QuaternionSecondPrimeType testQuatSecond;
 
+  // Use ()-operator to cast between different quaternions (float and double primetype, unit and non-unit)
+  // Throughs an error if a non-unit quaternion is cast to a unit quaternion
+  // Only tested for unit-quaternion data
   testQuatFirst(this->quat2);
   ASSERT_NEAR(testQuatFirst.w(),this->quat1.w(),1e-6);
   ASSERT_NEAR(testQuatFirst.x(),this->quat1.x(),1e-6);
