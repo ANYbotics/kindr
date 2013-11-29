@@ -238,7 +238,7 @@ class RotationBase {
    *  \returns the rotated vector or matrix
    */
   template <typename internal::get_matrix3X<DERIVED>::IndexType Cols>
-  typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> rotate(typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> & m) const {
+  typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> rotate(const typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> & m) const {
     return internal::RotationTraits<DERIVED>::rotate(this->derived(), m);
   }
 
@@ -246,7 +246,7 @@ class RotationBase {
    *  \returns the reverse rotated vector or matrix
    */
   template <typename internal::get_matrix3X<DERIVED>::IndexType Cols>
-  typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> inverseRotate(typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> & m) const {
+  typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> inverseRotate(const typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> & m) const {
     return internal::RotationTraits<DERIVED>::rotate(this->derived().inverse(), m); // todo: may be optimized
   }
 };

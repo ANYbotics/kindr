@@ -102,7 +102,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType, Usage>, Usage>, priva
    *  In debug mode, an assertion is thrown if the rotation vector has not unit length.
    *  \param other   Eigen::AngleAxis<PrimType>
    */
-  explicit AngleAxis(const Base & other)
+  explicit AngleAxis(const Base & other) // explicit on purpose
     : Base(other) {
     KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-6), "Input rotation axis has not unit length.");
   }
