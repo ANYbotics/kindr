@@ -135,7 +135,6 @@ class PositionBase {
 template<typename DERIVED>
 class Position3Base : public PositionBase<DERIVED> {
  public:
-  typedef PositionBase<DERIVED> Base;
   typedef typename internal::get_scalar<DERIVED>::Scalar Scalar;
 //  Position3Base() = default;
 //  Position3Base(const Base& other);

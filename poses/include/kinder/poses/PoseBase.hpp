@@ -40,6 +40,18 @@ namespace poses {
 //! Internal stuff (only for developers)
 namespace internal {
 
+template<typename POSE>
+class TransformationTraits {
+ public:
+//  inline static Position transform(const Pose & pose, const Position & position);
+};
+
+template<typename POSE>
+class get_position {
+ public:
+//  typedef typename positions::eigen_implementation::Position3D Position;
+};
+
 } // namespace internal
 
 
@@ -82,9 +94,26 @@ class PoseBase {
   }
 
 
-
+  /*! \brief Transforms a position
+   *  \returns the transformed position
+   */
+  typename internal::get_position<DERIVED>::Position transform(typename internal::get_position<DERIVED>::Position & position) const {
+    return internal::TransformationTraits<DERIVED>::transform(this->derived(), position);
+  }
 
 };
+
+template<typename DERIVED>
+class HomogeneousTransformationBase : public PoseBase<DERIVED> {
+ public:
+
+  template<typename OTHER_DERIVED>
+  HomogeneousTransformationBase & operator =(const HomogeneousTransformationBase<OTHER_DERIVED> & other) {
+    return *this;
+  }
+
+};
+
 
 } // namespace internal
 

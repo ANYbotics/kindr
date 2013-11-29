@@ -33,12 +33,26 @@
 #include <Eigen/Core>
 #include <iostream>
 
-namespace pos = kinder::poses::eigen_implementation;
-
+namespace pose = kinder::poses::eigen_implementation;
+namespace pos = kinder::positions::eigen_implementation;
+namespace rot = kinder::rotations::eigen_implementation;
 
 
 TEST(PosesTest, testInitial)
 {
+  pose::HomogeneousTransformationPosition3RotationQuaternionD test;
+  pose::HomogeneousTransformationPosition3RotationQuaternionD test2(pos::Position3D(1,2,3),rot::RotationQuaternionPD(rot::AngleAxisPD(0.5,1.0,0,0)));
+  std::cout << "pos: " << test2.getPosition() << std::endl;
+  std::cout << "rot: " << test2.getRotation() << std::endl;
+  std::cout << "mat: " << test2.getTransformationMatrix()<< std::endl;
+  rot::AngleAxisPD aa;
+  aa = test2.getRotation();
+
+  pose::HomogeneousTransformationPosition3RotationQuaternionD pose1(pos::Position3D(4,5,6),rot::RotationQuaternionPD(rot::AngleAxisPD(M_PI/2.0,0,0,1)));
+  pos::Position3D posX(Eigen::Vector3d::UnitX());
+  pos::Position3D posRes = pose1.transform(posX);
+  std::cout << "posRes: " << posRes << std::endl;
+
 
 }
 
