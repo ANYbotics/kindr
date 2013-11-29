@@ -32,6 +32,8 @@
 #include "kinder/common/common.hpp"
 #include "kinder/quaternions/QuaternionBase.hpp"
 
+
+
 namespace kinder {
 //! Generic rotation interface
 /*! \ingroup rotations
@@ -117,6 +119,20 @@ class get_matrix3X {
 //    typedef MATRIX type;
 //  }
 };
+
+/*! \brief This class determines the correct matrix type for each rotation which is used for position rotations
+ *  \class get_matrix3
+ *  (only for advanced users)
+ */
+template<typename POSITION>
+class get_matrix3 {
+ public:
+//  static const Matrix3X& getMatrix3(const Position& position) {
+//    return position.toImplementation();
+//  }
+};
+
+
 
 } // namespace internal
 
@@ -249,6 +265,24 @@ class RotationBase {
   typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> inverseRotate(const typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> & m) const {
     return internal::RotationTraits<DERIVED>::rotate(this->derived().inverted(), m); // todo: may be optimized
   }
+
+  /*! \brief Rotates a position.
+   *  \returns the rotated position
+   */
+  template <typename POSITION>
+  POSITION rotate(const POSITION & position) const {
+    return POSITION(internal::RotationTraits<DERIVED>::rotate(this->derived(), internal::get_matrix3<POSITION>::getMatrix3(position)));
+  }
+  /*! \brief Rotates a position in reverse.
+   *  \returns the reverse rotated position
+   */
+  template <typename POSITION>
+  POSITION inverseRotate(const POSITION & position) const {
+    return POSITION(internal::RotationTraits<DERIVED>::rotate(this->derived().inverted(), internal::get_matrix3<POSITION>::getMatrix3(position)));
+  }
+
+
+
 };
 
 

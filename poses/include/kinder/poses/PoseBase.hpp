@@ -30,7 +30,7 @@
 
 
 #include "kinder/common/common.hpp"
-//#include "kinder/positions/PositionBase.hpp"
+
 
 namespace kinder {
 //! Generic pose interface
@@ -44,6 +44,7 @@ template<typename POSE>
 class TransformationTraits {
  public:
 //  inline static Position transform(const Pose & pose, const Position & position);
+//  inline static Position inverseTransform(const Pose & pose, const Position & position);
 };
 
 template<typename POSE>
@@ -100,6 +101,14 @@ class PoseBase {
   typename internal::get_position<DERIVED>::Position transform(typename internal::get_position<DERIVED>::Position & position) const {
     return internal::TransformationTraits<DERIVED>::transform(this->derived(), position);
   }
+
+  /*! \brief Transforms a position
+   *  \returns the transformed position
+   */
+  typename internal::get_position<DERIVED>::Position inverseTransform(typename internal::get_position<DERIVED>::Position & position) const {
+    return internal::TransformationTraits<DERIVED>::inverseTransform(this->derived(), position);
+  }
+
 
 };
 

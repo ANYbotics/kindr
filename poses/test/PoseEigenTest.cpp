@@ -48,12 +48,14 @@ TEST(PosesTest, testInitial)
   rot::AngleAxisPD aa;
   aa = test2.getRotation();
 
-  pose::HomogeneousTransformationPosition3RotationQuaternionD pose1(pos::Position3D(4,5,6),rot::RotationQuaternionPD(rot::AngleAxisPD(M_PI/2.0,0,0,1)));
-  pos::Position3D posX(Eigen::Vector3d::UnitX());
+  pose::HomogeneousTransformationPosition3RotationQuaternionD pose1(pos::Position3D(4,5,6),rot::RotationQuaternionPD(rot::AngleAxisPD(0.2,Eigen::Vector3d(4,2,5).normalized())));
+  pos::Position3D posX(22,33,55);
   pos::Position3D posRes = pose1.transform(posX);
+  std::cout << "posX: " << posX << std::endl;
   std::cout << "posRes: " << posRes << std::endl;
-
-
+  std::cout << "posX again: " << pose1.inverseTransform(posRes) << std::endl;
+  posRes = rot::AngleAxisPD(M_PI/2.0,Eigen::Vector3d(0,0,1).normalized()).rotate(pos::Position3D(1,0,0));
+  std::cout << "posRes: " << posRes << std::endl;
 }
 
 
