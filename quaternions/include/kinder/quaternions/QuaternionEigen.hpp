@@ -279,14 +279,12 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>> {
     KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-6, "Input quaternion has not unit length.");
   }
 
-  template<typename PrimTypeIn>
-  UnitQuaternion & operator =(const UnitQuaternion<PrimTypeIn> & other) {
-	uq = other.template cast<PrimType>();
-//    this->w() = static_cast<PrimType>(other.w());
-//    this->x() = static_cast<PrimType>(other.x());
-//    this->y() = static_cast<PrimType>(other.y());
-//    this->z() = static_cast<PrimType>(other.z());
-    return *this;
+  UnitQuaternion & operator =(const UnitQuaternion<PrimType> & other) {
+	    this->w() = other.w();
+	    this->x() = other.x();
+	    this->y() = other.y();
+	    this->z() = other.z();
+	    return *this;
   }
 
   template<typename PrimTypeIn>

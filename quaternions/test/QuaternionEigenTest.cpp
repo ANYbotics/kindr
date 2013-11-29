@@ -66,6 +66,11 @@ typedef ::testing::Types<
 	std::pair<quat::UnitQuaternionF, quat::UnitQuaternionF>
 > TypePrimeTypePairs;
 
+typedef ::testing::Types<
+		float,
+		double
+> PrimTypes;
+
 template <typename QuaternionImplementation>
 struct QuaternionsSingleTest : public ::testing::Test{
 	  typedef QuaternionImplementation Quaternion;
@@ -90,6 +95,15 @@ struct QuaternionsPrimeTypePairsTest : public ::testing::Test{
 
   const QuaternionFirstPrimeType quat1 = QuaternionFirstPrimeType(0.0,0.36,0.48,0.8);
   const QuaternionSecondPrimeType quat2 = QuaternionSecondPrimeType(0.0,0.36,0.48,0.8);
+};
+
+template <typename PrimType>
+struct QuaternionsPrimTypeTest : public ::testing::Test{
+  typedef quat::Quaternion<PrimType> Quaternion;
+  typedef quat::UnitQuaternion<PrimType> UnitQuaternion;
+
+  const Quaternion quat = Quaternion(1.0,2.0,3.0,4.0);
+  const UnitQuaternion uquat = UnitQuaternion(0.0,0.36,0.48,0.8);
 };
 
 template <typename UnitQuaternionImplementation>
@@ -124,8 +138,9 @@ struct QuaternionsPairsTest : public ::testing::Test{
 
 TYPED_TEST_CASE(QuaternionsSingleTest, QuaternionTypes);
 TYPED_TEST_CASE(UnitQuaternionsSingleTest, UnitQuaternionTypes);
-TYPED_TEST_CASE(QuaternionsPairsTest, TypePairs);
+TYPED_TEST_CASE(QuaternionsPairsTest, TypePairs); // TODO: delete and rename next test
 TYPED_TEST_CASE(QuaternionsPrimeTypePairsTest, TypePrimeTypePairs);
+TYPED_TEST_CASE(QuaternionsPrimTypeTest, PrimTypes);
 
 // Testing of Quaternion Constructor and Access Operator
 TYPED_TEST (QuaternionsSingleTest, testQuaternionSingleConstructor) {
@@ -320,7 +335,7 @@ TYPED_TEST (QuaternionsPrimeTypePairsTest, testQuaternionPrimeTypeCasting ) {
   QuaternionSecondPrimeType testQuatSecond;
 
   // Use ()-operator to cast between different quaternions (float and double primetype, unit and non-unit)
-  // Throughs an error if a non-unit quaternion is cast to a unit quaternion
+  // Throws an error if a non-unit quaternion is cast to a unit quaternion
   // Only tested for unit-quaternion data
   testQuatFirst(this->quat2);
   ASSERT_NEAR(testQuatFirst.w(),this->quat1.w(),1e-6);
@@ -332,6 +347,29 @@ TYPED_TEST (QuaternionsPrimeTypePairsTest, testQuaternionPrimeTypeCasting ) {
   ASSERT_NEAR(testQuatSecond.x(),this->quat2.x(),1e-6);
   ASSERT_NEAR(testQuatSecond.y(),this->quat2.y(),1e-6);
   ASSERT_NEAR(testQuatSecond.z(),this->quat2.z(),1e-6);
+}
+
+// Test simple casting (=operator) between non-unit and unit quaternions (only unit to non-unit, no primetype casting)
+TYPED_TEST (QuaternionsPrimTypeTest, testQuaternionAssignmentCasting ) {
+  typename TestFixture::Quaternion testQuat;
+  typename TestFixture::UnitQuaternion testUnitQuat;
+
+  // Use =operator to cast between different quaternions (must be same primetype, unit and non-unit)
+  testQuat = this->quat;
+  ASSERT_EQ(testQuat.w(),this->quat.w());
+  ASSERT_EQ(testQuat.x(),this->quat.x());
+  ASSERT_EQ(testQuat.y(),this->quat.y());
+  ASSERT_EQ(testQuat.z(),this->quat.z());
+  testQuat = this->uquat;
+  ASSERT_EQ(testQuat.w(),this->uquat.w());
+  ASSERT_EQ(testQuat.x(),this->uquat.x());
+  ASSERT_EQ(testQuat.y(),this->uquat.y());
+  ASSERT_EQ(testQuat.z(),this->uquat.z());
+  testUnitQuat = this->uquat;
+  ASSERT_EQ(testUnitQuat.w(),this->uquat.w());
+  ASSERT_EQ(testUnitQuat.x(),this->uquat.x());
+  ASSERT_EQ(testUnitQuat.y(),this->uquat.y());
+  ASSERT_EQ(testUnitQuat.z(),this->uquat.z());
 }
 
 TYPED_TEST (UnitQuaternionsSingleTest, testUnitQuaternionSingle) {
