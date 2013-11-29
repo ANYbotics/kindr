@@ -247,7 +247,7 @@ class RotationBase {
    */
   template <typename internal::get_matrix3X<DERIVED>::IndexType Cols>
   typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> inverseRotate(const typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> & m) const {
-    return internal::RotationTraits<DERIVED>::rotate(this->derived().inverse(), m); // todo: may be optimized
+    return internal::RotationTraits<DERIVED>::rotate(this->derived().inverted(), m); // todo: may be optimized
   }
 };
 
