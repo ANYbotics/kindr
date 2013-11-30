@@ -26,8 +26,8 @@
  *
 */
 
-#ifndef KINDER_POSITIONBASE_HPP_
-#define KINDER_POSITIONBASE_HPP_
+#ifndef KINDER_POSITIONS_POSITIONBASE_HPP_
+#define KINDER_POSITIONS_POSITIONBASE_HPP_
 
 
 #include "kinder/common/common.hpp"
@@ -173,4 +173,4 @@ class AdditionTraits<PositionBase<LEFT_AND_RIGHT>> {
 } // namespace kinder
 
 
-#endif /* POSITIONBASE_HPP_ */
+#endif /* KINDER_POSITIONS_POSITIONBASE_HPP_ */

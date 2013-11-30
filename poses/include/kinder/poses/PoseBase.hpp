@@ -25,8 +25,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
 */
-#ifndef KINDER_POSESBASE_HPP_
-#define KINDER_POSESBASE_HPP_
+#ifndef KINDER_POSES_POSESBASE_HPP_
+#define KINDER_POSES_POSESBASE_HPP_
 
 
 #include "kinder/common/common.hpp"
@@ -40,6 +40,11 @@ namespace poses {
 //! Internal stuff (only for developers)
 namespace internal {
 
+/*! \class TransformationTraits
+ * \brief Transformation trait to implement transformations of positions.
+ *
+ *  (only for advanced users)
+ */
 template<typename POSE>
 class TransformationTraits {
  public:
@@ -47,6 +52,11 @@ class TransformationTraits {
 //  inline static Position inverseTransform(const Pose & pose, const Position & position);
 };
 
+/*! \class get_position
+ * \brief This class provides the type of the position
+ *
+ *  (only for advanced users)
+ */
 template<typename POSE>
 class get_position {
  public:
@@ -57,6 +67,12 @@ class get_position {
 
 
 
+/*! \ingroup poses
+ * \class PoseBase
+ * \brief Base class that defines the interface of a pose
+ *
+ * \tparam DERIVED the derived class that should implement the pose
+ */
 template<typename DERIVED>
 class PoseBase {
  public:
@@ -102,7 +118,7 @@ class PoseBase {
     return internal::TransformationTraits<DERIVED>::transform(this->derived(), position);
   }
 
-  /*! \brief Transforms a position
+  /*! \brief Transforms a position in reverse
    *  \returns the transformed position
    */
   typename internal::get_position<DERIVED>::Position inverseTransform(typename internal::get_position<DERIVED>::Position & position) const {
@@ -112,6 +128,12 @@ class PoseBase {
 
 };
 
+/*! \ingroup poses
+ * \class HomogeneousTransformationBase
+ * \brief Base class that defines the interface of a homogeneous transformation
+ *
+ * \tparam DERIVED the derived class that should implement the homogeneous transformation
+ */
 template<typename DERIVED>
 class HomogeneousTransformationBase : public PoseBase<DERIVED> {
  public:
@@ -132,4 +154,4 @@ namespace internal {
 } // namespace kinder
 
 
-#endif /* KINDER_POSESBASE_HPP_ */
+#endif /* KINDER_POSES_POSESBASE_HPP_ */

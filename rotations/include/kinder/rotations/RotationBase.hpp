@@ -26,8 +26,8 @@
  *
 */
 
-#ifndef KINDER_ROTATIONBASE_HPP_
-#define KINDER_ROTATIONBASE_HPP_
+#ifndef KINDER_ROTATIONS_ROTATIONBASE_HPP_
+#define KINDER_ROTATIONS_ROTATIONBASE_HPP_
 
 #include "kinder/common/common.hpp"
 #include "kinder/quaternions/QuaternionBase.hpp"
@@ -490,4 +490,4 @@ class MultiplicationTraits<RotationBase<LEFT_AND_RIGHT, Usage>, RotationBase<LEF
 } // namespace rotations
 } // namespace rm
 
-#endif /* KINDER_ROTATIONBASE_HPP_ */
+#endif /* KINDER_ROTATIONS_ROTATIONBASE_HPP_ */

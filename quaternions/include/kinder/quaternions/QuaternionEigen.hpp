@@ -25,13 +25,14 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
 */
-#ifndef KINDER_QUATERNIONEIGEN_HPP_
-#define KINDER_QUATERNIONEIGEN_HPP_
+#ifndef KINDER_QUATERNIONS_QUATERNIONEIGEN_HPP_
+#define KINDER_QUATERNIONS_QUATERNIONEIGEN_HPP_
+
+#include <Eigen/Geometry>
 
 #include "kinder/common/common.hpp"
-#include "QuaternionBase.hpp"
 #include "kinder/common/assert_macros_eigen.hpp"
-#include <Eigen/Geometry>
+#include "kinder/quaternions/QuaternionBase.hpp"
 
 namespace kinder {
 namespace quaternions {
@@ -476,4 +477,4 @@ namespace internal {
 } // namespace rm
 
 
-#endif /* KINDER_QUATERNIONEIGEN_HPP_ */
+#endif /* KINDER_QUATERNIONS_QUATERNIONEIGEN_HPP_ */

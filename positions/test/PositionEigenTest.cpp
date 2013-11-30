@@ -27,11 +27,16 @@
  *
 */
 
-#include <gtest/gtest.h>
-#include <kinder/positions/PositionEigen.hpp>
-#include <kinder/common/gtest_eigen.hpp>
-#include <Eigen/Core>
 #include <iostream>
+
+#include <Eigen/Core>
+
+#include <gtest/gtest.h>
+
+#include "kinder/positions/PositionEigen.hpp"
+#include "kinder/common/gtest_eigen.hpp"
+
+
 
 namespace pos = kinder::positions::eigen_implementation;
 

@@ -26,14 +26,14 @@
  *
 */
 
-#ifndef KINDER_POSESEIGEN_HPP_
-#define KINDER_POSESEIGEN_HPP_
+#ifndef KINDER_POSES_POSESEIGEN_HPP_
+#define KINDER_POSES_POSESEIGEN_HPP_
 
 #include "kinder/common/common.hpp"
 #include "kinder/common/assert_macros_eigen.hpp"
 #include "kinder/positions/PositionEigen.hpp"
 #include "kinder/rotations/RotationEigen.hpp"
-#include "PoseBase.hpp"
+#include "kinder/poses/PoseBase.hpp"
 
 
 namespace kinder {
@@ -76,12 +76,20 @@ class HomogeneousTransformation : public HomogeneousTransformationBase<Homogeneo
   }
 
 
-  inline const TransformationMatrix getTransformationMatrix(){
+  inline TransformationMatrix getTransformationMatrix() const {
     TransformationMatrix mat = TransformationMatrix::Zero();
     mat.topLeftCorner(3,3) =  rotations::eigen_implementation::RotationMatrix<Scalar, kinder::rotations::RotationUsage::PASSIVE>(getRotation()).toImplementation();
     mat.topRightCorner(3,1) = getPosition().toImplementation();
     mat(3,3) = Scalar(1);
     return mat;
+  }
+
+  /*! \brief Used for printing the object with std::cout.
+   *  \returns std::stream object
+   */
+  friend std::ostream & operator << (std::ostream & out, const HomogeneousTransformation & pose) {
+    out << pose.getTransformationMatrix();
+    return out;
   }
 
 
@@ -139,4 +147,4 @@ class TransformationTraits<eigen_implementation::HomogeneousTransformation<PrimT
 } // namespace poses
 } // namespace kinder
 
-#endif /* KINDER_POSESEIGEN_HPP_ */
+#endif /* KINDER_POSES_POSESEIGEN_HPP_ */

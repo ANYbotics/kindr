@@ -26,18 +26,25 @@
  *
 */
 
-#ifndef KINDER_POSITIONEIGEN_HPP_
-#define KINDER_POSITIONEIGEN_HPP_
+#ifndef KINDER_POSITIONS_POSITIONEIGEN_HPP_
+#define KINDER_POSITIONS_POSITIONEIGEN_HPP_
+
+#include <Eigen/Core>
 
 #include "kinder/common/common.hpp"
 #include "kinder/common/assert_macros_eigen.hpp"
-#include "PositionBase.hpp"
+#include "kinder/positions/PositionBase.hpp"
 
 namespace kinder {
 namespace positions {
 //! Implementation of rotations based on the C++ Eigen library
 namespace eigen_implementation {
 
+/*!
+ * \brief Position
+ * \class Position3
+ * \ingroup positions
+ */
 template<typename PrimType>
 class Position3 : public Position3Base<Position3<PrimType>>, private Eigen::Matrix<PrimType, 3, 1> {
  private:
@@ -159,4 +166,4 @@ class get_scalar<eigen_implementation::Position3<PrimType>>{
 
 
 
-#endif /* KINDER_POSITIONEIGEN_HPP_ */
+#endif /* KINDER_POSITIONS_POSITIONEIGEN_HPP_ */

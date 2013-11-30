@@ -25,8 +25,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
 */
-#ifndef KINDER_QUATERNIONBASE_HPP_
-#define KINDER_QUATERNIONBASE_HPP_
+#ifndef KINDER_QUATERNIONS_QUATERNIONBASE_HPP_
+#define KINDER_QUATERNIONS_QUATERNIONBASE_HPP_
 
 #include "kinder/common/common.hpp"
 
@@ -222,4 +222,4 @@ class UnitQuaternionBase : public QuaternionBase<DERIVED> {
 } // namespace quaternions
 } // namespace rm
 
-#endif /* KINDER_QUATERNIONBASE_HPP_ */
+#endif /* KINDER_QUATERNIONS_QUATERNIONBASE_HPP_ */

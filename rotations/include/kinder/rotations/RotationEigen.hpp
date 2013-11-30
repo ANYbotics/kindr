@@ -26,15 +26,17 @@
  *
 */
 
-#ifndef KINDER_ROTATIONEIGEN_HPP_
-#define KINDER_ROTATIONEIGEN_HPP_
+#ifndef KINDER_ROTATIONS_ROTATIONEIGEN_HPP_
+#define KINDER_ROTATIONS_ROTATIONEIGEN_HPP_
+
+#include <Eigen/Geometry>
 
 #include "kinder/common/common.hpp"
 #include "kinder/common/assert_macros_eigen.hpp"
 #include "kinder/quaternions/QuaternionEigen.hpp"
 #include "kinder/positions/PositionEigen.hpp"
-#include "RotationBase.hpp"
-#include "RotationEigenFunctions.hpp"
+#include "kinder/rotations/RotationBase.hpp"
+#include "kinder/rotations/RotationEigenFunctions.hpp"
 
 namespace kinder {
 namespace rotations {
@@ -1728,4 +1730,4 @@ class ComparisonTraits<eigen_implementation::RotationQuaternion<PrimType, Usage>
 } // namespace rotations
 } // namespace rm
 
-#endif /* KINDER_ROTATIONEIGEN_HPP_ */
+#endif /* KINDER_ROTATIONS_ROTATIONEIGEN_HPP_ */

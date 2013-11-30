@@ -27,16 +27,38 @@
  *
 */
 
-#include <gtest/gtest.h>
-#include <kinder/poses/PoseEigen.hpp>
-#include <kinder/poses/PoseBase.hpp>
-#include <Eigen/Core>
 #include <iostream>
+
+#include <Eigen/Core>
+
+#include <gtest/gtest.h>
+
+#include "kinder/poses/PoseEigen.hpp"
+#include "kinder/poses/PoseBase.hpp"
+
 
 namespace pose = kinder::poses::eigen_implementation;
 namespace pos = kinder::positions::eigen_implementation;
 namespace rot = kinder::rotations::eigen_implementation;
 
+
+typedef ::testing::Types<
+    pose::HomogeneousTransformationPosition3RotationQuaternionD,
+    pose::HomogeneousTransformationPosition3RotationQuaternionF
+> Types;
+
+
+template <typename PoseImplementation>
+struct HomogeneousTransformationTest: public ::testing::Test {
+  typedef PoseImplementation Pose;
+};
+
+TYPED_TEST_CASE(HomogeneousTransformationTest, Types);
+
+TYPED_TEST(HomogeneousTransformationTest, testConstructor)
+{
+
+}
 
 TEST(PosesTest, testInitial)
 {
@@ -56,6 +78,8 @@ TEST(PosesTest, testInitial)
   std::cout << "posX again: " << pose1.inverseTransform(posRes) << std::endl;
   posRes = rot::AngleAxisPD(M_PI/2.0,Eigen::Vector3d(0,0,1).normalized()).rotate(pos::Position3D(1,0,0));
   std::cout << "posRes: " << posRes << std::endl;
+
+  std::cout << "pose1: " << pose1 << std::endl;
 }
 
 

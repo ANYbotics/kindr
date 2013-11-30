@@ -25,8 +25,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
 */
-#ifndef KINDER_ROTATION_EIGEN_FUNCTIONS_HPP_
-#define KINDER_ROTATION_EIGEN_FUNCTIONS_HPP_
+#ifndef KINDER_ROTATIONS_ROTATION_EIGEN_FUNCTIONS_HPP_
+#define KINDER_ROTATIONS_ROTATION_EIGEN_FUNCTIONS_HPP_
 
 
 #include <cmath>
@@ -752,4 +752,4 @@ Vector3d omega2kardan(const Vector3d &K_w_IK, const Vector3d &abc) // quaternion
 } // namespace rotations
 } // namespace rm
 
-#endif /* KINDER_ROTATION_EIGEN_FUNCTIONS_HPP_ */
+#endif /* KINDER_ROTATIONS_ROTATION_EIGEN_FUNCTIONS_HPP_ */
