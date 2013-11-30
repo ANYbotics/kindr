@@ -80,7 +80,7 @@ class ConversionTraits {
 template<typename ROTATION> // only works with the same rotation representation
 class ComparisonTraits {
  public:
-  inline static bool isEqual(const ROTATION & a, const ROTATION & b) {
+  inline static bool isEqual(const ROTATION& a, const ROTATION& b) {
     return a.toImplementation() == b.toImplementation();
   }
 
@@ -94,7 +94,7 @@ class ComparisonTraits {
 template<typename LEFT, typename RIGHT>
 class MultiplicationTraits {
  public:
-//  inline static LEFT mult(const LEFT & l, const RIGHT & r);
+//  inline static LEFT mult(const LEFT& l, const RIGHT& r);
 };
 
 /*! \brief Rotation traits for rotating vectors and matrices
@@ -104,7 +104,7 @@ class MultiplicationTraits {
 template<typename ROTATION>
 class RotationTraits {
  public:
-// inline static typename internal::get_vector3<DERIVED>::type rotate(const ROTATION & r, const typename internal::get_vector3<DERIVED>::type & );
+// inline static typename internal::get_vector3<DERIVED>::type rotate(const ROTATION& r, const typename internal::get_vector3<DERIVED>::type& );
 };
 
 /*! \brief This class determines the correct matrix type for each rotation which is used for matrix rotations
@@ -171,7 +171,7 @@ class RotationBase {
   /*! \brief Inverts the rotation.
    *  \returns reference
    */
-  RotationBase & invert();
+  RotationBase& invert();
 
   /*! \brief Gets the derived rotation.
    *  (only for advanced users)
@@ -193,14 +193,14 @@ class RotationBase {
    *  (only for advanced users)
    *  \returns the derived rotation
    */
-  const DERIVED & derived() const {
+  const DERIVED& derived() const {
     return static_cast<const DERIVED &>(*this);
   }
 
   /*! \brief Sets the rotation to the identity rotation.
    *  \returns reference
    */
-  DERIVED & setIdentity();
+  DERIVED& setIdentity();
 
   /*! \brief Returns the rotation in a unique form
    *  This function is used to compare different rotations.
@@ -211,7 +211,7 @@ class RotationBase {
   /*! \brief  Modifies the rotation such that it is in its unique form
    *  \returns reference
    */
-  DERIVED & setUnique();
+  DERIVED& setUnique();
 
   /*! \brief Gets passive from active rotation.
    *  \returns the passive rotation
@@ -231,7 +231,7 @@ class RotationBase {
    *  \returns the concenations of two rotations
    */
   template<typename OTHER_DERIVED>
-  DERIVED operator *(const RotationBase<OTHER_DERIVED,Usage> & other) const {
+  DERIVED operator *(const RotationBase<OTHER_DERIVED,Usage>& other) const {
     return internal::MultiplicationTraits<RotationBase<DERIVED,Usage>,RotationBase<OTHER_DERIVED,Usage>>::mult(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
   }
 
@@ -239,7 +239,7 @@ class RotationBase {
    *  \returns true if the rotations are exactly equal
    */
   template<typename OTHER_DERIVED>
-  bool operator ==(const RotationBase<OTHER_DERIVED,Usage> & other) const { // todo: may be optimized
+  bool operator ==(const RotationBase<OTHER_DERIVED,Usage>& other) const { // todo: may be optimized
     return internal::ComparisonTraits<DERIVED>::isEqual(this->derived().getUnique(), DERIVED(other).getUnique()); // the type conversion must already take place here to ensure the specialised isequal function is called more often
   }
 
@@ -254,30 +254,30 @@ class RotationBase {
    *  \returns the rotated vector or matrix
    */
   template <typename internal::get_matrix3X<DERIVED>::IndexType Cols>
-  typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> rotate(const typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> & m) const {
-    return internal::RotationTraits<DERIVED>::rotate(this->derived(), m);
+  typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> rotate(const typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols>& matrix) const {
+    return internal::RotationTraits<DERIVED>::rotate(this->derived(), matrix);
   }
 
   /*! \brief Rotates a vector or matrix in reverse.
    *  \returns the reverse rotated vector or matrix
    */
   template <typename internal::get_matrix3X<DERIVED>::IndexType Cols>
-  typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> inverseRotate(const typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> & m) const {
-    return internal::RotationTraits<DERIVED>::rotate(this->derived().inverted(), m); // todo: may be optimized
+  typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> inverseRotate(const typename internal::get_matrix3X<DERIVED>::template Matrix3X<Cols> & matrix) const {
+    return internal::RotationTraits<DERIVED>::rotate(this->derived().inverted(), matrix); // todo: may be optimized
   }
 
   /*! \brief Rotates a position.
    *  \returns the rotated position
    */
   template <typename POSITION>
-  POSITION rotate(const POSITION & position) const {
+  POSITION rotate(const POSITION& position) const {
     return POSITION(internal::RotationTraits<DERIVED>::rotate(this->derived(), internal::get_matrix3<POSITION>::getMatrix3(position)));
   }
   /*! \brief Rotates a position in reverse.
    *  \returns the reverse rotated position
    */
   template <typename POSITION>
-  POSITION inverseRotate(const POSITION & position) const {
+  POSITION inverseRotate(const POSITION& position) const {
     return POSITION(internal::RotationTraits<DERIVED>::rotate(this->derived().inverted(), internal::get_matrix3<POSITION>::getMatrix3(position)));
   }
 
@@ -305,7 +305,7 @@ template<typename Implementation, enum RotationUsage Usage>
 class AngleAxisBase : public RotationBase<Implementation, Usage> {
 
   template<typename OTHER_DERIVED> // todo: necessary?
-  AngleAxisBase & operator =(const RotationBase<OTHER_DERIVED, Usage> & other) {
+  AngleAxisBase& operator =(const RotationBase<OTHER_DERIVED, Usage>& other) {
     return *this;
   }
 };
@@ -321,7 +321,7 @@ template<typename Implementation, enum RotationUsage Usage>
 class RotationQuaternionBase : public RotationBase<Implementation, Usage> {
 
   template<typename OTHER_DERIVED>
-  RotationQuaternionBase & operator =(const RotationBase<OTHER_DERIVED, Usage> & other) {
+  RotationQuaternionBase& operator =(const RotationBase<OTHER_DERIVED, Usage>& other) {
     return *this;
   }
 };
@@ -337,7 +337,7 @@ template<typename Implementation, enum RotationUsage Usage>
 class RotationMatrixBase : public RotationBase<Implementation, Usage> {
 
   template<typename OTHER_DERIVED>
-  RotationMatrixBase & operator =(const RotationBase<OTHER_DERIVED, Usage> & other) {
+  RotationMatrixBase& operator =(const RotationBase<OTHER_DERIVED, Usage>& other) {
     return *this;
   }
 };
@@ -393,7 +393,7 @@ namespace internal {
 template<typename DERIVED>
 class UsageConversionTraits<DERIVED,RotationUsage::PASSIVE> {
  public:
-  inline static typename get_other_usage<DERIVED>::OtherUsage getActive(const RotationBase<DERIVED,RotationUsage::PASSIVE> & in) {
+  inline static typename get_other_usage<DERIVED>::OtherUsage getActive(const RotationBase<DERIVED,RotationUsage::PASSIVE>& in) {
     return typename get_other_usage<DERIVED>::OtherUsage(in.derived().inverted());
   }
 
@@ -403,7 +403,7 @@ class UsageConversionTraits<DERIVED,RotationUsage::PASSIVE> {
 template<typename DERIVED>
 class UsageConversionTraits<DERIVED,RotationUsage::ACTIVE> {
  public:
-  inline static typename get_other_usage<DERIVED>::OtherUsage getPassive(const RotationBase<DERIVED,RotationUsage::ACTIVE> & in) {
+  inline static typename get_other_usage<DERIVED>::OtherUsage getPassive(const RotationBase<DERIVED,RotationUsage::ACTIVE>& in) {
     return typename get_other_usage<DERIVED>::OtherUsage(in.derived().inverted());
   }
 
@@ -470,10 +470,10 @@ class UsageConversionTraits<DERIVED,RotationUsage::ACTIVE> {
 template<typename LEFT, typename RIGHT, enum RotationUsage Usage>
 class MultiplicationTraits<RotationBase<LEFT, Usage>, RotationBase<RIGHT, Usage>> {
  public:
-  inline static LEFT mult(const RotationBase<LEFT, Usage> & l, const RotationBase<RIGHT, Usage> & r) {
+  inline static LEFT mult(const RotationBase<LEFT, Usage>& lhs, const RotationBase<RIGHT, Usage>& rhs) {
     return LEFT(typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar,  Usage>(
-               (typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar,  Usage>(l.derived())).toImplementation() *
-               (typename eigen_implementation::RotationQuaternion<typename RIGHT::Scalar, Usage>(r.derived())).toImplementation()
+               (typename eigen_implementation::RotationQuaternion<typename LEFT::Scalar,  Usage>(lhs.derived())).toImplementation() *
+               (typename eigen_implementation::RotationQuaternion<typename RIGHT::Scalar, Usage>(rhs.derived())).toImplementation()
                ));
   }
 };
@@ -481,8 +481,8 @@ class MultiplicationTraits<RotationBase<LEFT, Usage>, RotationBase<RIGHT, Usage>
 template<typename LEFT_AND_RIGHT, enum RotationUsage Usage>
 class MultiplicationTraits<RotationBase<LEFT_AND_RIGHT, Usage>, RotationBase<LEFT_AND_RIGHT, Usage>> {
  public:
-  inline static LEFT_AND_RIGHT mult(const RotationBase<LEFT_AND_RIGHT, Usage> & l, const RotationBase<LEFT_AND_RIGHT, Usage> & r) {
-    return LEFT_AND_RIGHT(typename LEFT_AND_RIGHT::Implementation(l.derived().toImplementation() * r.derived().toImplementation()));
+  inline static LEFT_AND_RIGHT mult(const RotationBase<LEFT_AND_RIGHT, Usage>& lhs, const RotationBase<LEFT_AND_RIGHT, Usage>& rhs) {
+    return LEFT_AND_RIGHT(typename LEFT_AND_RIGHT::Implementation(lhs.derived().toImplementation() * rhs.derived().toImplementation()));
   }
 };
 

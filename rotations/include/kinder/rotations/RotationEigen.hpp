@@ -86,7 +86,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType, Usage>, Usage>, priva
    *  \param v2      second entry of the rotation axis vector
    *  \param v3      third entry of the rotation axis vector
    */
-  AngleAxis(const Scalar & angle, const Scalar & v1, const Scalar & v2, const Scalar & v3)
+  AngleAxis(const Scalar& angle, const Scalar& v1, const Scalar& v2, const Scalar& v3)
     : Base(angle,Vector3(v1,v2,v3)) {
     KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input rotation axis has not unit length.");
   }
@@ -96,7 +96,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType, Usage>, Usage>, priva
    * \param angle   rotation angle
    * \param vector     rotation vector with unit length (Eigen vector)
    */
-  AngleAxis(const Scalar & angle, const Vector3 & vector)
+  AngleAxis(const Scalar& angle, const Vector3& vector)
     : Base(angle,vector) {
     KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input rotation axis has not unit length.");
   }
@@ -105,7 +105,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType, Usage>, Usage>, priva
    *  In debug mode, an assertion is thrown if the rotation vector has not unit length.
    *  \param other   Eigen::AngleAxis<PrimType>
    */
-  explicit AngleAxis(const Base & other) // explicit on purpose
+  explicit AngleAxis(const Base& other) // explicit on purpose
     : Base(other) {
     KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input rotation axis has not unit length.");
   }
@@ -114,7 +114,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType, Usage>, Usage>, priva
    *  \param other   other rotation
    */
   template<typename OTHER_DERIVED>
-  inline explicit AngleAxis(const RotationBase<OTHER_DERIVED, Usage> & other)
+  inline explicit AngleAxis(const RotationBase<OTHER_DERIVED, Usage>& other)
     : Base(internal::ConversionTraits<AngleAxis, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other))) {
   }
 
@@ -123,7 +123,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType, Usage>, Usage>, priva
    *  \returns referece
    */
   template<typename OTHER_DERIVED>
-  AngleAxis & operator =(const RotationBase<OTHER_DERIVED, Usage> & other) {
+  AngleAxis & operator =(const RotationBase<OTHER_DERIVED, Usage>& other) {
     this->angle() = internal::ConversionTraits<AngleAxis, OTHER_DERIVED>::convert(other.derived()).angle();
     this->axis()  = internal::ConversionTraits<AngleAxis, OTHER_DERIVED>::convert(other.derived()).axis();
     return *this;
@@ -139,7 +139,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType, Usage>, Usage>, priva
   /*! \brief Inverts the rotation.
    *  \returns reference
    */
-  AngleAxis & invert() {
+  AngleAxis& invert() {
     *this = AngleAxis(Base::inverse());
     return *this;
   }
@@ -147,14 +147,14 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType, Usage>, Usage>, priva
   /*! \brief Cast to the implementation type.
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
-  inline Implementation & toImplementation() {
+  inline Implementation& toImplementation() {
     return static_cast<Implementation &>(*this);
   }
 
   /*! \brief Cast to the implementation type.
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
-  inline const Implementation & toImplementation() const {
+  inline const Implementation& toImplementation() const {
     return static_cast<const Implementation &>(*this);
   }
 
@@ -168,14 +168,14 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType, Usage>, Usage>, priva
   /*! \brief Reading access to the rotation axis.
    *  \returns rotation axis (vector) with reading access
    */
-  inline const Vector3 & axis() const {
+  inline const Vector3& axis() const {
     return Base::axis();
   }
 
   /*! \brief Writing access to the rotation angle.
    *  \returns rotation angle (scalar) with writing access
    */
-  inline Scalar & angle() {
+  inline Scalar& angle() {
     return Base::angle();
   }
 
@@ -183,14 +183,14 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType, Usage>, Usage>, priva
    *  Attention: No length check in debug mode.
    *  \returns rotation axis (vector) with writing access
    */
-  inline Vector3 & axis() {
+  inline Vector3& axis() {
     return Base::axis();
   }
 
   /*! \brief Sets the rotation to identity.
    *  \returns reference
    */
-  AngleAxis & setIdentity() {
+  AngleAxis& setIdentity() {
     this->angle() = static_cast<Scalar>(0);
     this->axis() << static_cast<Scalar>(1), static_cast<Scalar>(0), static_cast<Scalar>(0);
     return *this;
@@ -212,7 +212,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType, Usage>, Usage>, priva
   /*! \brief Modifies the angle axis rotation such that the lies angle in [0,pi).
    *  \returns reference
    */
-  AngleAxis & setUnique() {
+  AngleAxis& setUnique() {
     AngleAxis aa(kinder::common::Mod(angle()+M_PI,2*M_PI)-M_PI, axis()); // wraps angle into [-pi,pi)
     if(aa.angle() >= 0) { // wraps angle into [0,pi)
       *this = aa;
@@ -231,7 +231,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType, Usage>, Usage>, priva
   /*! \brief Used for printing the object with std::cout.
    *  \returns std::stream object
    */
-  friend std::ostream & operator << (std::ostream & out, const AngleAxis & a) {
+  friend std::ostream& operator << (std::ostream & out, const AngleAxis & a) {
     out << a.angle() << ", " << a.axis().transpose();
     return out;
   }
@@ -290,7 +290,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  \param y     third entry of the quaternion = n2*sin(phi/2)
    *  \param z     fourth entry of the quaternion = n3*sin(phi/2)
    */
-  RotationQuaternion(const Scalar & w, const Scalar & x, const Scalar & y, const Scalar & z)
+  RotationQuaternion(const Scalar& w, const Scalar& x, const Scalar& y, const Scalar& z)
     : Base(w,x,y,z) {
     KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
   }
@@ -298,7 +298,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
   /*! \brief Constructor using UnitQuaternion.
    *  \param other   UnitQuaternion
    */
-  explicit RotationQuaternion(const Base & other)
+  explicit RotationQuaternion(const Implementation& other)
     : Base(other) {
   }
 
@@ -313,7 +313,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  In debug mode, an assertion is thrown if the quaternion has not unit length.
    *  \param other   Eigen::Quaternion<PrimType>
    */
-  explicit RotationQuaternion(const Implementation & other)
+  explicit RotationQuaternion(const Base& other)
     : Base(other) {
     KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
   }
@@ -322,7 +322,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  \param other   other rotation
    */
   template<typename OTHER_DERIVED>
-  inline explicit RotationQuaternion(const RotationBase<OTHER_DERIVED, Usage> & other)
+  inline explicit RotationQuaternion(const RotationBase<OTHER_DERIVED, Usage>& other)
     : Base(internal::ConversionTraits<RotationQuaternion, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other))) {
   }
 
@@ -331,7 +331,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  \returns reference
    */
   template<typename PrimTypeIn>
-  RotationQuaternion & operator =(const quaternions::eigen_implementation::UnitQuaternion<PrimTypeIn> & quat) {
+  RotationQuaternion & operator =(const quaternions::eigen_implementation::UnitQuaternion<PrimTypeIn>& quat) {
     this->w() = quat.w();
     this->x() = quat.x();
     this->y() = quat.y();
@@ -344,7 +344,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  \returns reference
    */
   template<typename OTHER_DERIVED> // todo: increase efficiency
-  RotationQuaternion & operator =(const RotationBase<OTHER_DERIVED, Usage> & other) {
+  RotationQuaternion& operator =(const RotationBase<OTHER_DERIVED, Usage>& other) {
     this->w() = internal::ConversionTraits<RotationQuaternion, OTHER_DERIVED>::convert(other.derived()).w();
     this->x() = internal::ConversionTraits<RotationQuaternion, OTHER_DERIVED>::convert(other.derived()).x();
     this->y() = internal::ConversionTraits<RotationQuaternion, OTHER_DERIVED>::convert(other.derived()).y();
@@ -357,7 +357,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  \returns reference
    */
   template<typename PrimTypeIn>
-  RotationQuaternion & operator ()(const quaternions::eigen_implementation::UnitQuaternion<PrimTypeIn> & quat) {
+  RotationQuaternion& operator ()(const quaternions::eigen_implementation::UnitQuaternion<PrimTypeIn>& quat) {
     this->w() = quat.w();
     this->x() = quat.x();
     this->y() = quat.y();
@@ -371,7 +371,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  \returns reference
    */
   template<typename PrimTypeIn>
-  RotationQuaternion & operator ()(const quaternions::eigen_implementation::Quaternion<PrimTypeIn> & quat) {
+  RotationQuaternion& operator ()(const quaternions::eigen_implementation::Quaternion<PrimTypeIn>& quat) {
     this->w() = quat.w();
     this->x() = quat.x();
     this->y() = quat.y();
@@ -390,7 +390,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
   /*! \brief Inverts the rotation.
    *  \returns reference
    */
-  RotationQuaternion & invert() {
+  RotationQuaternion& invert() {
     *this = inverted();
     return *this;
   }
@@ -405,7 +405,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
   /*! \brief Conjugates of the quaternion.
    *  \returns reference
    */
-  RotationQuaternion & conjugate() {
+  RotationQuaternion& conjugate() {
     *this = conjugated();
     return *this;
   }
@@ -413,7 +413,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
   /*! \brief Sets the rotation to identity.
    *  \returns reference
    */
-  RotationQuaternion & setIdentity() {
+  RotationQuaternion& setIdentity() {
     this->w() = static_cast<Scalar>(1);
     this->x() = static_cast<Scalar>(0);
     this->y() = static_cast<Scalar>(0);
@@ -436,7 +436,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
   /*! \brief Modifies the quaternion rotation such that w >= 0.
    *  \returns reference
    */
-  RotationQuaternion & setUnique() {
+  RotationQuaternion& setUnique() {
     if(this->w() < 0) {
       *this = RotationQuaternion(-this->w(),-this->x(),-this->y(),-this->z());
     }
@@ -519,9 +519,9 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType, Usage>
    *  \param r32     entry in row 3, col 2
    *  \param r33     entry in row 3, col 3
    */
-  RotationMatrix(const Scalar & r11, const Scalar & r12, const Scalar & r13,
-                 const Scalar & r21, const Scalar & r22, const Scalar & r23,
-                 const Scalar & r31, const Scalar & r32, const Scalar & r33) {
+  RotationMatrix(const Scalar& r11, const Scalar& r12, const Scalar& r13,
+                 const Scalar& r21, const Scalar& r22, const Scalar& r23,
+                 const Scalar& r31, const Scalar& r32, const Scalar& r33) {
     *this << r11,r12,r13,r21,r22,r23,r31,r32,r33;
     KINDER_ASSERT_MATRIX_NEAR_DBG(std::runtime_error, *this * this->transpose(), Base::Identity(), static_cast<Scalar>(1e-4), "Input matrix is not orthogonal.");
     KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->determinant(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input matrix determinant is not 1.");
@@ -531,7 +531,7 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType, Usage>
    *  In debug mode, an assertion is thrown if the rotation vector has not unit length.
    *  \param other   Eigen::Matrix<PrimType,3,3>
    */
-  explicit RotationMatrix(const Base & other)
+  explicit RotationMatrix(const Base& other)
   : Base(other) {
     KINDER_ASSERT_MATRIX_NEAR_DBG(std::runtime_error, other * other.transpose(), Base::Identity(), static_cast<Scalar>(1e-4), "Input matrix is not orthogonal.");
     KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, other.determinant(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input matrix determinant is not 1.");
@@ -541,7 +541,7 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType, Usage>
    *  \param other   other rotation
    */
   template<typename OTHER_DERIVED>
-  inline explicit RotationMatrix(const RotationBase<OTHER_DERIVED, Usage> & other)
+  inline explicit RotationMatrix(const RotationBase<OTHER_DERIVED, Usage>& other)
     : Base(internal::ConversionTraits<RotationMatrix, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other))) {
   }
 
@@ -550,7 +550,7 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType, Usage>
    *  \returns referece
    */
   template<typename OTHER_DERIVED>
-  RotationMatrix & operator =(const RotationBase<OTHER_DERIVED, Usage> & other) {
+  RotationMatrix & operator =(const RotationBase<OTHER_DERIVED, Usage>& other) {
     *this = internal::ConversionTraits<RotationMatrix, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other));
     return *this;
   }
@@ -565,7 +565,7 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType, Usage>
   /*! \brief Inverts the rotation.
    *  \returns reference
    */
-  RotationMatrix & invert() {
+  RotationMatrix& invert() {
     *this = RotationMatrix(toImplementation().transpose());
     return *this;
   }
@@ -580,7 +580,7 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType, Usage>
   /*! \brief Transposes the rotation matrix.
    *  \returns reference
    */
-  RotationMatrix & transpose() {
+  RotationMatrix& transpose() {
     *this = RotationMatrix(toImplementation().transpose());
     return *this;
   }
@@ -595,35 +595,35 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType, Usage>
   /*! \brief Cast to the implementation type.
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
-  inline Implementation & toImplementation() {
+  inline Implementation& toImplementation() {
     return static_cast<Implementation &>(*this);
   }
 
   /*! \brief Cast to the implementation type.
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
-  inline const Implementation & toImplementation() const {
+  inline const Implementation& toImplementation() const {
     return static_cast<const Implementation &>(*this);
   }
 
   /*! \brief Reading access to the rotation matrix.
    *  \returns rotation matrix (matrix) with reading access
    */
-  inline const Implementation & matrix() const {
+  inline const Implementation& matrix() const {
     return toImplementation();
   }
 
   /*! \brief Writing access to the rotation matrix.
    *  \returns rotation matrix (matrix) with writing access
    */
-  inline Implementation & matrix() {
+  inline Implementation& matrix() {
     return toImplementation();
   }
 
   /*! \brief Sets the rotation to identity.
    *  \returns reference
    */
-  RotationMatrix & setIdentity() {
+  RotationMatrix& setIdentity() {
     this->Implementation::setIdentity();
     return *this;
   }
@@ -641,7 +641,7 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType, Usage>
    *  A rotation matrix is always unique.
    *  \returns reference
    */
-  RotationMatrix & setUnique() {
+  RotationMatrix& setUnique() {
     return *this;
   }
 
@@ -660,8 +660,8 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType, Usage>
   /*! \brief Used for printing the object with std::cout.
    *  \returns std::stream object
    */
-  friend std::ostream & operator << (std::ostream & out, const RotationMatrix & R) {
-    out << R.toImplementation();
+  friend std::ostream& operator << (std::ostream & out, const RotationMatrix& rotationMatrix) {
+    out << rotationMatrix.toImplementation();
     return out;
   }
 };
@@ -719,14 +719,14 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType, Usage>
    *  \param pitch    second rotation angle around Y' axis
    *  \param yaw      third rotation angle around Z'' axis
    */
-  EulerAnglesXyz(const Scalar & roll, const Scalar & pitch, const Scalar & yaw)
+  EulerAnglesXyz(const Scalar& roll, const Scalar& pitch, const Scalar& yaw)
     : Base(roll,pitch,yaw) {
   }
 
   /*! \brief Constructor using Eigen::Matrix.
    *  \param other   Eigen::Matrix<PrimType,3,1> [roll; pitch; yaw]
    */
-  explicit EulerAnglesXyz(const Base & other)
+  explicit EulerAnglesXyz(const Base& other)
     : Base(other) {
   }
 
@@ -734,7 +734,7 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType, Usage>
    *  \param other   other rotation
    */
   template<typename OTHER_DERIVED>
-  inline explicit EulerAnglesXyz(const RotationBase<OTHER_DERIVED, Usage> & other)
+  inline explicit EulerAnglesXyz(const RotationBase<OTHER_DERIVED, Usage>& other)
     : Base(internal::ConversionTraits<EulerAnglesXyz, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other))) {
   }
 
@@ -743,7 +743,7 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType, Usage>
    *  \returns referece
    */
   template<typename OTHER_DERIVED>
-  EulerAnglesXyz & operator =(const RotationBase<OTHER_DERIVED, Usage> & other) {
+  EulerAnglesXyz& operator =(const RotationBase<OTHER_DERIVED, Usage>& other) {
     *this = internal::ConversionTraits<EulerAnglesXyz, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other));
     return *this;
   }
@@ -766,14 +766,14 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType, Usage>
   /*! \brief Cast to the implementation type.
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
-  inline Base & toImplementation() {
+  inline Base& toImplementation() {
     return static_cast<Base &>(*this);
   }
 
   /*! \brief Cast to the implementation type.
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
-  inline const Base & toImplementation() const {
+  inline const Base& toImplementation() const {
     return static_cast<const Base &>(*this);
   }
 
@@ -801,21 +801,21 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType, Usage>
   /*! \brief Writing access to roll (X) angle.
    *  \returns roll angle (scalar) with writing access
    */
-  inline Scalar & roll() {
+  inline Scalar& roll() {
     return toImplementation()(0);
   }
 
   /*! \brief Writing access to pitch (Y') angle.
    *  \returns pitch angle (scalar) with writing access
    */
-  inline Scalar & pitch() {
+  inline Scalar& pitch() {
     return toImplementation()(1);
   }
 
   /*! \brief Writing access to yaw (Z'') angle.
    *  \returns yaw angle (scalar) with writing access
    */
-  inline Scalar & yaw() {
+  inline Scalar& yaw() {
     return toImplementation()(2);
   }
 
@@ -843,28 +843,28 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType, Usage>
   /*! \brief Writing access to roll (X) angle.
    *  \returns roll angle (scalar) with writing access
    */
-  inline Scalar & x() {
+  inline Scalar& x() {
     return toImplementation()(0);
   }
 
   /*! \brief Writing access to pitch (Y') angle.
    *  \returns pitch angle (scalar) with writing access
    */
-  inline Scalar & y() {
+  inline Scalar& y() {
     return toImplementation()(1);
   }
 
   /*! \brief Writing access to yaw (Z'') angle.
    *  \returns yaw angle (scalar) with writing access
    */
-  inline Scalar & z() {
+  inline Scalar& z() {
     return toImplementation()(2);
   }
 
   /*! \brief Sets the rotation to identity.
    *  \returns reference
    */
-  EulerAnglesXyz & setIdentity() {
+  EulerAnglesXyz& setIdentity() {
 	  this->Implementation::setZero();
 	  return *this;
   }
@@ -915,7 +915,7 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType, Usage>
   /*! \brief Modifies the euler angles rotation such that the angles lie in [-pi,pi),[-pi/2,pi/2),[-pi,pi).
    *  \returns reference
    */
-  EulerAnglesXyz & setUnique() {
+  EulerAnglesXyz& setUnique() {
     *this = getUnique();
     return *this;
   }
@@ -935,7 +935,7 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType, Usage>
   /*! \brief Used for printing the object with std::cout.
    *  \returns std::stream object
    */
-  friend std::ostream & operator << (std::ostream & out, const EulerAnglesXyz & xyz) {
+  friend std::ostream& operator << (std::ostream & out, const EulerAnglesXyz& xyz) {
     out << xyz.toImplementation().transpose();
     return out;
   }
@@ -1007,14 +1007,14 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType, Usage>
    *  \param pitch    second rotation angle around Y' axis
    *  \param roll     third rotation angle around X'' axis
    */
-  EulerAnglesZyx(const Scalar & yaw, const Scalar & pitch, const Scalar & roll)
+  EulerAnglesZyx(const Scalar& yaw, const Scalar& pitch, const Scalar& roll)
     : Base(yaw,pitch,roll) {
   }
 
   /*! \brief Constructor using Eigen::Matrix.
    *  \param other   Eigen::Matrix<PrimType,3,1> [roll; pitch; yaw]
    */
-  explicit EulerAnglesZyx(const Base & other)
+  explicit EulerAnglesZyx(const Base& other)
     : Base(other) {
   }
 
@@ -1022,7 +1022,7 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType, Usage>
    *  \param other   other rotation
    */
   template<typename OTHER_DERIVED>
-  inline explicit EulerAnglesZyx(const RotationBase<OTHER_DERIVED, Usage> & other)
+  inline explicit EulerAnglesZyx(const RotationBase<OTHER_DERIVED, Usage>& other)
     : Base(internal::ConversionTraits<EulerAnglesZyx, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other))) {
   }
 
@@ -1031,7 +1031,7 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType, Usage>
    *  \returns referece
    */
   template<typename OTHER_DERIVED>
-  EulerAnglesZyx & operator =(const RotationBase<OTHER_DERIVED, Usage> & other) {
+  EulerAnglesZyx& operator =(const RotationBase<OTHER_DERIVED, Usage>& other) {
     *this = internal::ConversionTraits<EulerAnglesZyx, OTHER_DERIVED>::convert(static_cast<const OTHER_DERIVED &>(other));
     return *this;
   }
@@ -1046,7 +1046,7 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType, Usage>
   /*! \brief Inverts the rotation.
    *  \returns reference
    */
-  EulerAnglesZyx & inverted() {
+  EulerAnglesZyx& inverted() {
     *this = (EulerAnglesZyx)getInverseRpy<PrimType, PrimType>(*this);
     return *this;
   }
@@ -1054,14 +1054,14 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType, Usage>
   /*! \brief Cast to the implementation type.
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
-  inline Base & toImplementation() {
+  inline Base& toImplementation() {
     return static_cast<Base &>(*this);
   }
 
   /*! \brief Cast to the implementation type.
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
-  inline const Base & toImplementation() const {
+  inline const Base& toImplementation() const {
     return static_cast<const Base &>(*this);
   }
 
@@ -1089,21 +1089,21 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType, Usage>
   /*! \brief Writing access to yaw (Z) angle.
    *  \returns yaw angle (scalar) with writing access
    */
-  inline Scalar & yaw() {
+  inline Scalar& yaw() {
     return toImplementation()(0);
   }
 
   /*! \brief Writing access to pitch (Y') angle.
    *  \returns pitch angle (scalar) with writing access
    */
-  inline Scalar & pitch() {
+  inline Scalar& pitch() {
     return toImplementation()(1);
   }
 
   /*! \brief Writing access to roll (X'') angle.
    *  \returns roll angle (scalar) with writing access
    */
-  inline Scalar & roll() {
+  inline Scalar& roll() {
     return toImplementation()(2);
   }
 
@@ -1131,28 +1131,28 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType, Usage>
   /*! \brief Writing access to yaw (Z) angle.
    *  \returns yaw angle (scalar) with writing access
    */
-  inline Scalar & z() {
+  inline Scalar& z() {
     return toImplementation()(0);
   }
 
   /*! \brief Writing access to pitch (Y') angle.
    *  \returns pitch angle (scalar) with writing access
    */
-  inline Scalar & y() {
+  inline Scalar& y() {
     return toImplementation()(1);
   }
 
   /*! \brief Writing access to roll (X'') angle.
    *  \returns roll angle (scalar) with writing access
    */
-  inline Scalar & x() {
+  inline Scalar& x() {
     return toImplementation()(2);
   }
 
   /*! \brief Sets the rotation to identity.
    *  \returns reference
    */
-  EulerAnglesZyx & setIdentity() {
+  EulerAnglesZyx& setIdentity() {
 	  this->Implementation::setZero();
 	  return *this;
   }
@@ -1203,7 +1203,7 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType, Usage>
   /*! \brief Modifies the euler angles rotation such that the angles lie in [-pi,pi),[-pi/2,pi/2),[-pi,pi).
    *  \returns reference
    */
-  EulerAnglesZyx & setUnique() {  // wraps angles into [-pi,pi),[-pi/2,pi/2),[-pi,pi)
+  EulerAnglesZyx& setUnique() {  // wraps angles into [-pi,pi),[-pi/2,pi/2),[-pi,pi)
     *this = getUnique();
     return *this;
   }
@@ -1223,7 +1223,7 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType, Usage>
   /*! \brief Used for printing the object with std::cout.
    *  \returns std::stream object
    */
-  friend std::ostream & operator << (std::ostream & out, const EulerAnglesZyx & zyx) {
+  friend std::ostream& operator << (std::ostream& out, const EulerAnglesZyx& zyx) {
     out << zyx.toImplementation().transpose();
     return out;
   }
