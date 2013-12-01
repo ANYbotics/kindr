@@ -33,7 +33,6 @@
 
 #include <kinder/common/assert_macros_eigen.hpp>
 #include <kinder/common/gtest_eigen.hpp>
-
 #include <kinder/quaternions/QuaternionEigen.hpp>
 
 namespace quat = kinder::quaternions::eigen_implementation;
@@ -49,9 +48,9 @@ typedef ::testing::Types<
 > UnitQuaternionTypes;
 
 typedef ::testing::Types<
-    std::pair<quat::QuaternionD, quat::UnitQuaternionD>,
-    std::pair<quat::QuaternionF, quat::UnitQuaternionF>
-> TypePairs;
+		float,
+		double
+> PrimTypes;
 
 typedef ::testing::Types<
 	std::pair<quat::QuaternionD, quat::QuaternionD>,
@@ -64,32 +63,10 @@ typedef ::testing::Types<
 	std::pair<quat::UnitQuaternionD, quat::QuaternionF>,
 	std::pair<quat::UnitQuaternionF, quat::QuaternionD>,
 	std::pair<quat::UnitQuaternionF, quat::UnitQuaternionF>
-> TypePrimeTypePairs;
-
-typedef ::testing::Types<
-		float,
-		double
-> PrimTypes;
-
-template <typename QuaternionImplementation>
-struct QuaternionsSingleTest : public ::testing::Test{
-	  typedef QuaternionImplementation Quaternion;
-	  typedef typename Quaternion::Scalar QuaternionScalar;
-	  typedef Eigen::Quaternion<QuaternionScalar> EigenQuat;
-
-	  const EigenQuat eigenQuat1 = EigenQuat(1.0,2.0,3.0,4.0);
-	  const EigenQuat eigenQuat2 = EigenQuat(1.23,4.56,7.89,0.12);
-	  const EigenQuat eigenQuat1Conj = EigenQuat(1.0,-2.0,-3.0,-4.0);
-	  const EigenQuat eigenQuatIdentity = EigenQuat(1.0,0.0,0.0,0.0);
-	  const Quaternion quat1 = Quaternion(eigenQuat1);
-	  const Quaternion quat2 = Quaternion(eigenQuat2);
-	  const Quaternion quatIdentity = Quaternion(eigenQuatIdentity);
-	  const QuaternionScalar norm1 = 5.477225575051661;
-	  const QuaternionScalar norm2 = 9.196357974763703;
-};
+> TypePairs;
 
 template <typename QuaternionImplementationPrimeTypePair>
-struct QuaternionsPrimeTypePairsTest : public ::testing::Test{
+struct QuaternionsPairsTest : public ::testing::Test{
   typedef typename QuaternionImplementationPrimeTypePair::first_type QuaternionFirstPrimeType;
   typedef typename QuaternionImplementationPrimeTypePair::second_type QuaternionSecondPrimeType;
 
@@ -106,6 +83,23 @@ struct QuaternionsPrimTypeTest : public ::testing::Test{
   const UnitQuaternion uquat = UnitQuaternion(0.0,0.36,0.48,0.8);
 };
 
+template <typename QuaternionImplementation>
+struct QuaternionsSingleTest : public ::testing::Test{
+    typedef QuaternionImplementation Quaternion;
+    typedef typename Quaternion::Scalar QuaternionScalar;
+    typedef Eigen::Quaternion<QuaternionScalar> EigenQuat;
+
+    const EigenQuat eigenQuat1 = EigenQuat(1.0,2.0,3.0,4.0);
+    const EigenQuat eigenQuat2 = EigenQuat(1.23,4.56,7.89,0.12);
+    const EigenQuat eigenQuat1Conj = EigenQuat(1.0,-2.0,-3.0,-4.0);
+    const EigenQuat eigenQuatIdentity = EigenQuat(1.0,0.0,0.0,0.0);
+    const Quaternion quat1 = Quaternion(eigenQuat1);
+    const Quaternion quat2 = Quaternion(eigenQuat2);
+    const Quaternion quatIdentity = Quaternion(eigenQuatIdentity);
+    const QuaternionScalar norm1 = 5.477225575051661;
+    const QuaternionScalar norm2 = 9.196357974763703;
+};
+
 template <typename UnitQuaternionImplementation>
 struct UnitQuaternionsSingleTest : public ::testing::Test{
 	  typedef UnitQuaternionImplementation UnitQuaternion;
@@ -113,33 +107,18 @@ struct UnitQuaternionsSingleTest : public ::testing::Test{
 	  typedef Eigen::Quaternion<UnitQuaternionScalar> EigenQuat;
 
 	  const EigenQuat eigenQuat1 = EigenQuat(0.0,0.36,0.48,0.8);
-};
+    const EigenQuat eigenQuat2 = EigenQuat(-0.48,-0.6,0.0,0.64);
 
-template <typename QuaternionImplementationPair>
-struct QuaternionsPairsTest : public ::testing::Test{
-  typedef typename QuaternionImplementationPair::first_type Quaternion;
-  typedef typename QuaternionImplementationPair::second_type UnitQuaternion;
-
-  typedef typename Quaternion::Scalar QuaternionScalar;
-  typedef typename UnitQuaternion::Scalar UnitQuaternionScalar;
-  typedef Eigen::Matrix<QuaternionScalar, 3, 1> Vector3;
-  typedef Eigen::Matrix<QuaternionScalar, 3, 3> Matrix3x4;
-
-  Quaternion quatZero =     Quaternion(Eigen::Quaterniond(0, 0, 0, 0).cast<QuaternionScalar>());
-  Quaternion quatIdentity = Quaternion(Eigen::Quaterniond(1, 0, 0, 0).cast<QuaternionScalar>());
-  UnitQuaternion uquatIdentity = UnitQuaternion(quat::Quaternion<QuaternionScalar>(Eigen::Quaterniond(1, 0, 0, 0).cast<QuaternionScalar>()));
-  Quaternion quatGeneric =  Quaternion(quat::Quaternion<QuaternionScalar>(Eigen::Quaterniond(1, 2, 3, 4).cast<QuaternionScalar>()));
-  Quaternion quatGenericInverse =  Quaternion(quat::Quaternion<QuaternionScalar>(Eigen::Quaterniond(   0.033333333333333, -0.066666666666667, -0.1, -0.133333333333333).cast<QuaternionScalar>()));
-  UnitQuaternion uquatGeneric =  UnitQuaternion(quat::UnitQuaternion<UnitQuaternionScalar>(Eigen::Quaterniond(1.0/sqrt(1.0+2.0*2.0+3.0*3.0+4.0*4.0), 2.0/sqrt(1.0+2.0*2.0+3.0*3.0+4.0*4.0), 3.0/sqrt(1.0+2.0*2.0+3.0*3.0+4.0*4.0), 4.0/sqrt(1.0+2.0*2.0+3.0*3.0+4.0*4.0)).cast<UnitQuaternionScalar>()));
-  UnitQuaternion uquatGenericInverse =  UnitQuaternion(quat::UnitQuaternion<UnitQuaternionScalar>(Eigen::Quaterniond(1.0/sqrt(1.0+2.0*2.0+3.0*3.0+4.0*4.0), -2.0/sqrt(1.0+2.0*2.0+3.0*3.0+4.0*4.0), -3.0/sqrt(1.0+2.0*2.0+3.0*3.0+4.0*4.0), -4.0/sqrt(1.0+2.0*2.0+3.0*3.0+4.0*4.0)).cast<UnitQuaternionScalar>()));
-
-  QuaternionsPairsTest() {}
+    const EigenQuat eigenQuat1Conj = EigenQuat(0.0,-0.36,-0.48,-0.8);
+    const EigenQuat eigenQuatIdentity = EigenQuat(1.0,0.0,0.0,0.0);
+    const UnitQuaternion quat1 = UnitQuaternion(eigenQuat1);
+    const UnitQuaternion quat2 = UnitQuaternion(eigenQuat2);
+    const UnitQuaternion quatIdentity = UnitQuaternion(eigenQuatIdentity);
 };
 
 TYPED_TEST_CASE(QuaternionsSingleTest, QuaternionTypes);
 TYPED_TEST_CASE(UnitQuaternionsSingleTest, UnitQuaternionTypes);
-TYPED_TEST_CASE(QuaternionsPairsTest, TypePairs); // TODO: delete and rename next test
-TYPED_TEST_CASE(QuaternionsPrimeTypePairsTest, TypePrimeTypePairs);
+TYPED_TEST_CASE(QuaternionsPairsTest, TypePairs); //QuaternionsPairsTest, TypePairs
 TYPED_TEST_CASE(QuaternionsPrimTypeTest, PrimTypes);
 
 // Testing of Quaternion Constructor and Access Operator
@@ -328,7 +307,7 @@ TYPED_TEST (QuaternionsSingleTest, testQuaternionSinglImplementationCast) {
 }
 
 // Test simple casting (()-operator) between type and non-unit and unit quaternions
-TYPED_TEST (QuaternionsPrimeTypePairsTest, testQuaternionPrimeTypeCasting ) {
+TYPED_TEST (QuaternionsPairsTest, testQuaternionPrimeTypeCasting ) {
   typedef typename TestFixture::QuaternionFirstPrimeType QuaternionFirstPrimeType;
   typedef typename TestFixture::QuaternionSecondPrimeType QuaternionSecondPrimeType;
   QuaternionFirstPrimeType testQuatFirst;
@@ -385,126 +364,174 @@ TYPED_TEST (QuaternionsPrimTypeTest, testQuaternionToUnitQuaternion ) {
   ASSERT_NEAR(testUnitQuat.z()/testUnitQuat.w(),this->quat.z(),1e-6);
 }
 
-TYPED_TEST (UnitQuaternionsSingleTest, testUnitQuaternionSingle) {
+// Testing of UnitQuaternion Constructor and Access Operator
+TYPED_TEST (UnitQuaternionsSingleTest, testUnitQuaternionSingleConstructor) {
   typedef typename TestFixture::UnitQuaternion UnitQuaternion;
   typedef typename TestFixture::UnitQuaternionScalar UnitQuaternionScalar;
+  typedef typename TestFixture::EigenQuat EigenQuat;
 
+  // Default constructor of quaternion needs to set all coefficients to zero
+  UnitQuaternion testQuat;
+  ASSERT_EQ(testQuat.w(),UnitQuaternionScalar(1));
+  ASSERT_EQ(testQuat.x(),UnitQuaternionScalar(0));
+  ASSERT_EQ(testQuat.y(),UnitQuaternionScalar(0));
+  ASSERT_EQ(testQuat.z(),UnitQuaternionScalar(0));
 
-  // default constructor of unit quaternion needs to set all coefficient except w (1) to zero
-  UnitQuaternion quat;
-  ASSERT_EQ(quat.w(),UnitQuaternionScalar(1));
-  ASSERT_EQ(quat.x(),UnitQuaternionScalar(0));
-  ASSERT_EQ(quat.y(),UnitQuaternionScalar(0));
-  ASSERT_EQ(quat.z(),UnitQuaternionScalar(0));
+  // Constructor of quaternion using 4 scalars
+  UnitQuaternion testQuat1(this->eigenQuat1.w(), this->eigenQuat1.x(), this->eigenQuat1.y(), this->eigenQuat1.z());
+  ASSERT_EQ(testQuat1.w(),this->eigenQuat1.w());
+  ASSERT_EQ(testQuat1.x(),this->eigenQuat1.x());
+  ASSERT_EQ(testQuat1.y(),this->eigenQuat1.y());
+  ASSERT_EQ(testQuat1.z(),this->eigenQuat1.z());
 
-  // constructor of quaternion
-  UnitQuaternion quat1(this->eigenQuat1.w(), this->eigenQuat1.x(), this->eigenQuat1.y(), this->eigenQuat1.z());
-  ASSERT_EQ(quat1.w(),this->eigenQuat1.w());
-  ASSERT_EQ(quat1.x(),this->eigenQuat1.x());
-  ASSERT_EQ(quat1.y(),this->eigenQuat1.y());
-  ASSERT_EQ(quat1.z(),this->eigenQuat1.z());
+  // Constructor of quaternion using real and imaginary part
+  UnitQuaternion testQuat2(this->eigenQuat1.w(),typename UnitQuaternion::Imaginary(this->eigenQuat1.x(), this->eigenQuat1.y(), this->eigenQuat1.z()));
+  ASSERT_EQ(testQuat2.w(),this->eigenQuat1.w());
+  ASSERT_EQ(testQuat2.x(),this->eigenQuat1.x());
+  ASSERT_EQ(testQuat2.y(),this->eigenQuat1.y());
+  ASSERT_EQ(testQuat2.z(),this->eigenQuat1.z());
+  ASSERT_EQ(testQuat2.getReal(),this->eigenQuat1.w());
+  ASSERT_EQ(testQuat2.getImaginary()(0),this->eigenQuat1.x());
+  ASSERT_EQ(testQuat2.getImaginary()(1),this->eigenQuat1.y());
+  ASSERT_EQ(testQuat2.getImaginary()(2),this->eigenQuat1.z());
 
-  // constructor of quaternion using eigen quaternion
-  UnitQuaternion quat2(this->eigenQuat1);
-  ASSERT_EQ(quat2.w(),this->eigenQuat1.w());
-  ASSERT_EQ(quat2.x(),this->eigenQuat1.x());
-  ASSERT_EQ(quat2.y(),this->eigenQuat1.y());
-  ASSERT_EQ(quat2.z(),this->eigenQuat1.z());
+  // Constructor of quaternion using eigen quaternion
+  UnitQuaternion testQuat3(this->eigenQuat1);
+  ASSERT_EQ(testQuat3.w(),this->eigenQuat1.w());
+  ASSERT_EQ(testQuat3.x(),this->eigenQuat1.x());
+  ASSERT_EQ(testQuat3.y(),this->eigenQuat1.y());
+  ASSERT_EQ(testQuat3.z(),this->eigenQuat1.z());
 }
 
-TYPED_TEST (QuaternionsPairsTest, testQuaternionConstructor ) {
-
-  typedef typename TestFixture::Quaternion Quaternion;
+// Testing of UnitQuaternion multiplication
+TYPED_TEST (UnitQuaternionsSingleTest, testUnitQuaternionSingleMultiplication) {
   typedef typename TestFixture::UnitQuaternion UnitQuaternion;
-  typedef typename TestFixture::Quaternion::Scalar QuaternionScalar;
-  typedef typename TestFixture::UnitQuaternion::Scalar UnitQuaternionScalar;
+  typedef typename TestFixture::UnitQuaternionScalar UnitQuaternionScalar;
+  typedef typename TestFixture::EigenQuat EigenQuat;
+  UnitQuaternion testQuat;
 
+  // Check multiplication of two generic quaternions and compare with eigen results
+  UnitQuaternion quat12 = this->quat1*this->quat2;
+  EigenQuat eigenQuat12 = this->eigenQuat1*this->eigenQuat2;
+  ASSERT_EQ(quat12.w(),eigenQuat12.w());
+  ASSERT_EQ(quat12.x(),eigenQuat12.x());
+  ASSERT_EQ(quat12.y(),eigenQuat12.y());
+  ASSERT_EQ(quat12.z(),eigenQuat12.z());
 
-  // default constructor of quaternion needs to set all coefficients to zero
-  Quaternion quat;
-  ASSERT_EQ(quat.w(),QuaternionScalar(0));
-  ASSERT_EQ(quat.x(),QuaternionScalar(0));
-  ASSERT_EQ(quat.y(),QuaternionScalar(0));
-  ASSERT_EQ(quat.z(),QuaternionScalar(0));
-
-  // default constructor of unit quaternion needs to set the scalar to 1 and all other coefficients to zero
-  UnitQuaternion uquat;
-  ASSERT_EQ(uquat.w(),QuaternionScalar(1));
-  ASSERT_EQ(uquat.x(),QuaternionScalar(0));
-  ASSERT_EQ(uquat.y(),QuaternionScalar(0));
-  ASSERT_EQ(uquat.z(),QuaternionScalar(0));
-
-  // constructor of quaternion
-  Quaternion quat1(this->quatGeneric.w(), this->quatGeneric.x(), this->quatGeneric.y(), this->quatGeneric.z());
-  ASSERT_EQ(quat1.w(),this->quatGeneric.w());
-  ASSERT_EQ(quat1.x(),this->quatGeneric.x());
-  ASSERT_EQ(quat1.y(),this->quatGeneric.y());
-  ASSERT_EQ(quat1.z(),this->quatGeneric.z());
-
-  // constructor of quaternion
-  UnitQuaternion uquat1(this->uquatGeneric.w(), this->uquatGeneric.x(), this->uquatGeneric.y(), this->uquatGeneric.z());
-  ASSERT_EQ(uquat1.w(),this->uquatGeneric.w());
-  ASSERT_EQ(uquat1.x(),this->uquatGeneric.x());
-  ASSERT_EQ(uquat1.y(),this->uquatGeneric.y());
-  ASSERT_EQ(uquat1.z(),this->uquatGeneric.z());
-
-  // constructor of real and imaginary part
-  Quaternion quat2(this->quatGeneric.w(),typename Quaternion::Imaginary(this->quatGeneric.x(), this->quatGeneric.y(), this->quatGeneric.z()));
-  ASSERT_EQ(quat2.w(),this->quatGeneric.w());
-  ASSERT_EQ(quat2.x(),this->quatGeneric.x());
-  ASSERT_EQ(quat2.y(),this->quatGeneric.y());
-  ASSERT_EQ(quat2.z(),this->quatGeneric.z());
-  ASSERT_EQ(quat2.getReal(),this->quatGeneric.w());
-  ASSERT_EQ(quat2.getImaginary()(0),this->quatGeneric.x());
-  ASSERT_EQ(quat2.getImaginary()(1),this->quatGeneric.y());
-  ASSERT_EQ(quat2.getImaginary()(2),this->quatGeneric.z());
-
-  // constructor of real and imaginary part
-  UnitQuaternion uquat2(this->uquatGeneric.w(),typename UnitQuaternion::Imaginary(this->uquatGeneric.x(), this->uquatGeneric.y(), this->uquatGeneric.z()));
-  ASSERT_EQ(uquat2.w(),this->uquatGeneric.w());
-  ASSERT_EQ(uquat2.x(),this->uquatGeneric.x());
-  ASSERT_EQ(uquat2.y(),this->uquatGeneric.y());
-  ASSERT_EQ(uquat2.z(),this->uquatGeneric.z());
-  ASSERT_EQ(uquat2.getReal(),this->uquatGeneric.w());
-  ASSERT_EQ(uquat2.getImaginary()(0),this->uquatGeneric.x());
-  ASSERT_EQ(uquat2.getImaginary()(1),this->uquatGeneric.y());
-  ASSERT_EQ(uquat2.getImaginary()(2),this->uquatGeneric.z());
+  // Check result of multiplication of a generic quaternion with identity
+  testQuat = this->quat1*this->quatIdentity;
+  ASSERT_EQ(testQuat.w(),this->quat1.w());
+  ASSERT_EQ(testQuat.x(),this->quat1.x());
+  ASSERT_EQ(testQuat.y(),this->quat1.y());
+  ASSERT_EQ(testQuat.z(),this->quat1.z());
+  testQuat = this->quatIdentity*this->quat1;
+  ASSERT_EQ(testQuat.w(),this->quat1.w());
+  ASSERT_EQ(testQuat.x(),this->quat1.x());
+  ASSERT_EQ(testQuat.y(),this->quat1.y());
+  ASSERT_EQ(testQuat.z(),this->quat1.z());
 }
 
-
-
-TYPED_TEST (QuaternionsPairsTest, testQuaternionInversion ) {
-  typedef typename TestFixture::Quaternion Quaternion;
+// Testing of UnitQuaternion conjugation
+TYPED_TEST (UnitQuaternionsSingleTest, testUnitQuaternionSingleConjugation) {
   typedef typename TestFixture::UnitQuaternion UnitQuaternion;
-  typedef typename TestFixture::Quaternion::Scalar QuaternionScalar;
-  typedef typename TestFixture::UnitQuaternion::Scalar UnitQuaternionScalar;
+  typedef typename TestFixture::UnitQuaternionScalar UnitQuaternionScalar;
+  typedef typename TestFixture::EigenQuat EigenQuat;
+  UnitQuaternion testQuat1;
+  UnitQuaternion testQuat2;
 
-  // inverse of quaternion
-  Quaternion invquat = this->quatGeneric.inverted();
-  ASSERT_NEAR(invquat.w(), this->quatGenericInverse.w(),1e-6);
-  ASSERT_NEAR(invquat.x(), this->quatGenericInverse.x(),1e-6);
-  ASSERT_NEAR(invquat.y(), this->quatGenericInverse.y(),1e-6);
-  ASSERT_NEAR(invquat.z(), this->quatGenericInverse.z(),1e-6);
-
-  Quaternion quat = this->quatGeneric;
-  quat.invert();
-  ASSERT_NEAR(quat.w(), this->quatGenericInverse.w(),1e-6);
-  ASSERT_NEAR(quat.x(), this->quatGenericInverse.x(),1e-6);
-  ASSERT_NEAR(quat.y(), this->quatGenericInverse.y(),1e-6);
-  ASSERT_NEAR(quat.z(), this->quatGenericInverse.z(),1e-6);
-
-  // inverse of unit quaternion
-  UnitQuaternion invuquat = this->uquatGeneric.inverted();
-  ASSERT_NEAR(invuquat.w(), this->uquatGenericInverse.w(),1e-6);
-  ASSERT_NEAR(invuquat.x(), this->uquatGenericInverse.x(),1e-6);
-  ASSERT_NEAR(invuquat.y(), this->uquatGenericInverse.y(),1e-6);
-  ASSERT_NEAR(invuquat.z(), this->uquatGenericInverse.z(),1e-6);
-
-  UnitQuaternion uquat = this->uquatGeneric;
-  uquat.invert();
-  ASSERT_NEAR(uquat.w(), this->uquatGenericInverse.w(),1e-6);
-  ASSERT_NEAR(uquat.x(), this->uquatGenericInverse.x(),1e-6);
-  ASSERT_NEAR(uquat.y(), this->uquatGenericInverse.y(),1e-6);
-  ASSERT_NEAR(uquat.z(), this->uquatGenericInverse.z(),1e-6);
-
+  // Check conjugation
+  testQuat1 = this->quat1;
+  testQuat2 = testQuat1.conjugated();
+  ASSERT_NEAR(testQuat1.w(),this->quat1.w(),1e-6);
+  ASSERT_NEAR(testQuat1.x(),this->quat1.x(),1e-6);
+  ASSERT_NEAR(testQuat1.y(),this->quat1.y(),1e-6);
+  ASSERT_NEAR(testQuat1.z(),this->quat1.z(),1e-6);
+  ASSERT_NEAR(testQuat2.w(),this->eigenQuat1Conj.w(),1e-6);
+  ASSERT_NEAR(testQuat2.x(),this->eigenQuat1Conj.x(),1e-6);
+  ASSERT_NEAR(testQuat2.y(),this->eigenQuat1Conj.y(),1e-6);
+  ASSERT_NEAR(testQuat2.z(),this->eigenQuat1Conj.z(),1e-6);
+  testQuat2 = testQuat1.conjugate();
+  ASSERT_NEAR(testQuat1.w(),this->eigenQuat1Conj.w(),1e-6);
+  ASSERT_NEAR(testQuat1.x(),this->eigenQuat1Conj.x(),1e-6);
+  ASSERT_NEAR(testQuat1.y(),this->eigenQuat1Conj.y(),1e-6);
+  ASSERT_NEAR(testQuat1.z(),this->eigenQuat1Conj.z(),1e-6);
+  ASSERT_NEAR(testQuat2.w(),this->eigenQuat1Conj.w(),1e-6);
+  ASSERT_NEAR(testQuat2.x(),this->eigenQuat1Conj.x(),1e-6);
+  ASSERT_NEAR(testQuat2.y(),this->eigenQuat1Conj.y(),1e-6);
+  ASSERT_NEAR(testQuat2.z(),this->eigenQuat1Conj.z(),1e-6);
 }
+
+// Testing of UnitQuaternion inversion
+TYPED_TEST (UnitQuaternionsSingleTest, testUnitQuaternionSingleInversion) {
+  typedef typename TestFixture::UnitQuaternion UnitQuaternion;
+  typedef typename TestFixture::UnitQuaternionScalar UnitQuaternionScalar;
+  typedef typename TestFixture::EigenQuat EigenQuat;
+  UnitQuaternion testQuat1;
+  UnitQuaternion testQuat2;
+
+  // Check conjugation
+  testQuat1 = this->quat1;
+  testQuat2 = testQuat1.inverted();
+  ASSERT_NEAR(testQuat1.w(),this->quat1.w(),1e-6);
+  ASSERT_NEAR(testQuat1.x(),this->quat1.x(),1e-6);
+  ASSERT_NEAR(testQuat1.y(),this->quat1.y(),1e-6);
+  ASSERT_NEAR(testQuat1.z(),this->quat1.z(),1e-6);
+  ASSERT_NEAR(testQuat2.w(),this->eigenQuat1Conj.w(),1e-6);
+  ASSERT_NEAR(testQuat2.x(),this->eigenQuat1Conj.x(),1e-6);
+  ASSERT_NEAR(testQuat2.y(),this->eigenQuat1Conj.y(),1e-6);
+  ASSERT_NEAR(testQuat2.z(),this->eigenQuat1Conj.z(),1e-6);
+  testQuat2 = testQuat1.invert();
+  ASSERT_NEAR(testQuat1.w(),this->eigenQuat1Conj.w(),1e-6);
+  ASSERT_NEAR(testQuat1.x(),this->eigenQuat1Conj.x(),1e-6);
+  ASSERT_NEAR(testQuat1.y(),this->eigenQuat1Conj.y(),1e-6);
+  ASSERT_NEAR(testQuat1.z(),this->eigenQuat1Conj.z(),1e-6);
+  ASSERT_NEAR(testQuat2.w(),this->eigenQuat1Conj.w(),1e-6);
+  ASSERT_NEAR(testQuat2.x(),this->eigenQuat1Conj.x(),1e-6);
+  ASSERT_NEAR(testQuat2.y(),this->eigenQuat1Conj.y(),1e-6);
+  ASSERT_NEAR(testQuat2.z(),this->eigenQuat1Conj.z(),1e-6);
+}
+
+// Testing of UnitQuaternion comparison
+TYPED_TEST (UnitQuaternionsSingleTest, testUnitQuaternionSingleComparison) {
+  typedef typename TestFixture::UnitQuaternion UnitQuaternion;
+  typedef typename TestFixture::UnitQuaternionScalar UnitQuaternionScalar;
+  typedef typename TestFixture::EigenQuat EigenQuat;
+  UnitQuaternion testQuat;
+
+  // Check equality comparison
+  testQuat = this->quat1;
+  ASSERT_EQ(testQuat==this->quat1,true);
+  ASSERT_EQ(testQuat==this->quat2,false);
+}
+
+// Testing of Norm and Normalization for UnitQuaternion
+TYPED_TEST (UnitQuaternionsSingleTest, testUnitQuaternionSingleNormalization) {
+  typedef typename TestFixture::UnitQuaternion UnitQuaternion;
+  typedef typename TestFixture::UnitQuaternionScalar UnitQuaternionScalar;
+  typedef typename TestFixture::EigenQuat EigenQuat;
+  UnitQuaternion testQuat;
+  UnitQuaternionScalar scalar;
+
+  // Check norm and normalization
+  testQuat = this->quat1;
+  scalar = testQuat.norm();
+  ASSERT_NEAR(scalar,1.0,1e-6);
+}
+
+// Testing of casting to implementation for UnitQuaternion
+TYPED_TEST (UnitQuaternionsSingleTest, testUnitQuaternionSinglImplementationCast) {
+  typedef typename TestFixture::UnitQuaternion UnitQuaternion;
+  typedef typename TestFixture::UnitQuaternionScalar UnitQuaternionScalar;
+  typedef typename TestFixture::EigenQuat EigenQuat;
+  EigenQuat testEigenQuat;
+
+  // Check casting to implementation
+  testEigenQuat = this->quat1.toImplementation();
+  ASSERT_EQ(testEigenQuat.w(),this->eigenQuat1.w());
+  ASSERT_EQ(testEigenQuat.x(),this->eigenQuat1.x());
+  ASSERT_EQ(testEigenQuat.y(),this->eigenQuat1.y());
+  ASSERT_EQ(testEigenQuat.z(),this->eigenQuat1.z());
+}
+
+
+
