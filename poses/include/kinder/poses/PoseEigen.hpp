@@ -38,7 +38,7 @@
 
 namespace kinder {
 namespace poses {
-//! Implementation of rotations based on the C++ Eigen library
+//! Implementation of poses based on the C++ Eigen library
 namespace eigen_implementation {
 
 
@@ -104,9 +104,6 @@ class HomogeneousTransformationPosition3RotationQuaternion: public HomogeneousTr
 
 };
 
-
-
-
 typedef HomogeneousTransformationPosition3RotationQuaternion<double> HomogeneousTransformationPosition3RotationQuaternionD;
 typedef HomogeneousTransformationPosition3RotationQuaternion<float> HomogeneousTransformationPosition3RotationQuaternionF;
 
@@ -124,30 +121,17 @@ class get_position<eigen_implementation::HomogeneousTransformation<PrimType, POS
 
 template<typename PrimType, typename POSITION, typename ROTATION>
 class TransformationTraits<eigen_implementation::HomogeneousTransformation<PrimType, POSITION, ROTATION>> {
- public:
+ private:
   typedef typename eigen_implementation::HomogeneousTransformation<PrimType, POSITION, ROTATION> Pose;
   typedef typename get_position<Pose>::Position Position;
-    inline static Position transform(const Pose & pose, const Position & position){
-      return pose.getPosition() + Position(pose.getRotation().rotate(position.toImplementation()));
+ public:
+  inline static Position transform(const Pose & pose, const Position & position){
+    return pose.getRotation().rotate(position) + pose.getPosition();
+  }
+  inline static Position inverseTransform(const Pose & pose, const Position & position){
+    return pose.getRotation().inverseRotate((position-pose.getPosition()));
   }
 };
-
-
-
-// specialized (not needed)
-//template<typename PrimType>
-//class TransformationTraits<eigen_implementation::HomogeneousTransformation<PrimType, positions::eigen_implementation::Position3<PrimType>, rotations::eigen_implementation::RotationQuaternion<PrimType, rotations::RotationUsage::PASSIVE>>> {
-// public:
-//   typedef typename eigen_implementation::HomogeneousTransformation<PrimType, positions::eigen_implementation::Position3<PrimType>, rotations::eigen_implementation::RotationQuaternion<PrimType, rotations::RotationUsage::PASSIVE>> Pose;
-//    typedef typename get_position<Pose>::Position Position;
-//    inline static Position transform(const Pose & pose, const Position & position){
-//      return pose.getPosition() + Position(pose.getRotation().rotate(position.toImplementation()));
-//  }
-//};
-
-
-
-
 
 
 

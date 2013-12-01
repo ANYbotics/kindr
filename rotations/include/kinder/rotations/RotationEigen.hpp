@@ -32,6 +32,7 @@
 #include "kinder/common/common.hpp"
 #include "kinder/common/assert_macros_eigen.hpp"
 #include "kinder/quaternions/QuaternionEigen.hpp"
+#include "kinder/positions/PositionEigen.hpp"
 #include "RotationBase.hpp"
 #include "RotationEigenFunctions.hpp"
 
@@ -1301,6 +1302,18 @@ class get_matrix3X<eigen_implementation::EulerAnglesZyx<PrimType, Usage>>{
 };
 
 
+
+template<typename PrimType>
+class get_matrix3<positions::eigen_implementation::Position3<PrimType>>{
+ private:
+  typedef typename positions::eigen_implementation::Position3<PrimType> Position;
+  typedef typename Position::Implementation Matrix3X;
+ public:
+  static const Matrix3X& getMatrix3(const Position& position) {
+    return position.toImplementation();
+  }
+
+};
 
 
 template<typename PrimType>

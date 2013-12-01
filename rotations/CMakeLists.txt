@@ -43,6 +43,7 @@ include_directories(${EIGEN_INCLUDE_DIRS})
 include_directories(include)
 include_directories(../common/include)
 include_directories(../quaternions/include)
+include_directories(../positions/include)
 
 add_executable( rot_example EXCLUDE_FROM_ALL ./src/example.cpp)
 ADD_CUSTOM_TARGET(demo_rotations rot_example DEPENDS rot_example) 
