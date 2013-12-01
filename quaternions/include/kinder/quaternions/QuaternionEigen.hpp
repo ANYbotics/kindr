@@ -256,18 +256,18 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>> {
    */
   UnitQuaternion(const PrimType & w, const PrimType & x, const PrimType & y, const PrimType & z)
     : uq(w,x,y,z) {
-    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-6, "Input quaternion has not unit length.");
+    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-4, "Input quaternion has not unit length.");
   }
 
   UnitQuaternion(const PrimType & w, const Imaginary & imag)
     : uq(w,imag) {
-    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-6, "Input quaternion has not unit length.");
+    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-4, "Input quaternion has not unit length.");
   }
 
   //! Constructor to create unit quaternion from Quaternion
   explicit UnitQuaternion(const Quaternion<PrimType> & other)
     : uq(other.toImplementation()) {
-    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-6, "Input quaternion has not unit length.");
+    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-4, "Input quaternion has not unit length.");
   }
 
   //! Constructor to create unit quaternion from Eigen::Quaternion
@@ -276,7 +276,7 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>> {
    */
   explicit UnitQuaternion(const Implementation & other)
     : uq(other) {
-    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-6, "Input quaternion has not unit length.");
+    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-4, "Input quaternion has not unit length.");
   }
 
   UnitQuaternion & operator =(const UnitQuaternion<PrimType> & other) {
@@ -305,7 +305,7 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType>> {
 	this->x() = static_cast<PrimType>(other.x());
 	this->y() = static_cast<PrimType>(other.y());
 	this->z() = static_cast<PrimType>(other.z());
-    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-6, "Input quaternion has not unit length.");
+    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-4, "Input quaternion has not unit length.");
 	return *this;
   }
 
