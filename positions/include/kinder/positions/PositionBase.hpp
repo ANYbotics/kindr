@@ -44,14 +44,14 @@ namespace internal {
  *  \class AdditionTraits
  *  (only for advanced users)
  */
-template<typename LEFT_AND_RIGHT>
+template<typename LeftAndRight_>
 class AdditionTraits {
  public:
-//  inline static LEFT add(const LEFT & l, const RIGHT & r);
-//  inline static LEFT subtract(const LEFT & l, const RIGHT & r);
+//  inline static LeftAndRight_ add(const LeftAndRight_& lhs, const LeftAndRight_& rhs);
+//  inline static LeftAndRight_ subtract(const LeftAndRight_& lhs, const LeftAndRight_& rhs);
 };
 
-template<typename POSITION>
+template<typename Position_>
 class get_scalar {
  public:
 //  typedef PrimType Scalar;
@@ -60,7 +60,7 @@ class get_scalar {
 } // namespace internal
 
 
-template<typename DERIVED>
+template<typename Derived_>
 class PositionBase {
  public:
   /*! \brief Standard constructor.
@@ -71,77 +71,73 @@ class PositionBase {
   /*! \brief Constructor from derived position.
    *  This constructor has been deleted because the abstract class does not contain any data.
    */
-  PositionBase(const DERIVED &) = delete; // on purpose!!
+  PositionBase(const Derived_&) = delete; // on purpose!!
 
   /*! \brief Gets the derived position.
    *  (only for advanced users)
    *  \returns the derived position
    */
-  operator DERIVED & () {
-    return static_cast<DERIVED &>(*this);
+  operator Derived_& () {
+    return static_cast<Derived_&>(*this);
   }
 
   /*! \brief Gets the derived position.
    *  (only for advanced users)
    *  \returns the derived position
    */
-  operator const DERIVED & () const {
-    return static_cast<const DERIVED &>(*this);
+  operator const Derived_& () const {
+    return static_cast<const Derived_&>(*this);
   }
 
   /*! \brief Gets the derived position.
    *  (only for advanced users)
    *  \returns the derived position
    */
-  const DERIVED & derived() const {
-    return static_cast<const DERIVED &>(*this);
+  const Derived_& derived() const {
+    return static_cast<const Derived_&>(*this);
   }
 
 
   /*! \brief Sets the position to zero.
    *  \returns reference
    */
-  DERIVED & setZero();
+  Derived_& setZero();
 
   /*! \brief Addition.
    *  \returns
    */
-  template<typename OTHER_DERIVED>
-  DERIVED operator +(const PositionBase<OTHER_DERIVED> & other) const {
-    return internal::AdditionTraits<PositionBase<DERIVED>>::add(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
+  template<typename OtherDerived_>
+  Derived_ operator +(const PositionBase<OtherDerived_>& other) const {
+    return internal::AdditionTraits<PositionBase<Derived_>>::add(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
   }
 
-  template<typename OTHER_DERIVED>
-  DERIVED operator -(const PositionBase<OTHER_DERIVED> & other) const {
-    return internal::AdditionTraits<PositionBase<DERIVED>>::subtract(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
+  template<typename OtherDerived_>
+  Derived_ operator -(const PositionBase<OtherDerived_>& other) const {
+    return internal::AdditionTraits<PositionBase<Derived_>>::subtract(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
   }
 
 
   /*! \brief Addition and assignment.
    *  \returns  sum of the two positions
    */
-  template<typename OTHER_DERIVED>
-  DERIVED & operator +=(const PositionBase<OTHER_DERIVED> & other);
+  template<typename OtherDerived_>
+  Derived_& operator +=(const PositionBase<OtherDerived_>& other);
 
   /*! \brief Subtraction and assignment.
    *  \returns
    */
-  template<typename OTHER_DERIVED>
-  DERIVED & operator -=(const PositionBase<OTHER_DERIVED> & other);
+  template<typename OtherDerived_>
+  Derived_& operator -=(const PositionBase<OtherDerived_>& other);
 
 };
 
 
-template<typename DERIVED>
-class Position3Base : public PositionBase<DERIVED> {
+template<typename Derived_>
+class Position3Base : public PositionBase<Derived_> {
  public:
-  typedef typename internal::get_scalar<DERIVED>::Scalar Scalar;
-//  Position3Base() = default;
-//  Position3Base(const Base& other);
+  typedef typename internal::get_scalar<Derived_>::Scalar Scalar;
 
-//  Position3Base(const typename internal::get_scalar<DERIVED>::Scalar & x, const typename internal::get_scalar<DERIVED>::Scalar & y, const typename internal::get_scalar<DERIVED>::Scalar & z);
-
-  inline const Scalar & x() const;
+  inline const Scalar& x() const;
   inline Scalar& x();
 
   inline const Scalar& y() const;
@@ -155,15 +151,15 @@ class Position3Base : public PositionBase<DERIVED> {
 
 namespace internal {
 
-template<typename LEFT_AND_RIGHT>
-class AdditionTraits<PositionBase<LEFT_AND_RIGHT>> {
+template<typename LeftAndRight_>
+class AdditionTraits<PositionBase<LeftAndRight_>> {
  public:
-  inline static LEFT_AND_RIGHT add(const PositionBase<LEFT_AND_RIGHT> & l, const PositionBase<LEFT_AND_RIGHT> & r) {
-    return LEFT_AND_RIGHT(typename LEFT_AND_RIGHT::Implementation(l.derived().toImplementation() + r.derived().toImplementation()));
+  inline static LeftAndRight_ add(const PositionBase<LeftAndRight_>& lhs, const PositionBase<LeftAndRight_>& rhs) {
+    return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() + rhs.derived().toImplementation()));
   }
 
-  inline static LEFT_AND_RIGHT subtract(const PositionBase<LEFT_AND_RIGHT> & l, const PositionBase<LEFT_AND_RIGHT> & r) {
-    return LEFT_AND_RIGHT(typename LEFT_AND_RIGHT::Implementation(l.derived().toImplementation() - r.derived().toImplementation()));
+  inline static LeftAndRight_ subtract(const PositionBase<LeftAndRight_>& lhs, const PositionBase<LeftAndRight_>& rhs) {
+    return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() - rhs.derived().toImplementation()));
   }
 };
 

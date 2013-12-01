@@ -45,12 +45,12 @@ namespace eigen_implementation {
  * \class Position3
  * \ingroup positions
  */
-template<typename PrimType>
-class Position3 : public Position3Base<Position3<PrimType>>, private Eigen::Matrix<PrimType, 3, 1> {
+template<typename PrimType_>
+class Position3 : public Position3Base<Position3<PrimType_>>, private Eigen::Matrix<PrimType_, 3, 1> {
  private:
   /*! \brief The base type.
    */
-  typedef Eigen::Matrix<PrimType, 3, 1> Base;
+  typedef Eigen::Matrix<PrimType_, 3, 1> Base;
  public:
   /*! \brief The implementation type.
    *  The implementation type is always an Eigen object.
@@ -60,7 +60,7 @@ class Position3 : public Position3Base<Position3<PrimType>>, private Eigen::Matr
   /*! \brief The primary type.
    *  Float/Double
    */
-  typedef PrimType Scalar;
+  typedef PrimType_ Scalar;
 
   /*! \brief Default constructor initializes all coefficients with zero.
    */
@@ -68,53 +68,53 @@ class Position3 : public Position3Base<Position3<PrimType>>, private Eigen::Matr
     : Base(Base::Zero()) {
   }
 
-  Position3(const PrimType & x, const PrimType & y, const PrimType & z)
+  Position3(const PrimType_& x, const PrimType_& y, const PrimType_& z)
     : Base(x, y, z) {
   }
 
 
   /*! \brief Constructor using Eigen::Vector3.
-   *  \param other   Eigen::Matrix<PrimType,3,1>
+   *  \param other   Eigen::Matrix<PrimType_,3,1>
    */
-  explicit Position3(const Base & other)
+  explicit Position3(const Base& other)
     : Base(other) {
    }
 
   /*! \brief Cast to the implementation type.
    *  \returns the implementation (recommended only for advanced users)
    */
-  inline Implementation & toImplementation() {
-    return static_cast<Implementation &>(*this);
+  inline Implementation& toImplementation() {
+    return static_cast<Implementation&>(*this);
   }
 
   /*! \brief Cast to the implementation type.
    *  \returns the implementation (recommended only for advanced users)
    */
-  inline const Implementation & toImplementation() const {
-    return static_cast<const Implementation &>(*this);
+  inline const Implementation& toImplementation() const {
+    return static_cast<const Implementation&>(*this);
   }
 
   using Base::x;
   using Base::y;
   using Base::z;
 
-  using Position3Base<Position3<PrimType>>::operator+; // otherwise ambiguous PositionBase and Eigen
-  using Position3Base<Position3<PrimType>>::operator-; // otherwise ambiguous PositionBase and Eigen
+  using Position3Base<Position3<PrimType_>>::operator+; // otherwise ambiguous PositionBase and Eigen
+  using Position3Base<Position3<PrimType_>>::operator-; // otherwise ambiguous PositionBase and Eigen
 
 
   template<typename OTHER>
-  Position3<PrimType> & operator +=(const OTHER & other) {
+  Position3<PrimType_>& operator +=(const OTHER& other) {
     this->toImplementation() += other.toImplementation();
     return *this;
   }
 
   template<typename OTHER>
-  Position3<PrimType> & operator -=(const OTHER & other) {
+  Position3<PrimType_>& operator -=(const OTHER& other) {
     this->toImplementation() -= other.toImplementation();
     return *this;
   }
 
-  Position3<PrimType> & setZero() {
+  Position3<PrimType_>& setZero() {
     Base::setZero();
     return *this;
   }
@@ -124,7 +124,7 @@ class Position3 : public Position3Base<Position3<PrimType>>, private Eigen::Matr
   /*! \brief Used for printing the object with std::cout.
    *  \returns std::stream object
    */
-  friend std::ostream & operator << (std::ostream & out, const Position3 & position) {
+  friend std::ostream& operator << (std::ostream& out, const Position3& position) {
     out << position.transpose();
     return out;
   }
@@ -141,18 +141,18 @@ typedef Position3<float>  Position3F;
 
 namespace internal {
 
-template<typename PrimType>
-class get_scalar<eigen_implementation::Position3<PrimType>>{
+template<typename PrimType_>
+class get_scalar<eigen_implementation::Position3<PrimType_>>{
  public:
-  typedef PrimType Scalar;
+  typedef PrimType_ Scalar;
 };
 
 
-//template<typename PrimType>
-//class AdditionTraits<PositionBase<eigen_implementation::Position3<PrimType>>, PositionBase<eigen_implementation::Position3<PrimType>>> {
+//template<typename PrimType_>
+//class AdditionTraits<PositionBase<eigen_implementation::Position3<PrimType_>>, PositionBase<eigen_implementation::Position3<PrimType_>>> {
 // public:
-//  inline static eigen_implementation::Position3<PrimType> add(const eigen_implementation::Position3<PrimType> & a, const eigen_implementation::Position3<PrimType> & b) {
-//    return eigen_implementation::Position3<PrimType(
+//  inline static eigen_implementation::Position3<PrimType_> add(const eigen_implementation::Position3<PrimType_>& a, const eigen_implementation::Position3<PrimType_>& b) {
+//    return eigen_implementation::Position3<PrimType_(
 //                                                                   a.toImplementation()*
 //                                                                   b.toImplementation());
 //  }

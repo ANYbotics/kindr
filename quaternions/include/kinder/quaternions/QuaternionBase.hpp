@@ -55,7 +55,7 @@ class MultiplicationTraits {
   }
 };
 
-//! Comparision trait to implement to compare two quaterionsn
+//! Comparison trait to implement to compare two quaternions
 template<typename Quaternion_>
 class ComparisonTraits {
  public:

@@ -42,14 +42,14 @@ namespace poses {
 namespace eigen_implementation {
 
 
-template<typename PrimType, typename POSITION, typename ROTATION>
-class HomogeneousTransformation : public HomogeneousTransformationBase<HomogeneousTransformation<PrimType, POSITION, ROTATION>>, private POSITION, private ROTATION {
+template<typename PrimType_, typename Position_, typename Rotation_>
+class HomogeneousTransformation : public HomogeneousTransformationBase<HomogeneousTransformation<PrimType_, Position_, Rotation_>>, private Position_, private Rotation_ {
  public:
 
-  typedef PrimType Scalar;
-  typedef POSITION Position;
-  typedef ROTATION Rotation;
-  typedef Eigen::Matrix<PrimType, 4, 4> TransformationMatrix;
+  typedef PrimType_ Scalar;
+  typedef Position_ Position;
+  typedef Rotation_ Rotation;
+  typedef Eigen::Matrix<PrimType_, 4, 4> TransformationMatrix;
 
 
   HomogeneousTransformation() = default;
@@ -59,20 +59,20 @@ class HomogeneousTransformation : public HomogeneousTransformationBase<Homogeneo
   }
 
 
-  inline POSITION & getPosition() {
-    return static_cast<POSITION &>(*this);
+  inline Position_ & getPosition() {
+    return static_cast<Position_ &>(*this);
   }
 
-  inline const POSITION & getPosition() const {
-    return static_cast<const POSITION &>(*this);
+  inline const Position_ & getPosition() const {
+    return static_cast<const Position_ &>(*this);
   }
 
-  inline ROTATION & getRotation() {
-    return static_cast<ROTATION &>(*this);
+  inline Rotation_ & getRotation() {
+    return static_cast<Rotation_ &>(*this);
   }
 
-  inline const ROTATION & getRotation() const {
-    return static_cast<const ROTATION &>(*this);
+  inline const Rotation_ & getRotation() const {
+    return static_cast<const Rotation_ &>(*this);
   }
 
 
@@ -95,12 +95,12 @@ class HomogeneousTransformation : public HomogeneousTransformationBase<Homogeneo
 
 };
 
-template<typename PrimType>
-class HomogeneousTransformationPosition3RotationQuaternion: public HomogeneousTransformation<PrimType, positions::eigen_implementation::Position3<PrimType>, rotations::eigen_implementation::RotationQuaternion<PrimType, rotations::RotationUsage::PASSIVE>> {
+template<typename PrimType_>
+class HomogeneousTransformationPosition3RotationQuaternion: public HomogeneousTransformation<PrimType_, positions::eigen_implementation::Position3<PrimType_>, rotations::eigen_implementation::RotationQuaternion<PrimType_, rotations::RotationUsage::PASSIVE>> {
  private:
-  typedef HomogeneousTransformation<PrimType,kinder::positions::eigen_implementation::Position3<PrimType>, kinder::rotations::eigen_implementation::RotationQuaternion<PrimType, kinder::rotations::RotationUsage::PASSIVE>> Base;
+  typedef HomogeneousTransformation<PrimType_,kinder::positions::eigen_implementation::Position3<PrimType_>, kinder::rotations::eigen_implementation::RotationQuaternion<PrimType_, kinder::rotations::RotationUsage::PASSIVE>> Base;
  public:
-  typedef PrimType Scalar;
+  typedef PrimType_ Scalar;
   typedef typename Base::Position Position;
   typedef typename Base::Rotation Rotation;
 
@@ -120,17 +120,17 @@ typedef HomogeneousTransformationPosition3RotationQuaternion<float> HomogeneousT
 namespace internal {
 
 
-template<typename PrimType, typename POSITION, typename ROTATION>
-class get_position<eigen_implementation::HomogeneousTransformation<PrimType, POSITION, ROTATION>> {
+template<typename PrimType_, typename Position_, typename Rotation_>
+class get_position<eigen_implementation::HomogeneousTransformation<PrimType_, Position_, Rotation_>> {
  public:
   //! Position
-  typedef POSITION Position;
+  typedef Position_ Position;
 };
 
-template<typename PrimType, typename POSITION, typename ROTATION>
-class TransformationTraits<eigen_implementation::HomogeneousTransformation<PrimType, POSITION, ROTATION>> {
+template<typename PrimType_, typename Position_, typename Rotation_>
+class TransformationTraits<eigen_implementation::HomogeneousTransformation<PrimType_, Position_, Rotation_>> {
  private:
-  typedef typename eigen_implementation::HomogeneousTransformation<PrimType, POSITION, ROTATION> Pose;
+  typedef typename eigen_implementation::HomogeneousTransformation<PrimType_, Position_, Rotation_> Pose;
   typedef typename get_position<Pose>::Position Position;
  public:
   inline static Position transform(const Pose & pose, const Position & position){
