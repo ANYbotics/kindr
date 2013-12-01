@@ -372,6 +372,19 @@ TYPED_TEST (QuaternionsPrimTypeTest, testQuaternionAssignmentCasting ) {
   ASSERT_EQ(testUnitQuat.z(),this->uquat.z());
 }
 
+// Test toUnitquaternion explicit casting
+TYPED_TEST (QuaternionsPrimTypeTest, testQuaternionToUnitQuaternion ) {
+  typename TestFixture::Quaternion testQuat;
+  typename TestFixture::UnitQuaternion testUnitQuat;
+
+  // Use toUnitQuaternion method in order normalize and cast a Quaternion to a unit Quaternion
+  testUnitQuat = this->quat.toUnitQuaternion(); // w is 1.0
+  ASSERT_NEAR(testUnitQuat.norm(),1.0,1e-6);
+  ASSERT_NEAR(testUnitQuat.x()/testUnitQuat.w(),this->quat.x(),1e-6);
+  ASSERT_NEAR(testUnitQuat.y()/testUnitQuat.w(),this->quat.y(),1e-6);
+  ASSERT_NEAR(testUnitQuat.z()/testUnitQuat.w(),this->quat.z(),1e-6);
+}
+
 TYPED_TEST (UnitQuaternionsSingleTest, testUnitQuaternionSingle) {
   typedef typename TestFixture::UnitQuaternion UnitQuaternion;
   typedef typename TestFixture::UnitQuaternionScalar UnitQuaternionScalar;
