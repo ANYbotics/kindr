@@ -48,13 +48,13 @@ namespace eigen_implementation {
 /*! \brief Implementation of an angle axis rotation based on Eigen::AngleAxis
  *  \ingroup rotations
  *  \class AngleAxis
- *  \tparam PrimType the primary type of the data (double or float)
+ *  \tparam PrimType the primitive type of the data (double or float)
  *  \tparam Usage_ the rotation usage which is either active or passive
  *  The following two typedefs are provided for convenience:
- *   - AngleAxisAD for active rotation and double primary type
- *   - AngleAxisAF for active rotation and float primary type
- *   - AngleAxisPD for passive rotation and double primary type
- *   - AngleAxisPF for passive rotation and float primary type
+ *   - AngleAxisAD for active rotation and double primitive type
+ *   - AngleAxisAF for active rotation and float primitive type
+ *   - AngleAxisPD for passive rotation and double primitive type
+ *   - AngleAxisPF for passive rotation and float primitive type
  */
 template<typename PrimType_, enum RotationUsage Usage_>
 class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, private Eigen::AngleAxis<PrimType_> {
@@ -67,7 +67,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
    *  The implementation type is always an Eigen object.
    */
   typedef Base Implementation;
-  /*! \brief The primary type.
+  /*! \brief The primitive type.
    *  Float/Double
    */
   typedef PrimType_ Scalar;
@@ -239,13 +239,13 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
   }
 };
 
-//! \brief Active angle axis rotation with double primary type
+//! \brief Active angle axis rotation with double primitive type
 typedef AngleAxis<double, RotationUsage::ACTIVE>  AngleAxisAD;
-//! \brief Active angle axis rotation with float primary type
+//! \brief Active angle axis rotation with float primitive type
 typedef AngleAxis<float,  RotationUsage::ACTIVE>  AngleAxisAF;
-//! \brief Passive angle axis rotation with double primary type
+//! \brief Passive angle axis rotation with double primitive type
 typedef AngleAxis<double, RotationUsage::PASSIVE> AngleAxisPD;
-//! \brief Passive angle axis rotation with float primary type
+//! \brief Passive angle axis rotation with float primitive type
 typedef AngleAxis<float,  RotationUsage::PASSIVE> AngleAxisPF;
 
 
@@ -254,13 +254,13 @@ typedef AngleAxis<float,  RotationUsage::PASSIVE> AngleAxisPF;
 /*! \brief Implementation of quaternion rotation based on Eigen::Quaternion
  *  \ingroup rotations
  *  \class RotationQuaternion
- *  \tparam PrimType the primary type of the data (double or float)
+ *  \tparam PrimType the primitive type of the data (double or float)
  *  \tparam Usage_ the rotation usage which is either active or passive
  *  The following two typedefs are provided for convenience:
- *   - RotationQuaternionAD for active rotation and double primary type
- *   - RotationQuaternionAF for active rotation and float primary type
- *   - RotationQuaternionPD for passive rotation and double primary type
- *   - RotationQuaternionPF for passive rotation and float primary type
+ *   - RotationQuaternionAD for active rotation and double primitive type
+ *   - RotationQuaternionAF for active rotation and float primitive type
+ *   - RotationQuaternionPD for passive rotation and double primitive type
+ *   - RotationQuaternionPF for passive rotation and float primitive type
  */
 template<typename PrimType_, enum RotationUsage Usage_>
 class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<PrimType_, Usage_>, Usage_>, public quaternions::eigen_implementation::UnitQuaternion<PrimType_> {
@@ -274,7 +274,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    */
   typedef typename Base::Implementation Implementation;
 
-  /*! \brief The primary type.
+  /*! \brief The primitive type.
    *  Float/Double
    */
   typedef PrimType_ Scalar;
@@ -464,13 +464,13 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
   using RotationQuaternionBase<RotationQuaternion<PrimType_, Usage_>, Usage_> ::operator==;
 };
 
-//! \brief Active quaternion rotation with double primary type
+//! \brief Active quaternion rotation with double primitive type
 typedef RotationQuaternion<double, RotationUsage::ACTIVE>  RotationQuaternionAD;
-//! \brief Active quaternion rotation with float primary type
+//! \brief Active quaternion rotation with float primitive type
 typedef RotationQuaternion<float,  RotationUsage::ACTIVE>  RotationQuaternionAF;
-//! \brief Passive quaternion rotation with double primary type
+//! \brief Passive quaternion rotation with double primitive type
 typedef RotationQuaternion<double, RotationUsage::PASSIVE> RotationQuaternionPD;
-//! \brief Passive quaternion rotation with float primary type
+//! \brief Passive quaternion rotation with float primitive type
 typedef RotationQuaternion<float,  RotationUsage::PASSIVE> RotationQuaternionPF;
 
 
@@ -479,13 +479,13 @@ typedef RotationQuaternion<float,  RotationUsage::PASSIVE> RotationQuaternionPF;
 /*! \brief Implementation of matrix rotation based on Eigen::Matrix
  *  \ingroup rotations
  *  \class RotationMatrix
- *  \tparam PrimType the primary type of the data (double or float)
+ *  \tparam PrimType the primitive type of the data (double or float)
  *  \tparam Usage_ the rotation usage which is either active or passive
  *  The following two typedefs are provided for convenience:
- *   - RotationMatrixAD for active rotation and double primary type
- *   - RotationMatrixAF for active rotation and float primary type
- *   - RotationMatrixPD for passive rotation and double primary type
- *   - RotationMatrixPF for passive rotation and float primary type
+ *   - RotationMatrixAD for active rotation and double primitive type
+ *   - RotationMatrixAF for active rotation and float primitive type
+ *   - RotationMatrixPD for passive rotation and double primitive type
+ *   - RotationMatrixPF for passive rotation and float primitive type
  */
 template<typename PrimType_, enum RotationUsage Usage_>
 class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType_, Usage_>, Usage_>, private Eigen::Matrix<PrimType_, 3, 3> {
@@ -498,7 +498,7 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType_, Usage
    *  The implementation type is always an Eigen object.
    */
   typedef Base Implementation;
-  /*! \brief The primary type.
+  /*! \brief The primitive type.
    *  Float/Double
    */
   typedef PrimType_ Scalar;
@@ -668,13 +668,13 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType_, Usage
   }
 };
 
-//! \brief Active matrix rotation with double primary type
+//! \brief Active matrix rotation with double primitive type
 typedef RotationMatrix<double, RotationUsage::ACTIVE>  RotationMatrixAD;
-//! \brief Active matrix rotation with float primary type
+//! \brief Active matrix rotation with float primitive type
 typedef RotationMatrix<float,  RotationUsage::ACTIVE>  RotationMatrixAF;
-//! \brief Passive matrix rotation with double primary type
+//! \brief Passive matrix rotation with double primitive type
 typedef RotationMatrix<double, RotationUsage::PASSIVE> RotationMatrixPD;
-//! \brief Passive matrix rotation with float primary type
+//! \brief Passive matrix rotation with float primitive type
 typedef RotationMatrix<float,  RotationUsage::PASSIVE> RotationMatrixPF;
 
 
@@ -682,13 +682,13 @@ typedef RotationMatrix<float,  RotationUsage::PASSIVE> RotationMatrixPF;
 /*! \brief Implementation of euler angles (X,Y',Z'' / roll,pitch,yaw) rotation based on Eigen::Matrix
  *  \ingroup rotations
  *  \class EulerAnglesXyz
- *  \tparam PrimType the primary type of the data (double or float)
+ *  \tparam PrimType the primitive type of the data (double or float)
  *  \tparam Usage_ the rotation usage which is either active or passive
  *  The following two typedefs are provided for convenience:
- *   - EulerAnglesXyzAD for active rotation and double primary type
- *   - EulerAnglesXyzAF for active rotation and float primary type
- *   - EulerAnglesXyzPD for passive rotation and double primary type
- *   - EulerAnglesXyzPF for passive rotation and float primary type
+ *   - EulerAnglesXyzAD for active rotation and double primitive type
+ *   - EulerAnglesXyzAF for active rotation and float primitive type
+ *   - EulerAnglesXyzPD for passive rotation and double primitive type
+ *   - EulerAnglesXyzPF for passive rotation and float primitive type
  *   - EulerAnglesRpyAD = EulerAnglesXyzAD
  *   - EulerAnglesRpyAF = EulerAnglesXyzAF
  *   - EulerAnglesRpyPD = EulerAnglesXyzPD
@@ -705,7 +705,7 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage
    *  The implementation type is always an Eigen object.
    */
   typedef Base Implementation;
-  /*! \brief The primary type.
+  /*! \brief The primitive type.
    *  Float/Double
    */
   typedef PrimType_ Scalar;
@@ -943,26 +943,26 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage
   }
 };
 
-//! \brief Active euler angles rotation (X,Y',Z'' / roll,pitch,yaw) with double primary type
+//! \brief Active euler angles rotation (X,Y',Z'' / roll,pitch,yaw) with double primitive type
 typedef EulerAnglesXyz<double, RotationUsage::ACTIVE>  EulerAnglesXyzAD;
-//! \brief Active euler angles rotation (X,Y',Z'' / roll,pitch,yaw) with float primary type
+//! \brief Active euler angles rotation (X,Y',Z'' / roll,pitch,yaw) with float primitive type
 typedef EulerAnglesXyz<float,  RotationUsage::ACTIVE>  EulerAnglesXyzAF;
-//! \brief Passive euler angles rotation (X,Y',Z'' / roll,pitch,yaw) with double primary type
+//! \brief Passive euler angles rotation (X,Y',Z'' / roll,pitch,yaw) with double primitive type
 typedef EulerAnglesXyz<double, RotationUsage::PASSIVE> EulerAnglesXyzPD;
-//! \brief Passive euler angles rotation (X,Y',Z'' / roll,pitch,yaw) with float primary type
+//! \brief Passive euler angles rotation (X,Y',Z'' / roll,pitch,yaw) with float primitive type
 typedef EulerAnglesXyz<float,  RotationUsage::PASSIVE> EulerAnglesXyzPF;
 
 //! \brief Equivalent euler angles rotation (X,Y',Z'' / roll,pitch,yaw) class
 template <typename PrimType_, enum RotationUsage Usage_>
 using EulerAnglesRpy = EulerAnglesXyz<PrimType_, Usage_>;
 
-//! \brief Active euler angles rotation (X,Y',Z'' / roll,pitch,yaw) with double primary type
+//! \brief Active euler angles rotation (X,Y',Z'' / roll,pitch,yaw) with double primitive type
 typedef EulerAnglesRpy<double, RotationUsage::ACTIVE>  EulerAnglesRpyAD;
-//! \brief Active euler angles rotation (X,Y',Z'' / roll,pitch,yaw) with float primary type
+//! \brief Active euler angles rotation (X,Y',Z'' / roll,pitch,yaw) with float primitive type
 typedef EulerAnglesRpy<float,  RotationUsage::ACTIVE>  EulerAnglesRpyAF;
-//! \brief Passive euler angles rotation (X,Y',Z'' / roll,pitch,yaw) with double primary type
+//! \brief Passive euler angles rotation (X,Y',Z'' / roll,pitch,yaw) with double primitive type
 typedef EulerAnglesRpy<double, RotationUsage::PASSIVE> EulerAnglesRpyPD;
-//! \brief Passive euler angles rotation (X,Y',Z'' / roll,pitch,yaw) with float primary type
+//! \brief Passive euler angles rotation (X,Y',Z'' / roll,pitch,yaw) with float primitive type
 typedef EulerAnglesRpy<float,  RotationUsage::PASSIVE> EulerAnglesRpyPF;
 
 
@@ -970,13 +970,13 @@ typedef EulerAnglesRpy<float,  RotationUsage::PASSIVE> EulerAnglesRpyPF;
 /*! \brief Implementation of euler angles (Z,Y',X'' / yaw,pitch,roll) rotation based on Eigen::Matrix
  *  \ingroup rotations
  *  \class EulerAnglesZyx
- *  \tparam PrimType the primary type of the data (double or float)
+ *  \tparam PrimType the primitive type of the data (double or float)
  *  \tparam Usage_ the rotation usage which is either active or passive
  *  The following two typedefs are provided for convenience:
- *   - EulerAnglesZyxAD for active rotation and double primary type
- *   - EulerAnglesZyxAF for active rotation and float primary type
- *   - EulerAnglesZyxPD for passive rotation and double primary type
- *   - EulerAnglesZyxPF for passive rotation and float primary type
+ *   - EulerAnglesZyxAD for active rotation and double primitive type
+ *   - EulerAnglesZyxAF for active rotation and float primitive type
+ *   - EulerAnglesZyxPD for passive rotation and double primitive type
+ *   - EulerAnglesZyxPF for passive rotation and float primitive type
  *   - EulerAnglesYprAD = EulerAnglesZyxAD
  *   - EulerAnglesYprAF = EulerAnglesZyxAF
  *   - EulerAnglesYprPD = EulerAnglesZyxPD
@@ -993,7 +993,7 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
    *  The implementation type is always an Eigen object.
    */
   typedef Base Implementation;
-  /*! \brief The primary type.
+  /*! \brief The primitive type.
    *  Float/Double
    */
   typedef PrimType_ Scalar;
@@ -1231,26 +1231,26 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
   }
 };
 
-//! \brief Active euler angles rotation (Z,Y',X'' / yaw,pitch,roll) with double primary type
+//! \brief Active euler angles rotation (Z,Y',X'' / yaw,pitch,roll) with double primitive type
 typedef EulerAnglesZyx<double, RotationUsage::ACTIVE>  EulerAnglesZyxAD;
-//! \brief Active euler angles rotation (Z,Y',X'' / yaw,pitch,roll) with float primary type
+//! \brief Active euler angles rotation (Z,Y',X'' / yaw,pitch,roll) with float primitive type
 typedef EulerAnglesZyx<float,  RotationUsage::ACTIVE>  EulerAnglesZyxAF;
-//! \brief Passive euler angles rotation (Z,Y',X'' / yaw,pitch,roll) with double primary type
+//! \brief Passive euler angles rotation (Z,Y',X'' / yaw,pitch,roll) with double primitive type
 typedef EulerAnglesZyx<double, RotationUsage::PASSIVE> EulerAnglesZyxPD;
-//! \brief Passive euler angles rotation (Z,Y',X'' / yaw,pitch,roll) with float primary type
+//! \brief Passive euler angles rotation (Z,Y',X'' / yaw,pitch,roll) with float primitive type
 typedef EulerAnglesZyx<float,  RotationUsage::PASSIVE> EulerAnglesZyxPF;
 
 //! \brief Equivalent euler angles rotation (Z,Y',X'' / yaw,pitch,roll) class
 template <typename PrimType_, enum RotationUsage Usage_>
 using EulerAnglesYpr = EulerAnglesZyx<PrimType_, Usage_>;
 
-//! \brief Active euler angles rotation (Z,Y',X'' / yaw,pitch,roll) with double primary type
+//! \brief Active euler angles rotation (Z,Y',X'' / yaw,pitch,roll) with double primitive type
 typedef EulerAnglesYpr<double, RotationUsage::ACTIVE>  EulerAnglesYprAD;
-//! \brief Active euler angles rotation (Z,Y',X'' / yaw,pitch,roll) with float primary type
+//! \brief Active euler angles rotation (Z,Y',X'' / yaw,pitch,roll) with float primitive type
 typedef EulerAnglesYpr<float,  RotationUsage::ACTIVE>  EulerAnglesYprAF;
-//! \brief Passive euler angles rotation (Z,Y',X'' / yaw,pitch,roll) with double primary type
+//! \brief Passive euler angles rotation (Z,Y',X'' / yaw,pitch,roll) with double primitive type
 typedef EulerAnglesYpr<double, RotationUsage::PASSIVE> EulerAnglesYprPD;
-//! \brief Passive euler angles rotation (Z,Y',X'' / yaw,pitch,roll) with float primary type
+//! \brief Passive euler angles rotation (Z,Y',X'' / yaw,pitch,roll) with float primitive type
 typedef EulerAnglesYpr<float,  RotationUsage::PASSIVE> EulerAnglesYprPF;
 
 

@@ -40,9 +40,12 @@ namespace positions {
 //! Implementation of rotations based on the C++ Eigen library
 namespace eigen_implementation {
 
-/*!
- * \brief Position
- * \class Position3
+/*! \class Position3
+ * \brief Position in 3D-space.
+ *
+ * This class implements a position in 3D-space.
+ * More precisely an interface to store and access the coordinates of a position of a point in 3D-space is provided.
+ * \tparam PrimType_  Primitive type of the coordinates.
  * \ingroup positions
  */
 template<typename PrimType_>
@@ -53,21 +56,26 @@ class Position3 : public Position3Base<Position3<PrimType_>>, private Eigen::Mat
   typedef Eigen::Matrix<PrimType_, 3, 1> Base;
  public:
   /*! \brief The implementation type.
+   *
    *  The implementation type is always an Eigen object.
    */
   typedef Base Implementation;
 
-  /*! \brief The primary type.
-   *  Float/Double
+  /*! \brief The primitive type of the coordinates.
    */
   typedef PrimType_ Scalar;
 
-  /*! \brief Default constructor initializes all coefficients with zero.
+  /*! \brief Default constructor initializes all coordinates of the position with zero.
    */
   Position3()
     : Base(Base::Zero()) {
   }
 
+  /*! Constructor with three coordinates (x,y,z)
+   * \param x   x-coordinate
+   * \param y   y-coordinate
+   * \param z   z-coordinate
+   */
   Position3(const PrimType_& x, const PrimType_& y, const PrimType_& z)
     : Base(x, y, z) {
   }
@@ -94,32 +102,54 @@ class Position3 : public Position3Base<Position3<PrimType_>>, private Eigen::Mat
     return static_cast<const Implementation&>(*this);
   }
 
+  /*!\brief Get x-coordinate of the position
+   * \returns the x-coordinate of the position
+   */
   using Base::x;
+
+  /*!\brief Get y-coordinate of the position
+   * \returns the y-coordinate of the position
+   */
   using Base::y;
+
+  /*!\brief Get z-coordinate of the position
+   * \returns the z-coordinate of the position
+   */
   using Base::z;
 
+  /*! \brief Addition of two positions.
+   */
   using Position3Base<Position3<PrimType_>>::operator+; // otherwise ambiguous PositionBase and Eigen
+
+  /*! \brief Subtraction of two positions.
+   */
   using Position3Base<Position3<PrimType_>>::operator-; // otherwise ambiguous PositionBase and Eigen
 
-
-  template<typename OTHER>
-  Position3<PrimType_>& operator +=(const OTHER& other) {
+  /*! \brief Addition of two positions.
+   * \param other   other position
+   */
+  template<typename Other_>
+  Position3<PrimType_>& operator +=(const Other_& other) {
     this->toImplementation() += other.toImplementation();
     return *this;
   }
 
-  template<typename OTHER>
-  Position3<PrimType_>& operator -=(const OTHER& other) {
+  /*! \brief Subtraction of two positions.
+   * \param other   other position
+   */
+  template<typename Other_>
+  Position3<PrimType_>& operator -=(const Other_& other) {
     this->toImplementation() -= other.toImplementation();
     return *this;
   }
 
+  /*! \brief Sets all coordinates of the position to zero.
+   * \returns reference
+   */
   Position3<PrimType_>& setZero() {
     Base::setZero();
     return *this;
   }
-
-
 
   /*! \brief Used for printing the object with std::cout.
    *  \returns std::stream object
@@ -131,16 +161,18 @@ class Position3 : public Position3Base<Position3<PrimType_>>, private Eigen::Mat
 };
 
 
-//! \brief 3D-Position with double primary type
+//! \brief 3D-Position with primitive type double
 typedef Position3<double>  Position3D;
 
-//! \brief 3D-Position with float primary type
+//! \brief 3D-Position with primitive type float
 typedef Position3<float>  Position3F;
 
 } // namespace eigen_implementation
 
 namespace internal {
 
+/*! \brief Gets the primitive type of the coordinates
+ */
 template<typename PrimType_>
 class get_scalar<eigen_implementation::Position3<PrimType_>>{
  public:
@@ -148,15 +180,6 @@ class get_scalar<eigen_implementation::Position3<PrimType_>>{
 };
 
 
-//template<typename PrimType_>
-//class AdditionTraits<PositionBase<eigen_implementation::Position3<PrimType_>>, PositionBase<eigen_implementation::Position3<PrimType_>>> {
-// public:
-//  inline static eigen_implementation::Position3<PrimType_> add(const eigen_implementation::Position3<PrimType_>& a, const eigen_implementation::Position3<PrimType_>& b) {
-//    return eigen_implementation::Position3<PrimType_(
-//                                                                   a.toImplementation()*
-//                                                                   b.toImplementation());
-//  }
-//};
 
 } // namespace internal
 } // namespace positions
