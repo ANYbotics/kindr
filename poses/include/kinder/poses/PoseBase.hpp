@@ -53,7 +53,7 @@ class TransformationTraits {
 };
 
 /*! \class get_position
- * \brief This class provides the type of the position
+ * \brief This class provides the type of the position.
  *
  *  (only for advanced users)
  */
@@ -67,18 +67,22 @@ class get_position {
 
 
 
-/*! \ingroup poses
- * \class PoseBase
- * \brief Base class that defines the interface of a pose
+/*! \class PoseBase
+ * \brief Base class that defines the interface of a pose of a rigid body.
  *
- * \tparam Derived_ the derived class that should implement the pose
+ *  This class defines the interface of a pose of a rigid body.
+ *  A pose of a rigid body describes the position and orientation of the rigid body in space.
+ *  The position and orientation are described by position coordinates and a rotation, respectively.
+ * \tparam Derived_ the derived class that should implement the pose.
+ * \ingroup poses
  */
 template<typename Derived_>
 class PoseBase {
  public:
-  /*! \brief Standard constructor.
-    *  Creates an empty generic pose object
-    */
+  /*! \brief Default constructor.
+   *
+   *  Creates a pose with all position coordinates set to zero and an identity orientation.
+   */
   PoseBase() = default;
 
   /*! \brief Constructor from derived pose.
@@ -87,6 +91,7 @@ class PoseBase {
   PoseBase(const Derived_&) = delete; // on purpose!!
 
   /*! \brief Gets the derived pose.
+   *
    *  (only for advanced users)
    *  \returns the derived pose
    */
@@ -95,6 +100,7 @@ class PoseBase {
   }
 
   /*! \brief Gets the derived pose.
+   *
    *  (only for advanced users)
    *  \returns the derived pose
    */
@@ -103,6 +109,7 @@ class PoseBase {
   }
 
   /*! \brief Gets the derived pose.
+   *
    *  (only for advanced users)
    *  \returns the derived pose
    */
@@ -111,7 +118,7 @@ class PoseBase {
   }
 
 
-  /*! \brief Transforms a position
+  /*! \brief Transforms a position.
    *  \returns the transformed position
    */
   typename internal::get_position<Derived_>::Position transform(typename internal::get_position<Derived_>::Position& position) const {
@@ -128,20 +135,20 @@ class PoseBase {
 
 };
 
-/*! \ingroup poses
- * \class HomogeneousTransformationBase
+/*! \class HomogeneousTransformationBase
  * \brief Base class that defines the interface of a homogeneous transformation
  *
  * \tparam Derived_ the derived class that should implement the homogeneous transformation
+ * \ingroup poses
  */
 template<typename Derived_>
 class HomogeneousTransformationBase : public PoseBase<Derived_> {
  public:
 
-  template<typename OtherDerived_>
-  HomogeneousTransformationBase& operator =(const HomogeneousTransformationBase<OtherDerived_>& other) {
-    return *this;
-  }
+//  template<typename OtherDerived_>
+//  HomogeneousTransformationBase& operator =(const HomogeneousTransformationBase<OtherDerived_>& other) {
+//    return *this;
+//  }
 
 };
 

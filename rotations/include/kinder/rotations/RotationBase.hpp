@@ -305,9 +305,7 @@ template<typename Implementation, enum RotationUsage Usage_>
 class AngleAxisBase : public RotationBase<Implementation, Usage_> {
 
   template<typename OtherDerived_> // todo: necessary?
-  AngleAxisBase& operator =(const RotationBase<OtherDerived_, Usage_>& other) {
-    return *this;
-  }
+  AngleAxisBase& operator =(const RotationBase<OtherDerived_, Usage_>& other);
 };
 
 /*! \brief Representation of a generic quaternion rotation
@@ -321,9 +319,7 @@ template<typename Implementation, enum RotationUsage Usage_>
 class RotationQuaternionBase : public RotationBase<Implementation, Usage_> {
 
   template<typename OtherDerived_>
-  RotationQuaternionBase& operator =(const RotationBase<OtherDerived_, Usage_>& other) {
-    return *this;
-  }
+  RotationQuaternionBase& operator =(const RotationBase<OtherDerived_, Usage_>& other);
 };
 
 /*! \brief Representation of a generic matrix rotation
@@ -337,9 +333,8 @@ template<typename Implementation, enum RotationUsage Usage_>
 class RotationMatrixBase : public RotationBase<Implementation, Usage_> {
 
   template<typename OtherDerived_>
-  RotationMatrixBase& operator =(const RotationBase<OtherDerived_, Usage_>& other) {
-    return *this;
-  }
+  RotationMatrixBase& operator =(const RotationBase<OtherDerived_, Usage_>& other);
+
 };
 
 /*! \brief Representation of a generic euler angles rotation
@@ -365,9 +360,8 @@ template<typename Implementation, enum RotationUsage Usage_>
 class EulerAnglesXyzBase : public EulerAnglesBase<Implementation, Usage_> {
 
   template<typename OtherDerived_>
-  EulerAnglesXyzBase& operator =(const RotationBase<OtherDerived_, Usage_>& other) {
-    return *this;
-  }
+  EulerAnglesXyzBase& operator =(const RotationBase<OtherDerived_, Usage_>& other);
+
 };
 
 /*! \brief Representation of a generic euler angles zyx rotation
@@ -381,9 +375,8 @@ template<typename Implementation, enum RotationUsage Usage_>
 class EulerAnglesZyxBase : public EulerAnglesBase<Implementation, Usage_> {
 
   template<typename OtherDerived_>
-  EulerAnglesZyxBase& operator =(const RotationBase<OtherDerived_, Usage_>& other) {
-    return *this;
-  }
+  EulerAnglesZyxBase& operator =(const RotationBase<OtherDerived_, Usage_>& other);
+
 };
 
 

@@ -16,8 +16,8 @@ The class kinder::rotations::RotationBase serves as an interface for a rotation 
 \subsubsection rotations_interfaces_rotation_ap Active vs. Passive
 A rotation can be either active (alibi) or passive (alias).
 The class is therefore templated by the enumeration kinder::rotations::RotationUsage which indicates the usage type of a rotation:
-- RotationUsage::ACTIVE (alias)
-- RotationUsage::PASSIVE (alibi)
+- RotationUsage::ACTIVE:  maps the coordinates of the basis vectors of frame A expressed in A into the coordinates of the basis vectors of B expressed in A 
+- RotationUsage::PASSIVE: maps the coordinates of the basis vectors of frame A expressed in A into the coordinates of the basis vectors of A expressed in B 
 
 The usage type of a rotation can be identified by the typedef \ref kinder::rotations::RotationBase::Usage "RotationBase::Usage".
 
