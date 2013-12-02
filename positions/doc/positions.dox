@@ -86,11 +86,14 @@ z = position1.z();
 Eigen::Vector3d vector = position1.toImplementation();	// [x;y;z]
 \endcode
 
-Calculations with positions:
+Operations with positions:
 \code{.cpp}
-  pos::Position3D position4 = position1 + position2;
-  pos::Position3D position3 -= position1;
+  pos::Position3D position4 = position1 + position2;	// addition
+  pos::Position3D position3 -= position1;		// subtraction
+  std::cout << "Position 3 is: " << position3;		// print position
 \endcode
+
+
 <br/>
 <br/>
 <br/>

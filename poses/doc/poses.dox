@@ -5,6 +5,38 @@
  
  /*! \page page_poses Poses
 
+This library defines an \ref poses_interface "interface" for a pose (position and orientation) of a rigid body or a (displacement) frame to enable different representations of a pose (homogeneous transformation, screw motion, etc.) and different \ref poses_implementations "implementations" (based on Eigen, Bullet, etc.). 
+The section \ref poses_interface "Interface" describes the functionalities, whereas the section \ref poses_implementations "Implementation" shows some examples.
+
+\tableofcontents
+
+\section poses_interface Interface
+The class kinder::poses::PoseBase serves as an interface for a pose of a rigid body, i.e. the position and orientation of a rigid body. All types of representations of a pose, such as homogeneous transformations and screw motions, are derived from this base class.
+
+
+
+
+\section poses_implementations Implementations
+Each implementation lies in its own namespace, such that the implementation can be altered later very easily via namespace alias.
+For example: 
+\code{.cpp}
+namespace pos = kinder::poses::eigen_implementation; // select implementation based on Eigen
+pos::Position3D position();		     // create 3D-Position
+\endcode
+If the implementation needs to be changed, only one line of code has to be altered:
+\code{.cpp}
+namespace pos = kinder::poses::bullet_implementation; // select implementation based on bullet	
+\endcode
+\subsection poses_eigen Eigen
+The library comes along with an implementation based on the <a href="http://eigen.tuxfamily.org">C++ Eigen library</a>.
+
+All types can be included by
+\code{.cpp}
+#include <kinder/poses/PoseEigen.hpp>
+\endcode
+and lie within the namespace kinder::poses::eigen_implementation.
+
+
 
 <br/>
 <br/>
