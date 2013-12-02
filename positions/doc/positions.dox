@@ -5,7 +5,92 @@
  
  /*! \page page_positions Positions
 
+This library defines an \ref positions_interface "interface" for a position of a point to enable different representations of a position (3D-vector, homogeneous coordinates, etc.) and different \ref positions_implementations "implementations" (based on Eigen, Bullet, etc.). 
+The section \ref positions_interface "Interface" describes the functionalities, whereas the section \ref positions_implementations "Implementation" shows some examples.
 
+\tableofcontents
+
+\section positions_interface Interface
+The class kinder::positions::PositionBase serves as an interface for a position of a point. All types of representations of a position, such as 3D-vector and homogeneous coordinate, are derived from this base class.
+
+\subsection positions_zero Zero Coordinates
+The default constructor always initializes all coordinates equal to zero.
+
+All coordinates can be set to zero by the funtion \ref kinder::positions::PositionBase::setZero() "setZero()".
+
+\subsection positions_addition Addition
+
+
+
+\subsection positions_subtraction Subtraction
+
+
+\subsection positions_interfaces_representations Representations of a Position
+The following representations are currently provided by the library:
+
+\subsubsection positions_interfaces_position3 3D-Position
+The class kinder::positions::Position3Base defines an interface for a 3D-vector representation of a position in 3D-Space.
+The position of point P expressed in frame A can be stated as:
+
+\f$\boxed{_A\mathbf{r}_{A\,P} = \begin{bmatrix} x \\ y \\ z \end{bmatrix}}\f$
+
+The three coordinates x, y and z are stored and can accessed by
+   
+ - \ref kinder::positions::Position3Base::x() "x()"
+ - \ref kinder::positions::Position3Base::y() "y()"
+ - \ref kinder::positions::Position3Base::z() "z()"
+
+
+\section positions_implementations Implementations
+Each implementation lies in its own namespace, such that the implementation can be altered later very easily via namespace alias.
+For example: 
+\code{.cpp}
+namespace pos = kinder::positions::eigen_implementation; // select implementation based on Eigen
+pos::Position3D position();		     // create 3D-Position
+\endcode
+If the implementation needs to be changed, only one line of code has to be altered:
+\code{.cpp}
+namespace pos = kinder::positions::bullet_implementation; // select implementation based on bullet	
+\endcode
+\subsection positions_eigen Eigen
+The library comes along with an implementation based on the <a href="http://eigen.tuxfamily.org">C++ Eigen library</a>.
+
+All types can be included by
+\code{.cpp}
+#include <kinder/positions/PositionEigen.hpp>
+\endcode
+and lie within the namespace kinder::positions::eigen_implementation.
+
+\subsubsection positions_implementation_positin3 3D-Position
+The class \ref kinder::positions::eigen_implementation::Position3 "Position3" stores the three coordinates of the position in 3D-space in Eigen::Matrix<PrimType, 3, 1>.
+
+The following four typedefs are provided for convenience:
+ - \ref kinder::positions::eigen_implementation::Position3D "Position3D" for primitive type double
+ - \ref kinder::positions::eigen_implementation::Position3F "Position3F" for primitive type float
+
+A position can be created as follows:
+\code{.cpp}
+double x = 1.0;
+double y = 2.0;
+double z = 3.0;
+pos::Position3D position1();		     		// creates a 3D-Position with all coordinates equal to zero
+pos::Position3D position2(x, y, z);	     		// initializes the three coordinates
+pos::Position3D position3(Eigen::Vector3d(x, y, z)); 	// creates a position from an Eigen vector
+\endcode
+
+The coordinates can be obtained as follows:
+\code{.cpp}
+x = position1.x();
+y = position1.y();
+z = position1.z();
+Eigen::Vector3d vector = position1.toImplementation();	// [x;y;z]
+\endcode
+
+Calculations with positions:
+\code{.cpp}
+  pos::Position3D position4 = position1 + position2;
+  pos::Position3D position3 -= position1;
+\endcode
 <br/>
 <br/>
 <br/>
