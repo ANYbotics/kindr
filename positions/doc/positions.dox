@@ -16,7 +16,7 @@ The class kinder::positions::PositionBase serves as an interface for a position 
 \subsection positions_zero Zero Coordinates
 The default constructor always initializes all coordinates equal to zero.
 
-All coordinates can be set to zero by the funtion \ref kinder::positions::PositionBase::setZero() "setZero()".
+All coordinates can be set to zero by the function \ref kinder::positions::PositionBase::setZero() "setZero()".
 
 \subsection positions_addition Addition
 
@@ -34,7 +34,7 @@ The position of point P expressed in frame A can be stated as:
 
 \f$\boxed{_A\mathbf{r}_{A\,P} = \begin{bmatrix} x \\ y \\ z \end{bmatrix}}\f$
 
-The three coordinates x, y and z are stored and can accessed by
+The three coordinates x, y and z are stored and can be accessed by
    
  - \ref kinder::positions::Position3Base::x() "x()"
  - \ref kinder::positions::Position3Base::y() "y()"

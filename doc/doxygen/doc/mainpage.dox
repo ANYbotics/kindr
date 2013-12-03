@@ -96,9 +96,14 @@ See \ref chapters "Chapters" to learn how to use this library.
 \page chapters Chapters
 
  - \subpage page_quaternions 
+ 
+ \section position_orientation Positions and Orientations
  - \subpage page_rotations 
  - \subpage page_positions
  - \subpage page_poses
+ 
+ \section velocities Linear and Angular Velocities
+  - \subpage page_linearvelocities
 
 */
 
