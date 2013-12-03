@@ -26,8 +26,8 @@
  *
 */
 
-#ifndef KINDER_ANGULARVELOCITIES_ANGULARVELOCITYBASE_HPP_
-#define KINDER_ANGULARVELOCITIES_ANGULARVELOCITYBASE_HPP_
+#ifndef KINDER_ROTATIONS_RDIFFBASE_HPP_
+#define KINDER_ROTATIONS_RDIFFBASE_HPP_
 
 
 #include "kinder/common/common.hpp"
@@ -59,7 +59,7 @@ class get_scalar {
 
 } // namespace internal
 
-/*! \class AngularVelocityBase
+/*! \class RDiffBase
  * \brief Interface for an angular velocity.
  *
  * This class defines the generic interface for an angular velocity.
@@ -69,77 +69,77 @@ class get_scalar {
  *
  */
 template<typename Derived_>
-class AngularVelocityBase {
+class RDiffBase {
  public:
   /*! \brief Default constructor.
    *
-    *  Creates an angular velocity with zero coefficients.
+    *  Creates a time derivative of a rotation with zero coefficients.
     */
-  AngularVelocityBase() = default;
+  RDiffBase() = default;
 
-  /*! \brief Constructor from derived angular velocity.
+  /*! \brief Constructor from derived time derivative of a rotation.
    *
    *  This constructor has been deleted because the abstract class does not contain any data.
    */
-  AngularVelocityBase(const Derived_&) = delete; // on purpose!!
+  RDiffBase(const Derived_&) = delete; // on purpose!!
 
-  /*! \brief Gets the derived angular velocity.
+  /*! \brief Gets the derived time derivative of a rotation.
    *  (only for advanced users)
-   *  \returns the derived angular velocity
+   *  \returns the derived time derivative of a rotation
    */
   operator Derived_& () {
     return static_cast<Derived_&>(*this);
   }
 
-  /*! \brief Gets the derived angular velocity.
+  /*! \brief Gets the derived time derivative of a rotation.
    *  (only for advanced users)
-   *  \returns the derived angular velocity
+   *  \returns the derived time derivative of a rotation
    */
   operator const Derived_& () const {
     return static_cast<const Derived_&>(*this);
   }
 
-  /*! \brief Gets the derived angular velocity.
+  /*! \brief Gets the derived time derivative of a rotation.
    *  (only for advanced users)
-   *  \returns the derived angular velocity
+   *  \returns the derived time derivative of a rotation
    */
   const Derived_& derived() const {
     return static_cast<const Derived_&>(*this);
   }
 
 
-  /*! \brief Sets the angular velocity to zero.
+  /*! \brief Sets the time derivative of a rotation to zero.
    *  \returns reference
    */
   Derived_& setZero();
 
-  /*! \brief Addition of two angular velocities.
-   *  \returns sum of the two angular velocities.
+  /*! \brief Addition of two time derivatives.
+   *  \returns sum of the two time derivatives.
    */
   template<typename OtherDerived_>
-  Derived_ operator +(const AngularVelocityBase<OtherDerived_>& other) const {
-    return internal::RDiffAdditionTraits<AngularVelocityBase<Derived_>>::add(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
+  Derived_ operator +(const RDiffBase<OtherDerived_>& other) const {
+    return internal::RDiffAdditionTraits<RDiffBase<Derived_>>::add(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
   }
 
-  /*! \brief Subtraction of two Angular velocities.
-   *  \returns result of the subtraction of the two Angular velocities.
+  /*! \brief Subtraction of two time derivatives.
+   *  \returns result of the subtraction of the two time derivatives.
    */
   template<typename OtherDerived_>
-  Derived_ operator -(const AngularVelocityBase<OtherDerived_>& other) const {
-    return internal::RDiffAdditionTraits<AngularVelocityBase<Derived_>>::subtract(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
+  Derived_ operator -(const RDiffBase<OtherDerived_>& other) const {
+    return internal::RDiffAdditionTraits<RDiffBase<Derived_>>::subtract(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
   }
 
   /*! \brief Addition and assignment.
-   *  \returns sum of the two angular velocities.
+   *  \returns sum of the two time derivatives.
    */
   template<typename OtherDerived_>
-  Derived_& operator +=(const AngularVelocityBase<OtherDerived_>& other);
+  Derived_& operator +=(const RDiffBase<OtherDerived_>& other);
 
   /*! \brief Subtraction and assignment.
-   *  \returns result of the subtraction of the two angular velocities.
+   *  \returns result of the subtraction of the two time derivatives.
    */
   template<typename OtherDerived_>
-  Derived_& operator -=(const AngularVelocityBase<OtherDerived_>& other);
+  Derived_& operator -=(const RDiffBase<OtherDerived_>& other);
 
 };
 
@@ -151,10 +151,10 @@ class AngularVelocityBase {
 
  * \tparam Derived_ the derived class that should implement the angular velocity.
  *
- *  \ingroup angularvelocities
+ *  \ingroup rotations
  */
 template<typename Derived_>
-class AngularVelocity3Base : public AngularVelocityBase<Derived_> {
+class AngularVelocity3Base : public RDiffBase<Derived_> {
  public:
   /*! \brief The primitive type of an angular velocity.
    */
@@ -190,20 +190,20 @@ class AngularVelocity3Base : public AngularVelocityBase<Derived_> {
 namespace internal {
 
 template<typename LeftAndRight_>
-class RDiffAdditionTraits<AngularVelocityBase<LeftAndRight_>> {
+class RDiffAdditionTraits<RDiffBase<LeftAndRight_>> {
  public:
   /*! \returns the sum of two angular velocities
    * \param lhs left-hand side
    * \param rhs right-hand side
    */
-  inline static LeftAndRight_ add(const AngularVelocityBase<LeftAndRight_>& lhs, const AngularVelocityBase<LeftAndRight_>& rhs) {
+  inline static LeftAndRight_ add(const RDiffBase<LeftAndRight_>& lhs, const RDiffBase<LeftAndRight_>& rhs) {
     return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() + rhs.derived().toImplementation()));
   }
   /*! \returns the subtraction of two angular velocities
    * \param lhs left-hand side
    * \param rhs right-hand side
    */
-  inline static LeftAndRight_ subtract(const AngularVelocityBase<LeftAndRight_>& lhs, const AngularVelocityBase<LeftAndRight_>& rhs) {
+  inline static LeftAndRight_ subtract(const RDiffBase<LeftAndRight_>& lhs, const RDiffBase<LeftAndRight_>& rhs) {
     return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() - rhs.derived().toImplementation()));
   }
 };
@@ -216,4 +216,4 @@ class RDiffAdditionTraits<AngularVelocityBase<LeftAndRight_>> {
 
 
 
-#endif /* ANGULARVELOCITYBASE_HPP_ */
+#endif /* KINDER_ROTATIONS_RDIFFBASE_HPP_ */

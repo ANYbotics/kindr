@@ -1,6 +1,7 @@
 /**
  * \defgroup rotations Rotations
  *  \see \ref page_rotations "Chapter Rotations" 
+ *  \see \ref page_rdiff "Chapter Time Derivatives of Rotations" 
  */
  
  //-----------------------------------------------------------

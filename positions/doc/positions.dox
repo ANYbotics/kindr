@@ -1,6 +1,7 @@
 /**
  * \defgroup positions Positions
  *  \see \ref page_positions "Chapter Positions" 
+ *  \see \ref page_pdiff "Chapter Time Derivatives of Positions" 
  */
  
  /*! \page page_positions Positions
