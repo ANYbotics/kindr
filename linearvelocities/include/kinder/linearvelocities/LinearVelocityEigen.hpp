@@ -43,10 +43,10 @@ namespace linearvelocities {
 namespace eigen_implementation {
 
 /*! \class LinearVelocity3
- * \brief Position in 3D-space.
+ * \brief Linear velocity in 3D-space.
  *
- * This class implements a position in 3D-space.
- * More precisely an interface to store and access the coordinates of a position of a point in 3D-space is provided.
+ * This class implements a lienar velocity in 3D-space.
+ * More precisely an interface to store and access the components of a linear velocity of a point in 3D-space is provided.
  * \tparam PrimType_  Primitive type of the coordinates.
  * \ingroup linearvelocities
  */
@@ -67,7 +67,7 @@ class LinearVelocity3 : public LinearVelocity3Base<LinearVelocity3<PrimType_>>, 
    */
   typedef PrimType_ Scalar;
 
-  /*! \brief Default constructor initializes all coordinates of the position with zero.
+  /*! \brief Default constructor initializes the linear velocity with zero.
    */
   LinearVelocity3()
     : Base(Base::Zero()) {
@@ -104,31 +104,31 @@ class LinearVelocity3 : public LinearVelocity3Base<LinearVelocity3<PrimType_>>, 
     return static_cast<const Implementation&>(*this);
   }
 
-  /*!\brief Get x-coordinate of the position
-   * \returns the x-coordinate of the position
+  /*!\brief Get x-coordinate of the linear velocity
+   * \returns the x-coordinate of the linear velocity
    */
   using Base::x;
 
-  /*!\brief Get y-coordinate of the position
-   * \returns the y-coordinate of the position
+  /*!\brief Get y-coordinate of the linear velocity
+   * \returns the y-coordinate of the linear velocity
    */
   using Base::y;
 
-  /*!\brief Get z-coordinate of the position
-   * \returns the z-coordinate of the position
+  /*!\brief Get z-coordinate of the linear velocity
+   * \returns the z-coordinate of the linear velocity
    */
   using Base::z;
 
-  /*! \brief Addition of two linearvelocities.
+  /*! \brief Addition of two linear velocities.
    */
   using LinearVelocity3Base<LinearVelocity3<PrimType_>>::operator+; // otherwise ambiguous PositionBase and Eigen
 
-  /*! \brief Subtraction of two linearvelocities.
+  /*! \brief Subtraction of two linear velocities.
    */
   using LinearVelocity3Base<LinearVelocity3<PrimType_>>::operator-; // otherwise ambiguous PositionBase and Eigen
 
-  /*! \brief Addition of two linearvelocities.
-   * \param other   other position
+  /*! \brief Addition of two linear velocities.
+   * \param other   other linear velocity
    */
   template<typename Other_>
   LinearVelocity3<PrimType_>& operator +=(const Other_& other) {
@@ -136,8 +136,8 @@ class LinearVelocity3 : public LinearVelocity3Base<LinearVelocity3<PrimType_>>, 
     return *this;
   }
 
-  /*! \brief Subtraction of two linearvelocities.
-   * \param other   other position
+  /*! \brief Subtraction of two linear velocities.
+   * \param other   other linear velocity
    */
   template<typename Other_>
   LinearVelocity3<PrimType_>& operator -=(const Other_& other) {
@@ -145,7 +145,7 @@ class LinearVelocity3 : public LinearVelocity3Base<LinearVelocity3<PrimType_>>, 
     return *this;
   }
 
-  /*! \brief Sets all coordinates of the position to zero.
+  /*! \brief Sets all components of the velocity to zero.
    * \returns reference
    */
   LinearVelocity3<PrimType_>& setZero() {
@@ -156,17 +156,17 @@ class LinearVelocity3 : public LinearVelocity3Base<LinearVelocity3<PrimType_>>, 
   /*! \brief Used for printing the object with std::cout.
    *  \returns std::stream object
    */
-  friend std::ostream& operator << (std::ostream& out, const LinearVelocity3& position) {
-    out << position.transpose();
+  friend std::ostream& operator << (std::ostream& out, const LinearVelocity3& velocity) {
+    out << velocity.transpose();
     return out;
   }
 };
 
 
-//! \brief 3D-Position with primitive type double
+//! \brief Linear velocity in 3D space with primitive type double
 typedef LinearVelocity3<double>  LinearVelocity3D;
 
-//! \brief 3D-Position with primitive type float
+//! \brief Linear velocity in 3D space with primitive type float
 typedef LinearVelocity3<float>  LinearVelocity3F;
 
 } // namespace eigen_implementation

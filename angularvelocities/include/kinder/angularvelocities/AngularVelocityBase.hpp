@@ -52,7 +52,7 @@ class AdditionTraits {
 };
 
 /*! \class get_scalar
- *  \brief Gets the primitive of the position.
+ *  \brief Gets the primitive of the angular velocity.
  */
 template<typename Position_>
 class get_scalar {
