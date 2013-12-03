@@ -1,0 +1,113 @@
+/**
+ * \defgroup angularvelocities Angular Velocities
+ *  \see \ref page_angularvelocities "Chapter Angular Velocities" 
+ */
+ 
+ /*! \page page_angularvelocities Angular Velocities
+
+This library defines an \ref angularvelocities_interface "interface" for an angular velocity of a rigid body to enable different representations of a velocity (3D-vector, derivatives of Euler angles, derivative of quaternion, etc.) and different \ref angularvelocities_implementations "implementations" (based on Eigen, Bullet, etc.). 
+The section \ref angularvelocities_interface "Interface" describes the functionalities, whereas the section \ref angularvelocities_implementations "Implementation" shows some examples.
+
+\tableofcontents
+
+\section angularvelocities_interface Interface
+The class kinder::angularvelocities::AngularVelocityBase serves as an interface for a velocity of a point. All types of representations of a velocity, such as 3D-vector and homogeneous coordinate, are derived from this base class.
+
+\subsection angularvelocities_zero Zero Velocity
+The default constructor always initializes all velocities equal to zero.
+
+All velocities can be set to zero by the function \ref kinder::angularvelocities::AngularVelocityBase::setZero() "setZero()".
+
+\subsection angularvelocities_addition_and_subtraction Addition and Subtraction
+Addition and subtraction of linear velocities are provided by the kinder::angularvelocities::AngularVelocityBase::operator+ and kinder::angularvelocities::AngularVelocityBase::operator-, respectively.
+
+
+
+\subsection angularvelocities_interfaces_representations Representations of a Angular Velocity
+The following representations are currently provided by the library:
+
+\subsubsection angularvelocities_interfaces_velocity3 3-dimensional Angular Velocity
+The class kinder::angularvelocities::AngularVelocity3Base defines an interface for a 3D-vector representation of a linear velocity in 3D-Space.
+The linear velocity of point P expressed in frame A can be stated as:
+
+\f$\boxed{_A\mathbf{v}_{P} = \begin{bmatrix} v_x \\ v_y \\ v_z \end{bmatrix}}\f$
+
+The three components, x, y and z, are stored and can be accessed by
+   
+ - \ref kinder::angularvelocities::AngularVelocity3Base::x() "x()"
+ - \ref kinder::angularvelocities::AngularVelocity3Base::y() "y()"
+ - \ref kinder::angularvelocities::AngularVelocity3Base::z() "z()"
+
+
+\section angularvelocities_implementations Implementations
+Each implementation lies in its own namespace, such that the implementation can be altered later very easily via namespace alias.
+For example: 
+\code{.cpp}
+namespace vel = kinder::angularvelocities::eigen_implementation; // select implementation based on Eigen
+vel::AngularVelocity3D velocity();		     // create 3D-Velocity
+\endcode
+If the implementation needs to be changed, only one line of code has to be altered:
+\code{.cpp}
+namespace vel = kinder::angularvelocities::bullet_implementation; // select implementation based on bullet	
+\endcode
+\subsection angularvelocities_eigen Eigen
+The library comes along with an implementation based on the <a href="http://eigen.tuxfamily.org">C++ Eigen library</a>.
+
+All types can be included by
+\code{.cpp}
+#include <kinder/angularvelocities/AngularVelocityEigen.hpp>
+\endcode
+and lie within the namespace kinder::angularvelocities::eigen_implementation.
+
+\subsubsection angularvelocities_implementation_linearvelocity3 3D Angular Velocity
+The class \ref kinder::angularvelocities::eigen_implementation::Velocity3 "Velocity3" stores the three coordinates of the velocity in 3D-space in Eigen::Matrix<PrimType, 3, 1>.
+
+The following four typedefs are provided for convenience:
+ - \ref kinder::angularvelocities::eigen_implementation::AngularVelocity3D "AngularVelocity3D" for primitive type double
+ - \ref kinder::angularvelocities::eigen_implementation::AngularVelocity3F "AngularVelocity3F" for primitive type float
+
+A velocity can be created as follows:
+\code{.cpp}
+double x = 1.0;
+double y = 2.0;
+double z = 3.0;
+vel::AngularVelocity3D velocity1();		     		// creates a 3D-Velocity with all coordinates equal to zero
+vel::AngularVelocity3D velocity2(x, y, z);	     		// initializes the three coordinates
+vel::AngularVelocity3D velocity3(Eigen::Vector3d(x, y, z)); 	// creates a velocity from an Eigen vector
+\endcode
+
+The coordinates can be obtained as follows:
+\code{.cpp}
+x = velocity1.x();
+y = velocity1.y();
+z = velocity1.z();
+Eigen::Vector3d vector = velocity1.toImplementation();	// [x;y;z]
+\endcode
+
+Operations with angularvelocities:
+\code{.cpp}
+  vel::AngularVelocity3D velocity4 = velocity1 + velocity2;	// addition
+  vel::AngularVelocity3D velocity3 -= velocity1;		// subtraction
+  std::cout << "Velocity 3 is: " << velocity3;		// print velocity
+\endcode
+
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+
+
+*/

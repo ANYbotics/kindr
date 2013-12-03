@@ -26,58 +26,45 @@
 # Project configuration
 cmake_minimum_required (VERSION 2.8)
 
-project(kinder)
-
-
-# Set Build Type
-#   * None (CMAKE_C_FLAGS or CMAKE_CXX_FLAGS used)
-#   * Debug (CMAKE_C_FLAGS_DEBUG or CMAKE_CXX_FLAGS_DEBUG)
-#   * Release (CMAKE_C_FLAGS_RELEASE or CMAKE_CXX_FLAGS_RELEASE)
-#   * RelWithDebInfo (CMAKE_C_FLAGS_RELWITHDEBINFO or CMAKE_CXX_FLAGS_RELWITHDEBINFO
-#   * MinSizeRel (CMAKE_C_FLAGS_MINSIZEREL or CMAKE_CXX_FLAGS_MINSIZEREL) 
-set(CMAKE_BUILD_TYPE Debug)
-
 add_definitions(-std=c++0x)
-SET(CMAKE_BUILD_TYPE Debug)
+
+# Set the build type.  Options are:
+#  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
+#  Debug          : w/ debug symbols, w/o optimization
+#  Release        : w/o debug symbols, w/ optimization
+#  RelWithDebInfo : w/ debug symbols, w/ optimization
+#  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
+set(ROS_BUILD_TYPE Debug)
 
 
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/gtest/")
-	message(STATUS "Building GTests!")
-	option(BUILD_GTEST "build gtest" ON)
-	add_subdirectory(gtest gtest)
-	enable_testing()
+find_package(Eigen REQUIRED)
+
+include_directories(${EIGEN_INCLUDE_DIRS})
+include_directories(include)
+include_directories(../common/include)
+
+
+if (BUILD_GTEST)
+################################
+# Unit Tests
+################################
+################################
+# GTest
+################################
+
+include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+include_directories(test)
+
+include_directories(
+)
+set(TEST_SRCS
+	test/test_main.cpp
+	test/AngularVelocityEigenTest.cpp
+)
+
+# Add test cpp file
+add_executable( runUnitTestsAngularVelocities  ${TEST_SRCS})
+# Link test executable against gtest & gtest_main
+target_link_libraries(runUnitTestsAngularVelocities  gtest_main gtest pthread  ${PROJECT_NAME} )
+add_test( runUnitTestsAngularVelocities runUnitTestsAngularVelocities )
 endif()
-
-# Add CMake module path
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
-
-# Add common
-add_subdirectory(common)
-
-# Add linear algebra 
-add_subdirectory(linear_algebra)
-
-# Add quaternions
-add_subdirectory(quaternions)
-
-# Add rotations
-add_subdirectory(rotations)
-
-# Add positions
-add_subdirectory(positions)
-
-# Add poses
-add_subdirectory(poses)
-
-# Add Linear velocity
-add_subdirectory(linearvelocities)
-
-# Add Angular velocity
-add_subdirectory(angularvelocities)
-
-
-# Add Doxygen documentation
-add_subdirectory(doc/doxygen)
-
-ADD_CUSTOM_TARGET(demo DEPENDS demo_rotations)
-

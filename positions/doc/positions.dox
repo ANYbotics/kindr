@@ -18,11 +18,15 @@ The default constructor always initializes all coordinates equal to zero.
 
 All coordinates can be set to zero by the function \ref kinder::positions::PositionBase::setZero() "setZero()".
 
-\subsection positions_addition Addition
+\subsection positions_addition Addition and Subtraction
 
+Addition of two positions such as
 
+\f$\boxed{_A\mathbf{r}_{A\,Q} = _A\mathbf{r}_{A\,P} + _A\mathbf{r}_{P\,Q}}\f$
 
-\subsection positions_subtraction Subtraction
+is provided by the kinder::positions::PositionBase::operator+().
+
+Subtracting a position from another position is possible by using the kinder::positions::PositionBase::operator-().
 
 
 \subsection positions_interfaces_representations Representations of a Position
