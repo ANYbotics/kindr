@@ -97,14 +97,14 @@ See \ref chapters "Chapters" to learn how to use this library.
 
  - \subpage page_quaternions 
  
- \section position_orientation Positions and Orientations
+ \section position_orientation Positions and Rotations
   - \subpage page_positions
   - \subpage page_rotations 
   - \subpage page_poses
  
- \section velocities Linear and Angular Velocities
-  - \subpage page_linearvelocities
-  - \subpage page_angularvelocities
+ \section velocities Time Derivatives of Positions and Rotations
+  - \subpage page_pdiff
+  - \subpage page_rdiff
 
 
 */

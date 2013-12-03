@@ -33,19 +33,16 @@
 #include "kinder/common/common.hpp"
 
 namespace kinder {
-//! Generic angular velocity interface
-/*! \ingroup angularvelocities
- */
-namespace angularvelocities {
+namespace rotations {
 //! Internal stuff (only for developers)
 namespace internal {
 
 /*! \brief Addition traits for angular velocities
- *  \class AdditionTraits
+ *  \class RDiffAdditionTraits
  *  (only for advanced users)
  */
 template<typename LeftAndRight_>
-class AdditionTraits {
+class RDiffAdditionTraits {
  public:
 //  inline static LeftAndRight_ add(const LeftAndRight_& lhs, const LeftAndRight_& rhs);
 //  inline static LeftAndRight_ subtract(const LeftAndRight_& lhs, const LeftAndRight_& rhs);
@@ -68,7 +65,7 @@ class get_scalar {
  * This class defines the generic interface for an angular velocity.
  * More precisely an interface to store and access the angular velocity of a rigid body is provided.
  * \tparam Derived_ the derived class that should implement the angular velocity.
- * \ingroup angularvelocities
+ * \ingroup rotations
  *
  */
 template<typename Derived_>
@@ -121,7 +118,7 @@ class AngularVelocityBase {
    */
   template<typename OtherDerived_>
   Derived_ operator +(const AngularVelocityBase<OtherDerived_>& other) const {
-    return internal::AdditionTraits<AngularVelocityBase<Derived_>>::add(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
+    return internal::RDiffAdditionTraits<AngularVelocityBase<Derived_>>::add(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
   }
 
   /*! \brief Subtraction of two Angular velocities.
@@ -129,7 +126,7 @@ class AngularVelocityBase {
    */
   template<typename OtherDerived_>
   Derived_ operator -(const AngularVelocityBase<OtherDerived_>& other) const {
-    return internal::AdditionTraits<AngularVelocityBase<Derived_>>::subtract(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
+    return internal::RDiffAdditionTraits<AngularVelocityBase<Derived_>>::subtract(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
   }
 
   /*! \brief Addition and assignment.
@@ -193,7 +190,7 @@ class AngularVelocity3Base : public AngularVelocityBase<Derived_> {
 namespace internal {
 
 template<typename LeftAndRight_>
-class AdditionTraits<AngularVelocityBase<LeftAndRight_>> {
+class RDiffAdditionTraits<AngularVelocityBase<LeftAndRight_>> {
  public:
   /*! \returns the sum of two angular velocities
    * \param lhs left-hand side
@@ -213,7 +210,7 @@ class AdditionTraits<AngularVelocityBase<LeftAndRight_>> {
 
 } // namespace internal
 
-} // namespace angularvelocities
+} // namespace rotations
 } // namespace kinder
 
 

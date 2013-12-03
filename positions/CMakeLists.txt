@@ -60,6 +60,7 @@ include_directories(
 set(TEST_SRCS
 	test/test_main.cpp
 	test/PositionEigenTest.cpp
+	test/PDiffEigenTest.cpp
 )
 
 # Add test cpp file

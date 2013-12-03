@@ -25,33 +25,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
 */
-#ifndef KINDER_LINEARVELOCITIES_LINEARVELOCITIYEIGEN_HPP_
-#define KINDER_LINEARVELOCITIES_LINEARVELOCITIYEIGEN_HPP_
 
-#include "kinder/linearvelocities/LinearVelocityBase.hpp"
+#ifndef KINDER_ROTATIONS_RDIFFEIGEN_HPP_
+#define KINDER_ROTATIONS_RDIFFEIGEN_HPP_
 
 
 #include <Eigen/Core>
 
 #include "kinder/common/common.hpp"
 #include "kinder/common/assert_macros_eigen.hpp"
-#include "kinder/linearvelocities/LinearVelocityBase.hpp"
+#include "kinder/rotations/RDiffBase.hpp"
 
 namespace kinder {
-namespace linearvelocities {
-//! Implementation of rotations based on the C++ Eigen library
+namespace rotations {
 namespace eigen_implementation {
 
-/*! \class LinearVelocity3
- * \brief Linear velocity in 3D-space.
+/*! \class AngularVelocity3
+ * \brief Angular velocity in 3D-space.
  *
- * This class implements a lienar velocity in 3D-space.
- * More precisely an interface to store and access the components of a linear velocity of a point in 3D-space is provided.
+ * This class implements an angular velocity of a body in 3D-space.
+ * More precisely an interface to store and access the components of an angular velocity of a rigid body in 3D-space is provided.
  * \tparam PrimType_  Primitive type of the coordinates.
- * \ingroup linearvelocities
+ * \ingroup rotations
  */
 template<typename PrimType_>
-class LinearVelocity3 : public LinearVelocity3Base<LinearVelocity3<PrimType_>>, private Eigen::Matrix<PrimType_, 3, 1> {
+class AngularVelocity3 : public AngularVelocity3Base<AngularVelocity3<PrimType_>>, private Eigen::Matrix<PrimType_, 3, 1> {
  private:
   /*! \brief The base type.
    */
@@ -63,22 +61,22 @@ class LinearVelocity3 : public LinearVelocity3Base<LinearVelocity3<PrimType_>>, 
    */
   typedef Base Implementation;
 
-  /*! \brief The primitive type of the coordinates.
+  /*! \brief The primitive type of the velocities.
    */
   typedef PrimType_ Scalar;
 
-  /*! \brief Default constructor initializes the linear velocity with zero.
+  /*! \brief Default constructor initializes all velocities with zero.
    */
-  LinearVelocity3()
+  AngularVelocity3()
     : Base(Base::Zero()) {
   }
 
-  /*! Constructor with three coordinates (x,y,z)
+  /*! Constructor with three components (x,y,z)
    * \param x   x-coordinate
    * \param y   y-coordinate
    * \param z   z-coordinate
    */
-  LinearVelocity3(const PrimType_& x, const PrimType_& y, const PrimType_& z)
+  AngularVelocity3(const PrimType_& x, const PrimType_& y, const PrimType_& z)
     : Base(x, y, z) {
   }
 
@@ -86,7 +84,7 @@ class LinearVelocity3 : public LinearVelocity3Base<LinearVelocity3<PrimType_>>, 
   /*! \brief Constructor using Eigen::Vector3.
    *  \param other   Eigen::Matrix<PrimType_,3,1>
    */
-  explicit LinearVelocity3(const Base& other)
+  explicit AngularVelocity3(const Base& other)
     : Base(other) {
    }
 
@@ -104,51 +102,51 @@ class LinearVelocity3 : public LinearVelocity3Base<LinearVelocity3<PrimType_>>, 
     return static_cast<const Implementation&>(*this);
   }
 
-  /*!\brief Get x-coordinate of the linear velocity
-   * \returns the x-coordinate of the linear velocity
+  /*!\brief Get x-coordinate of the angular velocity
+   * \returns the x-coordinate of the angular velocity
    */
   using Base::x;
 
-  /*!\brief Get y-coordinate of the linear velocity
-   * \returns the y-coordinate of the linear velocity
+  /*!\brief Get y-coordinate of the angular velocity
+   * \returns the y-coordinate of the angular velocity
    */
   using Base::y;
 
-  /*!\brief Get z-coordinate of the linear velocity
-   * \returns the z-coordinate of the linear velocity
+  /*!\brief Get z-coordinate of the angular velocity
+   * \returns the z-coordinate of the angular velocity
    */
   using Base::z;
 
-  /*! \brief Addition of two linear velocities.
+  /*! \brief Addition of two angular velocities.
    */
-  using LinearVelocity3Base<LinearVelocity3<PrimType_>>::operator+; // otherwise ambiguous PositionBase and Eigen
+  using AngularVelocity3Base<AngularVelocity3<PrimType_>>::operator+; // otherwise ambiguous PositionBase and Eigen
 
-  /*! \brief Subtraction of two linear velocities.
+  /*! \brief Subtraction of two angular velocities.
    */
-  using LinearVelocity3Base<LinearVelocity3<PrimType_>>::operator-; // otherwise ambiguous PositionBase and Eigen
+  using AngularVelocity3Base<AngularVelocity3<PrimType_>>::operator-; // otherwise ambiguous PositionBase and Eigen
 
-  /*! \brief Addition of two linear velocities.
-   * \param other   other linear velocity
+  /*! \brief Addition of two angular velocities.
+   * \param other   other angular velocity
    */
   template<typename Other_>
-  LinearVelocity3<PrimType_>& operator +=(const Other_& other) {
+  AngularVelocity3<PrimType_>& operator +=(const Other_& other) {
     this->toImplementation() += other.toImplementation();
     return *this;
   }
 
-  /*! \brief Subtraction of two linear velocities.
-   * \param other   other linear velocity
+  /*! \brief Subtraction of two angular velocities.
+   * \param other   other angular velocity
    */
   template<typename Other_>
-  LinearVelocity3<PrimType_>& operator -=(const Other_& other) {
+  AngularVelocity3<PrimType_>& operator -=(const Other_& other) {
     this->toImplementation() -= other.toImplementation();
     return *this;
   }
 
-  /*! \brief Sets all components of the velocity to zero.
+  /*! \brief Sets all components of the angular velocity to zero.
    * \returns reference
    */
-  LinearVelocity3<PrimType_>& setZero() {
+  AngularVelocity3<PrimType_>& setZero() {
     Base::setZero();
     return *this;
   }
@@ -156,27 +154,27 @@ class LinearVelocity3 : public LinearVelocity3Base<LinearVelocity3<PrimType_>>, 
   /*! \brief Used for printing the object with std::cout.
    *  \returns std::stream object
    */
-  friend std::ostream& operator << (std::ostream& out, const LinearVelocity3& velocity) {
-    out << velocity.transpose();
+  friend std::ostream& operator << (std::ostream& out, const AngularVelocity3& position) {
+    out << position.transpose();
     return out;
   }
 };
 
 
-//! \brief Linear velocity in 3D space with primitive type double
-typedef LinearVelocity3<double>  LinearVelocity3D;
+//! \brief 3D angular velocity with primitive type double
+typedef AngularVelocity3<double>  AngularVelocity3D;
 
-//! \brief Linear velocity in 3D space with primitive type float
-typedef LinearVelocity3<float>  LinearVelocity3F;
+//! \brief 3D angular velocity with primitive type float
+typedef AngularVelocity3<float>  AngularVelocity3F;
 
 } // namespace eigen_implementation
 
 namespace internal {
 
-/*! \brief Gets the primitive type of the coordinates
+/*! \brief Gets the primitive type of the angular velocity
  */
 template<typename PrimType_>
-class get_scalar<eigen_implementation::LinearVelocity3<PrimType_>>{
+class get_scalar<eigen_implementation::AngularVelocity3<PrimType_>>{
  public:
   typedef PrimType_ Scalar;
 };
@@ -184,7 +182,8 @@ class get_scalar<eigen_implementation::LinearVelocity3<PrimType_>>{
 
 
 } // namespace internal
-} // namespace linearvelocities
+} // namespace rotations
 } // namespace kinder
 
-#endif /* KINDER_LINEARVELOCITIES_LINEARVELOCITIYEIGEN_HPP_ */
+
+#endif /* KINDER_ROTATIONS_RDIFFEIGEN_HPP_ */

@@ -26,26 +26,23 @@
  *
 */
 
-#ifndef KINDER_LINEARVELOCITIES_LINEARVELOCITYBASE_HPP_
-#define KINDER_LINEARVELOCITIES_LINEARVELOCITYBASE_HPP_
+#ifndef KINDER_POSITIONS_PDIFFBASE_HPP_
+#define KINDER_POSITIONS_PDIFFBASE_HPP_
 
 
 #include "kinder/common/common.hpp"
 
 namespace kinder {
-//! Generic linear velocity interface
-/*! \ingroup linearvelocities
- */
-namespace linearvelocities {
+namespace positions {
 //! Internal stuff (only for developers)
 namespace internal {
 
 /*! \brief Addition traits for linear velocities
- *  \class AdditionTraits
+ *  \class PDiffAdditionTraits
  *  (only for advanced users)
  */
 template<typename LeftAndRight_>
-class AdditionTraits {
+class PDiffAdditionTraits {
  public:
 //  inline static LeftAndRight_ add(const LeftAndRight_& lhs, const LeftAndRight_& rhs);
 //  inline static LeftAndRight_ subtract(const LeftAndRight_& lhs, const LeftAndRight_& rhs);
@@ -62,29 +59,29 @@ class get_scalar {
 
 } // namespace internal
 
-/*! \class LinearVelocityBase
+/*! \class PDiffBase
  * \brief Interface for a linear velocity.
  *
  * This class defines the generic interface for a linear velocity.
  * More precisely an interface to store and access the linear velocities of a point is provided.
  * \tparam Derived_ the derived class that should implement the linear velocity.
- * \ingroup linearvelocities
+ * \ingroup positions
  *
  */
 template<typename Derived_>
-class LinearVelocityBase {
+class PDiffBase {
  public:
   /*! \brief Default constructor.
    *
     *  Creates a linear velocity with zero coefficients.
     */
-  LinearVelocityBase() = default;
+  PDiffBase() = default;
 
   /*! \brief Constructor from derived linear velocity.
    *
    *  This constructor has been deleted because the abstract class does not contain any data.
    */
-  LinearVelocityBase(const Derived_&) = delete; // on purpose!!
+  PDiffBase(const Derived_&) = delete; // on purpose!!
 
   /*! \brief Gets the derived linear velocity.
    *  (only for advanced users)
@@ -120,29 +117,29 @@ class LinearVelocityBase {
    *  \returns sum of the two linear velocities.
    */
   template<typename OtherDerived_>
-  Derived_ operator +(const LinearVelocityBase<OtherDerived_>& other) const {
-    return internal::AdditionTraits<LinearVelocityBase<Derived_>>::add(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
+  Derived_ operator +(const PDiffBase<OtherDerived_>& other) const {
+    return internal::PDiffAdditionTraits<PDiffBase<Derived_>>::add(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
   }
 
-  /*! \brief Subtraction of two linearvelocities.
-   *  \returns result of the subtraction of the two linearvelocities.
+  /*! \brief Subtraction of two time derivatives.
+   *  \returns result of the subtraction of the two two time derivatives.
    */
   template<typename OtherDerived_>
-  Derived_ operator -(const LinearVelocityBase<OtherDerived_>& other) const {
-    return internal::AdditionTraits<LinearVelocityBase<Derived_>>::subtract(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
+  Derived_ operator -(const PDiffBase<OtherDerived_>& other) const {
+    return internal::PDiffAdditionTraits<PDiffBase<Derived_>>::subtract(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
   }
 
   /*! \brief Addition and assignment.
    *  \returns sum of the two linear velocities.
    */
   template<typename OtherDerived_>
-  Derived_& operator +=(const LinearVelocityBase<OtherDerived_>& other);
+  Derived_& operator +=(const PDiffBase<OtherDerived_>& other);
 
   /*! \brief Subtraction and assignment.
    *  \returns result of the subtraction of the two linear velocities.
    */
   template<typename OtherDerived_>
-  Derived_& operator -=(const LinearVelocityBase<OtherDerived_>& other);
+  Derived_& operator -=(const PDiffBase<OtherDerived_>& other);
 
 };
 
@@ -154,10 +151,10 @@ class LinearVelocityBase {
 
  * \tparam Derived_ the derived class that should implement the linear velocity.
  *
- *  \ingroup linearvelocities
+ *  \ingroup positions
  */
 template<typename Derived_>
-class LinearVelocity3Base : public LinearVelocityBase<Derived_> {
+class LinearVelocity3Base : public PDiffBase<Derived_> {
  public:
   /*! \brief The primitive type of a linear velocity.
    */
@@ -193,30 +190,30 @@ class LinearVelocity3Base : public LinearVelocityBase<Derived_> {
 namespace internal {
 
 template<typename LeftAndRight_>
-class AdditionTraits<LinearVelocityBase<LeftAndRight_>> {
+class PDiffAdditionTraits<PDiffBase<LeftAndRight_>> {
  public:
   /*! \returns the sum of two linear velocities
    * \param lhs left-hand side
    * \param rhs right-hand side
    */
-  inline static LeftAndRight_ add(const LinearVelocityBase<LeftAndRight_>& lhs, const LinearVelocityBase<LeftAndRight_>& rhs) {
+  inline static LeftAndRight_ add(const PDiffBase<LeftAndRight_>& lhs, const PDiffBase<LeftAndRight_>& rhs) {
     return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() + rhs.derived().toImplementation()));
   }
   /*! \returns the subtraction of two linear velocities
    * \param lhs left-hand side
    * \param rhs right-hand side
    */
-  inline static LeftAndRight_ subtract(const LinearVelocityBase<LeftAndRight_>& lhs, const LinearVelocityBase<LeftAndRight_>& rhs) {
+  inline static LeftAndRight_ subtract(const PDiffBase<LeftAndRight_>& lhs, const PDiffBase<LeftAndRight_>& rhs) {
     return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() - rhs.derived().toImplementation()));
   }
 };
 
 } // namespace internal
 
-} // namespace linearvelocities
+} // namespace positions
 } // namespace kinder
 
 
 
 
-#endif /* KINDER_LINEARVELOCITIES_LINEARVELOCITIYBASE_HPP_ */
+#endif /* KINDER_POSITIONS_PDIFFBASE_HPP_ */

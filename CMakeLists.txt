@@ -69,11 +69,6 @@ add_subdirectory(positions)
 # Add poses
 add_subdirectory(poses)
 
-# Add Linear velocity
-add_subdirectory(linearvelocities)
-
-# Add Angular velocity
-add_subdirectory(angularvelocities)
 
 
 # Add Doxygen documentation

@@ -33,12 +33,12 @@
 
 #include <gtest/gtest.h>
 
-#include "kinder/linearvelocities/LinearVelocityEigen.hpp"
+#include "kinder/positions/PDiffEigen.hpp"
 #include "kinder/common/gtest_eigen.hpp"
 
 
 
-namespace vel = kinder::linearvelocities::eigen_implementation;
+namespace pos = kinder::positions::eigen_implementation;
 
 template <typename LinearVelocityImplementation>
 struct LinearVelocity3Test: public ::testing::Test {
@@ -70,8 +70,8 @@ struct LinearVelocity3Test: public ::testing::Test {
 
 
 typedef ::testing::Types<
-    vel::LinearVelocity3D,
-    vel::LinearVelocity3F
+    pos::LinearVelocity3D,
+    pos::LinearVelocity3F
 > Types;
 
 

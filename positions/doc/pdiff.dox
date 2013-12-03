@@ -1,9 +1,5 @@
-/**
- * \defgroup linearvelocities Linear Velocities
- *  \see \ref page_linearvelocities "Chapter Linear Velocities" 
- */
- 
- /*! \page page_linearvelocities Linear Velocities
+
+ /*! \page page_pdiff Time Derivatives of Positions
 
 This library defines an \ref linearvelocities_interface "interface" for a velocity of a point to enable different representations of a velocity (3D-vector, homogeneous velocity, etc.) and different \ref linearvelocities_implementations "implementations" (based on Eigen, Bullet, etc.). 
 The section \ref linearvelocities_interface "Interface" describes the functionalities, whereas the section \ref linearvelocities_implementations "Implementation" shows some examples.

@@ -33,12 +33,12 @@
 
 #include <gtest/gtest.h>
 
-#include "kinder/angularvelocities/AngularVelocityEigen.hpp"
+#include "kinder/rotations/RDiffEigen.hpp"
 #include "kinder/common/gtest_eigen.hpp"
 
 
 
-namespace vel = kinder::angularvelocities::eigen_implementation;
+namespace rot = kinder::rotations::eigen_implementation;
 
 template <typename AngularVelocityImplementation>
 struct AngularVelocity3Test: public ::testing::Test {
@@ -70,8 +70,8 @@ struct AngularVelocity3Test: public ::testing::Test {
 
 
 typedef ::testing::Types<
-    vel::AngularVelocity3D,
-    vel::AngularVelocity3F
+    rot::AngularVelocity3D,
+    rot::AngularVelocity3F
 > Types;
 
 
