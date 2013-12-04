@@ -35,6 +35,7 @@
 #include "kinder/common/common.hpp"
 #include "kinder/common/assert_macros_eigen.hpp"
 #include "kinder/rotations/RDiffBase.hpp"
+#include "kinder/quaternions/QuaternionEigen.hpp"
 
 namespace kinder {
 namespace rotations {
@@ -154,8 +155,8 @@ class AngularVelocity3 : public AngularVelocity3Base<AngularVelocity3<PrimType_>
   /*! \brief Used for printing the object with std::cout.
    *  \returns std::stream object
    */
-  friend std::ostream& operator << (std::ostream& out, const AngularVelocity3& position) {
-    out << position.transpose();
+  friend std::ostream& operator << (std::ostream& out, const AngularVelocity3& velocity) {
+    out << velocity.toImplementation().transpose();
     return out;
   }
 };
@@ -167,17 +168,418 @@ typedef AngularVelocity3<double>  AngularVelocity3D;
 //! \brief 3D angular velocity with primitive type float
 typedef AngularVelocity3<float>  AngularVelocity3F;
 
+
+
+template<typename PrimType_>
+class RotationQuaternionDiff : public RDiffBase<RotationQuaternionDiff<PrimType_>>, public quaternions::eigen_implementation::Quaternion<PrimType_> {
+ private:
+  /*! \brief The base type.
+   */
+  typedef quaternions::eigen_implementation::Quaternion<PrimType_> Base;
+
+ public:
+  /*! \brief The implementation type.
+   *  The implementation type is always an Eigen object.
+   */
+  typedef typename Base::Implementation Implementation;
+  /*! \brief The primitive type.
+   *  Float/Double
+   */
+  typedef PrimType_ Scalar;
+
+  RotationQuaternionDiff()
+    : Base(Implementation::Zero()) {
+  }
+
+  /*! \brief Sets all time derivatives to zero.
+   *  \returns reference
+   */
+  RotationQuaternionDiff& setZero() {
+    this->Base::setZero();
+    return *this;
+  }
+
+
+  /*! \brief Used for printing the object with std::cout.
+   *  \returns std::stream object
+   */
+  friend std::ostream& operator << (std::ostream& out, const RotationQuaternionDiff& diff) {
+    out << diff.toImplementation().transpose();
+    return out;
+  }
+};
+
+
+//! \brief Time derivative of a rotation quaternion with primitive type double
+typedef RotationQuaternionDiff<double> RotationQuaternionDiffD;
+
+//! \brief Time derivative of a rotation quaternion with primitive type float
+typedef RotationQuaternionDiff<float> RotationQuaternionDiffF;
+
+/*! \class EulerAnglesZyxDiff
+ * \brief Implementation of time derivatives of Euler angles (Z,Y',X'' / yaw,pitch,roll) based on Eigen::Matrix
+ *
+ * The following two typedefs are provided for convenience:
+ *   - EulerAnglesZyxD for primitive type double
+ *   - EulerAnglesZyxF for primitive type float
+ * \tparam PrimType_ the primitive type of the data (double or float)
+ * \ingroup rotations
+ */
+template<typename PrimType_>
+class EulerAnglesZyxDiff : public EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimType_>>,  private Eigen::Matrix<PrimType_, 3, 1>  {
+ private:
+  /*! \brief The base type.
+   */
+  typedef Eigen::Matrix<PrimType_, 3, 1> Base;
+
+ public:
+  /*! \brief The implementation type.
+   *  The implementation type is always an Eigen object.
+   */
+  typedef Base Implementation;
+  /*! \brief The primitive type.
+   *  Float/Double
+   */
+  typedef PrimType_ Scalar;
+
+  /*! \brief Default constructor.
+   */
+  EulerAnglesZyxDiff()
+    : Base(Base::Zero()) {
+  }
+
+  /*! \brief Constructor using three scalars.
+   *  \param yaw      time derivative of first rotation angle around Z axis
+   *  \param pitch    time derivative of second rotation angle around Y' axis
+   *  \param roll     time derivative of third rotation angle around X'' axis
+   */
+  EulerAnglesZyxDiff(const Scalar& yaw, const Scalar& pitch, const Scalar& roll)
+    : Base(yaw,pitch,roll) {
+  }
+
+  /*! \brief Constructor using Eigen::Matrix.
+   *  \param other   Eigen::Matrix<PrimType_,3,1> [roll; pitch; yaw]
+   */
+  explicit EulerAnglesZyxDiff(const Base& other)
+    : Base(other) {
+  }
+
+  /*! \brief Cast to the implementation type.
+   *  \returns the implementation for direct manipulation (recommended only for advanced users)
+   */
+  inline Base& toImplementation() {
+    return static_cast<Base&>(*this);
+  }
+
+  /*! \brief Cast to the implementation type.
+   *  \returns the implementation for direct manipulation (recommended only for advanced users)
+   */
+  inline const Base& toImplementation() const {
+    return static_cast<const Base&>(*this);
+  }
+
+  /*! \brief Reading access to time derivative of yaw (Z) angle.
+    *  \returns time derivative of yaw angle (scalar) with reading access
+    */
+   inline Scalar yaw() const {
+     return toImplementation()(0);
+   }
+
+   /*! \brief Reading access to time derivative of pitch (Y') angle.
+    *  \returns time derivative of pitch angle (scalar) with reading access
+    */
+   inline Scalar pitch() const {
+     return toImplementation()(1);
+   }
+
+   /*! \brief Reading access to time derivative of roll (X'') angle.
+    *  \returns time derivative of roll angle (scalar) with reading access
+    */
+   inline Scalar roll() const {
+     return toImplementation()(2);
+   }
+
+   /*! \brief Writing access to time derivative of yaw (Z) angle.
+    *  \returns time derivative of yaw angle (scalar) with writing access
+    */
+   inline Scalar& yaw() {
+     return toImplementation()(0);
+   }
+
+   /*! \brief Writing access to time derivative of pitch (Y') angle.
+    *  \returns time derivative of pitch angle (scalar) with writing access
+    */
+   inline Scalar& pitch() {
+     return toImplementation()(1);
+   }
+
+   /*! \brief Writing access to time derivative of roll (X'') angle.
+    *  \returns time derivative of roll angle (scalar) with writing access
+    */
+   inline Scalar& roll() {
+     return toImplementation()(2);
+   }
+
+   /*! \brief Reading access to time derivative of yaw (Z) angle.
+    *  \returns time derivative of yaw angle (scalar) with reading access
+    */
+   inline Scalar z() const {
+     return toImplementation()(0);
+   }
+
+   /*! \brief Reading access to time derivative of pitch (Y') angle.
+    *  \returns time derivative of pitch angle (scalar) with reading access
+    */
+   inline Scalar y() const {
+     return toImplementation()(1);
+   }
+
+   /*! \brief Reading access to time derivative of roll (X'') angle.
+    *  \returns time derivative of roll angle (scalar) with reading access
+    */
+   inline Scalar x() const {
+     return toImplementation()(2);
+   }
+
+   /*! \brief Writing access to time derivative of yaw (Z) angle.
+    *  \returns time derivative of yaw angle (scalar) with writing access
+    */
+   inline Scalar& z() {
+     return toImplementation()(0);
+   }
+
+   /*! \brief Writing access to time derivative of pitch (Y') angle.
+    *  \returns time derivative of pitch angle (scalar) with writing access
+    */
+   inline Scalar& y() {
+     return toImplementation()(1);
+   }
+
+   /*! \brief Writing access to time derivative of roll (X'') angle.
+    *  \returns time derivative of roll angle (scalar) with writing access
+    */
+   inline Scalar& x() {
+     return toImplementation()(2);
+   }
+
+   /*! \brief Sets all time derivatives to zero.
+    *  \returns reference
+    */
+   EulerAnglesZyxDiff& setZero() {
+     this->Implementation::setZero();
+     return *this;
+   }
+
+   /*! \brief Addition of two angular velocities.
+    */
+   using EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimType_>>::operator+; // otherwise ambiguous EulerAnglesDiffBase and Eigen
+
+   /*! \brief Subtraction of two angular velocities.
+    */
+   using EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimType_>>::operator-; // otherwise ambiguous EulerAnglesDiffBase and Eigen
+
+
+   /*! \brief Used for printing the object with std::cout.
+    *  \returns std::stream object
+    */
+   friend std::ostream& operator << (std::ostream& out, const EulerAnglesZyxDiff& diff) {
+     out << diff.toImplementation().transpose();
+     return out;
+   }
+};
+
+//! \brief Time derivative of Euler angles with z-y-x convention and primitive type double
+typedef EulerAnglesZyxDiff<double> EulerAnglesZyxDiffD;
+
+//! \brief Time derivative of Euler angles with z-y-x convention and primitive type float
+typedef EulerAnglesZyxDiff<float> EulerAnglesZyxDiffF;
+
+
+/*! \class EulerAnglesXyzDiff
+ * \brief Implementation of time derivatives of Euler angles (X,Y',Z'' / roll,pitch,yaw) based on Eigen::Matrix
+ *
+ * The following two typedefs are provided for convenience:
+ *   - EulerAnglesXyzD for primitive type double
+ *   - EulerAnglesXyzF for primitive type float
+ * \tparam PrimType_ the primitive type of the data (double or float)
+ * \ingroup rotations
+ */
+template<typename PrimType_>
+class EulerAnglesXyzDiff : public EulerAnglesDiffBase<EulerAnglesXyzDiff<PrimType_>>,  private Eigen::Matrix<PrimType_, 3, 1>  {
+ private:
+  /*! \brief The base type.
+   */
+  typedef Eigen::Matrix<PrimType_, 3, 1> Base;
+
+ public:
+  /*! \brief The implementation type.
+   *  The implementation type is always an Eigen object.
+   */
+  typedef Base Implementation;
+  /*! \brief The primitive type.
+   *  Float/Double
+   */
+  typedef PrimType_ Scalar;
+
+  /*! \brief Default constructor.
+   */
+  EulerAnglesXyzDiff()
+    : Base(Base::Zero()) {
+  }
+
+  /*! \brief Constructor using three scalars.
+   *  \param roll     time derivative of first rotation angle around X axis
+   *  \param pitch    time derivative of second rotation angle around Y' axis
+   *  \param yaw      time derivative of third rotation angle around Z'' axis
+   */
+  EulerAnglesXyzDiff(const Scalar& yaw, const Scalar& pitch, const Scalar& roll)
+    : Base(yaw,pitch,roll) {
+  }
+
+  /*! \brief Constructor using Eigen::Matrix.
+   *  \param other   Eigen::Matrix<PrimType_,3,1> [roll; pitch; yaw]
+   */
+  explicit EulerAnglesXyzDiff(const Base& other)
+    : Base(other) {
+  }
+
+  /*! \brief Cast to the implementation type.
+   *  \returns the implementation for direct manipulation (recommended only for advanced users)
+   */
+  inline Base& toImplementation() {
+    return static_cast<Base&>(*this);
+  }
+
+  /*! \brief Cast to the implementation type.
+   *  \returns the implementation for direct manipulation (recommended only for advanced users)
+   */
+  inline const Base& toImplementation() const {
+    return static_cast<const Base&>(*this);
+  }
+
+
+
+  /*! \brief Reading access to time derivative of roll (X) angle.
+   *  \returns roll angle (scalar) with reading access
+   */
+  inline Scalar roll() const {
+    return toImplementation()(0);
+  }
+
+  /*! \brief Reading access to time derivative of pitch (Y') angle.
+   *  \returns pitch angle (scalar) with reading access
+   */
+  inline Scalar pitch() const {
+    return toImplementation()(1);
+  }
+
+  /*! \brief Reading access to time derivative of yaw (Z'') angle.
+   *  \returns yaw angle (scalar) with reading access
+   */
+  inline Scalar yaw() const {
+    return toImplementation()(2);
+  }
+
+  /*! \brief Writing access to time derivative of roll (X) angle.
+   *  \returns roll angle (scalar) with writing access
+   */
+  inline Scalar& roll() {
+    return toImplementation()(0);
+  }
+
+  /*! \brief Writing access to time derivative of pitch (Y') angle.
+   *  \returns pitch angle (scalar) with writing access
+   */
+  inline Scalar& pitch() {
+    return toImplementation()(1);
+  }
+
+  /*! \brief Writing access to time derivative of yaw (Z'') angle.
+   *  \returns yaw angle (scalar) with writing access
+   */
+  inline Scalar& yaw() {
+    return toImplementation()(2);
+  }
+
+  /*! \brief Reading access to time derivative of roll (X) angle.
+   *  \returns roll angle (scalar) with reading access
+   */
+  inline Scalar x() const {
+    return toImplementation()(0);
+  }
+
+  /*! \brief Reading access to time derivative of pitch (Y') angle.
+   *  \returns pitch angle (scalar) with reading access
+   */
+  inline Scalar y() const {
+    return toImplementation()(1);
+  }
+
+  /*! \brief Reading access to time derivative of yaw (Z'') angle.
+   *  \returns yaw angle (scalar) with reading access
+   */
+  inline Scalar z() const {
+    return toImplementation()(2);
+  }
+
+  /*! \brief Writing access to time derivative of roll (X) angle.
+   *  \returns roll angle (scalar) with writing access
+   */
+  inline Scalar& x() {
+    return toImplementation()(0);
+  }
+
+  /*! \brief Writing access to time derivative of pitch (Y') angle.
+   *  \returns pitch angle (scalar) with writing access
+   */
+  inline Scalar& y() {
+    return toImplementation()(1);
+  }
+
+  /*! \brief Writing access to time derivative of yaw (Z'') angle.
+   *  \returns yaw angle (scalar) with writing access
+   */
+  inline Scalar& z() {
+    return toImplementation()(2);
+  }
+
+   /*! \brief Sets all time derivatives to zero.
+    *  \returns reference
+    */
+   EulerAnglesXyzDiff& setZero() {
+     this->Implementation::setZero();
+     return *this;
+   }
+
+
+   using EulerAnglesDiffBase<EulerAnglesXyzDiff<PrimType_>>::operator+; // otherwise ambiguous EulerAnglesDiffBase and Eigen
+
+
+   using EulerAnglesDiffBase<EulerAnglesXyzDiff<PrimType_>>::operator-; // otherwise ambiguous EulerAnglesDiffBase and Eigen
+
+
+   /*! \brief Used for printing the object with std::cout.
+    *  \returns std::stream object
+    */
+   friend std::ostream& operator << (std::ostream& out, const EulerAnglesXyzDiff& diff) {
+     out << diff.toImplementation().transpose();
+     return out;
+   }
+};
+
+//! \brief Time derivative of Euler angles with x-y-z convention and primitive type double
+typedef EulerAnglesXyzDiff<double> EulerAnglesXyzDiffD;
+
+//! \brief Time derivative of Euler angles with x-y-z convention and primitive type float
+typedef EulerAnglesXyzDiff<float> EulerAnglesXyzDiffF;
+
+
+
 } // namespace eigen_implementation
 
 namespace internal {
 
-/*! \brief Gets the primitive type of the angular velocity
- */
-template<typename PrimType_>
-class get_scalar<eigen_implementation::AngularVelocity3<PrimType_>>{
- public:
-  typedef PrimType_ Scalar;
-};
+
 
 
 

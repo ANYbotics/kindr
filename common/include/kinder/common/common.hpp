@@ -60,6 +60,9 @@ namespace eigen_implementation {
 template<typename PrimType, enum RotationUsage Usage>
 class RotationQuaternion;
 
+template<typename PrimType>
+class AngularVelocity3;
+
 } // namespace eigen_implementation
 } // namespace rotations
 } // namespace rm

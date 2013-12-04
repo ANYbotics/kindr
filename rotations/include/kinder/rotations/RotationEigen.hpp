@@ -263,7 +263,7 @@ typedef AngleAxis<float,  RotationUsage::PASSIVE> AngleAxisPF;
  *   - RotationQuaternionPF for passive rotation and float primitive type
  */
 template<typename PrimType_, enum RotationUsage Usage_>
-class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<PrimType_, Usage_>, Usage_>, public quaternions::eigen_implementation::UnitQuaternion<PrimType_> {
+class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<PrimType_, Usage_>, Usage_>, public quaternions::eigen_implementation::UnitQuaternion<PrimType_> { // public on purpose
  private:
   /*! \brief The base type.
    */

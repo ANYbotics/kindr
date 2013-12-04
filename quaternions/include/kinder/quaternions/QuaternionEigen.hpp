@@ -208,8 +208,13 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::
 	  return *this;
   }
 
+  Quaternion& setZero() {
+    this->Base::setZero();
+    return *this;
+  }
+
   UnitQuaternion<PrimType_> toUnitQuaternion() const {
-	return UnitQuaternion<PrimType_>(this->Base::normalized());
+    return UnitQuaternion<PrimType_>(this->Base::normalized());
   }
 };
 

@@ -41,21 +41,14 @@ namespace internal {
  *  \class RDiffAdditionTraits
  *  (only for advanced users)
  */
-template<typename LeftAndRight_>
+template<typename Left_, typename Right_>
 class RDiffAdditionTraits {
  public:
 //  inline static LeftAndRight_ add(const LeftAndRight_& lhs, const LeftAndRight_& rhs);
 //  inline static LeftAndRight_ subtract(const LeftAndRight_& lhs, const LeftAndRight_& rhs);
 };
 
-/*! \class get_scalar
- *  \brief Gets the primitive of the angular velocity.
- */
-template<typename Position_>
-class get_scalar {
- public:
-//  typedef PrimType Scalar;
-};
+
 
 } // namespace internal
 
@@ -118,7 +111,7 @@ class RDiffBase {
    */
   template<typename OtherDerived_>
   Derived_ operator +(const RDiffBase<OtherDerived_>& other) const {
-    return internal::RDiffAdditionTraits<RDiffBase<Derived_>>::add(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
+    return internal::RDiffAdditionTraits<RDiffBase<Derived_>, RDiffBase<OtherDerived_>>::add(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
   }
 
   /*! \brief Subtraction of two time derivatives.
@@ -126,7 +119,7 @@ class RDiffBase {
    */
   template<typename OtherDerived_>
   Derived_ operator -(const RDiffBase<OtherDerived_>& other) const {
-    return internal::RDiffAdditionTraits<RDiffBase<Derived_>>::subtract(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
+    return internal::RDiffAdditionTraits<RDiffBase<Derived_>, RDiffBase<OtherDerived_>>::subtract(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
   }
 
   /*! \brief Addition and assignment.
@@ -153,44 +146,48 @@ class RDiffBase {
  *
  *  \ingroup rotations
  */
-template<typename Derived_>
-class AngularVelocity3Base : public RDiffBase<Derived_> {
+template<typename Implementation_>
+class AngularVelocity3Base : public RDiffBase<Implementation_> {
+
+
+};
+
+template<typename Implementation_>
+class RotationQuaternionDiffBase : public RDiffBase<Implementation_> {
  public:
-  /*! \brief The primitive type of an angular velocity.
-   */
-  typedef typename internal::get_scalar<Derived_>::Scalar Scalar;
 
-  /*! \returns the x-coordinate of the 3D angular velocity
-   */
-  inline const Scalar& x() const;
+};
 
-  /*! \returns the x-coordinate of the 3D angular velocity
-   */
-  inline Scalar& x();
 
-  /*! \returns the y-coordinate of the 3D angular velocity
-   */
-  inline const Scalar& y() const;
-
-  /*! \returns the y-coordinate of the 3D angular velocity
-   */
-  inline Scalar& y();
-
-  /*! \returns the z-coordinate of the 3D angular velocity
-   */
-  inline Scalar& z() const;
-
-  /*! \returns the z-coordinate of the 3D angular velocity
-   */
-  inline Scalar& z();
+template<typename Implementation_>
+class EulerAnglesDiffBase : public RDiffBase<Implementation_> {
+ public:
 
 };
 
 
 namespace internal {
 
+template<typename Left_, typename Right_>
+class RDiffAdditionTraits<RDiffBase<Left_>, RDiffBase<Right_>> {
+ public:
+  inline static Left_ add(const RDiffBase<Left_>& lhs, const RDiffBase<Right_>& rhs) {
+    return Left_(typename eigen_implementation::AngularVelocity3<typename Left_::Scalar>(
+               (typename eigen_implementation::AngularVelocity3<typename Left_::Scalar>(lhs.derived())).toImplementation() +
+               (typename eigen_implementation::AngularVelocity3<typename Right_::Scalar>(rhs.derived())).toImplementation()
+               ));
+  }
+  inline static Left_ subtract(const RDiffBase<Left_>& lhs, const RDiffBase<Right_>& rhs) {
+    return Left_(typename eigen_implementation::AngularVelocity3<typename Left_::Scalar>(
+               (typename eigen_implementation::AngularVelocity3<typename Left_::Scalar>(lhs.derived())).toImplementation() -
+               (typename eigen_implementation::AngularVelocity3<typename Right_::Scalar>(rhs.derived())).toImplementation()
+               ));
+  }
+};
+
+
 template<typename LeftAndRight_>
-class RDiffAdditionTraits<RDiffBase<LeftAndRight_>> {
+class RDiffAdditionTraits<RDiffBase<LeftAndRight_>, RDiffBase<LeftAndRight_>> {
  public:
   /*! \returns the sum of two angular velocities
    * \param lhs left-hand side
@@ -207,6 +204,9 @@ class RDiffAdditionTraits<RDiffBase<LeftAndRight_>> {
     return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() - rhs.derived().toImplementation()));
   }
 };
+
+
+
 
 } // namespace internal
 
