@@ -70,8 +70,8 @@ struct AngularVelocity3Test: public ::testing::Test {
 
 
 typedef ::testing::Types<
-    rot::AngularVelocity3D,
-    rot::AngularVelocity3F
+    rot::AngularVelocity3PD,
+    rot::AngularVelocity3PF
 > Types;
 
 

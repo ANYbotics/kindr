@@ -49,8 +49,8 @@ namespace eigen_implementation {
  * \tparam PrimType_  Primitive type of the coordinates.
  * \ingroup rotations
  */
-template<typename PrimType_>
-class AngularVelocity3 : public AngularVelocity3Base<AngularVelocity3<PrimType_>>, private Eigen::Matrix<PrimType_, 3, 1> {
+template<typename PrimType_, enum RotationUsage Usage_>
+class AngularVelocity3 : public AngularVelocity3Base<AngularVelocity3<PrimType_, Usage_>, Usage_>, private Eigen::Matrix<PrimType_, 3, 1> {
  private:
   /*! \brief The base type.
    */
@@ -89,6 +89,13 @@ class AngularVelocity3 : public AngularVelocity3Base<AngularVelocity3<PrimType_>
     : Base(other) {
    }
 
+  template<typename RotationDerived_, typename OtherDerived_>
+  inline explicit AngularVelocity3(const RotationBase<RotationDerived_, Usage_>& rotation, const RDiffBase<OtherDerived_, Usage_>& other)
+    : Base(internal::RDiffConversionTraits<AngularVelocity3, OtherDerived_, RotationDerived_>::convert(static_cast<const RotationDerived_&>(rotation), static_cast<const OtherDerived_&>(other))){
+  }
+
+
+
   /*! \brief Cast to the implementation type.
    *  \returns the implementation (recommended only for advanced users)
    */
@@ -120,17 +127,17 @@ class AngularVelocity3 : public AngularVelocity3Base<AngularVelocity3<PrimType_>
 
   /*! \brief Addition of two angular velocities.
    */
-  using AngularVelocity3Base<AngularVelocity3<PrimType_>>::operator+; // otherwise ambiguous PositionBase and Eigen
+  using AngularVelocity3Base<AngularVelocity3<PrimType_, Usage_>,Usage_>::operator+; // otherwise ambiguous PositionBase and Eigen
 
   /*! \brief Subtraction of two angular velocities.
    */
-  using AngularVelocity3Base<AngularVelocity3<PrimType_>>::operator-; // otherwise ambiguous PositionBase and Eigen
+  using AngularVelocity3Base<AngularVelocity3<PrimType_, Usage_>, Usage_>::operator-; // otherwise ambiguous PositionBase and Eigen
 
   /*! \brief Addition of two angular velocities.
    * \param other   other angular velocity
    */
   template<typename Other_>
-  AngularVelocity3<PrimType_>& operator +=(const Other_& other) {
+  AngularVelocity3& operator +=(const Other_& other) {
     this->toImplementation() += other.toImplementation();
     return *this;
   }
@@ -139,7 +146,7 @@ class AngularVelocity3 : public AngularVelocity3Base<AngularVelocity3<PrimType_>
    * \param other   other angular velocity
    */
   template<typename Other_>
-  AngularVelocity3<PrimType_>& operator -=(const Other_& other) {
+  AngularVelocity3& operator -=(const Other_& other) {
     this->toImplementation() -= other.toImplementation();
     return *this;
   }
@@ -147,7 +154,7 @@ class AngularVelocity3 : public AngularVelocity3Base<AngularVelocity3<PrimType_>
   /*! \brief Sets all components of the angular velocity to zero.
    * \returns reference
    */
-  AngularVelocity3<PrimType_>& setZero() {
+  AngularVelocity3& setZero() {
     Base::setZero();
     return *this;
   }
@@ -161,17 +168,20 @@ class AngularVelocity3 : public AngularVelocity3Base<AngularVelocity3<PrimType_>
   }
 };
 
-
 //! \brief 3D angular velocity with primitive type double
-typedef AngularVelocity3<double>  AngularVelocity3D;
-
+typedef AngularVelocity3<double, RotationUsage::PASSIVE>  AngularVelocity3PD;
 //! \brief 3D angular velocity with primitive type float
-typedef AngularVelocity3<float>  AngularVelocity3F;
+typedef AngularVelocity3<float, RotationUsage::PASSIVE>  AngularVelocity3PF;
+//! \brief 3D angular velocity with primitive type double
+typedef AngularVelocity3<double, RotationUsage::ACTIVE>  AngularVelocity3AD;
+//! \brief 3D angular velocity with primitive type float
+typedef AngularVelocity3<float, RotationUsage::ACTIVE>  AngularVelocity3AF;
 
 
 
-template<typename PrimType_>
-class RotationQuaternionDiff : public RDiffBase<RotationQuaternionDiff<PrimType_>>, public quaternions::eigen_implementation::Quaternion<PrimType_> {
+
+template<typename PrimType_, enum RotationUsage Usage_>
+class RotationQuaternionDiff : public RDiffBase<RotationQuaternionDiff<PrimType_, Usage_>,Usage_>, public quaternions::eigen_implementation::Quaternion<PrimType_> {
  private:
   /*! \brief The base type.
    */
@@ -211,10 +221,13 @@ class RotationQuaternionDiff : public RDiffBase<RotationQuaternionDiff<PrimType_
 
 
 //! \brief Time derivative of a rotation quaternion with primitive type double
-typedef RotationQuaternionDiff<double> RotationQuaternionDiffD;
-
+typedef RotationQuaternionDiff<double, RotationUsage::PASSIVE> RotationQuaternionDiffPD;
 //! \brief Time derivative of a rotation quaternion with primitive type float
-typedef RotationQuaternionDiff<float> RotationQuaternionDiffF;
+typedef RotationQuaternionDiff<float, RotationUsage::PASSIVE> RotationQuaternionDiffPF;
+//! \brief Time derivative of a rotation quaternion with primitive type double
+typedef RotationQuaternionDiff<double, RotationUsage::ACTIVE> RotationQuaternionDiffAD;
+//! \brief Time derivative of a rotation quaternion with primitive type float
+typedef RotationQuaternionDiff<float, RotationUsage::ACTIVE> RotationQuaternionDiffAF;
 
 /*! \class EulerAnglesZyxDiff
  * \brief Implementation of time derivatives of Euler angles (Z,Y',X'' / yaw,pitch,roll) based on Eigen::Matrix
@@ -225,8 +238,8 @@ typedef RotationQuaternionDiff<float> RotationQuaternionDiffF;
  * \tparam PrimType_ the primitive type of the data (double or float)
  * \ingroup rotations
  */
-template<typename PrimType_>
-class EulerAnglesZyxDiff : public EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimType_>>,  private Eigen::Matrix<PrimType_, 3, 1>  {
+template<typename PrimType_, enum RotationUsage Usage_>
+class EulerAnglesZyxDiff : public EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimType_, Usage_>, Usage_>,  private Eigen::Matrix<PrimType_, 3, 1>  {
  private:
   /*! \brief The base type.
    */
@@ -372,11 +385,11 @@ class EulerAnglesZyxDiff : public EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimTyp
 
    /*! \brief Addition of two angular velocities.
     */
-   using EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimType_>>::operator+; // otherwise ambiguous EulerAnglesDiffBase and Eigen
+   using EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimType_,Usage_>,Usage_>::operator+; // otherwise ambiguous EulerAnglesDiffBase and Eigen
 
    /*! \brief Subtraction of two angular velocities.
     */
-   using EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimType_>>::operator-; // otherwise ambiguous EulerAnglesDiffBase and Eigen
+   using EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimType_,Usage_>,Usage_>::operator-; // otherwise ambiguous EulerAnglesDiffBase and Eigen
 
 
    /*! \brief Used for printing the object with std::cout.
@@ -389,11 +402,13 @@ class EulerAnglesZyxDiff : public EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimTyp
 };
 
 //! \brief Time derivative of Euler angles with z-y-x convention and primitive type double
-typedef EulerAnglesZyxDiff<double> EulerAnglesZyxDiffD;
-
+typedef EulerAnglesZyxDiff<double, RotationUsage::PASSIVE> EulerAnglesZyxDiffPD;
 //! \brief Time derivative of Euler angles with z-y-x convention and primitive type float
-typedef EulerAnglesZyxDiff<float> EulerAnglesZyxDiffF;
-
+typedef EulerAnglesZyxDiff<float, RotationUsage::PASSIVE> EulerAnglesZyxDiffPF;
+//! \brief Time derivative of Euler angles with z-y-x convention and primitive type double
+typedef EulerAnglesZyxDiff<double, RotationUsage::ACTIVE> EulerAnglesZyxDiffAD;
+//! \brief Time derivative of Euler angles with z-y-x convention and primitive type float
+typedef EulerAnglesZyxDiff<float, RotationUsage::ACTIVE> EulerAnglesZyxDiffAF;
 
 /*! \class EulerAnglesXyzDiff
  * \brief Implementation of time derivatives of Euler angles (X,Y',Z'' / roll,pitch,yaw) based on Eigen::Matrix
@@ -404,8 +419,8 @@ typedef EulerAnglesZyxDiff<float> EulerAnglesZyxDiffF;
  * \tparam PrimType_ the primitive type of the data (double or float)
  * \ingroup rotations
  */
-template<typename PrimType_>
-class EulerAnglesXyzDiff : public EulerAnglesDiffBase<EulerAnglesXyzDiff<PrimType_>>,  private Eigen::Matrix<PrimType_, 3, 1>  {
+template<typename PrimType_, enum RotationUsage Usage_ >
+class EulerAnglesXyzDiff : public EulerAnglesDiffBase<EulerAnglesXyzDiff<PrimType_,Usage_>,Usage_>,  private Eigen::Matrix<PrimType_, 3, 1>  {
  private:
   /*! \brief The base type.
    */
@@ -552,10 +567,10 @@ class EulerAnglesXyzDiff : public EulerAnglesDiffBase<EulerAnglesXyzDiff<PrimTyp
    }
 
 
-   using EulerAnglesDiffBase<EulerAnglesXyzDiff<PrimType_>>::operator+; // otherwise ambiguous EulerAnglesDiffBase and Eigen
+   using EulerAnglesDiffBase<EulerAnglesXyzDiff<PrimType_,Usage_>,Usage_>::operator+; // otherwise ambiguous EulerAnglesDiffBase and Eigen
 
 
-   using EulerAnglesDiffBase<EulerAnglesXyzDiff<PrimType_>>::operator-; // otherwise ambiguous EulerAnglesDiffBase and Eigen
+   using EulerAnglesDiffBase<EulerAnglesXyzDiff<PrimType_,Usage_>,Usage_>::operator-; // otherwise ambiguous EulerAnglesDiffBase and Eigen
 
 
    /*! \brief Used for printing the object with std::cout.
@@ -568,19 +583,26 @@ class EulerAnglesXyzDiff : public EulerAnglesDiffBase<EulerAnglesXyzDiff<PrimTyp
 };
 
 //! \brief Time derivative of Euler angles with x-y-z convention and primitive type double
-typedef EulerAnglesXyzDiff<double> EulerAnglesXyzDiffD;
-
+typedef EulerAnglesXyzDiff<double, RotationUsage::PASSIVE> EulerAnglesXyzDiffPD;
 //! \brief Time derivative of Euler angles with x-y-z convention and primitive type float
-typedef EulerAnglesXyzDiff<float> EulerAnglesXyzDiffF;
-
+typedef EulerAnglesXyzDiff<float, RotationUsage::PASSIVE> EulerAnglesXyzDiffPF;
+//! \brief Time derivative of Euler angles with x-y-z convention and primitive type double
+typedef EulerAnglesXyzDiff<double, RotationUsage::ACTIVE> EulerAnglesXyzDiffAD;
+//! \brief Time derivative of Euler angles with x-y-z convention and primitive type float
+typedef EulerAnglesXyzDiff<float, RotationUsage::ACTIVE> EulerAnglesXyzDiffAF;
 
 
 } // namespace eigen_implementation
 
 namespace internal {
 
-
-
+//template<typename DestPrimType_, typename SourcePrimType_, typename RotationPrimType_, enum RotationUsage Usage_>
+//class RDiffConversionTraits<eigen_implementation::AngularVelocity3<DestPrimType_, Usage_>, eigen_implementation::RotationQuaternionDiff<SourcePrimType_, Usage_>, eigen_implementation::RotationQuaternion<RotationPrimType_, Usage_>> {
+// public:
+//  inline static eigen_implementation::AngularVelocity3<DestPrimType_, Usage_> convert(const eigen_implementation::RotationQuaternion<RotationPrimType_, Usage_>& rotation, const eigen_implementation::RotationQuaternionDiff<SourcePrimType_, Usage_>& diff) {
+//    return eigen_implementation::AngularVelocity3<DestPrimType_, Usage_>(eigen_implementation::getRpyFromAngleAxis<SourcePrimType_, DestPrimType_>(aa.toImplementation()));
+//  }
+//};
 
 
 } // namespace internal
