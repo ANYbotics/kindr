@@ -351,7 +351,11 @@ $\rotvel{D}{A}{D} = \rotvel{D}{A}{B} +  \rotvel{D}{B}{C} + \rotvel{D}{C}{D}$ & c
 $\rotvelhat{I}{I}{B} = \drotmat{B}{I} \rotmat{B}{I}^\transpose = \dcomat{I}{B}\comat{I}{B}^\transpose$ & angular velocity of $B$ w.r.t. $I$ expressed in CS $I$  \\
 $\rotvelhat{B}{I}{B} = \rotmat{I}{B} \drotmat{I}{B}^\transpose = \comat{I}{B}^\transpose \dcomat{I}{B}$ & angular velocity of $B$ w.r.t. $I$ expressed in CS $B$  \\
 $\rotvel{B}{I}{B} = 2 \bar{\vH}(\quat{B}{I}) \dot{\vp}_{B\!I}$  & ang. velocity from time derivative of the rotation quaternion with \\
-& $\bar{\vH}(\vp) = \begin{bmatrix}-\imquatvec{p} & -\hat{\imquatvec{p}}+p_0\identity_{3\times 3}\end{bmatrix} \in \mathbb{R}^{3\times4}$  \\
+& $\begin{aligned}\bar{\vH}(\vp) &= \begin{bmatrix}-\imquatvec{p} & -\hat{\imquatvec{p}}+p_0\identity_{3\times 3}\end{bmatrix} \in \mathbb{R}^{3\times4} \\
+ &=\begin{bmatrix} -p_1 &  p_0 &  p_3 & -p_2 \\
+ -p_2 & -p_3 &  p_0 &  p_1 \\
+ -p_3 &  p_2 & -p_1 &  p_0 \end{bmatrix}
+\end{aligned}$  \\ 
 $\dot{\vp}_{B\!I} = \frac{1}{2}\bar{\vH}(\quat{B}{I})^\transpose \rotvel{B}{I}{B}$ & time derivative of the rotation quaternion \\
 \end{tabular}
 

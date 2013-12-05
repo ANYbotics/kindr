@@ -35,6 +35,7 @@
 #include "kinder/common/common.hpp"
 #include "kinder/common/assert_macros_eigen.hpp"
 #include "kinder/rotations/RDiffBase.hpp"
+#include "kinder/rotations/RotationEigen.hpp"
 #include "kinder/quaternions/QuaternionEigen.hpp"
 
 namespace kinder {
@@ -181,7 +182,7 @@ typedef AngularVelocity3<float, RotationUsage::ACTIVE>  AngularVelocity3AF;
 
 
 template<typename PrimType_, enum RotationUsage Usage_>
-class RotationQuaternionDiff : public RDiffBase<RotationQuaternionDiff<PrimType_, Usage_>,Usage_>, public quaternions::eigen_implementation::Quaternion<PrimType_> {
+class RotationQuaternionDiff : public RDiffBase<RotationQuaternionDiff<PrimType_, Usage_>,Usage_>, private quaternions::eigen_implementation::Quaternion<PrimType_> {
  private:
   /*! \brief The base type.
    */
@@ -198,7 +199,15 @@ class RotationQuaternionDiff : public RDiffBase<RotationQuaternionDiff<PrimType_
   typedef PrimType_ Scalar;
 
   RotationQuaternionDiff()
-    : Base(Implementation::Zero()) {
+    : Base() {
+  }
+
+  Base& toQuaternion()  {
+    return static_cast<Base&>(*this);
+  }
+
+  const Base& toQuaternion() const {
+    return static_cast<const Base&>(*this);
   }
 
   /*! \brief Sets all time derivatives to zero.
@@ -596,13 +605,15 @@ typedef EulerAnglesXyzDiff<float, RotationUsage::ACTIVE> EulerAnglesXyzDiffAF;
 
 namespace internal {
 
-//template<typename DestPrimType_, typename SourcePrimType_, typename RotationPrimType_, enum RotationUsage Usage_>
-//class RDiffConversionTraits<eigen_implementation::AngularVelocity3<DestPrimType_, Usage_>, eigen_implementation::RotationQuaternionDiff<SourcePrimType_, Usage_>, eigen_implementation::RotationQuaternion<RotationPrimType_, Usage_>> {
-// public:
-//  inline static eigen_implementation::AngularVelocity3<DestPrimType_, Usage_> convert(const eigen_implementation::RotationQuaternion<RotationPrimType_, Usage_>& rotation, const eigen_implementation::RotationQuaternionDiff<SourcePrimType_, Usage_>& diff) {
-//    return eigen_implementation::AngularVelocity3<DestPrimType_, Usage_>(eigen_implementation::getRpyFromAngleAxis<SourcePrimType_, DestPrimType_>(aa.toImplementation()));
-//  }
-//};
+template<typename DestPrimType_, typename SourcePrimType_, typename RotationPrimType_, enum RotationUsage Usage_>
+class RDiffConversionTraits<eigen_implementation::AngularVelocity3<DestPrimType_, Usage_>, eigen_implementation::RotationQuaternionDiff<SourcePrimType_, Usage_>, eigen_implementation::RotationQuaternion<RotationPrimType_, Usage_>> {
+ public:
+  inline static eigen_implementation::AngularVelocity3<DestPrimType_, Usage_> convert(const eigen_implementation::RotationQuaternion<RotationPrimType_, Usage_>& rquat, const eigen_implementation::RotationQuaternionDiff<SourcePrimType_, Usage_>& rquatdiff) {
+    Eigen::Matrix<DestPrimType_,3,4> H_bar;
+    H_bar << -rquat.toUnitQuaternion().x(), rquat.toUnitQuaternion().w(), rquat.toUnitQuaternion().z(), -rquat.toUnitQuaternion().y(), -rquat.toUnitQuaternion().y(), -rquat.toUnitQuaternion().z(), rquat.toUnitQuaternion().w(), rquat.toUnitQuaternion().x(), -rquat.toUnitQuaternion().z(), rquat.toUnitQuaternion().y(), -rquat.toUnitQuaternion().x(), rquat.toUnitQuaternion().w();
+    return eigen_implementation::AngularVelocity3<DestPrimType_, Usage_>(0.5*H_bar*rquatdiff.toQuaternion().getVector4());
+  }
+};
 
 
 } // namespace internal

@@ -263,7 +263,7 @@ typedef AngleAxis<float,  RotationUsage::PASSIVE> AngleAxisPF;
  *   - RotationQuaternionPF for passive rotation and float primitive type
  */
 template<typename PrimType_, enum RotationUsage Usage_>
-class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<PrimType_, Usage_>, Usage_>, public quaternions::eigen_implementation::UnitQuaternion<PrimType_> { // public on purpose
+class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<PrimType_, Usage_>, Usage_>, private quaternions::eigen_implementation::UnitQuaternion<PrimType_> {
  private:
   /*! \brief The base type.
    */
@@ -307,8 +307,24 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
   /*! \brief Function for converting the RotationQuaternion back to a UnitQuaternion.
    *  \returns UnitQuaternion
    */
-  Base toUnitQuaternion() const {
-    return Base(*this);
+//  Base toUnitQuaternion() const {
+//    return Base(*this); // todo needed?
+//  }
+
+  Base& toUnitQuaternion()  {
+    return static_cast<Base&>(*this);
+  }
+
+  const Base& toUnitQuaternion() const {
+    return static_cast<const Base&>(*this);
+  }
+
+  Implementation& toImplementation()  {
+    return this->toUnitQuaternion().toImplementation();
+  }
+
+  const Implementation& toImplementation() const {
+    return this->toUnitQuaternion().toImplementation();
   }
 
   /*! \brief Constructor using Eigen::Quaternion<PrimType_>.
@@ -462,6 +478,15 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  \returns true if two rotations are similar.
    */
   using RotationQuaternionBase<RotationQuaternion<PrimType_, Usage_>, Usage_> ::operator==;
+
+
+  /*! \brief Used for printing the object with std::cout.
+   *  \returns std::stream object
+   */
+  friend std::ostream& operator << (std::ostream& out, const RotationQuaternion& rquat) {
+    out << rquat.toUnitQuaternion();
+    return out;
+  }
 };
 
 //! \brief Active quaternion rotation with double primitive type

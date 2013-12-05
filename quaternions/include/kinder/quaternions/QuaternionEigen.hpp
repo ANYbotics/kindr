@@ -63,6 +63,8 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::
   typedef PrimType_ Scalar;
   //! the imaginary type, i.e., Eigen::Quaternion<>
   typedef Eigen::Matrix<PrimType_,3,1> Imaginary;
+  //! quaternion as 4x1 matrix: [w; x; y; z]
+  typedef Eigen::Matrix<PrimType_,4,1> Vector4;
 
   //! Default constructor creates a quaternion with all coefficients equal to zero
   Quaternion()
@@ -195,6 +197,14 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::
     return Imaginary(Base::x(),Base::y(),Base::z());
   }
 
+  inline Vector4 getVector4() const {
+    Vector4 vector4;
+    vector4 << Base::w(), Base::x(), Base::y(), Base::z();
+    return vector4;
+  }
+
+
+
   inline PrimType_ norm() const {
     return Base::norm();
   }
@@ -216,6 +226,8 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::
   UnitQuaternion<PrimType_> toUnitQuaternion() const {
     return UnitQuaternion<PrimType_>(this->Base::normalized());
   }
+
+
 };
 
 //! Quaternion using double
@@ -246,7 +258,8 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType_>> {
   typedef PrimType_ Scalar;
   //! the imaginary type, i.e., Eigen::Quaternion<>
   typedef Eigen::Matrix<PrimType_,3,1> Imaginary;
-
+  //! quaternion as 4x1 matrix: [w; x; y; z]
+  typedef Eigen::Matrix<PrimType_,4,1> Vector4;
 
   //! Default Constructor initializes the unit quaternion to identity
   UnitQuaternion()
@@ -370,6 +383,12 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType_>> {
     return Imaginary(unitQuternion_.x(),unitQuternion_.y(),unitQuternion_.z());
   }
 
+  inline Vector4 getVector4() const {
+    Vector4 vector4;
+    vector4 << Base::w(), Base::x(), Base::y(), Base::z();
+    return vector4;
+  }
+
 //  using Base::operator*;
 
 //  using UnitQuaternionBase<UnitQuaternion<PrimType_>>::conjugate;
@@ -397,16 +416,18 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType_>> {
 //  }
 
   PrimType_ norm() const {
-	return unitQuternion_.norm();
+    return unitQuternion_.norm();
   }
 
   const Implementation& toImplementation() const {
-	return unitQuternion_.toImplementation();
+    return unitQuternion_.toImplementation();
   }
 
   Implementation& toImplementation() {
-	return unitQuternion_.toImplementation();
+    return unitQuternion_.toImplementation();
   }
+
+
 };
 
 //! Unit quaternion using double
