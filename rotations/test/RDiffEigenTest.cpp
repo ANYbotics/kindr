@@ -70,8 +70,8 @@ struct AngularVelocity3Test: public ::testing::Test {
 
 
 typedef ::testing::Types<
-    rot::AngularVelocity3PD,
-    rot::AngularVelocity3PF
+    rot::AngularVelocityPD,
+    rot::AngularVelocityPF
 > Types;
 
 
@@ -137,11 +137,20 @@ TYPED_TEST(AngularVelocity3Test, testAngularVelocity3)
 TEST(RDiffTest, testDevelopment)
 {
   rot::RotationQuaternionPD rquat;
-  rot::RotationQuaternionDiffPD rquatdiff;
-  rot::AngularVelocity3PD angularVelocity(rquat, rquatdiff);
+
+  rot::RotationQuaternionDiffPD rquatdiff(1,2,3,4);
+  rot::AngularVelocityPD angularVelocity(rquat, rquatdiff);
 
 
+  std::cout << "rquatdiff:" << rquatdiff << std::endl;
+  std::cout << "angularVelocity:" << angularVelocity << std::endl;
+  std::cout << "angularVelocity2" << rquatdiff.cast<rot::AngularVelocityPD>(rquat) << std::endl;
 
 
+  rot::EulerAnglesXyzPD eulerAnglesXyz(0.1, 0.2, 0.3);
+  rot::AngularVelocityPD angularVelocity2(0.2, 0.2, 0.2);
+  rot::EulerAnglesXyzDiffPD eulerAnglesXyzDiff2(eulerAnglesXyz,angularVelocity2);
+
+  std::cout << "eulerDiff: " << eulerAnglesXyzDiff2 << std::endl;
 }
 

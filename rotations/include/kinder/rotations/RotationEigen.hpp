@@ -248,6 +248,173 @@ typedef AngleAxis<double, RotationUsage::PASSIVE> AngleAxisPD;
 //! \brief Passive angle axis rotation with float primitive type
 typedef AngleAxis<float,  RotationUsage::PASSIVE> AngleAxisPF;
 
+/*! \class RotationVector
+ * \brief Implementation of a rotation vector based on Eigen::Matrix<Scalar, 3, 1>
+ *
+ *  This representation uses three parameters. \see AngleAxis for an angle-axis representation with four parameters.
+ *
+ *  The following two typedefs are provided for convenience:
+ *   - RotationVectorAD for active rotation and double primitive type
+ *   - RotationVectorAF for active rotation and float primitive type
+ *   - RotationVectorPD for passive rotation and double primitive type
+ *   - RotationVectorPF for passive rotation and float primitive type
+ *
+ *  \tparam PrimType the primitive type of the data (double or float)
+ *  \tparam Usage_ the rotation usage which is either active or passive
+ *  \ingroup rotations
+ */
+template<typename PrimType_, enum RotationUsage Usage_>
+class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage_>, Usage_>, private Eigen::Matrix<PrimType_, 3, 1> {
+ private:
+  /*! \brief The base type.
+   */
+  typedef Eigen::Matrix<PrimType_, 3, 1> Base;
+ public:
+  /*! \brief The implementation type.
+   *  The implementation type is always an Eigen object.
+   */
+  typedef Base Implementation;
+  /*! \brief The primitive type.
+   *  Float/Double
+   */
+  typedef PrimType_ Scalar;
+
+  /*! \brief The rotation type is a 3D vector.
+   */
+  typedef Implementation Vector3;
+
+  /*! \brief Default constructor using identity rotation.
+   */
+  RotationVector()
+    : Base(Base::Zero()) {
+  }
+
+  /*! \brief Constructor using three scalars.
+   *
+   *  \param v1      first entry of the rotation vector
+   *  \param v2      second entry of the rotation vector
+   *  \param v3      third entry of the rotation vector
+   */
+  RotationVector(const Scalar& v1, const Scalar& v2, const Scalar& v3)
+    : Base(v1,v2,v3) {
+  }
+
+
+  /*! \brief Constructor using Eigen::Matrix<Scalar, 3, 1>.
+   *
+   *  \param other   Eigen::Matrix<Scalar, 3, 1>
+   */
+  explicit RotationVector(const Base& other) // explicit on purpose
+    : Base(other) {
+  }
+
+  /*! \brief Constructor using another rotation.
+   *  \param other   other rotation
+   */
+  template<typename OtherDerived_>
+  inline explicit RotationVector(const RotationBase<OtherDerived_, Usage_>& other)
+    : Base(internal::ConversionTraits<RotationVector, OtherDerived_>::convert(static_cast<const OtherDerived_&>(other))) {
+  }
+
+  /*! \brief Assignment operator using another rotation.
+   *  \param other   other rotation
+   *  \returns reference
+   */
+  template<typename OtherDerived_>
+  RotationVector& operator =(const RotationBase<OtherDerived_, Usage_>& other) {
+    this->toImplementation() = internal::ConversionTraits<RotationVector, OtherDerived_>::convert(other.derived()).toImplementation();
+    return *this;
+  }
+
+  /*! \brief Returns the inverse of the rotation.
+   *  \returns the inverse of the rotation
+   */
+  RotationVector inverted() const {
+    return RotationVector(AngleAxis<PrimType_, Usage_>(this->toImplementation().norm(), this->toImplementation().normalized()).inverse());
+  }
+
+  /*! \brief Inverts the rotation.
+   *  \returns reference
+   */
+  RotationVector& invert() {
+    *this = inverted();
+    return *this;
+  }
+
+  /*! \brief Cast to the implementation type.
+   *  \returns the implementation for direct manipulation (recommended only for advanced users)
+   */
+  inline Implementation& toImplementation() {
+    return static_cast<Implementation&>(*this);
+  }
+
+  /*! \brief Cast to the implementation type.
+   *  \returns the implementation for direct manipulation (recommended only for advanced users)
+   */
+  inline const Implementation& toImplementation() const {
+    return static_cast<const Implementation&>(*this);
+  }
+
+
+  /*! \brief Reading access to the rotation vector.
+   *  \returns rotation axis (vector) with reading access
+   */
+  inline const Vector3& vector() const {
+    return this->toImplementation();
+  }
+
+
+  /*! \brief Sets the rotation to identity.
+   *  \returns reference
+   */
+  RotationVector& setIdentity() {
+    this->vector().setZero();
+    return *this;
+  }
+
+  /*! \brief Returns a unique angle axis rotation with norm in [0,pi).
+   *  This function is used to compare different rotations.
+   *  \returns copy of the rotation vector which is unique
+   */
+  RotationVector getUnique() const {
+    RotationVector rotVector(toImplementation());
+    const Scalar norm = rotVector.toImplementation().norm();
+    const Scalar normWrapped = kinder::common::Mod(norm+M_PI,2*M_PI)-M_PI;
+    rotVector.toImplementation()*normWrapped/norm;
+    return rotVector;
+  }
+
+  /*! \brief
+   *  \returns reference
+   */
+  RotationVector& setUnique() {
+    *this = getUnique();
+    return *this;
+  }
+
+  /*! \brief Concenation operator.
+   *  This is explicitly specified, because Eigen provides also an operator*.
+   *  \returns the concenation of two rotations
+   */
+  using RotationVectorBase<RotationVector<PrimType_, Usage_>, Usage_>::operator*;
+
+  /*! \brief Used for printing the object with std::cout.
+   *  \returns std::stream object
+   */
+  friend std::ostream& operator << (std::ostream& out, const RotationVector& rotationVector) {
+    out << rotationVector.toImplementation().transpose();
+    return out;
+  }
+};
+
+//! \brief Active rotation vector with double primitive type
+typedef RotationVector<double, RotationUsage::ACTIVE>  RotationVectorAD;
+//! \brief Active rotation vector with float primitive type
+typedef RotationVector<float,  RotationUsage::ACTIVE>  RotationVectorAF;
+//! \brief Passive rotation vector with double primitive type
+typedef RotationVector<double, RotationUsage::PASSIVE> RotationVectorPD;
+//! \brief Passive rotation vector with float primitive type
+typedef RotationVector<float,  RotationUsage::PASSIVE> RotationVectorPF;
 
 
 
@@ -297,19 +464,32 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
     KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
   }
 
-  /*! \brief Constructor using UnitQuaternion.
-   *  \param other   UnitQuaternion
+  /*! \brief Constructor using Eigen::Quaternion<PrimType_>.
+   *  In debug mode, an assertion is thrown if the quaternion has not unit length.
+   *  \param other   Eigen::Quaternion<PrimType_>
    */
   explicit RotationQuaternion(const Implementation& other)
     : Base(other) {
+    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
   }
 
-  /*! \brief Function for converting the RotationQuaternion back to a UnitQuaternion.
-   *  \returns UnitQuaternion
+  /*! \brief Constructor using quaternions::UnitQuaternion.
+   *  In debug mode, an assertion is thrown if the quaternion has not unit length.
+   *  \param other   quaternions::UnitQuaternion
    */
-//  Base toUnitQuaternion() const {
-//    return Base(*this); // todo needed?
-//  }
+  explicit RotationQuaternion(const Base& other)
+    : Base(other) {
+    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
+  }
+
+  /*! \brief Constructor using another rotation.
+   *  \param other   other rotation
+   */
+  template<typename OtherDerived_>
+  inline explicit RotationQuaternion(const RotationBase<OtherDerived_, Usage_>& other)
+    : Base(internal::ConversionTraits<RotationQuaternion, OtherDerived_>::convert(static_cast<const OtherDerived_&>(other))) {
+  }
+
 
   Base& toUnitQuaternion()  {
     return static_cast<Base&>(*this);
@@ -327,22 +507,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
     return this->toUnitQuaternion().toImplementation();
   }
 
-  /*! \brief Constructor using Eigen::Quaternion<PrimType_>.
-   *  In debug mode, an assertion is thrown if the quaternion has not unit length.
-   *  \param other   Eigen::Quaternion<PrimType_>
-   */
-  explicit RotationQuaternion(const Base& other)
-    : Base(other) {
-    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
-  }
 
-  /*! \brief Constructor using another rotation.
-   *  \param other   other rotation
-   */
-  template<typename OtherDerived_>
-  inline explicit RotationQuaternion(const RotationBase<OtherDerived_, Usage_>& other)
-    : Base(internal::ConversionTraits<RotationQuaternion, OtherDerived_>::convert(static_cast<const OtherDerived_&>(other))) {
-  }
 
   /*! \brief Assignment operator using a UnitQuaternion.
    *  \param quat   UnitQuaternion
@@ -1295,6 +1460,15 @@ class get_matrix3X<eigen_implementation::AngleAxis<PrimType_, Usage_>>{
 };
 
 template<typename PrimType_, enum RotationUsage Usage_>
+class get_matrix3X<eigen_implementation::RotationVector<PrimType_, Usage_>>{
+ public:
+  typedef int  IndexType;
+
+  template <IndexType Cols>
+  using Matrix3X = Eigen::Matrix<PrimType_, 3, Cols>;
+};
+
+template<typename PrimType_, enum RotationUsage Usage_>
 class get_matrix3X<eigen_implementation::RotationQuaternion<PrimType_, Usage_>>{
  public:
   typedef int IndexType;
@@ -1358,6 +1532,18 @@ class get_other_usage<eigen_implementation::AngleAxis<PrimType_, RotationUsage::
 };
 
 template<typename PrimType_>
+class get_other_usage<eigen_implementation::RotationVector<PrimType_, RotationUsage::ACTIVE>> {
+ public:
+  typedef eigen_implementation::RotationVector<PrimType_, RotationUsage::PASSIVE> OtherUsage;
+};
+
+template<typename PrimType_>
+class get_other_usage<eigen_implementation::RotationVector<PrimType_, RotationUsage::PASSIVE>> {
+ public:
+  typedef eigen_implementation::RotationVector<PrimType_, RotationUsage::ACTIVE> OtherUsage;
+};
+
+template<typename PrimType_>
 class get_other_usage<eigen_implementation::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>> {
  public:
   typedef eigen_implementation::RotationQuaternion<PrimType_, RotationUsage::PASSIVE> OtherUsage;
@@ -1416,6 +1602,14 @@ class ConversionTraits<eigen_implementation::AngleAxis<DestPrimType_, Usage_>, e
 };
 
 template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
+class ConversionTraits<eigen_implementation::AngleAxis<DestPrimType_, Usage_>, eigen_implementation::RotationVector<SourcePrimType_, Usage_>> {
+ public:
+  inline static eigen_implementation::AngleAxis<DestPrimType_, Usage_> convert(const eigen_implementation::RotationVector<SourcePrimType_, Usage_>& rv) {
+    return eigen_implementation::AngleAxis<DestPrimType_, Usage_>(rv.toImplementation().norm(), rv.toImplementation().normalized());
+  }
+};
+
+template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
 class ConversionTraits<eigen_implementation::AngleAxis<DestPrimType_, Usage_>, eigen_implementation::RotationQuaternion<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_implementation::AngleAxis<DestPrimType_, Usage_> convert(const eigen_implementation::RotationQuaternion<SourcePrimType_, Usage_>& q) {
@@ -1447,12 +1641,37 @@ class ConversionTraits<eigen_implementation::AngleAxis<DestPrimType_, Usage_>, e
   }
 };
 
+template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
+class ConversionTraits<eigen_implementation::RotationVector<DestPrimType_, Usage_>, eigen_implementation::RotationVector<SourcePrimType_, Usage_>> {
+ public:
+  inline static eigen_implementation::RotationVector<DestPrimType_, Usage_> convert(const eigen_implementation::RotationVector<SourcePrimType_, Usage_>& rotation) {
+    return eigen_implementation::RotationVector<DestPrimType_, Usage_>(rotation.toImplementation().template cast<DestPrimType_>());
+  }
+};
+
+template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
+class ConversionTraits<eigen_implementation::RotationVector<DestPrimType_, Usage_>, eigen_implementation::RotationQuaternion<SourcePrimType_, Usage_>> {
+ public:
+  inline static eigen_implementation::RotationVector<DestPrimType_, Usage_> convert(const eigen_implementation::RotationQuaternion<SourcePrimType_, Usage_>& q) {
+    const Eigen::AngleAxis<DestPrimType_> aa(eigen_implementation::getAngleAxisFromQuaternion<SourcePrimType_, DestPrimType_>(q.toImplementation()));
+    return eigen_implementation::RotationVector<DestPrimType_, Usage_>(aa.angle()*aa.axis());
+  }
+};
+
 
 template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
 class ConversionTraits<eigen_implementation::RotationQuaternion<DestPrimType_, Usage_>, eigen_implementation::AngleAxis<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_implementation::RotationQuaternion<DestPrimType_, Usage_> convert(const eigen_implementation::AngleAxis<SourcePrimType_, Usage_>& aa) {
     return eigen_implementation::RotationQuaternion<DestPrimType_, Usage_>(eigen_implementation::getQuaternionFromAngleAxis<SourcePrimType_, DestPrimType_>(aa.toImplementation()));
+  }
+};
+
+template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
+class ConversionTraits<eigen_implementation::RotationQuaternion<DestPrimType_, Usage_>, eigen_implementation::RotationVector<SourcePrimType_, Usage_>> {
+ public:
+  inline static eigen_implementation::RotationQuaternion<DestPrimType_, Usage_> convert(const eigen_implementation::RotationVector<SourcePrimType_, Usage_>& rv) {
+    return eigen_implementation::RotationQuaternion<DestPrimType_, Usage_>(eigen_implementation::getQuaternionFromAngleAxis<SourcePrimType_, DestPrimType_>(eigen_implementation::AngleAxis<SourcePrimType_, Usage_>(rv.toImplementation().norm(), rv.toImplementation().normalized()).toImplementation()));
   }
 };
 
@@ -1498,6 +1717,14 @@ class ConversionTraits<eigen_implementation::RotationMatrix<DestPrimType_, Usage
 };
 
 template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
+class ConversionTraits<eigen_implementation::RotationMatrix<DestPrimType_, Usage_>, eigen_implementation::RotationVector<SourcePrimType_, Usage_>> {
+ public:
+  inline static eigen_implementation::RotationMatrix<DestPrimType_, Usage_> convert(const eigen_implementation::RotationVector<SourcePrimType_, Usage_>& rv) {
+    return eigen_implementation::RotationMatrix<DestPrimType_, Usage_>(eigen_implementation::getRotationMatrixFromAngleAxis<SourcePrimType_, DestPrimType_>(eigen_implementation::AngleAxis<SourcePrimType_, Usage_>(rv.toImplementation().norm(), rv.toImplementation().normalized()).toImplementation()));
+  }
+};
+
+template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
 class ConversionTraits<eigen_implementation::RotationMatrix<DestPrimType_, Usage_>, eigen_implementation::RotationQuaternion<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_implementation::RotationMatrix<DestPrimType_, Usage_> convert(const eigen_implementation::RotationQuaternion<SourcePrimType_, Usage_>& q) {
@@ -1535,6 +1762,14 @@ class ConversionTraits<eigen_implementation::EulerAnglesXyz<DestPrimType_, Usage
  public:
   inline static eigen_implementation::EulerAnglesXyz<DestPrimType_, Usage_> convert(const eigen_implementation::AngleAxis<SourcePrimType_, Usage_>& aa) {
     return eigen_implementation::EulerAnglesXyz<DestPrimType_, Usage_>(eigen_implementation::getRpyFromAngleAxis<SourcePrimType_, DestPrimType_>(aa.toImplementation()));
+  }
+};
+
+template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
+class ConversionTraits<eigen_implementation::EulerAnglesXyz<DestPrimType_, Usage_>, eigen_implementation::RotationVector<SourcePrimType_, Usage_>> {
+ public:
+  inline static eigen_implementation::EulerAnglesXyz<DestPrimType_, Usage_> convert(const eigen_implementation::RotationVector<SourcePrimType_, Usage_>& rv) {
+    return eigen_implementation::EulerAnglesXyz<DestPrimType_, Usage_>(eigen_implementation::getRpyFromAngleAxis<SourcePrimType_, DestPrimType_>(eigen_implementation::AngleAxis<SourcePrimType_, Usage_>(rv.toImplementation().norm(), rv.toImplementation().normalized()).toImplementation()));
   }
 };
 
@@ -1687,6 +1922,15 @@ class RotationTraits<eigen_implementation::AngleAxis<PrimType_, Usage_>> {
 };
 
 template<typename PrimType_, enum RotationUsage Usage_>
+class RotationTraits<eigen_implementation::RotationVector<PrimType_, Usage_>> {
+ public:
+  template<typename get_matrix3X<eigen_implementation::RotationVector<PrimType_, Usage_>>::IndexType Cols>
+  inline static typename get_matrix3X<eigen_implementation::RotationVector<PrimType_, Usage_>>::template Matrix3X<Cols> rotate(const eigen_implementation::RotationVector<PrimType_, Usage_>& rv, const typename get_matrix3X<eigen_implementation::RotationVector<PrimType_, Usage_>>::template Matrix3X<Cols>& m){
+    return eigen_implementation::RotationMatrix<PrimType_, Usage_>(rv).toImplementation() * m;
+  }
+};
+
+template<typename PrimType_, enum RotationUsage Usage_>
 class RotationTraits<eigen_implementation::RotationQuaternion<PrimType_, Usage_>> {
  public:
   template<typename get_matrix3X<eigen_implementation::RotationQuaternion<PrimType_, Usage_>>::IndexType Cols>
@@ -1744,10 +1988,10 @@ class ComparisonTraits<eigen_implementation::RotationQuaternion<PrimType_, Usage
    }
 
    inline static bool isNear(const eigen_implementation::RotationQuaternion<PrimType_, Usage_>& a, const eigen_implementation::RotationQuaternion<PrimType_, Usage_>& b, PrimType_ tol){
-     return fabs(a.toImplementation().w() - b.toImplementation().w() < tol) &&
-    		    fabs(a.toImplementation().x() - b.toImplementation().x() < tol) &&
-    	    	fabs(a.toImplementation().y() - b.toImplementation().y() < tol) &&
-    	    	fabs(a.toImplementation().z() - b.toImplementation().z() < tol);
+     return fabs(a.toImplementation().w() - b.toImplementation().w()) < tol &&
+    		    fabs(a.toImplementation().x() - b.toImplementation().x()) < tol &&
+    	    	fabs(a.toImplementation().y() - b.toImplementation().y()) < tol &&
+    	    	fabs(a.toImplementation().z() - b.toImplementation().z()) < tol;
    }
 };
 

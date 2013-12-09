@@ -107,6 +107,13 @@ class RotationTraits {
 // inline static typename internal::get_vector3<Derived_>::type rotate(const Rotation_& r, const typename internal::get_vector3<Derived_>::type& );
 };
 
+template<typename Rotation_>
+class ExponentialMapTraits {
+ public:
+// inline static typename internal::get_vector3<Derived_>::type rotate(const Rotation_& r, const typename internal::get_vector3<Derived_>::type& );
+};
+
+
 /*! \brief This class determines the correct matrix type for each rotation which is used for matrix rotations
  *  \class get_matrix3X
  *  (only for advanced users)
@@ -131,6 +138,15 @@ class get_matrix3 {
 //    return position.toImplementation();
 //  }
 };
+
+
+//template<typename Vector_>
+//class get_vector3 {
+// public:
+//
+//};
+
+
 
 
 
@@ -306,6 +322,22 @@ class AngleAxisBase : public RotationBase<Implementation, Usage_> {
 
   template<typename OtherDerived_> // todo: necessary?
   AngleAxisBase& operator =(const RotationBase<OtherDerived_, Usage_>& other);
+};
+
+/*! \brief Representation of a generic rotation vector
+ *  \ingroup rotations
+ *  \class RotationVectorBase
+ *
+ *  This class defines the generic interface for a rotation vector, which has three paramters.
+ *  \see AngleAxisBase for a representation with four parameters.
+ *  \tparam Implementation the derived class that should implement the rotation
+ *  \tparam Usage_ the rotation usage which is either active or passive
+ */
+template<typename Implementation, enum RotationUsage Usage_>
+class RotationVectorBase : public RotationBase<Implementation, Usage_> {
+
+  template<typename OtherDerived_> // todo: necessary?
+  RotationVectorBase& operator =(const RotationBase<OtherDerived_, Usage_>& other);
 };
 
 /*! \brief Representation of a generic quaternion rotation
