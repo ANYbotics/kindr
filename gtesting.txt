@@ -4,12 +4,12 @@ Main functionality:
 - Constructor
 - Access to derived
 - Inversion
-- Setters (identity)
-- Unique (getter and setter)
-- Passive/Active forms
-- Concatenation
-- Comparison (equality)
-- Rotation of a vector (normal and inverse)
+------------------- Setters (identity)
+------------------- Unique (getter and setter)
+------------------- Passive/Active forms
+------------------- Concatenation
+------------------- Comparison (equality)
+------------------- Rotation of a vector (normal and inverse)
 
 Derived classes:
 - AngleAxisBase (assignment || toImplementation, angle, axis, <<)
