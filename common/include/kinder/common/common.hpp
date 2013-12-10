@@ -72,11 +72,15 @@ class AngularVelocity;
 namespace kinder {
 namespace common {
 
-
+/*! \brief Floating-point modulo
+ *
+ * The result (the remainder) has same sign as the divisor.
+ * Similar to matlab's mod(); Not similar to fmod():    floatingPointModulo(-3,4)= 1   fmod(-3,4)= -3
+ */
 template<typename T>
-T mod(const T& x, const T& y)
+T floatingPointModulo(const T& x, const T& y)
 {
-    static_assert(!std::numeric_limits<T>::is_exact , "Mod: floating-point type expected");
+    static_assert(!std::numeric_limits<T>::is_exact , "floatingPointModulo: floating-point type expected");
 
     if (y == 0.0)
         return x;
@@ -87,7 +91,7 @@ T mod(const T& x, const T& y)
 
     if (y > 0)              // modulo range: [0..y)
     {
-        if (m>=y)           // Mod(-1e-16             , 360.    ): m= 360.
+        if (m>=y)           // mod(-1e-16             , 360.    ): m= 360.
             return 0;
 
         if (m<0 )
@@ -100,7 +104,7 @@ T mod(const T& x, const T& y)
     }
     else                    // modulo range: (y..0]
     {
-        if (m<=y)           // Mod(1e-16              , -360.   ): m= -360.
+        if (m<=y)           // mod(1e-16              , -360.   ): m= -360.
             return 0;
 
         if (m>0 )
@@ -108,32 +112,32 @@ T mod(const T& x, const T& y)
             if (y+m == y)
                 return 0  ; // just in case...
             else
-                return y+m; // Mod(-106.81415022205296, -2*M_PI): m= 1.421e-14
+                return y+m; // mod(-106.81415022205296, -2*M_PI): m= 1.421e-14
         }
     }
 
     return m;
 }
 
-// wrap angle to [x1..x2)
+//! wrap angle to [x1..x2)
 template<typename T>
 inline T wrapAngle(const T& angle, const T& x1, const T& x2)
 {
-    return Mod(angle-x1, x2-x1) + x1;
+    return floatingPointModulo(angle-x1, x2-x1) + x1;
 }
 
-// wrap angle to [-PI..PI)
+//! wrap angle to [-PI..PI)
 template<typename T>
 inline T wrapPosNegPI(const T& angle)
 {
-    return Mod(angle + M_PI, 2*M_PI) - M_PI;
+    return floatingPointModulo(angle + M_PI, 2*M_PI) - M_PI;
 }
 
-// wrap angle to [0..2*PI)
+//! wrap angle to [0..2*PI)
 template<typename T>
 inline T wrapTwoPI(const T& angle)
 {
-    return Mod(angle, 2*M_PI);
+    return floatingPointModulo(angle, 2*M_PI);
 }
 
 }

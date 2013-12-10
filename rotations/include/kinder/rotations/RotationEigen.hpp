@@ -207,7 +207,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
    *  \returns copy of the angle axis rotation which is unique
    */
   AngleAxis getUnique() const {
-    AngleAxis aa(kinder::common::mod(angle()+M_PI,2*M_PI)-M_PI, axis()); // wraps angle into [-pi,pi)
+    AngleAxis aa(kinder::common::floatingPointModulo(angle()+M_PI,2*M_PI)-M_PI, axis()); // first wraps angle into [-pi,pi)
     if(aa.angle() >= 0)	{
       return aa;
     } else {
@@ -219,7 +219,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
    *  \returns reference
    */
   AngleAxis& setUnique() {
-    AngleAxis aa(kinder::common::mod(angle()+M_PI,2*M_PI)-M_PI, axis()); // wraps angle into [-pi,pi)
+    AngleAxis aa(kinder::common::floatingPointModulo(angle()+M_PI,2*M_PI)-M_PI, axis()); // wraps angle into [-pi,pi)
     if(aa.angle() >= 0) { // wraps angle into [0,pi)
       *this = aa;
     } else {
@@ -388,7 +388,7 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
 
     const Scalar norm = rotVector.toImplementation().norm();
     if (norm != Scalar(0)) {
-      const Scalar normWrapped = kinder::common::mod(norm+M_PI,2*M_PI)-M_PI;
+      const Scalar normWrapped = kinder::common::floatingPointModulo(norm+M_PI,2*M_PI)-M_PI;
       rotVector.toImplementation()*normWrapped/norm;
     }
     return rotVector;
@@ -1085,9 +1085,9 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage
    *  \returns copy of the Euler angles rotation which is unique
    */
   EulerAnglesXyz getUnique() const {
-    EulerAnglesXyz xyz(kinder::common::mod(roll() +M_PI,2*M_PI)-M_PI,
-                       kinder::common::mod(pitch()+M_PI,2*M_PI)-M_PI,
-                       kinder::common::mod(yaw()  +M_PI,2*M_PI)-M_PI); // wraps all angles into [-pi,pi)
+    EulerAnglesXyz xyz(kinder::common::floatingPointModulo(roll() +M_PI,2*M_PI)-M_PI,
+                       kinder::common::floatingPointModulo(pitch()+M_PI,2*M_PI)-M_PI,
+                       kinder::common::floatingPointModulo(yaw()  +M_PI,2*M_PI)-M_PI); // wraps all angles into [-pi,pi)
     if(xyz.pitch() >= M_PI/2)  // wraps angles into [-pi,pi),[-pi/2,pi/2),[-pi,pi)
     {
       if(xyz.roll() >= 0) {
@@ -1375,9 +1375,9 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
    *  \returns copy of the Euler angles rotation which is unique
    */
   EulerAnglesZyx getUnique() const {  // wraps angles into [-pi,pi),[-pi/2,pi/2),[-pi,pi)
-    EulerAnglesZyx zyx(kinder::common::mod(yaw()  +M_PI,2*M_PI)-M_PI,
-                       kinder::common::mod(pitch()+M_PI,2*M_PI)-M_PI,
-                       kinder::common::mod(roll() +M_PI,2*M_PI)-M_PI); // wraps all angles into [-pi,pi)
+    EulerAnglesZyx zyx(kinder::common::floatingPointModulo(yaw()  +M_PI,2*M_PI)-M_PI,
+                       kinder::common::floatingPointModulo(pitch()+M_PI,2*M_PI)-M_PI,
+                       kinder::common::floatingPointModulo(roll() +M_PI,2*M_PI)-M_PI); // wraps all angles into [-pi,pi)
     if(zyx.pitch() >= M_PI/2)
     {
       if(zyx.yaw() >= 0) {
