@@ -668,10 +668,35 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  \returns copy of the quaternion rotation which is unique
    */
   RotationQuaternion getUnique() const {
-    if(this->w() >= 0) {
+    if(this->w() > 0) {
       return *this;
-    } else {
+    } else if (this->w() < 0){
       return RotationQuaternion(-this->w(),-this->x(),-this->y(),-this->z());
+    } else { // w == 0
+
+      if(this->x() > 0) {
+        return *this;
+      } else if (this->x() < 0){
+        return RotationQuaternion(-this->w(),-this->x(),-this->y(),-this->z());
+      } else { // x == 0
+
+        if(this->y() > 0) {
+          return *this;
+        } else if (this->y() < 0){
+          return RotationQuaternion(-this->w(),-this->x(),-this->y(),-this->z());
+        } else { // y == 0
+
+          if(this->z() > 0) {
+            return *this;
+          } else if (this->z() < 0){
+            return RotationQuaternion(-this->w(),-this->x(),-this->y(),-this->z());
+          } else { // z == 0
+
+            std::cout << "Invalid Quaternion." << std::endl;
+
+          }
+        }
+      }
     }
   }
 
