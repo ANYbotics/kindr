@@ -421,7 +421,7 @@ template<typename Derived_>
 class UsageConversionTraits<Derived_,RotationUsage::PASSIVE> {
  public:
   inline static typename get_other_usage<Derived_>::OtherUsage getActive(const RotationBase<Derived_,RotationUsage::PASSIVE>& in) {
-    return typename get_other_usage<Derived_>::OtherUsage(in.derived().inverted());
+    return typename get_other_usage<Derived_>::OtherUsage(in.derived().inverted().toImplementation());
   }
 
   // getPassive() does not exist (on purpose)
@@ -431,7 +431,7 @@ template<typename Derived_>
 class UsageConversionTraits<Derived_,RotationUsage::ACTIVE> {
  public:
   inline static typename get_other_usage<Derived_>::OtherUsage getPassive(const RotationBase<Derived_,RotationUsage::ACTIVE>& in) {
-    return typename get_other_usage<Derived_>::OtherUsage(in.derived().inverted());
+    return typename get_other_usage<Derived_>::OtherUsage(in.derived().inverted().toImplementation());
   }
 
   // getActive() does not exist (on purpose)
