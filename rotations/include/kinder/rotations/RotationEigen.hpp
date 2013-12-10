@@ -211,7 +211,30 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
     if(aa.angle() > 0)	{
       return aa;
     } else if(aa.angle() < 0) {
-      return AngleAxis(-aa.angle(),-aa.axis());
+      if(aa.angle() != -M_PI) {
+        return AngleAxis(-aa.angle(),-aa.axis());
+      } else { // angle == -pi, so axis must be viewed further, because -pi,axis does the same as -pi,-axis
+
+        if(aa.axis()[0] < 0) {
+          return AngleAxis(-aa.angle(),-aa.axis());
+        } else if(aa.axis()[0] > 0) {
+          return AngleAxis(-aa.angle(),aa.axis());
+        } else { // v1 == 0
+
+          if(aa.axis()[1] < 0) {
+            return AngleAxis(-aa.angle(),-aa.axis());
+          } else if(aa.axis()[1] > 0) {
+            return AngleAxis(-aa.angle(),aa.axis());
+          } else { // v2 == 0
+
+            if(aa.axis()[2] < 0) { // v3 must be -1 or 1
+              return AngleAxis(-aa.angle(),-aa.axis());
+            } else  {
+              return AngleAxis(-aa.angle(),aa.axis());
+            }
+          }
+        }
+      }
     } else { // angle == 0
       return AngleAxis();
     }
