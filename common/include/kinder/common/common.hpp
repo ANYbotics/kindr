@@ -74,7 +74,7 @@ namespace common {
 
 
 template<typename T>
-T Mod(const T& x, const T& y)
+T mod(const T& x, const T& y)
 {
     static_assert(!std::numeric_limits<T>::is_exact , "Mod: floating-point type expected");
 
