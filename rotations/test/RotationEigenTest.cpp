@@ -27,6 +27,7 @@
 */
 
 #include "kinder/common/gtest_eigen.hpp"
+#include "kinder/quaternions/QuaternionEigen.hpp"
 #include "kinder/rotations/RotationEigen.hpp"
 
 namespace rot = kinder::rotations::eigen_implementation;
@@ -320,3 +321,23 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionVectorRotation){
 //TYPED_TEST(RotationPairsTest, testConversion){
 //
 //}
+
+TEST (RotationImplementationTest, testRotationVector) {
+  rot::RotationVectorAD rvec;
+  rot::RotationQuaternionAD rquat(kinder::quaternions::eigen_implementation::QuaternionD(1,2,3,4).toUnitQuaternion());
+  rvec = rquat;
+  std::cout << "rvec: " << rvec << std::endl;
+  Eigen::Vector3d vec(1,2,3);
+  std::cout << "rvec rotate: " << rvec.rotate(vec)-rquat.rotate(vec) << std::endl;
+  std::cout << rquat << " | " <<  rot::RotationQuaternionAD(rvec) << std::endl;
+  rot::EulerAnglesXyzAD xyz1(rvec);
+
+
+//  xyz1 = rvec;
+//  xyz1 = Eigen::Vector3d(0,0,0);
+  rot::EulerAnglesXyzAD xyz2(rquat);
+  std::cout << xyz1 << " | " <<  xyz2 << std::endl;
+
+
+
+}

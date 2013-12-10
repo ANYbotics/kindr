@@ -107,6 +107,13 @@ class RotationTraits {
 // inline static typename internal::get_vector3<Derived_>::type rotate(const Rotation_& r, const typename internal::get_vector3<Derived_>::type& );
 };
 
+template<typename Rotation_>
+class ExponentialMapTraits {
+ public:
+// inline static typename internal::get_vector3<Derived_>::type rotate(const Rotation_& r, const typename internal::get_vector3<Derived_>::type& );
+};
+
+
 /*! \brief This class determines the correct matrix type for each rotation which is used for matrix rotations
  *  \class get_matrix3X
  *  (only for advanced users)
@@ -131,6 +138,7 @@ class get_matrix3 {
 //    return position.toImplementation();
 //  }
 };
+
 
 
 
@@ -298,25 +306,41 @@ class RotationBase {
  *  \ingroup rotations
  *  \class AngleAxisBase
  *  This class defines the generic interface for an angle axis rotation.
- *  \tparam Implementation the derived class that should implement the rotation
+ *  \tparam Implementation_ the derived class that should implement the rotation
  *  \tparam Usage_ the rotation usage which is either active or passive
  */
-template<typename Implementation, enum RotationUsage Usage_>
-class AngleAxisBase : public RotationBase<Implementation, Usage_> {
+template<typename Implementation_, enum RotationUsage Usage_>
+class AngleAxisBase : public RotationBase<Implementation_, Usage_> {
 
   template<typename OtherDerived_> // todo: necessary?
   AngleAxisBase& operator =(const RotationBase<OtherDerived_, Usage_>& other);
+};
+
+/*! \brief Representation of a generic rotation vector
+ *  \ingroup rotations
+ *  \class RotationVectorBase
+ *
+ *  This class defines the generic interface for a rotation vector, which has three paramters.
+ *  \see AngleAxisBase for a representation with four parameters.
+ *  \tparam Implementation_ the derived class that should implement the rotation
+ *  \tparam Usage_ the rotation usage which is either active or passive
+ */
+template<typename Implementation_, enum RotationUsage Usage_>
+class RotationVectorBase : public RotationBase<Implementation_, Usage_> {
+
+  template<typename OtherDerived_> // todo: necessary?
+  RotationVectorBase& operator =(const RotationBase<OtherDerived_, Usage_>& other);
 };
 
 /*! \brief Representation of a generic quaternion rotation
  *  \ingroup rotations
  *  \class RotationQuaternionBase
  *  This class defines the generic interface for a quaternion rotation.
- *  \tparam Implementation the derived class that should implement the rotation
+ *  \tparam Implementation_ the derived class that should implement the rotation
  *  \tparam Usage_ the rotation usage which is either active or passive
  */
-template<typename Implementation, enum RotationUsage Usage_>
-class RotationQuaternionBase : public RotationBase<Implementation, Usage_> {
+template<typename Implementation_, enum RotationUsage Usage_>
+class RotationQuaternionBase : public RotationBase<Implementation_, Usage_> {
 
   template<typename OtherDerived_>
   RotationQuaternionBase& operator =(const RotationBase<OtherDerived_, Usage_>& other);
@@ -326,53 +350,63 @@ class RotationQuaternionBase : public RotationBase<Implementation, Usage_> {
  *  \ingroup rotations
  *  \class RotationMatrixBase
  *  This class defines the generic interface for a matrix rotation.
- *  \tparam Implementation the derived class that should implement the rotation
+ *  \tparam Implementation_ the derived class that should implement the rotation
  *  \tparam Usage_ the rotation usage which is either active or passive
  */
-template<typename Implementation, enum RotationUsage Usage_>
-class RotationMatrixBase : public RotationBase<Implementation, Usage_> {
+template<typename Implementation_, enum RotationUsage Usage_>
+class RotationMatrixBase : public RotationBase<Implementation_, Usage_> {
 
   template<typename OtherDerived_>
   RotationMatrixBase& operator =(const RotationBase<OtherDerived_, Usage_>& other);
 
 };
 
-/*! \brief Representation of a generic euler angles rotation
- *  \ingroup rotations
- *  \class EulerAnglesBase
- *  This class defines the generic interface for a euler angles rotation.
- *  \tparam Implementation the derived class that should implement the rotation
+/*! \class EulerAnglesBase
+ *  \brief Representation of a generic Euler angles rotation
+ *
+ *  This class defines the generic interface for a Euler angles rotation.
+ *  The implementation of a representation of a rotation based on Euler angles
+ *  needs to define three angles and the axis-convention that can be
+ *  x-y-z, y-z-x, z-x-y, x-z-y, z-y-x, y-x-z or
+ *  z-x-z, x-y-x, y-z-y, z-y-z, x-z-x, y-x-y.
+ *
+ *  \tparam Implementation_ the derived class that should implement the rotation
  *  \tparam Usage_ the rotation usage which is either active or passive
+ *  \ingroup rotations
  */
-template<typename Implementation, enum RotationUsage Usage_>
-class EulerAnglesBase : public RotationBase<Implementation, Usage_> {
+template<typename Implementation_, enum RotationUsage Usage_>
+class EulerAnglesBase : public RotationBase<Implementation_, Usage_> {
 
 };
 
-/*! \brief Representation of a generic euler angles xyz rotation
- *  \ingroup rotations
- *  \class EulerAnglesXyzBase
- *  This class defines the generic interface for a euler angles (X,Y',Z'' / roll,pitch,yaw) rotation.
+/*! \class EulerAnglesXyzBase
+ *  \brief Representation of a generic Euler angles x'-y''-z' rotation
+ *
+ *  This class defines the generic interface for a Euler angles (X,Y',Z'' / roll,pitch,yaw) rotation.
+ *
  *  \tparam Implementation the derived class that should implement the rotation
  *  \tparam Usage_ the rotation usage which is either active or passive
+ *  \ingroup rotations
  */
-template<typename Implementation, enum RotationUsage Usage_>
-class EulerAnglesXyzBase : public EulerAnglesBase<Implementation, Usage_> {
+template<typename Implementation_, enum RotationUsage Usage_>
+class EulerAnglesXyzBase : public EulerAnglesBase<Implementation_, Usage_> {
 
   template<typename OtherDerived_>
   EulerAnglesXyzBase& operator =(const RotationBase<OtherDerived_, Usage_>& other);
 
 };
 
-/*! \brief Representation of a generic euler angles zyx rotation
- *  \ingroup rotations
- *  \class EulerAnglesZyxBase
- *  This class defines the generic interface for a euler angles (Z,Y',X'' / yaw,pitch,roll) rotation.
+/*! \class EulerAnglesZyxBase
+ *  \brief Representation of a generic Euler angles z-y'-x'' rotation
+ *
+ *  This class defines the generic interface for a Euler angles (Z-Y'-X'' / yaw-pitch-roll) rotation.
+ *
  *  \tparam Implementation the derived class that should implement the rotation
  *  \tparam Usage_ the rotation usage which is either active or passive
+ *  \ingroup rotations
  */
-template<typename Implementation, enum RotationUsage Usage_>
-class EulerAnglesZyxBase : public EulerAnglesBase<Implementation, Usage_> {
+template<typename Implementation_, enum RotationUsage Usage_>
+class EulerAnglesZyxBase : public EulerAnglesBase<Implementation_, Usage_> {
 
   template<typename OtherDerived_>
   EulerAnglesZyxBase& operator =(const RotationBase<OtherDerived_, Usage_>& other);
@@ -403,66 +437,13 @@ class UsageConversionTraits<Derived_,RotationUsage::ACTIVE> {
   // getActive() does not exist (on purpose)
 };
 
-//template<typename Left_, typename Right_, enum RotationUsage Usage_>
-//class MultiplicationTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usage_>> {
-//// public:
-////  inline static Left_ mult(const RotationBase<Left_, Usage_>& l, const RotationBase<Right_, Usage_>& r) {
-////    return Left_(typename eigen_implementation::RotationQuaternion<typename Left_::Scalar,  Usage_>(
-////               (typename eigen_implementation::RotationQuaternion<typename Left_::Scalar,  Usage_>(l.derived())).toImplementation() *
-////               (typename eigen_implementation::RotationQuaternion<typename Right_::Scalar, Usage_>(r.derived())).toImplementation()
-////               ));
-////  }
-//};
-//
-//template<typename Left_, typename Right_>
-//class MultiplicationTraits<RotationBase<Left_, RotationUsage::ACTIVE>, RotationBase<Right_, RotationUsage::ACTIVE>> {
-// public:
-//  inline static Left_ mult(const RotationBase<Left_, RotationUsage::ACTIVE>& l, const RotationBase<Right_, RotationUsage::ACTIVE>& r) {
-//    return Left_(typename eigen_implementation::RotationQuaternion<typename Left_::Scalar,  RotationUsage::ACTIVE>(
-//               (typename eigen_implementation::RotationQuaternion<typename Left_::Scalar,  RotationUsage::ACTIVE>(l.derived())).toImplementation() *
-//               (typename eigen_implementation::RotationQuaternion<typename Right_::Scalar, RotationUsage::ACTIVE>(r.derived())).toImplementation()
-//               ));
-//  }
-//};
-//
-//template<typename Left_, typename Right_>
-//class MultiplicationTraits<RotationBase<Left_, RotationUsage::PASSIVE>, RotationBase<Right_, RotationUsage::PASSIVE>> {
-// public:
-//  inline static Left_ mult(const RotationBase<Left_, RotationUsage::PASSIVE>& l, const RotationBase<Right_, RotationUsage::PASSIVE>& r) {
-//    return Left_(typename eigen_implementation::RotationQuaternion<typename Left_::Scalar,  RotationUsage::PASSIVE>(
-//               (typename eigen_implementation::RotationQuaternion<typename Left_::Scalar,  RotationUsage::PASSIVE>(l.derived())).toImplementation() *
-//               (typename eigen_implementation::RotationQuaternion<typename Right_::Scalar, RotationUsage::PASSIVE>(r.derived())).toImplementation()
-//               ));
-//  }
-//};
-//
-//template<typename LeftAndRight_, enum RotationUsage Usage_>
-//class MultiplicationTraits<RotationBase<LeftAndRight_, Usage_>, RotationBase<LeftAndRight_, Usage_>> {
-//// public:
-////  inline static LeftAndRight_ mult(const RotationBase<LeftAndRight_, Usage_>& l, const RotationBase<LeftAndRight_, Usage_>& r) {
-////    return LeftAndRight_(typename LeftAndRight_::Implementation(l.derived().toImplementation() * r.derived().toImplementation()));
-////  }
-//};
-//
-//template<typename LeftAndRight_>
-//class MultiplicationTraits<RotationBase<LeftAndRight_, RotationUsage::ACTIVE>, RotationBase<LeftAndRight_, RotationUsage::ACTIVE>> {
-// public:
-//  inline static LeftAndRight_ mult(const RotationBase<LeftAndRight_, RotationUsage::ACTIVE>& l, const RotationBase<LeftAndRight_, RotationUsage::ACTIVE>& r) {
-//    return LeftAndRight_(typename LeftAndRight_::Implementation(l.derived().toImplementation() * r.derived().toImplementation()));
-//  }
-//};
-//
-//template<typename LeftAndRight_>
-//class MultiplicationTraits<RotationBase<LeftAndRight_, RotationUsage::PASSIVE>, RotationBase<LeftAndRight_, RotationUsage::PASSIVE>> {
-// public:
-//  inline static LeftAndRight_ mult(const RotationBase<LeftAndRight_, RotationUsage::PASSIVE>& l, const RotationBase<LeftAndRight_, RotationUsage::PASSIVE>& r) {
-//    return LeftAndRight_(typename LeftAndRight_::Implementation(l.derived().toImplementation() * r.derived().toImplementation()));
-//  }
-//};
 
+/*! \brief Multiplication of two rotations with different parameterizations
+ */
 template<typename Left_, typename Right_, enum RotationUsage Usage_>
 class MultiplicationTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usage_>> {
  public:
+  //! Default multiplication of rotations converts the representations of the rotations to rotation quaternions and multiplies them
   inline static Left_ mult(const RotationBase<Left_, Usage_>& lhs, const RotationBase<Right_, Usage_>& rhs) {
     return Left_(typename eigen_implementation::RotationQuaternion<typename Left_::Scalar,  Usage_>(
                (typename eigen_implementation::RotationQuaternion<typename Left_::Scalar,  Usage_>(lhs.derived())).toImplementation() *
@@ -471,6 +452,8 @@ class MultiplicationTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usa
   }
 };
 
+/*! \brief Multiplication of two rotations with the same parameterization
+ */
 template<typename LeftAndRight_, enum RotationUsage Usage_>
 class MultiplicationTraits<RotationBase<LeftAndRight_, Usage_>, RotationBase<LeftAndRight_, Usage_>> {
  public:

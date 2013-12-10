@@ -84,6 +84,10 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::
     : Base(other) {
   }
 
+  Quaternion(const Vector4& vector4)
+    : Base(vector4(0),vector4(1),vector4(2),vector4(3)) {
+  }
+
   /*! \returns the inverse of the quaternion
     */
   Quaternion inverted() const {
@@ -280,6 +284,11 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType_>> {
 
   UnitQuaternion(const PrimType_& w, const Imaginary& imag)
     : unitQuternion_(w,imag) {
+    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-4, "Input quaternion has not unit length.");
+  }
+
+  UnitQuaternion(const Vector4& vector4)
+    : unitQuternion_(vector4(0),vector4(1),vector4(2),vector4(3)) {
     KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-4, "Input quaternion has not unit length.");
   }
 

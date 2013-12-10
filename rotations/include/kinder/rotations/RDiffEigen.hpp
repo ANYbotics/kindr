@@ -51,7 +51,7 @@ namespace eigen_implementation {
  * \ingroup rotations
  */
 template<typename PrimType_, enum RotationUsage Usage_>
-class AngularVelocity3 : public AngularVelocity3Base<AngularVelocity3<PrimType_, Usage_>, Usage_>, private Eigen::Matrix<PrimType_, 3, 1> {
+class AngularVelocity : public AngularVelocity3Base<AngularVelocity<PrimType_, Usage_>, Usage_>, private Eigen::Matrix<PrimType_, 3, 1> {
  private:
   /*! \brief The base type.
    */
@@ -69,7 +69,7 @@ class AngularVelocity3 : public AngularVelocity3Base<AngularVelocity3<PrimType_,
 
   /*! \brief Default constructor initializes all velocities with zero.
    */
-  AngularVelocity3()
+  AngularVelocity()
     : Base(Base::Zero()) {
   }
 
@@ -78,7 +78,7 @@ class AngularVelocity3 : public AngularVelocity3Base<AngularVelocity3<PrimType_,
    * \param y   y-coordinate
    * \param z   z-coordinate
    */
-  AngularVelocity3(const PrimType_& x, const PrimType_& y, const PrimType_& z)
+  AngularVelocity(const PrimType_& x, const PrimType_& y, const PrimType_& z)
     : Base(x, y, z) {
   }
 
@@ -86,13 +86,13 @@ class AngularVelocity3 : public AngularVelocity3Base<AngularVelocity3<PrimType_,
   /*! \brief Constructor using Eigen::Vector3.
    *  \param other   Eigen::Matrix<PrimType_,3,1>
    */
-  explicit AngularVelocity3(const Base& other)
+  explicit AngularVelocity(const Base& other)
     : Base(other) {
    }
 
   template<typename RotationDerived_, typename OtherDerived_>
-  inline explicit AngularVelocity3(const RotationBase<RotationDerived_, Usage_>& rotation, const RDiffBase<OtherDerived_, Usage_>& other)
-    : Base(internal::RDiffConversionTraits<AngularVelocity3, OtherDerived_, RotationDerived_>::convert(static_cast<const RotationDerived_&>(rotation), static_cast<const OtherDerived_&>(other))){
+  inline explicit AngularVelocity(const RotationBase<RotationDerived_, Usage_>& rotation, const RDiffBase<OtherDerived_, Usage_>& other)
+    : Base(internal::RDiffConversionTraits<AngularVelocity, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived())){
   }
 
 
@@ -128,17 +128,17 @@ class AngularVelocity3 : public AngularVelocity3Base<AngularVelocity3<PrimType_,
 
   /*! \brief Addition of two angular velocities.
    */
-  using AngularVelocity3Base<AngularVelocity3<PrimType_, Usage_>,Usage_>::operator+; // otherwise ambiguous PositionBase and Eigen
+  using AngularVelocity3Base<AngularVelocity<PrimType_, Usage_>,Usage_>::operator+; // otherwise ambiguous PositionBase and Eigen
 
   /*! \brief Subtraction of two angular velocities.
    */
-  using AngularVelocity3Base<AngularVelocity3<PrimType_, Usage_>, Usage_>::operator-; // otherwise ambiguous PositionBase and Eigen
+  using AngularVelocity3Base<AngularVelocity<PrimType_, Usage_>, Usage_>::operator-; // otherwise ambiguous PositionBase and Eigen
 
   /*! \brief Addition of two angular velocities.
    * \param other   other angular velocity
    */
   template<typename Other_>
-  AngularVelocity3& operator +=(const Other_& other) {
+  AngularVelocity& operator +=(const Other_& other) {
     this->toImplementation() += other.toImplementation();
     return *this;
   }
@@ -147,7 +147,7 @@ class AngularVelocity3 : public AngularVelocity3Base<AngularVelocity3<PrimType_,
    * \param other   other angular velocity
    */
   template<typename Other_>
-  AngularVelocity3& operator -=(const Other_& other) {
+  AngularVelocity& operator -=(const Other_& other) {
     this->toImplementation() -= other.toImplementation();
     return *this;
   }
@@ -155,7 +155,7 @@ class AngularVelocity3 : public AngularVelocity3Base<AngularVelocity3<PrimType_,
   /*! \brief Sets all components of the angular velocity to zero.
    * \returns reference
    */
-  AngularVelocity3& setZero() {
+  AngularVelocity& setZero() {
     Base::setZero();
     return *this;
   }
@@ -163,20 +163,20 @@ class AngularVelocity3 : public AngularVelocity3Base<AngularVelocity3<PrimType_,
   /*! \brief Used for printing the object with std::cout.
    *  \returns std::stream object
    */
-  friend std::ostream& operator << (std::ostream& out, const AngularVelocity3& velocity) {
+  friend std::ostream& operator << (std::ostream& out, const AngularVelocity& velocity) {
     out << velocity.toImplementation().transpose();
     return out;
   }
 };
 
 //! \brief 3D angular velocity with primitive type double
-typedef AngularVelocity3<double, RotationUsage::PASSIVE>  AngularVelocity3PD;
+typedef AngularVelocity<double, RotationUsage::PASSIVE>  AngularVelocityPD;
 //! \brief 3D angular velocity with primitive type float
-typedef AngularVelocity3<float, RotationUsage::PASSIVE>  AngularVelocity3PF;
+typedef AngularVelocity<float, RotationUsage::PASSIVE>  AngularVelocityPF;
 //! \brief 3D angular velocity with primitive type double
-typedef AngularVelocity3<double, RotationUsage::ACTIVE>  AngularVelocity3AD;
+typedef AngularVelocity<double, RotationUsage::ACTIVE>  AngularVelocityAD;
 //! \brief 3D angular velocity with primitive type float
-typedef AngularVelocity3<float, RotationUsage::ACTIVE>  AngularVelocity3AF;
+typedef AngularVelocity<float, RotationUsage::ACTIVE>  AngularVelocityAF;
 
 
 
@@ -202,10 +202,64 @@ class RotationQuaternionDiff : public RDiffBase<RotationQuaternionDiff<PrimType_
     : Base() {
   }
 
+  explicit RotationQuaternionDiff(const Base& other) // explicit on purpose
+    : Base(other) {
+  }
+
+  /*! \brief Constructor using four scalars.
+   *  \param w     first entry of the derivative of the quaternion
+   *  \param x     second entry of the derivative of the quaternion
+   *  \param y     third entry of the derivative of the quaternion
+   *  \param z     fourth entry of the derivative of the quaternion
+   */
+  RotationQuaternionDiff(const Scalar& w, const Scalar& x, const Scalar& y, const Scalar& z)
+    : Base(w,x,y,z) {
+  }
+
+  /*! \brief Constructor using a time derivative with a different parameterization
+   *
+   * \param rotation  rotation
+   * \param other     other time derivative
+   */
+  template<typename RotationDerived_, typename OtherDerived_>
+  inline explicit RotationQuaternionDiff(const RotationBase<RotationDerived_, Usage_>& rotation, const RDiffBase<OtherDerived_, Usage_>& other)
+    : Base(internal::RDiffConversionTraits<RotationQuaternionDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived())){
+  }
+
+  /*! \brief Cast to another representation of the time derivative of a rotation
+   *  \param other   other rotation
+   *  \returns reference
+   */
+  template<typename OtherDerived_, typename RotationDerived_>
+  OtherDerived_ cast(const RotationBase<RotationDerived_, Usage_>& rotation) const {
+    return internal::RDiffConversionTraits<OtherDerived_, RotationQuaternionDiff, RotationDerived_>::convert(rotation.derived(), *this);
+  }
+
+
+  /*! \brief Cast to the implementation type.
+   *  \returns the implementation (recommended only for advanced users)
+   */
+  inline Implementation& toImplementation() {
+    return this->toQuaternion().toImplementation();
+  }
+
+  /*! \brief Cast to the implementation type.
+   *  \returns the implementation (recommended only for advanced users)
+   */
+  inline const Implementation& toImplementation() const {
+    return this->toQuaternion().toImplementation();
+  }
+
+  /*! \brief Cast to the base type.
+   *  \returns the quaternion that contains the derivative (recommended only for advanced users)
+   */
   Base& toQuaternion()  {
     return static_cast<Base&>(*this);
   }
 
+  /*! \brief Cast to the base type.
+   *  \returns the quaternion that contains the derivative (recommended only for advanced users)
+   */
   const Base& toQuaternion() const {
     return static_cast<const Base&>(*this);
   }
@@ -223,7 +277,7 @@ class RotationQuaternionDiff : public RDiffBase<RotationQuaternionDiff<PrimType_
    *  \returns std::stream object
    */
   friend std::ostream& operator << (std::ostream& out, const RotationQuaternionDiff& diff) {
-    out << diff.toImplementation().transpose();
+    out << diff.toQuaternion();
     return out;
   }
 };
@@ -277,6 +331,25 @@ class EulerAnglesZyxDiff : public EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimTyp
    */
   EulerAnglesZyxDiff(const Scalar& yaw, const Scalar& pitch, const Scalar& roll)
     : Base(yaw,pitch,roll) {
+  }
+
+  /*! \brief Constructor using a time derivative with a different parameterization
+   *
+   * \param rotation  rotation
+   * \param other     other time derivative
+   */
+  template<typename RotationDerived_, typename OtherDerived_>
+  inline explicit EulerAnglesZyxDiff(const RotationBase<RotationDerived_, Usage_>& rotation, const RDiffBase<OtherDerived_, Usage_>& other)
+    : Base(internal::RDiffConversionTraits<EulerAnglesZyxDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived())){
+  }
+
+  /*! \brief Cast to another representation of the time derivative of a rotation
+   *  \param other   other rotation
+   *  \returns reference
+   */
+  template<typename OtherDerived_, typename RotationDerived_>
+  OtherDerived_ cast(const RotationBase<RotationDerived_, Usage_>& rotation) const {
+    return internal::RDiffConversionTraits<OtherDerived_, EulerAnglesZyxDiff, RotationDerived_>::convert(rotation.derived(), *this);
   }
 
   /*! \brief Constructor using Eigen::Matrix.
@@ -467,6 +540,27 @@ class EulerAnglesXyzDiff : public EulerAnglesDiffBase<EulerAnglesXyzDiff<PrimTyp
     : Base(other) {
   }
 
+
+  /*! \brief Constructor using a time derivative with a different parameterization
+   *
+   * \param rotation  rotation
+   * \param other     other time derivative
+   */
+  template<typename RotationDerived_, typename OtherDerived_>
+  inline explicit EulerAnglesXyzDiff(const RotationBase<RotationDerived_, Usage_>& rotation, const RDiffBase<OtherDerived_, Usage_>& other)
+    : Base(internal::RDiffConversionTraits<EulerAnglesXyzDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived())){
+  }
+
+  /*! \brief Cast to another representation of the time derivative of a rotation
+   *  \param other   other rotation
+   *  \returns reference
+   */
+  template<typename OtherDerived_, typename RotationDerived_>
+  OtherDerived_ cast(const RotationBase<RotationDerived_, Usage_>& rotation) const {
+    return internal::RDiffConversionTraits<OtherDerived_, EulerAnglesXyzDiff, RotationDerived_>::convert(rotation.derived(), *this);
+  }
+
+
   /*! \brief Cast to the implementation type.
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
@@ -605,15 +699,59 @@ typedef EulerAnglesXyzDiff<float, RotationUsage::ACTIVE> EulerAnglesXyzDiffAF;
 
 namespace internal {
 
-template<typename DestPrimType_, typename SourcePrimType_, typename RotationPrimType_, enum RotationUsage Usage_>
-class RDiffConversionTraits<eigen_implementation::AngularVelocity3<DestPrimType_, Usage_>, eigen_implementation::RotationQuaternionDiff<SourcePrimType_, Usage_>, eigen_implementation::RotationQuaternion<RotationPrimType_, Usage_>> {
+
+template<typename PrimType_, enum RotationUsage Usage_>
+class RDiffConversionTraits<eigen_implementation::AngularVelocity<PrimType_, Usage_>, eigen_implementation::RotationQuaternionDiff<PrimType_, Usage_>, eigen_implementation::RotationQuaternion<PrimType_, Usage_>> {
  public:
-  inline static eigen_implementation::AngularVelocity3<DestPrimType_, Usage_> convert(const eigen_implementation::RotationQuaternion<RotationPrimType_, Usage_>& rquat, const eigen_implementation::RotationQuaternionDiff<SourcePrimType_, Usage_>& rquatdiff) {
-    Eigen::Matrix<DestPrimType_,3,4> H_bar;
-    H_bar << -rquat.toUnitQuaternion().x(), rquat.toUnitQuaternion().w(), rquat.toUnitQuaternion().z(), -rquat.toUnitQuaternion().y(), -rquat.toUnitQuaternion().y(), -rquat.toUnitQuaternion().z(), rquat.toUnitQuaternion().w(), rquat.toUnitQuaternion().x(), -rquat.toUnitQuaternion().z(), rquat.toUnitQuaternion().y(), -rquat.toUnitQuaternion().x(), rquat.toUnitQuaternion().w();
-    return eigen_implementation::AngularVelocity3<DestPrimType_, Usage_>(0.5*H_bar*rquatdiff.toQuaternion().getVector4());
+  inline static eigen_implementation::AngularVelocity<PrimType_, Usage_> convert(const eigen_implementation::RotationQuaternion<PrimType_, Usage_>& rquat, const eigen_implementation::RotationQuaternionDiff<PrimType_, Usage_>& rquatdiff) {
+    Eigen::Matrix<PrimType_,3,4> H_bar;
+    H_bar << -rquat.toUnitQuaternion().x(),  rquat.toUnitQuaternion().w(),  rquat.toUnitQuaternion().z(), -rquat.toUnitQuaternion().y(),
+             -rquat.toUnitQuaternion().y(), -rquat.toUnitQuaternion().z(),  rquat.toUnitQuaternion().w(),  rquat.toUnitQuaternion().x(),
+             -rquat.toUnitQuaternion().z(),  rquat.toUnitQuaternion().y(), -rquat.toUnitQuaternion().x(),  rquat.toUnitQuaternion().w();
+    return eigen_implementation::AngularVelocity<PrimType_, Usage_>(2.0*H_bar*rquatdiff.toQuaternion().getVector4());
   }
 };
+
+template<typename PrimType_, enum RotationUsage Usage_>
+class RDiffConversionTraits<eigen_implementation::RotationQuaternionDiff<PrimType_, Usage_>, eigen_implementation::AngularVelocity<PrimType_, Usage_>, eigen_implementation::RotationQuaternion<PrimType_, Usage_>> {
+ public:
+  inline static eigen_implementation::RotationQuaternionDiff<PrimType_, Usage_> convert(const eigen_implementation::RotationQuaternion<PrimType_, Usage_>& rquat, const eigen_implementation::AngularVelocity<PrimType_, Usage_>& angularVelocity) {
+    Eigen::Matrix<PrimType_,4,3> H_bar_transpose;
+    H_bar_transpose << -rquat.toUnitQuaternion().x(), -rquat.toUnitQuaternion().y(), -rquat.toUnitQuaternion().z(),
+                        rquat.toUnitQuaternion().w(), -rquat.toUnitQuaternion().z(),  rquat.toUnitQuaternion().y(),
+                        rquat.toUnitQuaternion().z(),  rquat.toUnitQuaternion().w(), -rquat.toUnitQuaternion().x(),
+                       -rquat.toUnitQuaternion().y(),  rquat.toUnitQuaternion().x(),  rquat.toUnitQuaternion().w();
+    return eigen_implementation::RotationQuaternionDiff<PrimType_, Usage_>(quaternions::eigen_implementation::Quaternion<PrimType_>(0.5*H_bar_transpose*angularVelocity.toImplementation()));
+  }
+};
+
+
+template<typename PrimType_, enum RotationUsage Usage_>
+class RDiffConversionTraits<eigen_implementation::EulerAnglesXyzDiff<PrimType_, Usage_>, eigen_implementation::AngularVelocity<PrimType_, Usage_>, eigen_implementation::EulerAnglesXyz<PrimType_, Usage_>> {
+ public:
+  inline static eigen_implementation::EulerAnglesXyzDiff<PrimType_, Usage_> convert(const eigen_implementation::EulerAnglesXyz<PrimType_, Usage_>& eulerAngles, const eigen_implementation::AngularVelocity<PrimType_, Usage_>& angularVelocity) {
+    typedef typename Eigen::Matrix<PrimType_, 3, 3> Matrix3x3;
+
+    eigen_implementation::EulerAnglesXyzDiff<PrimType_, Usage_> eulerAnglesXyzDiff;
+
+    const PrimType_ alpha = eulerAngles.roll();
+    const PrimType_ beta = eulerAngles.pitch();
+    const PrimType_ gamma = eulerAngles.yaw();
+
+    Matrix3x3 H = Matrix3x3::Zero();
+
+    if(cos(beta) == 0) {
+      H << std::numeric_limits<PrimType_>::max(), std::numeric_limits<PrimType_>::max(), 0, sin(gamma), cos(gamma), 0, -cos(gamma)*tan(beta), sin(gamma)*tan(beta), 1;
+    }
+    else {
+      H << cos(gamma)/cos(beta), -sin(gamma)/cos(beta), 0, sin(gamma), cos(gamma), 0, -cos(gamma)*tan(beta), sin(gamma)*tan(beta), 1;
+    }
+
+    eulerAnglesXyzDiff.toImplementation() = H*angularVelocity.toImplementation();
+    return eulerAnglesXyzDiff;
+  }
+};
+
 
 
 } // namespace internal
