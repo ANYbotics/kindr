@@ -271,11 +271,14 @@ typedef AngleAxis<float,  RotationUsage::PASSIVE> AngleAxisPF;
  *  \ingroup rotations
  */
 template<typename PrimType_, enum RotationUsage Usage_>
-class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage_>, Usage_>, private Eigen::Matrix<PrimType_, 3, 1> {
+class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage_>, Usage_> {
  private:
   /*! \brief The base type.
    */
   typedef Eigen::Matrix<PrimType_, 3, 1> Base;
+
+  Base vector_;
+
  public:
   /*! \brief The implementation type.
    *  The implementation type is always an Eigen object.
@@ -286,14 +289,10 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    */
   typedef PrimType_ Scalar;
 
-  /*! \brief The rotation type is a 3D vector.
-   */
-  typedef Implementation Vector3;
-
   /*! \brief Default constructor using identity rotation.
    */
   RotationVector()
-    : Base(Base::Zero()) {
+    : vector_(Base::Zero()) {
   }
 
   /*! \brief Constructor using three scalars.
@@ -303,7 +302,7 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    *  \param v3      third entry of the rotation vector
    */
   RotationVector(const Scalar& v1, const Scalar& v2, const Scalar& v3)
-    : Base(v1,v2,v3) {
+    : vector_(v1,v2,v3) {
   }
 
 
@@ -312,7 +311,7 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    *  \param other   Eigen::Matrix<Scalar, 3, 1>
    */
   explicit RotationVector(const Base& other) // explicit on purpose
-    : Base(other) {
+    : vector_(other) {
   }
 
   /*! \brief Constructor using another rotation.
@@ -320,7 +319,7 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    */
   template<typename OtherDerived_>
   inline explicit RotationVector(const RotationBase<OtherDerived_, Usage_>& other)
-    : Base(internal::ConversionTraits<RotationVector, OtherDerived_>::convert(static_cast<const OtherDerived_&>(other))) {
+    : vector_(internal::ConversionTraits<RotationVector, OtherDerived_>::convert(static_cast<const OtherDerived_&>(other))) {
   }
 
   /*! \brief Assignment operator using another rotation.
@@ -352,21 +351,21 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
   inline Implementation& toImplementation() {
-    return static_cast<Implementation&>(*this);
+    return static_cast<Implementation&>(vector_);
   }
 
   /*! \brief Cast to the implementation type.
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
   inline const Implementation& toImplementation() const {
-    return static_cast<const Implementation&>(*this);
+    return static_cast<const Implementation&>(vector_);
   }
 
 
   /*! \brief Reading access to the rotation vector.
    *  \returns rotation vector with reading access
    */
-  inline const Vector3& vector() const {
+  inline const Implementation& vector() const {
     return this->toImplementation();
   }
 
@@ -375,7 +374,7 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    *  \returns reference
    */
   RotationVector& setIdentity() {
-    this->vector().setZero();
+    this->toImplementation().setZero();
     return *this;
   }
 
@@ -946,7 +945,7 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage
    */
   template<typename OtherDerived_>
   inline explicit EulerAnglesXyz(const RotationBase<OtherDerived_, Usage_>& other)
-    : Base(internal::ConversionTraits<EulerAnglesXyz, OtherDerived_>::convert(static_cast<const OtherDerived_&>(other))) {
+    : Base(internal::ConversionTraits<EulerAnglesXyz, OtherDerived_>::convert(other.derived())) {
   }
 
   /*! \brief Assignment operator using another rotation.
@@ -1832,6 +1831,14 @@ class ConversionTraits<eigen_implementation::EulerAnglesZyx<DestPrimType_, Usage
  public:
   inline static eigen_implementation::EulerAnglesZyx<DestPrimType_, Usage_> convert(const eigen_implementation::AngleAxis<SourcePrimType_, Usage_>& aa) {
     return eigen_implementation::EulerAnglesZyx<DestPrimType_, Usage_>(eigen_implementation::getYprFromAngleAxis<SourcePrimType_, DestPrimType_>(aa.toImplementation()));
+  }
+};
+
+template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
+class ConversionTraits<eigen_implementation::EulerAnglesZyx<DestPrimType_, Usage_>, eigen_implementation::RotationVector<SourcePrimType_, Usage_>> {
+ public:
+  inline static eigen_implementation::EulerAnglesZyx<DestPrimType_, Usage_> convert(const eigen_implementation::RotationVector<SourcePrimType_, Usage_>& rv) {
+    return eigen_implementation::EulerAnglesZyx<DestPrimType_, Usage_>(eigen_implementation::getYprFromAngleAxis<SourcePrimType_, DestPrimType_>(eigen_implementation::AngleAxis<SourcePrimType_, Usage_>(rv.toImplementation().norm(), rv.toImplementation().normalized()).toImplementation()));
   }
 };
 
