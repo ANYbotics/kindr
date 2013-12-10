@@ -75,8 +75,8 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::
     : Base(w,x,y,z) {
   }
 
-  Quaternion(const PrimType_& w, const Imaginary& imag)
-    : Base(w,imag(0),imag(1),imag(2)) {
+  Quaternion(const PrimType_& real, const Imaginary& imag)
+    : Base(real,imag(0),imag(1),imag(2)) {
   }
 
   // create from Eigen::Quaternion
@@ -282,8 +282,8 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType_>> {
     KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-4, "Input quaternion has not unit length.");
   }
 
-  UnitQuaternion(const PrimType_& w, const Imaginary& imag)
-    : unitQuternion_(w,imag) {
+  UnitQuaternion(const PrimType_& real, const Imaginary& imag)
+    : unitQuternion_(real,imag) {
     KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-4, "Input quaternion has not unit length.");
   }
 

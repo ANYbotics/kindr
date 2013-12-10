@@ -458,6 +458,9 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    */
   typedef PrimType_ Scalar;
 
+  //! the imaginary type, i.e., Eigen::Quaternion<>
+  typedef Eigen::Matrix<PrimType_,3,1> Imaginary;
+
   /*! \brief Default constructor using identity rotation.
    */
   RotationQuaternion()
@@ -473,6 +476,11 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    */
   RotationQuaternion(const Scalar& w, const Scalar& x, const Scalar& y, const Scalar& z)
     : Base(w,x,y,z) {
+    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
+  }
+
+  RotationQuaternion(const PrimType_& real, const Imaginary& imag)
+    : Base(real,imag) {
     KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
   }
 
@@ -502,6 +510,45 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
     : Base(internal::ConversionTraits<RotationQuaternion, OtherDerived_>::convert(static_cast<const OtherDerived_&>(other))) {
   }
 
+  inline PrimType_ w() const {
+    return Base::w();
+  }
+
+  inline PrimType_ x() const {
+    return Base::x();
+  }
+
+  inline PrimType_ y() const {
+    return Base::y();
+  }
+
+  inline PrimType_ z() const {
+    return Base::z();
+  }
+
+  inline PrimType_& w() { // todo: attention: no assertion for unitquaternions!
+    return Base::w();
+  }
+
+  inline PrimType_& x() {
+    return Base::x();
+  }
+
+  inline PrimType_& y() {
+    return Base::y();
+  }
+
+  inline PrimType_& z() {
+    return Base::z();
+  }
+
+  inline PrimType_ getReal() const {
+    return Base::getReal();
+  }
+
+  inline Imaginary getImaginary() const {
+    return Base::getImaginary();
+  }
 
   Base& toUnitQuaternion()  {
     return static_cast<Base&>(*this);

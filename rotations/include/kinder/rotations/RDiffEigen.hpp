@@ -856,8 +856,6 @@ class RDiffConversionTraits<eigen_implementation::EulerAnglesXyzDiff<PrimType_, 
   inline static eigen_implementation::EulerAnglesXyzDiff<PrimType_, Usage_> convert(const eigen_implementation::EulerAnglesXyz<PrimType_, Usage_>& eulerAngles, const eigen_implementation::AngularVelocity<PrimType_, Usage_>& angularVelocity) {
     typedef typename Eigen::Matrix<PrimType_, 3, 3> Matrix3x3;
 
-    eigen_implementation::EulerAnglesXyzDiff<PrimType_, Usage_> eulerAnglesXyzDiff;
-
     const PrimType_ alpha = eulerAngles.roll();
     const PrimType_ beta = eulerAngles.pitch();
     const PrimType_ gamma = eulerAngles.yaw();
@@ -871,8 +869,7 @@ class RDiffConversionTraits<eigen_implementation::EulerAnglesXyzDiff<PrimType_, 
       H << cos(gamma)/cos(beta), -sin(gamma)/cos(beta), 0, sin(gamma), cos(gamma), 0, -cos(gamma)*tan(beta), sin(gamma)*tan(beta), 1;
     }
 
-    eulerAnglesXyzDiff.toImplementation() = H*angularVelocity.toImplementation();
-    return eulerAnglesXyzDiff;
+    return eigen_implementation::EulerAnglesXyzDiff<PrimType_, Usage_>(H*angularVelocity.toImplementation());
   }
 };
 
