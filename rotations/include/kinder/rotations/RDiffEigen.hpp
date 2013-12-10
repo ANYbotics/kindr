@@ -51,7 +51,7 @@ namespace eigen_implementation {
  * \ingroup rotations
  */
 template<typename PrimType_, enum RotationUsage Usage_>
-class AngularVelocity : public AngularVelocity3Base<AngularVelocity<PrimType_, Usage_>, Usage_>, private Eigen::Matrix<PrimType_, 3, 1> {
+class AngularVelocity : public AngularVelocityBase<AngularVelocity<PrimType_, Usage_>, Usage_>, private Eigen::Matrix<PrimType_, 3, 1> {
  private:
   /*! \brief The base type.
    */
@@ -128,11 +128,11 @@ class AngularVelocity : public AngularVelocity3Base<AngularVelocity<PrimType_, U
 
   /*! \brief Addition of two angular velocities.
    */
-  using AngularVelocity3Base<AngularVelocity<PrimType_, Usage_>,Usage_>::operator+; // otherwise ambiguous PositionBase and Eigen
+  using AngularVelocityBase<AngularVelocity<PrimType_, Usage_>,Usage_>::operator+; // otherwise ambiguous PositionBase and Eigen
 
   /*! \brief Subtraction of two angular velocities.
    */
-  using AngularVelocity3Base<AngularVelocity<PrimType_, Usage_>, Usage_>::operator-; // otherwise ambiguous PositionBase and Eigen
+  using AngularVelocityBase<AngularVelocity<PrimType_, Usage_>, Usage_>::operator-; // otherwise ambiguous PositionBase and Eigen
 
   /*! \brief Addition of two angular velocities.
    * \param other   other angular velocity
@@ -182,7 +182,7 @@ typedef AngularVelocity<float, RotationUsage::ACTIVE>  AngularVelocityAF;
 
 
 template<typename PrimType_, enum RotationUsage Usage_>
-class RotationQuaternionDiff : public RDiffBase<RotationQuaternionDiff<PrimType_, Usage_>,Usage_>, private quaternions::eigen_implementation::Quaternion<PrimType_> {
+class RotationQuaternionDiff : public RotationQuaternionDiffBase<RotationQuaternionDiff<PrimType_, Usage_>,Usage_>, private quaternions::eigen_implementation::Quaternion<PrimType_> {
  private:
   /*! \brief The base type.
    */
@@ -291,6 +291,130 @@ typedef RotationQuaternionDiff<float, RotationUsage::PASSIVE> RotationQuaternion
 typedef RotationQuaternionDiff<double, RotationUsage::ACTIVE> RotationQuaternionDiffAD;
 //! \brief Time derivative of a rotation quaternion with primitive type float
 typedef RotationQuaternionDiff<float, RotationUsage::ACTIVE> RotationQuaternionDiffAF;
+
+
+
+
+template<typename PrimType_, enum RotationUsage Usage_>
+class RotationMatrixDiff : public RotationMatrixDiffBase<RotationMatrixDiff<PrimType_, Usage_>,Usage_>, private Eigen::Matrix<PrimType_, 3, 3> {
+ private:
+  /*! \brief The base type.
+   */
+  typedef Eigen::Matrix<PrimType_, 3, 3> Base;
+
+ public:
+  /*! \brief The implementation type.
+   *  The implementation type is always an Eigen object.
+   */
+  typedef Base Implementation;
+  /*! \brief The primitive type.
+   *  Float/Double
+   */
+  typedef PrimType_ Scalar;
+
+  RotationMatrixDiff()
+    : Base() {
+  }
+
+  /*! \brief Constructor using Eigen::Matrix.
+   *  \param other   Eigen::Matrix<PrimType_,3,3>
+   */
+  explicit RotationMatrixDiff(const Base& other) // explicit on purpose
+    : Base(other) {
+  }
+
+  /*! \brief Constructor using nine scalars.
+   *  \param r11     entry in row 1, col 1
+   *  \param r12     entry in row 1, col 2
+   *  \param r13     entry in row 1, col 3
+   *  \param r21     entry in row 2, col 1
+   *  \param r22     entry in row 2, col 2
+   *  \param r23     entry in row 2, col 3
+   *  \param r31     entry in row 3, col 1
+   *  \param r32     entry in row 3, col 2
+   *  \param r33     entry in row 3, col 3
+   */
+  RotationMatrixDiff(const Scalar& r11, const Scalar& r12, const Scalar& r13,
+                     const Scalar& r21, const Scalar& r22, const Scalar& r23,
+                     const Scalar& r31, const Scalar& r32, const Scalar& r33) {
+    *this << r11,r12,r13,r21,r22,r23,r31,r32,r33;
+  }
+
+  /*! \brief Constructor using a time derivative with a different parameterization
+   *
+   * \param rotation  rotation
+   * \param other     other time derivative
+   */
+  template<typename RotationDerived_, typename OtherDerived_>
+  inline explicit RotationMatrixDiff(const RotationBase<RotationDerived_, Usage_>& rotation, const RDiffBase<OtherDerived_, Usage_>& other)
+    : Base(internal::RDiffConversionTraits<RotationMatrixDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived())){
+  }
+
+  /*! \brief Cast to another representation of the time derivative of a rotation
+   *  \param other   other rotation
+   *  \returns reference
+   */
+  template<typename OtherDerived_, typename RotationDerived_>
+  OtherDerived_ cast(const RotationBase<RotationDerived_, Usage_>& rotation) const {
+    return internal::RDiffConversionTraits<OtherDerived_, RotationMatrixDiff, RotationDerived_>::convert(rotation.derived(), *this);
+  }
+
+  /*! \brief Cast to the implementation type.
+   *  \returns the implementation (recommended only for advanced users)
+   */
+  inline Implementation& toImplementation() {
+    return this->toQuaternion().toImplementation();
+  }
+
+  /*! \brief Cast to the implementation type.
+   *  \returns the implementation (recommended only for advanced users)
+   */
+  inline const Implementation& toImplementation() const {
+    return this->toQuaternion().toImplementation();
+  }
+
+  /*! \brief Reading access to the rotation matrix.
+   *  \returns rotation matrix (matrix) with reading access
+   */
+  inline const Implementation& matrix() const {
+    return toImplementation();
+  }
+
+  /*! \brief Writing access to the rotation matrix.
+   *  \returns rotation matrix (matrix) with writing access
+   */
+  inline Implementation& matrix() {
+    return toImplementation();
+  }
+
+  /*! \brief Sets all time derivatives to zero.
+   *  \returns reference
+   */
+  RotationMatrixDiff& setZero() {
+    this->Base::setZero();
+    return *this;
+  }
+
+  /*! \brief Used for printing the object with std::cout.
+   *  \returns std::stream object
+   */
+  friend std::ostream& operator << (std::ostream& out, const RotationMatrixDiff& diff) {
+    out << diff.toImplementation();
+    return out;
+  }
+};
+
+
+//! \brief Time derivative of a rotation quaternion with primitive type double
+typedef RotationMatrixDiff<double, RotationUsage::PASSIVE> RotationMatrixDiffPD;
+//! \brief Time derivative of a rotation quaternion with primitive type float
+typedef RotationMatrixDiff<float, RotationUsage::PASSIVE> RotationMatrixDiffPF;
+//! \brief Time derivative of a rotation quaternion with primitive type double
+typedef RotationMatrixDiff<double, RotationUsage::ACTIVE> RotationMatrixDiffAD;
+//! \brief Time derivative of a rotation quaternion with primitive type float
+typedef RotationMatrixDiff<float, RotationUsage::ACTIVE> RotationMatrixDiffAF;
+
+
 
 /*! \class EulerAnglesZyxDiff
  * \brief Implementation of time derivatives of Euler angles (Z,Y',X'' / yaw,pitch,roll) based on Eigen::Matrix
