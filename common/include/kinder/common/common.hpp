@@ -65,7 +65,7 @@ class AngularVelocity;
 
 } // namespace eigen_implementation
 } // namespace rotations
-} // namespace rm
+} // namespace kinder
 
 
 

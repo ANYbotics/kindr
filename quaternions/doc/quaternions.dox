@@ -51,7 +51,7 @@ Eigen provides a Eigen::Quaternion, which is used as a primitive for a quaternio
 
 To use the quaternions based on Eigen, include the following header:
 \code{.cpp}
-#include <rm/quaternions/QuaternionEigen.hpp>
+#include <kinder/quaternions/QuaternionEigen.hpp>
 \endcode
 
 \subsubsection generic_quaternion_eigen Generic Quaternion

@@ -1700,6 +1700,7 @@ class get_other_usage<eigen_implementation::EulerAnglesZyx<PrimType_, RotationUs
 };
 
 
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
 class ConversionTraits<eigen_implementation::AngleAxis<DestPrimType_, Usage_>, eigen_implementation::AngleAxis<SourcePrimType_, Usage_>> {
@@ -1749,23 +1750,35 @@ class ConversionTraits<eigen_implementation::AngleAxis<DestPrimType_, Usage_>, e
   }
 };
 
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
 template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
 class ConversionTraits<eigen_implementation::RotationVector<DestPrimType_, Usage_>, eigen_implementation::RotationVector<SourcePrimType_, Usage_>> {
  public:
-  inline static eigen_implementation::RotationVector<DestPrimType_, Usage_> convert(const eigen_implementation::RotationVector<SourcePrimType_, Usage_>& rotation) {
-    return eigen_implementation::RotationVector<DestPrimType_, Usage_>(rotation.toImplementation().template cast<DestPrimType_>());
+  inline static eigen_implementation::RotationVector<DestPrimType_, Usage_> convert(const eigen_implementation::RotationVector<SourcePrimType_, Usage_>& rotationVector) {
+    return eigen_implementation::RotationVector<DestPrimType_, Usage_>(rotationVector.toImplementation().template cast<DestPrimType_>());
   }
 };
 
-template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
-class ConversionTraits<eigen_implementation::RotationVector<DestPrimType_, Usage_>, eigen_implementation::RotationQuaternion<SourcePrimType_, Usage_>> {
+//template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
+//class ConversionTraits<eigen_implementation::RotationVector<DestPrimType_, Usage_>, eigen_implementation::RotationQuaternion<SourcePrimType_, Usage_>> {
+// public:
+//  inline static eigen_implementation::RotationVector<DestPrimType_, Usage_> convert(const eigen_implementation::RotationQuaternion<SourcePrimType_, Usage_>& rotationQuaternion) {
+//    const Eigen::AngleAxis<DestPrimType_> aa(eigen_implementation::getAngleAxisFromQuaternion<SourcePrimType_, DestPrimType_>(rotationQuaternion.toImplementation()));
+//    return eigen_implementation::RotationVector<DestPrimType_, Usage_>(aa.angle()*aa.axis());
+//  }
+//};
+
+template<typename DestPrimType_, typename SourceImplementation_, enum RotationUsage Usage_>
+class ConversionTraits<eigen_implementation::RotationVector<DestPrimType_, Usage_>, SourceImplementation_> {
  public:
-  inline static eigen_implementation::RotationVector<DestPrimType_, Usage_> convert(const eigen_implementation::RotationQuaternion<SourcePrimType_, Usage_>& q) {
-    const Eigen::AngleAxis<DestPrimType_> aa(eigen_implementation::getAngleAxisFromQuaternion<SourcePrimType_, DestPrimType_>(q.toImplementation()));
-    return eigen_implementation::RotationVector<DestPrimType_, Usage_>(aa.angle()*aa.axis());
+  inline static eigen_implementation::RotationVector<DestPrimType_, Usage_> convert(const SourceImplementation_& rotation) {
+    const eigen_implementation::AngleAxis<DestPrimType_, Usage_> angleAxis(rotation);
+    return eigen_implementation::RotationVector<DestPrimType_, Usage_>(angleAxis.angle()*angleAxis.axis());
   }
 };
 
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
 class ConversionTraits<eigen_implementation::RotationQuaternion<DestPrimType_, Usage_>, eigen_implementation::AngleAxis<SourcePrimType_, Usage_>> {
@@ -1815,6 +1828,7 @@ class ConversionTraits<eigen_implementation::RotationQuaternion<DestPrimType_, U
   }
 };
 
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
 class ConversionTraits<eigen_implementation::RotationMatrix<DestPrimType_, Usage_>, eigen_implementation::AngleAxis<SourcePrimType_, Usage_>> {
@@ -1864,6 +1878,7 @@ class ConversionTraits<eigen_implementation::RotationMatrix<DestPrimType_, Usage
   }
 };
 
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
 class ConversionTraits<eigen_implementation::EulerAnglesXyz<DestPrimType_, Usage_>, eigen_implementation::AngleAxis<SourcePrimType_, Usage_>> {
@@ -1912,6 +1927,8 @@ class ConversionTraits<eigen_implementation::EulerAnglesXyz<DestPrimType_, Usage
     return eigen_implementation::EulerAnglesXyz<DestPrimType_, Usage_>(eigen_implementation::getRpyFromYpr<SourcePrimType_, DestPrimType_>(zyx.toImplementation()));
   }
 };
+
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 
 template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
@@ -1962,6 +1979,7 @@ class ConversionTraits<eigen_implementation::EulerAnglesZyx<DestPrimType_, Usage
   }
 };
 
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 
 
