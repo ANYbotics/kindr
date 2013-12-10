@@ -202,16 +202,18 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
     return *this;
   }
 
-  /*! \brief Returns a unique angle axis rotation with angle in [0,pi).
+  /*! \brief Returns a unique angle axis rotation with angle in [0,pi].
    *  This function is used to compare different rotations.
    *  \returns copy of the angle axis rotation which is unique
    */
   AngleAxis getUnique() const {
     AngleAxis aa(kinder::common::floatingPointModulo(angle()+M_PI,2*M_PI)-M_PI, axis()); // first wraps angle into [-pi,pi)
-    if(aa.angle() >= 0)	{
+    if(aa.angle() > 0)	{
       return aa;
-    } else {
+    } else if(aa.angle() < 0) {
       return AngleAxis(-aa.angle(),-aa.axis());
+    } else { // angle == 0
+      return AngleAxis();
     }
   }
 
@@ -219,12 +221,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
    *  \returns reference
    */
   AngleAxis& setUnique() {
-    AngleAxis aa(kinder::common::floatingPointModulo(angle()+M_PI,2*M_PI)-M_PI, axis()); // wraps angle into [-pi,pi)
-    if(aa.angle() >= 0) { // wraps angle into [0,pi)
-      *this = aa;
-    } else {
-      *this = AngleAxis(-aa.angle(),-aa.axis());
-    }
+    *this = getUnique();
     return *this;
   }
 
@@ -251,6 +248,8 @@ typedef AngleAxis<float,  RotationUsage::ACTIVE>  AngleAxisAF;
 typedef AngleAxis<double, RotationUsage::PASSIVE> AngleAxisPD;
 //! \brief Passive angle axis rotation with float primitive type
 typedef AngleAxis<float,  RotationUsage::PASSIVE> AngleAxisPF;
+
+
 
 /*! \class RotationVector
  * \brief Implementation of a rotation vector based on Eigen::Matrix<Scalar, 3, 1>
@@ -458,6 +457,9 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    */
   typedef PrimType_ Scalar;
 
+  //! the imaginary type, i.e., Eigen::Quaternion<>
+  typedef Eigen::Matrix<PrimType_,3,1> Imaginary;
+
   /*! \brief Default constructor using identity rotation.
    */
   RotationQuaternion()
@@ -473,6 +475,11 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    */
   RotationQuaternion(const Scalar& w, const Scalar& x, const Scalar& y, const Scalar& z)
     : Base(w,x,y,z) {
+    KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
+  }
+
+  RotationQuaternion(const PrimType_& real, const Imaginary& imag)
+    : Base(real,imag) {
     KINDER_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
   }
 
@@ -502,6 +509,45 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
     : Base(internal::ConversionTraits<RotationQuaternion, OtherDerived_>::convert(static_cast<const OtherDerived_&>(other))) {
   }
 
+  inline PrimType_ w() const {
+    return Base::w();
+  }
+
+  inline PrimType_ x() const {
+    return Base::x();
+  }
+
+  inline PrimType_ y() const {
+    return Base::y();
+  }
+
+  inline PrimType_ z() const {
+    return Base::z();
+  }
+
+  inline PrimType_& w() { // todo: attention: no assertion for unitquaternions!
+    return Base::w();
+  }
+
+  inline PrimType_& x() {
+    return Base::x();
+  }
+
+  inline PrimType_& y() {
+    return Base::y();
+  }
+
+  inline PrimType_& z() {
+    return Base::z();
+  }
+
+  inline PrimType_ getReal() const {
+    return Base::getReal();
+  }
+
+  inline Imaginary getImaginary() const {
+    return Base::getImaginary();
+  }
 
   Base& toUnitQuaternion()  {
     return static_cast<Base&>(*this);
@@ -621,10 +667,31 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  \returns copy of the quaternion rotation which is unique
    */
   RotationQuaternion getUnique() const {
-    if(this->w() >= 0) {
+    if(this->w() > 0) {
       return *this;
-    } else {
+    } else if (this->w() < 0){
       return RotationQuaternion(-this->w(),-this->x(),-this->y(),-this->z());
+    } else { // w == 0
+
+      if(this->x() > 0) {
+        return *this;
+      } else if (this->x() < 0){
+        return RotationQuaternion(-this->w(),-this->x(),-this->y(),-this->z());
+      } else { // x == 0
+
+        if(this->y() > 0) {
+          return *this;
+        } else if (this->y() < 0){
+          return RotationQuaternion(-this->w(),-this->x(),-this->y(),-this->z());
+        } else { // y == 0
+
+          if(this->z() > 0) { // z must be either -1 or 1 in this case
+            return *this;
+          } else {
+            return RotationQuaternion(-this->w(),-this->x(),-this->y(),-this->z());
+          }
+        }
+      }
     }
   }
 
@@ -632,9 +699,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  \returns reference
    */
   RotationQuaternion& setUnique() {
-    if(this->w() < 0) {
-      *this = RotationQuaternion(-this->w(),-this->x(),-this->y(),-this->z());
-    }
+    *this = getUnique();
     return *this;
   }
 

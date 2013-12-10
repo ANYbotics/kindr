@@ -153,7 +153,7 @@ class RDiffBase {
 
 };
 
-/*! \class AngularVelocity3Base
+/*! \class AngularVelocityBase
  * \brief Interface for an angular velocity of a rigid body in 3D-space.
  *
  * This class defines the generic interface for an angular velocity in 3D-space.
@@ -164,13 +164,19 @@ class RDiffBase {
  *  \ingroup rotations
  */
 template<typename Implementation_, enum RotationUsage Usage_>
-class AngularVelocity3Base : public RDiffBase<Implementation_, Usage_> {
+class AngularVelocityBase : public RDiffBase<Implementation_, Usage_> {
 
 
 };
 
 template<typename Implementation_, enum RotationUsage Usage_>
 class RotationQuaternionDiffBase : public RDiffBase<Implementation_, Usage_> {
+ public:
+
+};
+
+template<typename Implementation_, enum RotationUsage Usage_>
+class RotationMatrixDiffBase : public RDiffBase<Implementation_, Usage_> {
  public:
 
 };
