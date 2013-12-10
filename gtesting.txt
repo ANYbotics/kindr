@@ -4,11 +4,11 @@ Main functionality:
 - Constructor
 - Access to derived
 - Inversion
-------------------- Setters (identity)
+- Setters (identity)
 ------------------- Unique (getter and setter)
 ------------------- Passive/Active forms
-------------------- Concatenation
-------------------- Comparison (equality)
+- Concatenation
+- Comparison (equality)
 ------------------- Rotation of a vector (normal and inverse)
 
 Derived classes:

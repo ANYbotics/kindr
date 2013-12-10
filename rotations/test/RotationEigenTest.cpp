@@ -138,24 +138,11 @@ TYPED_TEST_CASE(RotationSingleTest, Types);
 TYPED_TEST_CASE(RotationQuaternionSingleTest, RotationQuaternionTypes);
 TYPED_TEST_CASE(RotationPairsTest, TypePairs);
 
+// --------------------------------------------------------------------------------------------------- //
+// ------------------------------ Testing for Rotation Quaternions only ------------------------------ //
+// --------------------------------------------------------------------------------------------------- //
 
-//TYPED_TEST(RotationSingleTest, testConstructor){
-//
-//}
-//
-//TYPED_TEST(RotationSingleTest, testRotateVector){
-////  ASSERT_EQ(this->vecGeneric, this->rotDefaultConstructor.rotate(this->vecGeneric));
-////	  for(auto & r : {TestFixture::halfX, TestFixture::halfY, TestFixture::halfZ}){
-////	    ASSERT_EQ(this->identity, r*r) << r*r; // TODO ASSERT_NEAR
-////		  ASSERT_TRUE(rm::rotations::areNearlyEqual(this->identity, r*r, this->tol)); // TODO ASSERT_NEAR
-////
-////	    ASSERT_EQ(this->vecX, this->identity.rotate(this->vecX));
-////	    ASSERT_EQ(this->vecY, this->identity.rotate(this->vecY));
-////	    ASSERT_EQ(this->vecZ, this->identity.rotate(this->vecZ));
-////	  }
-//}
-
-// Test Rotation Quaternion Cconstructors and access operator (relies on casting to base)
+// Test Rotation Quaternion Constructors and access operator (relies on casting to base)
 TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionConstructors){
   typedef typename TestFixture::RotationQuaternion RotationQuaternion;
   typedef typename TestFixture::Scalar Scalar;
@@ -277,6 +264,50 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionConcatenation){
   rotQuat = this->rotQuatIdentity*this->rotQuat1;
   ASSERT_EQ(rotQuat==this->rotQuat1,true);
 }
+
+// Test Rotation Quaternion Vector Rotation
+TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionVectorRotation){
+  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
+  typedef typename TestFixture::Scalar Scalar;
+  RotationQuaternion rotQuat;
+
+  // Check multiplication of two generic rotation quaternions and compare with eigen results
+  rotQuat = this->rotQuat1*this->rotQuat2;
+  typename RotationQuaternion::Implementation eigenQuat12 = this->eigenQuat1*this->eigenQuat2;
+  ASSERT_NEAR(rotQuat.toUnitQuaternion().w(), eigenQuat12.w(),1e-6);
+  ASSERT_NEAR(rotQuat.toUnitQuaternion().x(), eigenQuat12.x(),1e-6);
+  ASSERT_NEAR(rotQuat.toUnitQuaternion().y(), eigenQuat12.y(),1e-6);
+  ASSERT_NEAR(rotQuat.toUnitQuaternion().z(), eigenQuat12.z(),1e-6);
+
+  // Check result of multiplication of a generic rotation quaternion with identity
+  rotQuat = this->rotQuat1*this->rotQuatIdentity;
+  ASSERT_EQ(rotQuat==this->rotQuat1,true);
+  rotQuat = this->rotQuatIdentity*this->rotQuat1;
+  ASSERT_EQ(rotQuat==this->rotQuat1,true);
+}
+
+//TYPED_TEST(RotationSingleTest, testConstructor){
+//
+//}
+//
+//TYPED_TEST(RotationSingleTest, testRotateVector){
+////  ASSERT_EQ(this->vecGeneric, this->rotDefaultConstructor.rotate(this->vecGeneric));
+////    for(auto & r : {TestFixture::halfX, TestFixture::halfY, TestFixture::halfZ}){
+////      ASSERT_EQ(this->identity, r*r) << r*r; // TODO ASSERT_NEAR
+////      ASSERT_TRUE(rm::rotations::areNearlyEqual(this->identity, r*r, this->tol)); // TODO ASSERT_NEAR
+////
+////      ASSERT_EQ(this->vecX, this->identity.rotate(this->vecX));
+////      ASSERT_EQ(this->vecY, this->identity.rotate(this->vecY));
+////      ASSERT_EQ(this->vecZ, this->identity.rotate(this->vecZ));
+////    }
+//}
+
+
+
+// --------------------------------------------------------------------------------------------------- //
+// ------------------------------- Testing for casting between classes ------------------------------- //
+// --------------------------------------------------------------------------------------------------- //
+
 
 //// Test constructors
 //TYPED_TEST(RotationSingleTest, testRotationConstructors){
