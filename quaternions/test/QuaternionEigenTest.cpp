@@ -31,11 +31,11 @@
 
 #include <gtest/gtest.h>
 
-#include <kinder/common/assert_macros_eigen.hpp>
-#include <kinder/common/gtest_eigen.hpp>
-#include <kinder/quaternions/QuaternionEigen.hpp>
+#include <kindr/common/assert_macros_eigen.hpp>
+#include <kindr/common/gtest_eigen.hpp>
+#include <kindr/quaternions/QuaternionEigen.hpp>
 
-namespace quat = kinder::quaternions::eigen_implementation;
+namespace quat = kindr::quaternions::eigen_implementation;
 
 typedef ::testing::Types<
 		quat::QuaternionD,

@@ -12,12 +12,12 @@ The section \ref positions_interface "Interface" describes the functionalities, 
 \tableofcontents
 
 \section positions_interface Interface
-The class kinder::positions::PositionBase serves as an interface for a position of a point. All types of representations of a position, such as 3D-vector and homogeneous coordinate, are derived from this base class.
+The class kindr::positions::PositionBase serves as an interface for a position of a point. All types of representations of a position, such as 3D-vector and homogeneous coordinate, are derived from this base class.
 
 \subsection positions_zero Zero Coordinates
 The default constructor always initializes all coordinates equal to zero.
 
-All coordinates can be set to zero by the function \ref kinder::positions::PositionBase::setZero() "setZero()".
+All coordinates can be set to zero by the function \ref kindr::positions::PositionBase::setZero() "setZero()".
 
 \subsection positions_addition Addition and Subtraction
 
@@ -25,53 +25,53 @@ Addition of two positions such as
 
 \f$\boxed{_A\mathbf{r}_{A\,Q} = _A\mathbf{r}_{A\,P} + _A\mathbf{r}_{P\,Q}}\f$
 
-is provided by the kinder::positions::PositionBase::operator+().
+is provided by the kindr::positions::PositionBase::operator+().
 
-Subtracting a position from another position is possible by using the kinder::positions::PositionBase::operator-().
+Subtracting a position from another position is possible by using the kindr::positions::PositionBase::operator-().
 
 
 \subsection positions_interfaces_representations Representations of a Position
 The following representations are currently provided by the library:
 
 \subsubsection positions_interfaces_position3 3D-Position
-The class kinder::positions::Position3Base defines an interface for a 3D-vector representation of a position in 3D-Space.
+The class kindr::positions::Position3Base defines an interface for a 3D-vector representation of a position in 3D-Space.
 The position of point P expressed in frame A can be stated as:
 
 \f$\boxed{_A\mathbf{r}_{A\,P} = \begin{bmatrix} x \\ y \\ z \end{bmatrix}}\f$
 
 The three coordinates x, y and z are stored and can be accessed by
    
- - \ref kinder::positions::Position3Base::x() "x()"
- - \ref kinder::positions::Position3Base::y() "y()"
- - \ref kinder::positions::Position3Base::z() "z()"
+ - \ref kindr::positions::Position3Base::x() "x()"
+ - \ref kindr::positions::Position3Base::y() "y()"
+ - \ref kindr::positions::Position3Base::z() "z()"
 
 
 \section positions_implementations Implementations
 Each implementation lies in its own namespace, such that the implementation can be altered later very easily via namespace alias.
 For example: 
 \code{.cpp}
-namespace pos = kinder::positions::eigen_implementation; // select implementation based on Eigen
+namespace pos = kindr::positions::eigen_implementation; // select implementation based on Eigen
 pos::Position3D position();		     // create 3D-Position
 \endcode
 If the implementation needs to be changed, only one line of code has to be altered:
 \code{.cpp}
-namespace pos = kinder::positions::bullet_implementation; // select implementation based on bullet	
+namespace pos = kindr::positions::bullet_implementation; // select implementation based on bullet	
 \endcode
 \subsection positions_eigen Eigen
 The library comes along with an implementation based on the <a href="http://eigen.tuxfamily.org">C++ Eigen library</a>.
 
 All types can be included by
 \code{.cpp}
-#include <kinder/positions/PositionEigen.hpp>
+#include <kindr/positions/PositionEigen.hpp>
 \endcode
-and lie within the namespace kinder::positions::eigen_implementation.
+and lie within the namespace kindr::positions::eigen_implementation.
 
 \subsubsection positions_implementation_positin3 3D-Position
-The class \ref kinder::positions::eigen_implementation::Position3 "Position3" stores the three coordinates of the position in 3D-space in Eigen::Matrix<PrimType, 3, 1>.
+The class \ref kindr::positions::eigen_implementation::Position3 "Position3" stores the three coordinates of the position in 3D-space in Eigen::Matrix<PrimType, 3, 1>.
 
 The following four typedefs are provided for convenience:
- - \ref kinder::positions::eigen_implementation::Position3D "Position3D" for primitive type double
- - \ref kinder::positions::eigen_implementation::Position3F "Position3F" for primitive type float
+ - \ref kindr::positions::eigen_implementation::Position3D "Position3D" for primitive type double
+ - \ref kindr::positions::eigen_implementation::Position3F "Position3F" for primitive type float
 
 A position can be created as follows:
 \code{.cpp}

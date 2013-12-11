@@ -80,7 +80,7 @@ set(TEST_SRCS
 # Add test cpp file
 add_executable( runUnitTestsRotations ${TEST_SRCS})
 # Link test executable against gtest & gtest_main
-target_link_libraries(runUnitTestsRotations gtest_main gtest pthread  ${PROJECT_NAME} )
+target_link_libraries(runUnitTestsRotations gtest_main gtest pthread  )
 add_test(runUnitTestsRotations runUnitTestsRotations )
 ADD_CUSTOM_TARGET(test_rotations runUnitTestsRotations DEPENDS runUnitTestsRotations) 
 endif()

@@ -33,13 +33,13 @@
 
 #include <gtest/gtest.h>
 
-#include "kinder/poses/PoseEigen.hpp"
-#include "kinder/poses/PoseBase.hpp"
+#include "kindr/poses/PoseEigen.hpp"
+#include "kindr/poses/PoseBase.hpp"
 
 
-namespace pose = kinder::poses::eigen_implementation;
-namespace pos = kinder::positions::eigen_implementation;
-namespace rot = kinder::rotations::eigen_implementation;
+namespace pose = kindr::poses::eigen_implementation;
+namespace pos = kindr::positions::eigen_implementation;
+namespace rot = kindr::rotations::eigen_implementation;
 
 
 typedef ::testing::Types<

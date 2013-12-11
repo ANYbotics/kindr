@@ -33,12 +33,12 @@
 
 #include <gtest/gtest.h>
 
-#include "kinder/rotations/RDiffEigen.hpp"
-#include "kinder/common/gtest_eigen.hpp"
+#include "kindr/rotations/RDiffEigen.hpp"
+#include "kindr/common/gtest_eigen.hpp"
 
 
 
-namespace rot = kinder::rotations::eigen_implementation;
+namespace rot = kindr::rotations::eigen_implementation;
 
 template <typename AngularVelocityImplementation>
 struct AngularVelocity3Test: public ::testing::Test {

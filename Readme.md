@@ -1,4 +1,4 @@
-Kinder - the kinematics and dynamics library
+Kindr - Kinematics and Dynamics for Robotics
 -----------------------------------------------------------------
 Autonomous Systems Lab
 ETH Zurich
@@ -7,6 +7,11 @@ Author(s): Christian Gehring, Remo Diethelm, Hannes Sommer,
            Paul Furgale, Peter Fankhauser, Michael Bloesch, 
 email    : leggedrobotics@ethz.ch
 Date     : 08-Aug-2013
+
+DOCUMENTATION
+-----------------------------------------------------------------
+Online: http://ethz-asl-lr.bitbucket.org/kindr
+See also section 'Building the documentation' below.
 
 REQUIREMENTS
 -----------------------------------------------------------------

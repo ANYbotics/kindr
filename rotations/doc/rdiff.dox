@@ -6,15 +6,15 @@ The section \ref rdiff_interface "Interface" describes the functionalities, wher
 \tableofcontents
 
 \section rdiff_interface Interface
-The class kinder::rotations::RDiffBase serves as an interface for the time derivative of a rotation. All types of representations of a time derivative of a rotation, such as angular velocitcy and time derivatives of Euler angles, are derived from this base class.
+The class kindr::rotations::RDiffBase serves as an interface for the time derivative of a rotation. All types of representations of a time derivative of a rotation, such as angular velocitcy and time derivatives of Euler angles, are derived from this base class.
 
 \subsection rdiff_zero Zero
 The default constructor always initializes all derivatives with zero.
 
-All derivatives can be set to zero by the function \ref kinder::rotations::RDiffBase::setZero() "setZero()".
+All derivatives can be set to zero by the function \ref kindr::rotations::RDiffBase::setZero() "setZero()".
 
 \subsection rdiff_addition_and_subtraction Addition and Subtraction
-Addition and subtraction of the time derivatives are provided by the kinder::rotations::RDiffBase::operator+ and kinder::rotations::RDiffBase::operator-, respectively.
+Addition and subtraction of the time derivatives are provided by the kindr::rotations::RDiffBase::operator+ and kindr::rotations::RDiffBase::operator-, respectively.
 
 
 
@@ -22,44 +22,44 @@ Addition and subtraction of the time derivatives are provided by the kinder::rot
 The following representations are currently provided by the library:
 
 \subsubsection rdiff_interfaces_velocity3 3-dimensional Angular Velocity
-The class kinder::rotations::AngularVelocity3Base defines an interface for an angular velocity in 3D-Space.
+The class kindr::rotations::AngularVelocity3Base defines an interface for an angular velocity in 3D-Space.
 The angular velocity expressed in frame A can be stated as:
 
 \f$\boxed{_K\mathbf{\omega}_{IK} = \begin{bmatrix} \omega_x \\ \omega_y \\ \omega_z \end{bmatrix}}\f$
 
 The three components, x, y and z, are stored and can be accessed by
    
- - \ref kinder::rotations::AngularVelocity3Base::x() "x()"
- - \ref kinder::rotations::AngularVelocity3Base::y() "y()"
- - \ref kinder::rotations::AngularVelocity3Base::z() "z()"
+ - \ref kindr::rotations::AngularVelocity3Base::x() "x()"
+ - \ref kindr::rotations::AngularVelocity3Base::y() "y()"
+ - \ref kindr::rotations::AngularVelocity3Base::z() "z()"
 
 
 \section rdiff_implementations Implementations
 Each implementation lies in its own namespace, such that the implementation can be altered later very easily via namespace alias.
 For example: 
 \code{.cpp}
-namespace rot = kinder::rotations::eigen_implementation; // select implementation based on Eigen
+namespace rot = kindr::rotations::eigen_implementation; // select implementation based on Eigen
 rot::AngularVelocity3D velocity();		     // create angular velocity
 \endcode
 If the implementation needs to be changed, only one line of code has to be altered:
 \code{.cpp}
-namespace rot = kinder::rotations::bullet_implementation; // select implementation based on bullet	
+namespace rot = kindr::rotations::bullet_implementation; // select implementation based on bullet	
 \endcode
 \subsection rdiff_eigen Eigen
 The library comes along with an implementation based on the <a href="http://eigen.tuxfamily.org">C++ Eigen library</a>.
 
 All types can be included by
 \code{.cpp}
-#include <kinder/rotations/RDiffEigen.hpp>
+#include <kindr/rotations/RDiffEigen.hpp>
 \endcode
-and lie within the namespace kinder::rotations::eigen_implementation.
+and lie within the namespace kindr::rotations::eigen_implementation.
 
 \subsubsection rdiff_implementation_angularvelocity3 3D Angular Velocity
-The class \ref kinder::rotations::eigen_implementation::AngularVelocity3 "AngularVelocity3" stores the three coordinates of the angular velocity in Eigen::Matrix<PrimType, 3, 1>.
+The class \ref kindr::rotations::eigen_implementation::AngularVelocity3 "AngularVelocity3" stores the three coordinates of the angular velocity in Eigen::Matrix<PrimType, 3, 1>.
 
 The following two typedefs are provided for convenience:
- - \ref kinder::rotations::eigen_implementation::AngularVelocity3D "AngularVelocity3D" for primitive type double
- - \ref kinder::rotations::eigen_implementation::AngularVelocity3F "AngularVelocity3F" for primitive type float
+ - \ref kindr::rotations::eigen_implementation::AngularVelocity3D "AngularVelocity3D" for primitive type double
+ - \ref kindr::rotations::eigen_implementation::AngularVelocity3F "AngularVelocity3F" for primitive type float
 
 An angular velocity can be created as follows:
 \code{.cpp}

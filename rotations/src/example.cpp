@@ -25,12 +25,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
 */
-#include "kinder/quaternions/QuaternionEigen.hpp"
-#include "kinder/rotations/RotationEigen.hpp"
+#include "kindr/quaternions/QuaternionEigen.hpp"
+#include "kindr/rotations/RotationEigen.hpp"
 
 int main(int argc, char **argv){
-  using namespace kinder::rotations::eigen_implementation;
-  using namespace kinder::quaternions::eigen_implementation;
+  using namespace kindr::rotations::eigen_implementation;
+  using namespace kindr::quaternions::eigen_implementation;
   using namespace Eigen;
   Vector3d I_r_0F(1.0, 0.0, 0.0);
 

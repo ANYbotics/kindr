@@ -7,15 +7,15 @@ The section \ref pdiff_interface "Interface" describes the functionalities, wher
 \tableofcontents
 
 \section pdiff_interface Interface
-The class kinder::positions::PDiffBase serves as an interface for a velocity of a point. All types of representations of a velocity, such as 3D-vector and homogeneous coordinate, are derived from this base class.
+The class kindr::positions::PDiffBase serves as an interface for a velocity of a point. All types of representations of a velocity, such as 3D-vector and homogeneous coordinate, are derived from this base class.
 
 \subsection pdiff_zero Zero
 The default constructor always initializes all velocities equal to zero.
 
-All velocities can be set to zero by the function \ref kinder::positions::PDiffBase::setZero() "setZero()".
+All velocities can be set to zero by the function \ref kindr::positions::PDiffBase::setZero() "setZero()".
 
 \subsection pdiff_addition_and_subtraction Addition and Subtraction
-Addition and subtraction of linear velocities are provided by the kinder::positions::PDiffBase::operator+ and kinder::positions::PDiffBase::operator-, respectively.
+Addition and subtraction of linear velocities are provided by the kindr::positions::PDiffBase::operator+ and kindr::positions::PDiffBase::operator-, respectively.
 
 
 
@@ -23,44 +23,44 @@ Addition and subtraction of linear velocities are provided by the kinder::positi
 The following representations are currently provided by the library:
 
 \subsubsection pdiff_interfaces_velocity3 3-dimensional Linear Velocity
-The class kinder::positions::LinearVelocity3Base defines an interface for a 3D-vector representation of a linear velocity in 3D-Space.
+The class kindr::positions::LinearVelocity3Base defines an interface for a 3D-vector representation of a linear velocity in 3D-Space.
 The linear velocity of point P expressed in frame A can be stated as:
 
 \f$\boxed{_A\mathbf{v}_{P} = \begin{bmatrix} v_x \\ v_y \\ v_z \end{bmatrix}}\f$
 
 The three components, x, y and z, are stored and can be accessed by
    
- - \ref kinder::positions::LinearVelocity3Base::x() "x()"
- - \ref kinder::positions::LinearVelocity3Base::y() "y()"
- - \ref kinder::positions::LinearVelocity3Base::z() "z()"
+ - \ref kindr::positions::LinearVelocity3Base::x() "x()"
+ - \ref kindr::positions::LinearVelocity3Base::y() "y()"
+ - \ref kindr::positions::LinearVelocity3Base::z() "z()"
 
 
 \section pdiff_implementations Implementations
 Each implementation lies in its own namespace, such that the implementation can be altered later very easily via namespace alias.
 For example: 
 \code{.cpp}
-namespace pos = kinder::positions::eigen_implementation; // select implementation based on Eigen
+namespace pos = kindr::positions::eigen_implementation; // select implementation based on Eigen
 pos::LinearVelocity3D velocity();		     // create 3D-Velocity
 \endcode
 If the implementation needs to be changed, only one line of code has to be altered:
 \code{.cpp}
-namespace pos = kinder::positions::bullet_implementation; // select implementation based on bullet	
+namespace pos = kindr::positions::bullet_implementation; // select implementation based on bullet	
 \endcode
 \subsection pdiff_eigen Eigen
 The library comes along with an implementation based on the <a href="http://eigen.tuxfamily.org">C++ Eigen library</a>.
 
 All types can be included by
 \code{.cpp}
-#include <kinder/positions/PDiffEigen.hpp>
+#include <kindr/positions/PDiffEigen.hpp>
 \endcode
-and lie within the namespace kinder::positions::eigen_implementation.
+and lie within the namespace kindr::positions::eigen_implementation.
 
 \subsubsection pdiff_implementation_linearvelocity3 3D Linear Velocity
-The class \ref kinder::positions::eigen_implementation::LinearVelocity3 "LinearVelocity3" stores the three coordinates of the velocity in 3D-space in Eigen::Matrix<PrimType, 3, 1>.
+The class \ref kindr::positions::eigen_implementation::LinearVelocity3 "LinearVelocity3" stores the three coordinates of the velocity in 3D-space in Eigen::Matrix<PrimType, 3, 1>.
 
 The following four typedefs are provided for convenience:
- - \ref kinder::positions::eigen_implementation::LinearVelocity3D "LinearVelocity3D" for primitive type double
- - \ref kinder::positions::eigen_implementation::LinearVelocity3F "LinearVelocity3F" for primitive type float
+ - \ref kindr::positions::eigen_implementation::LinearVelocity3D "LinearVelocity3D" for primitive type double
+ - \ref kindr::positions::eigen_implementation::LinearVelocity3F "LinearVelocity3F" for primitive type float
 
 A velocity can be created as follows:
 \code{.cpp}
