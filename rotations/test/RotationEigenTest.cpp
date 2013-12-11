@@ -126,10 +126,16 @@ struct RotationQuaternionSinglePassiveTest : public ::testing::Test{
 template <typename QuaternionImplementationQuaternionPair>
 struct RotationQuaternionPairTest : public ::testing::Test{
   typedef typename QuaternionImplementationQuaternionPair::first_type RotationQuaternionFirstPrimeType;
+  typedef typename RotationQuaternionFirstPrimeType::Scalar FirstScalar;
   typedef typename QuaternionImplementationQuaternionPair::second_type RotationQuaternionSecondPrimeType;
+  typedef typename RotationQuaternionSecondPrimeType::Scalar SecondScalar;
 
   const RotationQuaternionFirstPrimeType rotQuat1 = RotationQuaternionFirstPrimeType(0.0,0.36,0.48,0.8);
   const RotationQuaternionSecondPrimeType rotQuat2 = RotationQuaternionSecondPrimeType(0.0,0.36,0.48,0.8);
+  const typename quat::UnitQuaternion<FirstScalar> uquat1 = typename quat::UnitQuaternion<FirstScalar>(0.0,0.36,0.48,0.8);
+  const typename quat::UnitQuaternion<SecondScalar> uquat2 = typename quat::UnitQuaternion<SecondScalar>(0.0,0.36,0.48,0.8);
+  const typename quat::Quaternion<FirstScalar> quat1 = typename quat::Quaternion<FirstScalar>(0.0,0.36,0.48,0.8);
+  const typename quat::Quaternion<SecondScalar> quat2 = typename quat::Quaternion<SecondScalar>(0.0,0.36,0.48,0.8);
 };
 
 typedef ::testing::Types<
@@ -213,38 +219,128 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionConstructors){
   ASSERT_NEAR(rot5.z(), this->eigenQuat1.z(),1e-6);
 }
 
-// Test Rotation Quaternion Assignment Operator
-TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionAssignment){
-  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
-  typedef typename TestFixture::Scalar Scalar;
-  RotationQuaternion rot;
-
-  rot = this->quat1;
-  ASSERT_NEAR(rot.w(), this->eigenQuat1.w(),1e-6);
-  ASSERT_NEAR(rot.x(), this->eigenQuat1.x(),1e-6);
-  ASSERT_NEAR(rot.y(), this->eigenQuat1.y(),1e-6);
-  ASSERT_NEAR(rot.z(), this->eigenQuat1.z(),1e-6);
-
-  rot = this->rotQuat1;
-  ASSERT_NEAR(rot.w(), this->eigenQuat1.w(),1e-6);
-  ASSERT_NEAR(rot.x(), this->eigenQuat1.x(),1e-6);
-  ASSERT_NEAR(rot.y(), this->eigenQuat1.y(),1e-6);
-  ASSERT_NEAR(rot.z(), this->eigenQuat1.z(),1e-6);
-}
-
-// Test Rotation Quaternion Assignment Operator between different primetypes
+// Test Rotation Quaternion Assignment Operator (including test between different primtypes)
 TYPED_TEST(RotationQuaternionPairTest, testRotationQuaternionAssignmentPrimetypes){
   typedef typename TestFixture::RotationQuaternionFirstPrimeType RotationQuaternionFirstPrimeType;
   typedef typename TestFixture::RotationQuaternionSecondPrimeType RotationQuaternionSecondPrimeType;
   RotationQuaternionFirstPrimeType rot1;
   RotationQuaternionSecondPrimeType rot2;
 
+  //  RotationQuaternionXF = RotationQuaternionXF
+  rot1 = this->rotQuat1;
+  ASSERT_NEAR(rot1.w(), this->rotQuat1.w(),1e-6);
+  ASSERT_NEAR(rot1.x(), this->rotQuat1.x(),1e-6);
+  ASSERT_NEAR(rot1.y(), this->rotQuat1.y(),1e-6);
+  ASSERT_NEAR(rot1.z(), this->rotQuat1.z(),1e-6);
+
+  //  RotationQuaternionXF = RotationQuaternionXD
   rot1 = this->rotQuat2;
   ASSERT_NEAR(rot1.w(), this->rotQuat2.w(),1e-6);
   ASSERT_NEAR(rot1.x(), this->rotQuat2.x(),1e-6);
   ASSERT_NEAR(rot1.y(), this->rotQuat2.y(),1e-6);
   ASSERT_NEAR(rot1.z(), this->rotQuat2.z(),1e-6);
+
+  //  RotationQuaternionXF = UnitQuaternionF
+  rot1 = this->uquat1;
+  ASSERT_NEAR(rot1.w(), this->rotQuat1.w(),1e-6);
+  ASSERT_NEAR(rot1.x(), this->rotQuat1.x(),1e-6);
+  ASSERT_NEAR(rot1.y(), this->rotQuat1.y(),1e-6);
+  ASSERT_NEAR(rot1.z(), this->rotQuat1.z(),1e-6);
+
+  //  RotationQuaternionXF = UnitQuaternionD
+  rot1 = this->uquat2;
+  ASSERT_NEAR(rot1.w(), this->rotQuat2.w(),1e-6);
+  ASSERT_NEAR(rot1.x(), this->rotQuat2.x(),1e-6);
+  ASSERT_NEAR(rot1.y(), this->rotQuat2.y(),1e-6);
+  ASSERT_NEAR(rot1.z(), this->rotQuat2.z(),1e-6);
+
+  //  RotationQuaternionXD = RotationQuaternionXD
+  rot2 = this->rotQuat2;
+  ASSERT_NEAR(rot2.w(), this->rotQuat2.w(),1e-6);
+  ASSERT_NEAR(rot2.x(), this->rotQuat2.x(),1e-6);
+  ASSERT_NEAR(rot2.y(), this->rotQuat2.y(),1e-6);
+  ASSERT_NEAR(rot2.z(), this->rotQuat2.z(),1e-6);
+
+  //  RotationQuaternionXD = RotationQuaternionXF
   rot2 = this->rotQuat1;
+  ASSERT_NEAR(rot2.w(), this->rotQuat1.w(),1e-6);
+  ASSERT_NEAR(rot2.x(), this->rotQuat1.x(),1e-6);
+  ASSERT_NEAR(rot2.y(), this->rotQuat1.y(),1e-6);
+  ASSERT_NEAR(rot2.z(), this->rotQuat1.z(),1e-6);
+
+  //  RotationQuaternionXD = UnitQuaternionD
+  rot2 = this->uquat2;
+  ASSERT_NEAR(rot2.w(), this->rotQuat2.w(),1e-6);
+  ASSERT_NEAR(rot2.x(), this->rotQuat2.x(),1e-6);
+  ASSERT_NEAR(rot2.y(), this->rotQuat2.y(),1e-6);
+  ASSERT_NEAR(rot2.z(), this->rotQuat2.z(),1e-6);
+
+  //  RotationQuaternionXD = UnitQuaternionF
+  rot2 = this->uquat1;
+  ASSERT_NEAR(rot2.w(), this->rotQuat1.w(),1e-6);
+  ASSERT_NEAR(rot2.x(), this->rotQuat1.x(),1e-6);
+  ASSERT_NEAR(rot2.y(), this->rotQuat1.y(),1e-6);
+  ASSERT_NEAR(rot2.z(), this->rotQuat1.z(),1e-6);
+}
+
+// Test Rotation Quaternion () Operator for casting from Quaternion/UnitQuaternion (including test between different primtypes)
+TYPED_TEST(RotationQuaternionPairTest, testRotationQuaternionParenthesisPrimetypes){
+  typedef typename TestFixture::RotationQuaternionFirstPrimeType RotationQuaternionFirstPrimeType;
+  typedef typename TestFixture::RotationQuaternionSecondPrimeType RotationQuaternionSecondPrimeType;
+  RotationQuaternionFirstPrimeType rot1;
+  RotationQuaternionSecondPrimeType rot2;
+
+  //  RotationQuaternionXF(UnitQuaternionF)
+  rot1(this->uquat1);
+  ASSERT_NEAR(rot1.w(), this->rotQuat1.w(),1e-6);
+  ASSERT_NEAR(rot1.x(), this->rotQuat1.x(),1e-6);
+  ASSERT_NEAR(rot1.y(), this->rotQuat1.y(),1e-6);
+  ASSERT_NEAR(rot1.z(), this->rotQuat1.z(),1e-6);
+
+  //  RotationQuaternionXF(UnitQuaternionD)
+  rot1(this->uquat2);
+  ASSERT_NEAR(rot1.w(), this->rotQuat2.w(),1e-6);
+  ASSERT_NEAR(rot1.x(), this->rotQuat2.x(),1e-6);
+  ASSERT_NEAR(rot1.y(), this->rotQuat2.y(),1e-6);
+  ASSERT_NEAR(rot1.z(), this->rotQuat2.z(),1e-6);
+
+  //  RotationQuaternionXD(UnitQuaternionD)
+  rot2(this->uquat2);
+  ASSERT_NEAR(rot2.w(), this->rotQuat2.w(),1e-6);
+  ASSERT_NEAR(rot2.x(), this->rotQuat2.x(),1e-6);
+  ASSERT_NEAR(rot2.y(), this->rotQuat2.y(),1e-6);
+  ASSERT_NEAR(rot2.z(), this->rotQuat2.z(),1e-6);
+
+  //  RotationQuaternionXD(UnitQuaternionF)
+  rot2(this->uquat1);
+  ASSERT_NEAR(rot2.w(), this->rotQuat1.w(),1e-6);
+  ASSERT_NEAR(rot2.x(), this->rotQuat1.x(),1e-6);
+  ASSERT_NEAR(rot2.y(), this->rotQuat1.y(),1e-6);
+  ASSERT_NEAR(rot2.z(), this->rotQuat1.z(),1e-6);
+
+  //  RotationQuaternionXF(QuaternionF)
+  rot1(this->quat1);
+  ASSERT_NEAR(rot1.w(), this->rotQuat1.w(),1e-6);
+  ASSERT_NEAR(rot1.x(), this->rotQuat1.x(),1e-6);
+  ASSERT_NEAR(rot1.y(), this->rotQuat1.y(),1e-6);
+  ASSERT_NEAR(rot1.z(), this->rotQuat1.z(),1e-6);
+
+  //  RotationQuaternionXF(QuaternionD)
+  rot1(this->quat2);
+  ASSERT_NEAR(rot1.w(), this->rotQuat2.w(),1e-6);
+  ASSERT_NEAR(rot1.x(), this->rotQuat2.x(),1e-6);
+  ASSERT_NEAR(rot1.y(), this->rotQuat2.y(),1e-6);
+  ASSERT_NEAR(rot1.z(), this->rotQuat2.z(),1e-6);
+
+  //  RotationQuaternionXD(QuaternionD)
+  rot2(this->quat2);
+  ASSERT_NEAR(rot2.w(), this->rotQuat2.w(),1e-6);
+  ASSERT_NEAR(rot2.x(), this->rotQuat2.x(),1e-6);
+  ASSERT_NEAR(rot2.y(), this->rotQuat2.y(),1e-6);
+  ASSERT_NEAR(rot2.z(), this->rotQuat2.z(),1e-6);
+
+  //  RotationQuaternionXD(QuaternionF)
+  rot2(this->quat1);
   ASSERT_NEAR(rot2.w(), this->rotQuat1.w(),1e-6);
   ASSERT_NEAR(rot2.x(), this->rotQuat1.x(),1e-6);
   ASSERT_NEAR(rot2.y(), this->rotQuat1.y(),1e-6);
@@ -293,6 +389,19 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionConjugation){
   ASSERT_NEAR(rot2.x(), this->eigenQuat1.x(),1e-6);
   ASSERT_NEAR(rot2.y(), this->eigenQuat1.y(),1e-6);
   ASSERT_NEAR(rot2.z(), this->eigenQuat1.z(),1e-6);
+}
+
+// Test Rotation Quaternion Norm
+TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionNorm){
+  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
+  typedef typename TestFixture::Scalar Scalar;
+
+  RotationQuaternion rot = this->rotQuat1;
+  ASSERT_NEAR(rot.norm(), 1.0,1e-6);
+  rot = this->rotQuat2;
+  ASSERT_NEAR(rot.norm(), 1.0,1e-6);
+  rot = this->rotQuatIdentity;
+  ASSERT_NEAR(rot.norm(), 1.0,1e-6);
 }
 
 // Test Rotation Quaternion Setters

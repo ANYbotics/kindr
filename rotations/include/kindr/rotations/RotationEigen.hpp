@@ -588,18 +588,13 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
     return this->toUnitQuaternion().toImplementation();
   }
 
-
-
   /*! \brief Assignment operator using a UnitQuaternion.
    *  \param quat   UnitQuaternion
    *  \returns reference
    */
-  template<typename PrimTypeIn>
-  RotationQuaternion& operator =(const quaternions::eigen_implementation::UnitQuaternion<PrimTypeIn>& quat) {
-    this->w() = quat.w();
-    this->x() = quat.x();
-    this->y() = quat.y();
-    this->z() = quat.z();
+  template<typename PrimTypeIn_>
+  RotationQuaternion& operator =(const quaternions::eigen_implementation::UnitQuaternion<PrimTypeIn_>& quat) {
+    this->toImplementation() = quat.toImplementation().template cast<PrimType_>();
     return *this;
   }
 
@@ -607,12 +602,19 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  \param other   other rotation
    *  \returns reference
    */
-  template<typename OtherDerived_> // todo: increase efficiency
+  template<typename OtherDerived_>
   RotationQuaternion& operator =(const RotationBase<OtherDerived_, Usage_>& other) {
-    this->w() = internal::ConversionTraits<RotationQuaternion, OtherDerived_>::convert(other.derived()).w();
-    this->x() = internal::ConversionTraits<RotationQuaternion, OtherDerived_>::convert(other.derived()).x();
-    this->y() = internal::ConversionTraits<RotationQuaternion, OtherDerived_>::convert(other.derived()).y();
-    this->z() = internal::ConversionTraits<RotationQuaternion, OtherDerived_>::convert(other.derived()).z();
+    this->toImplementation() = internal::ConversionTraits<RotationQuaternion, OtherDerived_>::convert(other.derived()).toImplementation();
+    return *this;
+  }
+
+  /*! \brief Assignment operator using another rotation.
+   *  \param other   other rotation
+   *  \returns reference
+   */
+  template<typename PrimTypeIn_>
+  RotationQuaternion& operator =(const RotationQuaternion<PrimTypeIn_, Usage_>& other) {
+    this->toImplementation() = other.toImplementation().template cast<PrimType_>();
     return *this;
   }
 
@@ -620,12 +622,9 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  \param quat   UnitQuaternion
    *  \returns reference
    */
-  template<typename PrimTypeIn>
-  RotationQuaternion& operator ()(const quaternions::eigen_implementation::UnitQuaternion<PrimTypeIn>& quat) {
-    this->w() = quat.w();
-    this->x() = quat.x();
-    this->y() = quat.y();
-    this->z() = quat.z();
+  template<typename PrimTypeIn_>
+  RotationQuaternion& operator ()(const quaternions::eigen_implementation::UnitQuaternion<PrimTypeIn_>& quat) {
+    this->toImplementation() = quat.toImplementation().template cast<PrimType_>();
     return *this;
   }
 
@@ -634,12 +633,9 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  \param quat   Quaternion
    *  \returns reference
    */
-  template<typename PrimTypeIn>
-  RotationQuaternion& operator ()(const quaternions::eigen_implementation::Quaternion<PrimTypeIn>& quat) {
-    this->w() = quat.w();
-    this->x() = quat.x();
-    this->y() = quat.y();
-    this->z() = quat.z();
+  template<typename PrimTypeIn_>
+  RotationQuaternion& operator ()(const quaternions::eigen_implementation::Quaternion<PrimTypeIn_>& quat) {
+    this->toImplementation() = quat.toImplementation().template cast<PrimType_>();
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
     return *this;
   }
