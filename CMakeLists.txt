@@ -26,7 +26,7 @@
 # Project configuration
 cmake_minimum_required (VERSION 2.8)
 
-project(kinder)
+project(kindr)
 
 
 # Set Build Type

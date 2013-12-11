@@ -33,12 +33,12 @@
 
 #include <gtest/gtest.h>
 
-#include "kinder/positions/PDiffEigen.hpp"
-#include "kinder/common/gtest_eigen.hpp"
+#include "kindr/positions/PDiffEigen.hpp"
+#include "kindr/common/gtest_eigen.hpp"
 
 
 
-namespace pos = kinder::positions::eigen_implementation;
+namespace pos = kindr::positions::eigen_implementation;
 
 template <typename LinearVelocityImplementation>
 struct LinearVelocity3Test: public ::testing::Test {

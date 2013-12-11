@@ -33,7 +33,7 @@
 #include <random>
 #include <sm/eigen/gtest.hpp>
 #include <boost/random/mersenne_twister.hpp>
-#include <boost/random/unifokinder_real.hpp>
+#include <boost/random/unifokindr_real.hpp>
 #include <limits>
 #include <sm/random.hpp>
 #include <sm/timing/Timer.hpp>

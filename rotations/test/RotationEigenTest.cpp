@@ -26,19 +26,19 @@
  *
 */
 
-#include "kinder/common/gtest_eigen.hpp"
-#include "kinder/quaternions/QuaternionEigen.hpp"
-#include "kinder/rotations/RotationEigen.hpp"
+#include "kindr/common/gtest_eigen.hpp"
+#include "kindr/quaternions/QuaternionEigen.hpp"
+#include "kindr/rotations/RotationEigen.hpp"
 
-namespace rot = kinder::rotations::eigen_implementation;
-namespace quat = kinder::quaternions::eigen_implementation;
+namespace rot = kindr::rotations::eigen_implementation;
+namespace quat = kindr::quaternions::eigen_implementation;
 
 template <typename RotationImplementation>
 struct RotationTest {
   typedef RotationImplementation Rotation;
   typedef typename RotationImplementation::Scalar Scalar;
 
-  static constexpr kinder::rotations::RotationUsage Usage = RotationImplementation::Usage;
+  static constexpr kindr::rotations::RotationUsage Usage = RotationImplementation::Usage;
   typedef Eigen::Matrix<Scalar, 3, 1> Vector3;
   typedef Eigen::Matrix<Scalar, 3, 4> Matrix3x4;
   Scalar tol;
@@ -490,7 +490,7 @@ TYPED_TEST(RotationQuaternionSinglePassiveTest, testRotationQuaternionPassive){
 
   // Get passive and active usage
   rotQuat = this->rotQuat;
-  typename rot::RotationQuaternion<Scalar, kinder::rotations::RotationUsage::ACTIVE> rotQuatActive;
+  typename rot::RotationQuaternion<Scalar, kindr::rotations::RotationUsage::ACTIVE> rotQuatActive;
   rotQuatActive = rotQuat.getActive();
   ASSERT_NEAR(rotQuatActive.w(), this->rotQuat.w(),1e-6);
   ASSERT_NEAR(rotQuatActive.x(), -this->rotQuat.x(),1e-6);
@@ -504,7 +504,7 @@ TYPED_TEST(RotationQuaternionSingleActiveTest, testRotationQuaternionActive){
 
   // Get passive and active usage
   rotQuat = this->rotQuat;
-  typename rot::RotationQuaternion<Scalar, kinder::rotations::RotationUsage::PASSIVE> rotQuatPassive;
+  typename rot::RotationQuaternion<Scalar, kindr::rotations::RotationUsage::PASSIVE> rotQuatPassive;
   rotQuatPassive = rotQuat.getPassive();
   ASSERT_NEAR(rotQuatPassive.w(), this->rotQuat.w(),1e-6);
   ASSERT_NEAR(rotQuatPassive.x(), -this->rotQuat.x(),1e-6);
@@ -577,7 +577,7 @@ TYPED_TEST(RotationQuaternionSingleActiveTest, testRotationQuaternionActive){
 
 TEST (RotationImplementationTest, testRotationVector) {
   rot::RotationVectorAD rvec;
-  rot::RotationQuaternionAD rquat(kinder::quaternions::eigen_implementation::QuaternionD(1,2,3,4).toUnitQuaternion());
+  rot::RotationQuaternionAD rquat(kindr::quaternions::eigen_implementation::QuaternionD(1,2,3,4).toUnitQuaternion());
   rvec = rquat;
   std::cout << "rvec: " << rvec << std::endl;
   Eigen::Vector3d vec(1,2,3);

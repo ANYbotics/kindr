@@ -6,25 +6,25 @@
  /*! \page page_quaternions Quaternions
 This library defines an \ref quaternion_interface "interface" for quaternions to enable different \ref quaternion_implementations "implementations".
 
-Note that these quaternions should not be used to represent rotations! Use a \ref kinder::rotations::RotationQuaternionBase "RotationQuaternion" instead as explained on page \ref page_rotations "Rotations".
+Note that these quaternions should not be used to represent rotations! Use a \ref kindr::rotations::RotationQuaternionBase "RotationQuaternion" instead as explained on page \ref page_rotations "Rotations".
  
 \section quaternion_interface Interfaces
 The interfaces are declared in \ref QuaternionBase.hpp.
 \subsection generic_quaternion Generic Quaternion
-The class kinder::quaternions::QuaternionBase defines the \em interface for a Hamiltonian generic quaternion defined as:
+The class kindr::quaternions::QuaternionBase defines the \em interface for a Hamiltonian generic quaternion defined as:
 
 \f$\boxed{\begin{aligned}Q &= q_0 + q_1 i + q_2 j + q_3 k \in \mathbb{H}, \quad q_i \in \mathbb{R} \\
 i^2 &= j^2=k^2 = ijk = -1 \\
 \end{aligned}}\f$
 
 The interface defines generic functions, such as:
-- inversion (kinder::quaternions::QuaternionBase::invert())
-- conjugation (kinder::quaternions::QuaternionBase::conjugate())
-- multiplication (kinder::quaternions::QuaternionBase::operator*())
-- comparison (kinder::quaternions::QuaternionBase::operator==())
+- inversion (kindr::quaternions::QuaternionBase::invert())
+- conjugation (kindr::quaternions::QuaternionBase::conjugate())
+- multiplication (kindr::quaternions::QuaternionBase::operator*())
+- comparison (kindr::quaternions::QuaternionBase::operator==())
 
 \subsection unit_quternion Unit Quaternion
-The class kinder::quaternions::UnitQuaternionBase defines the \em interface for a Hamiltonian unit quaternion defined as:
+The class kindr::quaternions::UnitQuaternionBase defines the \em interface for a Hamiltonian unit quaternion defined as:
 
 \f$\boxed{\begin{aligned}P &= p_0 + p_1 i + p_2 j + p_3 k \in \mathbb{H}, \quad p_i \in \mathbb{R} \\
 i^2 &= j^2=k^2 = ijk = -1, \quad \lVert P \rVert= \sqrt{p_0^2 + p_1^2 + p_2^2 + p_3^2} = 1 \\
@@ -38,12 +38,12 @@ There are two reasons why there is an extra class for unit quaternions:
 Each implementation lies in its own namespace, such that the implementation can be altered later very easily via namespace alias.
 For example: 
 \code{.cpp}
-namespace quat = kinder::quaternions::eigen_implementation; // select implementation based on Eigen
+namespace quat = kindr::quaternions::eigen_implementation; // select implementation based on Eigen
 quat::QuaternionD myQuaternion();				// create a quaternion
 \endcode
 If the implementation needs to be changed, only one line of code has to be changed:
 \code{.cpp}
-namespace quat = kinder::quaternions::bullet_implementation; // select implementation based on bullet	
+namespace quat = kindr::quaternions::bullet_implementation; // select implementation based on bullet	
 \endcode
 \subsection quaternion_eigen Eigen
 The library comes along with an implementation based on the C++ Eigen library.
@@ -51,35 +51,35 @@ Eigen provides a Eigen::Quaternion, which is used as a primitive for a quaternio
 
 To use the quaternions based on Eigen, include the following header:
 \code{.cpp}
-#include <kinder/quaternions/QuaternionEigen.hpp>
+#include <kindr/quaternions/QuaternionEigen.hpp>
 \endcode
 
 \subsubsection generic_quaternion_eigen Generic Quaternion
 
-The class kinder::quaternions::eigen_implementation::Quaternion implements a Hamiltonian generic quaternion.
+The class kindr::quaternions::eigen_implementation::Quaternion implements a Hamiltonian generic quaternion.
 
 The coefficients are defined as
 
 \f$\boxed{Q = w + x i + yj + z k}\f$
 
 The following two typedefs are provided for convenience:
- - \ref kinder::quaternions::eigen_implementation::QuaternionF "QuaternionF" for float
- - \ref kinder::quaternions::eigen_implementation::QuaternionD "QuaternionD" for double
+ - \ref kindr::quaternions::eigen_implementation::QuaternionF "QuaternionF" for float
+ - \ref kindr::quaternions::eigen_implementation::QuaternionD "QuaternionD" for double
 
 Example code to create a quaternion:
 \code{.cpp}
-namespace quat = kinder::quaternions::eigen_implementation; // select implementation based on Eigen
+namespace quat = kindr::quaternions::eigen_implementation; // select implementation based on Eigen
 quat::QuaternionD quat1;				// creates a quaternion with all coefficients equal to zero
 quat::QuaternionD quat2(1.0, 2.0, 3.0, 4.0); //creates a quaternion with w=1, x=2, y=3, z=4	
 \endcode
 
 \subsubsection unit_quaternion_eigen Unit Quaternion
 
-The class kinder::quaternions::eigen_implementation::UnitQuaternion implements a Hamiltonian unit quaternion.
+The class kindr::quaternions::eigen_implementation::UnitQuaternion implements a Hamiltonian unit quaternion.
 
 The following two typedefs are provided for convenience:
- - \ref kinder::quaternions::eigen_implementation::UnitQuaternionF "UnitQuaternionF" for float
- - \ref kinder::quaternions::eigen_implementation::UnitQuaternionD "UnitQuaternionD" for double
+ - \ref kindr::quaternions::eigen_implementation::UnitQuaternionF "UnitQuaternionF" for float
+ - \ref kindr::quaternions::eigen_implementation::UnitQuaternionD "UnitQuaternionD" for double
 
 
 The class only checks if the quaternion has unit length if the code is built with debugging symbols, i.e. #define NDEBUG exists. If the unit quaternion has not unit length, an exception will be thrown.  

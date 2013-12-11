@@ -68,6 +68,6 @@ set(TEST_SRCS
 # Add test cpp file
 add_executable( runUnitTestsPoses  ${TEST_SRCS})
 # Link test executable against gtest & gtest_main
-target_link_libraries(runUnitTestsPoses  gtest_main gtest pthread  ${PROJECT_NAME} )
+target_link_libraries(runUnitTestsPoses  gtest_main gtest pthread )
 add_test( runUnitTestsPoses runUnitTestsPoses )
 endif()
