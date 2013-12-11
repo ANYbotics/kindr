@@ -6,7 +6,7 @@ Main functionality:
 - Inversion
 - Setters (identity)
 - Unique (getter and setter)
-------------------- Passive/Active forms
+- Passive/Active forms
 - Concatenation
 - Comparison (equality)
 - Rotation of a vector (normal and inverse)
