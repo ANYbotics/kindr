@@ -42,7 +42,7 @@ namespace kindr {
 namespace rotations {
 namespace eigen_implementation {
 
-/*! \class AngularVelocity3
+/*! \class AngularVelocity
  * \brief Angular velocity in 3D-space.
  *
  * This class implements an angular velocity of a body in 3D-space.

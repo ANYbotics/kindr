@@ -405,6 +405,7 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    *  \returns copy of the rotation vector which is unique
    */
   RotationVector getUnique() const {
+    // todo: test
     RotationVector rotVector(toImplementation());
 
     const Scalar norm = rotVector.toImplementation().norm();
@@ -1769,14 +1770,6 @@ class ConversionTraits<eigen_implementation::RotationVector<DestPrimType_, Usage
   }
 };
 
-//template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
-//class ConversionTraits<eigen_implementation::RotationVector<DestPrimType_, Usage_>, eigen_implementation::RotationQuaternion<SourcePrimType_, Usage_>> {
-// public:
-//  inline static eigen_implementation::RotationVector<DestPrimType_, Usage_> convert(const eigen_implementation::RotationQuaternion<SourcePrimType_, Usage_>& rotationQuaternion) {
-//    const Eigen::AngleAxis<DestPrimType_> aa(eigen_implementation::getAngleAxisFromQuaternion<SourcePrimType_, DestPrimType_>(rotationQuaternion.toImplementation()));
-//    return eigen_implementation::RotationVector<DestPrimType_, Usage_>(aa.angle()*aa.axis());
-//  }
-//};
 
 template<typename DestPrimType_, typename SourceImplementation_, enum RotationUsage Usage_>
 class ConversionTraits<eigen_implementation::RotationVector<DestPrimType_, Usage_>, SourceImplementation_> {
@@ -2117,6 +2110,14 @@ class ComparisonTraits<eigen_implementation::AngleAxis<PrimType_, Usage_>> {
   inline static bool isEqual(const eigen_implementation::AngleAxis<PrimType_, Usage_>& a, const eigen_implementation::AngleAxis<PrimType_, Usage_>& b){
     return a.toImplementation().angle() ==  b.toImplementation().angle() &&
            a.toImplementation().axis()  ==  b.toImplementation().axis();
+  }
+};
+
+template<typename PrimType_, enum RotationUsage Usage_>
+class ComparisonTraits<eigen_implementation::RotationVector<PrimType_, Usage_>> {
+ public:
+  inline static bool isEqual(const eigen_implementation::RotationVector<PrimType_, Usage_>& a, const eigen_implementation::RotationVector<PrimType_, Usage_>& b){
+    return a.toImplementation() ==  b.toImplementation();
   }
 };
 
