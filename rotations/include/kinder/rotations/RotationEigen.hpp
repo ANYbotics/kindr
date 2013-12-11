@@ -341,7 +341,7 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    */
   template<typename OtherDerived_>
   inline explicit RotationVector(const RotationBase<OtherDerived_, Usage_>& other)
-    : vector_(internal::ConversionTraits<RotationVector, OtherDerived_>::convert(static_cast<const OtherDerived_&>(other))) {
+    : vector_(internal::ConversionTraits<RotationVector, OtherDerived_>::convert(other.derived()).toImplementation()) {
   }
 
   /*! \brief Assignment operator using another rotation.
@@ -991,11 +991,16 @@ typedef RotationMatrix<float,  RotationUsage::PASSIVE> RotationMatrixPF;
  *  \ingroup rotations
  */
 template<typename PrimType_, enum RotationUsage Usage_>
-class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage_>, Usage_>, private Eigen::Matrix<PrimType_, 3, 1> {
+class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage_>, Usage_> {
  private:
   /*! \brief The base type.
    */
   typedef Eigen::Matrix<PrimType_, 3, 1> Base;
+
+  /*! \brief vector of Euler angles [roll; pitch; yaw]
+   */
+  Base xyz_;
+
  public:
   /*! \brief The implementation type.
    *  The implementation type is always an Eigen object.
@@ -1009,7 +1014,7 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage
   /*! \brief Default constructor using identity rotation.
    */
   EulerAnglesXyz()
-    : Base(Base::Zero()) {
+    : xyz_(Base::Zero()) {
   }
 
   /*! \brief Constructor using three scalars.
@@ -1018,14 +1023,14 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage
    *  \param yaw      third rotation angle around Z'' axis
    */
   EulerAnglesXyz(const Scalar& roll, const Scalar& pitch, const Scalar& yaw)
-    : Base(roll,pitch,yaw) {
+    : xyz_(roll,pitch,yaw) {
   }
 
   /*! \brief Constructor using Eigen::Matrix.
    *  \param other   Eigen::Matrix<PrimType_,3,1> [roll; pitch; yaw]
    */
   explicit EulerAnglesXyz(const Base& other)
-    : Base(other) {
+    : xyz_(other) {
   }
 
   /*! \brief Constructor using another rotation.
@@ -1033,7 +1038,7 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage
    */
   template<typename OtherDerived_>
   inline explicit EulerAnglesXyz(const RotationBase<OtherDerived_, Usage_>& other)
-    : Base(internal::ConversionTraits<EulerAnglesXyz, OtherDerived_>::convert(other.derived())) {
+    : xyz_(internal::ConversionTraits<EulerAnglesXyz, OtherDerived_>::convert(other.derived()).toImplementation()) {
   }
 
   /*! \brief Assignment operator using another rotation.
@@ -1042,7 +1047,7 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage
    */
   template<typename OtherDerived_>
   EulerAnglesXyz& operator =(const RotationBase<OtherDerived_, Usage_>& other) {
-    *this = internal::ConversionTraits<EulerAnglesXyz, OtherDerived_>::convert(static_cast<const OtherDerived_&>(other));
+    *this = internal::ConversionTraits<EulerAnglesXyz, OtherDerived_>::convert(other.derived());
     return *this;
   }
 
@@ -1050,14 +1055,14 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage
    *  \returns the inverse of the rotation
    */
   EulerAnglesXyz inverted() const {
-    return (EulerAnglesXyz)getInverseRpy<PrimType_, PrimType_>(*this);
+    return EulerAnglesXyz(getInverseRpy<PrimType_, PrimType_>(xyz_));
   }
 
   /*! \brief Inverts the rotation.
    *  \returns reference
    */
   EulerAnglesXyz& inverted() {
-    *this = (EulerAnglesXyz)getInverseRpy<PrimType_, PrimType_>(*this);
+    xyz_ = getInverseRpy<PrimType_, PrimType_>(xyz_);
     return *this;
   }
 
@@ -1065,14 +1070,14 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
   inline Base& toImplementation() {
-    return static_cast<Base&>(*this);
+    return static_cast<Base&>(xyz_);
   }
 
   /*! \brief Cast to the implementation type.
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
   inline const Base& toImplementation() const {
-    return static_cast<const Base&>(*this);
+    return static_cast<const Base&>(xyz_);
   }
 
   /*! \brief Reading access to roll (X) angle.
@@ -1163,7 +1168,7 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage
    *  \returns reference
    */
   EulerAnglesXyz& setIdentity() {
-	  this->Implementation::setZero();
+    xyz_.setZero();
 	  return *this;
   }
 
@@ -1281,11 +1286,15 @@ typedef EulerAnglesRpy<float,  RotationUsage::PASSIVE> EulerAnglesRpyPF;
  *  \ingroup rotations
  */
 template<typename PrimType_, enum RotationUsage Usage_>
-class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage_>, Usage_>, private Eigen::Matrix<PrimType_, 3, 1> {
+class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage_>, Usage_> {
  private:
   /*! \brief The base type.
    */
   typedef Eigen::Matrix<PrimType_, 3, 1> Base;
+
+  /*! \brief vector of Euler angles [yaw; pitch; roll]
+   */
+  Base zyx_;
  public:
   /*! \brief The implementation type.
    *  The implementation type is always an Eigen object.
@@ -1299,7 +1308,7 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
   /*! \brief Default constructor using identity rotation.
    */
   EulerAnglesZyx()
-    : Base(Base::Zero()) {
+    : zyx_(Base::Zero()) {
   }
 
   /*! \brief Constructor using three scalars.
@@ -1308,14 +1317,14 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
    *  \param roll     third rotation angle around X'' axis
    */
   EulerAnglesZyx(const Scalar& yaw, const Scalar& pitch, const Scalar& roll)
-    : Base(yaw,pitch,roll) {
+    : zyx_(yaw,pitch,roll) {
   }
 
   /*! \brief Constructor using Eigen::Matrix.
    *  \param other   Eigen::Matrix<PrimType_,3,1> [roll; pitch; yaw]
    */
   explicit EulerAnglesZyx(const Base& other)
-    : Base(other) {
+    : zyx_(other) {
   }
 
   /*! \brief Constructor using another rotation.
@@ -1323,7 +1332,7 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
    */
   template<typename OtherDerived_>
   inline explicit EulerAnglesZyx(const RotationBase<OtherDerived_, Usage_>& other)
-    : Base(internal::ConversionTraits<EulerAnglesZyx, OtherDerived_>::convert(static_cast<const OtherDerived_&>(other))) {
+    : zyx_(internal::ConversionTraits<EulerAnglesZyx, OtherDerived_>::convert(other.derived()).toImplementation()) {
   }
 
   /*! \brief Assignment operator using another rotation.
@@ -1332,7 +1341,7 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
    */
   template<typename OtherDerived_>
   EulerAnglesZyx& operator =(const RotationBase<OtherDerived_, Usage_>& other) {
-    *this = internal::ConversionTraits<EulerAnglesZyx, OtherDerived_>::convert(static_cast<const OtherDerived_&>(other));
+    *this = internal::ConversionTraits<EulerAnglesZyx, OtherDerived_>::convert(other.derived());
     return *this;
   }
 
@@ -1340,14 +1349,14 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
    *  \returns the inverse of the rotation
    */
   EulerAnglesZyx inverted() const {
-    return (EulerAnglesZyx)getInverseRpy<PrimType_, PrimType_>(*this);
+    return EulerAnglesZyx(getInverseRpy<PrimType_, PrimType_>(zyx_));
   }
 
   /*! \brief Inverts the rotation.
    *  \returns reference
    */
   EulerAnglesZyx& inverted() {
-    *this = (EulerAnglesZyx)getInverseRpy<PrimType_, PrimType_>(*this);
+    *this = EulerAnglesZyx(getInverseRpy<PrimType_, PrimType_>(zyx_));
     return *this;
   }
 
@@ -1355,14 +1364,14 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
   inline Base& toImplementation() {
-    return static_cast<Base&>(*this);
+    return static_cast<Base&>(zyx_);
   }
 
   /*! \brief Cast to the implementation type.
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
   inline const Base& toImplementation() const {
-    return static_cast<const Base&>(*this);
+    return static_cast<const Base&>(zyx_);
   }
 
   /*! \brief Reading access to yaw (Z) angle.

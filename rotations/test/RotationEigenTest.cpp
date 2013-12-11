@@ -583,8 +583,9 @@ TEST (RotationImplementationTest, testRotationVector) {
   Eigen::Vector3d vec(1,2,3);
   std::cout << "rvec rotate: " << rvec.rotate(vec)-rquat.rotate(vec) << std::endl;
   std::cout << rquat << " | " <<  rot::RotationQuaternionAD(rvec) << std::endl;
-  rot::EulerAnglesXyzAD xyz1(rquat);
-  rot::RotationVectorAD rvec3(rot::AngleAxisAD(rquat));
+  rot::EulerAnglesZyxAD xyz1(rquat);
+  rot::RotationVectorAD rvec3(xyz1);
+  rot::EulerAnglesZyxAD xyz2(rvec3);
   std::cout << rvec << " | " <<  rvec3 << std::endl;
 
 
