@@ -753,6 +753,8 @@ TEST (RotationImplementationTest, testRotationVector) {
   rot::EulerAnglesZyxAD xyz2(rvec3);
   std::cout << rvec << " | " <<  rvec3 << std::endl;
 
-
+  if (rot::RotationVectorAD() == rot::RotationVectorAD()) {
+    std::cout << "is identity\n";
+  }
 
 }
