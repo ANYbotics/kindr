@@ -7,15 +7,20 @@
  //-----------------------------------------------------------
 
 /*! \page page_rotations Rotations
-This library defines an \ref rotations_interfaces "interface" for a rotation between two rigid bodies to enable different representations of a rotation (Quaternion, Angle-Axis, Euler angles, etc.) and different \ref rotations_implementations "implementations" (based on Eigen, Bullet, etc.). The section \ref rotations_interfaces "Interface" describes the functionalities, whereas the section \ref rotations_implementations "Implementation" shows some examples.
+A rotation between two rigid bodies can be represented by using different parameterizations. The most well-known parameterizations are Euler angles, rotation matrix, angle-axis, rotation vector and unit quaternion. Depending on the application, some representations may be better suited than others. For instance, a unit quaternion does not have singularity issues like Euler angles and are therefore better suited for calculations, but Euler angles are much easier to be interpreted by a user. The library provides therefore a type for each parameterization of a rotation, which enables type safe conversions between different representations. The type of a rotation further depends on the usage of a rotation. A rotation can be considered as an active transformation (alibi), which maps the coordinates of the basis vectors of frame A expressed in A into the coordinates of the basis vectors of frame B expressed in A, or as a passive transformation (alias), which maps the coordinates of the basis vectors of frame A expressed in A into the coordinates of the basis vectors of A expressed in frame B. Depending on the usage of a rotation, a rotated vector or a columnwise rotated matrix has a different meaning. 
+For this reason the library defines a sophisticated \ref rotations_interfaces "interface" for rotations to avoid errors in using rotations and at the same time to enable different \ref rotations_implementations "implementations". The library comes along with an implementation based on the <a href="http://eigen.tuxfamily.org">C++ Eigen library</a>, which already provides some of the representations, but does not feature the type safety.
+
+The following section \ref rotations_interfaces "Interface" describes the functionalities of a rotation, whereas the section \ref rotations_implementations "Implementation" shows some examples.
 
 \tableofcontents
 
 \section rotations_interfaces Interface
 \subsection rotations_interfaces_rotation Rotation
 The class kindr::rotations::RotationBase serves as an interface for a rotation between two rigid bodies. All types of representations of a rotation, such as quaternion, angle-axis, and Euler angles, are derived from this base class.
-\subsubsection rotations_interfaces_rotation_ap Active vs. Passive
-A rotation can be either active (alibi) or passive (alias).
+\subsubsection rotations_interfaces_rotation_ap Type of a Rotation
+The type of a rotation is defined by the \ref rotations_interfaces_representations "kind of parameterization", the primitive type of the parameters and the usage type.
+
+A rotation can be either used as an active (alibi) or passive (alias) transformation.
 The class is therefore templated by the enumeration kindr::rotations::RotationUsage which indicates the usage type of a rotation:
 - RotationUsage::ACTIVE:  maps the coordinates of the basis vectors of frame A expressed in A into the coordinates of the basis vectors of B expressed in A 
 - RotationUsage::PASSIVE: maps the coordinates of the basis vectors of frame A expressed in A into the coordinates of the basis vectors of A expressed in B 
@@ -26,10 +31,11 @@ An active rotation can be obtained from a passive rotation by the function \ref 
 
 This has the advantage that rotations are type-safe and other users can immediately recognize whether a rotation is used as an active or passive transformation.
 
+\subsubsection rotations_interfaces_rotation_constructor Construction of  a Rotation
+The default constructor of a rotation always creates an identity rotation.
+If the library is built with debugging symbols, an assertion is thrown if a rotation is constructed with parameter values that do not represent a valid rotation.
 
 \subsubsection rotations_interfaces_rotation_identity Identity Rotation
-The default constructor of a rotation always creates an identity rotation.
-
 Any rotation can be set equal to the identity rotation by the function \ref kindr::rotations::RotationBase::setIdentity() "setIdentity()".
 
 \subsubsection rotations_interfaces_rotation_unique Unique Rotation
@@ -65,7 +71,7 @@ RotationQuaternionPD quaternion(angleAxis);
 angleAxis = quaternion;
 \endcode
 
-\subsection rotations_interfaces_representations Representations of a Rotation
+\subsection rotations_interfaces_representations Parameterizations of a Rotation
 The following representations are currently provided by the library:
 
 \subsubsection rotations_interfaces_angleaxis Angle-Axis
@@ -74,6 +80,14 @@ The class kindr::rotations::AngleAxisBase defines an interface for an angle-axis
 \f$\boxed{(\theta, \mathbf{n}), \quad \lVert \mathbf{n} \rVert = 1,}\f$
 
 where \f$\theta\f$ is the rotation angle and \f$\mathbf{n}\f$ is the rotation axis with unit length.
+
+\subsubsection rotations_interfaces_rotationvector Rotation Vector
+The class kindr::rotations::RotationVectorBase defines an interface for a rotation vector representation of a rotation:
+
+\f$\boxed{\mathbf{\phi}\in\mathsf{R}^3}\f$
+
+where \f$\lVert \mathbf{\phi} \rVert \f$ is the rotation angle and \f$\frac{\mathbf{\phi}}{\lVert \mathbf{\phi} \rVert}\f$ is the rotation axis.
+
 \subsubsection rotations_interfaces_quaternion Rotation Quaternion
 The class kindr::rotations::RotationQuaternionBase defines the interface for a Hamiltonian unit quaternion representation of a rotation:
 
@@ -163,6 +177,37 @@ The following four typedefs are provided for convenience:
   \endcode
  
  
+\subsubsection rotations_implementation_rotationvector Rotation Vector
+The class \ref kindr::rotations::eigen_impl::RotationVector "RotationVector" stores the rotation vector in Eigen::Matrix<Scalar, 3, 1>.
+
+The following four typedefs are provided for convenience:
+ - \ref kindr::rotations::eigen_impl::RotationVectorAD "RotationVectorAD" for active rotation and primitive type double
+ - \ref kindr::rotations::eigen_impl::RotationVectorAF "RotationVectorAF" for active rotation and primitive type float
+ - \ref kindr::rotations::eigen_impl::RotationVectorPD "RotationVectorPD" for passive rotation and primitive type double
+ - \ref kindr::rotations::eigen_impl::RotationVectorPF "RotationVectorPF" for passive rotation and primitive type float
+ 
+ \paragraph rotations_implementation_rotationvector_create Create a Rotation Vector
+ \code{.cpp}
+ double v_1 = 2.0;
+ double v_2 = 0.0;
+ double v_3 = 0.0;
+ Eigen::Vector3d vector(v_1, v_2, v_3);
+ RotationVectorPD rotationVector1; // identity rotation: vector = (0.0, 0.0, 0.0)
+ RotationVectorPD rotationVector2(vector);
+ RotationVectorPD rotationVector3(v_1, v_2, v_3);
+ \endcode
+ 
+ \paragraph rotations_implementation_rotationvector_use Use a Rotation Vector
+  \code{.cpp}
+    Eigen::Vector3d vector = rotationVector.vector();								// get Eigen vector
+    Eigen::Vector3d vector_rotated = rotationVector.rotate(Eigen::Vector3d(1.0,2.0,3.0));			// rotate a vector
+    Eigen::Vector3d vector_invrotated = rotationVector.inverseRotate(Eigen::Vector3d(1.0,2.0,3.0));		// reverse rotate a vector
+    rotationVector.setUnique(); 										// Modifies the angle such that it is in [0,PI)
+    std::cout << "Rotation Vector: " << rotationVector << std::endl:						// output angle-axis
+    if (rotationVector == RotationVectorPD(M_PI/2.0, 0.0, 0.0))	 						// compare rotation vector
+	std::cout << "Rotation is about x-axis with angle M_PI/2.0\n"; 
+  \endcode
+ 
 \subsubsection rotations_implementation_quaternion Rotation Quaternion
 The class \ref kindr::rotations::eigen_impl::RotationQuaternion "RotationQuaternion" stores the coefficients according to the kindr::quaterions::UnitQuaternion.
 See also \ref page_quaternions "Chapter Quternions" for more information.
@@ -174,16 +219,18 @@ The following four typedefs are provided for convenience:
  - \ref kindr::rotations::eigen_impl::RotationQuaternionPF "RotationQuaternionPF" for passive rotation and primitive type float
 
  
-\paragraph rotations_implementation_quaternion_create Create a Quaternion
+\paragraph rotations_implementation_quaternion_create Create a Rotation Quaternion
 \code{.cpp}
 double p_0 = 1.0;
 double p_1 = 0.0;
 double p_2 = 0.0;
 double p_3 = 0.0;
-RotationQuaternionPD rquat1; // identity rotation: (1.0, 0.0, 0.0, 0.0)
-RotationQuaternionPD rquat2(p_0, p_1, p_2, p_3);
-RotationQuaternionPD rquat3(Eigen::Quaterniond(p_0, p_1, p_2, p_3));
-RotationQuaternionPD rquat4(1.0, 1.0, 1.0, 1.0); // will create an error in debug mode
+RotationQuaternionPD rquat1; 								// identity rotation: (1.0, 0.0, 0.0, 0.0)
+RotationQuaternionPD rquat2(p_0, p_1, p_2, p_3);					// create with four scalars
+RotationQuaternionPD rquat3(Eigen::Quaterniond(p_0, p_1, p_2, p_3));			// create with Eigen quaternion
+RotationQuaternionPD rquat5(quaternions::UnitQuaternion(p_0, p_1, p_2, p_3)); 		// create with unit quaternion
+RotationQuaternionPD rquat5(quaternions::Quaternion(p_0, p_1, p_2, p_3)); 		// create with quaternion
+RotationQuaternionPD rquat4(1.0, 1.0, 1.0, 1.0); 					// will create an error in debug mode
 \endcode
 
 \paragraph rotations_implementation_quaternion_use Use a Quaternion

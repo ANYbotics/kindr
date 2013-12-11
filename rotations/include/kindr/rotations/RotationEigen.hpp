@@ -1621,7 +1621,7 @@ class get_matrix3X<eigen_impl::EulerAnglesZyx<PrimType_, Usage_>>{
 
 
 template<typename PrimType_>
-class get_matrix3<positions::eigen_impl::Position3<PrimType_>>{
+class get_position3<positions::eigen_impl::Position3<PrimType_>>{
  private:
   typedef typename positions::eigen_impl::Position3<PrimType_> Position;
   typedef typename Position::Implementation Matrix3X;

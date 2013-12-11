@@ -128,11 +128,11 @@ class get_matrix3X {
 };
 
 /*! \brief This class determines the correct matrix type for each rotation which is used for position rotations
- *  \class get_matrix3
+ *  \class get_position3
  *  (only for advanced users)
  */
 template<typename Position_>
-class get_matrix3 {
+class get_position3 {
  public:
 //  static const Matrix3X& getMatrix3(const Position& position) {
 //    return position.toImplementation();
@@ -279,14 +279,14 @@ class RotationBase {
    */
   template <typename Position_>
   Position_ rotate(const Position_& position) const {
-    return Position_(internal::RotationTraits<Derived_>::rotate(this->derived(), internal::get_matrix3<Position_>::getMatrix3(position)));
+    return Position_(internal::RotationTraits<Derived_>::rotate(this->derived(), internal::get_position3<Position_>::getMatrix3(position)));
   }
   /*! \brief Rotates a position in reverse.
    *  \returns the reverse rotated position
    */
   template <typename Position_>
   Position_ inverseRotate(const Position_& position) const {
-    return Position_(internal::RotationTraits<Derived_>::rotate(this->derived().inverted(), internal::get_matrix3<Position_>::getMatrix3(position)));
+    return Position_(internal::RotationTraits<Derived_>::rotate(this->derived().inverted(), internal::get_position3<Position_>::getMatrix3(position)));
   }
 
 
