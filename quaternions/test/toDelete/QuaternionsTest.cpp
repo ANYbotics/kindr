@@ -33,8 +33,8 @@
 #include <rm/quaternions/QuaternionEigen.hpp>
 #include <rm/rotations/RotationEigen.hpp>
 
-namespace quat = kindr::quaternions::eigen_implementation;
-namespace rot = kindr::rotations::eigen_implementation;
+namespace quat = kindr::quaternions::eigen_impl;
+namespace rot = kindr::rotations::eigen_impl;
 
 TEST (RotationsTest, testDEBUG ) {
   Eigen::Vector3d test1(1.0,2.0,3.0);

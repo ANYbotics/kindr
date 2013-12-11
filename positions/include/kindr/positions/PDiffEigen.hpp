@@ -36,7 +36,7 @@
 
 namespace kindr {
 namespace positions {
-namespace eigen_implementation {
+namespace eigen_impl {
 
 /*! \class LinearVelocity3
  * \brief Linear velocity in 3D-space.
@@ -165,14 +165,14 @@ typedef LinearVelocity3<double>  LinearVelocity3D;
 //! \brief Linear velocity in 3D space with primitive type float
 typedef LinearVelocity3<float>  LinearVelocity3F;
 
-} // namespace eigen_implementation
+} // namespace eigen_impl
 
 namespace internal {
 
 /*! \brief Gets the primitive type of the coordinates
  */
 template<typename PrimType_>
-class get_scalar<eigen_implementation::LinearVelocity3<PrimType_>>{
+class get_scalar<eigen_impl::LinearVelocity3<PrimType_>>{
  public:
   typedef PrimType_ Scalar;
 };

@@ -29,8 +29,8 @@
 #include "kindr/rotations/RotationEigen.hpp"
 
 int main(int argc, char **argv){
-  using namespace kindr::rotations::eigen_implementation;
-  using namespace kindr::quaternions::eigen_implementation;
+  using namespace kindr::rotations::eigen_impl;
+  using namespace kindr::quaternions::eigen_impl;
   using namespace Eigen;
   Vector3d I_r_0F(1.0, 0.0, 0.0);
 

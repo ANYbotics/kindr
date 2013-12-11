@@ -38,7 +38,7 @@
 
 namespace kindr {
 namespace rotations {
-namespace eigen_implementation {
+namespace eigen_impl {
 
 
 // 1) Output: AngleAxis
@@ -748,7 +748,7 @@ Vector3d omega2kardan(const Vector3d &K_w_IK, const Vector3d &abc) // quaternion
 
 
 
-} // namespace eigen_implementation
+} // namespace eigen_impl
 } // namespace rotations
 } // namespace rm
 

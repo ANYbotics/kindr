@@ -211,8 +211,8 @@ TEST (RotationsTest, DISABLED_testEigenEulerAngleRange ) {
 //}
 
 
-namespace rot = kindr::rotations::eigen_implementation;
-namespace quat = kindr::quaternions::eigen_implementation;
+namespace rot = kindr::rotations::eigen_impl;
+namespace quat = kindr::quaternions::eigen_impl;
 
 template <typename RotationImplementation>
 struct RotationsTest : public ::testing::Test  {

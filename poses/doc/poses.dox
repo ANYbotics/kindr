@@ -20,12 +20,12 @@ The class kindr::poses::PoseBase serves as an interface for a pose of a rigid bo
 Each implementation lies in its own namespace, such that the implementation can be altered later very easily via namespace alias.
 For example: 
 \code{.cpp}
-namespace pos = kindr::poses::eigen_implementation; // select implementation based on Eigen
+namespace pos = kindr::poses::eigen_impl; // select implementation based on Eigen
 pos::Position3D position();		     // create 3D-Position
 \endcode
 If the implementation needs to be changed, only one line of code has to be altered:
 \code{.cpp}
-namespace pos = kindr::poses::bullet_implementation; // select implementation based on bullet	
+namespace pos = kindr::poses::bullet_impl; // select implementation based on bullet	
 \endcode
 \subsection poses_eigen Eigen
 The library comes along with an implementation based on the <a href="http://eigen.tuxfamily.org">C++ Eigen library</a>.
@@ -34,7 +34,7 @@ All types can be included by
 \code{.cpp}
 #include <kindr/poses/PoseEigen.hpp>
 \endcode
-and lie within the namespace kindr::poses::eigen_implementation.
+and lie within the namespace kindr::poses::eigen_impl.
 
 
 

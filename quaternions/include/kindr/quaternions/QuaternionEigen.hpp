@@ -37,7 +37,7 @@
 namespace kindr {
 namespace quaternions {
 //! Implementation based on the C++ Eigen library
-namespace eigen_implementation {
+namespace eigen_impl {
 
 
 //! Implementation of a Quaternion based on Eigen::Quaternion
@@ -49,8 +49,8 @@ namespace eigen_implementation {
  *   - QuaternionF for float
  *   - QuaternionD for double
  * \ingroup quaternions
- * \see rm::quaternions::eigen_implementation::UnitQuaternion for an implementation of a unit quaternion
- * \see rm::rotations::eigen_implementation::RotationQuaternion for quaternions that represent a rotation
+ * \see rm::quaternions::eigen_impl::UnitQuaternion for an implementation of a unit quaternion
+ * \see rm::rotations::eigen_impl::RotationQuaternion for quaternions that represent a rotation
  */
 template<typename PrimType_>
 class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::Quaternion<PrimType_> {
@@ -247,8 +247,8 @@ typedef Quaternion<float> QuaternionF;
  *   - UnitQuaternionF for float
  *   - UnitQuaternionD for double
  * \ingroup quaternions
- * \see rm::quaternions::eigen_implementation::Quaternion for an implementation of a generic quaternion
- * \see rm::rotations::eigen_implementation::RotationQuaternion for quaternions that represent a rotation
+ * \see rm::quaternions::eigen_impl::Quaternion for an implementation of a generic quaternion
+ * \see rm::rotations::eigen_impl::RotationQuaternion for quaternions that represent a rotation
  */
 template<typename PrimType_>
 class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType_>> {
@@ -457,48 +457,48 @@ typedef UnitQuaternion<float> UnitQuaternionF;
 //}
 
 
-} // namespace eigen_implementation
+} // namespace eigen_impl
 
 namespace internal {
 
 
 //template<typename PrimType_>
-//class MultiplicationTraits<eigen_implementation::Quaternion<PrimType_>, eigen_implementation::Quaternion<PrimType_>> {
+//class MultiplicationTraits<eigen_impl::Quaternion<PrimType_>, eigen_impl::Quaternion<PrimType_>> {
 //public:
-//  inline static eigen_implementation::Quaternion<PrimType_> mult(const eigen_implementation::Quaternion<PrimType_>& a, const eigen_implementation::Quaternion<PrimType_>& b) {
-//    return eigen_implementation::Quaternion<PrimType_>(eigen_implementation::Quaternion<PrimType_>(eigen_implementation::Quaternion<PrimType_>(a).toImplementation()*eigen_implementation::Quaternion<PrimType_>(b).toImplementation()));
+//  inline static eigen_impl::Quaternion<PrimType_> mult(const eigen_impl::Quaternion<PrimType_>& a, const eigen_impl::Quaternion<PrimType_>& b) {
+//    return eigen_impl::Quaternion<PrimType_>(eigen_impl::Quaternion<PrimType_>(eigen_impl::Quaternion<PrimType_>(a).toImplementation()*eigen_impl::Quaternion<PrimType_>(b).toImplementation()));
 //  }
 //};
 //
 //template<typename PrimType_>
-//class MultiplicationTraits<eigen_implementation::Quaternion<PrimType_>, eigen_implementation::UnitQuaternion<PrimType_>> {
+//class MultiplicationTraits<eigen_impl::Quaternion<PrimType_>, eigen_impl::UnitQuaternion<PrimType_>> {
 //public:
-//  inline static eigen_implementation::Quaternion<PrimType_> mult(const eigen_implementation::Quaternion<PrimType_>& a, const eigen_implementation::UnitQuaternion<PrimType_>& b) {
-//    return eigen_implementation::Quaternion<PrimType_>(eigen_implementation::Quaternion<PrimType_>(eigen_implementation::Quaternion<PrimType_>(a).toImplementation()*eigen_implementation::Quaternion<PrimType_>(b).toImplementation()));
+//  inline static eigen_impl::Quaternion<PrimType_> mult(const eigen_impl::Quaternion<PrimType_>& a, const eigen_impl::UnitQuaternion<PrimType_>& b) {
+//    return eigen_impl::Quaternion<PrimType_>(eigen_impl::Quaternion<PrimType_>(eigen_impl::Quaternion<PrimType_>(a).toImplementation()*eigen_impl::Quaternion<PrimType_>(b).toImplementation()));
 //  }
 //};
 //
 //template<typename PrimType_>
-//class MultiplicationTraits<eigen_implementation::UnitQuaternion<PrimType_>, eigen_implementation::Quaternion<PrimType_>> {
+//class MultiplicationTraits<eigen_impl::UnitQuaternion<PrimType_>, eigen_impl::Quaternion<PrimType_>> {
 //public:
-//  inline static eigen_implementation::Quaternion<PrimType_> mult(const eigen_implementation::UnitQuaternion<PrimType_>& a, const eigen_implementation::Quaternion<PrimType_>& b) {
-//    return eigen_implementation::Quaternion<PrimType_>(eigen_implementation::Quaternion<PrimType_>(eigen_implementation::Quaternion<PrimType_>(a).toImplementation()*eigen_implementation::Quaternion<PrimType_>(b).toImplementation()));
+//  inline static eigen_impl::Quaternion<PrimType_> mult(const eigen_impl::UnitQuaternion<PrimType_>& a, const eigen_impl::Quaternion<PrimType_>& b) {
+//    return eigen_impl::Quaternion<PrimType_>(eigen_impl::Quaternion<PrimType_>(eigen_impl::Quaternion<PrimType_>(a).toImplementation()*eigen_impl::Quaternion<PrimType_>(b).toImplementation()));
 //  }
 //};
 //
 //template<typename PrimType_>
-//class MultiplicationTraits<eigen_implementation::UnitQuaternion<PrimType_>, eigen_implementation::UnitQuaternion<PrimType_>> {
+//class MultiplicationTraits<eigen_impl::UnitQuaternion<PrimType_>, eigen_impl::UnitQuaternion<PrimType_>> {
 //public:
-//  inline static eigen_implementation::UnitQuaternion<PrimType_> mult(const eigen_implementation::UnitQuaternion<PrimType_>& a, const eigen_implementation::UnitQuaternion<PrimType_>& b) {
-//    return eigen_implementation::Quaternion<PrimType_>(eigen_implementation::Quaternion<PrimType_>(eigen_implementation::Quaternion<PrimType_>(a).toImplementation()*eigen_implementation::Quaternion<PrimType_>(b).toImplementation()));
+//  inline static eigen_impl::UnitQuaternion<PrimType_> mult(const eigen_impl::UnitQuaternion<PrimType_>& a, const eigen_impl::UnitQuaternion<PrimType_>& b) {
+//    return eigen_impl::Quaternion<PrimType_>(eigen_impl::Quaternion<PrimType_>(eigen_impl::Quaternion<PrimType_>(a).toImplementation()*eigen_impl::Quaternion<PrimType_>(b).toImplementation()));
 //  }
 //};
 
 
 //template<typename PrimType_>
-//class ComparisonTraits<eigen_implementation::Quaternion<PrimType_>> {
+//class ComparisonTraits<eigen_impl::Quaternion<PrimType_>> {
 // public:
-//   inline static bool isEqual(const eigen_implementation::Quaternion<PrimType_>& a, const eigen_implementation::Quaternion<PrimType_>& b){
+//   inline static bool isEqual(const eigen_impl::Quaternion<PrimType_>& a, const eigen_impl::Quaternion<PrimType_>& b){
 //     return (a.w() ==  b.w() &&
 //             a.x() ==  b.x() &&
 //             a.y() ==  b.y() &&

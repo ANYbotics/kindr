@@ -38,7 +38,7 @@
 
 
 
-namespace rot = kindr::rotations::eigen_implementation;
+namespace rot = kindr::rotations::eigen_impl;
 
 template <typename AngularVelocityImplementation>
 struct AngularVelocity3Test: public ::testing::Test {

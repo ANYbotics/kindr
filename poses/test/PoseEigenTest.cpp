@@ -37,9 +37,9 @@
 #include "kindr/poses/PoseBase.hpp"
 
 
-namespace pose = kindr::poses::eigen_implementation;
-namespace pos = kindr::positions::eigen_implementation;
-namespace rot = kindr::rotations::eigen_implementation;
+namespace pose = kindr::poses::eigen_impl;
+namespace pos = kindr::positions::eigen_impl;
+namespace rot = kindr::rotations::eigen_impl;
 
 
 typedef ::testing::Types<

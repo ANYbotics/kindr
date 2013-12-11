@@ -195,15 +195,15 @@ template<typename Left_, typename Right_, enum RotationUsage Usage_>
 class RDiffAdditionTraits<RDiffBase<Left_, Usage_>, RDiffBase<Right_, Usage_>> {
  public:
   inline static Left_ add(const RDiffBase<Left_, Usage_>& lhs, const RDiffBase<Right_, Usage_>& rhs) {
-    return Left_(typename eigen_implementation::AngularVelocity<typename Left_::Scalar, Usage_>(
-               (typename eigen_implementation::AngularVelocity<typename Left_::Scalar, Usage_>(lhs.derived())).toImplementation() +
-               (typename eigen_implementation::AngularVelocity<typename Right_::Scalar, Usage_>(rhs.derived())).toImplementation()
+    return Left_(typename eigen_impl::AngularVelocity<typename Left_::Scalar, Usage_>(
+               (typename eigen_impl::AngularVelocity<typename Left_::Scalar, Usage_>(lhs.derived())).toImplementation() +
+               (typename eigen_impl::AngularVelocity<typename Right_::Scalar, Usage_>(rhs.derived())).toImplementation()
                ));
   }
   inline static Left_ subtract(const RDiffBase<Left_, Usage_>& lhs, const RDiffBase<Right_, Usage_>& rhs) {
-    return Left_(typename eigen_implementation::AngularVelocity<typename Left_::Scalar, Usage_>(
-               (typename eigen_implementation::AngularVelocity<typename Left_::Scalar, Usage_>(lhs.derived())).toImplementation() -
-               (typename eigen_implementation::AngularVelocity<typename Right_::Scalar, Usage_>(rhs.derived())).toImplementation()
+    return Left_(typename eigen_impl::AngularVelocity<typename Left_::Scalar, Usage_>(
+               (typename eigen_impl::AngularVelocity<typename Left_::Scalar, Usage_>(lhs.derived())).toImplementation() -
+               (typename eigen_impl::AngularVelocity<typename Right_::Scalar, Usage_>(rhs.derived())).toImplementation()
                ));
   }
 };

@@ -40,7 +40,7 @@
 
 namespace kindr {
 namespace rotations {
-namespace eigen_implementation {
+namespace eigen_impl {
 
 /*! \class AngularVelocity
  * \brief Angular velocity in 3D-space.
@@ -182,11 +182,11 @@ typedef AngularVelocity<float, RotationUsage::ACTIVE>  AngularVelocityAF;
 
 
 template<typename PrimType_, enum RotationUsage Usage_>
-class RotationQuaternionDiff : public RotationQuaternionDiffBase<RotationQuaternionDiff<PrimType_, Usage_>,Usage_>, private quaternions::eigen_implementation::Quaternion<PrimType_> {
+class RotationQuaternionDiff : public RotationQuaternionDiffBase<RotationQuaternionDiff<PrimType_, Usage_>,Usage_>, private quaternions::eigen_impl::Quaternion<PrimType_> {
  private:
   /*! \brief The base type.
    */
-  typedef quaternions::eigen_implementation::Quaternion<PrimType_> Base;
+  typedef quaternions::eigen_impl::Quaternion<PrimType_> Base;
 
  public:
   /*! \brief The implementation type.
@@ -819,41 +819,41 @@ typedef EulerAnglesXyzDiff<double, RotationUsage::ACTIVE> EulerAnglesXyzDiffAD;
 typedef EulerAnglesXyzDiff<float, RotationUsage::ACTIVE> EulerAnglesXyzDiffAF;
 
 
-} // namespace eigen_implementation
+} // namespace eigen_impl
 
 namespace internal {
 
 
 template<typename PrimType_, enum RotationUsage Usage_>
-class RDiffConversionTraits<eigen_implementation::AngularVelocity<PrimType_, Usage_>, eigen_implementation::RotationQuaternionDiff<PrimType_, Usage_>, eigen_implementation::RotationQuaternion<PrimType_, Usage_>> {
+class RDiffConversionTraits<eigen_impl::AngularVelocity<PrimType_, Usage_>, eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>, eigen_impl::RotationQuaternion<PrimType_, Usage_>> {
  public:
-  inline static eigen_implementation::AngularVelocity<PrimType_, Usage_> convert(const eigen_implementation::RotationQuaternion<PrimType_, Usage_>& rquat, const eigen_implementation::RotationQuaternionDiff<PrimType_, Usage_>& rquatdiff) {
+  inline static eigen_impl::AngularVelocity<PrimType_, Usage_> convert(const eigen_impl::RotationQuaternion<PrimType_, Usage_>& rquat, const eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>& rquatdiff) {
     Eigen::Matrix<PrimType_,3,4> H_bar;
     H_bar << -rquat.toUnitQuaternion().x(),  rquat.toUnitQuaternion().w(),  rquat.toUnitQuaternion().z(), -rquat.toUnitQuaternion().y(),
              -rquat.toUnitQuaternion().y(), -rquat.toUnitQuaternion().z(),  rquat.toUnitQuaternion().w(),  rquat.toUnitQuaternion().x(),
              -rquat.toUnitQuaternion().z(),  rquat.toUnitQuaternion().y(), -rquat.toUnitQuaternion().x(),  rquat.toUnitQuaternion().w();
-    return eigen_implementation::AngularVelocity<PrimType_, Usage_>(2.0*H_bar*rquatdiff.toQuaternion().getVector4());
+    return eigen_impl::AngularVelocity<PrimType_, Usage_>(2.0*H_bar*rquatdiff.toQuaternion().getVector4());
   }
 };
 
 template<typename PrimType_, enum RotationUsage Usage_>
-class RDiffConversionTraits<eigen_implementation::RotationQuaternionDiff<PrimType_, Usage_>, eigen_implementation::AngularVelocity<PrimType_, Usage_>, eigen_implementation::RotationQuaternion<PrimType_, Usage_>> {
+class RDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>, eigen_impl::AngularVelocity<PrimType_, Usage_>, eigen_impl::RotationQuaternion<PrimType_, Usage_>> {
  public:
-  inline static eigen_implementation::RotationQuaternionDiff<PrimType_, Usage_> convert(const eigen_implementation::RotationQuaternion<PrimType_, Usage_>& rquat, const eigen_implementation::AngularVelocity<PrimType_, Usage_>& angularVelocity) {
+  inline static eigen_impl::RotationQuaternionDiff<PrimType_, Usage_> convert(const eigen_impl::RotationQuaternion<PrimType_, Usage_>& rquat, const eigen_impl::AngularVelocity<PrimType_, Usage_>& angularVelocity) {
     Eigen::Matrix<PrimType_,4,3> H_bar_transpose;
     H_bar_transpose << -rquat.toUnitQuaternion().x(), -rquat.toUnitQuaternion().y(), -rquat.toUnitQuaternion().z(),
                         rquat.toUnitQuaternion().w(), -rquat.toUnitQuaternion().z(),  rquat.toUnitQuaternion().y(),
                         rquat.toUnitQuaternion().z(),  rquat.toUnitQuaternion().w(), -rquat.toUnitQuaternion().x(),
                        -rquat.toUnitQuaternion().y(),  rquat.toUnitQuaternion().x(),  rquat.toUnitQuaternion().w();
-    return eigen_implementation::RotationQuaternionDiff<PrimType_, Usage_>(quaternions::eigen_implementation::Quaternion<PrimType_>(0.5*H_bar_transpose*angularVelocity.toImplementation()));
+    return eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>(quaternions::eigen_impl::Quaternion<PrimType_>(0.5*H_bar_transpose*angularVelocity.toImplementation()));
   }
 };
 
 
 template<typename PrimType_, enum RotationUsage Usage_>
-class RDiffConversionTraits<eigen_implementation::EulerAnglesXyzDiff<PrimType_, Usage_>, eigen_implementation::AngularVelocity<PrimType_, Usage_>, eigen_implementation::EulerAnglesXyz<PrimType_, Usage_>> {
+class RDiffConversionTraits<eigen_impl::EulerAnglesXyzDiff<PrimType_, Usage_>, eigen_impl::AngularVelocity<PrimType_, Usage_>, eigen_impl::EulerAnglesXyz<PrimType_, Usage_>> {
  public:
-  inline static eigen_implementation::EulerAnglesXyzDiff<PrimType_, Usage_> convert(const eigen_implementation::EulerAnglesXyz<PrimType_, Usage_>& eulerAngles, const eigen_implementation::AngularVelocity<PrimType_, Usage_>& angularVelocity) {
+  inline static eigen_impl::EulerAnglesXyzDiff<PrimType_, Usage_> convert(const eigen_impl::EulerAnglesXyz<PrimType_, Usage_>& eulerAngles, const eigen_impl::AngularVelocity<PrimType_, Usage_>& angularVelocity) {
     typedef typename Eigen::Matrix<PrimType_, 3, 3> Matrix3x3;
 
     const PrimType_ alpha = eulerAngles.roll();
@@ -869,7 +869,7 @@ class RDiffConversionTraits<eigen_implementation::EulerAnglesXyzDiff<PrimType_, 
       H << cos(gamma)/cos(beta), -sin(gamma)/cos(beta), 0, sin(gamma), cos(gamma), 0, -cos(gamma)*tan(beta), sin(gamma)*tan(beta), 1;
     }
 
-    return eigen_implementation::EulerAnglesXyzDiff<PrimType_, Usage_>(H*angularVelocity.toImplementation());
+    return eigen_impl::EulerAnglesXyzDiff<PrimType_, Usage_>(H*angularVelocity.toImplementation());
   }
 };
 

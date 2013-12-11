@@ -38,7 +38,7 @@
 namespace kindr {
 namespace positions {
 //! Implementation of rotations based on the C++ Eigen library
-namespace eigen_implementation {
+namespace eigen_impl {
 
 /*! \class Position3
  * \brief Position in 3D-space.
@@ -167,14 +167,14 @@ typedef Position3<double>  Position3D;
 //! \brief 3D-Position with primitive type float
 typedef Position3<float>  Position3F;
 
-} // namespace eigen_implementation
+} // namespace eigen_impl
 
 namespace internal {
 
 /*! \brief Gets the primitive type of the coordinates
  */
 template<typename PrimType_>
-class get_scalar<eigen_implementation::Position3<PrimType_>>{
+class get_scalar<eigen_impl::Position3<PrimType_>>{
  public:
   typedef PrimType_ Scalar;
 };

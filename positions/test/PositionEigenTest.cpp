@@ -38,7 +38,7 @@
 
 
 
-namespace pos = kindr::positions::eigen_implementation;
+namespace pos = kindr::positions::eigen_impl;
 
 template <typename PositionImplementation>
 struct Position3Test: public ::testing::Test {

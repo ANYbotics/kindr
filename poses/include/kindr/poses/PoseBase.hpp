@@ -60,7 +60,7 @@ class TransformationTraits {
 template<typename Pose_>
 class get_position {
  public:
-//  typedef typename positions::eigen_implementation::Position3D Position;
+//  typedef typename positions::eigen_impl::Position3D Position;
 };
 
 } // namespace internal

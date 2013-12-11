@@ -60,7 +60,7 @@ class UsageConversionTraits {
 template<typename Rotation_>
 class get_other_usage {
  public:
-//  typedef eigen_implementation::AngleAxis<PrimType, RotationUsage::PASSIVE> OtherUsage;
+//  typedef eigen_impl::AngleAxis<PrimType, RotationUsage::PASSIVE> OtherUsage;
 };
 
 /*! \brief Conversion traits for converting rotations into each other
@@ -84,7 +84,7 @@ class ComparisonTraits {
     return a.toImplementation() == b.toImplementation();
   }
 
-//  inline static bool areNearlyEqual(const eigen_implementation::RotationQuaternion<PrimType, Usage_>& a, const eigen_implementation::RotationQuaternion<PrimType, Usage_>& b, PrimType tol)
+//  inline static bool areNearlyEqual(const eigen_impl::RotationQuaternion<PrimType, Usage_>& a, const eigen_impl::RotationQuaternion<PrimType, Usage_>& b, PrimType tol)
 };
 
 /*! \brief Multiplication traits for concenating rotations
@@ -253,8 +253,8 @@ class RotationBase {
 
 //  template<typename OtherDerived_>
 //  bool isNear(const Rotation<OtherDerived_, Usage_>& other, typename Derived_::Scalar tol) { // todo: may be optimized
-//    return internal::ComparisonTraits<Derived_>::isNear(typename eigen_implementation::RotationQuaternion<typename Derived_::Scalar>(this->derived()).getUnique(),
-//                                                       typename eigen_implementation::RotationQuaternion<typename Derived_::Scalar>(other.derived()).getUnique(),
+//    return internal::ComparisonTraits<Derived_>::isNear(typename eigen_impl::RotationQuaternion<typename Derived_::Scalar>(this->derived()).getUnique(),
+//                                                       typename eigen_impl::RotationQuaternion<typename Derived_::Scalar>(other.derived()).getUnique(),
 //                                                       tol);
 //  }
 
@@ -296,8 +296,8 @@ class RotationBase {
 
 //template<typename Derived_, typename OtherDerived_>
 //bool isNear(const Rotation<Derived_>& a, const Rotation<OtherDerived_, Usage_>& b, typename Derived_::Scalar tol) { // todo: may be optimized
-//  return internal::ComparisonTraits<Derived_>::isNear(typename eigen_implementation::RotationQuaternion<typename Derived_::Scalar>(a.derived()).getUnique(),
-//                                                     typename eigen_implementation::RotationQuaternion<typename Derived_::Scalar>(b.derived()).getUnique(),
+//  return internal::ComparisonTraits<Derived_>::isNear(typename eigen_impl::RotationQuaternion<typename Derived_::Scalar>(a.derived()).getUnique(),
+//                                                     typename eigen_impl::RotationQuaternion<typename Derived_::Scalar>(b.derived()).getUnique(),
 //                                                     tol);
 //}
 
@@ -445,9 +445,9 @@ class MultiplicationTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usa
  public:
   //! Default multiplication of rotations converts the representations of the rotations to rotation quaternions and multiplies them
   inline static Left_ mult(const RotationBase<Left_, Usage_>& lhs, const RotationBase<Right_, Usage_>& rhs) {
-    return Left_(typename eigen_implementation::RotationQuaternion<typename Left_::Scalar,  Usage_>(
-               (typename eigen_implementation::RotationQuaternion<typename Left_::Scalar,  Usage_>(lhs.derived())).toImplementation() *
-               (typename eigen_implementation::RotationQuaternion<typename Right_::Scalar, Usage_>(rhs.derived())).toImplementation()
+    return Left_(typename eigen_impl::RotationQuaternion<typename Left_::Scalar,  Usage_>(
+               (typename eigen_impl::RotationQuaternion<typename Left_::Scalar,  Usage_>(lhs.derived())).toImplementation() *
+               (typename eigen_impl::RotationQuaternion<typename Right_::Scalar, Usage_>(rhs.derived())).toImplementation()
                ));
   }
 };

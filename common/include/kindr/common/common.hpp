@@ -40,12 +40,12 @@
 
 namespace kindr {
 namespace quaternions {
-namespace eigen_implementation {
+namespace eigen_impl {
 
 template<typename PrimType>
 class UnitQuaternion;
 
-} // namespace eigen_implementation
+} // namespace eigen_impl
 } // namespace quaternions
 
 namespace rotations {
@@ -55,7 +55,7 @@ enum class RotationUsage {
 	PASSIVE
 };
 
-namespace eigen_implementation {
+namespace eigen_impl {
 
 template<typename PrimType, enum RotationUsage Usage>
 class RotationQuaternion;
@@ -63,7 +63,7 @@ class RotationQuaternion;
 template<typename PrimType, enum RotationUsage Usage>
 class AngularVelocity;
 
-} // namespace eigen_implementation
+} // namespace eigen_impl
 } // namespace rotations
 } // namespace kindr
 

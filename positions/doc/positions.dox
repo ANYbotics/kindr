@@ -50,12 +50,12 @@ The three coordinates x, y and z are stored and can be accessed by
 Each implementation lies in its own namespace, such that the implementation can be altered later very easily via namespace alias.
 For example: 
 \code{.cpp}
-namespace pos = kindr::positions::eigen_implementation; // select implementation based on Eigen
+namespace pos = kindr::positions::eigen_impl; // select implementation based on Eigen
 pos::Position3D position();		     // create 3D-Position
 \endcode
 If the implementation needs to be changed, only one line of code has to be altered:
 \code{.cpp}
-namespace pos = kindr::positions::bullet_implementation; // select implementation based on bullet	
+namespace pos = kindr::positions::bullet_impl; // select implementation based on bullet	
 \endcode
 \subsection positions_eigen Eigen
 The library comes along with an implementation based on the <a href="http://eigen.tuxfamily.org">C++ Eigen library</a>.
@@ -64,14 +64,14 @@ All types can be included by
 \code{.cpp}
 #include <kindr/positions/PositionEigen.hpp>
 \endcode
-and lie within the namespace kindr::positions::eigen_implementation.
+and lie within the namespace kindr::positions::eigen_impl.
 
 \subsubsection positions_implementation_positin3 3D-Position
-The class \ref kindr::positions::eigen_implementation::Position3 "Position3" stores the three coordinates of the position in 3D-space in Eigen::Matrix<PrimType, 3, 1>.
+The class \ref kindr::positions::eigen_impl::Position3 "Position3" stores the three coordinates of the position in 3D-space in Eigen::Matrix<PrimType, 3, 1>.
 
 The following four typedefs are provided for convenience:
- - \ref kindr::positions::eigen_implementation::Position3D "Position3D" for primitive type double
- - \ref kindr::positions::eigen_implementation::Position3F "Position3F" for primitive type float
+ - \ref kindr::positions::eigen_impl::Position3D "Position3D" for primitive type double
+ - \ref kindr::positions::eigen_impl::Position3F "Position3F" for primitive type float
 
 A position can be created as follows:
 \code{.cpp}

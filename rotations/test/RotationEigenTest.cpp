@@ -30,8 +30,8 @@
 #include "kindr/quaternions/QuaternionEigen.hpp"
 #include "kindr/rotations/RotationEigen.hpp"
 
-namespace rot = kindr::rotations::eigen_implementation;
-namespace quat = kindr::quaternions::eigen_implementation;
+namespace rot = kindr::rotations::eigen_impl;
+namespace quat = kindr::quaternions::eigen_impl;
 
 template <typename RotationImplementation>
 struct RotationTest {
@@ -742,7 +742,7 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionUnitQuaternionCas
 
 TEST (RotationImplementationTest, testRotationVector) {
   rot::RotationVectorAD rvec;
-  rot::RotationQuaternionAD rquat(kindr::quaternions::eigen_implementation::QuaternionD(1,2,3,4).toUnitQuaternion());
+  rot::RotationQuaternionAD rquat(kindr::quaternions::eigen_impl::QuaternionD(1,2,3,4).toUnitQuaternion());
   rvec = rquat;
   std::cout << "rvec: " << rvec << std::endl;
   Eigen::Vector3d vec(1,2,3);

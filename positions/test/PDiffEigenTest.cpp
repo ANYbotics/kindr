@@ -38,7 +38,7 @@
 
 
 
-namespace pos = kindr::positions::eigen_implementation;
+namespace pos = kindr::positions::eigen_impl;
 
 template <typename LinearVelocityImplementation>
 struct LinearVelocity3Test: public ::testing::Test {
