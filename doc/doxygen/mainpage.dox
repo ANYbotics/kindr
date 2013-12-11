@@ -86,14 +86,15 @@ make
 This library comes a long with a <a href="cheatsheet_latest.pdf" target="_blank"><b>Cheatsheet</b></a>, which shows the mathematical notation.
 
 \section sec_continue How to Continue
-See \ref chapters "Chapters" to learn how to use this library.
+See \ref page_users "Users" to learn how to use this library.
 
+See \ref page_developers "Developers" to learn how to develop this library.
 */
 
 //-----------------------------------------------------------
 
 /*!
-\page chapters Chapters
+\page page_users Users
 
  - \subpage page_quaternions 
  
@@ -108,6 +109,21 @@ See \ref chapters "Chapters" to learn how to use this library.
 
 
 */
+
+//-----------------------------------------------------------
+
+/*!
+\page page_developers Developers
+
+ 
+\section coding_style Coding Style
+The coding style of this library must be in compliance with the <a href="https://github.com/ethz-asl/programming_styleguide/wiki/Cpp-Coding-Style-Guidelines">coding style guidelines of the Autonomous Systems Lab</a>.
+There exist  <a href="https://github.com/ethz-asl/programming_styleguide/">auto formatters for Eclipse and Emacs</a>.
+
+Developers are encouraged to make use of the new features of C++11.
+
+*/
+
 
 //-----------------------------------------------------------
 
