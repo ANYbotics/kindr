@@ -38,11 +38,23 @@ namespace linear_algebra {
  * \param   vec 3x1-matrix (column vector)
  * \return skew   3x3-matrix
  */
-inline Eigen::Matrix3d getSkewMatrixFromVector(const Eigen::Vector3d& vec) {
-  Eigen::Matrix3d mat;
+template<typename PrimType_>
+inline static Eigen::Matrix<PrimType_, 3, 3> getSkewMatrixFromVector(const Eigen::Matrix<PrimType_, 3, 1>& vec) {
+  Eigen::Matrix<PrimType_, 3, 3> mat;
   mat << 0, -vec(2), vec(1), vec(2), 0, -vec(0), -vec(1), vec(0), 0;
   return mat;
 }
+
+/*!
+ * \brief Gets a 3x1 vector from a skew-symmetric matrix
+ * \param   matrix 3x3-matrix
+ * \return  column vector (3x1-matrix)
+ */
+template<typename PrimType_>
+inline static Eigen::Matrix<PrimType_, 3, 1> getVectorFromSkewMatrix(const Eigen::Matrix<PrimType_, 3, 3>& matrix) {
+  return Eigen::Matrix<PrimType_, 3, 1> (matrix(2,1), matrix(0,2), matrix(1,0));
+}
+
 
 
 /*!

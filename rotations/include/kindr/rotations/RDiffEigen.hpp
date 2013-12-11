@@ -37,6 +37,7 @@
 #include "kindr/rotations/RDiffBase.hpp"
 #include "kindr/rotations/RotationEigen.hpp"
 #include "kindr/quaternions/QuaternionEigen.hpp"
+#include "kindr/linear_algebra/LinearAlgebra.hpp"
 
 namespace kindr {
 namespace rotations {
@@ -363,35 +364,35 @@ class RotationMatrixDiff : public RotationMatrixDiffBase<RotationMatrixDiff<Prim
    *  \returns the implementation (recommended only for advanced users)
    */
   inline Implementation& toImplementation() {
-    return this->toQuaternion().toImplementation();
+    return static_cast<Implementation&>(*this);
   }
 
   /*! \brief Cast to the implementation type.
    *  \returns the implementation (recommended only for advanced users)
    */
   inline const Implementation& toImplementation() const {
-    return this->toQuaternion().toImplementation();
+    return static_cast<const Implementation&>(*this);
   }
 
   /*! \brief Reading access to the rotation matrix.
    *  \returns rotation matrix (matrix) with reading access
    */
   inline const Implementation& matrix() const {
-    return toImplementation();
+    return this->toImplementation();
   }
 
   /*! \brief Writing access to the rotation matrix.
    *  \returns rotation matrix (matrix) with writing access
    */
   inline Implementation& matrix() {
-    return toImplementation();
+    return this->toImplementation();
   }
 
   /*! \brief Sets all time derivatives to zero.
    *  \returns reference
    */
   RotationMatrixDiff& setZero() {
-    this->Base::setZero();
+    this->toImplementation().setZero();
     return *this;
   }
 
@@ -585,7 +586,7 @@ class EulerAnglesZyxDiff : public EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimTyp
     *  \returns reference
     */
    EulerAnglesZyxDiff& setZero() {
-     this->Implementation::setZero();
+     this->toImplementation().setZero();
      return *this;
    }
 
@@ -789,7 +790,7 @@ class EulerAnglesXyzDiff : public EulerAnglesDiffBase<EulerAnglesXyzDiff<PrimTyp
     *  \returns reference
     */
    EulerAnglesXyzDiff& setZero() {
-     this->Implementation::setZero();
+     this->toImplementation().setZero();
      return *this;
    }
 
@@ -835,6 +836,15 @@ class RDiffConversionTraits<eigen_impl::AngularVelocity<PrimType_, Usage_>, eige
     return eigen_impl::AngularVelocity<PrimType_, Usage_>(2.0*H_bar*rquatdiff.toQuaternion().getVector4());
   }
 };
+
+template<typename PrimType_, enum RotationUsage Usage_>
+class RDiffConversionTraits<eigen_impl::AngularVelocity<PrimType_, Usage_>, eigen_impl::RotationMatrixDiff<PrimType_, Usage_>, eigen_impl::RotationMatrix<PrimType_, Usage_>> {
+ public:
+  inline static eigen_impl::AngularVelocity<PrimType_, Usage_> convert(const eigen_impl::RotationMatrix<PrimType_, Usage_>& rotationMatrix, const eigen_impl::RotationMatrixDiff<PrimType_, Usage_>& rotationMatrixDiff) {
+    return eigen_impl::AngularVelocity<PrimType_, Usage_>(linear_algebra::getVectorFromSkewMatrix<PrimType_>(rotationMatrixDiff.toImplementation()*rotationMatrix.inverted().toImplementation()));
+  }
+};
+
 
 template<typename PrimType_, enum RotationUsage Usage_>
 class RDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>, eigen_impl::AngularVelocity<PrimType_, Usage_>, eigen_impl::RotationQuaternion<PrimType_, Usage_>> {

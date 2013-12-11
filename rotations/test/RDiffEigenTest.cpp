@@ -152,5 +152,11 @@ TEST(RDiffTest, testDevelopment)
   rot::EulerAnglesXyzDiffPD eulerAnglesXyzDiff2(eulerAnglesXyz,angularVelocity2);
 
   std::cout << "eulerDiff: " << eulerAnglesXyzDiff2 << std::endl;
+
+  rot::RotationMatrixDiffPD rmatdiff;
+  rot::RotationMatrixPD rmat;
+  rot::AngularVelocityPD angularVelocity3(rmat, rmatdiff);
+
+
 }
 
