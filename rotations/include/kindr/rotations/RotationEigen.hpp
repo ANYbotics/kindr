@@ -120,17 +120,28 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
    */
   template<typename OtherDerived_>
   inline explicit AngleAxis(const RotationBase<OtherDerived_, Usage_>& other)
-    : Base(internal::ConversionTraits<AngleAxis, OtherDerived_>::convert(static_cast<const OtherDerived_&>(other))) {
+    : Base(internal::ConversionTraits<AngleAxis, OtherDerived_>::convert(other.derived())) {
   }
+
+
 
   /*! \brief Assignment operator using another rotation.
    *  \param other   other rotation
-   *  \returns referece
+   *  \returns reference
    */
   template<typename OtherDerived_>
   AngleAxis& operator =(const RotationBase<OtherDerived_, Usage_>& other) {
-    this->angle() = internal::ConversionTraits<AngleAxis, OtherDerived_>::convert(other.derived()).angle();
-    this->axis()  = internal::ConversionTraits<AngleAxis, OtherDerived_>::convert(other.derived()).axis();
+    this->toImplementation() = internal::ConversionTraits<AngleAxis, OtherDerived_>::convert(other.derived()).toImplementation();
+    return *this;
+  }
+
+  /*! \brief Parenthesis operator to convert from another rotation.
+   *  \param other   other rotation
+   *  \returns reference
+   */
+  template<typename OtherDerived_>
+  AngleAxis& operator ()(const RotationBase<OtherDerived_, Usage_>& other) {
+    this->toImplementation() = internal::ConversionTraits<AngleAxis, OtherDerived_>::convert(other.derived()).toImplementation();
     return *this;
   }
 
@@ -350,6 +361,16 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    */
   template<typename OtherDerived_>
   RotationVector& operator =(const RotationBase<OtherDerived_, Usage_>& other) {
+    this->toImplementation() = internal::ConversionTraits<RotationVector, OtherDerived_>::convert(other.derived()).toImplementation();
+    return *this;
+  }
+
+  /*! \brief Parenthesis operator to convert from another rotation.
+   *  \param other   other rotation
+   *  \returns reference
+   */
+  template<typename OtherDerived_>
+  RotationVector& operator ()(const RotationBase<OtherDerived_, Usage_>& other) {
     this->toImplementation() = internal::ConversionTraits<RotationVector, OtherDerived_>::convert(other.derived()).toImplementation();
     return *this;
   }
@@ -641,6 +662,16 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
     return *this;
   }
 
+  /*! \brief Parenthesis operator to convert from another rotation.
+   *  \param other   other rotation
+   *  \returns reference
+   */
+  template<typename OtherDerived_>
+  RotationQuaternion& operator ()(const RotationBase<OtherDerived_, Usage_>& other) {
+    this->toImplementation() = internal::ConversionTraits<RotationQuaternion, OtherDerived_>::convert(other.derived()).toImplementation();
+    return *this;
+  }
+
   /*! \brief Returns the inverse of the rotation.
    *  \returns the inverse of the rotation
    */
@@ -843,7 +874,17 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType_, Usage
    */
   template<typename OtherDerived_>
   RotationMatrix& operator =(const RotationBase<OtherDerived_, Usage_>& other) {
-    *this = internal::ConversionTraits<RotationMatrix, OtherDerived_>::convert(static_cast<const OtherDerived_&>(other));
+    *this = internal::ConversionTraits<RotationMatrix, OtherDerived_>::convert(other.derived());
+    return *this;
+  }
+
+  /*! \brief Parenthesis operator to convert from another rotation.
+   *  \param other   other rotation
+   *  \returns reference
+   */
+  template<typename OtherDerived_>
+  RotationMatrix& operator ()(const RotationBase<OtherDerived_, Usage_>& other) {
+    *this = internal::ConversionTraits<RotationMatrix, OtherDerived_>::convert(other.derived());
     return *this;
   }
 
@@ -1044,6 +1085,16 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage
    */
   template<typename OtherDerived_>
   EulerAnglesXyz& operator =(const RotationBase<OtherDerived_, Usage_>& other) {
+    *this = internal::ConversionTraits<EulerAnglesXyz, OtherDerived_>::convert(other.derived());
+    return *this;
+  }
+
+  /*! \brief Parenthesis operator to convert from another rotation.
+   *  \param other   other rotation
+   *  \returns reference
+   */
+  template<typename OtherDerived_>
+  EulerAnglesXyz& operator ()(const RotationBase<OtherDerived_, Usage_>& other) {
     *this = internal::ConversionTraits<EulerAnglesXyz, OtherDerived_>::convert(other.derived());
     return *this;
   }
@@ -1338,6 +1389,17 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
    */
   template<typename OtherDerived_>
   EulerAnglesZyx& operator =(const RotationBase<OtherDerived_, Usage_>& other) {
+    *this = internal::ConversionTraits<EulerAnglesZyx, OtherDerived_>::convert(other.derived());
+    return *this;
+  }
+
+
+  /*! \brief Parenthesis operator to convert from another rotation.
+   *  \param other   other rotation
+   *  \returns reference
+   */
+  template<typename OtherDerived_>
+  EulerAnglesZyx& operator ()(const RotationBase<OtherDerived_, Usage_>& other) {
     *this = internal::ConversionTraits<EulerAnglesZyx, OtherDerived_>::convert(other.derived());
     return *this;
   }

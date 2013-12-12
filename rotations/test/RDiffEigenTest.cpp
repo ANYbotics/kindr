@@ -136,27 +136,35 @@ TYPED_TEST(AngularVelocity3Test, testAngularVelocity3)
 
 TEST(RDiffTest, testDevelopment)
 {
-  rot::RotationQuaternionPD rquat;
+//  rot::RotationQuaternionPD rquat;
+//
+//  rot::RotationQuaternionDiffPD rquatdiff(1,2,3,4);
+//  rot::AngularVelocityPD angularVelocity(rquat, rquatdiff);
+//
+//
+//  std::cout << "rquatdiff:" << rquatdiff << std::endl;
+//  std::cout << "angularVelocity:" << angularVelocity << std::endl;
+//  std::cout << "angularVelocity2" << rquatdiff.cast<rot::AngularVelocityPD>(rquat) << std::endl;
+//
+//
+//  rot::EulerAnglesXyzPD eulerAnglesXyz(0.1, 0.2, 0.3);
+//  rot::AngularVelocityPD angularVelocity2(0.2, 0.2, 0.2);
+//  rot::EulerAnglesXyzDiffPD eulerAnglesXyzDiff2(eulerAnglesXyz,angularVelocity2);
+//
+//  std::cout << "eulerDiff: " << eulerAnglesXyzDiff2 << std::endl;
 
-  rot::RotationQuaternionDiffPD rquatdiff(1,2,3,4);
-  rot::AngularVelocityPD angularVelocity(rquat, rquatdiff);
+  rot::RotationMatrixDiffAD rmatADiff;
+  rot::RotationMatrixAD rmatA;
+//  rot::AngularVelocityAD avelA(rmatA, rmatADiff);
+//  std::cout << "avelA: " << avelA << std::endl;
 
+  rot::RotationMatrixDiffPD rmatPDiff;
+  rot::RotationMatrixPD rmatP;
+  rot::AngularVelocityAD avelA2(rmatP, rmatADiff);
+  std::cout << "avelA2: " << avelA2 << std::endl;
 
-  std::cout << "rquatdiff:" << rquatdiff << std::endl;
-  std::cout << "angularVelocity:" << angularVelocity << std::endl;
-  std::cout << "angularVelocity2" << rquatdiff.cast<rot::AngularVelocityPD>(rquat) << std::endl;
-
-
-  rot::EulerAnglesXyzPD eulerAnglesXyz(0.1, 0.2, 0.3);
-  rot::AngularVelocityPD angularVelocity2(0.2, 0.2, 0.2);
-  rot::EulerAnglesXyzDiffPD eulerAnglesXyzDiff2(eulerAnglesXyz,angularVelocity2);
-
-  std::cout << "eulerDiff: " << eulerAnglesXyzDiff2 << std::endl;
-
-  rot::RotationMatrixDiffPD rmatdiff;
-  rot::RotationMatrixPD rmat;
-  rot::AngularVelocityPD angularVelocity3(rmat, rmatdiff);
-
-
+  rot::AngleAxisAD aaAD;
+  rot::AngleAxisAF aaAF;
+  aaAD(aaAF);
 }
 

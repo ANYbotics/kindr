@@ -64,11 +64,25 @@ To rotate a vector or a matrix columnwise, the following methods are provided:
 - \ref kindr::rotations::RotationBase::inverseRotate() "inverseRotate()": reverse rotates a vector or a matrix columnwise
 
 \subsubsection rotations_interfaces_conversion Conversion between Rotations
+There are three kinds of conversions:
+- Conversion between different primitive data types (e.g. float - double)
+- Conversion between different representations, i.e. between different parameterizations (e.g. rotation quaternion - angle-axis)
+- Conversion between different usage types (active - passive)
+
+\paragraph rotations_interfaces_conversion_representations Conversion between Representations
 The constructor and the assignment operator allow to convert between different representations of a rotation:
 \code{.cpp}
 AngleAxisPD angleAxis;
 RotationQuaternionPD quaternion(angleAxis);
 angleAxis = quaternion;
+\endcode
+
+\paragraph rotations_interfaces_conversion_usage Conversion between Usage Types
+A direct conversion between different usage types, i.e. between active and passive rotations is not support.
+However, one can convert the usage type of the rotation manually:
+\code{.cpp}
+AngleAxisPD angleAxisPassive;					// passive angle-axis
+AngleAxisAD angleAxisActive(angleAxisPassive.getActive());	// convert to active angle-axis
 \endcode
 
 \subsection rotations_interfaces_representations Parameterizations of a Rotation
