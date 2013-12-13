@@ -91,7 +91,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
    *  \param v2      second entry of the rotation axis vector
    *  \param v3      third entry of the rotation axis vector
    */
-  AngleAxis(const Scalar& angle, const Scalar& v1, const Scalar& v2, const Scalar& v3)
+  AngleAxis(Scalar angle, Scalar v1, Scalar v2, Scalar v3)
     : Base(angle,Vector3(v1,v2,v3)) {
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input rotation axis has not unit length.");
   }
@@ -101,7 +101,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
    * \param angle   rotation angle
    * \param vector     rotation vector with unit length (Eigen vector)
    */
-  AngleAxis(const Scalar& angle, const Vector3& vector)
+  AngleAxis(Scalar angle, const Vector3& vector)
     : Base(angle,vector) {
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input rotation axis has not unit length.");
   }
@@ -334,7 +334,7 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    *  \param v2      second entry of the rotation vector
    *  \param v3      third entry of the rotation vector
    */
-  RotationVector(const Scalar& v1, const Scalar& v2, const Scalar& v3)
+  RotationVector(Scalar v1, Scalar v2, Scalar v3)
     : vector_(v1,v2,v3) {
   }
 
@@ -518,7 +518,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  \param y     third entry of the quaternion = n2*sin(phi/2)
    *  \param z     fourth entry of the quaternion = n3*sin(phi/2)
    */
-  RotationQuaternion(const Scalar& w, const Scalar& x, const Scalar& y, const Scalar& z)
+  RotationQuaternion(Scalar w, Scalar x, Scalar y, Scalar z)
     : Base(w,x,y,z) {
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
   }
@@ -842,9 +842,9 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType_, Usage
    *  \param r32     entry in row 3, col 2
    *  \param r33     entry in row 3, col 3
    */
-  RotationMatrix(const Scalar& r11, const Scalar& r12, const Scalar& r13,
-                 const Scalar& r21, const Scalar& r22, const Scalar& r23,
-                 const Scalar& r31, const Scalar& r32, const Scalar& r33) {
+  RotationMatrix(Scalar r11, Scalar r12, Scalar r13,
+                 Scalar r21, Scalar r22, Scalar r23,
+                 Scalar r31, Scalar r32, Scalar r33) {
     *this << r11,r12,r13,r21,r22,r23,r31,r32,r33;
     KINDR_ASSERT_MATRIX_NEAR_DBG(std::runtime_error, *this * this->transpose(), Base::Identity(), static_cast<Scalar>(1e-4), "Input matrix is not orthogonal.");
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->determinant(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input matrix determinant is not 1.");
@@ -1060,7 +1060,7 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage
    *  \param pitch    second rotation angle around Y' axis
    *  \param yaw      third rotation angle around Z'' axis
    */
-  EulerAnglesXyz(const Scalar& roll, const Scalar& pitch, const Scalar& yaw)
+  EulerAnglesXyz(Scalar roll, Scalar pitch, Scalar yaw)
     : xyz_(roll,pitch,yaw) {
   }
 
@@ -1364,7 +1364,7 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
    *  \param pitch    second rotation angle around Y' axis
    *  \param roll     third rotation angle around X'' axis
    */
-  EulerAnglesZyx(const Scalar& yaw, const Scalar& pitch, const Scalar& roll)
+  EulerAnglesZyx(Scalar yaw, Scalar pitch, Scalar roll)
     : zyx_(yaw,pitch,roll) {
   }
 

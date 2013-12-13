@@ -76,7 +76,7 @@ class Position3 : public Position3Base<Position3<PrimType_>>, private Eigen::Mat
    * \param y   y-coordinate
    * \param z   z-coordinate
    */
-  Position3(const PrimType_& x, const PrimType_& y, const PrimType_& z)
+  Position3(Scalar x, Scalar y, Scalar z)
     : Base(x, y, z) {
   }
 

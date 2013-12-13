@@ -79,7 +79,7 @@ class AngularVelocity : public AngularVelocityBase<AngularVelocity<PrimType_, Us
    * \param y   y-coordinate
    * \param z   z-coordinate
    */
-  AngularVelocity(const PrimType_& x, const PrimType_& y, const PrimType_& z)
+  AngularVelocity(Scalar x, Scalar y, Scalar z)
     : Base(x, y, z) {
   }
 
@@ -225,7 +225,7 @@ class RotationQuaternionDiff : public RotationQuaternionDiffBase<RotationQuatern
    *  \param y     third entry of the derivative of the quaternion
    *  \param z     fourth entry of the derivative of the quaternion
    */
-  RotationQuaternionDiff(const Scalar& w, const Scalar& x, const Scalar& y, const Scalar& z)
+  RotationQuaternionDiff(Scalar w, Scalar x, Scalar y, Scalar z)
     : Base(w,x,y,z) {
   }
 
@@ -347,9 +347,9 @@ class RotationMatrixDiff : public RotationMatrixDiffBase<RotationMatrixDiff<Prim
    *  \param r32     entry in row 3, col 2
    *  \param r33     entry in row 3, col 3
    */
-  RotationMatrixDiff(const Scalar& r11, const Scalar& r12, const Scalar& r13,
-                     const Scalar& r21, const Scalar& r22, const Scalar& r23,
-                     const Scalar& r31, const Scalar& r32, const Scalar& r33) {
+  RotationMatrixDiff(Scalar r11, Scalar r12, Scalar r13,
+                     Scalar r21, Scalar r22, Scalar r23,
+                     Scalar r31, Scalar r32, Scalar r33) {
     *this << r11,r12,r13,r21,r22,r23,r31,r32,r33;
   }
 
@@ -466,7 +466,7 @@ class EulerAnglesZyxDiff : public EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimTyp
    *  \param pitch    time derivative of second rotation angle around Y' axis
    *  \param roll     time derivative of third rotation angle around X'' axis
    */
-  EulerAnglesZyxDiff(const Scalar& yaw, const Scalar& pitch, const Scalar& roll)
+  EulerAnglesZyxDiff(Scalar yaw, Scalar pitch, Scalar roll)
     : Base(yaw,pitch,roll) {
   }
 
@@ -666,7 +666,7 @@ class EulerAnglesXyzDiff : public EulerAnglesDiffBase<EulerAnglesXyzDiff<PrimTyp
    *  \param pitch    time derivative of second rotation angle around Y' axis
    *  \param yaw      time derivative of third rotation angle around Z'' axis
    */
-  EulerAnglesXyzDiff(const Scalar& yaw, const Scalar& pitch, const Scalar& roll)
+  EulerAnglesXyzDiff(Scalar yaw, Scalar pitch, Scalar roll)
     : Base(yaw,pitch,roll) {
   }
 

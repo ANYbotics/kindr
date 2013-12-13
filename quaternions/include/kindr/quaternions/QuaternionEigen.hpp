@@ -71,11 +71,11 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::
     : Base(Implementation(0,0,0,0)) {
   }
 
-  Quaternion(const PrimType_& w, const PrimType_& x, const PrimType_& y, const PrimType_& z)
+  Quaternion(Scalar w, Scalar x, Scalar y, Scalar z)
     : Base(w,x,y,z) {
   }
 
-  Quaternion(const PrimType_& real, const Imaginary& imag)
+  Quaternion(Scalar real, const Imaginary& imag)
     : Base(real,imag(0),imag(1),imag(2)) {
   }
 
@@ -161,39 +161,39 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::
   using QuaternionBase<Quaternion<PrimType_>>::operator==;
   using QuaternionBase<Quaternion<PrimType_>>::operator*;
 
-  inline PrimType_ w() const {
+  inline Scalar w() const {
     return Base::w();
   }
 
-  inline PrimType_ x() const {
+  inline Scalar x() const {
     return Base::x();
   }
 
-  inline PrimType_ y() const {
+  inline Scalar y() const {
     return Base::y();
   }
 
-  inline PrimType_ z() const {
+  inline Scalar z() const {
     return Base::z();
   }
 
-  inline PrimType_& w() { // todo: attention: no assertion for unitquaternions!
+  inline Scalar& w() { // todo: attention: no assertion for unitquaternions!
     return Base::w();
   }
 
-  inline PrimType_& x() {
+  inline Scalar& x() {
     return Base::x();
   }
 
-  inline PrimType_& y() {
+  inline Scalar& y() {
     return Base::y();
   }
 
-  inline PrimType_& z() {
+  inline Scalar& z() {
     return Base::z();
   }
 
-  inline PrimType_ getReal() const {
+  inline Scalar getReal() const {
     return Base::w();
   }
 
@@ -209,7 +209,7 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::
 
 
 
-  inline PrimType_ norm() const {
+  inline Scalar norm() const {
     return Base::norm();
   }
 
@@ -277,12 +277,12 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType_>> {
    * \param   y   vector index 2
    * \param   z   vector index 3
    */
-  UnitQuaternion(const PrimType_& w, const PrimType_& x, const PrimType_& y, const PrimType_& z)
+  UnitQuaternion(Scalar w, Scalar x, Scalar y, Scalar z)
     : unitQuternion_(w,x,y,z) {
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-4, "Input quaternion has not unit length.");
   }
 
-  UnitQuaternion(const PrimType_& real, const Imaginary& imag)
+  UnitQuaternion(Scalar real, const Imaginary& imag)
     : unitQuternion_(real,imag) {
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-4, "Input quaternion has not unit length.");
   }
@@ -352,39 +352,39 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType_>> {
 //	  return this->uq == other.uq;
 //  }
 
-  inline PrimType_ w() const {
+  inline Scalar w() const {
     return unitQuternion_.w();
   }
 
-  inline PrimType_ x() const {
+  inline Scalar x() const {
     return unitQuternion_.x();
   }
 
-  inline PrimType_ y() const {
+  inline Scalar y() const {
     return unitQuternion_.y();
   }
 
-  inline PrimType_ z() const {
+  inline Scalar z() const {
     return unitQuternion_.z();
   }
 
-  inline PrimType_& w() { // todo: attention: no assertion for unitquaternions!
+  inline Scalar& w() { // todo: attention: no assertion for unitquaternions!
     return unitQuternion_.w();
   }
 
-  inline PrimType_& x() {
+  inline Scalar& x() {
     return unitQuternion_.x();
   }
 
-  inline PrimType_& y() {
+  inline Scalar& y() {
     return unitQuternion_.y();
   }
 
-  inline PrimType_& z() {
+  inline Scalar& z() {
     return unitQuternion_.z();
   }
 
-  inline PrimType_ getReal() const {
+  inline Scalar getReal() const {
     return unitQuternion_.w();
   }
 
@@ -424,7 +424,7 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType_>> {
 //    return UnitQuaternion(Base::conjugate());
 //  }
 
-  PrimType_ norm() const {
+  Scalar norm() const {
     return unitQuternion_.norm();
   }
 

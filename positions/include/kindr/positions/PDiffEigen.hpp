@@ -74,7 +74,7 @@ class LinearVelocity3 : public LinearVelocity3Base<LinearVelocity3<PrimType_>>, 
    * \param y   y-coordinate
    * \param z   z-coordinate
    */
-  LinearVelocity3(const PrimType_& x, const PrimType_& y, const PrimType_& z)
+  LinearVelocity3(Scalar x, Scalar y, Scalar z)
     : Base(x, y, z) {
   }
 
