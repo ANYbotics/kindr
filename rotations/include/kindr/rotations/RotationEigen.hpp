@@ -445,9 +445,9 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
     return *this;
   }
 
-  /*! \brief Concenation operator.
+  /*! \brief Concatenation operator.
    *  This is explicitly specified, because Eigen provides also an operator*.
-   *  \returns the concenation of two rotations
+   *  \returns the concatenation of two rotations
    */
   using RotationVectorBase<RotationVector<PrimType_, Usage_>, Usage_>::operator*;
 
