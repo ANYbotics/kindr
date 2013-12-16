@@ -65,17 +65,21 @@ To rotate a vector or a matrix columnwise, the following methods are provided:
 
 \subsubsection rotations_interfaces_conversion Conversion between Rotations
 There are three kinds of conversions:
-- Conversion between different primitive data types (e.g. float - double)
 - Conversion between different representations, i.e. between different parameterizations (e.g. rotation quaternion - angle-axis)
+- Conversion between different primitive data types (e.g. float - double)
 - Conversion between different usage types (active - passive)
 
 \paragraph rotations_interfaces_conversion_representations Conversion between Representations
-The constructor and the assignment operator allow to convert between different representations of a rotation:
+The following methods allow to convert between different representations of a rotation:
 \code{.cpp}
 AngleAxisPD angleAxis;
-RotationQuaternionPD quaternion(angleAxis);
-angleAxis = quaternion;
+RotationQuaternionPD quaternion(angleAxis);	// constructor
+angleAxis = quaternion;				// assignment operator
+quaternion(angleAxis);				// parenthesis operator
 \endcode
+
+\paragraph rotations_interfaces_conversion_primtype Conversion between Primitive Data Types
+The conversion between different primitive data types (double/float) works the same way as the conversion between different representations.
 
 \paragraph rotations_interfaces_conversion_usage Conversion between Usage Types
 A direct conversion between different usage types, i.e. between active and passive rotations is not support.
@@ -93,12 +97,12 @@ The class kindr::rotations::AngleAxisBase defines an interface for an angle-axis
 
 \f$\boxed{(\theta, \mathbf{n}), \quad \lVert \mathbf{n} \rVert = 1,}\f$
 
-where \f$\theta\f$ is the rotation angle and \f$\mathbf{n}\f$ is the rotation axis with unit length.
+where \f$\theta \in \mathbb{R}\f$ is the rotation angle and \f$\mathbf{n} \in \mathbb{R}^3\f$ is the rotation axis with unit length.
 
 \subsubsection rotations_interfaces_rotationvector Rotation Vector
 The class kindr::rotations::RotationVectorBase defines an interface for a rotation vector representation of a rotation:
 
-\f$\boxed{\mathbf{\phi}\in\mathsf{R}^3}\f$
+\f$\boxed{\mathbf{\phi}\in\mathbb{R}^3}\f$
 
 where \f$\lVert \mathbf{\phi} \rVert \f$ is the rotation angle and \f$\frac{\mathbf{\phi}}{\lVert \mathbf{\phi} \rVert}\f$ is the rotation axis.
 

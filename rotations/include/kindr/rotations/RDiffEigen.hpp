@@ -46,8 +46,10 @@ namespace eigen_impl {
 /*! \class AngularVelocity
  * \brief Angular velocity in 3D-space.
  *
- * This class implements an angular velocity of a body in 3D-space.
- * More precisely an interface to store and access the components of an angular velocity of a rigid body in 3D-space is provided.
+ * This class implements an angular velocity of a rigid body in 3D-space.
+ * The angular velocity is the absolute rotational velocity of a rigid body with respect to an inertial frame I
+ * and its coordinates are expressed in the body fixed frame (\f$\Omega_B = B_\omega_{IB}$\f)
+ *
  * \tparam PrimType_  Primitive type of the coordinates.
  * \ingroup rotations
  */
@@ -84,8 +86,8 @@ class AngularVelocity : public AngularVelocityBase<AngularVelocity<PrimType_, Us
   }
 
 
-  /*! \brief Constructor using Eigen::Vector3.
-   *  \param other   Eigen::Matrix<PrimType_,3,1>
+  /*! \brief Constructor using Eigen::Matrix<Scalar,3,1>.
+   *  \param other   Eigen::Matrix<Scalar,3,1>
    */
   explicit AngularVelocity(const Base& other)
     : Base(other) {
