@@ -468,6 +468,37 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
     return *this;
   }
 
+  /*! \brief Returns the rotation vector.
+   *  \returns the rotation vector (scalar)
+   */
+  inline const Implementation& getVector() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return vector_;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -vector_;
+    }
+  }
+
+  /*! \brief Sets the rotation vector.
+   */
+  inline void setVector(Scalar first, Scalar second, Scalar third) const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      vector_ << first, second, third;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      vector_ << -first, -second, -third;
+    }
+  }
+
+  /*! \brief Sets the rotation vector.
+   */
+  inline void setVector(Implementation vector) const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      vector_ = vector;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      vector_ = -vector;
+    }
+  }
+
   /*! \brief Returns the first entry of the rotation vector.
    *  \returns first entry of the rotation vector (scalar)
    */
