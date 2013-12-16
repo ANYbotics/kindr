@@ -22,16 +22,16 @@ Addition and subtraction of the time derivatives are provided by the kindr::rota
 The following representations are currently provided by the library:
 
 \subsubsection rdiff_interfaces_velocity3 3-dimensional Angular Velocity
-The class kindr::rotations::AngularVelocity3Base defines an interface for an angular velocity in 3D-Space.
+The class kindr::rotations::AngularVelocityBase defines an interface for an angular velocity in 3D-Space.
 The angular velocity expressed in frame A can be stated as:
 
 \f$\boxed{_K\mathbf{\omega}_{IK} = \begin{bmatrix} \omega_x \\ \omega_y \\ \omega_z \end{bmatrix}}\f$
 
 The three components, x, y and z, are stored and can be accessed by
    
- - \ref kindr::rotations::AngularVelocity3Base::x() "x()"
- - \ref kindr::rotations::AngularVelocity3Base::y() "y()"
- - \ref kindr::rotations::AngularVelocity3Base::z() "z()"
+ - \ref kindr::rotations::AngularVelocityBase::x() "x()"
+ - \ref kindr::rotations::AngularVelocityBase::y() "y()"
+ - \ref kindr::rotations::AngularVelocityBase::z() "z()"
 
 
 \section rdiff_implementations Implementations
@@ -39,7 +39,7 @@ Each implementation lies in its own namespace, such that the implementation can 
 For example: 
 \code{.cpp}
 namespace rot = kindr::rotations::eigen_impl; // select implementation based on Eigen
-rot::AngularVelocity3D velocity();		     // create angular velocity
+rot::AngularVelocityD velocity();		     // create angular velocity
 \endcode
 If the implementation needs to be changed, only one line of code has to be altered:
 \code{.cpp}
@@ -55,20 +55,20 @@ All types can be included by
 and lie within the namespace kindr::rotations::eigen_impl.
 
 \subsubsection rdiff_implementation_angularvelocity3 3D Angular Velocity
-The class \ref kindr::rotations::eigen_impl::AngularVelocity3 "AngularVelocity3" stores the three coordinates of the angular velocity in Eigen::Matrix<PrimType, 3, 1>.
+The class \ref kindr::rotations::eigen_impl::AngularVelocity "AngularVelocity" stores the three coordinates of the angular velocity in Eigen::Matrix<PrimType, 3, 1>.
 
 The following two typedefs are provided for convenience:
- - \ref kindr::rotations::eigen_impl::AngularVelocity3D "AngularVelocity3D" for primitive type double
- - \ref kindr::rotations::eigen_impl::AngularVelocity3F "AngularVelocity3F" for primitive type float
+ - \ref kindr::rotations::eigen_impl::AngularVelocityD "AngularVelocityD" for primitive type double
+ - \ref kindr::rotations::eigen_impl::AngularVelocityF "AngularVelocityF" for primitive type float
 
 An angular velocity can be created as follows:
 \code{.cpp}
 double w_x = 1.0;
 double w_y = 2.0;
 double w_z = 3.0;
-rot::AngularVelocity3D velocity1();		     			// creates a 3D-Velocity with all coordinates equal to zero
-rot::AngularVelocity3D velocity2(w_x, w_y, w_z);	     		// initializes the three coordinates
-rot::AngularVelocity3D velocity3(Eigen::Vector3d(w_x, w_y, w_z)); 	// creates a velocity from an Eigen vector
+rot::AngularVelocityD velocity1();		     			// creates a 3D-Velocity with all coordinates equal to zero
+rot::AngularVelocityD velocity2(w_x, w_y, w_z);	     		// initializes the three coordinates
+rot::AngularVelocityD velocity3(Eigen::Vector3d(w_x, w_y, w_z)); 	// creates a velocity from an Eigen vector
 \endcode
 
 The coordinates can be obtained as follows:
@@ -81,8 +81,8 @@ Eigen::Vector3d vector = velocity1.toImplementation();	// [w_x;w_y;w_z]
 
 Operations with angular velocities:
 \code{.cpp}
-  rot::AngularVelocity3D velocity4 = velocity1 + velocity2;	// addition
-  rot::AngularVelocity3D velocity3 -= velocity1;		// subtraction
+  rot::AngularVelocityD velocity4 = velocity1 + velocity2;	// addition
+  rot::AngularVelocityD velocity3 -= velocity1;		// subtraction
   std::cout << "Velocity 3 is: " << velocity3;		// print velocity
 \endcode
 

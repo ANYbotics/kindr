@@ -70,8 +70,8 @@ struct AngularVelocity3Test: public ::testing::Test {
 
 
 typedef ::testing::Types<
-    rot::AngularVelocityPD,
-    rot::AngularVelocityPF
+    rot::AngularVelocityAD,
+    rot::AngularVelocityAF
 > Types;
 
 
@@ -153,6 +153,11 @@ TEST(RDiffTest, testDevelopment)
 //
 //  std::cout << "eulerDiff: " << eulerAnglesXyzDiff2 << std::endl;
 
+  rot::AngleAxisAD aa;
+ rot::AngleAxisDiffAD aaDiff(0.2, 0.1, 0.2, 0.4);
+ std::cout << "angle axis: " << aaDiff << std::endl;
+ rot::AngularVelocityAD avelA6(aa, aaDiff);
+
   rot::RotationMatrixDiffAD rmatADiff;
   rot::RotationMatrixAD rmatA;
 //  rot::AngularVelocityAD avelA(rmatA, rmatADiff);
@@ -160,11 +165,10 @@ TEST(RDiffTest, testDevelopment)
 
   rot::RotationMatrixDiffPD rmatPDiff;
   rot::RotationMatrixPD rmatP;
-  rot::AngularVelocityAD avelA2(rmatP, rmatADiff);
+  rot::AngularVelocityAD avelA2(rmatA, rmatADiff);
+  rot::AngularVelocityAD avelA3(rmatP, rmatPDiff);
   std::cout << "avelA2: " << avelA2 << std::endl;
 
-  rot::AngleAxisAD aaAD;
-  rot::AngleAxisAF aaAF;
-  aaAD(aaAF);
+
 }
 

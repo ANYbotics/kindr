@@ -170,6 +170,13 @@ class AngularVelocityBase : public RDiffBase<Implementation_, Usage_> {
 };
 
 template<typename Implementation_, enum RotationUsage Usage_>
+class AngleAxisDiffBase : public RDiffBase<Implementation_, Usage_> {
+ public:
+
+};
+
+
+template<typename Implementation_, enum RotationUsage Usage_>
 class RotationQuaternionDiffBase : public RDiffBase<Implementation_, Usage_> {
  public:
 
