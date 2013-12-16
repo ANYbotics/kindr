@@ -18,7 +18,7 @@ The following section \ref rotations_interfaces "Interface" describes the functi
 \subsection rotations_interfaces_rotation Rotation
 The class kindr::rotations::RotationBase serves as an interface for a rotation between two rigid bodies. All types of representations of a rotation, such as quaternion, angle-axis, and Euler angles, are derived from this base class.
 \subsubsection rotations_interfaces_rotation_ap Type of a Rotation
-The type of a rotation is defined by the \ref rotations_interfaces_representations "kind of parameterization", the primitive type of the parameters and the usage type.
+The type of a rotation is defined by the \ref rotations_interfaces_representations "kind of parameterization", the primitive data type (float/double) of the parameters and the usage type.
 
 A rotation can be either used as an active (alibi) or passive (alias) transformation.
 The class is therefore templated by the enumeration kindr::rotations::RotationUsage which indicates the usage type of a rotation:
