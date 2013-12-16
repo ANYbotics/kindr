@@ -91,8 +91,12 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
    *  \param v2      second entry of the rotation axis vector
    *  \param v3      third entry of the rotation axis vector
    */
-  AngleAxis(Scalar angle, Scalar v1, Scalar v2, Scalar v3)
-    : Base(angle,Vector3(v1,v2,v3)) {
+  AngleAxis(Scalar angle, Scalar v1, Scalar v2, Scalar v3) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      Base(angle,Vector3(v1,v2,v3));
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      Base(-angle,Vector3(v1,v2,v3));
+    }
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input rotation axis has not unit length.");
   }
 
@@ -101,8 +105,12 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
    * \param angle   rotation angle
    * \param vector     rotation vector with unit length (Eigen vector)
    */
-  AngleAxis(Scalar angle, const Vector3& vector)
-    : Base(angle,vector) {
+  AngleAxis(Scalar angle, const Vector3& vector) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      Base(angle,vector);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      Base(-angle,vector);
+    }
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input rotation axis has not unit length.");
   }
 
@@ -122,8 +130,6 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
   inline explicit AngleAxis(const RotationBase<OtherDerived_, Usage_>& other)
     : Base(internal::ConversionTraits<AngleAxis, OtherDerived_>::convert(other.derived())) {
   }
-
-
 
   /*! \brief Assignment operator using another rotation.
    *  \param other   other rotation
@@ -161,7 +167,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
   }
 
   /*! \brief Cast to the implementation type.
-   *  \returns the implementation for direct manipulation (recommended only for advanced users)
+   *  \returns the implementation for direct manipulation (recommended only for advanced users) // todo: attention: all toImplementation functions will return different values for Active/Passive
    */
   inline Implementation& toImplementation() {
     return static_cast<Implementation&>(*this);
@@ -174,10 +180,45 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
     return static_cast<const Implementation&>(*this);
   }
 
+  /*! \brief Returns the rotation angle.
+   *  \returns rotation angle (scalar)
+   */
+  inline Scalar getAngle() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return Base::angle();
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -Base::angle();
+    }
+  }
+
+  /*! \brief Sets the rotation angle.
+   */
+  inline void setAngle(Scalar angle) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      Base::angle() = angle;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      Base::angle() = -angle;
+    }
+  }
+
+  /*! \brief Returns the rotation axis.
+   *  \returns rotation axis (vector)
+   */
+  inline const Vector3& getAxis() const {
+    return Base::axis();
+  }
+
+  /*! \brief Sets the rotation axis.
+   */
+  inline void setAxis(const Vector3 & axis) {
+    Base::axis() = axis;
+    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input rotation axis has not unit length.");
+  }
+
   /*! \brief Reading access to the rotation angle.
    *  \returns rotation angle (scalar) with reading access
    */
-  inline Scalar angle() const {
+  inline Scalar angle() const { // todo: attention: all these functions will return different values for Active/Passive
     return Base::angle();
   }
 
@@ -218,30 +259,30 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
    *  \returns copy of the angle axis rotation which is unique
    */
   AngleAxis getUnique() const {
-    AngleAxis aa(kindr::common::floatingPointModulo(angle()+M_PI,2*M_PI)-M_PI, axis()); // first wraps angle into [-pi,pi)
-    if(aa.angle() > 0)	{
+    AngleAxis aa(kindr::common::floatingPointModulo(getAngle()+M_PI,2*M_PI)-M_PI, getAxis()); // first wraps angle into [-pi,pi)
+    if(aa.getAngle() > 0)	{
       return aa;
-    } else if(aa.angle() < 0) {
-      if(aa.angle() != -M_PI) {
-        return AngleAxis(-aa.angle(),-aa.axis());
+    } else if(aa.getAngle() < 0) {
+      if(aa.getAngle() != -M_PI) {
+        return AngleAxis(-aa.getAngle(),-aa.getAxis());
       } else { // angle == -pi, so axis must be viewed further, because -pi,axis does the same as -pi,-axis
 
-        if(aa.axis()[0] < 0) {
-          return AngleAxis(-aa.angle(),-aa.axis());
-        } else if(aa.axis()[0] > 0) {
-          return AngleAxis(-aa.angle(),aa.axis());
+        if(aa.getAxis()[0] < 0) {
+          return AngleAxis(-aa.getAngle(),-aa.getAxis());
+        } else if(aa.getAxis()[0] > 0) {
+          return AngleAxis(-aa.getAngle(),aa.getAxis());
         } else { // v1 == 0
 
-          if(aa.axis()[1] < 0) {
-            return AngleAxis(-aa.angle(),-aa.axis());
-          } else if(aa.axis()[1] > 0) {
-            return AngleAxis(-aa.angle(),aa.axis());
+          if(aa.getAxis()[1] < 0) {
+            return AngleAxis(-aa.getAngle(),-aa.getAxis());
+          } else if(aa.getAxis()[1] > 0) {
+            return AngleAxis(-aa.getAngle(),aa.getAxis());
           } else { // v2 == 0
 
-            if(aa.axis()[2] < 0) { // v3 must be -1 or 1
-              return AngleAxis(-aa.angle(),-aa.axis());
+            if(aa.getAxis()[2] < 0) { // v3 must be -1 or 1
+              return AngleAxis(-aa.getAngle(),-aa.getAxis());
             } else  {
-              return AngleAxis(-aa.angle(),aa.axis());
+              return AngleAxis(-aa.getAngle(),aa.getAxis());
             }
           }
         }
@@ -269,7 +310,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
    *  \returns std::stream object
    */
   friend std::ostream& operator << (std::ostream& out, const AngleAxis& a) {
-    out << a.angle() << ", " << a.axis().transpose();
+    out << a.getAngle() << ", " << a.getAxis().transpose();
     return out;
   }
 };
@@ -334,8 +375,12 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    *  \param v2      second entry of the rotation vector
    *  \param v3      third entry of the rotation vector
    */
-  RotationVector(Scalar v1, Scalar v2, Scalar v3)
-    : vector_(v1,v2,v3) {
+  RotationVector(Scalar v1, Scalar v2, Scalar v3) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      vector_(v1,v2,v3);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      vector_(-v1,-v2,-v3);
+    }
   }
 
 
@@ -343,8 +388,12 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    *
    *  \param other   Eigen::Matrix<Scalar, 3, 1>
    */
-  explicit RotationVector(const Base& other) // explicit on purpose
-    : vector_(other) {
+  explicit RotationVector(const Base& other) { // explicit on purpose
+    if(Usage_ == RotationUsage::ACTIVE) {
+      vector_ = other;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      vector_ = -other;
+    }
   }
 
   /*! \brief Constructor using another rotation.
@@ -404,14 +453,12 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
     return static_cast<const Implementation&>(vector_);
   }
 
-
   /*! \brief Reading access to the rotation vector.
    *  \returns rotation vector with reading access
    */
   inline const Implementation& vector() const {
     return this->toImplementation();
   }
-
 
   /*! \brief Sets the rotation to identity.
    *  \returns reference
@@ -421,12 +468,75 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
     return *this;
   }
 
+  /*! \brief Returns the first entry of the rotation vector.
+   *  \returns first entry of the rotation vector (scalar)
+   */
+  inline Scalar getFirstEntry() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return vector_(0);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -vector_(0);
+    }
+  }
+
+  /*! \brief Returns the second entry of the rotation vector.
+   *  \returns second entry of the rotation vector (scalar)
+   */
+  inline Scalar getSecondEntry() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return vector_(1);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -vector_(1);
+    }
+  }
+
+  /*! \brief Returns the third entry of the rotation vector.
+   *  \returns third entry of the rotation vector (scalar)
+   */
+  inline Scalar getThirdEntry() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return vector_(2);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -vector_(2);
+    }
+  }
+
+  /*! \brief Sets the first entry of the rotation vector.
+   */
+  inline void setFirstEntry(Scalar first) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      vector_(0) = first;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      vector_(0) = -first;
+    }
+  }
+
+  /*! \brief Sets the second entry of the rotation vector.
+   */
+  inline void setSecondEntry(Scalar second) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      vector_(1) = second;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      vector_(1) = -second;
+    }
+  }
+
+  /*! \brief Sets the third entry of the rotation vector.
+   */
+  inline void setThirdEntry(Scalar third) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      vector_(2) = third;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      vector_(2) = -third;
+    }
+  }
+
   /*! \brief Returns a unique rotation vector with norm in [0,pi).
    *  This function is used to compare different rotations.
    *  \returns copy of the rotation vector which is unique
    */
   RotationVector getUnique() const {
-    // todo: test
+    // todo: test, passive and active
     RotationVector rotVector(toImplementation());
 
     const Scalar norm = rotVector.toImplementation().norm();
@@ -455,7 +565,11 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    *  \returns std::stream object
    */
   friend std::ostream& operator << (std::ostream& out, const RotationVector& rotationVector) {
-    out << rotationVector.toImplementation().transpose();
+    if(Usage_ == RotationUsage::ACTIVE) {
+      out << rotationVector.toImplementation().transpose();
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      out << -rotationVector.toImplementation().transpose();
+    }
     return out;
   }
 };
@@ -518,13 +632,21 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  \param y     third entry of the quaternion = n2*sin(phi/2)
    *  \param z     fourth entry of the quaternion = n3*sin(phi/2)
    */
-  RotationQuaternion(Scalar w, Scalar x, Scalar y, Scalar z)
-    : Base(w,x,y,z) {
+  RotationQuaternion(Scalar w, Scalar x, Scalar y, Scalar z) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      Base(w,x,y,z);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      Base(w,-x,-y,-z);
+    }
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
   }
 
-  RotationQuaternion(const PrimType_& real, const Imaginary& imag)
-    : Base(real,imag) {
+  RotationQuaternion(const PrimType_& real, const Imaginary& imag) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      Base(real,imag);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      Base(real,-imag);
+    }
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
   }
 
@@ -554,44 +676,120 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
     : Base(internal::ConversionTraits<RotationQuaternion, OtherDerived_>::convert(static_cast<const OtherDerived_&>(other))) {
   }
 
-  inline PrimType_ w() const {
+  inline Scalar getW() const {
     return Base::w();
   }
 
-  inline PrimType_ x() const {
-    return Base::x();
+  inline Scalar getX() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return Base::x();
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -Base::x();
+    }
   }
 
-  inline PrimType_ y() const {
-    return Base::y();
+  inline Scalar getY() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return Base::y();
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -Base::y();
+    }
   }
 
-  inline PrimType_ z() const {
-    return Base::z();
+  inline Scalar getZ() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return Base::z();
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -Base::z();
+    }
   }
 
-  inline PrimType_& w() { // todo: attention: no assertion for unitquaternions!
+  inline void setW(Scalar w) { // todo: attention: no assertion for unitquaternions
+    Base::w() = w;
+  }
+
+  inline void setX(Scalar x) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      Base::x() = x;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      Base::x() = -x;
+    }
+  }
+
+  inline void setY(Scalar y) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      Base::y() = y;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      Base::y() = -y;
+    }
+  }
+
+  inline void setZ(Scalar z) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      Base::z() = z;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      Base::z() = -z;
+    }
+  }
+
+  inline Scalar w() const {
     return Base::w();
   }
 
-  inline PrimType_& x() {
+  inline Scalar x() const {
     return Base::x();
   }
 
-  inline PrimType_& y() {
+  inline Scalar y() const {
     return Base::y();
   }
 
-  inline PrimType_& z() {
+  inline Scalar z() const {
     return Base::z();
   }
 
-  inline PrimType_ getReal() const {
+  inline Scalar& w() { // todo: attention: no assertion for unitquaternions!
+    return Base::w();
+  }
+
+  inline Scalar& x() {
+    return Base::x();
+  }
+
+  inline Scalar& y() {
+    return Base::y();
+  }
+
+  inline Scalar& z() {
+    return Base::z();
+  }
+
+  inline Scalar getReal() const {
     return Base::getReal();
   }
 
   inline Imaginary getImaginary() const {
-    return Base::getImaginary();
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return Base::getImaginary();
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -Base::getImaginary();
+    }
+  }
+
+  inline void setReal(Scalar real) const {
+    Base::w() = real;
+  }
+
+  inline void setImaginary(Imaginary imag) const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      Base::x() = imag(0);
+      Base::y() = imag(1);
+      Base::z() = imag(2);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      Base::x() = -imag(0);
+      Base::y() = -imag(1);
+      Base::z() = -imag(2);
+    }
   }
 
   Base& toUnitQuaternion()  {
@@ -718,28 +916,28 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  \returns copy of the quaternion rotation which is unique
    */
   RotationQuaternion getUnique() const {
-    if(this->w() > 0) {
+    if(this->getW() > 0) {
       return *this;
-    } else if (this->w() < 0){
-      return RotationQuaternion(-this->w(),-this->x(),-this->y(),-this->z());
+    } else if (this->getW() < 0){
+      return RotationQuaternion(-this->getW(),-this->getX(),-this->getY(),-this->getZ());
     } else { // w == 0
 
-      if(this->x() > 0) {
+      if(this->getX() > 0) {
         return *this;
-      } else if (this->x() < 0){
-        return RotationQuaternion(-this->w(),-this->x(),-this->y(),-this->z());
+      } else if (this->getX() < 0){
+        return RotationQuaternion(-this->getW(),-this->getX(),-this->getY(),-this->getZ());
       } else { // x == 0
 
-        if(this->y() > 0) {
+        if(this->getY() > 0) {
           return *this;
-        } else if (this->y() < 0){
-          return RotationQuaternion(-this->w(),-this->x(),-this->y(),-this->z());
+        } else if (this->getY() < 0){
+          return RotationQuaternion(-this->getW(),-this->getX(),-this->getY(),-this->getZ());
         } else { // y == 0
 
-          if(this->z() > 0) { // z must be either -1 or 1 in this case
+          if(this->getZ() > 0) { // z must be either -1 or 1 in this case
             return *this;
           } else {
-            return RotationQuaternion(-this->w(),-this->x(),-this->y(),-this->z());
+            return RotationQuaternion(-this->getW(),-this->getX(),-this->getY(),-this->getZ());
           }
         }
       }
@@ -777,7 +975,11 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  \returns std::stream object
    */
   friend std::ostream& operator << (std::ostream& out, const RotationQuaternion& rquat) {
-    out << rquat.toUnitQuaternion();
+    if(Usage_ == RotationUsage::ACTIVE) {
+      out << rquat.toUnitQuaternion();
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      out << rquat.inverted().toUnitQuaternion();
+    }
     return out;
   }
 };
@@ -1060,15 +1262,23 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage
    *  \param pitch    second rotation angle around Y' axis
    *  \param yaw      third rotation angle around Z'' axis
    */
-  EulerAnglesXyz(Scalar roll, Scalar pitch, Scalar yaw)
-    : xyz_(roll,pitch,yaw) {
+  EulerAnglesXyz(Scalar roll, Scalar pitch, Scalar yaw) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      xyz_(roll,pitch,yaw);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      xyz_(-roll,-pitch,-yaw);
+    }
   }
 
   /*! \brief Constructor using Eigen::Matrix.
    *  \param other   Eigen::Matrix<PrimType_,3,1> [roll; pitch; yaw]
    */
-  explicit EulerAnglesXyz(const Base& other)
-    : xyz_(other) {
+  explicit EulerAnglesXyz(const Base& other) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      xyz_(other);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      xyz_(-other);
+    }
   }
 
   /*! \brief Constructor using another rotation.
@@ -1128,88 +1338,214 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage
     return static_cast<const Base&>(xyz_);
   }
 
+  /*! \brief Returns roll (X) angle.
+   *  \returns roll angle (scalar)
+   */
+  inline Scalar getRoll() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return xyz_(0);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -xyz_(0);
+    }
+  }
+
+  /*! \brief Returns pitch (Y') angle.
+   *  \returns pitch angle (scalar)
+   */
+  inline Scalar getPitch() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return xyz_(1);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -xyz_(1);
+    }
+  }
+
+  /*! \brief Returns yaw (Z'') angle.
+   *  \returns yaw angle (scalar)
+   */
+  inline Scalar getYaw() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return xyz_(2);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -xyz_(2);
+    }
+  }
+
+  /*! \brief Sets roll (X) angle.
+   */
+  inline void setRoll(Scalar roll) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      xyz_(0) = roll;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      xyz_(0) = -roll;
+    }
+  }
+
+  /*! \brief Sets pitch (Y') angle.
+   */
+  inline void setPitch(Scalar pitch) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      xyz_(1) = pitch;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      xyz_(1) = -pitch;
+    }
+  }
+
+  /*! \brief Sets yaw (Z'') angle.
+   */
+  inline void setYaw(Scalar yaw) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      xyz_(2) = yaw;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      xyz_(2) = -yaw;
+    }
+  }
+
+  /*! \brief Gets roll (X) angle.
+   *  \returns roll angle (scalar)
+   */
+  inline Scalar getX() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return xyz_(0);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -xyz_(0);
+    }
+  }
+
+  /*! \brief Gets pitch (Y') angle.
+   *  \returns pitch angle (scalar)
+   */
+  inline Scalar getY() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return xyz_(1);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -xyz_(1);
+    }
+  }
+
+  /*! \brief Gets yaw (Z'') angle.
+   *  \returns yaw angle (scalar)
+   */
+  inline Scalar getZ() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return xyz_(2);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -xyz_(2);
+    }
+  }
+
+  /*! \brief Sets roll (X) angle.
+   */
+  inline void setX(Scalar x) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      xyz_(0) = x;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      xyz_(0) = -x;
+    }
+  }
+
+  /*! \brief Sets pitch (Y') angle.
+   */
+  inline void setY(Scalar y) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      xyz_(1) = y;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      xyz_(1) = -y;
+    }
+  }
+
+  /*! \brief Sets yaw (Z'') angle.
+   */
+  inline void setZ(Scalar z) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      xyz_(2) = z;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      xyz_(2) = -z;
+    }
+  }
+
   /*! \brief Reading access to roll (X) angle.
    *  \returns roll angle (scalar) with reading access
    */
   inline Scalar roll() const {
-    return toImplementation()(0);
+    return xyz_(0);
   }
 
   /*! \brief Reading access to pitch (Y') angle.
    *  \returns pitch angle (scalar) with reading access
    */
   inline Scalar pitch() const {
-    return toImplementation()(1);
+    return xyz_(1);
   }
 
   /*! \brief Reading access to yaw (Z'') angle.
    *  \returns yaw angle (scalar) with reading access
    */
   inline Scalar yaw() const {
-    return toImplementation()(2);
+    return xyz_(2);
   }
 
   /*! \brief Writing access to roll (X) angle.
    *  \returns roll angle (scalar) with writing access
    */
   inline Scalar& roll() {
-    return toImplementation()(0);
+    return xyz_(0);
   }
 
   /*! \brief Writing access to pitch (Y') angle.
    *  \returns pitch angle (scalar) with writing access
    */
   inline Scalar& pitch() {
-    return toImplementation()(1);
+    return xyz_(1);
   }
 
   /*! \brief Writing access to yaw (Z'') angle.
    *  \returns yaw angle (scalar) with writing access
    */
   inline Scalar& yaw() {
-    return toImplementation()(2);
+    return xyz_(2);
   }
 
   /*! \brief Reading access to roll (X) angle.
    *  \returns roll angle (scalar) with reading access
    */
   inline Scalar x() const {
-    return toImplementation()(0);
+    return xyz_(0);
   }
 
   /*! \brief Reading access to pitch (Y') angle.
    *  \returns pitch angle (scalar) with reading access
    */
   inline Scalar y() const {
-    return toImplementation()(1);
+    return xyz_(1);
   }
 
   /*! \brief Reading access to yaw (Z'') angle.
    *  \returns yaw angle (scalar) with reading access
    */
   inline Scalar z() const {
-    return toImplementation()(2);
+    return xyz_(2);
   }
 
   /*! \brief Writing access to roll (X) angle.
    *  \returns roll angle (scalar) with writing access
    */
   inline Scalar& x() {
-    return toImplementation()(0);
+    return xyz_(0);
   }
 
   /*! \brief Writing access to pitch (Y') angle.
    *  \returns pitch angle (scalar) with writing access
    */
   inline Scalar& y() {
-    return toImplementation()(1);
+    return xyz_(1);
   }
 
   /*! \brief Writing access to yaw (Z'') angle.
    *  \returns yaw angle (scalar) with writing access
    */
   inline Scalar& z() {
-    return toImplementation()(2);
+    return xyz_(2);
   }
 
   /*! \brief Sets the rotation to identity.
@@ -1225,39 +1561,39 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage
    *  \returns copy of the Euler angles rotation which is unique
    */
   EulerAnglesXyz getUnique() const {
-    EulerAnglesXyz xyz(kindr::common::floatingPointModulo(roll() +M_PI,2*M_PI)-M_PI,
-                       kindr::common::floatingPointModulo(pitch()+M_PI,2*M_PI)-M_PI,
-                       kindr::common::floatingPointModulo(yaw()  +M_PI,2*M_PI)-M_PI); // wraps all angles into [-pi,pi)
-    if(xyz.pitch() >= M_PI/2)  // wraps angles into [-pi,pi),[-pi/2,pi/2),[-pi,pi)
+    EulerAnglesXyz xyz(kindr::common::floatingPointModulo(getRoll() +M_PI,2*M_PI)-M_PI,
+                       kindr::common::floatingPointModulo(getPitch()+M_PI,2*M_PI)-M_PI,
+                       kindr::common::floatingPointModulo(getYaw()  +M_PI,2*M_PI)-M_PI); // wraps all angles into [-pi,pi)
+    if(xyz.getPitch() >= M_PI/2)  // wraps angles into [-pi,pi),[-pi/2,pi/2),[-pi,pi)
     {
-      if(xyz.roll() >= 0) {
-        xyz.roll() -= M_PI;
+      if(xyz.getRoll() >= 0) {
+        xyz.setRoll(xyz.getRoll() - M_PI);
       } else {
-        xyz.roll() += M_PI;
+        xyz.setRoll(xyz.getRoll() + M_PI);
       }
 
-      xyz.pitch() = -(xyz.pitch()-M_PI);
+      xyz.setPitch(-(xyz.getPitch() - M_PI));
 
-      if(xyz.yaw() >= 0) {
-        xyz.yaw() -= M_PI;
+      if(xyz.getYaw() >= 0) {
+        xyz.setYaw(xyz.getYaw - M_PI);
       } else {
-        xyz.yaw() += M_PI;
+        xyz.setYaw(xyz.getYaw + M_PI);
       }
     }
-    else if(xyz.pitch() < -M_PI/2)
+    else if(xyz.getPitch() < -M_PI/2)
     {
-      if(xyz.roll() >= 0) {
-        xyz.roll() -= M_PI;
+      if(xyz.getRoll() >= 0) {
+        xyz.setRoll(xyz.getRoll() - M_PI);
       } else {
-        xyz.roll() += M_PI;
+        xyz.setRoll(xyz.getRoll() + M_PI);
       }
 
-      xyz.pitch() = -(xyz.pitch()+M_PI);
+      xyz.setPitch(-(xyz.getPitch() + M_PI));
 
-      if(xyz.yaw() >= 0) {
-        xyz.yaw() -= M_PI;
+      if(xyz.getYaw() >= 0) {
+        xyz.setYaw(xyz.getYaw() - M_PI);
       } else {
-        xyz.yaw() += M_PI;
+        xyz.setYaw(xyz.getYaw() + M_PI);
       }
     }
     return xyz;
@@ -1364,15 +1700,23 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
    *  \param pitch    second rotation angle around Y' axis
    *  \param roll     third rotation angle around X'' axis
    */
-  EulerAnglesZyx(Scalar yaw, Scalar pitch, Scalar roll)
-    : zyx_(yaw,pitch,roll) {
+  EulerAnglesZyx(Scalar yaw, Scalar pitch, Scalar roll) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      zyx_(yaw,pitch,roll);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      zyx_(-yaw,-pitch,-roll);
+    }
   }
 
   /*! \brief Constructor using Eigen::Matrix.
    *  \param other   Eigen::Matrix<PrimType_,3,1> [roll; pitch; yaw]
    */
-  explicit EulerAnglesZyx(const Base& other)
-    : zyx_(other) {
+  explicit EulerAnglesZyx(const Base& other) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      zyx_ = other;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      zyx_ = -other;
+    }
   }
 
   /*! \brief Constructor using another rotation.
@@ -1433,88 +1777,217 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
     return static_cast<const Base&>(zyx_);
   }
 
+  /*! \brief Gets yaw (Z) angle.
+   *  \returns yaw angle (scalar)
+   */
+  inline Scalar getYaw() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return zyx_(0);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -zyx_(0);
+    }
+  }
+
+  /*! \brief Gets pitch (Y') angle.
+   *  \returns pitch angle (scalar)
+   */
+  inline Scalar getPitch() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return zyx_(1);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -zyx_(1);
+    }
+  }
+
+  /*! \brief Gets roll (X'') angle.
+   *  \returns roll angle (scalar)
+   */
+  inline Scalar getRoll() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return zyx_(2);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -zyx_(2);
+    }
+  }
+
+  /*! \brief Sets yaw (Z) angle.
+   */
+  inline void setYaw(Scalar yaw) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      zyx_(0) = yaw;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      zyx_(0) = -yaw;
+    }
+  }
+
+  /*! \brief Sets pitch (Y') angle.
+   */
+  inline void setPitch(Scalar pitch) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      zyx_(1) = pitch;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      zyx_(1) = -pitch;
+    }
+  }
+
+  /*! \brief Sets roll (X'') angle.
+   */
+  inline void setRoll(Scalar roll) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      zyx_(2) = roll;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      zyx_(2) = -roll;
+    }
+  }
+
+  /*! \brief Reading access to yaw (Z) angle.
+   *  \returns yaw angle (scalar) with reading access
+   */
+  inline Scalar getZ() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return zyx_(0);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -zyx_(0);
+    }
+  }
+
+  /*! \brief Reading access to pitch (Y') angle.
+   *  \returns pitch angle (scalar) with reading access
+   */
+  inline Scalar getY() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return zyx_(1);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -zyx_(1);
+    }
+  }
+
+  /*! \brief Reading access to roll (X'') angle.
+   *  \returns roll angle (scalar) with reading access
+   */
+  inline Scalar getX() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return zyx_(2);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -zyx_(2);
+    }
+  }
+
+  /*! \brief Writing access to yaw (Z) angle.
+   *  \returns yaw angle (scalar) with writing access
+   */
+  inline void setZ(Scalar z) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      zyx_(0) = z;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      zyx_(0) = -z;
+    }
+  }
+
+  /*! \brief Writing access to pitch (Y') angle.
+   *  \returns pitch angle (scalar) with writing access
+   */
+  inline void setY(Scalar y) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      zyx_(1) = y;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      zyx_(1) = -y;
+    }
+  }
+
+  /*! \brief Writing access to roll (X'') angle.
+   *  \returns roll angle (scalar) with writing access
+   */
+  inline void setX(Scalar x) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      zyx_(2) = x;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      zyx_(2) = -x;
+    }
+  }
+
   /*! \brief Reading access to yaw (Z) angle.
    *  \returns yaw angle (scalar) with reading access
    */
   inline Scalar yaw() const {
-    return toImplementation()(0);
+    return zyx_(0);
   }
 
   /*! \brief Reading access to pitch (Y') angle.
    *  \returns pitch angle (scalar) with reading access
    */
   inline Scalar pitch() const {
-    return toImplementation()(1);
+    return zyx_(1);
   }
 
   /*! \brief Reading access to roll (X'') angle.
    *  \returns roll angle (scalar) with reading access
    */
   inline Scalar roll() const {
-    return toImplementation()(2);
+    return zyx_(2);
   }
 
   /*! \brief Writing access to yaw (Z) angle.
    *  \returns yaw angle (scalar) with writing access
    */
   inline Scalar& yaw() {
-    return toImplementation()(0);
+    return zyx_(0);
   }
 
   /*! \brief Writing access to pitch (Y') angle.
    *  \returns pitch angle (scalar) with writing access
    */
   inline Scalar& pitch() {
-    return toImplementation()(1);
+    return zyx_(1);
   }
 
   /*! \brief Writing access to roll (X'') angle.
    *  \returns roll angle (scalar) with writing access
    */
   inline Scalar& roll() {
-    return toImplementation()(2);
+    return zyx_(2);
   }
 
   /*! \brief Reading access to yaw (Z) angle.
    *  \returns yaw angle (scalar) with reading access
    */
   inline Scalar z() const {
-    return toImplementation()(0);
+    return zyx_(0);
   }
 
   /*! \brief Reading access to pitch (Y') angle.
    *  \returns pitch angle (scalar) with reading access
    */
   inline Scalar y() const {
-    return toImplementation()(1);
+    return zyx_(1);
   }
 
   /*! \brief Reading access to roll (X'') angle.
    *  \returns roll angle (scalar) with reading access
    */
   inline Scalar x() const {
-    return toImplementation()(2);
+    return zyx_(2);
   }
 
   /*! \brief Writing access to yaw (Z) angle.
    *  \returns yaw angle (scalar) with writing access
    */
   inline Scalar& z() {
-    return toImplementation()(0);
+    return zyx_(0);
   }
 
   /*! \brief Writing access to pitch (Y') angle.
    *  \returns pitch angle (scalar) with writing access
    */
   inline Scalar& y() {
-    return toImplementation()(1);
+    return zyx_(1);
   }
 
   /*! \brief Writing access to roll (X'') angle.
    *  \returns roll angle (scalar) with writing access
    */
   inline Scalar& x() {
-    return toImplementation()(2);
+    return zyx_(2);
   }
 
   /*! \brief Sets the rotation to identity.
@@ -1530,39 +2003,39 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
    *  \returns copy of the Euler angles rotation which is unique
    */
   EulerAnglesZyx getUnique() const {  // wraps angles into [-pi,pi),[-pi/2,pi/2),[-pi,pi)
-    EulerAnglesZyx zyx(kindr::common::floatingPointModulo(yaw()  +M_PI,2*M_PI)-M_PI,
-                       kindr::common::floatingPointModulo(pitch()+M_PI,2*M_PI)-M_PI,
-                       kindr::common::floatingPointModulo(roll() +M_PI,2*M_PI)-M_PI); // wraps all angles into [-pi,pi)
-    if(zyx.pitch() >= M_PI/2)
+    EulerAnglesZyx zyx(kindr::common::floatingPointModulo(getYaw()  +M_PI,2*M_PI)-M_PI,
+                       kindr::common::floatingPointModulo(getPitch()+M_PI,2*M_PI)-M_PI,
+                       kindr::common::floatingPointModulo(getRoll() +M_PI,2*M_PI)-M_PI); // wraps all angles into [-pi,pi)
+    if(zyx.getPitch() >= M_PI/2)
     {
-      if(zyx.yaw() >= 0) {
-        zyx.yaw() -= M_PI;
+      if(zyx.getYaw() >= 0) {
+        zyx.setYaw(zyx.getYaw() - M_PI);
       } else {
-        zyx.yaw() += M_PI;
+        zyx.setYaw(zyx.getYaw() + M_PI);
       }
 
-      zyx.pitch() = -(zyx.pitch()-M_PI);
+      zyx.setPitch(-(zyx.getPitch() - M_PI));
 
-      if(zyx.roll() >= 0) {
-        zyx.roll() -= M_PI;
+      if(zyx.getRoll() >= 0) {
+        zyx.setRoll(zyx.getRoll() - M_PI);
       } else {
-        zyx.roll() += M_PI;
+        zyx.setRoll(zyx.getRoll() + M_PI);
       }
     }
-    else if(zyx.pitch() < -M_PI/2)
+    else if(zyx.getPitch() < -M_PI/2)
     {
-      if(zyx.yaw() >= 0) {
-        zyx.yaw() -= M_PI;
+      if(zyx.getYaw() >= 0) {
+        zyx.setYaw(zyx.getYaw() - M_PI);
       } else {
-        zyx.yaw() += M_PI;
+        zyx.setYaw(zyx.getYaw() + M_PI);
       }
 
-      zyx.pitch() = -(zyx.pitch()+M_PI);
+      zyx.setPitch(-(zyx.getPitch() + M_PI));
 
-      if(zyx.roll() >= 0) {
-        zyx.roll() -= M_PI;
+      if(zyx.getRoll() >= 0) {
+        zyx.setRoll(zyx.getRoll() - M_PI);
       } else {
-        zyx.roll() += M_PI;
+        zyx.setRoll(zyx.getRoll() + M_PI);
       }
     }
     return zyx;
