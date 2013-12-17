@@ -13,7 +13,7 @@ Main functionality:
 
 Derived classes:
 - AngleAxisBase (assignment || toImplementation, angle, axis, <<)
-------------------- RotationQuaternionBase (assignment || toUnitQuaternion, bracket operator, conjugation, norm)
+- RotationQuaternionBase (assignment || toUnitQuaternion, bracket operator, conjugation, norm)
 - RotationMatrixBase (assignment || transposition, determinant, toImplementation, matrixAccess, <<)
 - EulerAnglesBase -> Xyz,Zyx (assignment || toImplementation, angles, <<)
 
