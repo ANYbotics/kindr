@@ -153,24 +153,39 @@ TEST(RDiffTest, testDevelopment)
 //
 //  std::cout << "eulerDiff: " << eulerAnglesXyzDiff2 << std::endl;
 
-  rot::AngleAxisAD aa;
- rot::AngleAxisDiffAD aaDiff(0.2, 0.1, 0.2, 0.4);
- std::cout << "angle axis: " << aaDiff << std::endl;
- rot::AngularVelocityAD avelA6(aa, aaDiff);
+//  rot::AngleAxisAD aa;
+// rot::AngleAxisDiffAD aaDiff(0.2, 0.1, 0.2, 0.4);
+// std::cout << "angle axis: " << aaDiff << std::endl;
+// rot::AngularVelocityAD avelA6(aa, aaDiff);
+//
+//  rot::RotationMatrixDiffAD rmatADiff;
+//  rot::RotationMatrixAD rmatA;
+////  rot::AngularVelocityAD avelA(rmatA, rmatADiff);
+////  std::cout << "avelA: " << avelA << std::endl;
+//
+//  rot::RotationMatrixDiffPD rmatPDiff;
+//  rot::RotationMatrixPD rmatP;
+//  rot::AngularVelocityAD avelA2(rmatA, rmatADiff);
+//  rot::AngularVelocityAD avelA3(rmatP, rmatPDiff);
+//  std::cout << "avelA2: " << avelA2 << std::endl;
+//
+//  rot::RotationVectorDiffAD rvADiff;
+//  rot::RotationVectorAD rvA;
+//  rot::AngularVelocityAD avelAz(rvA, rvADiff);
+////  std::cout << rvA << std::endl;
 
-  rot::RotationMatrixDiffAD rmatADiff;
-  rot::RotationMatrixAD rmatA;
-//  rot::AngularVelocityAD avelA(rmatA, rmatADiff);
-//  std::cout << "avelA: " << avelA << std::endl;
+  rot::AngleAxisAD aaA(0.2, 0.0, 1.0, 0.0);
+  rot::AngleAxisDiffAD aaDiffA(0.5, 0.1, 0.2, 0.3);
 
-  rot::RotationMatrixDiffPD rmatPDiff;
-  rot::RotationMatrixPD rmatP;
-  rot::AngularVelocityAD avelA2(rmatA, rmatADiff);
-  rot::AngularVelocityAD avelA3(rmatP, rmatPDiff);
-  std::cout << "avelA2: " << avelA2 << std::endl;
+  rot::AngularVelocityAD avA(aaA, aaDiffA);
 
-  rot::RotationVectorDiffAD rvADiff;
-  rot::RotationVectorAD rvA;
-  rot::AngularVelocityAD avelAz(rvA, rvADiff);
+  rot::RotationQuaternionAD rqA(aaA);
+  rot::RotationQuaternionDiffAD rqDiffA(rqA, avA);
+
+  rot::AngularVelocityAD avA2(rqA, rqDiffA);
+
+  std::cout << "avA1 | avA2: "<<  avA << " | "  << avA2 << std::endl;
+
+
 }
 

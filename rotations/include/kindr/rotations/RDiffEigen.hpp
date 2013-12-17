@@ -1078,7 +1078,7 @@ class RDiffConversionTraits<eigen_impl::AngularVelocity<PrimType_, RotationUsage
     H_bar << -rquat.toUnitQuaternion().x(),  rquat.toUnitQuaternion().w(),  rquat.toUnitQuaternion().z(), -rquat.toUnitQuaternion().y(),
              -rquat.toUnitQuaternion().y(), -rquat.toUnitQuaternion().z(),  rquat.toUnitQuaternion().w(),  rquat.toUnitQuaternion().x(),
              -rquat.toUnitQuaternion().z(),  rquat.toUnitQuaternion().y(), -rquat.toUnitQuaternion().x(),  rquat.toUnitQuaternion().w();
-    return eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>(2.0*H_bar*rquatdiff.toQuaternion().getVector4());
+    return eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>(2.0*H_bar*rquatdiff.toQuaternion().vector());
   }
 };
 
@@ -1135,19 +1135,45 @@ template<typename PrimType_>
 class RDiffConversionTraits<eigen_impl::AngleAxisDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::AngleAxis<PrimType_, RotationUsage::ACTIVE>> {
  public:
   inline static eigen_impl::AngleAxisDiff<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::AngleAxis<PrimType_, RotationUsage::ACTIVE>& angleAxis, const eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>& angularVelocity) {
+    typedef typename eigen_impl::AngleAxis<PrimType_, RotationUsage::ACTIVE>::Vector3 Vector;
     const PrimType_ angle = angleAxis.angle();
-    const typename eigen_impl::AngleAxis<PrimType_, RotationUsage::ACTIVE>::Vector3 axis = angleAxis.axis();
 
+
+    if (angle < 1e-14) {
+      const PrimType_ angleDiff = angularVelocity.toImplementation().norm();
+      const Vector axisDiff = angularVelocity.toImplementation().normalized();
+      return eigen_impl::AngleAxisDiff<PrimType_, RotationUsage::ACTIVE>(angleDiff, axisDiff);
+    }
+    const Vector axis = angleAxis.axis();
     const Eigen::Matrix<PrimType_, 3, 3> n_hat = linear_algebra::getSkewMatrixFromVector(axis);
-
     const PrimType_ angleDiff = angleAxis.axis().transpose()*angularVelocity;
-    const typename eigen_impl::AngleAxisDiff<PrimType_, RotationUsage::ACTIVE>::Vector3 axisDiff = (-0.5*sin(angle)/(1-cos(angle))*n_hat-0.5)*n_hat*angularVelocity.toImplementation();
+    const Vector axisDiff = (-0.5*sin(angle)/(1.0-cos(angle))*n_hat-0.5)*n_hat*angularVelocity.toImplementation();
     return eigen_impl::AngleAxisDiff<PrimType_, RotationUsage::ACTIVE>(angleDiff, axisDiff);
   }
 };
 
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
+
+template<typename PrimType_>
+class RDiffConversionTraits<eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>> {
+ public:
+  inline static eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>& rotationVector, const eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>& angularVelocity) {
+    typedef typename eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>::Implementation Vector;
+    typedef typename Eigen::Matrix<PrimType_, 3, 3> Matrix3x3;
+
+    const Vector rv = rotationVector.toImplementation();
+    const PrimType_ angle = rv.norm();
+
+    if (angle < 1e-14) {
+      return eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>(angularVelocity.toImplementation());
+    }
+
+    const Matrix3x3 rv_hat = linear_algebra::getSkewMatrixFromVector(rv);
+    const Vector rvDiff = (Matrix3x3::Identity() + 0.5*rv_hat + (1.0/(angle*angle) - sin(angle)/(2.0*angle*(1.0-cos(angle))))*rv_hat*rv_hat)*angularVelocity.toImplementation();
+    return eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>(rvDiff);
+  }
+};
 
 
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
