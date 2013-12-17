@@ -78,7 +78,7 @@ class HomogeneousTransformation : public HomogeneousTransformationBase<Homogeneo
 
   inline TransformationMatrix getTransformationMatrix() const {
     TransformationMatrix mat = TransformationMatrix::Zero();
-    mat.template topLeftCorner<3,3>() =  rotations::eigen_impl::RotationMatrix<Scalar, kindr::rotations::RotationUsage::PASSIVE>(getRotation()).toImplementation();
+    mat.template topLeftCorner<3,3>() =  rotations::eigen_impl::RotationMatrix<Scalar, kindr::rotations::RotationUsage::PASSIVE>(getRotation()).toStoredImplementation();
     mat.template topRightCorner<3,1>() = getPosition().toImplementation();
     mat(3,3) = Scalar(1);
     return mat;

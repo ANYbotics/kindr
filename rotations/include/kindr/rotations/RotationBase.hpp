@@ -81,7 +81,7 @@ template<typename Rotation_> // only works with the same rotation representation
 class ComparisonTraits {
  public:
   inline static bool isEqual(const Rotation_& a, const Rotation_& b) {
-    return a.toImplementation() == b.toImplementation();
+    return a.toStoredImplementation() == b.toStoredImplementation();
   }
 
 //  inline static bool areNearlyEqual(const eigen_impl::RotationQuaternion<PrimType, Usage_>& a, const eigen_impl::RotationQuaternion<PrimType, Usage_>& b, PrimType tol)
@@ -135,7 +135,7 @@ template<typename Position_>
 class get_position3 {
  public:
 //  static const Matrix3X& getMatrix3(const Position& position) {
-//    return position.toImplementation();
+//    return position.toStoredImplementation();
 //  }
 };
 
@@ -421,7 +421,7 @@ template<typename Derived_>
 class UsageConversionTraits<Derived_,RotationUsage::PASSIVE> {
  public:
   inline static typename get_other_usage<Derived_>::OtherUsage getActive(const RotationBase<Derived_,RotationUsage::PASSIVE>& in) {
-    return typename get_other_usage<Derived_>::OtherUsage(in.derived().inverted().toImplementation());
+    return typename get_other_usage<Derived_>::OtherUsage(in.derived().inverted().toStoredImplementation());
   }
 
   // getPassive() does not exist (on purpose)
@@ -431,7 +431,7 @@ template<typename Derived_>
 class UsageConversionTraits<Derived_,RotationUsage::ACTIVE> {
  public:
   inline static typename get_other_usage<Derived_>::OtherUsage getPassive(const RotationBase<Derived_,RotationUsage::ACTIVE>& in) {
-    return typename get_other_usage<Derived_>::OtherUsage(in.derived().inverted().toImplementation());
+    return typename get_other_usage<Derived_>::OtherUsage(in.derived().inverted().toStoredImplementation());
   }
 
   // getActive() does not exist (on purpose)
@@ -446,8 +446,8 @@ class MultiplicationTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usa
   //! Default multiplication of rotations converts the representations of the rotations to rotation quaternions and multiplies them
   inline static Left_ mult(const RotationBase<Left_, Usage_>& lhs, const RotationBase<Right_, Usage_>& rhs) {
     return Left_(typename eigen_impl::RotationQuaternion<typename Left_::Scalar,  Usage_>(
-               (typename eigen_impl::RotationQuaternion<typename Left_::Scalar,  Usage_>(lhs.derived())).toImplementation() *
-               (typename eigen_impl::RotationQuaternion<typename Right_::Scalar, Usage_>(rhs.derived())).toImplementation()
+               (typename eigen_impl::RotationQuaternion<typename Left_::Scalar,  Usage_>(lhs.derived())).toStoredImplementation() *
+               (typename eigen_impl::RotationQuaternion<typename Right_::Scalar, Usage_>(rhs.derived())).toStoredImplementation()
                ));
   }
 };
@@ -458,7 +458,7 @@ template<typename LeftAndRight_, enum RotationUsage Usage_>
 class MultiplicationTraits<RotationBase<LeftAndRight_, Usage_>, RotationBase<LeftAndRight_, Usage_>> {
  public:
   inline static LeftAndRight_ mult(const RotationBase<LeftAndRight_, Usage_>& lhs, const RotationBase<LeftAndRight_, Usage_>& rhs) {
-    return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() * rhs.derived().toImplementation()));
+    return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toStoredImplementation() * rhs.derived().toStoredImplementation()));
   }
 };
 
