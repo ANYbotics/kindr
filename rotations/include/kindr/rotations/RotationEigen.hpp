@@ -334,6 +334,8 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    */
   typedef Eigen::Matrix<PrimType_, 3, 1> Base;
 
+  /*! Data container
+   */
   Base vector_;
 
  public:

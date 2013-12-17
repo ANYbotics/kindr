@@ -41,21 +41,21 @@
 namespace rot = kindr::rotations::eigen_impl;
 
 template <typename AngularVelocityImplementation>
-struct AngularVelocity3Test: public ::testing::Test {
-  typedef AngularVelocityImplementation AngularVelocity3;
-  typedef typename AngularVelocity3::Scalar Scalar;
+struct AngularVelocityTest: public ::testing::Test {
+  typedef AngularVelocityImplementation AngularVelocity;
+  typedef typename AngularVelocity::Scalar Scalar;
   typedef Eigen::Matrix<Scalar, 3, 1> Vector3;
 
   Scalar tol;
   Vector3 vecZero, vec1, vec2, vecAdd, vecSubtract;
 
-  AngularVelocity3 velDefault;
-  AngularVelocity3 velFromThreeValues;
-  AngularVelocity3 velFromEigen;
-  AngularVelocity3 vel2FromEigen;
-  AngularVelocity3 velFromVel;
+  AngularVelocity velDefault;
+  AngularVelocity velFromThreeValues;
+  AngularVelocity velFromEigen;
+  AngularVelocity vel2FromEigen;
+  AngularVelocity velFromVel;
 
-  AngularVelocity3Test() : tol(1e-6),
+  AngularVelocityTest() : tol(1e-6),
       vecZero(Vector3::Zero()),
       vec1(10,20,30),
       vec2(1,2,3),
@@ -75,11 +75,11 @@ typedef ::testing::Types<
 > Types;
 
 
-TYPED_TEST_CASE(AngularVelocity3Test, Types);
+TYPED_TEST_CASE(AngularVelocityTest, Types);
 
-TYPED_TEST(AngularVelocity3Test, testAngularVelocity3)
+TYPED_TEST(AngularVelocityTest, testAngularVelocity)
 {
-  typedef typename TestFixture::AngularVelocity3 AngularVelocity3;
+  typedef typename TestFixture::AngularVelocity AngularVelocity;
 
    // default constructor
    ASSERT_EQ(this->velDefault.x(), this->vecZero.x()) << "Default constructor needs to initialize x-component to zero!";
@@ -107,26 +107,26 @@ TYPED_TEST(AngularVelocity3Test, testAngularVelocity3)
    ASSERT_EQ(this->velFromThreeValues.toImplementation()(2,0), this->vec1.z()) << "Z-component needs to correspond to the matrix entry (2,0)!";
 
    // addition
-   AngularVelocity3 velAdd = this->velFromEigen+this->vel2FromEigen;
+   AngularVelocity velAdd = this->velFromEigen+this->vel2FromEigen;
    ASSERT_EQ(velAdd.x(), this->vecAdd.x());
    ASSERT_EQ(velAdd.y(), this->vecAdd.y());
    ASSERT_EQ(velAdd.z(), this->vecAdd.z());
 
    // addition and assignment
-   AngularVelocity3 velAddandAssign(this->velFromEigen);
+   AngularVelocity velAddandAssign(this->velFromEigen);
    velAddandAssign += this->vel2FromEigen;
    ASSERT_EQ(velAddandAssign.x(), this->vecAdd.x());
    ASSERT_EQ(velAddandAssign.y(), this->vecAdd.y());
    ASSERT_EQ(velAddandAssign.z(), this->vecAdd.z());
 
    // subtract
-   AngularVelocity3 velSubtract = this->velFromEigen-this->vel2FromEigen;
+   AngularVelocity velSubtract = this->velFromEigen-this->vel2FromEigen;
    ASSERT_EQ(velSubtract.x(), this->vecSubtract.x());
    ASSERT_EQ(velSubtract.y(), this->vecSubtract.y());
    ASSERT_EQ(velSubtract.z(), this->vecSubtract.z());
 
    // subtract and assignment
-   AngularVelocity3 velSubtractandAssign(this->velFromEigen);
+   AngularVelocity velSubtractandAssign(this->velFromEigen);
    velSubtractandAssign -= this->vel2FromEigen;
    ASSERT_EQ(velSubtractandAssign.x(), this->vecSubtract.x());
    ASSERT_EQ(velSubtractandAssign.y(), this->vecSubtract.y());
@@ -169,6 +169,8 @@ TEST(RDiffTest, testDevelopment)
   rot::AngularVelocityAD avelA3(rmatP, rmatPDiff);
   std::cout << "avelA2: " << avelA2 << std::endl;
 
-
+  rot::RotationVectorDiffAD rvADiff;
+  rot::RotationVectorAD rvA;
+  rot::AngularVelocityAD avelAz(rvA, rvADiff);
 }
 
