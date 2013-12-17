@@ -685,8 +685,18 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  In debug mode, an assertion is thrown if the quaternion has not unit length.
    *  \param other   Eigen::Quaternion<PrimType_>
    */
-  explicit RotationQuaternion(const Implementation& other)
-    : Base(other) {
+  explicit RotationQuaternion(const Implementation& other) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      Base::w() = other.w();
+      Base::x() = other.x();
+      Base::y() = other.y();
+      Base::z() = other.z();
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      Base::w() = other.w();
+      Base::x() = -other.x();
+      Base::y() = -other.y();
+      Base::z() = -other.z();
+    }
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
   }
 
@@ -694,8 +704,18 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  In debug mode, an assertion is thrown if the quaternion has not unit length.
    *  \param other   quaternions::UnitQuaternion
    */
-  explicit RotationQuaternion(const Base& other)
-    : Base(other) {
+  explicit RotationQuaternion(const Base& other) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      Base::w() = other.w();
+      Base::x() = other.x();
+      Base::y() = other.y();
+      Base::z() = other.z();
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      Base::w() = other.w();
+      Base::x() = -other.x();
+      Base::y() = -other.y();
+      Base::z() = -other.z();
+    }
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
   }
 
@@ -823,12 +843,12 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
     }
   }
 
-  Base& toUnitQuaternion()  {
-    return static_cast<Base&>(*this);
-  }
-
-  const Base& toUnitQuaternion() const {
-    return static_cast<const Base&>(*this);
+  Base toUnitQuaternion() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return Base(this->w(),this->x(),this->y(),this->z());
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return Base(this->w(),-this->x(),-this->y(),-this->z());
+    }
   }
 
   Implementation& toImplementation()  {

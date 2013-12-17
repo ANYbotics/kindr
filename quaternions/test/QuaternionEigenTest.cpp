@@ -147,10 +147,10 @@ TYPED_TEST (QuaternionsSingleTest, testQuaternionSingleConstructor) {
   ASSERT_EQ(testQuat2.x(),this->eigenQuat1.x());
   ASSERT_EQ(testQuat2.y(),this->eigenQuat1.y());
   ASSERT_EQ(testQuat2.z(),this->eigenQuat1.z());
-  ASSERT_EQ(testQuat2.getReal(),this->eigenQuat1.w());
-  ASSERT_EQ(testQuat2.getImaginary()(0),this->eigenQuat1.x());
-  ASSERT_EQ(testQuat2.getImaginary()(1),this->eigenQuat1.y());
-  ASSERT_EQ(testQuat2.getImaginary()(2),this->eigenQuat1.z());
+  ASSERT_EQ(testQuat2.real(),this->eigenQuat1.w());
+  ASSERT_EQ(testQuat2.imaginary()(0),this->eigenQuat1.x());
+  ASSERT_EQ(testQuat2.imaginary()(1),this->eigenQuat1.y());
+  ASSERT_EQ(testQuat2.imaginary()(2),this->eigenQuat1.z());
 
   // Constructor of quaternion using eigen quaternion
   Quaternion testQuat3(this->eigenQuat1);
@@ -390,10 +390,10 @@ TYPED_TEST (UnitQuaternionsSingleTest, testUnitQuaternionSingleConstructor) {
   ASSERT_EQ(testQuat2.x(),this->eigenQuat1.x());
   ASSERT_EQ(testQuat2.y(),this->eigenQuat1.y());
   ASSERT_EQ(testQuat2.z(),this->eigenQuat1.z());
-  ASSERT_EQ(testQuat2.getReal(),this->eigenQuat1.w());
-  ASSERT_EQ(testQuat2.getImaginary()(0),this->eigenQuat1.x());
-  ASSERT_EQ(testQuat2.getImaginary()(1),this->eigenQuat1.y());
-  ASSERT_EQ(testQuat2.getImaginary()(2),this->eigenQuat1.z());
+  ASSERT_EQ(testQuat2.real(),this->eigenQuat1.w());
+  ASSERT_EQ(testQuat2.imaginary()(0),this->eigenQuat1.x());
+  ASSERT_EQ(testQuat2.imaginary()(1),this->eigenQuat1.y());
+  ASSERT_EQ(testQuat2.imaginary()(2),this->eigenQuat1.z());
 
   // Constructor of quaternion using eigen quaternion
   UnitQuaternion testQuat3(this->eigenQuat1);

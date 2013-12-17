@@ -193,15 +193,15 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::
     return Base::z();
   }
 
-  inline Scalar getReal() const {
+  inline Scalar real() const {
     return Base::w();
   }
 
-  inline Imaginary getImaginary() const {
+  inline Imaginary imaginary() const {
     return Imaginary(Base::x(),Base::y(),Base::z());
   }
 
-  inline Vector4 getVector4() const {
+  inline Vector4 vector() const {
     Vector4 vector4;
     vector4 << Base::w(), Base::x(), Base::y(), Base::z();
     return vector4;
@@ -384,15 +384,15 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType_>> {
     return unitQuternion_.z();
   }
 
-  inline Scalar getReal() const {
+  inline Scalar real() const {
     return unitQuternion_.w();
   }
 
-  inline Imaginary getImaginary() const {
+  inline Imaginary imaginary() const {
     return Imaginary(unitQuternion_.x(),unitQuternion_.y(),unitQuternion_.z());
   }
 
-  inline Vector4 getVector4() const {
+  inline Vector4 vector() const {
     Vector4 vector4;
     vector4 << Base::w(), Base::x(), Base::y(), Base::z();
     return vector4;
