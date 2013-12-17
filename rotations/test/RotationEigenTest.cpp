@@ -207,10 +207,10 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionConstructors){
   ASSERT_NEAR(rot3.z(), this->eigenQuat1.z(),1e-6);
 
   RotationQuaternion rot4(this->quat1);
-  ASSERT_NEAR(rot4.w(), this->eigenQuat1.w(),1e-6);
-  ASSERT_NEAR(rot4.x(), this->eigenQuat1.x(),1e-6);
-  ASSERT_NEAR(rot4.y(), this->eigenQuat1.y(),1e-6);
-  ASSERT_NEAR(rot4.z(), this->eigenQuat1.z(),1e-6);
+  ASSERT_NEAR(rot4.w(), this->quat1.w(),1e-6);
+  ASSERT_NEAR(rot4.x(), this->quat1.x(),1e-6);
+  ASSERT_NEAR(rot4.y(), this->quat1.y(),1e-6);
+  ASSERT_NEAR(rot4.z(), this->quat1.z(),1e-6);
 
   RotationQuaternion rot5(rot3);
   ASSERT_NEAR(rot5.w(), this->eigenQuat1.w(),1e-6);
@@ -242,17 +242,17 @@ TYPED_TEST(RotationQuaternionPairTest, testRotationQuaternionAssignmentPrimetype
 
   //  RotationQuaternionXF = UnitQuaternionF
   rot1 = this->uquat1;
-  ASSERT_NEAR(rot1.w(), this->rotQuat1.w(),1e-6);
-  ASSERT_NEAR(rot1.x(), this->rotQuat1.x(),1e-6);
-  ASSERT_NEAR(rot1.y(), this->rotQuat1.y(),1e-6);
-  ASSERT_NEAR(rot1.z(), this->rotQuat1.z(),1e-6);
+  ASSERT_NEAR(rot1.w(), this->uquat1.w(),1e-6);
+  ASSERT_NEAR(rot1.x(), this->uquat1.x(),1e-6);
+  ASSERT_NEAR(rot1.y(), this->uquat1.y(),1e-6);
+  ASSERT_NEAR(rot1.z(), this->uquat1.z(),1e-6);
 
   //  RotationQuaternionXF = UnitQuaternionD
   rot1 = this->uquat2;
-  ASSERT_NEAR(rot1.w(), this->rotQuat2.w(),1e-6);
-  ASSERT_NEAR(rot1.x(), this->rotQuat2.x(),1e-6);
-  ASSERT_NEAR(rot1.y(), this->rotQuat2.y(),1e-6);
-  ASSERT_NEAR(rot1.z(), this->rotQuat2.z(),1e-6);
+  ASSERT_NEAR(rot1.w(), this->uquat2.w(),1e-6);
+  ASSERT_NEAR(rot1.x(), this->uquat2.x(),1e-6);
+  ASSERT_NEAR(rot1.y(), this->uquat2.y(),1e-6);
+  ASSERT_NEAR(rot1.z(), this->uquat2.z(),1e-6);
 
   //  RotationQuaternionXD = RotationQuaternionXD
   rot2 = this->rotQuat2;
@@ -270,17 +270,17 @@ TYPED_TEST(RotationQuaternionPairTest, testRotationQuaternionAssignmentPrimetype
 
   //  RotationQuaternionXD = UnitQuaternionD
   rot2 = this->uquat2;
-  ASSERT_NEAR(rot2.w(), this->rotQuat2.w(),1e-6);
-  ASSERT_NEAR(rot2.x(), this->rotQuat2.x(),1e-6);
-  ASSERT_NEAR(rot2.y(), this->rotQuat2.y(),1e-6);
-  ASSERT_NEAR(rot2.z(), this->rotQuat2.z(),1e-6);
+  ASSERT_NEAR(rot2.w(), this->uquat2.w(),1e-6);
+  ASSERT_NEAR(rot2.x(), this->uquat2.x(),1e-6);
+  ASSERT_NEAR(rot2.y(), this->uquat2.y(),1e-6);
+  ASSERT_NEAR(rot2.z(), this->uquat2.z(),1e-6);
 
   //  RotationQuaternionXD = UnitQuaternionF
   rot2 = this->uquat1;
-  ASSERT_NEAR(rot2.w(), this->rotQuat1.w(),1e-6);
-  ASSERT_NEAR(rot2.x(), this->rotQuat1.x(),1e-6);
-  ASSERT_NEAR(rot2.y(), this->rotQuat1.y(),1e-6);
-  ASSERT_NEAR(rot2.z(), this->rotQuat1.z(),1e-6);
+  ASSERT_NEAR(rot2.w(), this->uquat1.w(),1e-6);
+  ASSERT_NEAR(rot2.x(), this->uquat1.x(),1e-6);
+  ASSERT_NEAR(rot2.y(), this->uquat1.y(),1e-6);
+  ASSERT_NEAR(rot2.z(), this->uquat1.z(),1e-6);
 }
 
 // Test Rotation Quaternion () Operator for casting from Quaternion/UnitQuaternion (including test between different primtypes)
@@ -292,59 +292,59 @@ TYPED_TEST(RotationQuaternionPairTest, testRotationQuaternionParenthesisPrimetyp
 
   //  RotationQuaternionXF(UnitQuaternionF)
   rot1(this->uquat1);
-  ASSERT_NEAR(rot1.w(), this->rotQuat1.w(),1e-6);
-  ASSERT_NEAR(rot1.x(), this->rotQuat1.x(),1e-6);
-  ASSERT_NEAR(rot1.y(), this->rotQuat1.y(),1e-6);
-  ASSERT_NEAR(rot1.z(), this->rotQuat1.z(),1e-6);
+  ASSERT_NEAR(rot1.w(), this->uquat1.w(),1e-6);
+  ASSERT_NEAR(rot1.x(), this->uquat1.x(),1e-6);
+  ASSERT_NEAR(rot1.y(), this->uquat1.y(),1e-6);
+  ASSERT_NEAR(rot1.z(), this->uquat1.z(),1e-6);
 
   //  RotationQuaternionXF(UnitQuaternionD)
   rot1(this->uquat2);
-  ASSERT_NEAR(rot1.w(), this->rotQuat2.w(),1e-6);
-  ASSERT_NEAR(rot1.x(), this->rotQuat2.x(),1e-6);
-  ASSERT_NEAR(rot1.y(), this->rotQuat2.y(),1e-6);
-  ASSERT_NEAR(rot1.z(), this->rotQuat2.z(),1e-6);
+  ASSERT_NEAR(rot1.w(), this->uquat2.w(),1e-6);
+  ASSERT_NEAR(rot1.x(), this->uquat2.x(),1e-6);
+  ASSERT_NEAR(rot1.y(), this->uquat2.y(),1e-6);
+  ASSERT_NEAR(rot1.z(), this->uquat2.z(),1e-6);
 
   //  RotationQuaternionXD(UnitQuaternionD)
   rot2(this->uquat2);
-  ASSERT_NEAR(rot2.w(), this->rotQuat2.w(),1e-6);
-  ASSERT_NEAR(rot2.x(), this->rotQuat2.x(),1e-6);
-  ASSERT_NEAR(rot2.y(), this->rotQuat2.y(),1e-6);
-  ASSERT_NEAR(rot2.z(), this->rotQuat2.z(),1e-6);
+  ASSERT_NEAR(rot2.w(), this->uquat2.w(),1e-6);
+  ASSERT_NEAR(rot2.x(), this->uquat2.x(),1e-6);
+  ASSERT_NEAR(rot2.y(), this->uquat2.y(),1e-6);
+  ASSERT_NEAR(rot2.z(), this->uquat2.z(),1e-6);
 
   //  RotationQuaternionXD(UnitQuaternionF)
   rot2(this->uquat1);
-  ASSERT_NEAR(rot2.w(), this->rotQuat1.w(),1e-6);
-  ASSERT_NEAR(rot2.x(), this->rotQuat1.x(),1e-6);
-  ASSERT_NEAR(rot2.y(), this->rotQuat1.y(),1e-6);
-  ASSERT_NEAR(rot2.z(), this->rotQuat1.z(),1e-6);
+  ASSERT_NEAR(rot2.w(), this->uquat1.w(),1e-6);
+  ASSERT_NEAR(rot2.x(), this->uquat1.x(),1e-6);
+  ASSERT_NEAR(rot2.y(), this->uquat1.y(),1e-6);
+  ASSERT_NEAR(rot2.z(), this->uquat1.z(),1e-6);
 
   //  RotationQuaternionXF(QuaternionF)
   rot1(this->quat1);
-  ASSERT_NEAR(rot1.w(), this->rotQuat1.w(),1e-6);
-  ASSERT_NEAR(rot1.x(), this->rotQuat1.x(),1e-6);
-  ASSERT_NEAR(rot1.y(), this->rotQuat1.y(),1e-6);
-  ASSERT_NEAR(rot1.z(), this->rotQuat1.z(),1e-6);
+  ASSERT_NEAR(rot1.w(), this->quat1.w(),1e-6);
+  ASSERT_NEAR(rot1.x(), this->quat1.x(),1e-6);
+  ASSERT_NEAR(rot1.y(), this->quat1.y(),1e-6);
+  ASSERT_NEAR(rot1.z(), this->quat1.z(),1e-6);
 
   //  RotationQuaternionXF(QuaternionD)
   rot1(this->quat2);
-  ASSERT_NEAR(rot1.w(), this->rotQuat2.w(),1e-6);
-  ASSERT_NEAR(rot1.x(), this->rotQuat2.x(),1e-6);
-  ASSERT_NEAR(rot1.y(), this->rotQuat2.y(),1e-6);
-  ASSERT_NEAR(rot1.z(), this->rotQuat2.z(),1e-6);
+  ASSERT_NEAR(rot1.w(), this->quat2.w(),1e-6);
+  ASSERT_NEAR(rot1.x(), this->quat2.x(),1e-6);
+  ASSERT_NEAR(rot1.y(), this->quat2.y(),1e-6);
+  ASSERT_NEAR(rot1.z(), this->quat2.z(),1e-6);
 
   //  RotationQuaternionXD(QuaternionD)
   rot2(this->quat2);
-  ASSERT_NEAR(rot2.w(), this->rotQuat2.w(),1e-6);
-  ASSERT_NEAR(rot2.x(), this->rotQuat2.x(),1e-6);
-  ASSERT_NEAR(rot2.y(), this->rotQuat2.y(),1e-6);
-  ASSERT_NEAR(rot2.z(), this->rotQuat2.z(),1e-6);
+  ASSERT_NEAR(rot2.w(), this->quat2.w(),1e-6);
+  ASSERT_NEAR(rot2.x(), this->quat2.x(),1e-6);
+  ASSERT_NEAR(rot2.y(), this->quat2.y(),1e-6);
+  ASSERT_NEAR(rot2.z(), this->quat2.z(),1e-6);
 
   //  RotationQuaternionXD(QuaternionF)
   rot2(this->quat1);
-  ASSERT_NEAR(rot2.w(), this->rotQuat1.w(),1e-6);
-  ASSERT_NEAR(rot2.x(), this->rotQuat1.x(),1e-6);
-  ASSERT_NEAR(rot2.y(), this->rotQuat1.y(),1e-6);
-  ASSERT_NEAR(rot2.z(), this->rotQuat1.z(),1e-6);
+  ASSERT_NEAR(rot2.w(), this->quat1.w(),1e-6);
+  ASSERT_NEAR(rot2.x(), this->quat1.x(),1e-6);
+  ASSERT_NEAR(rot2.y(), this->quat1.y(),1e-6);
+  ASSERT_NEAR(rot2.z(), this->quat1.z(),1e-6);
 }
 
 // Test Rotation Quaternion Inversion
@@ -668,9 +668,7 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionUnitQuaternionCas
   typedef typename TestFixture::UnitQuaternion UnitQuaternion;
   typedef typename TestFixture::Scalar Scalar;
 
-  // Get passive and active usage
   UnitQuaternion unitQuat = this->rotQuat1.toUnitQuaternion();
-
   ASSERT_NEAR(unitQuat.w(), this->rotQuat1.w(),1e-6);
   ASSERT_NEAR(unitQuat.x(), this->rotQuat1.x(),1e-6);
   ASSERT_NEAR(unitQuat.y(), this->rotQuat1.y(),1e-6);

@@ -804,11 +804,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
   }
 
   Base toUnitQuaternion() const {
-    if(Usage_ == RotationUsage::ACTIVE) {
-      return Base(this->w(),this->x(),this->y(),this->z());
-    } else if(Usage_ == RotationUsage::PASSIVE) {
-      return Base(this->w(),-this->x(),-this->y(),-this->z());
-    }
+    return Base(this->w(),this->x(),this->y(),this->z());
   }
 
   Implementation toImplementation() const {
@@ -913,7 +909,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  \returns the inverse of the rotation
    */
   RotationQuaternion inverted() const {
-    return RotationQuaternion(Base::inverted());
+    return RotationQuaternion(this->toUnitQuaternion().inverted());
   }
 
   /*! \brief Inverts the rotation.
@@ -928,7 +924,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  \returns conjugated of the quaternion
    */
   RotationQuaternion conjugated() const {
-    return RotationQuaternion(Base::conjugated());
+    return RotationQuaternion(this->toUnitQuaternion().conjugated());
   }
 
   /*! \brief Conjugates of the quaternion.
