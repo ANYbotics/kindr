@@ -446,8 +446,8 @@ class MultiplicationTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usa
   //! Default multiplication of rotations converts the representations of the rotations to rotation quaternions and multiplies them
   inline static Left_ mult(const RotationBase<Left_, Usage_>& lhs, const RotationBase<Right_, Usage_>& rhs) {
     return Left_(typename eigen_impl::RotationQuaternion<typename Left_::Scalar,  Usage_>(
-               (typename eigen_impl::RotationQuaternion<typename Left_::Scalar,  Usage_>(lhs.derived())).toStoredImplementation() *
-               (typename eigen_impl::RotationQuaternion<typename Right_::Scalar, Usage_>(rhs.derived())).toStoredImplementation()
+               (typename eigen_impl::RotationQuaternion<typename Left_::Scalar,  Usage_>(lhs.derived())).toImplementation() *
+               (typename eigen_impl::RotationQuaternion<typename Right_::Scalar, Usage_>(rhs.derived())).toImplementation()
                ));
   }
 };
@@ -458,7 +458,7 @@ template<typename LeftAndRight_, enum RotationUsage Usage_>
 class MultiplicationTraits<RotationBase<LeftAndRight_, Usage_>, RotationBase<LeftAndRight_, Usage_>> {
  public:
   inline static LeftAndRight_ mult(const RotationBase<LeftAndRight_, Usage_>& lhs, const RotationBase<LeftAndRight_, Usage_>& rhs) {
-    return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toStoredImplementation() * rhs.derived().toStoredImplementation()));
+    return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() * rhs.derived().toImplementation()));
   }
 };
 
