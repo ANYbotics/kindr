@@ -1313,9 +1313,9 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage
    */
   explicit EulerAnglesXyz(const Base& other) {
     if(Usage_ == RotationUsage::ACTIVE) {
-      xyz_(other);
+      xyz_ = other;
     } else if(Usage_ == RotationUsage::PASSIVE) {
-      xyz_(-other);
+      xyz_ = -other;
     }
   }
 

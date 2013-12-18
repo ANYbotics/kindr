@@ -186,8 +186,19 @@ TEST(RDiffTest, testDevelopment)
 
   rot::AngularVelocityAD avA3(rqA, rqDiffA);
 
-  std::cout << "avA1 | avA3: "<<  avA << " | "  << avA3 << std::endl;
+  std::cout << "RotationQuaternionDiffAD: avA | avA3: "<<  avA << " | "  << avA3 << std::endl;
 
+  rot::EulerAnglesZyxAD zyxA(2,0,0.2);
+  rot::EulerAnglesZyxDiffAD zyxDiffA(zyxA, avA);
+  rot::AngularVelocityAD avA8(zyxA, zyxDiffA);
+
+  std::cout << "EulerAnglesZyxDiffAD: avA | avA8: "<<  avA << " | "  << avA8 << std::endl;
+
+  rot::EulerAnglesXyzAD xyzA(2,0,0.2);
+  rot::EulerAnglesXyzDiffAD xyzDiffA(xyzA, avA);
+  rot::AngularVelocityAD avA9(xyzA, xyzDiffA);
+
+  std::cout << "EulerAnglesXyzDiffAD: avA | avA9: "<<  avA << " | "  << avA9 << std::endl;
 
 }
 

@@ -670,11 +670,15 @@ typedef RotationMatrixDiff<float, RotationUsage::ACTIVE> RotationMatrixDiffAF;
  * \ingroup rotations
  */
 template<typename PrimType_, enum RotationUsage Usage_>
-class EulerAnglesZyxDiff : public EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimType_, Usage_>, Usage_>,  private Eigen::Matrix<PrimType_, 3, 1>  {
+class EulerAnglesZyxDiff : public EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimType_, Usage_>, Usage_> {
  private:
   /*! \brief The base type.
    */
   typedef Eigen::Matrix<PrimType_, 3, 1> Base;
+
+  /*! \brief data container [yaw; pitch, roll]
+   */
+  Base zyx_;
 
  public:
   /*! \brief The implementation type.
@@ -689,7 +693,7 @@ class EulerAnglesZyxDiff : public EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimTyp
   /*! \brief Default constructor.
    */
   EulerAnglesZyxDiff()
-    : Base(Base::Zero()) {
+    : zyx_(Base::Zero()) {
   }
 
   /*! \brief Constructor using three scalars.
@@ -698,7 +702,7 @@ class EulerAnglesZyxDiff : public EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimTyp
    *  \param roll     time derivative of third rotation angle around X'' axis
    */
   EulerAnglesZyxDiff(Scalar yaw, Scalar pitch, Scalar roll)
-    : Base(yaw,pitch,roll) {
+    : zyx_(yaw,pitch,roll) {
   }
 
   /*! \brief Constructor using a time derivative with a different parameterization
@@ -708,7 +712,7 @@ class EulerAnglesZyxDiff : public EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimTyp
    */
   template<typename RotationDerived_, typename OtherDerived_>
   inline explicit EulerAnglesZyxDiff(const RotationBase<RotationDerived_, Usage_>& rotation, const RDiffBase<OtherDerived_, Usage_>& other)
-    : Base(internal::RDiffConversionTraits<EulerAnglesZyxDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived())){
+    : zyx_(internal::RDiffConversionTraits<EulerAnglesZyxDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived()).toImplementation()){
   }
 
   /*! \brief Cast to another representation of the time derivative of a rotation
@@ -724,21 +728,21 @@ class EulerAnglesZyxDiff : public EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimTyp
    *  \param other   Eigen::Matrix<PrimType_,3,1> [roll; pitch; yaw]
    */
   explicit EulerAnglesZyxDiff(const Base& other)
-    : Base(other) {
+    : zyx_(other) {
   }
 
   /*! \brief Cast to the implementation type.
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
   inline Base& toImplementation() {
-    return static_cast<Base&>(*this);
+    return zyx_;
   }
 
   /*! \brief Cast to the implementation type.
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
   inline const Base& toImplementation() const {
-    return static_cast<const Base&>(*this);
+    return static_cast<const Base&>(zyx_);
   }
 
   /*! \brief Reading access to time derivative of yaw (Z) angle.
@@ -870,12 +874,15 @@ typedef EulerAnglesZyxDiff<float, RotationUsage::ACTIVE> EulerAnglesZyxDiffAF;
  * \ingroup rotations
  */
 template<typename PrimType_, enum RotationUsage Usage_ >
-class EulerAnglesXyzDiff : public EulerAnglesDiffBase<EulerAnglesXyzDiff<PrimType_,Usage_>,Usage_>,  private Eigen::Matrix<PrimType_, 3, 1>  {
+class EulerAnglesXyzDiff : public EulerAnglesDiffBase<EulerAnglesXyzDiff<PrimType_,Usage_>,Usage_> {
  private:
   /*! \brief The base type.
    */
   typedef Eigen::Matrix<PrimType_, 3, 1> Base;
 
+  /*! \brief data container [roll; pitch, yaw]
+   */
+  Base xyzDiff_;
  public:
   /*! \brief The implementation type.
    *  The implementation type is always an Eigen object.
@@ -889,7 +896,7 @@ class EulerAnglesXyzDiff : public EulerAnglesDiffBase<EulerAnglesXyzDiff<PrimTyp
   /*! \brief Default constructor.
    */
   EulerAnglesXyzDiff()
-    : Base(Base::Zero()) {
+    : xyzDiff_(Base::Zero()) {
   }
 
   /*! \brief Constructor using three scalars.
@@ -897,15 +904,15 @@ class EulerAnglesXyzDiff : public EulerAnglesDiffBase<EulerAnglesXyzDiff<PrimTyp
    *  \param pitch    time derivative of second rotation angle around Y' axis
    *  \param yaw      time derivative of third rotation angle around Z'' axis
    */
-  EulerAnglesXyzDiff(Scalar yaw, Scalar pitch, Scalar roll)
-    : Base(yaw,pitch,roll) {
+  EulerAnglesXyzDiff(Scalar roll, Scalar pitch, Scalar yaw)
+    : xyzDiff_(roll,pitch,yaw) {
   }
 
   /*! \brief Constructor using Eigen::Matrix.
    *  \param other   Eigen::Matrix<PrimType_,3,1> [roll; pitch; yaw]
    */
   explicit EulerAnglesXyzDiff(const Base& other)
-    : Base(other) {
+    : xyzDiff_(other) {
   }
 
 
@@ -916,7 +923,7 @@ class EulerAnglesXyzDiff : public EulerAnglesDiffBase<EulerAnglesXyzDiff<PrimTyp
    */
   template<typename RotationDerived_, typename OtherDerived_>
   inline explicit EulerAnglesXyzDiff(const RotationBase<RotationDerived_, Usage_>& rotation, const RDiffBase<OtherDerived_, Usage_>& other)
-    : Base(internal::RDiffConversionTraits<EulerAnglesXyzDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived())){
+    : xyzDiff_(internal::RDiffConversionTraits<EulerAnglesXyzDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived()).toImplementation()){
   }
 
   /*! \brief Cast to another representation of the time derivative of a rotation
@@ -933,14 +940,14 @@ class EulerAnglesXyzDiff : public EulerAnglesDiffBase<EulerAnglesXyzDiff<PrimTyp
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
   inline Base& toImplementation() {
-    return static_cast<Base&>(*this);
+    return static_cast<Base&>(xyzDiff_);
   }
 
   /*! \brief Cast to the implementation type.
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
   inline const Base& toImplementation() const {
-    return static_cast<const Base&>(*this);
+    return static_cast<const Base&>(xyzDiff_);
   }
 
 
@@ -1129,6 +1136,39 @@ class RDiffConversionTraits<eigen_impl::AngularVelocity<PrimType_, RotationUsage
   }
 };
 
+
+template<typename PrimType_>
+class RDiffConversionTraits<eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::EulerAnglesZyxDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE>> {
+ public:
+  inline static eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE>& eulerAngles, const eigen_impl::EulerAnglesZyxDiff<PrimType_, RotationUsage::ACTIVE>& eulerAnglesDiff) {
+    const PrimType_ phi = eulerAngles.roll();
+    const PrimType_ theta = eulerAngles.pitch();
+    const PrimType_ dphi = eulerAnglesDiff.roll();
+    const PrimType_ dtheta = eulerAnglesDiff.pitch();
+    const PrimType_ dpsi = eulerAnglesDiff.yaw();
+    const PrimType_ t2 = sin(phi);
+    const PrimType_ t3 = cos(phi);
+    const PrimType_ t4 = cos(theta);
+    return eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>(dphi-dpsi*sin(theta), dtheta*t3+dpsi*t2*t4, -dtheta*t2+dpsi*t3*t4);
+  }
+};
+
+template<typename PrimType_>
+class RDiffConversionTraits<eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::EulerAnglesXyzDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::EulerAnglesXyz<PrimType_, RotationUsage::ACTIVE>> {
+ public:
+  inline static eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::EulerAnglesXyz<PrimType_, RotationUsage::ACTIVE>& eulerAngles, const eigen_impl::EulerAnglesXyzDiff<PrimType_, RotationUsage::ACTIVE>& eulerAnglesDiff) {
+    const PrimType_ beta = eulerAngles.pitch();
+    const PrimType_ gamma = eulerAngles.yaw();
+    const PrimType_ dalpha = eulerAnglesDiff.roll();
+    const PrimType_ dbeta = eulerAnglesDiff.pitch();
+    const PrimType_ dgamma = eulerAnglesDiff.yaw();
+    const PrimType_ t2 = cos(gamma);
+    const PrimType_ t3 = cos(beta);
+    const PrimType_ t4 = sin(gamma);
+    return eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>(dbeta*t4+dalpha*t2*t3, dbeta*t2-dalpha*t3*t4, dgamma+dalpha*sin(beta));
+  }
+};
+
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 template<typename PrimType_>
@@ -1200,25 +1240,74 @@ class RDiffConversionTraits<eigen_impl::EulerAnglesXyzDiff<PrimType_, Usage_>, e
   inline static eigen_impl::EulerAnglesXyzDiff<PrimType_, Usage_> convert(const eigen_impl::EulerAnglesXyz<PrimType_, Usage_>& eulerAngles, const eigen_impl::AngularVelocity<PrimType_, Usage_>& angularVelocity) {
     typedef typename Eigen::Matrix<PrimType_, 3, 3> Matrix3x3;
 
-    const PrimType_ alpha = eulerAngles.roll();
-    const PrimType_ beta = eulerAngles.pitch();
-    const PrimType_ gamma = eulerAngles.yaw();
+    // works:
+//    const PrimType_ alpha = eulerAngles.roll();
+//    const PrimType_ beta = eulerAngles.pitch();
+//    const PrimType_ gamma = eulerAngles.yaw();
+//
+//    Matrix3x3 H = Matrix3x3::Zero();
+//
+//    if(cos(beta) == 0) {
+//      H << std::numeric_limits<PrimType_>::max(), std::numeric_limits<PrimType_>::max(), 0, sin(gamma), cos(gamma), 0, -cos(gamma)*tan(beta), sin(gamma)*tan(beta), 1;
+//    }
+//    else {
+//      H << cos(gamma)/cos(beta), -sin(gamma)/cos(beta), 0, sin(gamma), cos(gamma), 0, -cos(gamma)*tan(beta), sin(gamma)*tan(beta), 1;
+//    }
+//
+//    return eigen_impl::EulerAnglesXyzDiff<PrimType_, Usage_>(H*angularVelocity.toImplementation());
 
-    Matrix3x3 H = Matrix3x3::Zero();
 
-    if(cos(beta) == 0) {
-      H << std::numeric_limits<PrimType_>::max(), std::numeric_limits<PrimType_>::max(), 0, sin(gamma), cos(gamma), 0, -cos(gamma)*tan(beta), sin(gamma)*tan(beta), 1;
+    const PrimType_ beta_Var = eulerAngles.pitch();
+    const PrimType_ gamma_Var = eulerAngles.yaw();
+    const PrimType_ w1 = angularVelocity.toImplementation()(0);
+    const PrimType_ w2 = angularVelocity.toImplementation()(1);
+    const PrimType_ w3 = angularVelocity.toImplementation()(2);
+    const PrimType_ t2 = cos(beta_Var);
+    PrimType_ t3;
+    if (t2 == PrimType_(0)) {
+      t3 = std::numeric_limits<PrimType_>::max();
+    } else {
+      t3 = 1.0/t2;
     }
-    else {
-      H << cos(gamma)/cos(beta), -sin(gamma)/cos(beta), 0, sin(gamma), cos(gamma), 0, -cos(gamma)*tan(beta), sin(gamma)*tan(beta), 1;
-    }
+    const PrimType_ t4 = cos(gamma_Var);
+    const PrimType_ t5 = sin(gamma_Var);
+    const PrimType_ t6 = sin(beta_Var);
+    return eigen_impl::EulerAnglesXyzDiff<PrimType_, Usage_>(t3*t4*w1-t3*t5*w2, t4*w2+t5*w1, w3-t3*t4*t6*w1+t3*t5*t6*w2);
 
-    return eigen_impl::EulerAnglesXyzDiff<PrimType_, Usage_>(H*angularVelocity.toImplementation());
   }
 };
 
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
+
+template<typename PrimType_, enum RotationUsage Usage_>
+class RDiffConversionTraits<eigen_impl::EulerAnglesZyxDiff<PrimType_, Usage_>, eigen_impl::AngularVelocity<PrimType_, Usage_>, eigen_impl::EulerAnglesZyx<PrimType_, Usage_>> {
+ public:
+  inline static eigen_impl::EulerAnglesZyxDiff<PrimType_, Usage_> convert(const eigen_impl::EulerAnglesZyx<PrimType_, Usage_>& eulerAngles, const eigen_impl::AngularVelocity<PrimType_, Usage_>& angularVelocity) {
+    typedef typename Eigen::Matrix<PrimType_, 3, 3> Matrix3x3;
+
+    const PrimType_ theta = eulerAngles.pitch();
+    const PrimType_ phi = eulerAngles.roll();
+    const PrimType_ w1 = angularVelocity.x();
+    const PrimType_ w2 = angularVelocity.y();
+    const PrimType_ w3 = angularVelocity.z();
+
+    const PrimType_ t2 = cos(theta);
+    PrimType_ t3;
+
+    if (t2 == PrimType_(0)) {
+      t3 = std::numeric_limits<PrimType_>::max();
+    } else {
+      t3 = 1.0/t2;
+    }
+
+    const PrimType_ t4 = cos(phi);
+    const PrimType_ t5 = sin(phi);
+    const PrimType_ t6 = sin(theta);
+    return eigen_impl::EulerAnglesZyxDiff<PrimType_, Usage_>(t3*t4*w3+t3*t5*w2, t4*w2-t5*w3, w1+t3*t4*t6*w3+t3*t5*t6*w2);
+
+  }
+};
 
 
 } // namespace internal
