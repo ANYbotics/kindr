@@ -179,12 +179,14 @@ TEST(RDiffTest, testDevelopment)
 
   rot::AngularVelocityAD avA(aaA, aaDiffA);
 
+//  std::cout << "avA1 | avA2: "<<  avA << " | "  << avA2 << std::endl;
+
   rot::RotationQuaternionAD rqA(aaA);
   rot::RotationQuaternionDiffAD rqDiffA(rqA, avA);
 
-  rot::AngularVelocityAD avA2(rqA, rqDiffA);
+  rot::AngularVelocityAD avA3(rqA, rqDiffA);
 
-  std::cout << "avA1 | avA2: "<<  avA << " | "  << avA2 << std::endl;
+  std::cout << "avA1 | avA3: "<<  avA << " | "  << avA3 << std::endl;
 
 
 }
