@@ -33,7 +33,7 @@
 
 #include <gtest/gtest.h>
 
-#include "kindr/rotations/RDiffEigen.hpp"
+#include "kindr/rotations/RotationDiffEigen.hpp"
 #include "kindr/common/gtest_eigen.hpp"
 
 
