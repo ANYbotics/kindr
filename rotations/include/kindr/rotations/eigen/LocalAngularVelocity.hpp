@@ -48,7 +48,7 @@ namespace eigen_impl {
 
 
 /*! \class LocalAngularVelocity
- * \brief Angular velocity in 3D-space expressed in local coordinates (fixed to the body).
+ * \brief Angular velocity in 3D-space expressed in local coordinates (frame fixed to the body).
  *
  * This class implements an angular velocity of a rigid body in 3D-space expressed in body fixed (local) frame.
  *
@@ -183,13 +183,13 @@ class LocalAngularVelocity : public AngularVelocityBase<LocalAngularVelocity<Pri
 };
 
 //! \brief 3D angular velocity with primitive type double
-//typedef AngularVelocity<double, RotationUsage::PASSIVE>  AngularVelocityPD;
+typedef LocalAngularVelocity<double, RotationUsage::PASSIVE>  LocalAngularVelocityPD;
 //! \brief 3D angular velocity with primitive type float
-//typedef AngularVelocity<float, RotationUsage::PASSIVE>  AngularVelocityPF;
+typedef LocalAngularVelocity<float, RotationUsage::PASSIVE>  LocalAngularVelocityPF;
 //! \brief 3D angular velocity with primitive type double
-typedef LocalAngularVelocity<double, RotationUsage::ACTIVE>  AngularVelocityAD;
+typedef LocalAngularVelocity<double, RotationUsage::ACTIVE>  LocalAngularVelocityAD;
 //! \brief 3D angular velocity with primitive type float
-typedef LocalAngularVelocity<float, RotationUsage::ACTIVE>  AngularVelocityAF;
+typedef LocalAngularVelocity<float, RotationUsage::ACTIVE>  LocalAngularVelocityAF;
 
 } // namespace eigen_impl
 

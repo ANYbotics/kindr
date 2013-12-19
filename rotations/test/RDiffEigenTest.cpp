@@ -70,8 +70,8 @@ struct AngularVelocityTest: public ::testing::Test {
 
 
 typedef ::testing::Types<
-    rot::AngularVelocityAD,
-    rot::AngularVelocityAF
+    rot::LocalAngularVelocityAD,
+    rot::LocalAngularVelocityAF
 > Types;
 
 
@@ -139,16 +139,16 @@ TEST(RotationDiffTest, testDevelopment)
 //  rot::RotationQuaternionPD rquat;
 //
 //  rot::RotationQuaternionDiffPD rquatdiff(1,2,3,4);
-//  rot::AngularVelocityPD angularVelocity(rquat, rquatdiff);
+//  rot::LocalAngularVelocityPD angularVelocity(rquat, rquatdiff);
 //
 //
 //  std::cout << "rquatdiff:" << rquatdiff << std::endl;
 //  std::cout << "angularVelocity:" << angularVelocity << std::endl;
-//  std::cout << "angularVelocity2" << rquatdiff.cast<rot::AngularVelocityPD>(rquat) << std::endl;
+//  std::cout << "angularVelocity2" << rquatdiff.cast<rot::LocalAngularVelocityPD>(rquat) << std::endl;
 //
 //
 //  rot::EulerAnglesXyzPD eulerAnglesXyz(0.1, 0.2, 0.3);
-//  rot::AngularVelocityPD angularVelocity2(0.2, 0.2, 0.2);
+//  rot::LocalAngularVelocityPD angularVelocity2(0.2, 0.2, 0.2);
 //  rot::EulerAnglesXyzDiffPD eulerAnglesXyzDiff2(eulerAnglesXyz,angularVelocity2);
 //
 //  std::cout << "eulerDiff: " << eulerAnglesXyzDiff2 << std::endl;
@@ -156,54 +156,54 @@ TEST(RotationDiffTest, testDevelopment)
 //  rot::AngleAxisAD aa;
 // rot::AngleAxisDiffAD aaDiff(0.2, 0.1, 0.2, 0.4);
 // std::cout << "angle axis: " << aaDiff << std::endl;
-// rot::AngularVelocityAD avelA6(aa, aaDiff);
+// rot::LocalAngularVelocityAD avelA6(aa, aaDiff);
 //
 //  rot::RotationMatrixDiffAD rmatADiff;
 //  rot::RotationMatrixAD rmatA;
-////  rot::AngularVelocityAD avelA(rmatA, rmatADiff);
+////  rot::LocalAngularVelocityAD avelA(rmatA, rmatADiff);
 ////  std::cout << "avelA: " << avelA << std::endl;
 //
 //  rot::RotationMatrixDiffPD rmatPDiff;
 //  rot::RotationMatrixPD rmatP;
-//  rot::AngularVelocityAD avelA2(rmatA, rmatADiff);
-//  rot::AngularVelocityAD avelA3(rmatP, rmatPDiff);
+//  rot::LocalAngularVelocityAD avelA2(rmatA, rmatADiff);
+//  rot::LocalAngularVelocityAD avelA3(rmatP, rmatPDiff);
 //  std::cout << "avelA2: " << avelA2 << std::endl;
 //
 //  rot::RotationVectorDiffAD rvADiff;
 //  rot::RotationVectorAD rvA;
-//  rot::AngularVelocityAD avelAz(rvA, rvADiff);
+//  rot::LocalAngularVelocityAD avelAz(rvA, rvADiff);
 ////  std::cout << rvA << std::endl;
 
   rot::AngleAxisAD aaA(0.2, 0.0, 1.0, 0.0);
   rot::AngleAxisDiffAD aaDiffA(0.5, 0.1, 0.2, 0.3);
 
-  rot::AngularVelocityAD avA(aaA, aaDiffA);
+  rot::LocalAngularVelocityAD avA(aaA, aaDiffA);
 
 //  std::cout << "avA1 | avA2: "<<  avA << " | "  << avA2 << std::endl;
 
   rot::RotationQuaternionAD rqA(aaA);
   rot::RotationQuaternionDiffAD rqDiffA(rqA, avA);
 
-  rot::AngularVelocityAD avA3(rqA, rqDiffA);
+  rot::LocalAngularVelocityAD avA3(rqA, rqDiffA);
 
   std::cout << "RotationQuaternionDiffAD: avA | avA3: "<<  avA << " | "  << avA3 << std::endl;
 
   rot::EulerAnglesZyxAD zyxA(2,0,0.2);
   rot::EulerAnglesZyxDiffAD zyxDiffA(zyxA, avA);
-  rot::AngularVelocityAD avA8(zyxA, zyxDiffA);
+  rot::LocalAngularVelocityAD avA8(zyxA, zyxDiffA);
 
   std::cout << "EulerAnglesZyxDiffAD: avA | avA8: "<<  avA << " | "  << avA8 << std::endl;
 
   rot::EulerAnglesXyzAD xyzA(2,0,0.2);
   rot::EulerAnglesXyzDiffAD xyzDiffA(xyzA, avA);
-  rot::AngularVelocityAD avA9(xyzA, xyzDiffA);
+  rot::LocalAngularVelocityAD avA9(xyzA, xyzDiffA);
 
   std::cout << "EulerAnglesXyzDiffAD: avA | avA9: "<<  avA << " | "  << avA9 << std::endl;
 
 
   rot::RotationVectorAD rvA(rqA);
   rot::RotationVectorDiffAD rvDiffA(rvA, avA);
-  rot::AngularVelocityAD avA10(rvA, rvDiffA);
+  rot::LocalAngularVelocityAD avA10(rvA, rvDiffA);
 
   std::cout << "RotationVectorDiffAD: avA | avA9: "<<  avA << " | "  << avA10 << std::endl;
 
@@ -212,5 +212,15 @@ TEST(RotationDiffTest, testDevelopment)
   std::cout << "RotationQuaternionDiffAD: rqDiffA | rqDiffA2: "<<  rqDiffA << " | "  << rqDiffA2 << std::endl;
   rot::RotationQuaternionDiffAD rqDiffA3(rqA, rvDiffA);
   std::cout << "RotationQuaternionDiffAD: rqDiffA | rqDiffA3: "<<  rqDiffA << " | "  << rqDiffA3 << std::endl;
+
+  rot::RotationMatrixAD rmA(rqA);
+  rot::RotationMatrixDiffAD rmDiffA(rmA, avA);
+  rot::LocalAngularVelocityAD avA11(rmA, rmDiffA);
+  std::cout << "RotationMatrixDiffAD: avA | avA11: "<<  avA << " | "  << avA11 << std::endl;
+
+  rot::RotationMatrixPD rmP(rqA.getPassive());
+  rot::RotationMatrixDiffPD rmDiffA2(rmP, avA);
+  rot::LocalAngularVelocityAD avA12(rmP, rmDiffA2);
+  std::cout << "RotationMatrixDiffPD: avA | avA12: "<<  avA << " | "  << avA12 << std::endl;
 }
 

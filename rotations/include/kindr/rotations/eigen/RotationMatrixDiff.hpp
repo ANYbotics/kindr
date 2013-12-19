@@ -100,10 +100,11 @@ class RotationMatrixDiff : public RotationMatrixDiffBase<RotationMatrixDiff<Prim
    * \param rotation  rotation
    * \param other     other time derivative
    */
-  template<typename RotationDerived_, typename OtherDerived_>
-  inline explicit RotationMatrixDiff(const RotationBase<RotationDerived_, Usage_>& rotation, const RotationDiffBase<OtherDerived_, Usage_>& other)
+  template<typename RotationDerived_, enum RotationUsage RotationUsage_, typename OtherDerived_, enum RotationUsage OtherUsage_>
+  inline explicit RotationMatrixDiff(const RotationBase<RotationDerived_, RotationUsage_>& rotation, const RotationDiffBase<OtherDerived_, OtherUsage_>& other)
     : Base(internal::RotationDiffConversionTraits<RotationMatrixDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived())){
   }
+
 
   /*! \brief Cast to another representation of the time derivative of a rotation
    *  \param other   other rotation
@@ -173,6 +174,24 @@ typedef RotationMatrixDiff<float, RotationUsage::ACTIVE> RotationMatrixDiffAF;
 
 namespace internal {
 
+//! dR_IB = B_\hat{w}_IB'*R_IB
+template<typename PrimType_>
+class RotationDiffConversionTraits<eigen_impl::RotationMatrixDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationMatrix<PrimType_, RotationUsage::ACTIVE>> {
+ public:
+  inline static eigen_impl::RotationMatrixDiff<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::RotationMatrix<PrimType_, RotationUsage::ACTIVE>& rotationMatrix, const eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>& angularVelocity) {
+    return eigen_impl::RotationMatrixDiff<PrimType_, RotationUsage::ACTIVE>(linear_algebra::getSkewMatrixFromVector(angularVelocity.toImplementation()).transpose()*rotationMatrix.toImplementation());
+  }
+};
+
+
+//!  dC_IB = C_IB*B_\hat{w}_IB
+template<typename PrimType_>
+class RotationDiffConversionTraits<eigen_impl::RotationMatrixDiff<PrimType_, RotationUsage::PASSIVE>, eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationMatrix<PrimType_, RotationUsage::PASSIVE>> {
+ public:
+  inline static eigen_impl::RotationMatrixDiff<PrimType_, RotationUsage::PASSIVE> convert(const eigen_impl::RotationMatrix<PrimType_, RotationUsage::PASSIVE>& rotationMatrix, const eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>& angularVelocity) {
+    return eigen_impl::RotationMatrixDiff<PrimType_, RotationUsage::PASSIVE>(rotationMatrix.toImplementation()*linear_algebra::getSkewMatrixFromVector(angularVelocity.toImplementation()));
+  }
+};
 
 
 
