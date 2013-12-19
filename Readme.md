@@ -3,9 +3,9 @@ Kindr - Kinematics and Dynamics for Robotics
 Autonomous Systems Lab
 ETH Zurich
 
-Author(s): Christian Gehring, Remo Diethelm, Hannes Sommer,
-           Paul Furgale, Peter Fankhauser, Michael Bloesch, 
-email    : leggedrobotics@ethz.ch
+Contact  : Christian Gehring [gehrinch ( at ) ethz.ch]
+Author(s): Michael Bloesch, Remo Diethelm, Peter Fankhauser, 
+           Paul Furgale, Christian Gehring, Hannes Sommer
 Date     : 08-Aug-2013
 
 DOCUMENTATION
