@@ -134,7 +134,7 @@ TYPED_TEST(AngularVelocityTest, testAngularVelocity)
 
 }
 
-TEST(RDiffTest, testDevelopment)
+TEST(RotationDiffTest, testDevelopment)
 {
 //  rot::RotationQuaternionPD rquat;
 //

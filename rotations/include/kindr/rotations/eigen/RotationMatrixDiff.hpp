@@ -101,8 +101,8 @@ class RotationMatrixDiff : public RotationMatrixDiffBase<RotationMatrixDiff<Prim
    * \param other     other time derivative
    */
   template<typename RotationDerived_, typename OtherDerived_>
-  inline explicit RotationMatrixDiff(const RotationBase<RotationDerived_, Usage_>& rotation, const RDiffBase<OtherDerived_, Usage_>& other)
-    : Base(internal::RDiffConversionTraits<RotationMatrixDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived())){
+  inline explicit RotationMatrixDiff(const RotationBase<RotationDerived_, Usage_>& rotation, const RotationDiffBase<OtherDerived_, Usage_>& other)
+    : Base(internal::RotationDiffConversionTraits<RotationMatrixDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived())){
   }
 
   /*! \brief Cast to another representation of the time derivative of a rotation
@@ -111,7 +111,7 @@ class RotationMatrixDiff : public RotationMatrixDiffBase<RotationMatrixDiff<Prim
    */
   template<typename OtherDerived_, typename RotationDerived_>
   OtherDerived_ cast(const RotationBase<RotationDerived_, Usage_>& rotation) const {
-    return internal::RDiffConversionTraits<OtherDerived_, RotationMatrixDiff, RotationDerived_>::convert(rotation.derived(), *this);
+    return internal::RotationDiffConversionTraits<OtherDerived_, RotationMatrixDiff, RotationDerived_>::convert(rotation.derived(), *this);
   }
 
   /*! \brief Cast to the implementation type.

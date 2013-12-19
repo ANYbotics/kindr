@@ -95,8 +95,8 @@ class RotationQuaternionDiff : public RotationQuaternionDiffBase<RotationQuatern
    * \param other     other time derivative
    */
   template<typename RotationDerived_, typename OtherDerived_>
-  inline explicit RotationQuaternionDiff(const RotationBase<RotationDerived_, Usage_>& rotation, const RDiffBase<OtherDerived_, Usage_>& other)
-    : Base(internal::RDiffConversionTraits<RotationQuaternionDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived()).toQuaternion()){
+  inline explicit RotationQuaternionDiff(const RotationBase<RotationDerived_, Usage_>& rotation, const RotationDiffBase<OtherDerived_, Usage_>& other)
+    : Base(internal::RotationDiffConversionTraits<RotationQuaternionDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived()).toQuaternion()){
   }
 
   /*! \brief Cast to another representation of the time derivative of a rotation
@@ -105,7 +105,7 @@ class RotationQuaternionDiff : public RotationQuaternionDiffBase<RotationQuatern
    */
   template<typename OtherDerived_, typename RotationDerived_>
   OtherDerived_ cast(const RotationBase<RotationDerived_, Usage_>& rotation) const {
-    return internal::RDiffConversionTraits<OtherDerived_, RotationQuaternionDiff, RotationDerived_>::convert(rotation.derived(), *this);
+    return internal::RotationDiffConversionTraits<OtherDerived_, RotationQuaternionDiff, RotationDerived_>::convert(rotation.derived(), *this);
   }
 
 
@@ -171,7 +171,7 @@ namespace internal {
 
 
 template<typename PrimType_>
-class RDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>> {
+class RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>> {
  public:
   inline static eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>& rquat, const eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>& angularVelocity) {
     Eigen::Matrix<PrimType_,4,3> H_bar_transpose;
@@ -185,7 +185,7 @@ class RDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, Rotati
 
 
 template<typename PrimType_>
-class RDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>> {
+class RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>> {
  public:
   inline static eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>& rotationVector, const eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>& rotationVectorDiff) {
 
@@ -222,10 +222,10 @@ class RDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, Rotati
 };
 
 template<typename PrimType_>
-class RDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>> {
+class RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>> {
  public:
   inline static eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>& rquat, const eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>& rotationVectorDiff) {
-    return RDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>>::convert(eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>(rquat), rotationVectorDiff);
+    return RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>>::convert(eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>(rquat), rotationVectorDiff);
   }
 };
 

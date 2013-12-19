@@ -6,15 +6,15 @@ The section \ref rdiff_interface "Interface" describes the functionalities, wher
 \tableofcontents
 
 \section rdiff_interface Interface
-The class kindr::rotations::RDiffBase serves as an interface for the time derivative of a rotation. All types of representations of a time derivative of a rotation, such as angular velocitcy and time derivatives of Euler angles, are derived from this base class.
+The class kindr::rotations::RotationDiffBase serves as an interface for the time derivative of a rotation. All types of representations of a time derivative of a rotation, such as angular velocitcy and time derivatives of Euler angles, are derived from this base class.
 
 \subsection rdiff_zero Zero
 The default constructor always initializes all derivatives with zero.
 
-All derivatives can be set to zero by the function \ref kindr::rotations::RDiffBase::setZero() "setZero()".
+All derivatives can be set to zero by the function \ref kindr::rotations::RotationDiffBase::setZero() "setZero()".
 
 \subsection rdiff_addition_and_subtraction Addition and Subtraction
-Addition and subtraction of the time derivatives are provided by the kindr::rotations::RDiffBase::operator+ and kindr::rotations::RDiffBase::operator-, respectively.
+Addition and subtraction of the time derivatives are provided by the kindr::rotations::RotationDiffBase::operator+ and kindr::rotations::RotationDiffBase::operator-, respectively.
 
 
 
@@ -50,7 +50,7 @@ The library comes along with an implementation based on the <a href="http://eige
 
 All types can be included by
 \code{.cpp}
-#include <kindr/rotations/RDiffEigen.hpp>
+#include <kindr/rotations/RotationDiffEigen.hpp>
 \endcode
 and lie within the namespace kindr::rotations::eigen_impl.
 

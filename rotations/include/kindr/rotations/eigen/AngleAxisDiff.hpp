@@ -98,8 +98,8 @@ class AngleAxisDiff : public AngleAxisDiffBase<AngleAxisDiff<PrimType_, Usage_>,
    * \param other     other time derivative
    */
   template<typename RotationDerived_, typename OtherDerived_>
-  inline explicit AngleAxisDiff(const RotationBase<RotationDerived_, Usage_>& rotation, const RDiffBase<OtherDerived_, Usage_>& other)
-    : Base(internal::RDiffConversionTraits<AngleAxisDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived())){
+  inline explicit AngleAxisDiff(const RotationBase<RotationDerived_, Usage_>& rotation, const RotationDiffBase<OtherDerived_, Usage_>& other)
+    : Base(internal::RotationDiffConversionTraits<AngleAxisDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived())){
   }
 
   /*! \brief Cast to another representation of the time derivative of a rotation
@@ -108,7 +108,7 @@ class AngleAxisDiff : public AngleAxisDiffBase<AngleAxisDiff<PrimType_, Usage_>,
    */
   template<typename OtherDerived_, typename RotationDerived_>
   OtherDerived_ cast(const RotationBase<RotationDerived_, Usage_>& rotation) const {
-    return internal::RDiffConversionTraits<OtherDerived_, AngleAxisDiff, RotationDerived_>::convert(rotation.derived(), *this);
+    return internal::RotationDiffConversionTraits<OtherDerived_, AngleAxisDiff, RotationDerived_>::convert(rotation.derived(), *this);
   }
 
 
@@ -190,7 +190,7 @@ namespace internal {
 
 
 template<typename PrimType_>
-class RDiffConversionTraits<eigen_impl::AngleAxisDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::AngleAxis<PrimType_, RotationUsage::ACTIVE>> {
+class RotationDiffConversionTraits<eigen_impl::AngleAxisDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::AngleAxis<PrimType_, RotationUsage::ACTIVE>> {
  public:
   inline static eigen_impl::AngleAxisDiff<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::AngleAxis<PrimType_, RotationUsage::ACTIVE>& angleAxis, const eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>& angularVelocity) {
     typedef typename eigen_impl::AngleAxis<PrimType_, RotationUsage::ACTIVE>::Vector3 Vector;

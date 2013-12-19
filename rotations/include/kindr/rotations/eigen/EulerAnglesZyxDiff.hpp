@@ -93,8 +93,8 @@ class EulerAnglesZyxDiff : public EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimTyp
    * \param other     other time derivative
    */
   template<typename RotationDerived_, typename OtherDerived_>
-  inline explicit EulerAnglesZyxDiff(const RotationBase<RotationDerived_, Usage_>& rotation, const RDiffBase<OtherDerived_, Usage_>& other)
-    : zyxDiff_(internal::RDiffConversionTraits<EulerAnglesZyxDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived()).toImplementation()){
+  inline explicit EulerAnglesZyxDiff(const RotationBase<RotationDerived_, Usage_>& rotation, const RotationDiffBase<OtherDerived_, Usage_>& other)
+    : zyxDiff_(internal::RotationDiffConversionTraits<EulerAnglesZyxDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived()).toImplementation()){
   }
 
   /*! \brief Cast to another representation of the time derivative of a rotation
@@ -103,7 +103,7 @@ class EulerAnglesZyxDiff : public EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimTyp
    */
   template<typename OtherDerived_, typename RotationDerived_>
   OtherDerived_ cast(const RotationBase<RotationDerived_, Usage_>& rotation) const {
-    return internal::RDiffConversionTraits<OtherDerived_, EulerAnglesZyxDiff, RotationDerived_>::convert(rotation.derived(), *this);
+    return internal::RotationDiffConversionTraits<OtherDerived_, EulerAnglesZyxDiff, RotationDerived_>::convert(rotation.derived(), *this);
   }
 
   /*! \brief Constructor using Eigen::Matrix.
@@ -254,7 +254,7 @@ namespace internal {
 
 
 template<typename PrimType_, enum RotationUsage Usage_>
-class RDiffConversionTraits<eigen_impl::EulerAnglesZyxDiff<PrimType_, Usage_>, eigen_impl::LocalAngularVelocity<PrimType_, Usage_>, eigen_impl::EulerAnglesZyx<PrimType_, Usage_>> {
+class RotationDiffConversionTraits<eigen_impl::EulerAnglesZyxDiff<PrimType_, Usage_>, eigen_impl::LocalAngularVelocity<PrimType_, Usage_>, eigen_impl::EulerAnglesZyx<PrimType_, Usage_>> {
  public:
   inline static eigen_impl::EulerAnglesZyxDiff<PrimType_, Usage_> convert(const eigen_impl::EulerAnglesZyx<PrimType_, Usage_>& eulerAngles, const eigen_impl::LocalAngularVelocity<PrimType_, Usage_>& angularVelocity) {
     typedef typename Eigen::Matrix<PrimType_, 3, 3> Matrix3x3;
