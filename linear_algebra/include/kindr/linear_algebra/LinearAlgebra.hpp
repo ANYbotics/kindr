@@ -26,7 +26,7 @@
  *
 */
 #ifndef KINDR_LINEARALGEBRA_HPP_
-#define RMLINEARALGEBRA_HPP_
+#define KINDR_LINEARALGEBRA_HPP_
 
 #include <Eigen/SVD>
 
@@ -66,7 +66,7 @@ inline static Eigen::Matrix<PrimType_, 3, 1> getVectorFromSkewMatrix(const Eigen
  * \return true if successful
  */
 template<typename _Matrix_Type_>
-bool pseudoInverse(const _Matrix_Type_ &a, _Matrix_Type_ &result, double epsilon = std::numeric_limits<typename _Matrix_Type_::Scalar>::epsilon())
+bool static pseudoInverse(const _Matrix_Type_ &a, _Matrix_Type_ &result, double epsilon = std::numeric_limits<typename _Matrix_Type_::Scalar>::epsilon())
 {
   Eigen::JacobiSVD< _Matrix_Type_ > svd = a.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV);
 
