@@ -352,43 +352,42 @@ $\rotvelhat{I}{I}{B} =  \comat{I}{B} \rotvelhat{B}{I}{B} \comat{I}{B}^\transpose
 $\rotvel{D}{A}{D} = \rotvel{D}{A}{B} +  \rotvel{D}{B}{C} + \rotvel{D}{C}{D}$ & composition of angular velocity \\
 \end{tabular}
 
-\subsubsection{Angular Velocity $\Leftrightarrow$ Time Derivative of Direction Cosine Matrix}
+\subsubsection{Time Derivative of Direction Cosine Matrix $\Leftrightarrow$ Angular Velocity  }
 \begin{tabular}{@{}ll@{}}
-$\rotvelhat{I}{I}{B} = \dcomat{I}{B}\comat{I}{B}^\transpose = \dcomat{B}{I}^\transpose\comat{B}{I}$ & angular velocity of $B$ w.r.t. $I$ expressed in CS $I$  \\
-$\rotvelhat{B}{I}{B} = \comat{I}{B}^\transpose \dcomat{I}{B} = \comat{B}{I} \dcomat{B}{I}^\transpose$ & angular velocity of $B$ w.r.t. $I$ expressed in CS $B$  \\
+$\rotvelhat{I}{I}{B} = \dcomat{I}{B}\comat{I}{B}^\transpose = \dcomat{B}{I}^\transpose\comat{B}{I}$ &   \\
+$\rotvelhat{B}{I}{B} = \comat{I}{B}^\transpose \dcomat{I}{B} = \comat{B}{I} \dcomat{B}{I}^\transpose$ & $\dcomat{I}{B} =  \comat{I}{B}\rotvelhat{B}{I}{B}$ \\
 \end{tabular}
 
-\subsubsection{Angular Velocity $\Leftrightarrow$ Time Derivative of Rotation Matrix}
-\begin{tabular}{@{}ll@{}}
-$\rotvelhat{I}{I}{B} = \drotmat{B}{I} \rotmat{B}{I}^\transpose= \drotmat{I}{B}^\transpose \rotmat{I}{B}$ & angular velocity of $B$ w.r.t. $I$ expressed in CS $I$  \\
-$\rotvelhat{B}{I}{B} = \rotmat{I}{B} \drotmat{I}{B}^\transpose= \rotmat{B}{I}^\transpose \drotmat{B}{I}$ & angular velocity of $B$ w.r.t. $I$ expressed in CS $B$  \\
+\subsubsection{Time Derivative of Rotation Matrix $\Leftrightarrow$ Angular Velocity}
+\begin{tabular}{@{}lll@{}}
+$\rotvelhat{I}{I}{B} = \drotmat{B}{I} \rotmat{B}{I}^\transpose= \drotmat{I}{B}^\transpose \rotmat{I}{B}$ & $\drotmat{I}{B} = \rotmat{I}{B}\rotvelhat{I}{I}{B}^\transpose $ & $\drotmat{B}{I} = \rotvelhat{I}{I}{B}\rotmat{B}{I}$ \\
+$\rotvelhat{B}{I}{B} = \rotmat{I}{B} \drotmat{I}{B}^\transpose= \rotmat{B}{I}^\transpose \drotmat{B}{I}$ & $\drotmat{I}{B} = \rotvelhat{B}{I}{B}^\transpose \rotmat{I}{B}$ & $\drotmat{B}{I} = \rotmat{B}{I}\rotvelhat{B}{I}{B}$  \\
 \end{tabular}
 
-\subsubsection{Angular Velocity $\Leftrightarrow$ Time Derivative of Rotation Quaternion}
+\subsubsection{Time Derivative of Rotation Quaternion $\Leftrightarrow$ Angular Velocity}
 \begin{tabular}{@{}ll@{}}
-$\rotvel{B}{I}{B} = 2 \bar{\vH}(\quat{B}{I}) \dot{\vp}_{B\!I}$  & ang. velocity from time derivative of the rotation quaternion with \\
-& $\begin{aligned}\bar{\vH}(\vp) &= \begin{bmatrix}-\imquatvec{p} & -\hat{\imquatvec{p}}+p_0\identity_{3\times 3}\end{bmatrix} \in \mathbb{R}^{3\times4} \\
+$\rotvel{B}{I}{B} = 2 \bar{\vH}(\quat{B}{I}) \dot{\vp}_{B\!I}$  &  $\begin{aligned}\bar{\vH}(\vp) &= \begin{bmatrix}-\imquatvec{p} & -\hat{\imquatvec{p}}+p_0\identity_{3\times 3}\end{bmatrix} \in \mathbb{R}^{3\times4} \\
  &=\begin{bmatrix} -p_1 &  p_0 &  p_3 & -p_2 \\
  -p_2 & -p_3 &  p_0 &  p_1 \\
  -p_3 &  p_2 & -p_1 &  p_0 \end{bmatrix}
 \end{aligned}$  \\ 
-$\dot{\vp}_{B\!I} = \frac{1}{2}\bar{\vH}(\quat{B}{I})^\transpose \rotvel{B}{I}{B}$ & time derivative of the rotation quaternion \\
+$\dot{\vp}_{B\!I} = \frac{1}{2}\bar{\vH}(\quat{B}{I})^\transpose \rotvel{B}{I}{B}$ & \\
 \end{tabular}
 
-\subsubsection{Angular Velocity $\Leftrightarrow$ Time Derivative of Angle-Axis}
+\subsubsection{Time Derivative of Angle-Axis  $\Leftrightarrow$ Angular Velocity}
 \begin{tabular}{@{}ll@{}}
-$\rotvel{I}{I}{B} = \vn \dot{\theta} + \dot{\vn}\sin{\theta} + \hat{\vn}\dot{\vn}(1-\cos{\theta})$ & angular velocity of $B$ w.r.t. $I$ expressed in CS $I$  \\
-$\rotvel{B}{I}{B} = \vn \dot{\theta} + \dot{\vn}\sin{\theta} - \hat{\vn}\dot{\vn}(1-\cos{\theta})$ & angular velocity of $B$ w.r.t. $I$ expressed in CS $B$  \\
-$\dot{\theta} = \vn^\transpose {}_I\vom_{I\!B}, \dot{\vn}=\left(-\frac{1}{2}\frac{\sin{\theta}}{1-cos{\theta}}\hat{\vn}^2 -\frac{1}{2}\hat{\vn}\right) {}_I\vom _{I\!B}$  & \\
+$\rotvel{I}{I}{B} = \vn \dot{\theta} + \dot{\vn}\sin{\theta} + \hat{\vn}\dot{\vn}(1-\cos{\theta})$ &  \\
+$\rotvel{B}{I}{B} = \vn \dot{\theta} + \dot{\vn}\sin{\theta} - \hat{\vn}\dot{\vn}(1-\cos{\theta})$ &   \\
+$\dot{\theta} = \vn^\transpose {}_I\vom_{I\!B}, \dot{\vn}=\left(-\frac{1}{2}\frac{\sin{\theta}}{1-cos{\theta}}\hat{\vn}^2 -\frac{1}{2}\hat{\vn}\right) {}_I\vom _{I\!B} \quad \forall \theta \in \mathbb{R}\backslash\{0\}$  & \\
 \end{tabular}
 
-\subsubsection{Angular Velocity $\Leftrightarrow$ Time Derivative of Rotation Vector}
+\subsubsection{Time Derivative of Rotation Vector $\Leftrightarrow$ Angular Velocity}
 \begin{tabular}{@{}ll@{}}
 $\rotvel{I}{I}{B} = -\left(\identity_{3\times 3} + \hat{\vvph}\left(\frac{1-\cos{\norm{\vvph}}}{\norm{\vvph}^2}\right) +\hat{\vvph}^2 \left( \frac{\norm{\vvph}-\sin{\norm{\vvph}}}{\norm{\vvph}^3} \right)\right)\dot{\vvph} \quad \forall \norm{\vvph} \in \mathbb{R}\backslash\{0\}$ & \\
 $\rotvel{B}{I}{B} = \left(\identity_{3\times 3} - \hat{\vvph}\left(\frac{1-\cos{\norm{\vvph}}}{\norm{\vvph}^2}\right) +\hat{\vvph}^2 \left( \frac{\norm{\vvph}-\sin{\norm{\vvph}}}{\norm{\vvph}^3} \right)\right)\dot{\vvph} \quad \forall \norm{\vvph} \in \mathbb{R}\backslash\{0\}$ & \\
 \end{tabular}
 
-\subsubsection{Angular Velocity $\Leftrightarrow$ Time Derivative of Euler Angles ZYX}
+\subsubsection{Time Derivative of Euler Angles ZYX  $\Leftrightarrow$ Angular Velocity}
 %  is correct  according to Eq. 76 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
 $\begin{bmatrix} \dot{\psi} \\ \dot{\theta} \\ \dot{\phi} \end{bmatrix} = \begin{bmatrix} \frac{\cos{\psi}\sin{\theta}}{\cos{\theta}} & \frac{\sin{\psi}\sin{\theta}}{\cos{\theta}} & 1 \\
                         -\sin{\psi} &                         \cos{\psi} & 0 \\
@@ -408,7 +407,7 @@ $ \rotvel{B}{I}{B} = \begin{bmatrix}         -\sin{\theta} &         0 & 1 \\
  \cos{\theta}\sin{\phi} &  \cos{\phi} & 0 \\
  \cos{\phi}\cos{\theta} & -\sin{\phi} & 0 \end{bmatrix} \begin{bmatrix} \dot{\psi} \\ \dot{\theta} \\ \dot{\phi}  \end{bmatrix}  $ 
 
-\subsubsection{Angular Velocity $\Leftrightarrow$ Time Derivative of Euler Angles XYZ}
+\subsubsection{Time Derivative of Euler Angles XYZ  $\Leftrightarrow$ Angular Velocity}
 % is correct  according to Eq. 457 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
 $\begin{bmatrix} \dot{\alpha} \\ \dot{\beta} \\ \dot{\gamma} \end{bmatrix}  =  \begin{bmatrix} 1 & \frac{\sin{\alpha}\sin{\beta}}{\cos{\beta}} & -\frac{\cos{\alpha}\sin{\beta}}{\cos{\beta}} \\
  0 &                       \cos{\alpha} &                        \sin{\alpha} \\
