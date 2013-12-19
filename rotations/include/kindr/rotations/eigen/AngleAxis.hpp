@@ -106,9 +106,9 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
    */
   AngleAxis(Scalar angle, const Vector3& vector) {
     if(Usage_ == RotationUsage::ACTIVE) {
-      Base(angle,vector);
+      this->toStoredImplementation() = Base(angle,vector);
     } else if(Usage_ == RotationUsage::PASSIVE) {
-      Base(-angle,vector);
+      this->toStoredImplementation() = Base(-angle,vector);
     }
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input rotation axis has not unit length.");
   }
