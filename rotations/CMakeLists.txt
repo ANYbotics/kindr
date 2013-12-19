@@ -70,12 +70,7 @@ include_directories(
 set(TEST_SRCS
 	test/test_main.cpp
 	test/RotationEigenTest.cpp
-	test/RDiffEigenTest.cpp
-	#test/QuaternionsTest.cpp
-	#test/SimulationSubfunctions.cpp
-	#../../schweizer-messer/sm_random/src/random.cpp
-	#../../schweizer-messer/sm_eigen/src/random.cpp
-	#../../schweizer-messer/sm_timing/src/Timer.cpp
+	test/RotationDiffEigenTest.cpp
 )
 
 # Add test cpp file

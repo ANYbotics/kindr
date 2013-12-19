@@ -59,7 +59,7 @@ class get_scalar {
 
 } // namespace internal
 
-/*! \class PDiffBase
+/*! \class PositionDiffBase
  * \brief Interface for a linear velocity.
  *
  * This class defines the generic interface for a linear velocity.
@@ -69,19 +69,19 @@ class get_scalar {
  *
  */
 template<typename Derived_>
-class PDiffBase {
+class PositionDiffBase {
  public:
   /*! \brief Default constructor.
    *
     *  Creates a linear velocity with zero coefficients.
     */
-  PDiffBase() = default;
+  PositionDiffBase() = default;
 
   /*! \brief Constructor from derived linear velocity.
    *
    *  This constructor has been deleted because the abstract class does not contain any data.
    */
-  PDiffBase(const Derived_&) = delete; // on purpose!!
+  PositionDiffBase(const Derived_&) = delete; // on purpose!!
 
   /*! \brief Gets the derived linear velocity.
    *  (only for advanced users)
@@ -117,29 +117,29 @@ class PDiffBase {
    *  \returns sum of the two linear velocities.
    */
   template<typename OtherDerived_>
-  Derived_ operator +(const PDiffBase<OtherDerived_>& other) const {
-    return internal::PDiffAdditionTraits<PDiffBase<Derived_>>::add(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
+  Derived_ operator +(const PositionDiffBase<OtherDerived_>& other) const {
+    return internal::PDiffAdditionTraits<PositionDiffBase<Derived_>>::add(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
   }
 
   /*! \brief Subtraction of two time derivatives.
    *  \returns result of the subtraction of the two two time derivatives.
    */
   template<typename OtherDerived_>
-  Derived_ operator -(const PDiffBase<OtherDerived_>& other) const {
-    return internal::PDiffAdditionTraits<PDiffBase<Derived_>>::subtract(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
+  Derived_ operator -(const PositionDiffBase<OtherDerived_>& other) const {
+    return internal::PDiffAdditionTraits<PositionDiffBase<Derived_>>::subtract(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
   }
 
   /*! \brief Addition and assignment.
    *  \returns sum of the two linear velocities.
    */
   template<typename OtherDerived_>
-  Derived_& operator +=(const PDiffBase<OtherDerived_>& other);
+  Derived_& operator +=(const PositionDiffBase<OtherDerived_>& other);
 
   /*! \brief Subtraction and assignment.
    *  \returns result of the subtraction of the two linear velocities.
    */
   template<typename OtherDerived_>
-  Derived_& operator -=(const PDiffBase<OtherDerived_>& other);
+  Derived_& operator -=(const PositionDiffBase<OtherDerived_>& other);
 
 };
 
@@ -154,7 +154,7 @@ class PDiffBase {
  *  \ingroup positions
  */
 template<typename Derived_>
-class LinearVelocity3Base : public PDiffBase<Derived_> {
+class LinearVelocity3Base : public PositionDiffBase<Derived_> {
  public:
   /*! \brief The primitive type of a linear velocity.
    */
@@ -190,20 +190,20 @@ class LinearVelocity3Base : public PDiffBase<Derived_> {
 namespace internal {
 
 template<typename LeftAndRight_>
-class PDiffAdditionTraits<PDiffBase<LeftAndRight_>> {
+class PDiffAdditionTraits<PositionDiffBase<LeftAndRight_>> {
  public:
   /*! \returns the sum of two linear velocities
    * \param lhs left-hand side
    * \param rhs right-hand side
    */
-  inline static LeftAndRight_ add(const PDiffBase<LeftAndRight_>& lhs, const PDiffBase<LeftAndRight_>& rhs) {
+  inline static LeftAndRight_ add(const PositionDiffBase<LeftAndRight_>& lhs, const PositionDiffBase<LeftAndRight_>& rhs) {
     return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() + rhs.derived().toImplementation()));
   }
   /*! \returns the subtraction of two linear velocities
    * \param lhs left-hand side
    * \param rhs right-hand side
    */
-  inline static LeftAndRight_ subtract(const PDiffBase<LeftAndRight_>& lhs, const PDiffBase<LeftAndRight_>& rhs) {
+  inline static LeftAndRight_ subtract(const PositionDiffBase<LeftAndRight_>& lhs, const PositionDiffBase<LeftAndRight_>& rhs) {
     return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() - rhs.derived().toImplementation()));
   }
 };

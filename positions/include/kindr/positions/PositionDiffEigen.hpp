@@ -32,7 +32,7 @@
 
 #include "kindr/common/common.hpp"
 #include "kindr/common/assert_macros_eigen.hpp"
-#include "kindr/positions/PDiffBase.hpp"
+#include "kindr/positions/PositionDiffBase.hpp"
 
 namespace kindr {
 namespace positions {

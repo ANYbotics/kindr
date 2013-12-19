@@ -33,7 +33,7 @@
 
 #include <gtest/gtest.h>
 
-#include "kindr/positions/PDiffEigen.hpp"
+#include "kindr/positions/PositionDiffEigen.hpp"
 #include "kindr/common/gtest_eigen.hpp"
 
 
