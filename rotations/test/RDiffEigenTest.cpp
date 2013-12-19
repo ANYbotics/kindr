@@ -200,5 +200,17 @@ TEST(RDiffTest, testDevelopment)
 
   std::cout << "EulerAnglesXyzDiffAD: avA | avA9: "<<  avA << " | "  << avA9 << std::endl;
 
+
+  rot::RotationVectorAD rvA(rqA);
+  rot::RotationVectorDiffAD rvDiffA(rvA, avA);
+  rot::AngularVelocityAD avA10(rvA, rvDiffA);
+
+  std::cout << "RotationVectorDiffAD: avA | avA9: "<<  avA << " | "  << avA10 << std::endl;
+
+
+  rot::RotationQuaternionDiffAD rqDiffA2(rvA, rvDiffA);
+  std::cout << "RotationQuaternionDiffAD: rqDiffA | rqDiffA2: "<<  rqDiffA << " | "  << rqDiffA2 << std::endl;
+  rot::RotationQuaternionDiffAD rqDiffA3(rqA, rvDiffA);
+  std::cout << "RotationQuaternionDiffAD: rqDiffA | rqDiffA3: "<<  rqDiffA << " | "  << rqDiffA3 << std::endl;
 }
 

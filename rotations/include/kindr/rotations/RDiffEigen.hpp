@@ -33,6 +33,7 @@
 #include <Eigen/Core>
 
 #include "kindr/common/common.hpp"
+#include "kindr/common/assert_macros.hpp"
 #include "kindr/common/assert_macros_eigen.hpp"
 #include "kindr/rotations/RDiffBase.hpp"
 #include "kindr/rotations/RotationEigen.hpp"
@@ -56,7 +57,7 @@ namespace eigen_impl {
  * \ingroup rotations
  */
 template<typename PrimType_, enum RotationUsage Usage_>
-class AngularVelocity : public AngularVelocityBase<AngularVelocity<PrimType_, Usage_>, Usage_>, private Eigen::Matrix<PrimType_, 3, 1> {
+class LocalAngularVelocity : public AngularVelocityBase<LocalAngularVelocity<PrimType_, Usage_>, Usage_>, private Eigen::Matrix<PrimType_, 3, 1> {
  private:
   /*! \brief The base type.
    */
@@ -74,7 +75,7 @@ class AngularVelocity : public AngularVelocityBase<AngularVelocity<PrimType_, Us
 
   /*! \brief Default constructor initializes all velocities with zero.
    */
-  AngularVelocity()
+  LocalAngularVelocity()
     : Base(Base::Zero()) {
   }
 
@@ -83,7 +84,7 @@ class AngularVelocity : public AngularVelocityBase<AngularVelocity<PrimType_, Us
    * \param y   y-coordinate
    * \param z   z-coordinate
    */
-  AngularVelocity(Scalar x, Scalar y, Scalar z)
+  LocalAngularVelocity(Scalar x, Scalar y, Scalar z)
     : Base(x, y, z) {
   }
 
@@ -91,7 +92,7 @@ class AngularVelocity : public AngularVelocityBase<AngularVelocity<PrimType_, Us
   /*! \brief Constructor using Eigen::Matrix<Scalar,3,1>.
    *  \param other   Eigen::Matrix<Scalar,3,1>
    */
-  explicit AngularVelocity(const Base& other)
+  explicit LocalAngularVelocity(const Base& other)
     : Base(other) {
    }
 
@@ -102,8 +103,8 @@ class AngularVelocity : public AngularVelocityBase<AngularVelocity<PrimType_, Us
    * \param other       other time derivative
    */
   template<typename RotationDerived_, enum RotationUsage RotationUsage_, typename OtherDerived_, enum RotationUsage OtherUsage_>
-  inline explicit AngularVelocity(const RotationBase<RotationDerived_, RotationUsage_>& rotation, const RDiffBase<OtherDerived_, OtherUsage_>& other)
-    : Base(internal::RDiffConversionTraits<AngularVelocity, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived())){
+  inline explicit LocalAngularVelocity(const RotationBase<RotationDerived_, RotationUsage_>& rotation, const RDiffBase<OtherDerived_, OtherUsage_>& other)
+    : Base(internal::RDiffConversionTraits<LocalAngularVelocity, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived())){
   }
 
   /*! \brief Cast to the implementation type.
@@ -137,17 +138,17 @@ class AngularVelocity : public AngularVelocityBase<AngularVelocity<PrimType_, Us
 
   /*! \brief Addition of two angular velocities.
    */
-  using AngularVelocityBase<AngularVelocity<PrimType_, Usage_>,Usage_>::operator+; // otherwise ambiguous PositionBase and Eigen
+  using AngularVelocityBase<LocalAngularVelocity<PrimType_, Usage_>,Usage_>::operator+; // otherwise ambiguous PositionBase and Eigen
 
   /*! \brief Subtraction of two angular velocities.
    */
-  using AngularVelocityBase<AngularVelocity<PrimType_, Usage_>, Usage_>::operator-; // otherwise ambiguous PositionBase and Eigen
+  using AngularVelocityBase<LocalAngularVelocity<PrimType_, Usage_>, Usage_>::operator-; // otherwise ambiguous PositionBase and Eigen
 
   /*! \brief Addition of two angular velocities.
    * \param other   other angular velocity
    */
   template<typename Other_>
-  AngularVelocity& operator +=(const Other_& other) {
+  LocalAngularVelocity& operator +=(const Other_& other) {
     this->toImplementation() += other.toImplementation();
     return *this;
   }
@@ -156,7 +157,7 @@ class AngularVelocity : public AngularVelocityBase<AngularVelocity<PrimType_, Us
    * \param other   other angular velocity
    */
   template<typename Other_>
-  AngularVelocity& operator -=(const Other_& other) {
+  LocalAngularVelocity& operator -=(const Other_& other) {
     this->toImplementation() -= other.toImplementation();
     return *this;
   }
@@ -164,7 +165,7 @@ class AngularVelocity : public AngularVelocityBase<AngularVelocity<PrimType_, Us
   /*! \brief Sets all components of the angular velocity to zero.
    * \returns reference
    */
-  AngularVelocity& setZero() {
+  LocalAngularVelocity& setZero() {
     Base::setZero();
     return *this;
   }
@@ -172,7 +173,7 @@ class AngularVelocity : public AngularVelocityBase<AngularVelocity<PrimType_, Us
   /*! \brief Used for printing the object with std::cout.
    *  \returns std::stream object
    */
-  friend std::ostream& operator << (std::ostream& out, const AngularVelocity& velocity) {
+  friend std::ostream& operator << (std::ostream& out, const LocalAngularVelocity& velocity) {
     out << velocity.toImplementation().transpose();
     return out;
   }
@@ -183,9 +184,9 @@ class AngularVelocity : public AngularVelocityBase<AngularVelocity<PrimType_, Us
 //! \brief 3D angular velocity with primitive type float
 //typedef AngularVelocity<float, RotationUsage::PASSIVE>  AngularVelocityPF;
 //! \brief 3D angular velocity with primitive type double
-typedef AngularVelocity<double, RotationUsage::ACTIVE>  AngularVelocityAD;
+typedef LocalAngularVelocity<double, RotationUsage::ACTIVE>  AngularVelocityAD;
 //! \brief 3D angular velocity with primitive type float
-typedef AngularVelocity<float, RotationUsage::ACTIVE>  AngularVelocityAF;
+typedef LocalAngularVelocity<float, RotationUsage::ACTIVE>  AngularVelocityAF;
 
 
 
@@ -368,7 +369,7 @@ class RotationVectorDiff : public RotationVectorDiffBase<RotationVectorDiff<Prim
    */
   template<typename RotationDerived_, typename OtherDerived_>
   inline explicit RotationVectorDiff(const RotationBase<RotationDerived_, Usage_>& rotation, const RDiffBase<OtherDerived_, Usage_>& other)
-    : Base(internal::RDiffConversionTraits<RotationVectorDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived())){
+    : vector_(internal::RDiffConversionTraits<RotationVectorDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived()).toImplementation()){
   }
 
   /*! \brief Cast to another representation of the time derivative of a rotation
@@ -393,6 +394,21 @@ class RotationVectorDiff : public RotationVectorDiffBase<RotationVectorDiff<Prim
    */
   inline const Implementation& toImplementation() const {
     return vector_;
+  }
+
+
+  inline Scalar x() const {
+    return toImplementation()(0);
+  }
+
+
+  inline Scalar y() const {
+    return toImplementation()(1);
+  }
+
+
+  inline Scalar z() const {
+    return toImplementation()(2);
   }
 
 
@@ -467,7 +483,7 @@ class RotationQuaternionDiff : public RotationQuaternionDiffBase<RotationQuatern
    */
   template<typename RotationDerived_, typename OtherDerived_>
   inline explicit RotationQuaternionDiff(const RotationBase<RotationDerived_, Usage_>& rotation, const RDiffBase<OtherDerived_, Usage_>& other)
-    : Base(internal::RDiffConversionTraits<RotationQuaternionDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived())){
+    : Base(internal::RDiffConversionTraits<RotationQuaternionDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived()).toQuaternion()){
   }
 
   /*! \brief Cast to another representation of the time derivative of a rotation
@@ -1078,69 +1094,96 @@ namespace internal {
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 template<typename PrimType_>
-class RDiffConversionTraits<eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>> {
+class RDiffConversionTraits<eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>> {
  public:
-  inline static eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>& rquat, const eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>& rquatdiff) {
+  inline static eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>& rquat, const eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>& rquatdiff) {
     Eigen::Matrix<PrimType_,3,4> H_bar;
     H_bar << -rquat.toUnitQuaternion().x(),  rquat.toUnitQuaternion().w(),  rquat.toUnitQuaternion().z(), -rquat.toUnitQuaternion().y(),
              -rquat.toUnitQuaternion().y(), -rquat.toUnitQuaternion().z(),  rquat.toUnitQuaternion().w(),  rquat.toUnitQuaternion().x(),
              -rquat.toUnitQuaternion().z(),  rquat.toUnitQuaternion().y(), -rquat.toUnitQuaternion().x(),  rquat.toUnitQuaternion().w();
-    return eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>(2.0*H_bar*rquatdiff.toQuaternion().vector());
+    return eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>(2.0*H_bar*rquatdiff.toQuaternion().vector());
   }
 };
 
 //! B_\hat{w}_IB = (R_IB*dR_IB')
 template<typename PrimType_>
-class RDiffConversionTraits<eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationMatrixDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationMatrix<PrimType_, RotationUsage::ACTIVE>> {
+class RDiffConversionTraits<eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationMatrixDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationMatrix<PrimType_, RotationUsage::ACTIVE>> {
  public:
-  inline static eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::RotationMatrix<PrimType_, RotationUsage::ACTIVE>& rotationMatrix, const eigen_impl::RotationMatrixDiff<PrimType_, RotationUsage::ACTIVE>& rotationMatrixDiff) {
-    return eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>(linear_algebra::getVectorFromSkewMatrix<PrimType_>(rotationMatrix.toImplementation()*rotationMatrixDiff.toImplementation().transpose()));
+  inline static eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::RotationMatrix<PrimType_, RotationUsage::ACTIVE>& rotationMatrix, const eigen_impl::RotationMatrixDiff<PrimType_, RotationUsage::ACTIVE>& rotationMatrixDiff) {
+    return eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>(linear_algebra::getVectorFromSkewMatrix<PrimType_>(rotationMatrix.toImplementation()*rotationMatrixDiff.toImplementation().transpose()));
   }
 };
 
 
 //! B_\hat{w}_IB = (C_IB'*dC_IB)
 template<typename PrimType_>
-class RDiffConversionTraits<eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationMatrixDiff<PrimType_, RotationUsage::PASSIVE>, eigen_impl::RotationMatrix<PrimType_, RotationUsage::PASSIVE>> {
+class RDiffConversionTraits<eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationMatrixDiff<PrimType_, RotationUsage::PASSIVE>, eigen_impl::RotationMatrix<PrimType_, RotationUsage::PASSIVE>> {
  public:
-  inline static eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::RotationMatrix<PrimType_, RotationUsage::PASSIVE>& rotationMatrix, const eigen_impl::RotationMatrixDiff<PrimType_, RotationUsage::PASSIVE>& rotationMatrixDiff) {
-    return eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>(linear_algebra::getVectorFromSkewMatrix<PrimType_>(rotationMatrix.inverted().toImplementation()*rotationMatrixDiff.toImplementation()));
+  inline static eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::RotationMatrix<PrimType_, RotationUsage::PASSIVE>& rotationMatrix, const eigen_impl::RotationMatrixDiff<PrimType_, RotationUsage::PASSIVE>& rotationMatrixDiff) {
+    return eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>(linear_algebra::getVectorFromSkewMatrix<PrimType_>(rotationMatrix.inverted().toImplementation()*rotationMatrixDiff.toImplementation()));
   }
 };
 
 //! B_\hat{w}_IB = B_n \dot{\theta} + \dot{B_n}*sin(\theta) + B_\hat{n}(1-cos(\theta))
 template<typename PrimType_>
-class RDiffConversionTraits<eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::AngleAxisDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::AngleAxis<PrimType_, RotationUsage::ACTIVE>> {
+class RDiffConversionTraits<eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::AngleAxisDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::AngleAxis<PrimType_, RotationUsage::ACTIVE>> {
  public:
-  inline static eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::AngleAxis<PrimType_, RotationUsage::ACTIVE>& angleAxis, const eigen_impl::AngleAxisDiff<PrimType_, RotationUsage::ACTIVE>& angleAxisDiff) {
-    return eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>(angleAxis.axis()*angleAxisDiff.angle() + angleAxisDiff.axis()*sin(angleAxis.angle()) + linear_algebra::getSkewMatrixFromVector(angleAxis.axis())*angleAxisDiff.axis()*(1-cos(angleAxis.angle())));
+  inline static eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::AngleAxis<PrimType_, RotationUsage::ACTIVE>& angleAxis, const eigen_impl::AngleAxisDiff<PrimType_, RotationUsage::ACTIVE>& angleAxisDiff) {
+    return eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>(angleAxis.axis()*angleAxisDiff.angle() + angleAxisDiff.axis()*sin(angleAxis.angle()) + linear_algebra::getSkewMatrixFromVector(angleAxis.axis())*angleAxisDiff.axis()*(1-cos(angleAxis.angle())));
   }
 };
 
 template<typename PrimType_>
-class RDiffConversionTraits<eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>> {
+class RDiffConversionTraits<eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>> {
  public:
-  inline static eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>& rotationVector, const eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>& rotationVectorDiff) {
+  inline static eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>& rotationVector, const eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>& rotationVectorDiff) {
     typedef typename eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>::Implementation Vector;
     typedef PrimType_ Scalar;
     typedef typename Eigen::Matrix<PrimType_, 3, 3> Matrix3x3;
 
-    const Vector rv = rotationVector.toImplementation();
-    const Vector rvDiff = rotationVectorDiff.toImplementation();
-    const Matrix3x3 rv_hat = linear_algebra::getSkewMatrixFromVector(rv);
-    const Scalar angle = rv.norm();
 
-    const Vector angularVelocity = rvDiff-rv_hat*rvDiff*(1-cos(angle)/(angle*angle)) + rv_hat*rv_hat*rvDiff*((angle-sin(angle))/(angle*angle*angle));
+    // not tested:
+//    const Vector rv = rotationVector.toImplementation();
+//    const Vector rvDiff = rotationVectorDiff.toImplementation();
+//    const Matrix3x3 rv_hat = linear_algebra::getSkewMatrixFromVector(rv);
+//    const Scalar angle = rv.norm();
+//    const Vector angularVelocity = rvDiff-rv_hat*rvDiff*(1-cos(angle)/(angle*angle)) + rv_hat*rv_hat*rvDiff*((angle-sin(angle))/(angle*angle*angle));
+//    return eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>(angularVelocity);
 
-    return eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>(angularVelocity);
+    const PrimType_ v = rotationVector.vector().norm();
+    const PrimType_ v1 = rotationVector.firstEntry();
+    const PrimType_ v2 = rotationVector.secondEntry();
+    const PrimType_ v3 = rotationVector.thirdEntry();
+    const PrimType_ dv1 = rotationVectorDiff.x();
+    const PrimType_ dv2 = rotationVectorDiff.y();
+    const PrimType_ dv3 = rotationVectorDiff.z();
+
+    const PrimType_ t2 = 1.0/(v*v*v);
+    const PrimType_ t3 = cos(v);
+    const PrimType_ t4 = sin(v);
+    const PrimType_ t5 = v1*v1;
+    const PrimType_ t6 = v1*v2;
+    const PrimType_ t7 = v*v;
+    const PrimType_ t8 = t4*t7;
+    const PrimType_ t9 = v2*v2;
+    const PrimType_ t10 = v2*v3;
+    const PrimType_ t11 = v1*v3;
+    const PrimType_ t12 = t3*v2;
+    const PrimType_ t13 = v3*v3;
+    const PrimType_ w1 = dv3*t2*(v*(t11+t12-v2)-t4*v1*v3)+dv1*t2*(t8-t4*t5+t5*v)+dv2*t2*(v*(t6+v3-t3*v3)-t4*v1*v2);
+    const PrimType_ w2 = dv1*t2*(v*(t6-v3+t3*v3)-t4*v1*v2)+dv2*t2*(t8-t4*t9+t9*v)+dv3*t2*(v*(t10+v1-t3*v1)-t4*v2*v3);
+    const PrimType_ w3 = dv2*t2*(v*(t10-v1+t3*v1)-t4*v2*v3)+dv1*t2*(v*(t11-t12+v2)-t4*v1*v3)+dv3*t2*(t8-t4*t13+t13*v);
+
+    return eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>(w1, w2, w3);
+
   }
 };
 
 
 template<typename PrimType_>
-class RDiffConversionTraits<eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::EulerAnglesZyxDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE>> {
+class RDiffConversionTraits<eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::EulerAnglesZyxDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE>> {
  public:
-  inline static eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE>& eulerAngles, const eigen_impl::EulerAnglesZyxDiff<PrimType_, RotationUsage::ACTIVE>& eulerAnglesDiff) {
+  inline static eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE>& eulerAngles, const eigen_impl::EulerAnglesZyxDiff<PrimType_, RotationUsage::ACTIVE>& eulerAnglesDiff) {
     const PrimType_ phi = eulerAngles.roll();
     const PrimType_ theta = eulerAngles.pitch();
     const PrimType_ dphi = eulerAnglesDiff.roll();
@@ -1149,14 +1192,14 @@ class RDiffConversionTraits<eigen_impl::AngularVelocity<PrimType_, RotationUsage
     const PrimType_ t2 = sin(phi);
     const PrimType_ t3 = cos(phi);
     const PrimType_ t4 = cos(theta);
-    return eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>(dphi-dpsi*sin(theta), dtheta*t3+dpsi*t2*t4, -dtheta*t2+dpsi*t3*t4);
+    return eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>(dphi-dpsi*sin(theta), dtheta*t3+dpsi*t2*t4, -dtheta*t2+dpsi*t3*t4);
   }
 };
 
 template<typename PrimType_>
-class RDiffConversionTraits<eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::EulerAnglesXyzDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::EulerAnglesXyz<PrimType_, RotationUsage::ACTIVE>> {
+class RDiffConversionTraits<eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::EulerAnglesXyzDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::EulerAnglesXyz<PrimType_, RotationUsage::ACTIVE>> {
  public:
-  inline static eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::EulerAnglesXyz<PrimType_, RotationUsage::ACTIVE>& eulerAngles, const eigen_impl::EulerAnglesXyzDiff<PrimType_, RotationUsage::ACTIVE>& eulerAnglesDiff) {
+  inline static eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::EulerAnglesXyz<PrimType_, RotationUsage::ACTIVE>& eulerAngles, const eigen_impl::EulerAnglesXyzDiff<PrimType_, RotationUsage::ACTIVE>& eulerAnglesDiff) {
     const PrimType_ beta = eulerAngles.pitch();
     const PrimType_ gamma = eulerAngles.yaw();
     const PrimType_ dalpha = eulerAnglesDiff.roll();
@@ -1165,16 +1208,16 @@ class RDiffConversionTraits<eigen_impl::AngularVelocity<PrimType_, RotationUsage
     const PrimType_ t2 = cos(gamma);
     const PrimType_ t3 = cos(beta);
     const PrimType_ t4 = sin(gamma);
-    return eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>(dbeta*t4+dalpha*t2*t3, dbeta*t2-dalpha*t3*t4, dgamma+dalpha*sin(beta));
+    return eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>(dbeta*t4+dalpha*t2*t3, dbeta*t2-dalpha*t3*t4, dgamma+dalpha*sin(beta));
   }
 };
 
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 template<typename PrimType_>
-class RDiffConversionTraits<eigen_impl::AngleAxisDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::AngleAxis<PrimType_, RotationUsage::ACTIVE>> {
+class RDiffConversionTraits<eigen_impl::AngleAxisDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::AngleAxis<PrimType_, RotationUsage::ACTIVE>> {
  public:
-  inline static eigen_impl::AngleAxisDiff<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::AngleAxis<PrimType_, RotationUsage::ACTIVE>& angleAxis, const eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>& angularVelocity) {
+  inline static eigen_impl::AngleAxisDiff<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::AngleAxis<PrimType_, RotationUsage::ACTIVE>& angleAxis, const eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>& angularVelocity) {
     typedef typename eigen_impl::AngleAxis<PrimType_, RotationUsage::ACTIVE>::Vector3 Vector;
     const PrimType_ angle = angleAxis.angle();
 
@@ -1196,22 +1239,127 @@ class RDiffConversionTraits<eigen_impl::AngleAxisDiff<PrimType_, RotationUsage::
 
 
 template<typename PrimType_>
-class RDiffConversionTraits<eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>> {
+class RDiffConversionTraits<eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>> {
  public:
-  inline static eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>& rotationVector, const eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>& angularVelocity) {
+  inline static eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>& rotationVector, const eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>& angularVelocity) {
     typedef typename eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>::Implementation Vector;
     typedef typename Eigen::Matrix<PrimType_, 3, 3> Matrix3x3;
 
-    const Vector rv = rotationVector.toImplementation();
-    const PrimType_ angle = rv.norm();
+    // not tested:
+//    const Vector rv = rotationVector.toImplementation();
+//    const PrimType_ angle = rv.norm();
+//
+//    if (angle < 1e-14) {
+//      return eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>(angularVelocity.toImplementation());
+//    }
+//
+//    const Matrix3x3 rv_hat = linear_algebra::getSkewMatrixFromVector(rv);
+//    const Vector rvDiff = (Matrix3x3::Identity() + 0.5*rv_hat + (1.0/(angle*angle) - sin(angle)/(2.0*angle*(1.0-cos(angle))))*rv_hat*rv_hat)*angularVelocity.toImplementation();
+//    return eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>(rvDiff);
 
-    if (angle < 1e-14) {
+    const PrimType_ v = rotationVector.vector().norm();
+    if (v < 1e-14) {
       return eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>(angularVelocity.toImplementation());
     }
+    const PrimType_ w1 = angularVelocity.x();
+    const PrimType_ w2 = angularVelocity.y();
+    const PrimType_ w3 = angularVelocity.z();
 
-    const Matrix3x3 rv_hat = linear_algebra::getSkewMatrixFromVector(rv);
-    const Vector rvDiff = (Matrix3x3::Identity() + 0.5*rv_hat + (1.0/(angle*angle) - sin(angle)/(2.0*angle*(1.0-cos(angle))))*rv_hat*rv_hat)*angularVelocity.toImplementation();
-    return eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>(rvDiff);
+    const PrimType_ v1 = rotationVector.firstEntry();
+    const PrimType_ v2 = rotationVector.secondEntry();
+    const PrimType_ v3 = rotationVector.thirdEntry();
+    const PrimType_ t6 = v*(1.0/2.0);
+    const PrimType_ t2 = sin(t6);
+    const PrimType_ t3 = t2*t2;
+    const PrimType_ t4 = v2*v2;
+    const PrimType_ t5 = v*v;
+    const PrimType_ t7 = cos(t6);
+    const PrimType_ t8 = v1*v1;
+    const PrimType_ t9 = v3*v3;
+    const PrimType_ t10 = t7*t7;
+    const PrimType_ t11 = t3*t3;
+    const PrimType_ t12 = t8*t8;
+    const PrimType_ t13 = t4*t4;
+    const PrimType_ t14 = t9*t9;
+    const PrimType_ t15 = t5*t5;
+    const PrimType_ t16 = t10*t10;
+    const PrimType_ t17 = t2*t11*t12*v;
+    const PrimType_ t18 = t2*t11*t13*v;
+    const PrimType_ t19 = t2*t11*t14*v;
+    const PrimType_ t20 = t3*t7*t10*t15*2.0;
+    const PrimType_ t21 = t2*t4*t8*t11*v*2.0;
+    const PrimType_ t22 = t2*t8*t9*t11*v*2.0;
+    const PrimType_ t23 = t2*t4*t9*t11*v*2.0;
+    const PrimType_ t24 = t2*t3*t5*t8*t10*v;
+    const PrimType_ t25 = t2*t3*t4*t5*t10*v;
+    const PrimType_ t26 = t2*t3*t5*t9*t10*v;
+    const PrimType_ t27 = t5*t7*t8*t11*2.0;
+    const PrimType_ t28 = t2*t3*t10*t12*v;
+    const PrimType_ t29 = t4*t5*t7*t11*2.0;
+    const PrimType_ t30 = t2*t5*t8*t16*v;
+    const PrimType_ t31 = t2*t3*t10*t13*v;
+    const PrimType_ t32 = t5*t7*t9*t11*2.0;
+    const PrimType_ t33 = t2*t4*t5*t16*v;
+    const PrimType_ t34 = t2*t3*t10*t14*v;
+    const PrimType_ t35 = t2*t5*t9*t16*v;
+    const PrimType_ t36 = t2*t3*t4*t8*t10*v*2.0;
+    const PrimType_ t37 = t2*t3*t8*t9*t10*v*2.0;
+    const PrimType_ t38 = t2*t3*t4*t9*t10*v*2.0;
+    const PrimType_ t41 = t7*t11*t12*2.0;
+    const PrimType_ t42 = t7*t11*t13*2.0;
+    const PrimType_ t43 = t7*t11*t14*2.0;
+    const PrimType_ t44 = t3*t5*t7*t8*t10*2.0;
+    const PrimType_ t45 = t3*t4*t5*t7*t10*2.0;
+    const PrimType_ t46 = t3*t5*t7*t9*t10*2.0;
+    const PrimType_ t47 = t4*t7*t8*t11*4.0;
+    const PrimType_ t48 = t7*t8*t9*t11*4.0;
+    const PrimType_ t49 = t4*t7*t9*t11*4.0;
+    const PrimType_ t39 = t17+t18+t19+t20+t21+t22+t23+t24+t25+t26+t27+t28+t29+t30+t31+t32+t33+t34+t35+t36+t37+t38-t41-t42-t43-t44-t45-t46-t47-t48-t49;
+    const PrimType_ t40 = 1.0/t39;
+    const PrimType_ t50 = t9*v*v3*(1.0/2.0);
+    const PrimType_ t51 = t8*v*v3*(1.0/2.0);
+    const PrimType_ t52 = t4*v*v3*(1.0/2.0);
+    const PrimType_ t53 = t9*v*v3;
+    const PrimType_ t54 = t8*v*v3;
+    const PrimType_ t55 = t4*v*v3;
+    const PrimType_ t56 = t8*v3;
+    const PrimType_ t57 = t4*v3;
+    const PrimType_ t58 = t9*v3;
+    const PrimType_ t59 = t7*t10*t15*v1*v2*(1.0/2.0);
+    const PrimType_ t60 = t9*v*(1.0/2.0);
+    const PrimType_ t61 = t9*v;
+    const PrimType_ t62 = t8*v*v1*(1.0/2.0);
+    const PrimType_ t63 = t4*v*v1*(1.0/2.0);
+    const PrimType_ t64 = t9*v*v1*(1.0/2.0);
+    const PrimType_ t65 = t8*v*v1;
+    const PrimType_ t66 = t4*v*v1;
+    const PrimType_ t67 = t9*v*v1;
+    const PrimType_ t68 = t4*v1;
+    const PrimType_ t69 = t9*v1;
+    const PrimType_ t70 = t8*v1;
+    const PrimType_ t71 = t7*t10*t15*v2*v3*(1.0/2.0);
+    const PrimType_ t72 = t4*v*v2*(1.0/2.0);
+    const PrimType_ t73 = t8*v*v2*(1.0/2.0);
+    const PrimType_ t74 = t9*v*v2*(1.0/2.0);
+    const PrimType_ t75 = v*v1*v3;
+    const PrimType_ t76 = t4*v*v2;
+    const PrimType_ t77 = t8*v*v2;
+    const PrimType_ t78 = t9*v*v2;
+    const PrimType_ t79 = v*v1*v3*2.0;
+    const PrimType_ t80 = t8*v2;
+    const PrimType_ t81 = t9*v2;
+    const PrimType_ t82 = t5*v1*v3*(1.0/2.0);
+    const PrimType_ t83 = t4*v2;
+    const PrimType_ t84 = t7*t10*t15*v1*v3*(1.0/2.0);
+    const PrimType_ t85 = t8*v*(1.0/2.0);
+    const PrimType_ t86 = t4*v*(1.0/2.0);
+    const PrimType_ t87 = t8*v;
+    const PrimType_ t88 = t4*v;
+    const PrimType_ dv1 = -t40*w2*(t59+t2*t3*t5*(t50+t51+t52-v*v1*v2)+t2*t5*t10*(t53+t54+t55-v*v1*v2*2.0)*(1.0/2.0)-t3*t5*t7*(t56+t57+t58-t5*v3-t5*v1*v2*(1.0/2.0)))-t40*w3*(t84+t3*t5*t7*(t80+t81+t82+t83-t5*v2)-t2*t3*t5*(t72+t73+t74+t75)-t2*t5*t10*(t76+t77+t78+t79)*(1.0/2.0))+t40*w1*(-t2*t5*t10*v*(t4-t5+t9)+t3*t5*t7*v*(t61+t88)*(1.0/2.0)+t5*t7*t10*v*(t60+t86)+t2*t3*t5*t8*v);
+    const PrimType_ dv2 = -t40*w1*(t59-t2*t3*t5*(t50+t51+t52+v*v1*v2)-t2*t5*t10*(t53+t54+t55+v*v1*v2*2.0)*(1.0/2.0)+t3*t5*t7*(t56+t57+t58-t5*v3+t5*v1*v2*(1.0/2.0)))-t40*w3*(t71+t2*t3*t5*(t62+t63+t64-v*v2*v3)+t2*t5*t10*(t65+t66+t67-v*v2*v3*2.0)*(1.0/2.0)-t3*t5*t7*(t68+t69+t70-t5*v1-t5*v2*v3*(1.0/2.0)))+t40*w2*(-t2*t5*t10*v*(-t5+t8+t9)+t3*t5*t7*v*(t61+t87)*(1.0/2.0)+t5*t7*t10*v*(t60+t85)+t2*t3*t4*t5*v);
+    const PrimType_ dv3 = -t40*w2*(t71-t2*t3*t5*(t62+t63+t64+v*v2*v3)-t2*t5*t10*(t65+t66+t67+v*v2*v3*2.0)*(1.0/2.0)+t3*t5*t7*(t68+t69+t70-t5*v1+t5*v2*v3*(1.0/2.0)))-t40*w1*(t84+t2*t3*t5*(t72+t73+t74-t75)+t2*t5*t10*(t76+t77+t78-t79)*(1.0/2.0)-t3*t5*t7*(t80+t81-t82+t83-t5*v2))+t40*w3*(-t2*t5*t10*v*(t4-t5+t8)+t3*t5*t7*v*(t87+t88)*(1.0/2.0)+t5*t7*t10*v*(t85+t86)+t2*t3*t5*t9*v);
+    return eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>(dv1, dv2, dv3);
+
   }
 };
 
@@ -1220,9 +1368,9 @@ class RDiffConversionTraits<eigen_impl::RotationVectorDiff<PrimType_, RotationUs
 
 
 template<typename PrimType_>
-class RDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>> {
+class RDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>> {
  public:
-  inline static eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>& rquat, const eigen_impl::AngularVelocity<PrimType_, RotationUsage::ACTIVE>& angularVelocity) {
+  inline static eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>& rquat, const eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>& angularVelocity) {
     Eigen::Matrix<PrimType_,4,3> H_bar_transpose;
     H_bar_transpose << -rquat.toUnitQuaternion().x(), -rquat.toUnitQuaternion().y(), -rquat.toUnitQuaternion().z(),
                         rquat.toUnitQuaternion().w(), -rquat.toUnitQuaternion().z(),  rquat.toUnitQuaternion().y(),
@@ -1232,12 +1380,60 @@ class RDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, Rotati
   }
 };
 
+
+template<typename PrimType_>
+class RDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>> {
+ public:
+  inline static eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>& rotationVector, const eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>& rotationVectorDiff) {
+
+    const PrimType_ v = rotationVector.vector().norm();
+    if (v < 1e-14) {
+      KINDR_ASSERT_TRUE(std::runtime_error, false, "not yet implemented" );
+      return eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>();
+    }
+
+    const PrimType_ v1 = rotationVector.firstEntry();
+    const PrimType_ v2 = rotationVector.secondEntry();
+    const PrimType_ v3 = rotationVector.thirdEntry();
+    const PrimType_ dv1 = rotationVectorDiff.x();
+    const PrimType_ dv2 = rotationVectorDiff.y();
+    const PrimType_ dv3 = rotationVectorDiff.z();
+
+    const PrimType_ t2 = 1.0/v;
+    const PrimType_ t3 = v*(1.0/2.0);
+    const PrimType_ t4 = sin(t3);
+    const PrimType_ t5 = 1.0/(v*v*v);
+    const PrimType_ t6 = t4*2.0;
+    const PrimType_ t7 = cos(t3);
+    const PrimType_ t9 = t7*v;
+    const PrimType_ t8 = t6-t9;
+    const PrimType_ t10 = t2*t4;
+    const PrimType_ w = dv1*t2*t4*v1*(-1.0/2.0)-dv2*t2*t4*v2*(1.0/2.0)-dv3*t2*t4*v3*(1.0/2.0);
+    const PrimType_ x = dv1*(t10-t5*t8*(v1*v1)*(1.0/2.0))-dv2*t5*t8*v1*v2*(1.0/2.0)-dv3*t5*t8*v1*v3*(1.0/2.0);
+    const PrimType_ y = dv2*(t10-t5*t8*(v2*v2)*(1.0/2.0))-dv1*t5*t8*v1*v2*(1.0/2.0)-dv3*t5*t8*v2*v3*(1.0/2.0);
+    const PrimType_ z = dv3*(t10-t5*t8*(v3*v3)*(1.0/2.0))-dv1*t5*t8*v1*v3*(1.0/2.0)-dv2*t5*t8*v2*v3*(1.0/2.0);
+
+
+    return eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>(w, x, y, z);
+  }
+};
+
+template<typename PrimType_>
+class RDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>> {
+ public:
+  inline static eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>& rquat, const eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>& rotationVectorDiff) {
+    return RDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>>::convert(eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>(rquat), rotationVectorDiff);
+  }
+};
+
+
+
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 template<typename PrimType_, enum RotationUsage Usage_>
-class RDiffConversionTraits<eigen_impl::EulerAnglesXyzDiff<PrimType_, Usage_>, eigen_impl::AngularVelocity<PrimType_, Usage_>, eigen_impl::EulerAnglesXyz<PrimType_, Usage_>> {
+class RDiffConversionTraits<eigen_impl::EulerAnglesXyzDiff<PrimType_, Usage_>, eigen_impl::LocalAngularVelocity<PrimType_, Usage_>, eigen_impl::EulerAnglesXyz<PrimType_, Usage_>> {
  public:
-  inline static eigen_impl::EulerAnglesXyzDiff<PrimType_, Usage_> convert(const eigen_impl::EulerAnglesXyz<PrimType_, Usage_>& eulerAngles, const eigen_impl::AngularVelocity<PrimType_, Usage_>& angularVelocity) {
+  inline static eigen_impl::EulerAnglesXyzDiff<PrimType_, Usage_> convert(const eigen_impl::EulerAnglesXyz<PrimType_, Usage_>& eulerAngles, const eigen_impl::LocalAngularVelocity<PrimType_, Usage_>& angularVelocity) {
     typedef typename Eigen::Matrix<PrimType_, 3, 3> Matrix3x3;
 
     // works:
@@ -1281,9 +1477,9 @@ class RDiffConversionTraits<eigen_impl::EulerAnglesXyzDiff<PrimType_, Usage_>, e
 
 
 template<typename PrimType_, enum RotationUsage Usage_>
-class RDiffConversionTraits<eigen_impl::EulerAnglesZyxDiff<PrimType_, Usage_>, eigen_impl::AngularVelocity<PrimType_, Usage_>, eigen_impl::EulerAnglesZyx<PrimType_, Usage_>> {
+class RDiffConversionTraits<eigen_impl::EulerAnglesZyxDiff<PrimType_, Usage_>, eigen_impl::LocalAngularVelocity<PrimType_, Usage_>, eigen_impl::EulerAnglesZyx<PrimType_, Usage_>> {
  public:
-  inline static eigen_impl::EulerAnglesZyxDiff<PrimType_, Usage_> convert(const eigen_impl::EulerAnglesZyx<PrimType_, Usage_>& eulerAngles, const eigen_impl::AngularVelocity<PrimType_, Usage_>& angularVelocity) {
+  inline static eigen_impl::EulerAnglesZyxDiff<PrimType_, Usage_> convert(const eigen_impl::EulerAnglesZyx<PrimType_, Usage_>& eulerAngles, const eigen_impl::LocalAngularVelocity<PrimType_, Usage_>& angularVelocity) {
     typedef typename Eigen::Matrix<PrimType_, 3, 3> Matrix3x3;
 
     const PrimType_ theta = eulerAngles.pitch();
