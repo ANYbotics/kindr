@@ -39,7 +39,7 @@
 #include "kindr/quaternions/QuaternionEigen.hpp"
 #include "kindr/linear_algebra/LinearAlgebra.hpp"
 
-//#include "kindr/rotations/RDiffEigen.hpp"
+
 
 namespace kindr {
 namespace rotations {
@@ -64,14 +64,14 @@ template<typename PrimType, enum RotationUsage Usage>
 class EulerAnglesXyzDiff;
 
 
-/*! \class AngularVelocity
- * \brief Angular velocity in 3D-space.
+/*! \class LocalAngularVelocity
+ * \brief Angular velocity in 3D-space expressed in local coordinates (fixed to the body).
  *
- * This class implements an angular velocity of a rigid body in 3D-space.
+ * This class implements an angular velocity of a rigid body in 3D-space expressed in body fixed (local) frame.
  *
  * Note that only the version with the active usage type makes sense to represent a physical angular velocity of a body.
- * The angular velocity should represent the absolute rotational velocity of a rigid body with respect to an inertial frame I
- * and its coordinates should be expressed in the body fixed frame (\f$\Omega_B = B_\omega_{IB}$\f)
+ * The angular velocity should represent the absolute rotational velocity of a rigid body with respect to an inertial (global) frame I
+ * and its coordinates are expressed in the body fixed (local) frame (\f$\B_Omega = B_\omega_{IB}$\f)
  *
  * \tparam PrimType_  Primitive type of the coordinates.
  * \ingroup rotations
@@ -100,9 +100,9 @@ class LocalAngularVelocity : public AngularVelocityBase<LocalAngularVelocity<Pri
   }
 
   /*! Constructor with three components (x,y,z)
-   * \param x   x-coordinate
-   * \param y   y-coordinate
-   * \param z   z-coordinate
+   * \param x   x-coordinate expressed in body fixed (local) frame
+   * \param y   y-coordinate expressed in body fixed (local) frame
+   * \param z   z-coordinate expressed in body fixed (local) frame
    */
   LocalAngularVelocity(Scalar x, Scalar y, Scalar z)
     : Base(x, y, z) {
@@ -141,17 +141,17 @@ class LocalAngularVelocity : public AngularVelocityBase<LocalAngularVelocity<Pri
     return static_cast<const Implementation&>(*this);
   }
 
-  /*!\brief Get x-coordinate of the angular velocity
+  /*!\brief Get x-coordinate of the angular velocity expressed in body fixed (local) frame
    * \returns the x-coordinate of the angular velocity
    */
   using Base::x;
 
-  /*!\brief Get y-coordinate of the angular velocity
+  /*!\brief Get y-coordinate of the angular velocity expressed in body fixed (local) frame
    * \returns the y-coordinate of the angular velocity
    */
   using Base::y;
 
-  /*!\brief Get z-coordinate of the angular velocity
+  /*!\brief Get z-coordinate of the angular velocity expressed in body fixed (local) frame
    * \returns the z-coordinate of the angular velocity
    */
   using Base::z;

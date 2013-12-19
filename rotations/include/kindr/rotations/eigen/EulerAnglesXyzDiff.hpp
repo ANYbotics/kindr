@@ -62,11 +62,11 @@ class EulerAnglesXyzDiff;
 
 
 /*! \class EulerAnglesXyzDiff
- * \brief Implementation of time derivatives of Euler angles (X,Y',Z'' / roll,pitch,yaw) based on Eigen::Matrix
+ * \brief Implementation of time derivatives of Euler angles (X,Y',Z'' / roll,pitch,yaw) based on Eigen::Matrix<Scalar, 3, 1>
  *
  * The following two typedefs are provided for convenience:
- *   - EulerAnglesXyzD for primitive type double
- *   - EulerAnglesXyzF for primitive type float
+ *   - EulerAnglesXyzDiffAD for primitive type double
+ *   - EulerAnglesXyzDiffAF for primitive type float
  * \tparam PrimType_ the primitive type of the data (double or float)
  * \ingroup rotations
  */
@@ -77,7 +77,7 @@ class EulerAnglesXyzDiff : public EulerAnglesDiffBase<EulerAnglesXyzDiff<PrimTyp
    */
   typedef Eigen::Matrix<PrimType_, 3, 1> Base;
 
-  /*! \brief data container [roll; pitch, yaw]
+  /*! \brief data container [roll; pitch; yaw]
    */
   Base xyzDiff_;
  public:
@@ -249,6 +249,8 @@ class EulerAnglesXyzDiff : public EulerAnglesDiffBase<EulerAnglesXyzDiff<PrimTyp
 
 
    /*! \brief Used for printing the object with std::cout.
+    *
+    *   Prints: roll pitch yaw
     *  \returns std::stream object
     */
    friend std::ostream& operator << (std::ostream& out, const EulerAnglesXyzDiff& diff) {

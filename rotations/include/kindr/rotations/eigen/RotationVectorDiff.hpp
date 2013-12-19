@@ -60,13 +60,24 @@ class EulerAnglesZyxDiff;
 template<typename PrimType, enum RotationUsage Usage>
 class EulerAnglesXyzDiff;
 
-
+/*! \class RotationVectorDiff
+ * \brief Time derivative of a rotation vector.
+ *
+ * This class implements the time derivative of a rotation vector using a Eigen::Matrix<Scalar, 3, 1> as data storage.
+ *
+ * \tparam PrimType_  Primitive data type of the coordinates.
+ * \ingroup rotations
+ */
 template<typename PrimType_, enum RotationUsage Usage_>
 class RotationVectorDiff : public RotationVectorDiffBase<RotationVectorDiff<PrimType_, Usage_>,Usage_> {
  private:
   /*! \brief The base type.
    */
   typedef typename Eigen::Matrix<PrimType_, 3, 1> Base;
+
+  /*! \brief data container
+   */
+  Base rotationVector_;
 
  public:
   /*! \brief The implementation type.
@@ -79,16 +90,16 @@ class RotationVectorDiff : public RotationVectorDiffBase<RotationVectorDiff<Prim
    */
   typedef PrimType_ Scalar;
 
-  /*! \brief data container
-   */
-  Base vector_;
 
+  /*! \brief Default constructor sets all derivatives to zero
+   *
+   */
   RotationVectorDiff()
-    : vector_(Base::Zero()) {
+    : rotationVector_(Base::Zero()) {
   }
 
   explicit RotationVectorDiff(const Base& other) // explicit on purpose
-    : vector_(other) {
+    : rotationVector_(other) {
   }
 
   /*! \brief Constructor using four scalars.
@@ -97,7 +108,7 @@ class RotationVectorDiff : public RotationVectorDiffBase<RotationVectorDiff<Prim
    *  \param v3      third entry of the time derivative of the rotation axis vector
    */
   RotationVectorDiff(Scalar v1, Scalar v2, Scalar v3)
-    : vector_(v1,v2,v3) {
+    : rotationVector_(v1,v2,v3) {
   }
 
   /*! \brief Constructor using a time derivative with a different parameterization
@@ -107,7 +118,7 @@ class RotationVectorDiff : public RotationVectorDiffBase<RotationVectorDiff<Prim
    */
   template<typename RotationDerived_, typename OtherDerived_>
   inline explicit RotationVectorDiff(const RotationBase<RotationDerived_, Usage_>& rotation, const RDiffBase<OtherDerived_, Usage_>& other)
-    : vector_(internal::RDiffConversionTraits<RotationVectorDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived()).toImplementation()){
+    : rotationVector_(internal::RDiffConversionTraits<RotationVectorDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived()).toImplementation()){
   }
 
   /*! \brief Cast to another representation of the time derivative of a rotation
@@ -124,14 +135,14 @@ class RotationVectorDiff : public RotationVectorDiffBase<RotationVectorDiff<Prim
    *  \returns the implementation (recommended only for advanced users)
    */
   inline Implementation& toImplementation() {
-    return static_cast<Implementation&>(vector_);
+    return static_cast<Implementation&>(rotationVector_);
   }
 
   /*! \brief Cast to the implementation type.
    *  \returns the implementation (recommended only for advanced users)
    */
   inline const Implementation& toImplementation() const {
-    return vector_;
+    return rotationVector_;
   }
 
 
@@ -154,7 +165,7 @@ class RotationVectorDiff : public RotationVectorDiffBase<RotationVectorDiff<Prim
    *  \returns reference
    */
   RotationVectorDiff& setZero() {
-    vector_.setZero();
+    rotationVector_.setZero();
     return *this;
   }
 

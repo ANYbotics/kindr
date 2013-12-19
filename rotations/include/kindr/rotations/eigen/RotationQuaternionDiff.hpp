@@ -61,7 +61,14 @@ class EulerAnglesZyxDiff;
 template<typename PrimType, enum RotationUsage Usage>
 class EulerAnglesXyzDiff;
 
-
+/*! \class RotationQuaternionDiff
+ * \brief Time derivative of a rotation quaternion.
+ *
+ * This class implements the time derivative of a rotation quaterion using a quaternions::eigen_impl::Quaternion<Scalar> as data storage.
+ *
+ * \tparam PrimType_  Primitive data type of the coordinates.
+ * \ingroup rotations
+ */
 template<typename PrimType_, enum RotationUsage Usage_>
 class RotationQuaternionDiff : public RotationQuaternionDiffBase<RotationQuaternionDiff<PrimType_, Usage_>,Usage_>, private quaternions::eigen_impl::Quaternion<PrimType_> {
  private:
@@ -74,11 +81,15 @@ class RotationQuaternionDiff : public RotationQuaternionDiffBase<RotationQuatern
    *  The implementation type is always an Eigen object.
    */
   typedef typename Base::Implementation Implementation;
+
   /*! \brief The primitive type.
    *  Float/Double
    */
   typedef PrimType_ Scalar;
 
+  /*! \brief Default constructor sets all derivatives to zero
+   *
+   */
   RotationQuaternionDiff()
     : Base() {
   }

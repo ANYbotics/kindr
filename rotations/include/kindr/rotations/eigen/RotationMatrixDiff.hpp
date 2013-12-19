@@ -61,7 +61,14 @@ template<typename PrimType, enum RotationUsage Usage>
 class EulerAnglesXyzDiff;
 
 
-
+/*! \class RotationMatrixDiff
+ * \brief Time derivative of a rotation matrix.
+ *
+ * This class implements the time derivative of a rotation matrix using a Eigen::Matrix<Scalar, 3, 3> as data storage.
+ *
+ * \tparam PrimType_  Primitive data type of the coordinates.
+ * \ingroup rotations
+ */
 template<typename PrimType_, enum RotationUsage Usage_>
 class RotationMatrixDiff : public RotationMatrixDiffBase<RotationMatrixDiff<PrimType_, Usage_>,Usage_>, private Eigen::Matrix<PrimType_, 3, 3> {
  private:
@@ -83,8 +90,8 @@ class RotationMatrixDiff : public RotationMatrixDiffBase<RotationMatrixDiff<Prim
     : Base() {
   }
 
-  /*! \brief Constructor using Eigen::Matrix.
-   *  \param other   Eigen::Matrix<PrimType_,3,3>
+  /*! \brief Constructor using Eigen::Matrix<Scalar, 3, 3>.
+   *  \param other   Eigen::Matrix<Scalar, 3, 3>
    */
   explicit RotationMatrixDiff(const Base& other) // explicit on purpose
     : Base(other) {
@@ -140,14 +147,14 @@ class RotationMatrixDiff : public RotationMatrixDiffBase<RotationMatrixDiff<Prim
     return static_cast<const Implementation&>(*this);
   }
 
-  /*! \brief Reading access to the rotation matrix.
+  /*! \brief Reading access to the time derivative of the rotation matrix.
    *  \returns rotation matrix (matrix) with reading access
    */
   inline const Implementation& matrix() const {
     return this->toImplementation();
   }
 
-  /*! \brief Writing access to the rotation matrix.
+  /*! \brief Writing access to the time derivative of the rotation matrix.
    *  \returns rotation matrix (matrix) with writing access
    */
   inline Implementation& matrix() {

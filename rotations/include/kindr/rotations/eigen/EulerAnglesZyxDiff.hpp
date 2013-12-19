@@ -63,11 +63,11 @@ class EulerAnglesXyzDiff;
 
 
 /*! \class EulerAnglesZyxDiff
- * \brief Implementation of time derivatives of Euler angles (Z,Y',X'' / yaw,pitch,roll) based on Eigen::Matrix
+ * \brief Implementation of time derivatives of Euler angles (Z,Y',X'' / yaw,pitch,roll) based on Eigen::Matrix<Scalar, 3, 1>
  *
  * The following two typedefs are provided for convenience:
- *   - EulerAnglesZyxD for primitive type double
- *   - EulerAnglesZyxF for primitive type float
+ *   - EulerAnglesZyxDiffAD for primitive type double
+ *   - EulerAnglesZyxDoffAF for primitive type float
  * \tparam PrimType_ the primitive type of the data (double or float)
  * \ingroup rotations
  */
@@ -78,15 +78,16 @@ class EulerAnglesZyxDiff : public EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimTyp
    */
   typedef Eigen::Matrix<PrimType_, 3, 1> Base;
 
-  /*! \brief data container [yaw; pitch, roll]
+  /*! \brief data container [yaw; pitch; roll]
    */
-  Base zyx_;
+  Base zyxDiff_;
 
  public:
   /*! \brief The implementation type.
    *  The implementation type is always an Eigen object.
    */
   typedef Base Implementation;
+
   /*! \brief The primitive type.
    *  Float/Double
    */
@@ -95,7 +96,7 @@ class EulerAnglesZyxDiff : public EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimTyp
   /*! \brief Default constructor.
    */
   EulerAnglesZyxDiff()
-    : zyx_(Base::Zero()) {
+    : zyxDiff_(Base::Zero()) {
   }
 
   /*! \brief Constructor using three scalars.
@@ -104,7 +105,7 @@ class EulerAnglesZyxDiff : public EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimTyp
    *  \param roll     time derivative of third rotation angle around X'' axis
    */
   EulerAnglesZyxDiff(Scalar yaw, Scalar pitch, Scalar roll)
-    : zyx_(yaw,pitch,roll) {
+    : zyxDiff_(yaw,pitch,roll) {
   }
 
   /*! \brief Constructor using a time derivative with a different parameterization
@@ -114,7 +115,7 @@ class EulerAnglesZyxDiff : public EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimTyp
    */
   template<typename RotationDerived_, typename OtherDerived_>
   inline explicit EulerAnglesZyxDiff(const RotationBase<RotationDerived_, Usage_>& rotation, const RDiffBase<OtherDerived_, Usage_>& other)
-    : zyx_(internal::RDiffConversionTraits<EulerAnglesZyxDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived()).toImplementation()){
+    : zyxDiff_(internal::RDiffConversionTraits<EulerAnglesZyxDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived()).toImplementation()){
   }
 
   /*! \brief Cast to another representation of the time derivative of a rotation
@@ -127,24 +128,24 @@ class EulerAnglesZyxDiff : public EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimTyp
   }
 
   /*! \brief Constructor using Eigen::Matrix.
-   *  \param other   Eigen::Matrix<PrimType_,3,1> [roll; pitch; yaw]
+   *  \param other   Eigen::Matrix<Scalar, 3, 1> [yaw; pitch; roll]
    */
   explicit EulerAnglesZyxDiff(const Base& other)
-    : zyx_(other) {
+    : zyxDiff_(other) {
   }
 
   /*! \brief Cast to the implementation type.
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
   inline Base& toImplementation() {
-    return zyx_;
+    return static_cast<Base&>(zyxDiff_);
   }
 
   /*! \brief Cast to the implementation type.
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
   inline const Base& toImplementation() const {
-    return static_cast<const Base&>(zyx_);
+    return static_cast<const Base&>(zyxDiff_);
   }
 
   /*! \brief Reading access to time derivative of yaw (Z) angle.
@@ -249,6 +250,8 @@ class EulerAnglesZyxDiff : public EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimTyp
 
 
    /*! \brief Used for printing the object with std::cout.
+    *
+    *   Prints: yaw pitch roll
     *  \returns std::stream object
     */
    friend std::ostream& operator << (std::ostream& out, const EulerAnglesZyxDiff& diff) {

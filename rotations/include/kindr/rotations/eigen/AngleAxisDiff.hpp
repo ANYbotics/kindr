@@ -60,7 +60,14 @@ class EulerAnglesZyxDiff;
 template<typename PrimType, enum RotationUsage Usage>
 class EulerAnglesXyzDiff;
 
-
+/*! \class AngleAxisDiff
+ * \brief Time derivative of an angle-axis.
+ *
+ * This class implements the time derivative of an angle-axis using a Eigen::AngleAxis<Scalar> as data storage.
+ *
+ * \tparam PrimType_  Primitive data type of the coordinates.
+ * \ingroup rotations
+ */
 template<typename PrimType_, enum RotationUsage Usage_>
 class AngleAxisDiff : public AngleAxisDiffBase<AngleAxisDiff<PrimType_, Usage_>,Usage_>, private Eigen::AngleAxis<PrimType_> {
  private:
@@ -83,8 +90,10 @@ class AngleAxisDiff : public AngleAxisDiffBase<AngleAxisDiff<PrimType_, Usage_>,
    */
   typedef Eigen::Matrix<PrimType_, 3, 1> Vector3;
 
+  /*! \brief Default constructor sets all derivatives to zero
+   */
   AngleAxisDiff()
-    : Base() {
+    : Base(Base::Zero()) {
   }
 
   explicit AngleAxisDiff(const Base& other) // explicit on purpose

@@ -38,7 +38,7 @@
 #include "kindr/quaternions/QuaternionEigen.hpp"
 #include "kindr/positions/PositionEigen.hpp"
 #include "kindr/rotations/RotationBase.hpp"
-#include "kindr/rotations/RotationEigenFunctions.hpp"
+#include "kindr/rotations/eigen/RotationEigenFunctions.hpp"
 
 namespace kindr {
 namespace rotations {
