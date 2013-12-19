@@ -35,6 +35,7 @@
 
 #include "kindr/common/common.hpp"
 #include "kindr/common/assert_macros_eigen.hpp"
+#include "kindr/quaternions/QuaternionEigen.hpp"
 #include "kindr/rotations/RotationBase.hpp"
 #include "kindr/rotations/eigen/RotationEigenFunctions.hpp"
 
@@ -42,11 +43,549 @@ namespace kindr {
 namespace rotations {
 namespace eigen_impl {
 
+
+
+/*!  \class RotationQuaternion
+ *  \brief Implementation of quaternion rotation based on Eigen::Quaternion
+ *
+ *  The following four typedefs are provided for convenience:
+ *   - \ref eigen_impl::RotationQuaternionAD "RotationQuaternionAD" for active rotation and primitive type double
+ *   - \ref eigen_impl::RotationQuaternionAF "RotationQuaternionAF" for active rotation and primitive type float
+ *   - \ref eigen_impl::RotationQuaternionPD "RotationQuaternionPD" for passive rotation and primitive type double
+ *   - \ref eigen_impl::RotationQuaternionPF "RotationQuaternionPF" for passive rotation and primitive type float
+ *
+ *  \tparam PrimType_ the primitive type of the data (double or float)
+ *  \tparam Usage_ the rotation usage which is either active or passive
+ *
+ *  \ingroup rotations
+ */
+template<typename PrimType_, enum RotationUsage Usage_>
+class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<PrimType_, Usage_>, Usage_>, private quaternions::eigen_impl::UnitQuaternion<PrimType_> {
+ private:
+  /*! \brief The base type.
+   */
+  typedef quaternions::eigen_impl::UnitQuaternion<PrimType_> Base;
+ public:
+  /*! \brief The implementation type.
+   *  The implementation type is always an Eigen object.
+   */
+  typedef typename Base::Implementation Implementation;
+
+  /*! \brief The primitive type.
+   *  Float/Double
+   */
+  typedef PrimType_ Scalar;
+
+  //! the imaginary type, i.e., Eigen::Quaternion<>
+  typedef Eigen::Matrix<PrimType_,3,1> Imaginary;
+
+  /*! \brief Default constructor using identity rotation.
+   */
+  RotationQuaternion()
+    : Base(Implementation::Identity()) {
+  }
+
+  /*! \brief Constructor using four scalars.
+   *  In debug mode, an assertion is thrown if the quaternion has not unit length.
+   *  \param w     first entry of the quaternion = cos(phi/2)
+   *  \param x     second entry of the quaternion = n1*sin(phi/2)
+   *  \param y     third entry of the quaternion = n2*sin(phi/2)
+   *  \param z     fourth entry of the quaternion = n3*sin(phi/2)
+   */
+  RotationQuaternion(Scalar w, Scalar x, Scalar y, Scalar z) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      Base::w() = w;
+      Base::x() = x;
+      Base::y() = y;
+      Base::z() = z;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      Base::w() = w;
+      Base::x() = -x;
+      Base::y() = -y;
+      Base::z() = -z;
+    }
+    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
+  }
+
+  RotationQuaternion(const PrimType_& real, const Imaginary& imag) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      Base(real,imag);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      Base(real,-imag);
+    }
+    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
+  }
+
+  /*! \brief Constructor using Eigen::Quaternion<PrimType_>.
+   *  In debug mode, an assertion is thrown if the quaternion has not unit length.
+   *  \param other   Eigen::Quaternion<PrimType_>
+   */
+  explicit RotationQuaternion(const Implementation& other) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      Base::w() = other.w();
+      Base::x() = other.x();
+      Base::y() = other.y();
+      Base::z() = other.z();
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      Base::w() = other.w();
+      Base::x() = -other.x();
+      Base::y() = -other.y();
+      Base::z() = -other.z();
+    }
+    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
+  }
+
+  /*! \brief Constructor using quaternions::UnitQuaternion.
+   *  In debug mode, an assertion is thrown if the quaternion has not unit length.
+   *  \param other   quaternions::UnitQuaternion
+   */
+  explicit RotationQuaternion(const Base& other) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      Base::w() = other.w();
+      Base::x() = other.x();
+      Base::y() = other.y();
+      Base::z() = other.z();
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      Base::w() = other.w();
+      Base::x() = -other.x();
+      Base::y() = -other.y();
+      Base::z() = -other.z();
+    }
+    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
+  }
+
+  /*! \brief Constructor using another rotation.
+   *  \param other   other rotation
+   */
+  template<typename OtherDerived_>
+  inline explicit RotationQuaternion(const RotationBase<OtherDerived_, Usage_>& other)
+    : Base(internal::ConversionTraits<RotationQuaternion, OtherDerived_>::convert(static_cast<const OtherDerived_&>(other))) {
+  }
+
+  inline Scalar w() const {
+    return Base::w();
+  }
+
+  inline Scalar x() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return Base::x();
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -Base::x();
+    }
+  }
+
+  inline Scalar y() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return Base::y();
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -Base::y();
+    }
+  }
+
+  inline Scalar z() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return Base::z();
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -Base::z();
+    }
+  }
+
+  inline void setW(Scalar w) { // todo: attention: no assertion for unitquaternions
+    Base::w() = w;
+  }
+
+  inline void setX(Scalar x) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      Base::x() = x;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      Base::x() = -x;
+    }
+  }
+
+  inline void setY(Scalar y) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      Base::y() = y;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      Base::y() = -y;
+    }
+  }
+
+  inline void setZ(Scalar z) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      Base::z() = z;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      Base::z() = -z;
+    }
+  }
+
+
+  inline Scalar real() const {
+    return Base::getReal();
+  }
+
+  inline Imaginary imaginary() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return Base::getImaginary();
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -Base::getImaginary();
+    }
+  }
+
+  inline void setReal(Scalar real) const {
+    Base::w() = real;
+  }
+
+  inline void setImaginary(Imaginary imag) const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      Base::x() = imag(0);
+      Base::y() = imag(1);
+      Base::z() = imag(2);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      Base::x() = -imag(0);
+      Base::y() = -imag(1);
+      Base::z() = -imag(2);
+    }
+  }
+
+  Base toUnitQuaternion() const {
+    return Base(this->w(),this->x(),this->y(),this->z());
+  }
+
+  Implementation toImplementation() const {
+    return Implementation(this->w(),this->x(),this->y(),this->z());
+  }
+
+  Base& toStoredUnitQuaternion() {
+     return static_cast<Base&>(*this);
+   }
+
+  const Base& toStoredUnitQuaternion() const {
+     return static_cast<const Base&>(*this);
+   }
+
+  Implementation& toStoredImplementation()  {
+    return this->toStoredUnitQuaternion().toImplementation();
+  }
+
+  const Implementation& toStoredImplementation() const {
+    return this->toStoredUnitQuaternion().toImplementation();
+  }
+
+  /*! \brief Assignment operator using a UnitQuaternion.
+   *  \param quat   UnitQuaternion
+   *  \returns reference
+   */
+  template<typename PrimTypeIn_>
+  RotationQuaternion& operator =(const quaternions::eigen_impl::UnitQuaternion<PrimTypeIn_>& quat) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      this->toStoredImplementation() = Implementation(quat.w(),quat.x(),quat.y(),quat.z());
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      this->toStoredImplementation() = Implementation(quat.w(),-quat.x(),-quat.y(),-quat.z());
+    }
+    return *this;
+  }
+
+  /*! \brief Assignment operator using another rotation.
+   *  \param other   other rotation
+   *  \returns reference
+   */
+  template<typename OtherDerived_>
+  RotationQuaternion& operator =(const RotationBase<OtherDerived_, Usage_>& other) {
+    this->toStoredImplementation() = internal::ConversionTraits<RotationQuaternion, OtherDerived_>::convert(other.derived()).toStoredImplementation();
+    return *this;
+  }
+
+  /*! \brief Assignment operator using another rotation.
+   *  \param other   other rotation
+   *  \returns reference
+   */
+  template<typename PrimTypeIn_>
+  RotationQuaternion& operator =(const RotationQuaternion<PrimTypeIn_, Usage_>& other) {
+    this->toStoredImplementation() = other.toStoredImplementation().template cast<PrimType_>();
+    return *this;
+  }
+
+  /*! \brief Bracket operator which assigns a UnitQuaternion to the RotationQuaternion.
+   *  \param quat   UnitQuaternion
+   *  \returns reference
+   */
+  template<typename PrimTypeIn_>
+  RotationQuaternion& operator ()(const quaternions::eigen_impl::UnitQuaternion<PrimTypeIn_>& quat) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      this->toStoredImplementation() = Implementation(quat.w(),quat.x(),quat.y(),quat.z());
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      this->toStoredImplementation() = Implementation(quat.w(),-quat.x(),-quat.y(),-quat.z());
+    }
+    return *this;
+  }
+
+  /*! \brief Bracket operator which assigns a Quaternion to the RotationQuaternion.
+   *  In debug mode, an assertion is thrown if the quaternion has not unit length.
+   *  \param quat   Quaternion
+   *  \returns reference
+   */
+  template<typename PrimTypeIn_>
+  RotationQuaternion& operator ()(const quaternions::eigen_impl::Quaternion<PrimTypeIn_>& quat) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      this->toStoredImplementation() = Implementation(quat.w(),quat.x(),quat.y(),quat.z());
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      this->toStoredImplementation() = Implementation(quat.w(),-quat.x(),-quat.y(),-quat.z());
+    }
+    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
+    return *this;
+  }
+
+  /*! \brief Parenthesis operator to convert from another rotation.
+   *  \param other   other rotation
+   *  \returns reference
+   */
+  template<typename OtherDerived_>
+  RotationQuaternion& operator ()(const RotationBase<OtherDerived_, Usage_>& other) {
+    this->toStoredImplementation() = internal::ConversionTraits<RotationQuaternion, OtherDerived_>::convert(other.derived()).toStoredImplementation();
+    return *this;
+  }
+
+  /*! \brief Returns the inverse of the rotation.
+   *  \returns the inverse of the rotation
+   */
+  RotationQuaternion inverted() const {
+    return RotationQuaternion(this->toUnitQuaternion().inverted());
+  }
+
+  /*! \brief Inverts the rotation.
+   *  \returns reference
+   */
+  RotationQuaternion& invert() {
+    *this = inverted();
+    return *this;
+  }
+
+  /*! \brief Returns the conjugated of the quaternion.
+   *  \returns conjugated of the quaternion
+   */
+  RotationQuaternion conjugated() const {
+    return RotationQuaternion(this->toUnitQuaternion().conjugated());
+  }
+
+  /*! \brief Conjugates of the quaternion.
+   *  \returns reference
+   */
+  RotationQuaternion& conjugate() {
+    *this = conjugated();
+    return *this;
+  }
+
+  /*! \brief Sets the rotation to identity.
+   *  \returns reference
+   */
+  RotationQuaternion& setIdentity() {
+    Base::w() = static_cast<Scalar>(1);
+    Base::x() = static_cast<Scalar>(0);
+    Base::y() = static_cast<Scalar>(0);
+    Base::z() = static_cast<Scalar>(0);
+    return *this;
+  }
+
+  /*! \brief Returns a unique quaternion rotation with w > 0.
+   *  This function is used to compare different rotations.
+   *  \returns copy of the quaternion rotation which is unique
+   */
+  RotationQuaternion getUnique() const {
+    if(this->w() > 0) {
+      return *this;
+    } else if (this->w() < 0){
+      return RotationQuaternion(-this->w(),-this->x(),-this->y(),-this->z());
+    } else { // w == 0
+
+      if(this->x() > 0) {
+        return *this;
+      } else if (this->x() < 0){
+        return RotationQuaternion(-this->w(),-this->x(),-this->y(),-this->z());
+      } else { // x == 0
+
+        if(this->y() > 0) {
+          return *this;
+        } else if (this->y() < 0){
+          return RotationQuaternion(-this->w(),-this->x(),-this->y(),-this->z());
+        } else { // y == 0
+
+          if(this->z() > 0) { // z must be either -1 or 1 in this case
+            return *this;
+          } else {
+            return RotationQuaternion(-this->w(),-this->x(),-this->y(),-this->z());
+          }
+        }
+      }
+    }
+  }
+
+  /*! \brief Modifies the quaternion rotation such that w >= 0.
+   *  \returns reference
+   */
+  RotationQuaternion& setUnique() {
+    *this = getUnique();
+    return *this;
+  }
+
+  /*! \brief Returns the norm of the quaternion.
+   *  The RotationQuaternion should always have unit length.
+   *  \returns norm of the quaternion
+   */
+  using Base::norm;
+
+  /*! \brief Concenation operator.
+   *  This is explicitly specified, because QuaternionBase provides also an operator*.
+   *  \returns the concenation of two rotations
+   */
+  using RotationQuaternionBase<RotationQuaternion<PrimType_, Usage_>, Usage_> ::operator*;
+
+  /*! \brief Equivalence operator.
+   *  This is explicitly specified, because QuaternionBase provides also an operator==.
+   *  \returns true if two rotations are similar.
+   */
+  using RotationQuaternionBase<RotationQuaternion<PrimType_, Usage_>, Usage_> ::operator==;
+
+
+  /*! \brief Used for printing the object with std::cout.
+   *  \returns std::stream object
+   */
+  friend std::ostream& operator << (std::ostream& out, const RotationQuaternion& rquat) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      out << rquat.toUnitQuaternion();
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      out << rquat.inverted().toUnitQuaternion();
+    }
+    return out;
+  }
+};
+
+//! \brief Active quaternion rotation with double primitive type
+typedef RotationQuaternion<double, RotationUsage::ACTIVE>  RotationQuaternionAD;
+//! \brief Active quaternion rotation with float primitive type
+typedef RotationQuaternion<float,  RotationUsage::ACTIVE>  RotationQuaternionAF;
+//! \brief Passive quaternion rotation with double primitive type
+typedef RotationQuaternion<double, RotationUsage::PASSIVE> RotationQuaternionPD;
+//! \brief Passive quaternion rotation with float primitive type
+typedef RotationQuaternion<float,  RotationUsage::PASSIVE> RotationQuaternionPF;
+
+
+
+
+
+
 } // namespace eigen_impl
 
 
 namespace internal {
 
+template<typename PrimType_, enum RotationUsage Usage_>
+class get_matrix3X<eigen_impl::RotationQuaternion<PrimType_, Usage_>>{
+ public:
+  typedef int IndexType;
+
+  template <IndexType Cols>
+  using Matrix3X = Eigen::Matrix<PrimType_, 3, Cols>;
+};
+
+template<typename PrimType_>
+class get_other_usage<eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>> {
+ public:
+  typedef eigen_impl::RotationQuaternion<PrimType_, RotationUsage::PASSIVE> OtherUsage;
+};
+
+template<typename PrimType_>
+class get_other_usage<eigen_impl::RotationQuaternion<PrimType_, RotationUsage::PASSIVE>> {
+ public:
+  typedef eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE> OtherUsage;
+};
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Conversion Traits
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
+class ConversionTraits<eigen_impl::RotationQuaternion<DestPrimType_, Usage_>, eigen_impl::AngleAxis<SourcePrimType_, Usage_>> {
+ public:
+  inline static eigen_impl::RotationQuaternion<DestPrimType_, Usage_> convert(const eigen_impl::AngleAxis<SourcePrimType_, Usage_>& aa) {
+    return eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(eigen_impl::getQuaternionFromAngleAxis<SourcePrimType_, DestPrimType_>(aa.toStoredImplementation()));
+  }
+};
+
+template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
+class ConversionTraits<eigen_impl::RotationQuaternion<DestPrimType_, Usage_>, eigen_impl::RotationVector<SourcePrimType_, Usage_>> {
+ public:
+  inline static eigen_impl::RotationQuaternion<DestPrimType_, Usage_> convert(const eigen_impl::RotationVector<SourcePrimType_, Usage_>& rv) {
+    return eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(eigen_impl::getQuaternionFromAngleAxis<SourcePrimType_, DestPrimType_>(eigen_impl::AngleAxis<SourcePrimType_, Usage_>(rv.toStoredImplementation().norm(), rv.toStoredImplementation().normalized()).toStoredImplementation()));
+  }
+};
+
+template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
+class ConversionTraits<eigen_impl::RotationQuaternion<DestPrimType_, Usage_>, eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>> {
+ public:
+  inline static eigen_impl::RotationQuaternion<DestPrimType_, Usage_> convert(const eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>& q) {
+    return eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(q.toStoredImplementation().template cast<DestPrimType_>());
+  }
+};
+
+template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
+class ConversionTraits<eigen_impl::RotationQuaternion<DestPrimType_, Usage_>, eigen_impl::RotationMatrix<SourcePrimType_, Usage_>> {
+ public:
+  inline static eigen_impl::RotationQuaternion<DestPrimType_, Usage_> convert(const eigen_impl::RotationMatrix<SourcePrimType_, Usage_>& R) {
+    return eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(eigen_impl::getQuaternionFromRotationMatrix<SourcePrimType_, DestPrimType_>(R.toStoredImplementation()));
+  }
+};
+
+template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
+class ConversionTraits<eigen_impl::RotationQuaternion<DestPrimType_, Usage_>, eigen_impl::EulerAnglesXyz<SourcePrimType_, Usage_>> {
+ public:
+  inline static eigen_impl::RotationQuaternion<DestPrimType_, Usage_> convert(const eigen_impl::EulerAnglesXyz<SourcePrimType_, Usage_>& xyz) {
+    return eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(eigen_impl::getQuaternionFromRpy<SourcePrimType_, DestPrimType_>(xyz.toStoredImplementation()));
+  }
+};
+
+template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
+class ConversionTraits<eigen_impl::RotationQuaternion<DestPrimType_, Usage_>, eigen_impl::EulerAnglesZyx<SourcePrimType_, Usage_>> {
+ public:
+  inline static eigen_impl::RotationQuaternion<DestPrimType_, Usage_> convert(const eigen_impl::EulerAnglesZyx<SourcePrimType_, Usage_>& zyx) {
+    return eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(eigen_impl::getQuaternionFromYpr<SourcePrimType_, DestPrimType_>(zyx.toStoredImplementation()));
+  }
+};
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Multiplication Traits
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Rotation Traits
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+template<typename PrimType_, enum RotationUsage Usage_>
+class RotationTraits<eigen_impl::RotationQuaternion<PrimType_, Usage_>> {
+ public:
+  template<typename get_matrix3X<eigen_impl::RotationQuaternion<PrimType_, Usage_>>::IndexType Cols>
+  inline static typename get_matrix3X<eigen_impl::RotationQuaternion<PrimType_, Usage_>>::template Matrix3X<Cols> rotate(const eigen_impl::RotationQuaternion<PrimType_, Usage_>& p, const typename get_matrix3X<eigen_impl::RotationQuaternion<PrimType_, Usage_>>::template Matrix3X<Cols>& m){
+    return eigen_impl::RotationMatrix<PrimType_, Usage_>(p).toImplementation() * m;
+  }
+};
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Comparison Traits
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+template<typename PrimType_, enum RotationUsage Usage_>
+class ComparisonTraits<eigen_impl::RotationQuaternion<PrimType_, Usage_>> {
+ public:
+   inline static bool isEqual(const eigen_impl::RotationQuaternion<PrimType_, Usage_>& a, const eigen_impl::RotationQuaternion<PrimType_, Usage_>& b){
+     return a.toStoredImplementation().w() ==  b.toStoredImplementation().w() &&
+            a.toStoredImplementation().x() ==  b.toStoredImplementation().x() &&
+            a.toStoredImplementation().y() ==  b.toStoredImplementation().y() &&
+            a.toStoredImplementation().z() ==  b.toStoredImplementation().z();
+   }
+
+   inline static bool isNear(const eigen_impl::RotationQuaternion<PrimType_, Usage_>& a, const eigen_impl::RotationQuaternion<PrimType_, Usage_>& b, PrimType_ tol){
+     return fabs(a.toStoredImplementation().w() - b.toStoredImplementation().w()) < tol &&
+            fabs(a.toStoredImplementation().x() - b.toStoredImplementation().x()) < tol &&
+            fabs(a.toStoredImplementation().y() - b.toStoredImplementation().y()) < tol &&
+            fabs(a.toStoredImplementation().z() - b.toStoredImplementation().z()) < tol;
+   }
+};
 
 } // namespace internal
 } // namespace rotations

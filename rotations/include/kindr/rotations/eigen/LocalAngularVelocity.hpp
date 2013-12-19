@@ -45,23 +45,6 @@ namespace kindr {
 namespace rotations {
 namespace eigen_impl {
 
-template<typename PrimType, enum RotationUsage Usage>
-class RotationQuaternionDiff;
-
-template<typename PrimType, enum RotationUsage Usage>
-class RotationMatrixDiff;
-
-template<typename PrimType, enum RotationUsage Usage>
-class AngleAxisDiff;
-
-template<typename PrimType, enum RotationUsage Usage>
-class RotationVectorDiff;
-
-template<typename PrimType, enum RotationUsage Usage>
-class EulerAnglesZyxDiff;
-
-template<typename PrimType, enum RotationUsage Usage>
-class EulerAnglesXyzDiff;
 
 
 /*! \class LocalAngularVelocity

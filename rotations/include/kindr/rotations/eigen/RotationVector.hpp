@@ -42,11 +42,371 @@ namespace kindr {
 namespace rotations {
 namespace eigen_impl {
 
+
+/*! \class RotationVector
+ * \brief Implementation of a rotation vector based on Eigen::Matrix<Scalar, 3, 1>
+ *
+ *  The rotation vector is a non-normalized three-dimensional vector.
+ *  The direction of the vector specifies the rotation axis and the length the angle.
+ *  This representation uses therefore three parameters.
+ *  \see AngleAxis for an angle-axis representation with four parameters.
+ *
+ *  The following four typedefs are provided for convenience:
+ *   - \ref eigen_impl::RotationVectorAD "RotationVectorAD" for active rotation and primitive type double
+ *   - \ref eigen_impl::RotationVectorAF "RotationVectorAF" for active rotation and primitive type float
+ *   - \ref eigen_impl::RotationVectorPD "RotationVectorPD" for passive rotation and primitive type double
+ *   - \ref eigen_impl::RotationVectorPF "RotationVectorPF" for passive rotation and primitive type float
+ *
+ *  \tparam PrimType_ the primitive type of the data (double or float)
+ *  \tparam Usage_ the rotation usage which is either active or passive
+ *  \ingroup rotations
+ */
+template<typename PrimType_, enum RotationUsage Usage_>
+class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage_>, Usage_> {
+ private:
+  /*! \brief The base type.
+   */
+  typedef Eigen::Matrix<PrimType_, 3, 1> Base;
+
+  /*! Data container
+   */
+  Base vector_;
+
+ public:
+  /*! \brief The implementation type.
+   *  The implementation type is always an Eigen object.
+   */
+  typedef Base Implementation;
+  /*! \brief The primitive type.
+   *  Float/Double
+   */
+  typedef PrimType_ Scalar;
+
+  /*! \brief Default constructor using identity rotation.
+   */
+  RotationVector()
+    : vector_(Base::Zero()) {
+  }
+
+  /*! \brief Constructor using three scalars.
+   *
+   *  \param v1      first entry of the rotation vector
+   *  \param v2      second entry of the rotation vector
+   *  \param v3      third entry of the rotation vector
+   */
+  RotationVector(Scalar v1, Scalar v2, Scalar v3) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      vector_ << v1,v2,v3;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      vector_ << -v1,-v2,-v3;
+    }
+  }
+
+
+  /*! \brief Constructor using Eigen::Matrix<Scalar, 3, 1>.
+   *
+   *  \param other   Eigen::Matrix<Scalar, 3, 1>
+   */
+  explicit RotationVector(const Base& other) { // explicit on purpose
+    if(Usage_ == RotationUsage::ACTIVE) {
+      vector_ = other;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      vector_ = -other;
+    }
+  }
+
+  /*! \brief Constructor using another rotation.
+   *  \param other   other rotation
+   */
+  template<typename OtherDerived_>
+  inline explicit RotationVector(const RotationBase<OtherDerived_, Usage_>& other)
+    : vector_(internal::ConversionTraits<RotationVector, OtherDerived_>::convert(other.derived()).toStoredImplementation()) {
+  }
+
+  /*! \brief Assignment operator using another rotation.
+   *  \param other   other rotation
+   *  \returns reference
+   */
+  template<typename OtherDerived_>
+  RotationVector& operator =(const RotationBase<OtherDerived_, Usage_>& other) {
+    this->toStoredImplementation() = internal::ConversionTraits<RotationVector, OtherDerived_>::convert(other.derived()).toStoredImplementation();
+    return *this;
+  }
+
+  /*! \brief Parenthesis operator to convert from another rotation.
+   *  \param other   other rotation
+   *  \returns reference
+   */
+  template<typename OtherDerived_>
+  RotationVector& operator ()(const RotationBase<OtherDerived_, Usage_>& other) {
+    this->toStoredImplementation() = internal::ConversionTraits<RotationVector, OtherDerived_>::convert(other.derived()).toStoredImplementation();
+    return *this;
+  }
+
+  /*! \brief Returns the inverse of the rotation.
+   *  \returns the inverse of the rotation
+   */
+  RotationVector inverted() const {
+    return RotationVector(AngleAxis<PrimType_, Usage_>(this->toStoredImplementation().norm(), this->toStoredImplementation().normalized()).inverse());
+  }
+
+  /*! \brief Inverts the rotation.
+   *  \returns reference
+   */
+  RotationVector& invert() {
+    *this = inverted();
+    return *this;
+  }
+
+  /*! \brief Returns the type used for the implementation.
+   *  \returns the type used for the implementation
+   */
+  Implementation toImplementation() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return vector_;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -vector_;
+    }
+  }
+
+  /*! \brief Cast to the implementation type.
+   *  \returns the implementation for direct manipulation (recommended only for advanced users)
+   */
+  inline Implementation& toStoredImplementation() {
+    return static_cast<Implementation&>(vector_);
+  }
+
+  /*! \brief Cast to the implementation type.
+   *  \returns the implementation for direct manipulation (recommended only for advanced users)
+   */
+  inline const Implementation& toStoredImplementation() const {
+    return static_cast<const Implementation&>(vector_);
+  }
+
+  /*! \brief Sets the rotation to identity.
+   *  \returns reference
+   */
+  RotationVector& setIdentity() {
+    this->toImplementatoStoredImplementation;
+    return *this;
+  }
+
+  /*! \brief Returns the rotation vector.
+   *  \returns the rotation vector (scalar)
+   */
+  inline const Implementation& vector() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return vector_;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -vector_;
+    }
+  }
+
+  /*! \brief Sets the rotation vector.
+   */
+  inline void setVector(Scalar first, Scalar second, Scalar third) const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      vector_ << first, second, third;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      vector_ << -first, -second, -third;
+    }
+  }
+
+  /*! \brief Sets the rotation vector.
+   */
+  inline void setVector(Implementation vector) const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      vector_ = vector;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      vector_ = -vector;
+    }
+  }
+
+  /*! \brief Returns the first entry of the rotation vector.
+   *  \returns first entry of the rotation vector (scalar)
+   */
+  inline Scalar firstEntry() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return vector_(0);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -vector_(0);
+    }
+  }
+
+  /*! \brief Returns the second entry of the rotation vector.
+   *  \returns second entry of the rotation vector (scalar)
+   */
+  inline Scalar secondEntry() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return vector_(1);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -vector_(1);
+    }
+  }
+
+  /*! \brief Returns the third entry of the rotation vector.
+   *  \returns third entry of the rotation vector (scalar)
+   */
+  inline Scalar thirdEntry() const {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return vector_(2);
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      return -vector_(2);
+    }
+  }
+
+  /*! \brief Sets the first entry of the rotation vector.
+   */
+  inline void setFirstEntry(Scalar first) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      vector_(0) = first;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      vector_(0) = -first;
+    }
+  }
+
+  /*! \brief Sets the second entry of the rotation vector.
+   */
+  inline void setSecondEntry(Scalar second) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      vector_(1) = second;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      vector_(1) = -second;
+    }
+  }
+
+  /*! \brief Sets the third entry of the rotation vector.
+   */
+  inline void setThirdEntry(Scalar third) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      vector_(2) = third;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      vector_(2) = -third;
+    }
+  }
+
+  /*! \brief Returns a unique rotation vector with norm in [0,pi).
+   *  This function is used to compare different rotations.
+   *  \returns copy of the rotation vector which is unique
+   */
+  RotationVector getUnique() const {
+    // todo: test, passive and active
+    RotationVector rotVector(toStoredImplementation());
+
+    const Scalar norm = rotVector.toStoredImplementation().norm();
+    if (norm != Scalar(0)) {
+      const Scalar normWrapped = kindr::common::floatingPointModulo(norm+M_PI,2*M_PI)-M_PI;
+      rotVector.toStoredImplementation()*normWrapped/norm;
+    }
+    return rotVector;
+  }
+
+  /*! \brief
+   *  \returns reference
+   */
+  RotationVector& setUnique() {
+    *this = getUnique();
+    return *this;
+  }
+
+  /*! \brief Concatenation operator.
+   *  This is explicitly specified, because Eigen provides also an operator*.
+   *  \returns the concatenation of two rotations
+   */
+  using RotationVectorBase<RotationVector<PrimType_, Usage_>, Usage_>::operator*;
+
+  /*! \brief Used for printing the object with std::cout.
+   *  \returns std::stream object
+   */
+  friend std::ostream& operator << (std::ostream& out, const RotationVector& rotationVector) {
+    out << rotationVector.toImplementation().transpose();
+    return out;
+  }
+};
+
+//! \brief Active rotation vector with double primitive type
+typedef RotationVector<double, RotationUsage::ACTIVE>  RotationVectorAD;
+//! \brief Active rotation vector with float primitive type
+typedef RotationVector<float,  RotationUsage::ACTIVE>  RotationVectorAF;
+//! \brief Passive rotation vector with double primitive type
+typedef RotationVector<double, RotationUsage::PASSIVE> RotationVectorPD;
+//! \brief Passive rotation vector with float primitive type
+typedef RotationVector<float,  RotationUsage::PASSIVE> RotationVectorPF;
+
+
 } // namespace eigen_impl
 
 
 namespace internal {
 
+template<typename PrimType_, enum RotationUsage Usage_>
+class get_matrix3X<eigen_impl::RotationVector<PrimType_, Usage_>>{
+ public:
+  typedef int  IndexType;
+
+  template <IndexType Cols>
+  using Matrix3X = Eigen::Matrix<PrimType_, 3, Cols>;
+};
+
+template<typename PrimType_>
+class get_other_usage<eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>> {
+ public:
+  typedef eigen_impl::RotationVector<PrimType_, RotationUsage::PASSIVE> OtherUsage;
+};
+
+template<typename PrimType_>
+class get_other_usage<eigen_impl::RotationVector<PrimType_, RotationUsage::PASSIVE>> {
+ public:
+  typedef eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE> OtherUsage;
+};
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Conversion Traits
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
+class ConversionTraits<eigen_impl::RotationVector<DestPrimType_, Usage_>, eigen_impl::RotationVector<SourcePrimType_, Usage_>> {
+ public:
+  inline static eigen_impl::RotationVector<DestPrimType_, Usage_> convert(const eigen_impl::RotationVector<SourcePrimType_, Usage_>& rotationVector) {
+    return eigen_impl::RotationVector<DestPrimType_, Usage_>(rotationVector.toStoredImplementation().template cast<DestPrimType_>());
+  }
+};
+
+
+template<typename DestPrimType_, typename SourceImplementation_, enum RotationUsage Usage_>
+class ConversionTraits<eigen_impl::RotationVector<DestPrimType_, Usage_>, SourceImplementation_> {
+ public:
+  inline static eigen_impl::RotationVector<DestPrimType_, Usage_> convert(const SourceImplementation_& rotation) {
+    const eigen_impl::AngleAxis<DestPrimType_, Usage_> angleAxis(rotation);
+    return eigen_impl::RotationVector<DestPrimType_, Usage_>(angleAxis.angle()*angleAxis.axis());
+  }
+};
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Multiplication Traits
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Rotation Traits
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+template<typename PrimType_, enum RotationUsage Usage_>
+class RotationTraits<eigen_impl::RotationVector<PrimType_, Usage_>> {
+ public:
+  template<typename get_matrix3X<eigen_impl::RotationVector<PrimType_, Usage_>>::IndexType Cols>
+  inline static typename get_matrix3X<eigen_impl::RotationVector<PrimType_, Usage_>>::template Matrix3X<Cols> rotate(const eigen_impl::RotationVector<PrimType_, Usage_>& rv, const typename get_matrix3X<eigen_impl::RotationVector<PrimType_, Usage_>>::template Matrix3X<Cols>& m){
+    return eigen_impl::RotationMatrix<PrimType_, Usage_>(rv).toStoredImplementation() * m;
+  }
+};
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Comparison Traits
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+template<typename PrimType_, enum RotationUsage Usage_>
+class ComparisonTraits<eigen_impl::RotationVector<PrimType_, Usage_>> {
+ public:
+  inline static bool isEqual(const eigen_impl::RotationVector<PrimType_, Usage_>& a, const eigen_impl::RotationVector<PrimType_, Usage_>& b){
+    return a.toStoredImplementation() ==  b.toStoredImplementation();
+  }
+};
 
 } // namespace internal
 } // namespace rotations

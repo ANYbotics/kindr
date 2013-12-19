@@ -39,6 +39,12 @@ namespace kindr {
 /*! \ingroup rotations
  */
 namespace rotations {
+
+enum class RotationUsage {
+  ACTIVE,
+  PASSIVE
+};
+
 //! Internal stuff (only for developers)
 namespace internal {
 
@@ -438,32 +444,32 @@ class UsageConversionTraits<Derived_,RotationUsage::ACTIVE> {
 };
 
 
-/*! \brief Multiplication of two rotations with different parameterizations
- */
-template<typename Left_, typename Right_, enum RotationUsage Usage_>
-class MultiplicationTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usage_>> {
- public:
-  //! Default multiplication of rotations converts the representations of the rotations to rotation quaternions and multiplies them
-  inline static Left_ mult(const RotationBase<Left_, Usage_>& lhs, const RotationBase<Right_, Usage_>& rhs) {
-    return Left_(typename eigen_impl::RotationQuaternion<typename Left_::Scalar,  Usage_>(
-               (typename eigen_impl::RotationQuaternion<typename Left_::Scalar,  Usage_>(lhs.derived())).toImplementation() *
-               (typename eigen_impl::RotationQuaternion<typename Right_::Scalar, Usage_>(rhs.derived())).toImplementation()
-               ));
-  }
-};
-
-/*! \brief Multiplication of two rotations with the same parameterization
- */
-template<typename LeftAndRight_, enum RotationUsage Usage_>
-class MultiplicationTraits<RotationBase<LeftAndRight_, Usage_>, RotationBase<LeftAndRight_, Usage_>> {
- public:
-  inline static LeftAndRight_ mult(const RotationBase<LeftAndRight_, Usage_>& lhs, const RotationBase<LeftAndRight_, Usage_>& rhs) {
-    return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() * rhs.derived().toImplementation()));
-  }
-};
+///*! \brief Multiplication of two rotations with different parameterizations
+// */
+//template<typename Left_, typename Right_, enum RotationUsage Usage_>
+//class MultiplicationTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usage_>> {
+// public:
+//  //! Default multiplication of rotations converts the representations of the rotations to rotation quaternions and multiplies them
+//  inline static Left_ mult(const RotationBase<Left_, Usage_>& lhs, const RotationBase<Right_, Usage_>& rhs) {
+//    return Left_(typename eigen_impl::RotationQuaternion<typename Left_::Scalar,  Usage_>(
+//               (typename eigen_impl::RotationQuaternion<typename Left_::Scalar,  Usage_>(lhs.derived())).toImplementation() *
+//               (typename eigen_impl::RotationQuaternion<typename Right_::Scalar, Usage_>(rhs.derived())).toImplementation()
+//               ));
+//  }
+//};
+//
+///*! \brief Multiplication of two rotations with the same parameterization
+// */
+//template<typename LeftAndRight_, enum RotationUsage Usage_>
+//class MultiplicationTraits<RotationBase<LeftAndRight_, Usage_>, RotationBase<LeftAndRight_, Usage_>> {
+// public:
+//  inline static LeftAndRight_ mult(const RotationBase<LeftAndRight_, Usage_>& lhs, const RotationBase<LeftAndRight_, Usage_>& rhs) {
+//    return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() * rhs.derived().toImplementation()));
+//  }
+//};
 
 } // namespace internal
 } // namespace rotations
-} // namespace rm
+} // namespace kindr
 
 #endif /* KINDR_ROTATIONS_ROTATION_BASE_HPP_ */

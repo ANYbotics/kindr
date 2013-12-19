@@ -29,6 +29,41 @@
 #ifndef KINDR_ROTATIONS_RDIFFEIGEN_HPP_
 #define KINDR_ROTATIONS_RDIFFEIGEN_HPP_
 
+#include "kindr/rotations/RotationBase.hpp"
+
+namespace kindr {
+namespace rotations {
+namespace eigen_impl {
+
+template<typename PrimType, enum RotationUsage Usage>
+class LocalAngularVelocity;
+
+template<typename PrimType, enum RotationUsage Usage>
+class RotationQuaternionDiff;
+
+template<typename PrimType, enum RotationUsage Usage>
+class RotationMatrixDiff;
+
+template<typename PrimType, enum RotationUsage Usage>
+class AngleAxisDiff;
+
+template<typename PrimType, enum RotationUsage Usage>
+class RotationVectorDiff;
+
+template<typename PrimType, enum RotationUsage Usage>
+class EulerAnglesZyxDiff;
+
+template<typename PrimType, enum RotationUsage Usage>
+class EulerAnglesXyzDiff;
+
+
+} // namespace eigen_impl
+} // namespace rotations
+} // namespace kindr
+
+
+
+
 #include "kindr/rotations/eigen/LocalAngularVelocity.hpp"
 #include "kindr/rotations/eigen/AngleAxisDiff.hpp"
 #include "kindr/rotations/eigen/RotationVectorDiff.hpp"
@@ -36,6 +71,8 @@
 #include "kindr/rotations/eigen/RotationMatrixDiff.hpp"
 #include "kindr/rotations/eigen/EulerAnglesZyxDiff.hpp"
 #include "kindr/rotations/eigen/EulerAnglesXyzDiff.hpp"
+
+
 
 
 

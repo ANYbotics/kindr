@@ -39,6 +39,8 @@ namespace quaternions {
 //! Implementation based on the C++ Eigen library
 namespace eigen_impl {
 
+template<typename PrimType_>
+class UnitQuaternion;
 
 //! Implementation of a Quaternion based on Eigen::Quaternion
 /*!
