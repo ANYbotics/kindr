@@ -2566,6 +2566,6 @@ class ComparisonTraits<eigen_impl::RotationQuaternion<PrimType_, Usage_>> {
 
 } // namespace internal
 } // namespace rotations
-} // namespace rm
+} // namespace kindr
 
 #endif /* KINDR_ROTATIONS_ROTATIONEIGEN_HPP_ */
