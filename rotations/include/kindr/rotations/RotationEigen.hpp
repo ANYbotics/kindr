@@ -90,7 +90,11 @@ template<typename LeftAndRight_, enum RotationUsage Usage_>
 class MultiplicationTraits<RotationBase<LeftAndRight_, Usage_>, RotationBase<LeftAndRight_, Usage_>> {
  public:
   inline static LeftAndRight_ mult(const RotationBase<LeftAndRight_, Usage_>& lhs, const RotationBase<LeftAndRight_, Usage_>& rhs) {
-    return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() * rhs.derived().toImplementation()));
+    if(Usage_ == RotationUsage::ACTIVE){
+      return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() * rhs.derived().toImplementation()));
+    } else {
+      return LeftAndRight_(typename LeftAndRight_::Implementation(rhs.derived().toImplementation() * lhs.derived().toImplementation()));
+    }
   }
 };
 

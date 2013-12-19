@@ -482,14 +482,6 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionConcatenation){
   typedef typename TestFixture::Scalar Scalar;
   RotationQuaternion rotQuat;
 
-  // Check multiplication of two generic rotation quaternions and compare with eigen results
-  rotQuat = this->rotQuat1*this->rotQuat2;
-  typename RotationQuaternion::Implementation eigenQuat12 = this->eigenQuat1*this->eigenQuat2;
-  ASSERT_NEAR(rotQuat.w(), eigenQuat12.w(),1e-6);
-  ASSERT_NEAR(rotQuat.x(), eigenQuat12.x(),1e-6);
-  ASSERT_NEAR(rotQuat.y(), eigenQuat12.y(),1e-6);
-  ASSERT_NEAR(rotQuat.z(), eigenQuat12.z(),1e-6);
-
   // Check result of multiplication of a generic rotation quaternion with identity
   rotQuat = this->rotQuat1*this->rotQuatIdentity;
   ASSERT_EQ(rotQuat==this->rotQuat1,true);
@@ -512,6 +504,56 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionConcatenation){
   ASSERT_NEAR(rotQuat.getUnique().x(), this->rotQuatIdentity.getUnique().x(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().y(), this->rotQuatIdentity.getUnique().y(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().z(), this->rotQuatIdentity.getUnique().z(),1e-6);
+
+  // Check concatenation of 3 different quarters
+  rotQuat = this->rotQuatQuarterX.inverted()*this->rotQuatQuarterY*this->rotQuatQuarterX;
+  if(RotationQuaternion::Usage == kindr::rotations::RotationUsage::ACTIVE){
+    rotQuat.invert();
+  }
+  ASSERT_NEAR(rotQuat.getUnique().w(), this->rotQuatQuarterZ.getUnique().w(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().x(), this->rotQuatQuarterZ.getUnique().x(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().y(), this->rotQuatQuarterZ.getUnique().y(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().z(), this->rotQuatQuarterZ.getUnique().z(),1e-6);
+  rotQuat = this->rotQuatQuarterX.inverted()*this->rotQuatQuarterZ*this->rotQuatQuarterX;
+  if(RotationQuaternion::Usage == kindr::rotations::RotationUsage::ACTIVE){
+    rotQuat.invert();
+  }
+  ASSERT_NEAR(rotQuat.getUnique().w(), this->rotQuatQuarterY.inverted().getUnique().w(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().x(), this->rotQuatQuarterY.inverted().getUnique().x(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().y(), this->rotQuatQuarterY.inverted().getUnique().y(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().z(), this->rotQuatQuarterY.inverted().getUnique().z(),1e-6);
+  rotQuat = this->rotQuatQuarterY.inverted()*this->rotQuatQuarterX*this->rotQuatQuarterY;
+  if(RotationQuaternion::Usage == kindr::rotations::RotationUsage::ACTIVE){
+    rotQuat.invert();
+  }
+  ASSERT_NEAR(rotQuat.getUnique().w(), this->rotQuatQuarterZ.inverted().getUnique().w(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().x(), this->rotQuatQuarterZ.inverted().getUnique().x(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().y(), this->rotQuatQuarterZ.inverted().getUnique().y(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().z(), this->rotQuatQuarterZ.inverted().getUnique().z(),1e-6);
+  rotQuat = this->rotQuatQuarterY.inverted()*this->rotQuatQuarterZ*this->rotQuatQuarterY;
+  if(RotationQuaternion::Usage == kindr::rotations::RotationUsage::ACTIVE){
+    rotQuat.invert();
+  }
+  ASSERT_NEAR(rotQuat.getUnique().w(), this->rotQuatQuarterX.getUnique().w(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().x(), this->rotQuatQuarterX.getUnique().x(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().y(), this->rotQuatQuarterX.getUnique().y(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().z(), this->rotQuatQuarterX.getUnique().z(),1e-6);
+  rotQuat = this->rotQuatQuarterZ.inverted()*this->rotQuatQuarterX*this->rotQuatQuarterZ;
+  if(RotationQuaternion::Usage == kindr::rotations::RotationUsage::ACTIVE){
+    rotQuat.invert();
+  }
+  ASSERT_NEAR(rotQuat.getUnique().w(), this->rotQuatQuarterY.getUnique().w(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().x(), this->rotQuatQuarterY.getUnique().x(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().y(), this->rotQuatQuarterY.getUnique().y(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().z(), this->rotQuatQuarterY.getUnique().z(),1e-6);
+  rotQuat = this->rotQuatQuarterZ.inverted()*this->rotQuatQuarterY*this->rotQuatQuarterZ;
+  if(RotationQuaternion::Usage == kindr::rotations::RotationUsage::ACTIVE){
+    rotQuat.invert();
+  }
+  ASSERT_NEAR(rotQuat.getUnique().w(), this->rotQuatQuarterX.inverted().getUnique().w(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().x(), this->rotQuatQuarterX.inverted().getUnique().x(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().y(), this->rotQuatQuarterX.inverted().getUnique().y(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().z(), this->rotQuatQuarterX.inverted().getUnique().z(),1e-6);
 }
 
 // Test Rotation Quaternion Vector Rotation

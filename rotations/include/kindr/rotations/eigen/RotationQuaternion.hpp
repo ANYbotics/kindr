@@ -562,7 +562,7 @@ class RotationTraits<eigen_impl::RotationQuaternion<PrimType_, Usage_>> {
  public:
   template<typename get_matrix3X<eigen_impl::RotationQuaternion<PrimType_, Usage_>>::IndexType Cols>
   inline static typename get_matrix3X<eigen_impl::RotationQuaternion<PrimType_, Usage_>>::template Matrix3X<Cols> rotate(const eigen_impl::RotationQuaternion<PrimType_, Usage_>& p, const typename get_matrix3X<eigen_impl::RotationQuaternion<PrimType_, Usage_>>::template Matrix3X<Cols>& m){
-    return eigen_impl::RotationMatrix<PrimType_, Usage_>(p).toImplementation() * m;
+    return eigen_impl::RotationMatrix<PrimType_, Usage_>(p).toStoredImplementation() * m;
   }
 };
 
