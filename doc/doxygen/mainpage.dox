@@ -37,7 +37,7 @@ This library is written in C++11.
 GCC 4.7 is required at the minimum.
 
 \section install Installation
-\subsection build_lib Buid the Library
+\subsection build_lib Build the Library
 
 Build the library with CMake:
 \code{.sh}
