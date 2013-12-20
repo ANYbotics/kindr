@@ -212,6 +212,12 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionConstructors){
   ASSERT_NEAR(rot5.x(), this->eigenQuat1.x(),1e-6);
   ASSERT_NEAR(rot5.y(), this->eigenQuat1.y(),1e-6);
   ASSERT_NEAR(rot5.z(), this->eigenQuat1.z(),1e-6);
+
+  RotationQuaternion rot6(this->quat1.real(),this->quat1.imaginary());
+  ASSERT_NEAR(rot6.w(), this->eigenQuat1.w(),1e-6);
+  ASSERT_NEAR(rot6.x(), this->eigenQuat1.x(),1e-6);
+  ASSERT_NEAR(rot6.y(), this->eigenQuat1.y(),1e-6);
+  ASSERT_NEAR(rot6.z(), this->eigenQuat1.z(),1e-6);
 }
 
 // Test Rotation Quaternion Assignment Operator (including test between different primtypes)
