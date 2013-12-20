@@ -63,6 +63,11 @@ To rotate a vector or a matrix columnwise, the following methods are provided:
 - \ref kindr::rotations::RotationBase::rotate() "rotate()": rotates a vector or a matrix columnwise
 - \ref kindr::rotations::RotationBase::inverseRotate() "inverseRotate()": reverse rotates a vector or a matrix columnwise
 
+\subsubsection rotations_interfaces_comparison Comparison of two Rotations
+To compare two rotations, the equal operator (operator==) can be used to check if a rotation is equal to another rotation. 
+Small numeric errors may however lead to a wrong result. Therefore, the function \ref kindr::rotations::RotationBase::isEqual() "isEqual()" compares two rotations using a measure.
+
+
 \subsubsection rotations_interfaces_conversion Conversion between Rotations
 There are three kinds of conversions:
 - Conversion between different representations, i.e. between different parameterizations (e.g. rotation quaternion - angle-axis)
