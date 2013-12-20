@@ -48,19 +48,8 @@ enum class RotationUsage {
 //! Internal stuff (only for developers)
 namespace internal {
 
-/*! \brief Usage conversion traits for converting active and passive rotations into each other
- *  \class UsageConversionTraits
- *  (only for advanced users)
- */
-template<typename Derived_, enum RotationUsage Usage_>
-class UsageConversionTraits {
- public:
-//  inline static typename get_other_usage<Derived_>::OtherUsage getActive(const RotationBase<Derived_,RotationUsage::PASSIVE>& in);
-//  inline static typename get_other_usage<Derived_>::OtherUsage getPassive(const RotationBase<Derived_,RotationUsage::ACTIVE>& in);
-};
-
 /*! \brief This class determines the alternative usage type for each rotation
- *  \class get_matrix3X
+ *  \class get_other_usage
  *  (only for advanced users)
  */
 template<typename Rotation_>
@@ -68,57 +57,6 @@ class get_other_usage {
  public:
 //  typedef eigen_impl::AngleAxis<PrimType, RotationUsage::PASSIVE> OtherUsage;
 };
-
-/*! \brief Conversion traits for converting rotations into each other
- *  \class ConversionTraits
- *  (only for advanced users)
- */
-template<typename Dest_, typename Source_>
-class ConversionTraits {
- public:
-  // inline static Dest_ convert(const Source_& );
-};
-
-/*! \brief Comparison traits for comparing different rotations
- *  \class ComparisonTraits
- *  (only for advanced users)
- */
-template<typename Rotation_> // only works with the same rotation representation
-class ComparisonTraits {
- public:
-  inline static bool isEqual(const Rotation_& a, const Rotation_& b) {
-    return a.toStoredImplementation() == b.toStoredImplementation();
-  }
-
-//  inline static bool areNearlyEqual(const eigen_impl::RotationQuaternion<PrimType, Usage_>& a, const eigen_impl::RotationQuaternion<PrimType, Usage_>& b, PrimType tol)
-};
-
-/*! \brief Multiplication traits for concenating rotations
- *  \class MultiplicationTraits
- *  (only for advanced users)
- */
-template<typename Left_, typename Right_>
-class MultiplicationTraits {
- public:
-//  inline static Left_ mult(const Left_& l, const Right_& r);
-};
-
-/*! \brief Rotation traits for rotating vectors and matrices
- *  \class RotationTraits
- *  (only for advanced users)
- */
-template<typename Rotation_>
-class RotationTraits {
- public:
-// inline static typename internal::get_vector3<Derived_>::type rotate(const Rotation_& r, const typename internal::get_vector3<Derived_>::type& );
-};
-
-template<typename Rotation_>
-class ExponentialMapTraits {
- public:
-// inline static typename internal::get_vector3<Derived_>::type rotate(const Rotation_& r, const typename internal::get_vector3<Derived_>::type& );
-};
-
 
 /*! \brief This class determines the correct matrix type for each rotation which is used for matrix rotations
  *  \class get_matrix3X
@@ -144,6 +82,70 @@ class get_position3 {
 //    return position.toStoredImplementation();
 //  }
 };
+
+/*! \brief Usage conversion traits for converting active and passive rotations into each other
+ *  \class UsageConversionTraits
+ *  (only for advanced users)
+ */
+template<typename Derived_, enum RotationUsage Usage_>
+class UsageConversionTraits {
+ public:
+//  inline static typename get_other_usage<Derived_>::OtherUsage getActive(const RotationBase<Derived_,RotationUsage::PASSIVE>& in);
+//  inline static typename get_other_usage<Derived_>::OtherUsage getPassive(const RotationBase<Derived_,RotationUsage::ACTIVE>& in);
+};
+
+
+/*! \brief Conversion traits for converting rotations into each other
+ *  \class ConversionTraits
+ *  (only for advanced users)
+ */
+template<typename Dest_, typename Source_>
+class ConversionTraits {
+ public:
+  // inline static Dest_ convert(const Source_& );
+};
+
+/*! \brief Comparison traits for comparing different rotations
+ *  \class ComparisonTraits
+ *  (only for advanced users)
+ */
+template<typename Rotation_> // only works with the same rotation representation
+class ComparisonTraits {
+ public:
+  inline static bool isEqual(const Rotation_& a, const Rotation_& b) {
+    return a.toStoredImplementation() == b.toStoredImplementation();
+  }
+
+};
+
+/*! \brief Multiplication traits for concatenating rotations
+ *  \class MultiplicationTraits
+ *  (only for advanced users)
+ */
+template<typename Left_, typename Right_>
+class MultiplicationTraits {
+ public:
+//  inline static Left_ mult(const Left_& lhs, const Right_& rhs);
+};
+
+/*! \brief Rotation traits for rotating vectors and matrices
+ *  \class RotationTraits
+ *  (only for advanced users)
+ */
+template<typename Rotation_>
+class RotationTraits {
+ public:
+// inline static typename internal::get_matrix3X<Derived_>::type rotate(const Rotation_& r, const typename internal::get_vector3<Derived_>::type& );
+};
+
+template<typename Rotation_>
+class ExponentialMapTraits {
+ public:
+// inline static typename internal::get_matrix3X<Derived_>::type rotate(const Rotation_& r, const typename internal::get_vector3<Derived_>::type& );
+};
+
+
+
 
 
 
@@ -241,8 +243,8 @@ class RotationBase {
     return internal::UsageConversionTraits<Derived_,Usage_>::getActive(*this);
   }
 
-  /*! \brief Concenates two rotations.
-   *  \returns the concenations of two rotations
+  /*! \brief Concatenates two rotations.
+   *  \returns the concatenation of two rotations
    */
   template<typename OtherDerived_>
   Derived_ operator *(const RotationBase<OtherDerived_,Usage_>& other) const {
@@ -264,7 +266,7 @@ class RotationBase {
 //                                                       tol);
 //  }
 
-  /*! \brief Rotates a vector or matrix.
+  /*! \brief Rotates a vector or a matrix column-wise.
    *  \returns the rotated vector or matrix
    */
   template <typename internal::get_matrix3X<Derived_>::IndexType Cols>

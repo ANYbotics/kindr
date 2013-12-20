@@ -195,9 +195,9 @@ class RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_,
       return eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>();
     }
 
-    const PrimType_ v1 = rotationVector.firstEntry();
-    const PrimType_ v2 = rotationVector.secondEntry();
-    const PrimType_ v3 = rotationVector.thirdEntry();
+    const PrimType_ v1 = rotationVector.x();
+    const PrimType_ v2 = rotationVector.y();
+    const PrimType_ v3 = rotationVector.z();
     const PrimType_ dv1 = rotationVectorDiff.x();
     const PrimType_ dv2 = rotationVectorDiff.y();
     const PrimType_ dv3 = rotationVectorDiff.z();

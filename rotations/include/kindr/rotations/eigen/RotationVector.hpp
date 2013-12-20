@@ -90,15 +90,15 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
 
   /*! \brief Constructor using three scalars.
    *
-   *  \param v1      first entry of the rotation vector
-   *  \param v2      second entry of the rotation vector
-   *  \param v3      third entry of the rotation vector
+   *  \param x      first entry of the rotation vector
+   *  \param y      second entry of the rotation vector
+   *  \param z      third entry of the rotation vector
    */
-  RotationVector(Scalar v1, Scalar v2, Scalar v3) {
+  RotationVector(Scalar x, Scalar y, Scalar z) {
     if(Usage_ == RotationUsage::ACTIVE) {
-      vector_ << v1,v2,v3;
+      vector_ << x,y,z;
     } else if(Usage_ == RotationUsage::PASSIVE) {
-      vector_ << -v1,-v2,-v3;
+      vector_ << -x,-y,-z;
     }
   }
 
@@ -162,11 +162,10 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    *  \returns the type used for the implementation
    */
   Implementation toImplementation() const {
-    if(Usage_ == RotationUsage::ACTIVE) {
-      return vector_;
-    } else if(Usage_ == RotationUsage::PASSIVE) {
+    if(Usage_ == RotationUsage::PASSIVE) {
       return -vector_;
     }
+    return vector_;
   }
 
   /*! \brief Cast to the implementation type.
@@ -194,27 +193,26 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
   /*! \brief Returns the rotation vector.
    *  \returns the rotation vector (scalar)
    */
-  inline const Implementation& vector() const {
+  inline const Implementation vector() const {
+    return this->toImplementation();
+  }
+
+  /*! \brief Sets the rotation vector.
+   * \param x   first entry
+   * \param y   second entry
+   * \param z   third entry
+   */
+  inline void setVector(Scalar x, Scalar y, Scalar z) {
     if(Usage_ == RotationUsage::ACTIVE) {
-      return vector_;
+      vector_ << x, y, z;
     } else if(Usage_ == RotationUsage::PASSIVE) {
-      return -vector_;
+      vector_ << -x, -y, -z;
     }
   }
 
   /*! \brief Sets the rotation vector.
    */
-  inline void setVector(Scalar first, Scalar second, Scalar third) const {
-    if(Usage_ == RotationUsage::ACTIVE) {
-      vector_ << first, second, third;
-    } else if(Usage_ == RotationUsage::PASSIVE) {
-      vector_ << -first, -second, -third;
-    }
-  }
-
-  /*! \brief Sets the rotation vector.
-   */
-  inline void setVector(Implementation vector) const {
+  inline void setVector(const Implementation& vector) {
     if(Usage_ == RotationUsage::ACTIVE) {
       vector_ = vector;
     } else if(Usage_ == RotationUsage::PASSIVE) {
@@ -225,63 +223,60 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
   /*! \brief Returns the first entry of the rotation vector.
    *  \returns first entry of the rotation vector (scalar)
    */
-  inline Scalar firstEntry() const {
-    if(Usage_ == RotationUsage::ACTIVE) {
-      return vector_(0);
-    } else if(Usage_ == RotationUsage::PASSIVE) {
+  inline Scalar x() const {
+    if(Usage_ == RotationUsage::PASSIVE) {
       return -vector_(0);
     }
+    return vector_(0);
   }
 
   /*! \brief Returns the second entry of the rotation vector.
    *  \returns second entry of the rotation vector (scalar)
    */
-  inline Scalar secondEntry() const {
-    if(Usage_ == RotationUsage::ACTIVE) {
-      return vector_(1);
-    } else if(Usage_ == RotationUsage::PASSIVE) {
+  inline Scalar y() const {
+    if(Usage_ == RotationUsage::PASSIVE) {
       return -vector_(1);
     }
+    return vector_(1);
   }
 
   /*! \brief Returns the third entry of the rotation vector.
    *  \returns third entry of the rotation vector (scalar)
    */
-  inline Scalar thirdEntry() const {
-    if(Usage_ == RotationUsage::ACTIVE) {
-      return vector_(2);
-    } else if(Usage_ == RotationUsage::PASSIVE) {
+  inline Scalar z() const {
+    if(Usage_ == RotationUsage::PASSIVE) {
       return -vector_(2);
     }
+    return vector_(2);
   }
 
   /*! \brief Sets the first entry of the rotation vector.
    */
-  inline void setFirstEntry(Scalar first) {
+  inline void setX(Scalar x) {
     if(Usage_ == RotationUsage::ACTIVE) {
-      vector_(0) = first;
+      vector_(0) = x;
     } else if(Usage_ == RotationUsage::PASSIVE) {
-      vector_(0) = -first;
+      vector_(0) = -x;
     }
   }
 
   /*! \brief Sets the second entry of the rotation vector.
    */
-  inline void setSecondEntry(Scalar second) {
+  inline void setY(Scalar y) {
     if(Usage_ == RotationUsage::ACTIVE) {
-      vector_(1) = second;
+      vector_(1) = y;
     } else if(Usage_ == RotationUsage::PASSIVE) {
-      vector_(1) = -second;
+      vector_(1) = -y;
     }
   }
 
   /*! \brief Sets the third entry of the rotation vector.
    */
-  inline void setThirdEntry(Scalar third) {
+  inline void setZ(Scalar z) {
     if(Usage_ == RotationUsage::ACTIVE) {
-      vector_(2) = third;
+      vector_(2) = z;
     } else if(Usage_ == RotationUsage::PASSIVE) {
-      vector_(2) = -third;
+      vector_(2) = -z;
     }
   }
 

@@ -204,9 +204,9 @@ class RotationDiffConversionTraits<eigen_impl::RotationVectorDiff<PrimType_, Rot
     const PrimType_ w2 = angularVelocity.y();
     const PrimType_ w3 = angularVelocity.z();
 
-    const PrimType_ v1 = rotationVector.firstEntry();
-    const PrimType_ v2 = rotationVector.secondEntry();
-    const PrimType_ v3 = rotationVector.thirdEntry();
+    const PrimType_ v1 = rotationVector.x();
+    const PrimType_ v2 = rotationVector.y();
+    const PrimType_ v3 = rotationVector.z();
     const PrimType_ t6 = v*(1.0/2.0);
     const PrimType_ t2 = sin(t6);
     const PrimType_ t3 = t2*t2;
