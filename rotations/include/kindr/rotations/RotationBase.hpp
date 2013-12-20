@@ -109,13 +109,12 @@ class ConversionTraits {
  *  \class ComparisonTraits
  *  (only for advanced users)
  */
-template<typename Rotation_> // only works with the same rotation representation
+template<typename Left_, typename Right_>
 class ComparisonTraits {
  public:
-  inline static bool isEqual(const Rotation_& a, const Rotation_& b) {
-    return a.toStoredImplementation() == b.toStoredImplementation();
+  inline static bool isEqual(const Left_& left, const Right_& right) {
+    return left.toStoredImplementation() == Left_(right).toStoredImplementation();
   }
-
 };
 
 /*! \brief Multiplication traits for concatenating rotations
@@ -256,15 +255,24 @@ class RotationBase {
    */
   template<typename OtherDerived_>
   bool operator ==(const RotationBase<OtherDerived_,Usage_>& other) const { // todo: may be optimized
-    return internal::ComparisonTraits<Derived_>::isEqual(this->derived().getUnique(), Derived_(other).getUnique()); // the type conversion must already take place here to ensure the specialised isequal function is called more often
+    return internal::ComparisonTraits<Derived_,OtherDerived_>::isEqual(this->derived().getUnique(), other.derived().getUnique()); // the type conversion must already take place here to ensure the specialised isequal function is called more often
   }
 
-//  template<typename OtherDerived_>
-//  bool isNear(const Rotation<OtherDerived_, Usage_>& other, typename Derived_::Scalar tol) { // todo: may be optimized
-//    return internal::ComparisonTraits<Derived_>::isNear(typename eigen_impl::RotationQuaternion<typename Derived_::Scalar>(this->derived()).getUnique(),
-//                                                       typename eigen_impl::RotationQuaternion<typename Derived_::Scalar>(other.derived()).getUnique(),
-//                                                       tol);
-//  }
+  /*! \brief Compares two rotations and returns the disparity angle.
+   *  \returns the disparity angle
+   */
+  template<typename OtherDerived_>
+  double getDisparityAngle(const RotationBase<OtherDerived_,Usage_>& other) const {
+    return internal::ComparisonTraits<Derived_,OtherDerived_>::getDisparityAngle(this->derived(), other.derived());
+  }
+
+  /*! \brief Compares two rotations with a tolerance.
+   *  \returns true if the rotations are equal inside the tolerance
+   */
+  template<typename OtherDerived_>
+  bool compare(const RotationBase<OtherDerived_,Usage_>& other, double tol) const {
+    return (fabs(this->getDisparityAngle(other)) <= tol);
+  }
 
   /*! \brief Rotates a vector or a matrix column-wise.
    *  \returns the rotated vector or matrix

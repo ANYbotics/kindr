@@ -392,16 +392,16 @@ class RotationTraits<eigen_impl::RotationVector<PrimType_, Usage_>> {
   }
 };
 
-/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
- * Comparison Traits
- * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-template<typename PrimType_, enum RotationUsage Usage_>
-class ComparisonTraits<eigen_impl::RotationVector<PrimType_, Usage_>> {
- public:
-  inline static bool isEqual(const eigen_impl::RotationVector<PrimType_, Usage_>& a, const eigen_impl::RotationVector<PrimType_, Usage_>& b){
-    return a.toStoredImplementation() ==  b.toStoredImplementation();
-  }
-};
+///* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// * Comparison Traits
+// * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+//template<typename PrimType_, enum RotationUsage Usage_>
+//class ComparisonTraits<eigen_impl::RotationVector<PrimType_, Usage_>> {
+// public:
+//  inline static bool isEqual(const eigen_impl::RotationVector<PrimType_, Usage_>& a, const eigen_impl::RotationVector<PrimType_, Usage_>& b){
+//    return a.toStoredImplementation() ==  b.toStoredImplementation();
+//  }
+//};
 
 } // namespace internal
 } // namespace rotations
