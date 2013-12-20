@@ -226,15 +226,11 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
 
 
   inline Scalar real() const {
-    return Base::getReal();
+    return this->toUnitQuaternion().real();
   }
 
   inline Imaginary imaginary() const {
-    if(Usage_ == RotationUsage::ACTIVE) {
-      return Base::getImaginary();
-    } else if(Usage_ == RotationUsage::PASSIVE) {
-      return -Base::getImaginary();
-    }
+    return this->toUnitQuaternion().imaginary();
   }
 
   inline void setReal(Scalar real) const {
