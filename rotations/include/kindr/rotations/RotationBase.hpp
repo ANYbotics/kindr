@@ -58,6 +58,13 @@ class get_other_usage {
 //  typedef eigen_impl::AngleAxis<PrimType, RotationUsage::PASSIVE> OtherUsage;
 };
 
+template<typename Rotation_>
+class get_scalar {
+ public:
+//  typedef typename Rotation_::Scalar Scalar;
+};
+
+
 /*! \brief This class determines the correct matrix type for each rotation which is used for matrix rotations
  *  \class get_matrix3X
  *  (only for advanced users)
@@ -258,19 +265,24 @@ class RotationBase {
     return internal::ComparisonTraits<Derived_,OtherDerived_>::isEqual(this->derived().getUnique(), other.derived().getUnique()); // the type conversion must already take place here to ensure the specialised isequal function is called more often
   }
 
-  /*! \brief Compares two rotations and returns the disparity angle.
-   *  \returns the disparity angle
+  /*! \brief Gets the disparity angle between two rotations for comparison.
+   *
+   *  The disparity angle is defined as the angle of the angle-axis representation of the concatenation of
+   *  the first rotation and the inverse of the second rotation. If the disparity angle is zero,
+   *  the rotations are equal.
+   *
+   *  \returns disparity angle
    */
   template<typename OtherDerived_>
-  double getDisparityAngle(const RotationBase<OtherDerived_,Usage_>& other) const {
-    return internal::ComparisonTraits<Derived_,OtherDerived_>::getDisparityAngle(this->derived(), other.derived());
+  typename internal::get_scalar<Derived_>::Scalar getDisparityAngle(const RotationBase<OtherDerived_,Usage_>& other) const {
+    return internal::ComparisonTraits<RotationBase<Derived_, Usage_>, RotationBase<OtherDerived_, Usage_>>::getDisparityAngle(this->derived(), other.derived());
   }
 
   /*! \brief Compares two rotations with a tolerance.
-   *  \returns true if the rotations are equal inside the tolerance
+   *  \returns true if the rotations are equal within the tolerance
    */
   template<typename OtherDerived_>
-  bool compare(const RotationBase<OtherDerived_,Usage_>& other, double tol) const {
+  bool isEqual(const RotationBase<OtherDerived_,Usage_>& other, typename internal::get_scalar<Derived_>::Scalar tol) const {
     return (fabs(this->getDisparityAngle(other)) <= tol);
   }
 

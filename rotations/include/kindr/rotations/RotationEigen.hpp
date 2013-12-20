@@ -101,12 +101,20 @@ class MultiplicationTraits<RotationBase<LeftAndRight_, Usage_>, RotationBase<Lef
   }
 };
 
-
+/*! \brief Compares two rotations.
+ *  The
+ */
 template<typename Left_, typename Right_, enum RotationUsage Usage_>
 class ComparisonTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usage_>> {
  public:
-  inline static double getDisparityAngle(const Left_ & left, const Right_ & right) {
-    return (typename eigen_impl::AngleAxis<typename Left_::Scalar,  Usage_>(left*right.inverse())).angle();
+  /*! \brief Gets the disparity angle between two rotations.
+   *
+   *  The disparity angle is defined as the angle of the angle-axis representation of the concatenation of
+   *  the first rotation and the inverse of the second rotation. If the disparity angle is zero,
+   *  the rotations are equal.
+   */
+  inline static typename Left_::Scalar getDisparityAngle(const RotationBase<Left_, Usage_>& left, const RotationBase<Right_, Usage_>& right) {
+    return eigen_impl::AngleAxis<typename Left_::Scalar,  Usage_>(left.derived()*right.derived().inverted()).angle();
   }
 };
 

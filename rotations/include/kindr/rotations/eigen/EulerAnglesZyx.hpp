@@ -416,6 +416,12 @@ typedef EulerAnglesYpr<float,  RotationUsage::PASSIVE> EulerAnglesYprPF;
 namespace internal {
 
 template<typename PrimType_, enum RotationUsage Usage_>
+class get_scalar<eigen_impl::EulerAnglesZyx<PrimType_, Usage_>> {
+ public:
+  typedef PrimType_ Scalar;
+};
+
+template<typename PrimType_, enum RotationUsage Usage_>
 class get_matrix3X<eigen_impl::EulerAnglesZyx<PrimType_, Usage_>>{
  public:
   typedef int  IndexType;

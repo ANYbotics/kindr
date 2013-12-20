@@ -485,6 +485,12 @@ typedef RotationQuaternion<float,  RotationUsage::PASSIVE> RotationQuaternionPF;
 namespace internal {
 
 template<typename PrimType_, enum RotationUsage Usage_>
+class get_scalar<eigen_impl::RotationQuaternion<PrimType_, Usage_>> {
+ public:
+  typedef PrimType_ Scalar;
+};
+
+template<typename PrimType_, enum RotationUsage Usage_>
 class get_matrix3X<eigen_impl::RotationQuaternion<PrimType_, Usage_>>{
  public:
   typedef int IndexType;
