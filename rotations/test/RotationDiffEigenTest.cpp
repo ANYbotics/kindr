@@ -174,12 +174,13 @@ TEST(RotationDiffTest, testDevelopment)
 //  rot::LocalAngularVelocityAD avelAz(rvA, rvADiff);
 ////  std::cout << rvA << std::endl;
 
+  rot::LocalAngularVelocityAD avA(0.9, 0.5, 0.8);
+
   rot::AngleAxisAD aaA(0.2, 0.0, 1.0, 0.0);
-  rot::AngleAxisDiffAD aaDiffA(0.5, 0.1, 0.2, 0.3);
+  rot::AngleAxisDiffAD aaDiffA(aaA, avA);
+  rot::LocalAngularVelocityAD avA2(aaA, aaDiffA);
 
-  rot::LocalAngularVelocityAD avA(aaA, aaDiffA);
-
-//  std::cout << "avA1 | avA2: "<<  avA << " | "  << avA2 << std::endl;
+  std::cout << "AngleAxisDiffAD: avA | avA2: "<<  avA << " | "  << avA2 << std::endl;
 
   rot::RotationQuaternionAD rqA(aaA);
   rot::RotationQuaternionDiffAD rqDiffA(rqA, avA);
@@ -208,10 +209,10 @@ TEST(RotationDiffTest, testDevelopment)
   std::cout << "RotationVectorDiffAD: avA | avA9: "<<  avA << " | "  << avA10 << std::endl;
 
 
-  rot::RotationQuaternionDiffAD rqDiffA2(rvA, rvDiffA);
-  std::cout << "RotationQuaternionDiffAD: rqDiffA | rqDiffA2: "<<  rqDiffA << " | "  << rqDiffA2 << std::endl;
-  rot::RotationQuaternionDiffAD rqDiffA3(rqA, rvDiffA);
-  std::cout << "RotationQuaternionDiffAD: rqDiffA | rqDiffA3: "<<  rqDiffA << " | "  << rqDiffA3 << std::endl;
+//  rot::RotationQuaternionDiffAD rqDiffA2(rvA, rvDiffA);
+//  std::cout << "RotationQuaternionDiffAD: rqDiffA | rqDiffA2: "<<  rqDiffA << " | "  << rqDiffA2 << std::endl;
+//  rot::RotationQuaternionDiffAD rqDiffA3(rqA, rvDiffA);
+//  std::cout << "RotationQuaternionDiffAD: rqDiffA | rqDiffA3: "<<  rqDiffA << " | "  << rqDiffA3 << std::endl;
 
   rot::RotationMatrixAD rmA(rqA);
   rot::RotationMatrixDiffAD rmDiffA(rmA, avA);

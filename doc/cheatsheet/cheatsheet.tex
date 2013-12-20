@@ -366,12 +366,20 @@ $\rotvelhat{B}{I}{B} = \rotmat{I}{B} \drotmat{I}{B}^\transpose= \rotmat{B}{I}^\t
 
 \subsubsection{Time Derivative of Rotation Quaternion $\Leftrightarrow$ Angular Velocity}
 \begin{tabular}{@{}ll@{}}
-$\rotvel{B}{I}{B} = 2 \bar{\vH}(\quat{B}{I}) \dot{\vp}_{B\!I}$  &  $\begin{aligned}\bar{\vH}(\vp) &= \begin{bmatrix}-\imquatvec{p} & -\hat{\imquatvec{p}}+p_0\identity_{3\times 3}\end{bmatrix} \in \mathbb{R}^{3\times4} \\
+%  The following line is correct  according to Eq. 164 and Eq. 158 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
+$\rotvel{I}{I}{B} = 2 \vH(\quat{B}{I}) \dot{\vp}_{B\!I}$  &   $\dot{\vp}_{B\!I} = \frac{1}{2}\vH(\quat{B}{I})^\transpose \rotvel{I}{I}{B}$ \\ 
+%  The following line correct  according to Eq. 165 and Eq. 159 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
+$\rotvel{B}{I}{B} = 2 \bar{\vH}(\quat{B}{I}) \dot{\vp}_{B\!I}$  &  $\dot{\vp}_{B\!I} = \frac{1}{2}\bar{\vH}(\quat{B}{I})^\transpose \rotvel{B}{I}{B}$   \\ 
+%  The following line correct  according to Eq. 150 and Eq. 151 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
+$\begin{aligned}\vH(\vp) &= \begin{bmatrix}-\imquatvec{p} & \hat{\imquatvec{p}}+p_0\identity_{3\times 3}\end{bmatrix} \in \mathbb{R}^{3\times4} \\
+ &=\begin{bmatrix}  -p_1 &  p_0 & -p_3 &  p_2 \\
+ -p_2 &  p_3 &  p_0 & -p_1 \\
+ -p_3 & -p_2 &  p_1 &  p_0 \end{bmatrix}
+\end{aligned}$ &  $\begin{aligned}\bar{\vH}(\vp) &= \begin{bmatrix}-\imquatvec{p} & -\hat{\imquatvec{p}}+p_0\identity_{3\times 3}\end{bmatrix} \in \mathbb{R}^{3\times4} \\
  &=\begin{bmatrix} -p_1 &  p_0 &  p_3 & -p_2 \\
  -p_2 & -p_3 &  p_0 &  p_1 \\
  -p_3 &  p_2 & -p_1 &  p_0 \end{bmatrix}
-\end{aligned}$  \\ 
-$\dot{\vp}_{B\!I} = \frac{1}{2}\bar{\vH}(\quat{B}{I})^\transpose \rotvel{B}{I}{B}$ & \\
+\end{aligned}$ \\
 \end{tabular}
 
 \subsubsection{Time Derivative of Angle-Axis  $\Leftrightarrow$ Angular Velocity}

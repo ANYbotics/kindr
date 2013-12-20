@@ -92,6 +92,10 @@ class AngleAxisDiff : public AngleAxisDiffBase<AngleAxisDiff<PrimType_, Usage_>,
     : Base(angle,Vector3(v1,v2,v3)) {
   }
 
+  AngleAxisDiff(Scalar angle, Vector3 axis)
+    : Base(angle,axis) {
+  }
+
   /*! \brief Constructor using a time derivative with a different parameterization
    *
    * \param rotation  rotation
@@ -204,8 +208,8 @@ class RotationDiffConversionTraits<eigen_impl::AngleAxisDiff<PrimType_, Rotation
     }
     const Vector axis = angleAxis.axis();
     const Eigen::Matrix<PrimType_, 3, 3> n_hat = linear_algebra::getSkewMatrixFromVector(axis);
-    const PrimType_ angleDiff = angleAxis.axis().transpose()*angularVelocity;
-    const Vector axisDiff = (-0.5*sin(angle)/(1.0-cos(angle))*n_hat-0.5)*n_hat*angularVelocity.toImplementation();
+    const PrimType_ angleDiff = angleAxis.axis().transpose()*angularVelocity.toImplementation();
+    const Vector axisDiff = (-0.5*sin(angle)/(1.0-cos(angle))*n_hat*n_hat+0.5*n_hat)*angularVelocity.toImplementation();
     return eigen_impl::AngleAxisDiff<PrimType_, RotationUsage::ACTIVE>(angleDiff, axisDiff);
   }
 };
