@@ -100,6 +100,7 @@ class RotationQuaternionSingleTest : public ::testing::Test{
   const RotationQuaternion rotQuat2 = RotationQuaternion(eigenQuat2);
   const RotationQuaternion rotQuatIdentity = RotationQuaternion(eigenQuatIdentity);
 
+  const Vector vec = Vector(1.3,-2.5,3.6);
   const Vector vecX = Vector(1.0,0.0,0.0);
   const Vector vecY = Vector(0.0,1.0,0.0);
   const Vector vecZ = Vector(0.0,0.0,1.0);
@@ -563,6 +564,8 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionVectorRotation){
   typedef typename TestFixture::Vector Vector;
   RotationQuaternion rotQuat;
   Vector testVec;
+  Vector testVec1;
+  Vector testVec2;
 
   int signSwitch = 2*(RotationQuaternion::Usage == kindr::rotations::RotationUsage::ACTIVE)-1;
 
@@ -666,13 +669,23 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionVectorRotation){
   ASSERT_NEAR(testVec(0), this->vecZ(0),1e-6);
   ASSERT_NEAR(testVec(1), this->vecZ(1),1e-6);
   ASSERT_NEAR(testVec(2), this->vecZ(2),1e-6);
+
+  // Check combination between concatenation and rotate
+  testVec1 = this->rotQuat2.rotate(this->rotQuat1.rotate(this->vec));
+  testVec2 = (this->rotQuat2*this->rotQuat1).rotate(this->vec);
+  ASSERT_NEAR(testVec1(0), testVec2(0),1e-6);
+  ASSERT_NEAR(testVec1(1), testVec2(1),1e-6);
+  ASSERT_NEAR(testVec1(2), testVec2(2),1e-6);
 }
 
 // Test Rotation Quaternion getActive
 TYPED_TEST(RotationQuaternionSinglePassiveTest, testRotationQuaternionGetActive){
   typedef typename TestFixture::RotationQuaternion RotationQuaternion;
   typedef typename TestFixture::Scalar Scalar;
+  typedef typename TestFixture::Vector Vector;
   RotationQuaternion rotQuat;
+  Vector testVec1;
+  Vector testVec2;
 
   // Get passive and active usage
   rotQuat = this->rotQuat1;
@@ -682,13 +695,23 @@ TYPED_TEST(RotationQuaternionSinglePassiveTest, testRotationQuaternionGetActive)
   ASSERT_NEAR(rotQuatActive.x(), -this->rotQuat1.x(),1e-6);
   ASSERT_NEAR(rotQuatActive.y(), -this->rotQuat1.y(),1e-6);
   ASSERT_NEAR(rotQuatActive.z(), -this->rotQuat1.z(),1e-6);
+
+  // Check effect on vector
+  testVec1 = rotQuat.rotate(this->vec);
+  testVec2 = rotQuatActive.inverted().rotate(this->vec);
+  ASSERT_NEAR(testVec1(0), testVec2(0),1e-6);
+  ASSERT_NEAR(testVec1(1), testVec2(1),1e-6);
+  ASSERT_NEAR(testVec1(2), testVec2(2),1e-6);
 }
 
 // Test Rotation Quaternion getPassive
 TYPED_TEST(RotationQuaternionSingleActiveTest, testRotationQuaternionGetPassive){
   typedef typename TestFixture::RotationQuaternion RotationQuaternion;
   typedef typename TestFixture::Scalar Scalar;
+  typedef typename TestFixture::Vector Vector;
   RotationQuaternion rotQuat;
+  Vector testVec1;
+  Vector testVec2;
 
   // Get passive and active usage
   rotQuat = this->rotQuat1;
@@ -698,6 +721,13 @@ TYPED_TEST(RotationQuaternionSingleActiveTest, testRotationQuaternionGetPassive)
   ASSERT_NEAR(rotQuatPassive.x(), -this->rotQuat1.x(),1e-6);
   ASSERT_NEAR(rotQuatPassive.y(), -this->rotQuat1.y(),1e-6);
   ASSERT_NEAR(rotQuatPassive.z(), -this->rotQuat1.z(),1e-6);
+
+  // Check effect on vector
+  testVec1 = rotQuat.rotate(this->vec);
+  testVec2 = rotQuatPassive.inverted().rotate(this->vec);
+  ASSERT_NEAR(testVec1(0), testVec2(0),1e-6);
+  ASSERT_NEAR(testVec1(1), testVec2(1),1e-6);
+  ASSERT_NEAR(testVec1(2), testVec2(2),1e-6);
 }
 
 // Test Rotation Quaternion cast to UnitQuaternion
