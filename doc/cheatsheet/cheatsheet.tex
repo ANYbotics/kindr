@@ -268,7 +268,7 @@ Quaternion multiplication: $\begin{aligned}Q \cdot P &= (q_0, \imquatvec{q})\cdo
 $ \quat{B}{I} = \begin{bmatrix} \cos{\frac{\theta}{2}} \\ \vn \sin{\frac{\theta}{2}} \end{bmatrix}$ & $\Leftrightarrow$ & $
 (\theta, \vn)_{B\!I} = \left\{
   \begin{array}{l l}
-    (2\arccos{(a_0)}, \frac{\imquatvec{p}}{\norm{\imquatvec{p}}}) & \quad \text{if $\lVert \imquatvec{p} \rVert^2 \geq \epsilon^2$}\\
+    (2\arccos{(p_0)}, \frac{\imquatvec{p}}{\norm{\imquatvec{p}}}) & \quad \text{if $\lVert \imquatvec{p} \rVert^2 \geq \epsilon^2$}\\
     (0, \begin{bmatrix}1 & 0 & 0\end{bmatrix}^\transpose)  & \quad \text{otherwise}
   \end{array} \right. $ \\
 \end{tabular}
@@ -378,7 +378,8 @@ $\dot{\vp}_{B\!I} = \frac{1}{2}\bar{\vH}(\quat{B}{I})^\transpose \rotvel{B}{I}{B
 \begin{tabular}{@{}ll@{}}
 $\rotvel{I}{I}{B} = \vn \dot{\theta} + \dot{\vn}\sin{\theta} + \hat{\vn}\dot{\vn}(1-\cos{\theta})$ &  \\
 $\rotvel{B}{I}{B} = \vn \dot{\theta} + \dot{\vn}\sin{\theta} - \hat{\vn}\dot{\vn}(1-\cos{\theta})$ &   \\
-$\dot{\theta} = \vn^\transpose {}_I\vom_{I\!B}, \dot{\vn}=\left(-\frac{1}{2}\frac{\sin{\theta}}{1-cos{\theta}}\hat{\vn}^2 -\frac{1}{2}\hat{\vn}\right) {}_I\vom _{I\!B} \quad \forall \theta \in \mathbb{R}\backslash\{0\}$  & \\
+$\dot{\theta} = \vn^\transpose \rotvel{I}{I}{B}, \quad \dot{\vn}=\left(-\frac{1}{2}\frac{\sin{\theta}}{1-cos{\theta}}\hat{\vn}^2 -\frac{1}{2}\hat{\vn}\right) \rotvel{I}{I}{B} \quad \forall \theta \in \mathbb{R}\backslash\{0\}$  & \\
+$\dot{\theta} = \vn^\transpose \rotvel{B}{I}{B}, \quad \dot{\vn}=\left(-\frac{1}{2}\frac{\sin{\theta}}{1-cos{\theta}}\hat{\vn}^2 +\frac{1}{2}\hat{\vn}\right) \rotvel{B}{I}{B} \quad \forall \theta \in \mathbb{R}\backslash\{0\}$  & \\
 \end{tabular}
 
 \subsubsection{Time Derivative of Rotation Vector $\Leftrightarrow$ Angular Velocity}
