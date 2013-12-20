@@ -119,13 +119,13 @@ struct RotationQuaternionSinglePassiveTest : public RotationQuaternionSingleTest
 
 template <typename QuaternionImplementationQuaternionPair>
 struct RotationQuaternionPairTest : public ::testing::Test{
-  typedef typename QuaternionImplementationQuaternionPair::first_type RotationQuaternionFirstPrimeType;
-  typedef typename RotationQuaternionFirstPrimeType::Scalar FirstScalar;
-  typedef typename QuaternionImplementationQuaternionPair::second_type RotationQuaternionSecondPrimeType;
-  typedef typename RotationQuaternionSecondPrimeType::Scalar SecondScalar;
+  typedef typename QuaternionImplementationQuaternionPair::first_type RotationQuaternionFirstPrimType;
+  typedef typename RotationQuaternionFirstPrimType::Scalar FirstScalar;
+  typedef typename QuaternionImplementationQuaternionPair::second_type RotationQuaternionSecondPrimType;
+  typedef typename RotationQuaternionSecondPrimType::Scalar SecondScalar;
 
-  const RotationQuaternionFirstPrimeType rotQuat1 = RotationQuaternionFirstPrimeType(0.0,0.36,0.48,0.8);
-  const RotationQuaternionSecondPrimeType rotQuat2 = RotationQuaternionSecondPrimeType(0.0,0.36,0.48,0.8);
+  const RotationQuaternionFirstPrimType rotQuat1 = RotationQuaternionFirstPrimType(0.0,0.36,0.48,0.8);
+  const RotationQuaternionSecondPrimType rotQuat2 = RotationQuaternionSecondPrimType(0.0,0.36,0.48,0.8);
   const typename quat::UnitQuaternion<FirstScalar> uquat1 = typename quat::UnitQuaternion<FirstScalar>(0.0,0.36,0.48,0.8);
   const typename quat::UnitQuaternion<SecondScalar> uquat2 = typename quat::UnitQuaternion<SecondScalar>(0.0,0.36,0.48,0.8);
   const typename quat::Quaternion<FirstScalar> quat1 = typename quat::Quaternion<FirstScalar>(0.0,0.36,0.48,0.8);
@@ -214,11 +214,11 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionConstructors){
 }
 
 // Test Rotation Quaternion Assignment Operator (including test between different primtypes)
-TYPED_TEST(RotationQuaternionPairTest, testRotationQuaternionAssignmentPrimetypes){
-  typedef typename TestFixture::RotationQuaternionFirstPrimeType RotationQuaternionFirstPrimeType;
-  typedef typename TestFixture::RotationQuaternionSecondPrimeType RotationQuaternionSecondPrimeType;
-  RotationQuaternionFirstPrimeType rot1;
-  RotationQuaternionSecondPrimeType rot2;
+TYPED_TEST(RotationQuaternionPairTest, testRotationQuaternionAssignmentPrimTypes){
+  typedef typename TestFixture::RotationQuaternionFirstPrimType RotationQuaternionFirstPrimType;
+  typedef typename TestFixture::RotationQuaternionSecondPrimType RotationQuaternionSecondPrimType;
+  RotationQuaternionFirstPrimType rot1;
+  RotationQuaternionSecondPrimType rot2;
 
   //  RotationQuaternionXF = RotationQuaternionXF
   rot1 = this->rotQuat1;
@@ -278,11 +278,11 @@ TYPED_TEST(RotationQuaternionPairTest, testRotationQuaternionAssignmentPrimetype
 }
 
 // Test Rotation Quaternion () Operator for casting from Quaternion/UnitQuaternion (including test between different primtypes)
-TYPED_TEST(RotationQuaternionPairTest, testRotationQuaternionParenthesisPrimetypes){
-  typedef typename TestFixture::RotationQuaternionFirstPrimeType RotationQuaternionFirstPrimeType;
-  typedef typename TestFixture::RotationQuaternionSecondPrimeType RotationQuaternionSecondPrimeType;
-  RotationQuaternionFirstPrimeType rot1;
-  RotationQuaternionSecondPrimeType rot2;
+TYPED_TEST(RotationQuaternionPairTest, testRotationQuaternionParenthesisPrimTypes){
+  typedef typename TestFixture::RotationQuaternionFirstPrimType RotationQuaternionFirstPrimType;
+  typedef typename TestFixture::RotationQuaternionSecondPrimType RotationQuaternionSecondPrimType;
+  RotationQuaternionFirstPrimType rot1;
+  RotationQuaternionSecondPrimType rot2;
 
   //  RotationQuaternionXF(UnitQuaternionF)
   rot1(this->uquat1);
