@@ -570,7 +570,7 @@ class RotationTraits<eigen_impl::RotationQuaternion<PrimType_, Usage_>> {
  * Comparison Traits
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 template<typename PrimType_, enum RotationUsage Usage_>
-class ComparisonTraits<eigen_impl::RotationQuaternion<PrimType_, Usage_>> {
+class ComparisonTraits<eigen_impl::RotationQuaternion<PrimType_, Usage_>, eigen_impl::RotationQuaternion<PrimType_, Usage_>> {
  public:
    inline static bool isEqual(const eigen_impl::RotationQuaternion<PrimType_, Usage_>& a, const eigen_impl::RotationQuaternion<PrimType_, Usage_>& b){
      return a.toStoredImplementation().w() ==  b.toStoredImplementation().w() &&
@@ -579,12 +579,12 @@ class ComparisonTraits<eigen_impl::RotationQuaternion<PrimType_, Usage_>> {
             a.toStoredImplementation().z() ==  b.toStoredImplementation().z();
    }
 
-   inline static bool isNear(const eigen_impl::RotationQuaternion<PrimType_, Usage_>& a, const eigen_impl::RotationQuaternion<PrimType_, Usage_>& b, PrimType_ tol){
-     return fabs(a.toStoredImplementation().w() - b.toStoredImplementation().w()) < tol &&
-            fabs(a.toStoredImplementation().x() - b.toStoredImplementation().x()) < tol &&
-            fabs(a.toStoredImplementation().y() - b.toStoredImplementation().y()) < tol &&
-            fabs(a.toStoredImplementation().z() - b.toStoredImplementation().z()) < tol;
-   }
+//   inline static bool isNear(const eigen_impl::RotationQuaternion<PrimType_, Usage_>& a, const eigen_impl::RotationQuaternion<PrimType_, Usage_>& b, PrimType_ tol){
+//     return fabs(a.toStoredImplementation().w() - b.toStoredImplementation().w()) < tol &&
+//            fabs(a.toStoredImplementation().x() - b.toStoredImplementation().x()) < tol &&
+//            fabs(a.toStoredImplementation().y() - b.toStoredImplementation().y()) < tol &&
+//            fabs(a.toStoredImplementation().z() - b.toStoredImplementation().z()) < tol;
+//   }
 };
 
 } // namespace internal

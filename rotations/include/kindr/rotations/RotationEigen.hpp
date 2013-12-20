@@ -37,6 +37,9 @@ namespace rotations {
 namespace eigen_impl {
 
 template<typename PrimType_, enum RotationUsage Usage_>
+class AngleAxis;
+
+template<typename PrimType_, enum RotationUsage Usage_>
 class RotationVector;
 
 template<typename PrimType_, enum RotationUsage Usage_>
@@ -95,6 +98,15 @@ class MultiplicationTraits<RotationBase<LeftAndRight_, Usage_>, RotationBase<Lef
     } else {
       return LeftAndRight_(typename LeftAndRight_::Implementation(rhs.derived().toImplementation() * lhs.derived().toImplementation()));
     }
+  }
+};
+
+
+template<typename Left_, typename Right_, enum RotationUsage Usage_>
+class ComparisonTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usage_>> {
+ public:
+  inline static double getDisparityAngle(const Left_ & left, const Right_ & right) {
+    return (typename eigen_impl::AngleAxis<typename Left_::Scalar,  Usage_>(left*right.inverse())).angle();
   }
 };
 
