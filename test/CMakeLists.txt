@@ -40,14 +40,14 @@ add_definitions(-std=c++0x)
 find_package(Eigen REQUIRED)
 
 include_directories(${EIGEN_INCLUDE_DIRS})
-include_directories(include)
-include_directories(../common/include)
-include_directories(../quaternions/include)
-include_directories(../positions/include)
-include_directories(../linear_algebra/include)
+include_directories(../include)
+#include_directories(../common/include)
+#include_directories(../quaternions/include)
+#include_directories(../positions/include)
+#include_directories(../linear_algebra/include)
 
-add_executable( rot_example EXCLUDE_FROM_ALL ./src/example.cpp)
-ADD_CUSTOM_TARGET(demo_rotations rot_example DEPENDS rot_example) 
+#add_executable( rot_example EXCLUDE_FROM_ALL ./src/example.cpp)
+#ADD_CUSTOM_TARGET(demo_rotations rot_example DEPENDS rot_example) 
 
  
 if (BUILD_GTEST)
@@ -61,22 +61,69 @@ if (BUILD_GTEST)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 include_directories(test)
 
-include_directories(
-	#../../schweizer-messer/sm_common/include
-	#../../schweizer-messer/sm_eigen/include
-	#../../schweizer-messer/sm_random/include
-	#../../schweizer-messer/sm_timing/include
-)
-set(TEST_SRCS
-	test/test_main.cpp
-	test/RotationEigenTest.cpp
-	test/RotationDiffEigenTest.cpp
+set(LINEARALGEBRA_SRCS
+      test_main.cpp 
+      linear_algebra/SkewMatrixFromVectorTest.cpp
 )
 
 # Add test cpp file
-add_executable( runUnitTestsRotations ${TEST_SRCS})
+add_executable( runUnitTestsLinearAlgebra  ${LINEARALGEBRA_SRCS})
+# Link test executable against gtest & gtest_main
+target_link_libraries(runUnitTestsLinearAlgebra gtest gtest_main)
+add_test( runUnitTestsLinearAlgebra runUnitTestsLinearAlgebra )
+
+
+set(QUATERNIONS_SRCS
+	test_main.cpp
+	quaternions/QuaternionEigenTest.cpp
+)
+
+# Add test cpp file
+add_executable( runUnitTestsQuaternions  ${QUATERNIONS_SRCS})
+# Link test executable against gtest & gtest_main
+target_link_libraries(runUnitTestsQuaternions  gtest_main gtest pthread )
+add_test( runUnitTestsQuaternions runUnitTestsQuaternions )
+
+
+
+set(ROTATIONS_SRCS
+	test_main.cpp
+	rotations/RotationEigenTest.cpp
+	rotations/RotationDiffEigenTest.cpp
+)
+
+# Add test cpp file
+add_executable( runUnitTestsRotations ${ROTATIONS_SRCS})
 # Link test executable against gtest & gtest_main
 target_link_libraries(runUnitTestsRotations gtest_main gtest pthread  )
 add_test(runUnitTestsRotations runUnitTestsRotations )
 ADD_CUSTOM_TARGET(test_rotations runUnitTestsRotations DEPENDS runUnitTestsRotations) 
+
+
+
+
+set(POSITIONS_SRCS
+	test_main.cpp
+	positions/PositionEigenTest.cpp
+	positions/PositionDiffEigenTest.cpp
+)
+
+# Add test cpp file
+add_executable( runUnitTestsPositions  ${POSITIONS_SRCS})
+# Link test executable against gtest & gtest_main
+target_link_libraries(runUnitTestsPositions  gtest_main gtest pthread )
+add_test( runUnitTestsQuaternions runUnitTestsPositions )
+
+
+set(POSES_SRCS
+	test_main.cpp
+	poses/PoseEigenTest.cpp
+)
+
+# Add test cpp file
+add_executable( runUnitTestsPoses  ${POSES_SRCS})
+# Link test executable against gtest & gtest_main
+target_link_libraries(runUnitTestsPoses  gtest_main gtest pthread )
+add_test( runUnitTestsPoses runUnitTestsPoses )
+
 endif()
