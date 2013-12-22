@@ -31,6 +31,7 @@
 
 #include "kindr/rotations/RotationBase.hpp"
 #include "kindr/positions/PositionEigen.hpp"
+#include "kindr/linear_algebra/LinearAlgebra.hpp"
 
 namespace kindr {
 namespace rotations {
@@ -117,6 +118,55 @@ class ComparisonTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usage_>
     return eigen_impl::AngleAxis<typename Left_::Scalar,  Usage_>(left.derived()*right.derived().inverted()).angle();
   }
 };
+
+template<typename Rotation_, enum RotationUsage Usage_>
+class MapTraits<RotationBase<Rotation_, Usage_>> {
+ public:
+  inline static Rotation_ exponentialMap(const typename internal::get_matrix3X<Rotation_>::template Matrix3X<1>& vector) {
+    typedef typename internal::get_matrix3X<Rotation_>::template Matrix3X<1> Vector;
+    typedef typename internal::get_matrix3X<Rotation_>::template Matrix3X<3> Matrix;
+    typedef typename get_scalar<Rotation_>::Scalar Scalar;
+    const Scalar angle = vector.norm();
+    const Vector unitVector = vector.normalized();
+    const Matrix unitVector_hat = linear_algebra::getSkewMatrixFromVector(unitVector);
+
+    return static_cast<Rotation_>(eigen_impl::RotationMatrix<Scalar, Usage_>(Matrix::Identity()+unitVector_hat*sin(angle)+unitVector_hat*unitVector_hat*(Scalar(1)-cos(angle))));
+  }
+
+  inline static typename internal::get_matrix3X<Rotation_>::template Matrix3X<1> logarithmicMap(const Rotation_& rotation) {
+    typedef typename internal::get_matrix3X<Rotation_>::template Matrix3X<1> Vector;
+    typedef typename internal::get_matrix3X<Rotation_>::template Matrix3X<3> Matrix;
+    typedef typename get_scalar<Rotation_>::Scalar Scalar;
+    eigen_impl::RotationVector<Scalar, Rotation_::Usage> rotationVector(rotation);
+
+
+//    Scalar phi = rotation.toImplementation.norm();
+//       if(phi == 0){
+//         return Eigen::Matrix<Scalar_, 3, 3>::Identity();
+//       }
+//
+//       Scalar_ phiAbs = fabs(phi);
+//       Eigen::Matrix<Scalar_, 3, 3> vecCross = crossMx(vec);
+//
+//       Scalar_ a;
+//       if(!isLessThenEpsilons4thRoot(phiAbs)){
+//         Scalar_ phiHalf = 0.5 * phi;
+//         a = ((1 - phiHalf / tan(phiHalf))/phi/phi);
+//       }
+//       else{
+//         a = 1.0 / 12 * (1 + 1.0 / 60 * phi * phi);
+//       }
+//       return Eigen::Matrix<Scalar_, 3, 3>::Identity() + 0.5 * vecCross + a * vecCross * vecCross;
+//
+//
+    return Vector();
+  }
+
+};
+
+
+
+
 
 
 } // namespace internal

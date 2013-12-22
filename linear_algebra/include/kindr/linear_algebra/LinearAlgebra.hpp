@@ -25,8 +25,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
 */
-#ifndef KINDR_LINEARALGEBRA_HPP_
-#define KINDR_LINEARALGEBRA_HPP_
+#ifndef KINDR_LINEARALGEBRA_LINEARALGEBRA_HPP_
+#define KINDR_LINEARALGEBRA_LINEARALGEBRA_HPP_
 
 #include <Eigen/SVD>
 
@@ -78,6 +78,6 @@ bool static pseudoInverse(const _Matrix_Type_ &a, _Matrix_Type_ &result, double 
 }
 
 } // end namespace linear_algebra
-} // end namespace rm
+} // end namespace kindr
 
-#endif /* KINDR_LINEARALGEBRA_HPP_ */
+#endif /* KINDR_LINEARALGEBRA_LINEARALGEBRA_HPP_ */

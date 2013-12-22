@@ -144,12 +144,11 @@ class RotationTraits {
 // inline static typename internal::get_matrix3X<Derived_>::type rotate(const Rotation_& r, const typename internal::get_vector3<Derived_>::type& );
 };
 
-template<typename Rotation_>
-class ExponentialMapTraits {
- public:
-// inline static typename internal::get_matrix3X<Derived_>::type rotate(const Rotation_& r, const typename internal::get_vector3<Derived_>::type& );
-};
 
+template<typename Rotation_>
+class MapTraits {
+ public:
+};
 
 
 
@@ -301,6 +300,20 @@ class RotationBase {
   typename internal::get_matrix3X<Derived_>::template Matrix3X<Cols> inverseRotate(const typename internal::get_matrix3X<Derived_>::template Matrix3X<Cols>& matrix) const {
     return internal::RotationTraits<Derived_>::rotate(this->derived().inverted(), matrix); // todo: may be optimized
   }
+
+
+//  Derived_& setExponentialMap(const typename internal::get_matrix3X<Derived_>::template Matrix3X<3>& vector);
+
+  Derived_& setExponentialMap(const typename internal::get_matrix3X<Derived_>::template Matrix3X<1>& vector)  {
+   static_cast<Derived_ &>(*this) = internal::MapTraits<RotationBase<Derived_,Usage_>>::exponentialMap(vector);
+   return static_cast<Derived_&>(*this);
+  }
+
+  typename internal::get_matrix3X<Derived_>::template Matrix3X<1> getLogarithmicMap()  {
+    return internal::MapTraits<RotationBase<Derived_,Usage_>>::logarithmicMap(this->derived());
+  }
+
+
 
   /*! \brief Rotates a position.
    *  \returns the rotated position

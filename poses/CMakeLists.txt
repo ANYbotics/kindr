@@ -45,7 +45,7 @@ include_directories(../common/include)
 include_directories(../positions/include)
 include_directories(../rotations/include)
 include_directories(../quaternions/include)
-
+include_directories(../linear_algebra/include)
 
 if (BUILD_GTEST)
 ################################

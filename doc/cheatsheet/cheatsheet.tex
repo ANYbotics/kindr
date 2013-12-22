@@ -39,9 +39,12 @@
 %\usepackage{esvect}
 \usepackage{graphics}
    \usepackage[pdftex]{graphicx}
+
+\usepackage{tabularx,booktabs} 
 \usepackage{epstopdf}
  \usepackage{ifpdf}
 \usepackage{sectsty}
+\usepackage{tikz}
 \paragraphfont{\small}
 
 % To make this come out properly in landscape mode, do one of the following
@@ -166,6 +169,7 @@
 
 \begin{center}
      \Large{\textbf{Kindr Cheat Sheet}} \\
+      \small{Kinematics and Dynamics for Robotics}
 \end{center}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  BEGIN CONTENT
@@ -177,7 +181,9 @@
 Column vector & $\va$ & bold small letter  \\ \hline
 Matrix & $\vM$ & bold capital letter  \\ \hline
 Identity matrix & $\identity_{n\times m}$ & ${n \times m}$-matrix  \\  \hline
-Coordinate system (CS) & ${\ve_x^B,\ve_y^B,\ve_z^B}$ & Cartesian right-hand system $B$ with basis (unit) vectors $\ve$  \\ \hline
+Coordinate system (CS) & ${\ve_x^A,\ve_y^A,\ve_z^A}$ & Cartesian right-hand system $A$ with basis (unit) vectors $\ve$  \\ \hline
+Inertial frame & ${\ve_x^I,\ve_y^I,\ve_z^I}$ & Global / inertial / world coordinate system (never moves) \\ \hline
+Body-fixed frame & ${\ve_x^B,\ve_y^B,\ve_z^B}$ & Local / body-fixed coordinate system (moves with body) \\ \hline
 Machine precision & $\epsilon$ & \\ \hline
 %Translational velocity & $\linvel{I}{P} \in \mathbb{R}^3 $  & translational velocity of point $P$ expressed in CS $I$ \\ \hline
 %Angular velocity & $\rotvel{I}{I}{B} \in \mathbb{R}^3 $ & ang. velocity of CS $B$ w.r.t. to CS $B$ expressed in CS $I$ \\ \hline
@@ -199,27 +205,43 @@ Quaternion multiplicator & $ \vq\otimes\vp  \Leftrightarrow Q\cdot P $ \\ \hline
 \subsection{Position}
 \begin{tabular}{|l|l|l|}
  \hline
-Position vector & $\pos{I}{O}{P} \in \mathbb{R}^3 $ & vector from point $O$ to point $P$ expr. in CS $I$ \\ \hline 
-Homogeneous pos. vector & $_I\bar{\vr}_{O\!P} = \begin{bmatrix}\postranspose{I}{O}{P} & 1 \end{bmatrix}^\transpose$ & vector from point $O$ to point $P$ expr. in CS $I$ \\ \hline
+Vector & $\vr_{O\!P}$ & from point $O$ to point $P$ \\ \hline
+Position vector & $\pos{A}{O}{P} \in \mathbb{R}^3 $ & from point $O$ to point $P$ expr. in frame $A$ \\ \hline 
+Homogeneous pos. vector & ${}_A\bar{\vr}_{O\!P} = \begin{bmatrix}\postranspose{A}{O}{P} & 1 \end{bmatrix}^\transpose$ & from point $O$ to point $P$ expr. in frame $A$ \\ \hline
 \end{tabular}
 
 
-\subsection{Orientation}
+\subsection{Orientation/Rotation}
+\parbox[t]{0.7\columnwidth}{\null
+  \vskip-\abovecaptionskip
+\begin{tabular}[h!]{l@{ }l@{ }l@{ }l}
+ 1) & Active Rotation: & $\cR^A: {}_A\color{blue}{\vr_{O\!P}} \color{black}\mapsto {}_A\color{green!50!black}{\vr_{O\!Q}} $ & (rotates the vector $\vr_{O\!P}$) \\
+ 2) & Passive Rotation:& $\cR^P: {}_A\color{blue}{\vr_{O\!P}} \color{black}\mapsto \color{red}{}_B\color{blue}{\vr_{O\!P}} $ & (rotates the frame $(\ve_x^A,\ve_y^A,\ve_z^A)$)\\
+ 3) & Inversion: & $\cR^{A^{-1}}(\vr) = \cR^P(\vr)$ \\ 
+ 4) & Concatenation: & \multicolumn{2}{l}{$\begin{aligned}\cR_1^A\left(\cR_2^A(\vr)\right) &= \left(\cR_1^A \otimes \cR_2^A\right)(\vr) \\ &= \left(\cR_2^{A^{-1}} \otimes \cR_1^{A^{-1}}\right)(\vr)\end{aligned}$} \\
+\end{tabular}
+}
+\parbox[t]{0.25\columnwidth}{\null
+\vspace{-5mm}
+        \includegraphics[width=0.25\columnwidth]{coordinate_systems/rotation_active_passive-crop.pdf}
+}
+
 \begin{tabular}{|l|l@{}|l@{}|}
 \hline
-Rotation matrix & $\rotmat{B}{A} \in \mathrm{SO}(3)$ & Rotates the coord. of the basis vectors $(_A\ve_x^A, _A\ve_y^A, _A\ve_z^A)$ \\
- & & of frame $A$ expressed in $A$  into the coordinates of the  \\
-& & basis vectors $(_A\ve_x^B, _A\ve_y^B, _A\ve_z^B)$ of $B$ expressed in $A$. \\ 
- &  &  The rotation is active (alibi). \\
+%Rotation Matrix &  $\rotmat{B}{A}  =\begin{bmatrix} R_{11} & R_{12} & R_{13} \\  R_{21} & R_{22} & R_{23} \\ R_{31} & R_{32} & R_{33} \end{bmatrix} \in \mathrm{SO}(3)$ & Maps the coord. of the basis vectors $(_A\ve_x^A, _A\ve_y^A, _A\ve_z^A)$ \\
+Rotation Matrix &  $\rotmat{B}{A} \in \mathrm{SO}(3)$ & Maps the coord. of the basis vectors $(_A\ve_x^A, _A\ve_y^A, _A\ve_z^A)$ \\
+ & $ \pos{A}{O}{Q} = \rotmat{B}{A} \pos{A}{O}{P}$ & of frame $A$ expressed in $A$  into the coordinates of the  \\
+& $ \pos{B}{O}{P} = \rotmat{B}{A}^\transpose \pos{A}{O}{P}$ & basis vectors $(_A\ve_x^B, _A\ve_y^B, _A\ve_z^B)$ of $B$ expressed in $A$. \\ 
+ & &  The rotation is active (alibi). \\
 & & $_A\rotmat{B}{A} = \begin{bmatrix}_A\ve_x^B & _A\ve_y^B & _A\ve_z^B\end{bmatrix}$ \\ \hline
 Direct Cosine& $\comat{B}{A} \in \mathrm{SO}(3)$ & The coordinate tranformation matrix, which transforms \\  
- matrix & $ \pos{B}{O}{P} = \comat{B}{A} \pos{A}{O}{P}$ & vectors from frame $A$ to frame $B$. \\
+ Matrix & $ \pos{B}{O}{P} = \comat{B}{A} \pos{A}{O}{P}$ & vectors from frame $A$ to frame $B$. \\
 & $\comat{B}{A} = \rotmat{B}{A}^\transpose$ & The rotation is passive (alias). \\  \hline 
  Rotation  & $\quat{B}{A}$ & The rotation is active (alibi). \\
 Quaternion &   $\quat{B}{A} \Leftrightarrow \rotmat{B}{A} $ &  \\ \hline
 Rotation & $\angleaxis{B}{A}$ &   Rotation with unit rotation axis $\vn$ and angle $\theta \in [0, \pi]$. \\
 Angle-axis & $\angleaxis{B}{A} \Leftrightarrow \rotmat{B}{A}$  & The rotation is active (alibi). \\ \hline
-Rotation vector & $ \rotvec{B}{A} $  &  Rotation with rotation axis $\vn = \frac{\vvph}{\norm{\vvph}}$ and angle $\theta = \norm{\vvph}$. \\ 
+Rotation Vector & $ \rotvec{B}{A} $  &  Rotation with rotation axis $\vn = \frac{\vvph}{\norm{\vvph}}$ and angle $\theta = \norm{\vvph}$. \\ 
  & $\rotvec{B}{A} \Leftrightarrow \rotmat{B}{A} $ &  The rotation is active (alibi). \\ \hline
 Euler Angles ZYX &  $(\psi, \theta, \phi)_{B\!A}$  & Tait-Bryan angles (Flight conv.): $z-y'-x''$, i.e.\   \\
 Euler Angles YPR & $(\psi, \theta, \phi)_{B\!A} \Leftrightarrow \comat{B}{A} $ & yaw-pitch-roll. Singularities are at $\theta=\pm\frac{\pi}{2}$. \\
@@ -337,18 +359,18 @@ Homogeneous Transformation Matrix & $\vT_{A\!B}$ &   \\ \hline
 \section{Time Derivatives of Position \& Orientation}
 
 \subsection{Linear Velocity}
-\begin{tabular}{@{}ll@{}}
-${}_B\vv_P = {}_B\vv_A  + {}_B\dot{\vr}_{AP} + \rotvel{B}{I}{B} \times \pos{B}{A}{P}$ & velocity of point $P$ expr. in CS $B$  w.r.t. to the inertial system $I$\\
-${}_B\vv_Q = {}_B\vv_{P} + {}_B\vOm \times \pos{B}{P}{Q}$ &  velocity of point $Q$ on rigid body $B$ from point $P$ on same body\\
-\end{tabular}
+Velocity of point $P$ expressed in frame $B$  w.r.t. to the inertial frame $I$: \\
+${}_B\vv_P = {}_B\vv_A  + {}_B\dot{\vr}_{AP} + \rotvel{B}{I}{B} \times \pos{B}{A}{P}$ \\
+Velocity of point $Q$ on rigid body $B$ that rotates with ${}_B\vOm$, where point $P$ is on the same rigid body $B$: \\
+${}_B\vv_Q = {}_B\vv_{P} + {}_B\vOm \times \pos{B}{P}{Q}, \quad {}_B\vOm=\rotvel{B}{I}{B}$ 
 
 \subsection{Angular Velocity}
-The absolute angular velocity ${}_B\vOm$ of a rigid body expressed in the body fixed frame $B$ is equal to the relative angular velocity $\rotvel{B}{I}{B}$ of frame $B$ w.r.t. the inertial frame $I$ expressed in $B$.
+%The absolute angular velocity ${}_B\vOm$ of a rigid body expressed in the body fixed frame $B$ is equal to the relative angular velocity $\rotvel{B}{I}{B}$ of frame $B$ w.r.t. the inertial frame $I$ expressed in $B$.
 \begin{tabular}{@{}ll@{}}
-${}_B\vOm = \rotvel{B}{I}{B}$ & ang. vel. of rigid body with body-fixed CS $B$ w.r.t. to inertial CS $I$ \\ 
+${}_B\vOm = \rotvel{B}{I}{B}$ & absolute angular velocity of rigid body $B$ expressed in frame $B$ \\ 
 $\rotvel{B}{I}{B} = - \rotvel{B}{B}{I}$ & inverse of angular velocity \\
-$\rotvel{I}{I}{B} =  \comat{I}{B} \rotvel{B}{I}{B}$  & transform coordinates of angular velocity from frame $B$ to frame $I$ \\
-$\rotvelhat{I}{I}{B} =  \comat{I}{B} \rotvelhat{B}{I}{B} \comat{I}{B}^\transpose$ & transform coordinates of angular velocity from frame $B$ to frame $I$  \\
+$\rotvel{I}{I}{B} =  \comat{I}{B} \rotvel{B}{I}{B}$  &  coord. transformation of angular velocity from frame $B$ to frame $I$ \\
+$\rotvelhat{I}{I}{B} =  \comat{I}{B} \rotvelhat{B}{I}{B} \comat{I}{B}^\transpose$ & coord. transformation of angular velocity from frame $B$ to frame $I$  \\
 $\rotvel{D}{A}{D} = \rotvel{D}{A}{B} +  \rotvel{D}{B}{C} + \rotvel{D}{C}{D}$ & composition of angular velocity \\
 \end{tabular}
 
@@ -436,6 +458,7 @@ $ \rotvel{B}{I}{B} =\begin{bmatrix}  \cos{\beta}\cos{\gamma} & \sin{\gamma} & 0 
  -\cos{\beta}\sin{\gamma} & \cos{\gamma} & 0 \\
              \sin{\beta} &          0 & 1 \end{bmatrix} \begin{bmatrix} \dot{\alpha} \\ \dot{\beta} \\ \dot{\gamma} \end{bmatrix} $
 
+\newpage
 \section{Dynamics of a Multi-Rigid-Body System}
 
 \begin{tabular}{@{}ll@{}}
@@ -480,7 +503,7 @@ $\dot{\vu} = \begin{pmatrix} {}_I \va_B \\ {}_B\vps_{I\!B} \\ \ddot{\varphi}_1 \
 \end{tabular}
 $\dot{\vq} = \vF \vu, \quad \vF = \begin{pmatrix} \vI_{3\times 3} & \mathbf{0} & \mathbf{0} \\ \mathbf{0} & \frac{1}{2}\bar{\vH}^\mathsf{T} & \mathbf{0} \\ \mathbf{0} & \mathbf{0} & \vI_{n_j\times n_j} \end{pmatrix} \quad \Leftrightarrow \quad \vu = \bar{\vF}\dot{\vq}, \quad \bar{\vF} = \begin{pmatrix} \vI_{3x3} & \mathbf{0} & \mathbf{0} \\ \mathbf{0} & 2\bar{\vH} & \mathbf{0} \\ \mathbf{0} & \mathbf{0} & \vI_{n_j \times n_j} \end{pmatrix}$ \\
 
-\subsection{Equation of Motion with Contacts and no Impulses}
+\subsection{Equations of Motion with Contacts and no Impulses}
 \begin{tabular}{@{}ll@{}}
 $\boxed{\vM\dot{\vu} - \vh = \vW\vla}$ with $\vh := \vf - \vg$, and &
 $\begin{aligned}\vM &= \sum_{i=1}^n \left[ (\vJ_S^\mathsf{T} m \vJ_S + \vJ_R^\mathsf{T} \vTh_S \vJ_R) \right]_i \\
@@ -489,7 +512,7 @@ $\begin{aligned}\vM &= \sum_{i=1}^n \left[ (\vJ_S^\mathsf{T} m \vJ_S + \vJ_R^\ma
 \end{tabular}
 
 
-\subsection{Equation of Motion with Contacts and Impulses}
+\subsection{Equations of Motion with Contacts and Impulses}
 $\boxed{\vM \mathrm{\Delta} \vu - \vh \mathrm{\Delta} t = \vW \vP}  \quad \left\{
   \begin{array}{r l} \vM (\vu^+ - \vu^-) &= \vW \vLa \\
  \vM \underbrace{(\dot{\vu} \mathrm{d}t + (\vu^+ - \vu^-) \mathrm{d}\eta)}_{\mathrm{d}\vu} - \vh \mathrm{d}t &= \vW \underbrace{(\vla \mathrm{d}t + \vLa \mathrm{d}\eta)}_{\mathrm{d}\vP}\end{array}\right.$ \\
@@ -506,10 +529,8 @@ $\boxed{\vM \mathrm{\Delta} \vu - \vh \mathrm{\Delta} t = \vW \vP}  \quad \left\
 \rule{0.3\linewidth}{0.25pt}
 \scriptsize
 
-Copyright \copyright\ 2013 Autonomous Systems Lab, ETH Zurich
-
-http://asl.ethz.ch
-
+Copyright \copyright\ 2013 Autonomous Systems Lab, ETH Zurich (asl.ethz.ch)\\
+Contact: Christian Gehring (gehrinch@ethz.ch) \\
 
 \end{multicols}
 \end{document}
