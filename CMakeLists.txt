@@ -28,6 +28,9 @@ cmake_minimum_required (VERSION 2.8)
 
 project(kindr)
 
+#set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+#set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
 # Set Build Type
 #   * None (CMAKE_C_FLAGS or CMAKE_CXX_FLAGS used)

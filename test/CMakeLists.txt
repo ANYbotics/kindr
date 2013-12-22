@@ -101,7 +101,6 @@ ADD_CUSTOM_TARGET(test_rotations runUnitTestsRotations DEPENDS runUnitTestsRotat
 
 
 
-
 set(POSITIONS_SRCS
 	test_main.cpp
 	positions/PositionEigenTest.cpp
