@@ -122,6 +122,7 @@ class ComparisonTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usage_>
 template<typename Rotation_, enum RotationUsage Usage_>
 class MapTraits<RotationBase<Rotation_, Usage_>> {
  public:
+
   inline static Rotation_ exponentialMap(const typename internal::get_matrix3X<Rotation_>::template Matrix3X<1>& vector) {
     typedef typename get_scalar<Rotation_>::Scalar Scalar;
     eigen_impl::RotationVector<Scalar, Rotation_::Usage> rotationVector(vector);
@@ -137,6 +138,20 @@ class MapTraits<RotationBase<Rotation_, Usage_>> {
 
 };
 
+
+template<typename Left_, typename Right_, enum RotationUsage Usage_>
+class BoxOperationTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usage_>> {
+ public:
+  inline static typename internal::get_matrix3X<Left_>::template Matrix3X<1> boxMinus(const RotationBase<Left_, Usage_>& lhs, const RotationBase<Right_, Usage_>& rhs) {
+    typedef typename internal::get_matrix3X<Left_>::template Matrix3X<1> Vector;
+    return Vector();
+  }
+
+  inline static  Left_ boxPlus(const RotationBase<Left_, Usage_>& rotation, const typename internal::get_matrix3X<Left_>::template Matrix3X<1>& vector) {
+    typedef Left_ Rotation;
+    return Rotation();
+  }
+};
 
 
 

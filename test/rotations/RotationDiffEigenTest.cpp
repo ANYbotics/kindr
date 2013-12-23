@@ -231,5 +231,8 @@ TEST(RotationDiffTest, testDevelopment)
 
   std::cout << "aaTest log: " << aaTest.getLogarithmicMap() << std::endl;
 
+  Eigen::Vector3d vector2 = aaTest.boxMinus(rqA);
+  rot::AngleAxisAD rot = aaTest.boxPlus(vector2);
+
 }
 

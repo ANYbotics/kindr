@@ -144,11 +144,29 @@ class RotationTraits {
 // inline static typename internal::get_matrix3X<Derived_>::type rotate(const Rotation_& r, const typename internal::get_vector3<Derived_>::type& );
 };
 
-
+/*! \brief Traits for map operations
+ *  \class MapTraits
+ *  (only for advanced users)
+ */
 template<typename Rotation_>
 class MapTraits {
  public:
+//  Derived_& setExponentialMap(const typename internal::get_matrix3X<Derived_>::template Matrix3X<1>& vector);
+//  typename internal::get_matrix3X<Derived_>::template Matrix3X<1> getLogarithmicMap();
 };
+
+
+/*! \brief Traits for box operations
+ *  \class BoxOperationTraits
+ *  (only for advanced users)
+ */
+template<typename Left_, typename Right_>
+class BoxOperationTraits {
+ public:
+//  inline static typename internal::get_matrix3X<Left_>::template Matrix3X<1> boxMinus(const RotationBase<Left_, Usage_>& lhs, const RotationBase<Right_, Usage_>& rhs);
+//  inline static Left_ boxPlus(const RotationBase<Left_, Usage_>& rotation, const typename internal::get_matrix3X<Left_>::template Matrix3X<1>& vector);
+};
+
 
 
 
@@ -302,16 +320,37 @@ class RotationBase {
   }
 
 
-//  Derived_& setExponentialMap(const typename internal::get_matrix3X<Derived_>::template Matrix3X<3>& vector);
-
+  /*! \brief Sets the rotation using an exponential map
+   * \param vector  Eigen::Matrix<Scalar 3, 1>
+   * \return  reference to modified rotation
+   */
   Derived_& setExponentialMap(const typename internal::get_matrix3X<Derived_>::template Matrix3X<1>& vector)  {
    static_cast<Derived_ &>(*this) = internal::MapTraits<RotationBase<Derived_,Usage_>>::exponentialMap(vector);
    return static_cast<Derived_&>(*this);
   }
 
-  typename internal::get_matrix3X<Derived_>::template Matrix3X<1> getLogarithmicMap() const {
+  /*! \brief Gets the logarithmic map from the rotation
+   * \returns vector  Eigen::Matrix<Scalar 3, 1>
+   */
+  typename internal::get_matrix3X<Derived_>::template Matrix3X<1> getLogarithmicMap()  {
     return internal::MapTraits<RotationBase<Derived_,Usage_>>::logarithmicMap(this->derived());
   }
+
+  /*! \brief Applies the box minus operation
+   * \returns vector  Eigen::Matrix<Scalar 3, 1>
+   */
+  template<typename OtherDerived_>
+  typename internal::get_matrix3X<Derived_>::template Matrix3X<1> boxMinus(const RotationBase<OtherDerived_,Usage_>& other) const {
+    return internal::BoxOperationTraits<RotationBase<Derived_,Usage_>, RotationBase<OtherDerived_,Usage_>>::boxMinus(this->derived(), other.derived());
+  }
+  /*! \brief Applies the box plus operation
+   * \returns rotation
+   */
+  Derived_ boxPlus(const typename internal::get_matrix3X<Derived_>::template Matrix3X<1>& vector) const {
+    return internal::BoxOperationTraits<RotationBase<Derived_,Usage_>, RotationBase<Derived_,Usage_>>::boxPlus(this->derived(), vector);
+  }
+
+
 
   /*! \brief Rotates a position.
    *  \returns the rotated position
