@@ -115,7 +115,7 @@ class ComparisonTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usage_>
    *  the rotations are equal.
    */
   inline static typename Left_::Scalar getDisparityAngle(const RotationBase<Left_, Usage_>& left, const RotationBase<Right_, Usage_>& right) {
-    return eigen_impl::AngleAxis<typename Left_::Scalar,  Usage_>(left.derived()*right.derived().inverted()).angle();
+    return fabs(eigen_impl::AngleAxis<typename Left_::Scalar,  Usage_>(left.derived()*right.derived().inverted()).angle());
   }
 };
 

@@ -282,7 +282,7 @@ class RotationBase {
    */
   template<typename OtherDerived_>
   bool isNear(const RotationBase<OtherDerived_,Usage_>& other, typename internal::get_scalar<Derived_>::Scalar tol) const {
-    return (fabs(this->getDisparityAngle(other)) <= tol);
+    return (this->getDisparityAngle(other) <= tol);
   }
 
   /*! \brief Rotates a vector or a matrix column-wise.
@@ -309,11 +309,9 @@ class RotationBase {
    return static_cast<Derived_&>(*this);
   }
 
-  typename internal::get_matrix3X<Derived_>::template Matrix3X<1> getLogarithmicMap()  {
+  typename internal::get_matrix3X<Derived_>::template Matrix3X<1> getLogarithmicMap() const {
     return internal::MapTraits<RotationBase<Derived_,Usage_>>::logarithmicMap(this->derived());
   }
-
-
 
   /*! \brief Rotates a position.
    *  \returns the rotated position

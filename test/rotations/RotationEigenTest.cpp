@@ -89,7 +89,7 @@ class RotationQuaternionSingleTest : public ::testing::Test{
   typedef Eigen::Matrix<Scalar,3,1> Vector;
 
   const EigenQuat eigenQuat1 = EigenQuat(0.0,0.36,0.48,0.8);
-  const EigenQuat eigenQuat2 = EigenQuat(-0.48,-0.6,0.0,0.64);
+  const EigenQuat eigenQuat2 = EigenQuat(4.0/sqrt(30.0),3.0/sqrt(30.0),1.0/sqrt(30.0),2.0/sqrt(30.0));
 
   const EigenQuat eigenQuat1Conj = EigenQuat(0.0,-0.36,-0.48,-0.8);
   const EigenQuat eigenQuatIdentity = EigenQuat(1.0,0.0,0.0,0.0);
@@ -852,6 +852,20 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionGetDisparityAngle
   ASSERT_NEAR(this->rotQuat2.getDisparityAngle(this->rotQuat2),0.0,1e-6);
   ASSERT_NEAR(this->rotQuatIdentity.getDisparityAngle(this->rotQuatIdentity),0.0,1e-6);
   ASSERT_NEAR(this->rotQuat2.getDisparityAngle(this->rotQuat1),this->rotQuat1.getDisparityAngle(this->rotQuat2),1e-6);
+  ASSERT_NEAR(this->rotQuat1.getDisparityAngle(this->rotQuatIdentity),fabs(acos(this->rotQuat1.w())*2),1e-6);
+  ASSERT_NEAR(this->rotQuat2.getDisparityAngle(this->rotQuat1),fabs(acos((this->rotQuat1.inverted()*this->rotQuat2).w())*2),1e-6);
+}
+
+// Test Rotation Quaternion Exponential Map
+TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionExponentialMap){
+  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
+  typedef typename TestFixture::Scalar Scalar;
+  typedef typename TestFixture::Vector Vector;
+  RotationQuaternion rotQuat;
+  Vector testVec;
+
+  rotQuat = this->rotQuat1;
+  testVec = rotQuat.getLogarithmicMap();
 }
 
 //TYPED_TEST(RotationSingleTest, testConstructor){
