@@ -132,7 +132,6 @@ class MapTraits<RotationBase<Rotation_, Usage_>> {
   inline static typename internal::get_matrix3X<Rotation_>::template Matrix3X<1> logarithmicMap(const Rotation_& rotation) {
     typedef typename get_scalar<Rotation_>::Scalar Scalar;
     eigen_impl::RotationVector<Scalar, Rotation_::Usage> rotationVector(rotation);
-
     return rotationVector.toImplementation();
   }
 
@@ -143,13 +142,11 @@ template<typename Left_, typename Right_, enum RotationUsage Usage_>
 class BoxOperationTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usage_>> {
  public:
   inline static typename internal::get_matrix3X<Left_>::template Matrix3X<1> boxMinus(const RotationBase<Left_, Usage_>& lhs, const RotationBase<Right_, Usage_>& rhs) {
-    typedef typename internal::get_matrix3X<Left_>::template Matrix3X<1> Vector;
-    return Vector();
+    return (lhs.derived()*rhs.derived().inverted()).getLogarithmicMap();
   }
 
   inline static  Left_ boxPlus(const RotationBase<Left_, Usage_>& rotation, const typename internal::get_matrix3X<Left_>::template Matrix3X<1>& vector) {
-    typedef Left_ Rotation;
-    return Rotation();
+    return static_cast<Left_>(rotation.derived()*MapTraits<RotationBase<Left_,Usage_>>::exponentialMap(vector));
   }
 };
 

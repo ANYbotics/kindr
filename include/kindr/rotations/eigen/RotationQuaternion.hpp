@@ -528,7 +528,7 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::RotationQuaternion<DestPrimType_, Usage_>, eigen_impl::RotationVector<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::RotationQuaternion<DestPrimType_, Usage_> convert(const eigen_impl::RotationVector<SourcePrimType_, Usage_>& rv) {
-    return eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(eigen_impl::getQuaternionFromAngleAxis<SourcePrimType_, DestPrimType_>(eigen_impl::AngleAxis<SourcePrimType_, Usage_>(rv.toStoredImplementation().norm(), rv.toStoredImplementation().normalized()).toStoredImplementation()));
+    return eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(eigen_impl::getQuaternionFromAngleAxis<SourcePrimType_, DestPrimType_>(eigen_impl::AngleAxis<SourcePrimType_, Usage_>(rv).toStoredImplementation()));
   }
 };
 

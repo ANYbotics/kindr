@@ -332,7 +332,7 @@ class RotationBase {
   /*! \brief Gets the logarithmic map from the rotation
    * \returns vector  Eigen::Matrix<Scalar 3, 1>
    */
-  typename internal::get_matrix3X<Derived_>::template Matrix3X<1> getLogarithmicMap()  {
+  typename internal::get_matrix3X<Derived_>::template Matrix3X<1> getLogarithmicMap() const {
     return internal::MapTraits<RotationBase<Derived_,Usage_>>::logarithmicMap(this->derived());
   }
 

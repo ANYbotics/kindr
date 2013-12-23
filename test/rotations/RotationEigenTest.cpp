@@ -887,6 +887,30 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionExponentialMap){
   testVec = this->vec/this->vec.norm()*norm;
   rotQuat.setExponentialMap(testVec);
   ASSERT_NEAR(rotQuat.getDisparityAngle(this->rotQuatIdentity),norm,1e-6);
+
+  testVec.setZero();
+  rotQuat.setExponentialMap(testVec);
+  ASSERT_NEAR(rotQuat.w(), this->rotQuatIdentity.w(),1e-6);
+  ASSERT_NEAR(rotQuat.x(), this->rotQuatIdentity.x(),1e-6);
+  ASSERT_NEAR(rotQuat.y(), this->rotQuatIdentity.y(),1e-6);
+  ASSERT_NEAR(rotQuat.z(), this->rotQuatIdentity.z(),1e-6);
+}
+
+// Test Rotation Quaternion boxplus and boxminus
+TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionBoxOperators){
+  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
+  typedef typename TestFixture::Scalar Scalar;
+  typedef typename TestFixture::Vector Vector;
+  RotationQuaternion rotQuat;
+  Vector testVec;
+
+  testVec.setZero();
+  rotQuat = this->rotQuat1.boxPlus(testVec);
+  ASSERT_NEAR(rotQuat.w(), this->rotQuat1.w(),1e-6);
+  ASSERT_NEAR(rotQuat.x(), this->rotQuat1.x(),1e-6);
+  ASSERT_NEAR(rotQuat.y(), this->rotQuat1.y(),1e-6);
+  ASSERT_NEAR(rotQuat.z(), this->rotQuat1.z(),1e-6);
+
 }
 
 //TYPED_TEST(RotationSingleTest, testConstructor){
