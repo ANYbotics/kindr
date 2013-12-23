@@ -281,7 +281,7 @@ class RotationBase {
    *  \returns true if the rotations are equal within the tolerance
    */
   template<typename OtherDerived_>
-  bool isEqual(const RotationBase<OtherDerived_,Usage_>& other, typename internal::get_scalar<Derived_>::Scalar tol) const {
+  bool isNear(const RotationBase<OtherDerived_,Usage_>& other, typename internal::get_scalar<Derived_>::Scalar tol) const {
     return (fabs(this->getDisparityAngle(other)) <= tol);
   }
 

@@ -233,11 +233,11 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
     return this->toUnitQuaternion().imaginary();
   }
 
-  inline void setReal(Scalar real) const {
+  inline void setReal(Scalar real) {
     Base::w() = real;
   }
 
-  inline void setImaginary(Imaginary imag) const {
+  inline void setImaginary(Imaginary imag) {
     if(Usage_ == RotationUsage::ACTIVE) {
       Base::x() = imag(0);
       Base::y() = imag(1);
