@@ -75,7 +75,7 @@ class AngleAxisDiff : public AngleAxisDiffBase<AngleAxisDiff<PrimType_, Usage_>,
   /*! \brief Default constructor sets all derivatives to zero
    */
   AngleAxisDiff()
-    : Base(Base::Zero()) {
+    : Base(0, Vector3::Zero()) {
   }
 
   explicit AngleAxisDiff(const Base& other) // explicit on purpose

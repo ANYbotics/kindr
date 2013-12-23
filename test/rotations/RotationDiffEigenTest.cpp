@@ -182,6 +182,21 @@ TEST(RotationDiffTest, testDevelopment)
 
   std::cout << "AngleAxisDiffAD: avA | avA2: "<<  avA << " | "  << avA2 << std::endl;
 
+
+  // Finite difference method for checking derivatives
+  rot::AngleAxisAD aaAnext;
+  rot::AngleAxisDiffAD aaDiffA2;
+  double dt = 0.00000001;
+  aaAnext = aaA.boxPlus(dt*avA.toImplementation());
+  double dtheta = (aaAnext.angle()-aaA.angle())/dt;
+  rot::AngleAxisDiffAD::Vector3 dn = (aaAnext.axis()-aaA.axis())/dt;
+  ASSERT_NEAR(aaDiffA.angle(),dtheta,1e-6);
+  ASSERT_NEAR(aaDiffA.axis()(0),dn(0),1e-6);
+  ASSERT_NEAR(aaDiffA.axis()(1),dn(1),1e-6);
+  ASSERT_NEAR(aaDiffA.axis()(2),dn(2),1e-6);
+
+
+
   rot::RotationQuaternionAD rqA(aaA);
   rot::RotationQuaternionDiffAD rqDiffA(rqA, avA);
 
