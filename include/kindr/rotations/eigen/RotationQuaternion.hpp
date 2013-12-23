@@ -169,7 +169,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    */
   template<typename OtherDerived_>
   inline explicit RotationQuaternion(const RotationBase<OtherDerived_, Usage_>& other)
-    : rotationQuaternion_(internal::ConversionTraits<RotationQuaternion, OtherDerived_>::convert(static_cast<const OtherDerived_&>(other)).toImplementation()) {
+    : rotationQuaternion_(internal::ConversionTraits<RotationQuaternion, OtherDerived_>::convert(other.derived()).toImplementation()) {
   }
 
   inline Scalar w() const {
@@ -536,7 +536,7 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::RotationQuaternion<DestPrimType_, Usage_>, eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::RotationQuaternion<DestPrimType_, Usage_> convert(const eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>& q) {
-    return eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(q.toStoredImplementation().template cast<DestPrimType_>());
+    return eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(q.toImplementation().template cast<DestPrimType_>());
   }
 };
 
