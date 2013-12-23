@@ -60,11 +60,15 @@ namespace eigen_impl {
  *  \ingroup rotations
  */
 template<typename PrimType_, enum RotationUsage Usage_>
-class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<PrimType_, Usage_>, Usage_>, private quaternions::eigen_impl::UnitQuaternion<PrimType_> {
+class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<PrimType_, Usage_>, Usage_> {
  private:
   /*! \brief The base type.
    */
   typedef quaternions::eigen_impl::UnitQuaternion<PrimType_> Base;
+
+  /*! \brief The data container
+   */
+  Base rotationQuaternion_;
  public:
   /*! \brief The implementation type.
    *  The implementation type is always an Eigen object.
@@ -82,7 +86,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
   /*! \brief Default constructor using identity rotation.
    */
   RotationQuaternion()
-    : Base(Implementation::Identity()) {
+    : rotationQuaternion_(Implementation::Identity()) {
   }
 
   /*! \brief Constructor using four scalars.
@@ -94,32 +98,32 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    */
   RotationQuaternion(Scalar w, Scalar x, Scalar y, Scalar z) {
     if(Usage_ == RotationUsage::ACTIVE) {
-      Base::w() = w;
-      Base::x() = x;
-      Base::y() = y;
-      Base::z() = z;
+      rotationQuaternion_.w() = w;
+      rotationQuaternion_.x() = x;
+      rotationQuaternion_.y() = y;
+      rotationQuaternion_.z() = z;
     } else if(Usage_ == RotationUsage::PASSIVE) {
-      Base::w() = w;
-      Base::x() = -x;
-      Base::y() = -y;
-      Base::z() = -z;
+      rotationQuaternion_.w() = w;
+      rotationQuaternion_.x() = -x;
+      rotationQuaternion_.y() = -y;
+      rotationQuaternion_.z() = -z;
     }
-    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
+    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, rotationQuaternion_.norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
   }
 
   RotationQuaternion(const PrimType_& real, const Imaginary& imag) {
     if(Usage_ == RotationUsage::ACTIVE) {
-      Base::w() = real;
-      Base::x() = imag(0);
-      Base::y() = imag(1);
-      Base::z() = imag(2);
+      rotationQuaternion_.w() = real;
+      rotationQuaternion_.x() = imag(0);
+      rotationQuaternion_.y() = imag(1);
+      rotationQuaternion_.z() = imag(2);
     } else if(Usage_ == RotationUsage::PASSIVE) {
-      Base::w() = real;
-      Base::x() = -imag(0);
-      Base::y() = -imag(1);
-      Base::z() = -imag(2);
+      rotationQuaternion_.w() = real;
+      rotationQuaternion_.x() = -imag(0);
+      rotationQuaternion_.y() = -imag(1);
+      rotationQuaternion_.z() = -imag(2);
     }
-    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
+    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, rotationQuaternion_.norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
   }
 
   /*! \brief Constructor using Eigen::Quaternion<PrimType_>.
@@ -128,17 +132,17 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    */
   explicit RotationQuaternion(const Implementation& other) {
     if(Usage_ == RotationUsage::ACTIVE) {
-      Base::w() = other.w();
-      Base::x() = other.x();
-      Base::y() = other.y();
-      Base::z() = other.z();
+      rotationQuaternion_.w() = other.w();
+      rotationQuaternion_.x() = other.x();
+      rotationQuaternion_.y() = other.y();
+      rotationQuaternion_.z() = other.z();
     } else if(Usage_ == RotationUsage::PASSIVE) {
-      Base::w() = other.w();
-      Base::x() = -other.x();
-      Base::y() = -other.y();
-      Base::z() = -other.z();
+      rotationQuaternion_.w() = other.w();
+      rotationQuaternion_.x() = -other.x();
+      rotationQuaternion_.y() = -other.y();
+      rotationQuaternion_.z() = -other.z();
     }
-    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
+    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, rotationQuaternion_.norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
   }
 
   /*! \brief Constructor using quaternions::UnitQuaternion.
@@ -147,17 +151,17 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    */
   explicit RotationQuaternion(const Base& other) {
     if(Usage_ == RotationUsage::ACTIVE) {
-      Base::w() = other.w();
-      Base::x() = other.x();
-      Base::y() = other.y();
-      Base::z() = other.z();
+      rotationQuaternion_.w() = other.w();
+      rotationQuaternion_.x() = other.x();
+      rotationQuaternion_.y() = other.y();
+      rotationQuaternion_.z() = other.z();
     } else if(Usage_ == RotationUsage::PASSIVE) {
-      Base::w() = other.w();
-      Base::x() = -other.x();
-      Base::y() = -other.y();
-      Base::z() = -other.z();
+      rotationQuaternion_.w() = other.w();
+      rotationQuaternion_.x() = -other.x();
+      rotationQuaternion_.y() = -other.y();
+      rotationQuaternion_.z() = -other.z();
     }
-    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
+    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, rotationQuaternion_.norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
   }
 
   /*! \brief Constructor using another rotation.
@@ -165,62 +169,62 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    */
   template<typename OtherDerived_>
   inline explicit RotationQuaternion(const RotationBase<OtherDerived_, Usage_>& other)
-    : Base(internal::ConversionTraits<RotationQuaternion, OtherDerived_>::convert(static_cast<const OtherDerived_&>(other))) {
+    : rotationQuaternion_(internal::ConversionTraits<RotationQuaternion, OtherDerived_>::convert(static_cast<const OtherDerived_&>(other)).toImplementation()) {
   }
 
   inline Scalar w() const {
-    return Base::w();
+    return rotationQuaternion_.w();
   }
 
   inline Scalar x() const {
     if(Usage_ == RotationUsage::ACTIVE) {
-      return Base::x();
+      return rotationQuaternion_.x();
     } else if(Usage_ == RotationUsage::PASSIVE) {
-      return -Base::x();
+      return -rotationQuaternion_.x();
     }
   }
 
   inline Scalar y() const {
     if(Usage_ == RotationUsage::ACTIVE) {
-      return Base::y();
+      return rotationQuaternion_.y();
     } else if(Usage_ == RotationUsage::PASSIVE) {
-      return -Base::y();
+      return -rotationQuaternion_.y();
     }
   }
 
   inline Scalar z() const {
     if(Usage_ == RotationUsage::ACTIVE) {
-      return Base::z();
+      return rotationQuaternion_.z();
     } else if(Usage_ == RotationUsage::PASSIVE) {
-      return -Base::z();
+      return -rotationQuaternion_.z();
     }
   }
 
   inline void setW(Scalar w) { // todo: attention: no assertion for unitquaternions
-    Base::w() = w;
+    rotationQuaternion_.w() = w;
   }
 
   inline void setX(Scalar x) {
     if(Usage_ == RotationUsage::ACTIVE) {
-      Base::x() = x;
+      rotationQuaternion_.x() = x;
     } else if(Usage_ == RotationUsage::PASSIVE) {
-      Base::x() = -x;
+      rotationQuaternion_.x() = -x;
     }
   }
 
   inline void setY(Scalar y) {
     if(Usage_ == RotationUsage::ACTIVE) {
-      Base::y() = y;
+      rotationQuaternion_.y() = y;
     } else if(Usage_ == RotationUsage::PASSIVE) {
-      Base::y() = -y;
+      rotationQuaternion_.y() = -y;
     }
   }
 
   inline void setZ(Scalar z) {
     if(Usage_ == RotationUsage::ACTIVE) {
-      Base::z() = z;
+      rotationQuaternion_.z() = z;
     } else if(Usage_ == RotationUsage::PASSIVE) {
-      Base::z() = -z;
+      rotationQuaternion_.z() = -z;
     }
   }
 
@@ -234,18 +238,18 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
   }
 
   inline void setReal(Scalar real) {
-    Base::w() = real;
+    rotationQuaternion_.w() = real;
   }
 
   inline void setImaginary(Imaginary imag) {
     if(Usage_ == RotationUsage::ACTIVE) {
-      Base::x() = imag(0);
-      Base::y() = imag(1);
-      Base::z() = imag(2);
+      rotationQuaternion_.x() = imag(0);
+      rotationQuaternion_.y() = imag(1);
+      rotationQuaternion_.z() = imag(2);
     } else if(Usage_ == RotationUsage::PASSIVE) {
-      Base::x() = -imag(0);
-      Base::y() = -imag(1);
-      Base::z() = -imag(2);
+      rotationQuaternion_.x() = -imag(0);
+      rotationQuaternion_.y() = -imag(1);
+      rotationQuaternion_.z() = -imag(2);
     }
   }
 
@@ -258,11 +262,11 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
   }
 
   Base& toStoredUnitQuaternion() {
-     return static_cast<Base&>(*this);
+     return static_cast<Base&>(rotationQuaternion_);
    }
 
   const Base& toStoredUnitQuaternion() const {
-     return static_cast<const Base&>(*this);
+     return static_cast<const Base&>(rotationQuaternion_);
    }
 
   Implementation& toStoredImplementation()  {
@@ -381,10 +385,10 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  \returns reference
    */
   RotationQuaternion& setIdentity() {
-    Base::w() = static_cast<Scalar>(1);
-    Base::x() = static_cast<Scalar>(0);
-    Base::y() = static_cast<Scalar>(0);
-    Base::z() = static_cast<Scalar>(0);
+    rotationQuaternion_.w() = static_cast<Scalar>(1);
+    rotationQuaternion_.x() = static_cast<Scalar>(0);
+    rotationQuaternion_.y() = static_cast<Scalar>(0);
+    rotationQuaternion_.z() = static_cast<Scalar>(0);
     return *this;
   }
 
@@ -433,7 +437,9 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  The RotationQuaternion should always have unit length.
    *  \returns norm of the quaternion
    */
-  using Base::norm;
+  Scalar norm() {
+    return rotationQuaternion_.norm();
+  }
 
   /*! \brief Concenation operator.
    *  This is explicitly specified, because QuaternionBase provides also an operator*.
