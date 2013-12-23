@@ -120,7 +120,7 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    */
   template<typename OtherDerived_>
   inline explicit RotationVector(const RotationBase<OtherDerived_, Usage_>& other)
-    : vector_(internal::ConversionTraits<RotationVector, OtherDerived_>::convert(other.derived()).toStoredImplementation()) {
+    : vector_(internal::ConversionTraits<RotationVector, OtherDerived_>::convert(other.derived()).toImplementation()) {
   }
 
   /*! \brief Assignment operator using another rotation.

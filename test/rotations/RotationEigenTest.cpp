@@ -856,7 +856,7 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionGetDisparityAngle
   ASSERT_NEAR(this->rotQuat2.getDisparityAngle(this->rotQuat1),fabs(acos((this->rotQuat1.inverted()*this->rotQuat2).w())*2),1e-6);
 }
 
-// Test Rotation Quaternion Exponential Map
+// Test Rotation Quaternion Exponential and Logarithmic Map
 TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionExponentialMap){
   typedef typename TestFixture::RotationQuaternion RotationQuaternion;
   typedef typename TestFixture::Scalar Scalar;
@@ -864,8 +864,29 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionExponentialMap){
   RotationQuaternion rotQuat;
   Vector testVec;
 
-  rotQuat = this->rotQuat1;
-  testVec = rotQuat.getLogarithmicMap();
+  testVec = this->rotQuatIdentity.getLogarithmicMap();
+  ASSERT_NEAR(testVec(0), 0.0,1e-6);
+  ASSERT_NEAR(testVec(1), 0.0,1e-6);
+  ASSERT_NEAR(testVec(2), 0.0,1e-6);
+
+  testVec = this->rotQuat1.getLogarithmicMap();
+  rotQuat.setExponentialMap(testVec);
+  ASSERT_NEAR(rotQuat.w(), this->rotQuat1.w(),1e-6);
+  ASSERT_NEAR(rotQuat.x(), this->rotQuat1.x(),1e-6);
+  ASSERT_NEAR(rotQuat.y(), this->rotQuat1.y(),1e-6);
+  ASSERT_NEAR(rotQuat.z(), this->rotQuat1.z(),1e-6);
+
+  testVec = this->rotQuat2.getLogarithmicMap();
+  rotQuat.setExponentialMap(testVec);
+  ASSERT_NEAR(rotQuat.w(), this->rotQuat2.w(),1e-6);
+  ASSERT_NEAR(rotQuat.x(), this->rotQuat2.x(),1e-6);
+  ASSERT_NEAR(rotQuat.y(), this->rotQuat2.y(),1e-6);
+  ASSERT_NEAR(rotQuat.z(), this->rotQuat2.z(),1e-6);
+
+  double norm = 0.1;
+  testVec = this->vec/this->vec.norm()*norm;
+  rotQuat.setExponentialMap(testVec);
+  ASSERT_NEAR(rotQuat.getDisparityAngle(this->rotQuatIdentity),norm,1e-6);
 }
 
 //TYPED_TEST(RotationSingleTest, testConstructor){
