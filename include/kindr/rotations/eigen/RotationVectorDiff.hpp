@@ -71,6 +71,8 @@ class RotationVectorDiff : public RotationVectorDiffBase<RotationVectorDiff<Prim
    */
   typedef PrimType_ Scalar;
 
+  typedef Base Vector3;
+
 
   /*! \brief Default constructor sets all derivatives to zero
    *
@@ -141,6 +143,10 @@ class RotationVectorDiff : public RotationVectorDiffBase<RotationVectorDiff<Prim
     return toImplementation()(2);
   }
 
+  const Vector3& vector() const {
+    return toImplementation();
+  }
+
 
   /*! \brief Sets all time derivatives to zero.
    *  \returns reference
@@ -197,16 +203,28 @@ class RotationDiffConversionTraits<eigen_impl::RotationVectorDiff<PrimType_, Rot
 //    return eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>(rvDiff);
 
     const PrimType_ v = rotationVector.vector().norm();
-    if (v < 1e-14) {
-      return eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>(angularVelocity.toImplementation());
-    }
     const PrimType_ w1 = angularVelocity.x();
     const PrimType_ w2 = angularVelocity.y();
     const PrimType_ w3 = angularVelocity.z();
-
     const PrimType_ v1 = rotationVector.x();
     const PrimType_ v2 = rotationVector.y();
     const PrimType_ v3 = rotationVector.z();
+
+
+    if (v < 1e-14) {
+      // small angle
+      const PrimType_ t2 = v1*v1;
+      const PrimType_ t3 = v2*v2;
+      const PrimType_ t4 = v3*v3;
+      const PrimType_ t5 = t2+t3+t4+4.0;
+      const PrimType_ t6 = 1.0/t5;
+      const PrimType_ dv1 = t6*w1*4.0+t6*v2*w3*2.0-t6*v3*w2*2.0;
+      const PrimType_ dv2 = t6*w2*4.0-t6*v1*w3*2.0+t6*v3*w1*2.0;
+      const PrimType_ dv3 = t6*w3*4.0+t6*v1*w2*2.0-t6*v2*w1*2.0;
+
+      return eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>(dv1, dv2, dv3);
+    }
+
     const PrimType_ t6 = v*(1.0/2.0);
     const PrimType_ t2 = sin(t6);
     const PrimType_ t3 = t2*t2;
