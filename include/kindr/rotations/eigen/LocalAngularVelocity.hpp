@@ -261,6 +261,20 @@ class RotationDiffConversionTraits<eigen_impl::LocalAngularVelocity<PrimType_, R
     const PrimType_ dv2 = rotationVectorDiff.y();
     const PrimType_ dv3 = rotationVectorDiff.z();
 
+
+    if (v < 1e-14) {
+      // small angle
+      const PrimType_ t2 = v3*(1.0/2.0);
+      const PrimType_ t3 = v1*v2*(1.0/4.0);
+      const PrimType_ t4 = v2*(1.0/2.0);
+      const PrimType_ t5 = v1*(1.0/2.0);
+      const PrimType_ t6 = v2*v3*(1.0/4.0);
+      const PrimType_ w1 = dv2*(t2+t3)+dv1*((v1*v1)*(1.0/4.0)+1.0)-dv3*(t4-v1*v3*(1.0/4.0));
+      const PrimType_ w2 = dv3*(t5+t6)+dv2*((v2*v2)*(1.0/4.0)+1.0)-dv1*(t2-t3);
+      const PrimType_ w3 = dv3*((v3*v3)*(1.0/4.0)+1.0)-dv2*(t5-t6)+dv1*(t4+v1*v3*(1.0/4.0));
+      return eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>(w1, w2, w3);
+    }
+
     const PrimType_ t2 = 1.0/(v*v*v);
     const PrimType_ t3 = cos(v);
     const PrimType_ t4 = sin(v);
