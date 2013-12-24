@@ -234,7 +234,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
   inline Vector4 vector() const {
     Vector4 vector;
     vector(0) = angle();
-    vector.block<3,1>(1) = axis();
+    vector.template block<3,1>(1,0) = axis();
     return vector;
   }
 
