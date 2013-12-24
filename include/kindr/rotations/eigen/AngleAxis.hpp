@@ -75,6 +75,10 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
    */
   typedef Eigen::Matrix<PrimType_, 3, 1> Vector3;
 
+  /*! \brief All four parameters stored in a vector [angle; axis]
+   */
+  typedef Eigen::Matrix<PrimType_, 4, 1> Vector4;
+
   /*! \brief Default constructor using identity rotation.
    */
   AngleAxis()
@@ -224,6 +228,16 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
     Base::axis() = axis;
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input rotation axis has not unit length.");
   }
+
+  /*! \returns the angle and axis in a 4x1 vector [angle; axis].
+   */
+  inline Vector4 vector() const {
+    Vector4 vector;
+    vector(0) = angle();
+    vector.block<3,1>(1) = axis();
+    return vector;
+  }
+
 
   /*! \brief Sets the rotation to identity.
    *  \returns reference
