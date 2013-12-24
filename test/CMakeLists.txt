@@ -86,20 +86,29 @@ add_test( runUnitTestsQuaternions runUnitTestsQuaternions )
 
 
 
-set(ROTATIONS_SRCS
+set(ROTATION_SRCS
 	test_main.cpp
 	rotations/RotationEigenTest.cpp
+)
+
+# Add test cpp file
+add_executable( runUnitTestsRotation ${ROTATION_SRCS})
+# Link test executable against gtest & gtest_main
+target_link_libraries(runUnitTestsRotation gtest_main gtest pthread  )
+add_test(runUnitTestsRotation runUnitTestsRotation )
+
+
+
+set(ROTATIONDIFF_SRCS
+	test_main.cpp
 	rotations/RotationDiffEigenTest.cpp
 )
 
 # Add test cpp file
-add_executable( runUnitTestsRotations ${ROTATIONS_SRCS})
+add_executable( runUnitTestsRotationDiff ${ROTATIONDIFF_SRCS})
 # Link test executable against gtest & gtest_main
-target_link_libraries(runUnitTestsRotations gtest_main gtest pthread  )
-add_test(runUnitTestsRotations runUnitTestsRotations )
-ADD_CUSTOM_TARGET(test_rotations runUnitTestsRotations DEPENDS runUnitTestsRotations) 
-
-
+target_link_libraries(runUnitTestsRotationDiff gtest_main gtest pthread  )
+add_test(runUnitTestsRotationDiff runUnitTestsRotations )
 
 set(POSITIONS_SRCS
 	test_main.cpp
