@@ -51,17 +51,9 @@ namespace eigen_impl {
  * \ingroup rotations
  */
 template<typename PrimType_, enum RotationUsage Usage_>
-class AngleAxisDiff : public AngleAxisDiffBase<AngleAxisDiff<PrimType_, Usage_>,Usage_>, private Eigen::AngleAxis<PrimType_> {
- private:
-  /*! \brief The base type.
-   */
-  typedef typename Eigen::AngleAxis<PrimType_> Base;
+class AngleAxisDiff : public AngleAxisDiffBase<AngleAxisDiff<PrimType_, Usage_>,Usage_>{
 
  public:
-  /*! \brief The implementation type.
-   *  The implementation type is always an Eigen object.
-   */
-  typedef Base Implementation;
 
   /*! \brief The primitive type.
    *  Float/Double
@@ -72,15 +64,16 @@ class AngleAxisDiff : public AngleAxisDiffBase<AngleAxisDiff<PrimType_, Usage_>,
    */
   typedef Eigen::Matrix<PrimType_, 3, 1> Vector3;
 
+  /*! \brief All four parameters stored in a vector [angle; axis]
+   */
+  typedef Eigen::Matrix<PrimType_, 4, 1> Vector4;
+
   /*! \brief Default constructor sets all derivatives to zero
    */
   AngleAxisDiff()
-    : Base(0, Vector3::Zero()) {
+    : angle_(0), axis_(Vector3::Zero()) {
   }
 
-  explicit AngleAxisDiff(const Base& other) // explicit on purpose
-    : Base(other) {
-  }
 
   /*! \brief Constructor using four scalars.
    *  \param angle   time derivative of the rotation angle
@@ -89,11 +82,11 @@ class AngleAxisDiff : public AngleAxisDiffBase<AngleAxisDiff<PrimType_, Usage_>,
    *  \param v3      third entry of the time derivative of the rotation axis vector
    */
   AngleAxisDiff(Scalar angle, Scalar v1, Scalar v2, Scalar v3)
-    : Base(angle,Vector3(v1,v2,v3)) {
+    : angle_(angle),axis_(v1,v2,v3) {
   }
 
   AngleAxisDiff(Scalar angle, Vector3 axis)
-    : Base(angle,axis) {
+    : angle_(angle), axis_(axis) {
   }
 
   /*! \brief Constructor using a time derivative with a different parameterization
@@ -102,8 +95,8 @@ class AngleAxisDiff : public AngleAxisDiffBase<AngleAxisDiff<PrimType_, Usage_>,
    * \param other     other time derivative
    */
   template<typename RotationDerived_, typename OtherDerived_>
-  inline explicit AngleAxisDiff(const RotationBase<RotationDerived_, Usage_>& rotation, const RotationDiffBase<OtherDerived_, Usage_>& other)
-    : Base(internal::RotationDiffConversionTraits<AngleAxisDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived())){
+  inline explicit AngleAxisDiff(const RotationBase<RotationDerived_, Usage_>& rotation, const RotationDiffBase<OtherDerived_, Usage_>& other) {
+   *this = internal::RotationDiffConversionTraits<AngleAxisDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived());
   }
 
   /*! \brief Cast to another representation of the time derivative of a rotation
@@ -116,39 +109,26 @@ class AngleAxisDiff : public AngleAxisDiffBase<AngleAxisDiff<PrimType_, Usage_>,
   }
 
 
-  /*! \brief Cast to the implementation type.
-   *  \returns the implementation (recommended only for advanced users)
-   */
-  inline Implementation& toImplementation() {
-    return this->toImplementation();
-  }
-
-  /*! \brief Cast to the implementation type.
-   *  \returns the implementation (recommended only for advanced users)
-   */
-  inline const Implementation& toImplementation() const {
-    return this->toImplementation();
-  }
 
   /*! \brief Reading access to the time derivative of the rotation angle.
    *  \returns rotation angle (scalar) with reading access
    */
   inline Scalar angle() const {
-    return Base::angle();
+    return angle_;
   }
 
   /*! \brief Writing access to the time derivative of the rotation angle.
    *  \returns rotation angle (scalar) with writing access
    */
   inline Scalar& angle() {
-    return Base::angle();
+    return angle_;
   }
 
   /*! \brief Reading access to the time derivative of the rotation axis.
    *  \returns rotation axis (vector) with reading access
    */
   inline const Vector3& axis() const {
-    return Base::axis();
+    return axis_;
   }
 
   /*! \brief Writing access to the time derivative of the rotation axis.
@@ -156,15 +136,24 @@ class AngleAxisDiff : public AngleAxisDiffBase<AngleAxisDiff<PrimType_, Usage_>,
    *  \returns rotation axis (vector) with writing access
    */
   inline Vector3& axis() {
-    return Base::axis();
+    return axis_;
   }
 
+  /*! \returns the angle and axis in a 4x1 vector [angle; axis].
+   */
+  inline Vector4 vector() const {
+    Vector4 vector;
+    vector(0) = angle();
+    vector.template block<3,1>(1,0) = axis();
+    return vector;
+  }
 
   /*! \brief Sets all time derivatives to zero.
    *  \returns reference
    */
   AngleAxisDiff& setZero() {
-    this->Base::setZero();
+    angle_ = Scalar(0.0);
+    axis_.setZero();
     return *this;
   }
 
@@ -176,6 +165,10 @@ class AngleAxisDiff : public AngleAxisDiffBase<AngleAxisDiff<PrimType_, Usage_>,
     out << diff.angle() << ", " << diff.axis().transpose();
     return out;
   }
+
+ private:
+  Scalar angle_;
+  Vector3 axis_;
 };
 
 
