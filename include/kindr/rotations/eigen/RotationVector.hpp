@@ -372,7 +372,21 @@ class ConversionTraits<eigen_impl::RotationVector<DestPrimType_, Usage_>, eigen_
   }
 };
 
+template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
+class ConversionTraits<eigen_impl::RotationVector<DestPrimType_, Usage_>, eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>> {
+ public:
+  inline static eigen_impl::RotationVector<DestPrimType_, Usage_> convert(const eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>& q) {
+    typedef typename eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>::Scalar Scalar;
+    const Scalar q0 = q.real();
+    const Scalar q0_sqr = q0*q0;
+    if (q0_sqr > (1.0-1e-14)) {
+      return eigen_impl::RotationVector<DestPrimType_, Usage_>(2.0*q.imaginary());
+    }
+    return eigen_impl::RotationVector<DestPrimType_, Usage_>(2.0*acos(q0)/sqrt(1.0-q0*q0)*q.imaginary());
+  }
+};
 
+// Generic conversion
 template<typename DestPrimType_, typename SourceImplementation_, enum RotationUsage Usage_>
 class ConversionTraits<eigen_impl::RotationVector<DestPrimType_, Usage_>, SourceImplementation_> {
  public:
