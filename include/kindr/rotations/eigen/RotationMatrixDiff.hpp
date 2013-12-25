@@ -62,13 +62,17 @@ class RotationMatrixDiff : public RotationMatrixDiffBase<RotationMatrixDiff<Prim
    *  The implementation type is always an Eigen object.
    */
   typedef Base Implementation;
+
+  typedef Base Matrix3x3;
+
+
   /*! \brief The primitive type.
    *  Float/Double
    */
   typedef PrimType_ Scalar;
 
   RotationMatrixDiff()
-    : Base() {
+    : Base(Base::Zero()) {
   }
 
   /*! \brief Constructor using Eigen::Matrix<Scalar, 3, 3>.
@@ -132,14 +136,14 @@ class RotationMatrixDiff : public RotationMatrixDiffBase<RotationMatrixDiff<Prim
   /*! \brief Reading access to the time derivative of the rotation matrix.
    *  \returns rotation matrix (matrix) with reading access
    */
-  inline const Implementation& matrix() const {
+  inline const Matrix3x3& matrix() const {
     return this->toImplementation();
   }
 
   /*! \brief Writing access to the time derivative of the rotation matrix.
    *  \returns rotation matrix (matrix) with writing access
    */
-  inline Implementation& matrix() {
+  inline Matrix3x3& matrix() {
     return this->toImplementation();
   }
 

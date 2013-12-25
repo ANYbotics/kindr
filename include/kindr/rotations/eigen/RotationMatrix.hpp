@@ -95,7 +95,7 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType_, Usage
                  Scalar r21, Scalar r22, Scalar r23,
                  Scalar r31, Scalar r32, Scalar r33) {
     *this << r11,r12,r13,r21,r22,r23,r31,r32,r33;
-    KINDR_ASSERT_MATRIX_NEAR_DBG(std::runtime_error, *this * this->transpose(), Base::Identity(), static_cast<Scalar>(1e-4), "Input matrix is not orthogonal.");
+    KINDR_ASSERT_MATRIX_NEAR_DBG(std::runtime_error, this->toImplementation() * this->toImplementation().transpose(), Base::Identity(), static_cast<Scalar>(1e-4), "Input matrix is not orthogonal.");
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->determinant(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input matrix determinant is not 1.");
   }
 
@@ -311,7 +311,46 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_impl::RotationVector<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::RotationMatrix<DestPrimType_, Usage_> convert(const eigen_impl::RotationVector<SourcePrimType_, Usage_>& rv) {
-    return eigen_impl::RotationMatrix<DestPrimType_, Usage_>(eigen_impl::getRotationMatrixFromAngleAxis<SourcePrimType_, DestPrimType_>(eigen_impl::AngleAxis<SourcePrimType_, Usage_>(rv.toStoredImplementation().norm(), rv.toStoredImplementation().normalized()).toStoredImplementation()));
+    typename eigen_impl::RotationMatrix<DestPrimType_, Usage_>::Implementation matrix;
+    const SourcePrimType_ v1 = rv.x();
+    const SourcePrimType_ v2 = rv.y();
+    const SourcePrimType_ v3 = rv.z();
+    const SourcePrimType_ v = rv.toImplementation().norm();
+
+    if (v < 1e-14)  {
+      matrix << 1.0,  v3, -v2,
+                        -v3, 1.0,  v1,
+                          v2, -v1, 1.0;
+    } else {
+      const DestPrimType_ t3 = v*(1.0/2.0);
+      const DestPrimType_ t2 = sin(t3);
+      const DestPrimType_ t4 = cos(t3);
+      const DestPrimType_ t5 = 1.0/(v*v);
+      const DestPrimType_ t6 = t4*v*v3;
+      const DestPrimType_ t7 = t2*v1*v2;
+      const DestPrimType_ t8 = t2*t2;
+      const DestPrimType_ t9 = v1*v1;
+      const DestPrimType_ t10 = v2*v2;
+      const DestPrimType_ t11 = v3*v3;
+      const DestPrimType_ t12 = v*v;
+      const DestPrimType_ t13 = t4*t4;
+      const DestPrimType_ t14 = t12*t13;
+      const DestPrimType_ t15 = t2*v1*v3;
+      const DestPrimType_ t16 = t4*v*v1;
+      const DestPrimType_ t17 = t2*v2*v3;
+      matrix(0,0) = t5*(t14-t8*(-t9+t10+t11));
+      matrix(0,1) = t2*t5*(t6+t7)*2.0;
+      matrix(0,2) = t2*t5*(t15-t4*v*v2)*2.0;
+      matrix(1,0) = t2*t5*(t6-t7)*-2.0;
+      matrix(1,1) = t5*(t14-t8*(t9-t10+t11));
+      matrix(1,2) = t2*t5*(t16+t17)*2.0;
+      matrix(2,0) = t2*t5*(t15+t4*v*v2)*2.0;
+      matrix(2,1) = t2*t5*(t16-t17)*-2.0;
+      matrix(2,2) = t5*(t14-t8*(t9+t10-t11));
+
+    }
+    return eigen_impl::RotationMatrix<DestPrimType_, Usage_>(matrix);
+//    return eigen_impl::RotationMatrix<DestPrimType_, Usage_>(eigen_impl::getRotationMatrixFromAngleAxis<SourcePrimType_, DestPrimType_>(eigen_impl::AngleAxis<SourcePrimType_, Usage_>(rv.toStoredImplementation().norm(), rv.toStoredImplementation().normalized()).toStoredImplementation()));
   }
 };
 

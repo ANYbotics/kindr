@@ -139,7 +139,7 @@ class MapTraits<RotationBase<Rotation_, Usage_>> {
   inline static Rotation_ exponentialMap(const typename internal::get_matrix3X<Rotation_>::template Matrix3X<1>& vector) {
     typedef typename get_scalar<Rotation_>::Scalar Scalar;
     eigen_impl::RotationVector<Scalar, Rotation_::Usage> rotationVector(vector);
-    return static_cast<Rotation_>(rotationVector);
+    return Rotation_(rotationVector);
   }
 
   inline static typename internal::get_matrix3X<Rotation_>::template Matrix3X<1> logarithmicMap(const Rotation_& rotation) {
