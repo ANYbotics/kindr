@@ -102,6 +102,8 @@ add_test(runUnitTestsRotation runUnitTestsRotation )
 set(ROTATIONDIFF_SRCS
 	test_main.cpp
 	rotations/RotationDiffEigenTest.cpp
+	rotations/eigen/AngleAxisDiffTest.cpp
+	rotations/eigen/RotationVectorDiffTest.cpp
 )
 
 # Add test cpp file

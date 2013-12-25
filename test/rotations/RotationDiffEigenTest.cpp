@@ -1,5 +1,4 @@
 /*
-  /*
  * Copyright (c) 2013, Christian Gehring, Hannes Sommer, Paul Furgale, Remo Diethelm
  * All rights reserved.
  *
@@ -36,8 +35,6 @@
 #include "kindr/rotations/RotationDiffEigen.hpp"
 #include "kindr/common/gtest_eigen.hpp"
 
-
-
 namespace rot = kindr::rotations::eigen_impl;
 
 template <typename AngularVelocityImplementation>
@@ -68,98 +65,7 @@ struct AngularVelocityTest: public ::testing::Test {
   {}
 };
 
-template <typename Implementation>
-struct AngleAxisDiffTest: public ::testing::Test {
-  typedef Implementation AngleAxisDiff;
 
-  typedef typename Implementation::Scalar Scalar;
-  typedef Eigen::Matrix<Scalar, 3, 1> Vector3;
-
-//  template<enum kindr::rotations::RotationUsage Usage_ = Implementation::Usage>
-  typedef rot::AngleAxis<Scalar, AngleAxisDiff::Usage> Rotation;
-//  template<enum kindr::rotations::RotationUsage Usage_ = Implementation::Usage>
-  typedef rot::LocalAngularVelocity<Scalar, AngleAxisDiff::Usage> LocalAngularVelocity;
-
-  Rotation rot;
-  Rotation rotNext;
-  LocalAngularVelocity angularVelocity;
-  AngleAxisDiff angleAxisDiff;
-
-  LocalAngularVelocity angularVelocity1 = LocalAngularVelocity(0.0, 0.0, 0.0);
-  LocalAngularVelocity angularVelocity2 = LocalAngularVelocity(0.4, 0.3, 0.8);
-  LocalAngularVelocity angularVelocity3 = LocalAngularVelocity(40, 52, 99);
-  Rotation rotation1 = Rotation(0.0, 1.0, 0.0, 0.0);
-  Rotation rotation2 = Rotation(0.5, 1.0, 0.0, 0.0);
-  Rotation rotation3 = Rotation(0.5, 0.0, 1.0, 0.0);
-  Rotation rotation4 = Rotation(0.5, 0.0, 0.0, 1.0);
-  Rotation rotation5 = Rotation(1e-6, 1.0, 0.0, 0.0);
-  Rotation rotation6 = Rotation(1e-6, 0.0, 1.0, 0.0);
-  Rotation rotation7 = Rotation(1e-6, 0.0, 0.0, 1.0);
-  Rotation rotation8 = Rotation(0.8, 1.0/sqrt(1+4+9), 2.0/sqrt(1+4+9), 3.0/sqrt(1+4+9));
-
-  std::vector<Rotation> rotations;
-  std::vector<LocalAngularVelocity> angularVelocities;
-  AngleAxisDiffTest() {
-    rotations.push_back(rotation1);
-    rotations.push_back(rotation2);
-    rotations.push_back(rotation3);
-    rotations.push_back(rotation4);
-    rotations.push_back(rotation5);
-    rotations.push_back(rotation6);
-    rotations.push_back(rotation7);
-    rotations.push_back(rotation8);
-
-    angularVelocities.push_back(angularVelocity1);
-    angularVelocities.push_back(angularVelocity2);
-    angularVelocities.push_back(angularVelocity3);
-
-
-  }
-};
-
-
-template <typename Implementation>
-struct RotationVectorDiffTest: public ::testing::Test {
-  typedef Implementation RotationVectorDiff;
-
-  typedef typename Implementation::Scalar Scalar;
-  typedef rot::RotationVector<Scalar, RotationVectorDiff::Usage> Rotation;
-  typedef rot::LocalAngularVelocity<Scalar, RotationVectorDiff::Usage> LocalAngularVelocity;
-
-
-
-
-  LocalAngularVelocity angularVelocity1 = LocalAngularVelocity(0.0, 0.0, 0.0);
-  LocalAngularVelocity angularVelocity2 = LocalAngularVelocity(0.4, 0.3, 0.8);
-  LocalAngularVelocity angularVelocity3 = LocalAngularVelocity(40, 52, 99);
-  Rotation rotation1 = Rotation(0.0, 0.0, 0.0);
-  Rotation rotation2 = Rotation(1.0, 0.0, 0.0);
-  Rotation rotation3 = Rotation(0.0, 1.0, 0.0);
-  Rotation rotation4 = Rotation(0.0, 0.0, 1.0);
-  Rotation rotation5 = Rotation(1e-6, 0.0, 0.0);
-  Rotation rotation6 = Rotation(0.0, 1e-6, 0.0);
-  Rotation rotation7 = Rotation(0.0, 0.0, 1e-6);
-  Rotation rotation8 = Rotation(0.8, 0.9, 1.2);
-
-  std::vector<Rotation> rotations;
-  std::vector<LocalAngularVelocity> angularVelocities;
-  RotationVectorDiffTest() {
-    rotations.push_back(rotation1);
-    rotations.push_back(rotation2);
-    rotations.push_back(rotation3);
-    rotations.push_back(rotation4);
-    rotations.push_back(rotation5);
-    rotations.push_back(rotation6);
-    rotations.push_back(rotation7);
-    rotations.push_back(rotation8);
-
-    angularVelocities.push_back(angularVelocity1);
-    angularVelocities.push_back(angularVelocity2);
-    angularVelocities.push_back(angularVelocity3);
-
-
-  }
-};
 
 
 
@@ -170,20 +76,7 @@ typedef ::testing::Types<
 
 TYPED_TEST_CASE(AngularVelocityTest, LocalAngularVelocityTypes);
 
-typedef ::testing::Types<
-    rot::AngleAxisDiffAD,
-    rot::AngleAxisDiffAF
-> AngleAxisDiffTypes;
 
-TYPED_TEST_CASE(AngleAxisDiffTest, AngleAxisDiffTypes);
-
-
-typedef ::testing::Types<
-    rot::RotationVectorDiffAD,
-    rot::RotationVectorDiffAF
-> RotationVectorDiffTypes;
-
-TYPED_TEST_CASE(RotationVectorDiffTest, RotationVectorDiffTypes);
 
 
 TYPED_TEST(AngularVelocityTest, testAngularVelocity)
@@ -243,48 +136,10 @@ TYPED_TEST(AngularVelocityTest, testAngularVelocity)
 
 }
 
-TYPED_TEST(AngleAxisDiffTest, testFiniteDifference)
-{
-  int count = 0;
-
-  for (auto rotation : this->rotations) {
-    this->rot = rotation;
-    for (auto angularVelocity : this->angularVelocities) {
-      this->angularVelocity = angularVelocity;
-      // Finite difference method for checking derivatives
-      double dt = 0.00000001;
-      this->rotNext = this->rot.boxPlus(dt*this->angularVelocity.toImplementation());
-      double dtheta = (this->rotNext.angle()-this->rotNext.angle())/dt;
-      typename TestFixture::AngleAxisDiff::Vector3 dn = (this->rotNext.axis()-this->rot.axis())/dt;
-      ASSERT_NEAR(this->angleAxisDiff.angle(),dtheta,1e-6) << "rotation: " << this->rot << " angular velocity: " << this->angularVelocity << " angleAxisDiff: " << this->angleAxisDiff;
-      ASSERT_NEAR(this->angleAxisDiff.axis()(0),dn(0),1e-6) << "rotation: " << this->rot << " angular velocity: " << this->angularVelocity  << " angleAxisDiff: " << this->angleAxisDiff;
-      ASSERT_NEAR(this->angleAxisDiff.axis()(1),dn(1),1e-6) << "rotation: " << this->rot << " angular velocity: " << this->angularVelocity << " angleAxisDiff: " << this->angleAxisDiff;
-      ASSERT_NEAR(this->angleAxisDiff.axis()(2),dn(2),1e-6) << "rotation: " << this->rot << " angular velocity: " << this->angularVelocity << " angleAxisDiff: " << this->angleAxisDiff;
-
-      std::cout << count++ << std::endl;
-    }
-  }
-}
 
 
-TYPED_TEST(RotationVectorDiffTest, testFiniteDifference)
-{
 
-  for (auto rotation : this->rotations) {
-    for (auto angularVelocity : this->angularVelocities) {
-      // Finite difference method for checking derivatives
-      double dt = 0.00000001;
-      typename TestFixture::RotationVectorDiff diff(rotation, angularVelocity);
-      typename TestFixture::Rotation rotNext = rotation.boxPlus(dt*angularVelocity.toImplementation());
-      typename TestFixture::RotationVectorDiff::Vector3 dn = (rotNext.vector()-rotation.vector())/dt;
-      ASSERT_NEAR(diff.vector()(0),dn(0),1e-4) << "rotation: " << rotation << " angular velocity: " << angularVelocity  << " diff: " << diff;
-      ASSERT_NEAR(diff.vector()(1),dn(1),1e-4) << "rotation: " << rotation << " angular velocity: " << angularVelocity << " diff: " << diff;
-      ASSERT_NEAR(diff.vector()(2),dn(2),1e-4) << "rotation: " << rotation << " angular velocity: " << angularVelocity << " diff: " << diff;
-    }
-  }
-}
-
-TEST(RotationDiffTest, testDevelopment)
+TEST(RotationDiffTest, DISABLED_testDevelopment)
 {
 //  rot::RotationQuaternionPD rquat;
 //

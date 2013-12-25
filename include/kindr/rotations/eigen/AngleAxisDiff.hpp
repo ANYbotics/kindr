@@ -52,7 +52,6 @@ namespace eigen_impl {
  */
 template<typename PrimType_, enum RotationUsage Usage_>
 class AngleAxisDiff : public AngleAxisDiffBase<AngleAxisDiff<PrimType_, Usage_>,Usage_>{
-
  public:
 
   /*! \brief The primitive type.
@@ -85,8 +84,12 @@ class AngleAxisDiff : public AngleAxisDiffBase<AngleAxisDiff<PrimType_, Usage_>,
     : angle_(angle),axis_(v1,v2,v3) {
   }
 
-  AngleAxisDiff(Scalar angle, Vector3 axis)
+  AngleAxisDiff(Scalar angle, const Vector3& axis)
     : angle_(angle), axis_(axis) {
+  }
+
+  AngleAxisDiff(const Vector4& vector4)
+    : angle_(vector4(0)), axis_(vector4(1), vector4(2), vector4(3)) {
   }
 
   /*! \brief Constructor using a time derivative with a different parameterization
@@ -196,7 +199,10 @@ class RotationDiffConversionTraits<eigen_impl::AngleAxisDiff<PrimType_, Rotation
 
     if (angle < 1e-14) {
       const PrimType_ angleDiff = angularVelocity.toImplementation().norm();
-      const Vector axisDiff = angularVelocity.toImplementation().normalized();
+      Vector axisDiff = angularVelocity.toImplementation().normalized();
+      if (angleDiff < 1e-14) {
+         axisDiff.setZero();
+      }
       return eigen_impl::AngleAxisDiff<PrimType_, RotationUsage::ACTIVE>(angleDiff, axisDiff);
     }
     const Vector axis = angleAxis.axis();
