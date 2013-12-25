@@ -225,7 +225,10 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::
   }
 
   Quaternion& setZero() {
-    this->Base::setZero();
+    this->w() = Scalar(0.0);
+    this->x() = Scalar(0.0);
+    this->y() = Scalar(0.0);
+    this->z() = Scalar(0.0);
     return *this;
   }
 
