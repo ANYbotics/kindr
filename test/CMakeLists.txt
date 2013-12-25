@@ -104,13 +104,14 @@ set(ROTATIONDIFF_SRCS
 	rotations/RotationDiffEigenTest.cpp
 	rotations/eigen/AngleAxisDiffTest.cpp
 	rotations/eigen/RotationVectorDiffTest.cpp
+	rotations/eigen/RotationQuaternionDiffTest.cpp
 )
 
 # Add test cpp file
 add_executable( runUnitTestsRotationDiff ${ROTATIONDIFF_SRCS})
 # Link test executable against gtest & gtest_main
 target_link_libraries(runUnitTestsRotationDiff gtest_main gtest pthread  )
-add_test(runUnitTestsRotationDiff runUnitTestsRotations )
+add_test(runUnitTestsRotationDiff runUnitTestsRotationDiff )
 
 set(POSITIONS_SRCS
 	test_main.cpp

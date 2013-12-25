@@ -71,6 +71,9 @@ class RotationVectorDiff : public RotationVectorDiffBase<RotationVectorDiff<Prim
    */
   typedef PrimType_ Scalar;
 
+
+  /*! \brief 3x1 matrix
+   */
   typedef Base Vector3;
 
 
@@ -143,9 +146,30 @@ class RotationVectorDiff : public RotationVectorDiffBase<RotationVectorDiff<Prim
     return toImplementation()(2);
   }
 
+
   const Vector3& vector() const {
     return toImplementation();
   }
+
+  inline Scalar& x()  {
+    return toImplementation()(0);
+  }
+
+
+  inline Scalar& y()  {
+    return toImplementation()(1);
+  }
+
+
+  inline Scalar& z()  {
+    return toImplementation()(2);
+  }
+
+  inline  Vector3& vector()  {
+    return static_cast<Vector3&>(rotationVector_);
+  }
+
+
 
 
   /*! \brief Sets all time derivatives to zero.

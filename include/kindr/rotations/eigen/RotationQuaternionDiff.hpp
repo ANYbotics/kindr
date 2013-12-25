@@ -68,6 +68,9 @@ class RotationQuaternionDiff : public RotationQuaternionDiffBase<RotationQuatern
    */
   typedef PrimType_ Scalar;
 
+  //! the imaginary type, i.e., Eigen::Quaternion<>
+  typedef Eigen::Matrix<PrimType_, 3, 1> Imaginary;
+
   /*! \brief Default constructor sets all derivatives to zero
    *
    */
@@ -87,6 +90,10 @@ class RotationQuaternionDiff : public RotationQuaternionDiffBase<RotationQuatern
    */
   RotationQuaternionDiff(Scalar w, Scalar x, Scalar y, Scalar z)
     : Base(w,x,y,z) {
+  }
+
+  RotationQuaternionDiff(const Scalar& real, const Imaginary& imag)
+    : Base(real, imag)  {
   }
 
   /*! \brief Constructor using a time derivative with a different parameterization
@@ -130,6 +137,7 @@ class RotationQuaternionDiff : public RotationQuaternionDiffBase<RotationQuatern
     return static_cast<Base&>(*this);
   }
 
+
   /*! \brief Cast to the base type.
    *  \returns the quaternion that contains the derivative (recommended only for advanced users)
    */
@@ -137,11 +145,19 @@ class RotationQuaternionDiff : public RotationQuaternionDiffBase<RotationQuatern
     return static_cast<const Base&>(*this);
   }
 
+
+  using Base::w;
+  using Base::x;
+  using Base::y;
+  using Base::z;
+
+  using Base::vector;
+
   /*! \brief Sets all time derivatives to zero.
    *  \returns reference
    */
   RotationQuaternionDiff& setZero() {
-    this->Base::setZero();
+    Base::setZero();
     return *this;
   }
 

@@ -111,7 +111,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, rotationQuaternion_.norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
   }
 
-  RotationQuaternion(const PrimType_& real, const Imaginary& imag) {
+  RotationQuaternion(const Scalar& real, const Imaginary& imag) {
     if(Usage_ == RotationUsage::ACTIVE) {
       rotationQuaternion_.w() = real;
       rotationQuaternion_.x() = imag(0);

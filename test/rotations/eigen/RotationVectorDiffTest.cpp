@@ -92,7 +92,7 @@ typedef ::testing::Types<
 TYPED_TEST_CASE(RotationVectorDiffTest, RotationVectorDiffTypes);
 
 
-TYPED_TEST(RotationVectorDiffTest, testRotationVectorDiffConstructors)
+TYPED_TEST(RotationVectorDiffTest, testConstructors)
 {
   typedef typename TestFixture::RotationDiff RotationDiff;
   typedef typename TestFixture::Scalar Scalar;
@@ -114,3 +114,68 @@ TYPED_TEST(RotationVectorDiffTest, testRotationVectorDiffConstructors)
   ASSERT_EQ(this->eigenVector3v1(2), rotDiff4.z());
 
 }
+
+TYPED_TEST(RotationVectorDiffTest, testGetters)
+{
+  typedef typename TestFixture::RotationDiff RotationDiff;
+  typedef typename TestFixture::Scalar Scalar;
+
+
+  RotationDiff rotDiff(this->eigenVector3v1(0), this->eigenVector3v1(1), this->eigenVector3v1(2));
+  ASSERT_EQ(this->eigenVector3v1(0), rotDiff.vector().x());
+  ASSERT_EQ(this->eigenVector3v1(1), rotDiff.vector().y());
+  ASSERT_EQ(this->eigenVector3v1(2), rotDiff.vector().z());
+
+}
+
+TYPED_TEST(RotationVectorDiffTest, testSetters)
+{
+  typedef typename TestFixture::RotationDiff RotationDiff;
+  typedef typename TestFixture::Scalar Scalar;
+
+
+  RotationDiff rotDiff;
+  rotDiff.x() = this->eigenVector3v1(0);
+  rotDiff.y() = this->eigenVector3v1(1);
+  rotDiff.z() = this->eigenVector3v1(2);
+  ASSERT_EQ(this->eigenVector3v1(0), rotDiff.x());
+  ASSERT_EQ(this->eigenVector3v1(1), rotDiff.y());
+  ASSERT_EQ(this->eigenVector3v1(2), rotDiff.z());
+
+  RotationDiff rotDiff2;
+  rotDiff2.vector() = this->eigenVector3v1;
+  ASSERT_EQ(this->eigenVector3v1(0), rotDiff2.x());
+  ASSERT_EQ(this->eigenVector3v1(1), rotDiff2.y());
+  ASSERT_EQ(this->eigenVector3v1(2), rotDiff2.z());
+
+  RotationDiff rotDiff3(this->eigenVector3v1(0), this->eigenVector3v1(1), this->eigenVector3v1(2));
+  rotDiff3.setZero();
+  ASSERT_EQ(this->eigenVector3vZero(0), rotDiff3.x());
+  ASSERT_EQ(this->eigenVector3vZero(1), rotDiff3.y());
+  ASSERT_EQ(this->eigenVector3vZero(2), rotDiff3.z());
+
+}
+
+
+TYPED_TEST(RotationVectorDiffTest, testFiniteDifference)
+{
+  typedef typename TestFixture::Scalar Scalar;
+  typedef typename TestFixture::Rotation Rotation;
+  typedef typename TestFixture::RotationDiff RotationDiff;
+  typedef typename TestFixture::RotationDiff::Vector3 Vector3;
+
+ const  double dt = 1e-8;
+  for (auto rotation : this->rotations) {
+    for (auto angularVelocity : this->angularVelocities) {
+      // Finite difference method for checking derivatives
+      RotationDiff rotationDiff(rotation, angularVelocity);
+      Rotation rotationNext = rotation.boxPlus(dt*angularVelocity.toImplementation());
+      Vector3 dn = (rotationNext.vector()-rotation.vector())/dt;
+      ASSERT_NEAR(rotationDiff.x(),dn(0),1e-4) << " angular velocity: " << angularVelocity << " rotation: " << rotation << " rotationNext: " << rotationNext  << " diff: " << rotationDiff  << " approxdiff: " << dn.transpose();
+      ASSERT_NEAR(rotationDiff.y(),dn(1),1e-4)  << " angular velocity: " << angularVelocity  <<  "rotation: " << rotation << " rotationNext: " << rotationNext << " diff: " << rotationDiff << " approxdiff: " << dn.transpose();
+      ASSERT_NEAR(rotationDiff.z(),dn(2),1e-4) << " angular velocity: " << angularVelocity << " rotation: " << rotation << " rotationNext: " << rotationNext  << " diff: " << rotationDiff << " approxdiff: " << dn.transpose();
+
+    }
+  }
+}
+
