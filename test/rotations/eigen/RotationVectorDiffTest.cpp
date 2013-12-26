@@ -166,7 +166,7 @@ TYPED_TEST(RotationVectorDiffTest, testFiniteDifference)
   typedef typename TestFixture::RotationDiff RotationDiff;
   typedef typename TestFixture::RotationDiff::Vector3 Vector3;
 
- const  double dt = 1e-8;
+  const  double dt = 1e-8;
   for (auto rotation : this->rotations) {
     for (auto angularVelocity : this->angularVelocities) {
       // Finite difference method for checking derivatives

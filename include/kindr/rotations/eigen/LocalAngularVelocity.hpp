@@ -227,6 +227,9 @@ template<typename PrimType_, enum RotationUsage Usage_>
 class RotationDiffConversionTraits<eigen_impl::LocalAngularVelocity<PrimType_, Usage_>, eigen_impl::AngleAxisDiff<PrimType_, Usage_>, eigen_impl::AngleAxis<PrimType_, Usage_>> {
  public:
   inline static eigen_impl::LocalAngularVelocity<PrimType_, Usage_> convert(const eigen_impl::AngleAxis<PrimType_, Usage_>& angleAxis, const eigen_impl::AngleAxisDiff<PrimType_, Usage_>& angleAxisDiff) {
+    if (angleAxis.angle() < 1e-14) {
+      return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(angleAxis.axis()*angleAxisDiff.angle() + angleAxisDiff.axis()*angleAxis.angle());
+    }
     return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(angleAxis.axis()*angleAxisDiff.angle() + angleAxisDiff.axis()*sin(angleAxis.angle()) - linear_algebra::getSkewMatrixFromVector(angleAxis.axis())*angleAxisDiff.axis()*(1-cos(angleAxis.angle())));
   }
 };

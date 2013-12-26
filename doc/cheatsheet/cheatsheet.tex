@@ -420,6 +420,8 @@ $\dot{\theta} = \vn^\transpose \rotvel{B}{I}{B}, \quad \dot{\vn}=\left(-\frac{1}
 \begin{tabular}{@{}ll@{}}
 $\rotvel{I}{I}{B} = \left(\identity_{3\times 3} + \hat{\vvph}\left(\frac{1-\cos{\norm{\vvph}}}{\norm{\vvph}^2}\right) +\hat{\vvph}^2 \left( \frac{\norm{\vvph}-\sin{\norm{\vvph}}}{\norm{\vvph}^3} \right)\right)\dot{\vvph} \quad \forall \norm{\vvph} \in \mathbb{R}\backslash\{0\}$ & \\
 $\rotvel{B}{I}{B} = \left(\identity_{3\times 3} - \hat{\vvph}\left(\frac{1-\cos{\norm{\vvph}}}{\norm{\vvph}^2}\right) +\hat{\vvph}^2 \left( \frac{\norm{\vvph}-\sin{\norm{\vvph}}}{\norm{\vvph}^3} \right)\right)\dot{\vvph} \quad \forall \norm{\vvph} \in \mathbb{R}\backslash\{0\}$ & \\
+$\dot{\vvph} = \left(\identity_{3\times 3} - \frac{1}{2}\hat{\vvph} + \hat{\vvph}^2 \frac{1}{\norm{\vvph}^2}\left(1 - \frac{\norm{\vvph}}{2}\frac{\sin{\norm{\vvph}}}{1-\cos{\norm{\vvph}}}\right)\right)\rotvel{I}{I}{B} \quad \forall \norm{\vvph} \in \mathbb{R}\backslash\{0\}$ & \\
+$\dot{\vvph} = \left(\identity_{3\times 3} + \frac{1}{2}\hat{\vvph} + \hat{\vvph}^2 \frac{1}{\norm{\vvph}^2}\left(1 - \frac{\norm{\vvph}}{2}\frac{\sin{\norm{\vvph}}}{1-\cos{\norm{\vvph}}}\right)\right)\rotvel{B}{I}{B} \quad \forall \norm{\vvph} \in \mathbb{R}\backslash\{0\}$ & \\
 \end{tabular}
 
 \subsubsection{Time Derivative of Euler Angles ZYX  $\Leftrightarrow$ Angular Velocity}
