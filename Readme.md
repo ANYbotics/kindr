@@ -11,7 +11,8 @@ Date     : 08-Aug-2013
 
 DOCUMENTATION
 -----------------------------------------------------------------
-Online: http://ethz-asl-lr.bitbucket.org/kindr
+[Online](http://ethz-asl-lr.bitbucket.org/kindr)
+
 See also section 'Building the documentation' below.
 
 REQUIREMENTS
