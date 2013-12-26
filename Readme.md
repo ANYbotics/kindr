@@ -4,7 +4,9 @@ Autonomous Systems Lab
 ETH Zurich
 
 Contact  : Christian Gehring [gehrinch ( at ) ethz.ch]
+
 Author(s): Michael Bloesch, Remo Diethelm, Peter Fankhauser, Paul Furgale, Christian Gehring, Hannes Sommer
+
 Date     : 08-Aug-2013
 
 DOCUMENTATION
