@@ -239,10 +239,10 @@ TEST(RotationDiffTest, DISABLED_testDevelopment)
   rot::LocalAngularVelocityAD avA11(rmA, rmDiffA);
   std::cout << "RotationMatrixDiffAD: avA | avA11: "<<  avA << " | "  << avA11 << std::endl;
 
-  rot::RotationMatrixPD rmP(rqA.getPassive());
-  rot::RotationMatrixDiffPD rmDiffA2(rmP, avA);
-  rot::LocalAngularVelocityAD avA12(rmP, rmDiffA2);
-  std::cout << "RotationMatrixDiffPD: avA | avA12: "<<  avA << " | "  << avA12 << std::endl;
+//  rot::RotationMatrixPD rmP(rqA.getPassive());
+//  rot::RotationMatrixDiffPD rmDiffA2(rmP, avA);
+//  rot::LocalAngularVelocityPD avP12(rmP, rmDiffA2);
+//  std::cout << "RotationMatrixDiffPD: avA | avA12: "<<  avA << " | "  << avP12 << std::endl;
 
   Eigen::Vector3d vector(2,0,0);
   rot::AngleAxisAD aaTest;

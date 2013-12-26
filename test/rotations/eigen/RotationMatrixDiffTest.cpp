@@ -103,7 +103,9 @@ struct RotationMatrixDiffTest: public ::testing::Test {
 
 typedef ::testing::Types<
     rot::RotationMatrixDiffAD,
-    rot::RotationMatrixDiffAF
+    rot::RotationMatrixDiffAF,
+    rot::RotationMatrixDiffPD,
+    rot::RotationMatrixDiffPF
 > RotationMatrixDiffTypes;
 
 TYPED_TEST_CASE(RotationMatrixDiffTest, RotationMatrixDiffTypes);

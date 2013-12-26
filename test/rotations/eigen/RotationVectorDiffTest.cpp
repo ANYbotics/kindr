@@ -86,7 +86,9 @@ struct RotationVectorDiffTest: public ::testing::Test {
 
 typedef ::testing::Types<
     rot::RotationVectorDiffAD,
-    rot::RotationVectorDiffAF
+    rot::RotationVectorDiffAF,
+    rot::RotationVectorDiffPD,
+    rot::RotationVectorDiffPF
 > RotationVectorDiffTypes;
 
 TYPED_TEST_CASE(RotationVectorDiffTest, RotationVectorDiffTypes);

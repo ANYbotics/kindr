@@ -169,9 +169,6 @@ TYPED_TEST(EulerAnglesXyzDiffTest, testSetters)
   ASSERT_EQ(this->eigenVector3v1(1), rotDiff4.y());
   ASSERT_EQ(this->eigenVector3v1(2), rotDiff4.z());
 
-  Rotation rot;
-  rot.setExponentialMap(typename TestFixture::Vector3(0.0, 0.0, 0.0));
-  std::cout << "expmap: " << rot << std::endl;
 
 }
 

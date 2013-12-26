@@ -188,37 +188,43 @@ typedef RotationQuaternionDiff<float, RotationUsage::ACTIVE> RotationQuaternionD
 namespace internal {
 
 
-template<typename PrimType_>
-class RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>> {
+template<typename PrimType_, enum RotationUsage Usage_>
+class RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>, eigen_impl::LocalAngularVelocity<PrimType_, Usage_>, eigen_impl::RotationQuaternion<PrimType_, Usage_>> {
  public:
-  inline static eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>& rquat, const eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>& angularVelocity) {
+  inline static eigen_impl::RotationQuaternionDiff<PrimType_, Usage_> convert(const eigen_impl::RotationQuaternion<PrimType_, Usage_>& rquat, const eigen_impl::LocalAngularVelocity<PrimType_, Usage_>& angularVelocity) {
     Eigen::Matrix<PrimType_,4,3> H_bar_transpose;
     H_bar_transpose << -rquat.x(), -rquat.y(), -rquat.z(),
                         rquat.w(), -rquat.z(),  rquat.y(),
                         rquat.z(),  rquat.w(), -rquat.x(),
                        -rquat.y(),  rquat.x(),  rquat.w();
-    return eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>(quaternions::eigen_impl::Quaternion<PrimType_>(0.5*H_bar_transpose*angularVelocity.toImplementation()));
+    return eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>(quaternions::eigen_impl::Quaternion<PrimType_>(0.5*H_bar_transpose*angularVelocity.toImplementation()));
   }
 };
 
 
-template<typename PrimType_>
-class RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>> {
+template<typename PrimType_, enum RotationUsage Usage_>
+class RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>, eigen_impl::RotationVectorDiff<PrimType_, Usage_>, eigen_impl::RotationVector<PrimType_, Usage_>> {
  public:
-  inline static eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>& rotationVector, const eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>& rotationVectorDiff) {
+  inline static eigen_impl::RotationQuaternionDiff<PrimType_, Usage_> convert(const eigen_impl::RotationVector<PrimType_, Usage_>& rotationVector, const eigen_impl::RotationVectorDiff<PrimType_, Usage_>& rotationVectorDiff) {
 
     const PrimType_ v = rotationVector.vector().norm();
-    if (v < 1e-14) {
-      KINDR_ASSERT_TRUE(std::runtime_error, false, "not yet implemented" );
-      return eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>();
-    }
-
     const PrimType_ v1 = rotationVector.x();
     const PrimType_ v2 = rotationVector.y();
     const PrimType_ v3 = rotationVector.z();
     const PrimType_ dv1 = rotationVectorDiff.x();
     const PrimType_ dv2 = rotationVectorDiff.y();
     const PrimType_ dv3 = rotationVectorDiff.z();
+
+    if (v < 1e-14) {
+      Eigen::Matrix<PrimType_, 3, 3> G_v0;
+      G_v0 = -v1, -v2, -v3,
+              2.0, 2.0, 0.0,
+              0.0, 0.0, 2.0;
+      G_v0 *=0.25;
+      return eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>(G_v0*rotationVectorDiff.toImplementation());
+    }
+
+
 
     const PrimType_ t2 = 1.0/v;
     const PrimType_ t3 = v*(1.0/2.0);
@@ -235,15 +241,15 @@ class RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_,
     const PrimType_ z = dv3*(t10-t5*t8*(v3*v3)*(1.0/2.0))-dv1*t5*t8*v1*v3*(1.0/2.0)-dv2*t5*t8*v2*v3*(1.0/2.0);
 
 
-    return eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>(w, x, y, z);
+    return eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>(w, x, y, z);
   }
 };
 
-template<typename PrimType_>
-class RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>> {
+template<typename PrimType_, enum RotationUsage Usage_>
+class RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>, eigen_impl::RotationVectorDiff<PrimType_, Usage_>, eigen_impl::RotationQuaternion<PrimType_, Usage_>> {
  public:
-  inline static eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>& rquat, const eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>& rotationVectorDiff) {
-    return RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>>::convert(eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>(rquat), rotationVectorDiff);
+  inline static eigen_impl::RotationQuaternionDiff<PrimType_, Usage_> convert(const eigen_impl::RotationQuaternion<PrimType_, Usage_>& rquat, const eigen_impl::RotationVectorDiff<PrimType_, Usage_>& rotationVectorDiff) {
+    return RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>, eigen_impl::RotationVectorDiff<PrimType_, Usage_>, eigen_impl::RotationVector<PrimType_, Usage_>>::convert(eigen_impl::RotationVector<PrimType_, Usage_>(rquat), rotationVectorDiff);
   }
 };
 

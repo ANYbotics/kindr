@@ -93,7 +93,9 @@ struct AngleAxisDiffTest: public ::testing::Test {
 
 typedef ::testing::Types<
     rot::AngleAxisDiffAD,
-    rot::AngleAxisDiffAF
+    rot::AngleAxisDiffAF,
+    rot::AngleAxisDiffPD,
+    rot::AngleAxisDiffPF
 > AngleAxisDiffTypes;
 
 TYPED_TEST_CASE(AngleAxisDiffTest, AngleAxisDiffTypes);

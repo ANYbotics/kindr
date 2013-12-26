@@ -87,7 +87,9 @@ struct RotationQuaternionDiffTest: public ::testing::Test {
 
 typedef ::testing::Types<
     rot::RotationQuaternionDiffAD,
-    rot::RotationQuaternionDiffAF
+    rot::RotationQuaternionDiffAF,
+    rot::RotationQuaternionDiffPD,
+    rot::RotationQuaternionDiffPF
 > RotationQuaternionDiffTypes;
 
 TYPED_TEST_CASE(RotationQuaternionDiffTest, RotationQuaternionDiffTypes);

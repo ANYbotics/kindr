@@ -189,11 +189,11 @@ typedef AngleAxisDiff<float, RotationUsage::ACTIVE> AngleAxisDiffAF;
 namespace internal {
 
 
-template<typename PrimType_>
-class RotationDiffConversionTraits<eigen_impl::AngleAxisDiff<PrimType_, RotationUsage::ACTIVE>, eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>, eigen_impl::AngleAxis<PrimType_, RotationUsage::ACTIVE>> {
+template<typename PrimType_, enum RotationUsage Usage_>
+class RotationDiffConversionTraits<eigen_impl::AngleAxisDiff<PrimType_, Usage_>, eigen_impl::LocalAngularVelocity<PrimType_, Usage_>, eigen_impl::AngleAxis<PrimType_, Usage_>> {
  public:
-  inline static eigen_impl::AngleAxisDiff<PrimType_, RotationUsage::ACTIVE> convert(const eigen_impl::AngleAxis<PrimType_, RotationUsage::ACTIVE>& angleAxis, const eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>& angularVelocity) {
-    typedef typename eigen_impl::AngleAxis<PrimType_, RotationUsage::ACTIVE>::Vector3 Vector;
+  inline static eigen_impl::AngleAxisDiff<PrimType_, Usage_> convert(const eigen_impl::AngleAxis<PrimType_, Usage_>& angleAxis, const eigen_impl::LocalAngularVelocity<PrimType_, Usage_>& angularVelocity) {
+    typedef typename eigen_impl::AngleAxis<PrimType_, Usage_>::Vector3 Vector;
     const PrimType_ angle = angleAxis.angle();
 
 
@@ -203,13 +203,13 @@ class RotationDiffConversionTraits<eigen_impl::AngleAxisDiff<PrimType_, Rotation
       if (angleDiff < 1e-14) {
          axisDiff.setZero();
       }
-      return eigen_impl::AngleAxisDiff<PrimType_, RotationUsage::ACTIVE>(angleDiff, axisDiff);
+      return eigen_impl::AngleAxisDiff<PrimType_, Usage_>(angleDiff, axisDiff);
     }
     const Vector axis = angleAxis.axis();
     const Eigen::Matrix<PrimType_, 3, 3> n_hat = linear_algebra::getSkewMatrixFromVector(axis);
     const PrimType_ angleDiff = angleAxis.axis().transpose()*angularVelocity.toImplementation();
     const Vector axisDiff = (-0.5*sin(angle)/(1.0-cos(angle))*n_hat*n_hat+0.5*n_hat)*angularVelocity.toImplementation();
-    return eigen_impl::AngleAxisDiff<PrimType_, RotationUsage::ACTIVE>(angleDiff, axisDiff);
+    return eigen_impl::AngleAxisDiff<PrimType_, Usage_>(angleDiff, axisDiff);
   }
 };
 
