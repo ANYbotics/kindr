@@ -51,7 +51,7 @@ GTests are built as soon as the folder gtest exists in the root folder.
 
 Download and use GTest:
 
-
+```bash
 kindr$ wget http://googletest.googlecode.com/files/gtest-1.7.0.zip
 kindr$ unzip gtest-1.7.0.zip
 kindr$ ln -s gtest-1.7.0 gtest
@@ -59,3 +59,4 @@ kindr$ mkdir build
 kindr$ cd build
 kindr$ cmake ..
 kindr$ make
+```
