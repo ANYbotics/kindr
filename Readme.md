@@ -4,8 +4,7 @@ Autonomous Systems Lab
 ETH Zurich
 
 Contact  : Christian Gehring [gehrinch ( at ) ethz.ch]
-Author(s): Michael Bloesch, Remo Diethelm, Peter Fankhauser, 
-           Paul Furgale, Christian Gehring, Hannes Sommer
+Author(s): Michael Bloesch, Remo Diethelm, Peter Fankhauser, Paul Furgale, Christian Gehring, Hannes Sommer
 Date     : 08-Aug-2013
 
 DOCUMENTATION
@@ -51,6 +50,7 @@ Building google tests
 GTests are built as soon as the folder gtest exists in the root folder.
 
 Download and use GTest:
+
 
 kindr$ wget http://googletest.googlecode.com/files/gtest-1.7.0.zip
 kindr$ unzip gtest-1.7.0.zip
