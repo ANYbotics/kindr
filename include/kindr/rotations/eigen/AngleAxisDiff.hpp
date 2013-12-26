@@ -199,11 +199,7 @@ class RotationDiffConversionTraits<eigen_impl::AngleAxisDiff<PrimType_, Usage_>,
 
 
     if (angle < common::NumTraits<Scalar>::dummy_precision()) {
-      KINDR_ASSERT_TRUE(std::runtime_error, false, "not correctly implemented!");
-      const PrimType_ angleDiff = angleAxis.axis().transpose()*angularVelocity.toImplementation();
-
-      Vector axisDiff = 0.5*linear_algebra::getSkewMatrixFromVector(angleAxis.axis())*angularVelocity.toImplementation();
-      return eigen_impl::AngleAxisDiff<PrimType_, Usage_>(angleDiff, axisDiff);
+      return eigen_impl::AngleAxisDiff<PrimType_, Usage_>(0, angularVelocity.toImplementation());
     }
     const Vector axis = angleAxis.axis();
     const Eigen::Matrix<PrimType_, 3, 3> n_hat = linear_algebra::getSkewMatrixFromVector(axis);

@@ -32,8 +32,10 @@
 
 #include <gtest/gtest.h>
 
+
 #include "kindr/rotations/RotationDiffEigen.hpp"
 #include "kindr/common/gtest_eigen.hpp"
+#include "kindr/common/common.hpp"
 
 namespace rot = kindr::rotations::eigen_impl;
 
@@ -49,15 +51,22 @@ struct RotationDiffPairTest : public ::testing::Test {
   std::vector<LocalAngularVelocity> angularVelocities;
 
   RotationDiffPairTest() {
-    rotations.push_back(Rotation(AngleAxis()));
-    rotations.push_back(Rotation(AngleAxis(0.1, 1, 0, 0)));
-    rotations.push_back(Rotation(AngleAxis(0.1, 0, 1, 0)));
-    rotations.push_back(Rotation(AngleAxis(0.1, 0, 0, 1)));
+    rotations.push_back(Rotation(AngleAxis()));   // identity rotation
+    rotations.push_back(Rotation(AngleAxis(kindr::common::NumTraits<RotationScalar>::dummy_precision()/10.0, 1, 0, 0)));  // small angle
+    rotations.push_back(Rotation(AngleAxis(kindr::common::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 1, 0)));  // small angle
+    rotations.push_back(Rotation(AngleAxis(kindr::common::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 0, 1)));  // small angle
+    rotations.push_back(Rotation(AngleAxis(1.3, 1, 0, 0))); // large angle
+    rotations.push_back(Rotation(AngleAxis(1.3, 0, 1, 0))); // large angle
+    rotations.push_back(Rotation(AngleAxis(1.3, 0, 0, 1))); // large angle
 
-    angularVelocities.push_back(LocalAngularVelocity());
+    angularVelocities.push_back(LocalAngularVelocity());  // zero velocity
+    angularVelocities.push_back(LocalAngularVelocity(kindr::common::NumTraits<RotationScalar>::dummy_precision()/10.0, 0.0, 0.0));
+    angularVelocities.push_back(LocalAngularVelocity(0.0, kindr::common::NumTraits<RotationScalar>::dummy_precision()/10.0, 0.0));
+    angularVelocities.push_back(LocalAngularVelocity(0.0, 0.0, kindr::common::NumTraits<RotationScalar>::dummy_precision()/10.0));
     angularVelocities.push_back(LocalAngularVelocity(0.1, 0.0, 0.0));
     angularVelocities.push_back(LocalAngularVelocity(0.0, 0.1, 0.0));
     angularVelocities.push_back(LocalAngularVelocity(0.0, 0.0, 0.1));
+
     angularVelocities.push_back(LocalAngularVelocity(2.2, 3.3, 4.4));
   }
 
