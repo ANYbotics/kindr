@@ -350,7 +350,6 @@ class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_
 
     }
     return eigen_impl::RotationMatrix<DestPrimType_, Usage_>(matrix);
-//    return eigen_impl::RotationMatrix<DestPrimType_, Usage_>(eigen_impl::getRotationMatrixFromAngleAxis<SourcePrimType_, DestPrimType_>(eigen_impl::AngleAxis<SourcePrimType_, Usage_>(rv.toStoredImplementation().norm(), rv.toStoredImplementation().normalized()).toStoredImplementation()));
   }
 };
 

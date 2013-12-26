@@ -455,8 +455,8 @@ class ConversionTraits<eigen_impl::EulerAnglesXyz<DestPrimType_, Usage_>, eigen_
 template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
 class ConversionTraits<eigen_impl::EulerAnglesXyz<DestPrimType_, Usage_>, eigen_impl::RotationVector<SourcePrimType_, Usage_>> {
  public:
-  inline static eigen_impl::EulerAnglesXyz<DestPrimType_, Usage_> convert(const eigen_impl::RotationVector<SourcePrimType_, Usage_>& rv) {
-    return eigen_impl::EulerAnglesXyz<DestPrimType_, Usage_>(eigen_impl::getRpyFromAngleAxis<SourcePrimType_, DestPrimType_>(eigen_impl::AngleAxis<SourcePrimType_, Usage_>(rv.toStoredImplementation().norm(), rv.toStoredImplementation().normalized()).toStoredImplementation()));
+  inline static eigen_impl::EulerAnglesXyz<DestPrimType_, Usage_> convert(const eigen_impl::RotationVector<SourcePrimType_, Usage_>& rotationVector) {
+    return eigen_impl::EulerAnglesXyz<DestPrimType_, Usage_>(eigen_impl::AngleAxis<SourcePrimType_, Usage_>(rotationVector));
   }
 };
 
