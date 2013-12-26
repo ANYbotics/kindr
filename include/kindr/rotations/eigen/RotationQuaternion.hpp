@@ -527,8 +527,21 @@ class ConversionTraits<eigen_impl::RotationQuaternion<DestPrimType_, Usage_>, ei
 template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
 class ConversionTraits<eigen_impl::RotationQuaternion<DestPrimType_, Usage_>, eigen_impl::RotationVector<SourcePrimType_, Usage_>> {
  public:
-  inline static eigen_impl::RotationQuaternion<DestPrimType_, Usage_> convert(const eigen_impl::RotationVector<SourcePrimType_, Usage_>& rv) {
-    return eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(eigen_impl::getQuaternionFromAngleAxis<SourcePrimType_, DestPrimType_>(eigen_impl::AngleAxis<SourcePrimType_, Usage_>(rv).toStoredImplementation()));
+  inline static eigen_impl::RotationQuaternion<DestPrimType_, Usage_> convert(const eigen_impl::RotationVector<SourcePrimType_, Usage_>& rotationVector) {
+    typedef typename eigen_impl::RotationQuaternion<DestPrimType_, Usage_>::Scalar Scalar;
+    typedef typename eigen_impl::RotationQuaternion<DestPrimType_, Usage_>::Imaginary Imaginary;
+    const Scalar v = rotationVector.toImplementation().norm();
+    Scalar real;
+    Imaginary imaginary;
+    if (v < 1e-14) {
+      real = 1.0;
+      imaginary= 0.5*rotationVector.toImplementation();
+    }
+    else {
+      real = cos(v/2);
+      imaginary = sin(v/2)/v*rotationVector.toImplementation();
+    }
+    return eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(real, imaginary);
   }
 };
 
