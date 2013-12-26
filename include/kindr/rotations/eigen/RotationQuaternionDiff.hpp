@@ -206,7 +206,7 @@ template<typename PrimType_, enum RotationUsage Usage_>
 class RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>, eigen_impl::RotationVectorDiff<PrimType_, Usage_>, eigen_impl::RotationVector<PrimType_, Usage_>> {
  public:
   inline static eigen_impl::RotationQuaternionDiff<PrimType_, Usage_> convert(const eigen_impl::RotationVector<PrimType_, Usage_>& rotationVector, const eigen_impl::RotationVectorDiff<PrimType_, Usage_>& rotationVectorDiff) {
-
+    typedef typename eigen_impl::RotationVector<PrimType_, Usage_>::Scalar Scalar;
     const PrimType_ v = rotationVector.vector().norm();
     const PrimType_ v1 = rotationVector.x();
     const PrimType_ v2 = rotationVector.y();
@@ -215,7 +215,7 @@ class RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_,
     const PrimType_ dv2 = rotationVectorDiff.y();
     const PrimType_ dv3 = rotationVectorDiff.z();
 
-    if (v < 1e-14) {
+    if (v < common::NumTraits<Scalar>::dummy_precision()) {
       Eigen::Matrix<PrimType_, 3, 3> G_v0;
       G_v0 = -v1, -v2, -v3,
               2.0, 2.0, 0.0,

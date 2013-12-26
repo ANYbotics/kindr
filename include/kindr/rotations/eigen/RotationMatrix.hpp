@@ -312,12 +312,13 @@ class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_
  public:
   inline static eigen_impl::RotationMatrix<DestPrimType_, Usage_> convert(const eigen_impl::RotationVector<SourcePrimType_, Usage_>& rv) {
     typename eigen_impl::RotationMatrix<DestPrimType_, Usage_>::Implementation matrix;
+    typedef typename eigen_impl::RotationVector<SourcePrimType_, Usage_>::Scalar Scalar;
     const SourcePrimType_ v1 = rv.x();
     const SourcePrimType_ v2 = rv.y();
     const SourcePrimType_ v3 = rv.z();
     const SourcePrimType_ v = rv.toImplementation().norm();
 
-    if (v < 1e-14)  {
+    if (v < common::NumTraits<Scalar>::dummy_precision())  {
       matrix << 1.0,  v3, -v2,
                         -v3, 1.0,  v1,
                           v2, -v1, 1.0;

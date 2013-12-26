@@ -369,7 +369,7 @@ class ConversionTraits<eigen_impl::AngleAxis<DestPrimType_, Usage_>, eigen_impl:
  public:
   inline static eigen_impl::AngleAxis<DestPrimType_, Usage_> convert(const eigen_impl::RotationVector<SourcePrimType_, Usage_>& rv) {
     typedef typename eigen_impl::RotationVector<SourcePrimType_, Usage_>::Scalar Scalar;
-    if (rv.toStoredImplementation().norm() < 1e-14) {
+    if (rv.toStoredImplementation().norm() < common::NumTraits<Scalar>::dummy_precision()) {
       return eigen_impl::AngleAxis<DestPrimType_, Usage_>();
     }
     return eigen_impl::AngleAxis<DestPrimType_, Usage_>(rv.toStoredImplementation().norm(), rv.toStoredImplementation().normalized());

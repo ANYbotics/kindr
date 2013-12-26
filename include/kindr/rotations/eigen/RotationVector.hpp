@@ -379,7 +379,7 @@ class ConversionTraits<eigen_impl::RotationVector<DestPrimType_, Usage_>, eigen_
     typedef typename eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>::Scalar Scalar;
     const Scalar q0 = q.real();
     const Scalar q0_sqr = q0*q0;
-    if (q0_sqr > (1.0-1e-14)) {
+    if (q0_sqr > (1.0-common::NumTraits<Scalar>::dummy_precision())) {
       return eigen_impl::RotationVector<DestPrimType_, Usage_>(2.0*q.imaginary());
     }
     return eigen_impl::RotationVector<DestPrimType_, Usage_>(2.0*acos(q0)/sqrt(1.0-q0*q0)*q.imaginary());

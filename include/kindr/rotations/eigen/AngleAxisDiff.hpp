@@ -194,10 +194,11 @@ class RotationDiffConversionTraits<eigen_impl::AngleAxisDiff<PrimType_, Usage_>,
  public:
   inline static eigen_impl::AngleAxisDiff<PrimType_, Usage_> convert(const eigen_impl::AngleAxis<PrimType_, Usage_>& angleAxis, const eigen_impl::LocalAngularVelocity<PrimType_, Usage_>& angularVelocity) {
     typedef typename eigen_impl::AngleAxis<PrimType_, Usage_>::Vector3 Vector;
+    typedef typename eigen_impl::AngleAxis<PrimType_, Usage_>::Scalar Scalar;
     const PrimType_ angle = angleAxis.angle();
 
 
-    if (angle < 1e-14) {
+    if (angle < common::NumTraits<Scalar>::dummy_precision()) {
       KINDR_ASSERT_TRUE(std::runtime_error, false, "not correctly implemented!");
       const PrimType_ angleDiff = angleAxis.axis().transpose()*angularVelocity.toImplementation();
 

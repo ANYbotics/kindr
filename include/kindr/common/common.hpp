@@ -107,8 +107,61 @@ inline T wrapTwoPI(const T& angle)
     return floatingPointModulo(angle, 2*M_PI);
 }
 
-}
-}
+
+
+template<typename T>
+class GenericNumTraits {
+ public:
+  enum {
+    IsInteger = std::numeric_limits<T>::is_integer,
+    IsSigned = std::numeric_limits<T>::is_signed,
+  };
+
+  typedef T Scalar;
+
+
+  static inline Scalar epsilon() { return std::numeric_limits<T>::epsilon(); }
+  static inline Scalar dummy_precision()
+  {
+    // make sure to override this for floating-point types
+    return Scalar(0);
+  }
+  static inline T highest() { return (std::numeric_limits<T>::max)(); }
+  static inline T lowest()  { return IsInteger ? (std::numeric_limits<T>::min)() : (-(std::numeric_limits<T>::max)()); }
+
+};
+
+template<typename T>
+class NumTraits : GenericNumTraits<T> {
+ public:
+};
+
+template<>
+class NumTraits<float>
+  : GenericNumTraits<float>
+{
+ public:
+  static inline float dummy_precision() { return 1e-5f; }
+};
+
+template<>
+class NumTraits<double> : GenericNumTraits<double>
+{
+ public:
+  static inline double dummy_precision() { return 1e-12; }
+};
+
+template<>
+class NumTraits<long double>
+  : GenericNumTraits<long double>
+{
+ public:
+  static inline long double dummy_precision() { return 1e-15l; }
+};
+
+
+} // namespace common
+} // namespace kindr
 
 
 #endif /* COMMON_HPP_ */

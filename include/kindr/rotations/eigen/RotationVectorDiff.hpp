@@ -213,12 +213,13 @@ class RotationDiffConversionTraits<eigen_impl::RotationVectorDiff<PrimType_, Usa
   inline static eigen_impl::RotationVectorDiff<PrimType_, Usage_> convert(const eigen_impl::RotationVector<PrimType_,Usage_>& rotationVector, const eigen_impl::LocalAngularVelocity<PrimType_, Usage_>& angularVelocity) {
     typedef typename eigen_impl::RotationVector<PrimType_, Usage_>::Implementation Vector;
     typedef typename Eigen::Matrix<PrimType_, 3, 3> Matrix3x3;
+    typedef typename eigen_impl::RotationVector<PrimType_, Usage_>::Scalar Scalar;
 
     // not tested:
 //    const Vector rv = rotationVector.toImplementation();
 //    const PrimType_ angle = rv.norm();
 //
-//    if (angle < 1e-14) {
+//    if (angle < common::NumTraits<Scalar>::dummy_precision()) {
 //      return eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>(angularVelocity.toImplementation());
 //    }
 //
@@ -235,7 +236,7 @@ class RotationDiffConversionTraits<eigen_impl::RotationVectorDiff<PrimType_, Usa
     const PrimType_ v3 = rotationVector.z();
 
 
-    if (v < 1e-14) {
+    if (v < common::NumTraits<Scalar>::dummy_precision()) {
       // small angle
       const PrimType_ t2 = v1*v1;
       const PrimType_ t3 = v2*v2;

@@ -533,7 +533,7 @@ class ConversionTraits<eigen_impl::RotationQuaternion<DestPrimType_, Usage_>, ei
     const Scalar v = rotationVector.toImplementation().norm();
     Scalar real;
     Imaginary imaginary;
-    if (v < 1e-14) {
+    if (v < common::NumTraits<Scalar>::dummy_precision()) {
       real = 1.0;
       imaginary= 0.5*rotationVector.toImplementation();
     }
