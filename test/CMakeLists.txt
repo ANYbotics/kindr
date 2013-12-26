@@ -106,6 +106,8 @@ set(ROTATIONDIFF_SRCS
 	rotations/eigen/RotationVectorDiffTest.cpp
 	rotations/eigen/RotationQuaternionDiffTest.cpp
 	rotations/eigen/RotationMatrixDiffTest.cpp
+	rotations/eigen/EulerAnglesZyxDiffTest.cpp
+	rotations/eigen/EulerAnglesXyzDiffTest.cpp
 )
 
 # Add test cpp file
@@ -124,7 +126,7 @@ set(POSITIONS_SRCS
 add_executable( runUnitTestsPositions  ${POSITIONS_SRCS})
 # Link test executable against gtest & gtest_main
 target_link_libraries(runUnitTestsPositions  gtest_main gtest pthread )
-add_test( runUnitTestsQuaternions runUnitTestsPositions )
+add_test( runUnitTestsQuaternions runUnitTestsQuaternions )
 
 
 set(POSES_SRCS
