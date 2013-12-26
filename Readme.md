@@ -23,22 +23,24 @@ INSTALLATION
 Building the library:
 -----------------------------
 Build the library with CMake:
-
+```bash
 kindr$ mkdir build
 kindr$ cd build
 kindr$ cmake ..
 kindr$ make
+```
 
 Building the documentation:
 -----------------------------
 Doxygen needs to be installed to create the documentation.
 
 Build the documentation with doxygen:
-
+```bash
 kindr$ mkdir build
 kindr$ cd build
 kindr$ cmake ..
 kindr$ make doc
+```
 
 The doxygen documentation can be found here:
 
