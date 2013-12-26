@@ -24,41 +24,38 @@ INSTALLATION
 Building the library:
 -----------------------------
 Build the library with CMake:
-mkdir build
-cd build
-cmake ..
-make
+
+kindr$ mkdir build
+kindr$ cd build
+kindr$ cmake ..
+kindr$ make
 
 Building the documentation:
 -----------------------------
 Doxygen needs to be installed to create the documentation.
 
 Build the documentation with doxygen:
-mkdir build
-cd build
-cmake ..
-make doc
+
+kindr$ mkdir build
+kindr$ cd build
+kindr$ cmake ..
+kindr$ make doc
 
 The doxygen documentation can be found here:
-rm_doc/doc/html/index.html
 
+kindr$ doc/doxygen/doc/html/index.html
 
-Building examples
------------------------------
-mkdir build
-cd build
-cmake ..
-make demo
 
 Building google tests
 -----------------------------
 GTests are built as soon as the folder gtest exists in the root folder.
 
 Download and use GTest:
-wget http://googletest.googlecode.com/files/gtest-1.7.0.zip
-unzip gtest-1.7.0.zip
-ln -s gtest-1.7.0 gtest
-mkdir build
-cd build
-cmake ..
-make
+
+kindr$ wget http://googletest.googlecode.com/files/gtest-1.7.0.zip
+kindr$ unzip gtest-1.7.0.zip
+kindr$ ln -s gtest-1.7.0 gtest
+kindr$ mkdir build
+kindr$ cd build
+kindr$ cmake ..
+kindr$ make
