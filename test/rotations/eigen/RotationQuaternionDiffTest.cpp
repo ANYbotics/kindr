@@ -36,6 +36,7 @@
 
 #include "kindr/rotations/RotationDiffEigen.hpp"
 #include "kindr/common/gtest_eigen.hpp"
+#include "kindr/common/common.hpp"
 
 namespace rot = kindr::rotations::eigen_impl;
 namespace quat = kindr::quaternions::eigen_impl;
@@ -55,13 +56,16 @@ struct RotationQuaternionDiffTest: public ::testing::Test {
   LocalAngularVelocity angularVelocity1 = LocalAngularVelocity(0.0, 0.0, 0.0);
   LocalAngularVelocity angularVelocity2 = LocalAngularVelocity(0.4, 0.3, 0.8);
   LocalAngularVelocity angularVelocity3 = LocalAngularVelocity(40, 52, 99);
+  LocalAngularVelocity angularVelocity4 = LocalAngularVelocity(kindr::common::NumTraits<Scalar>::dummy_precision()/10.0, 0.0, 0.0);
+  LocalAngularVelocity angularVelocity5 = LocalAngularVelocity(0.0, kindr::common::NumTraits<Scalar>::dummy_precision()/10.0, 0.0);
+  LocalAngularVelocity angularVelocity6 = LocalAngularVelocity(0.0, 0.0, kindr::common::NumTraits<Scalar>::dummy_precision()/10.0);
   Rotation rotation1 = Rotation(Quaternion(0.0, 1.0, 0.0, 0.0).toUnitQuaternion());
   Rotation rotation2 = Rotation(Quaternion(0.5, 1.0, 0.0, 0.0).toUnitQuaternion());
   Rotation rotation3 = Rotation(Quaternion(0.5, 0.0, 1.0, 0.0).toUnitQuaternion());
   Rotation rotation4 = Rotation(Quaternion(0.5, 0.0, 0.0, 1.0).toUnitQuaternion());
-  Rotation rotation5 = Rotation(Quaternion(1e-6, 1.0, 0.0, 0.0).toUnitQuaternion());
-  Rotation rotation6 = Rotation(Quaternion(1e-6, 0.0, 1.0, 0.0).toUnitQuaternion());
-  Rotation rotation7 = Rotation(Quaternion(1e-6, 0.0, 0.0, 1.0).toUnitQuaternion());
+  Rotation rotation5 = Rotation(Quaternion(kindr::common::NumTraits<Scalar>::dummy_precision()/10.0, 1.0, 0.0, 0.0).toUnitQuaternion());
+  Rotation rotation6 = Rotation(Quaternion(kindr::common::NumTraits<Scalar>::dummy_precision()/10.0, 0.0, 1.0, 0.0).toUnitQuaternion());
+  Rotation rotation7 = Rotation(Quaternion(kindr::common::NumTraits<Scalar>::dummy_precision()/10.0, 0.0, 0.0, 1.0).toUnitQuaternion());
   Rotation rotation8 = Rotation(Quaternion(0.8, 1.0/sqrt(1+4+9), 2.0/sqrt(1+4+9), 3.0/sqrt(1+4+9)).toUnitQuaternion());
 
   std::vector<Rotation> rotations;
@@ -79,6 +83,9 @@ struct RotationQuaternionDiffTest: public ::testing::Test {
     angularVelocities.push_back(angularVelocity1);
     angularVelocities.push_back(angularVelocity2);
     angularVelocities.push_back(angularVelocity3);
+    angularVelocities.push_back(angularVelocity4);
+    angularVelocities.push_back(angularVelocity5);
+    angularVelocities.push_back(angularVelocity6);
 
     eigenVector4v1 << 2.2, 3.3, 4.4, 5.5;
   }

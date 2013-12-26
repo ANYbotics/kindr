@@ -36,6 +36,7 @@
 
 #include "kindr/rotations/RotationDiffEigen.hpp"
 #include "kindr/common/gtest_eigen.hpp"
+#include "kindr/common/common.hpp"
 
 namespace rot = kindr::rotations::eigen_impl;
 
@@ -55,6 +56,9 @@ struct RotationMatrixDiffTest: public ::testing::Test {
   LocalAngularVelocity angularVelocity1 = LocalAngularVelocity(0.0, 0.0, 0.0);
   LocalAngularVelocity angularVelocity2 = LocalAngularVelocity(0.4, 0.3, 0.8);
   LocalAngularVelocity angularVelocity3 = LocalAngularVelocity(40, 52, 99);
+  LocalAngularVelocity angularVelocity4 = LocalAngularVelocity(kindr::common::NumTraits<Scalar>::dummy_precision()/10.0, 0.0, 0.0);
+  LocalAngularVelocity angularVelocity5 = LocalAngularVelocity(0.0, kindr::common::NumTraits<Scalar>::dummy_precision()/10.0, 0.0);
+  LocalAngularVelocity angularVelocity6 = LocalAngularVelocity(0.0, 0.0, kindr::common::NumTraits<Scalar>::dummy_precision()/10.0);
   Rotation rotation1 = Rotation();
   Rotation rotation2 = Rotation(1.00000000000000e+000,    0.00000000000000e+000,    0.00000000000000e+000,
                                 0.00000000000000e+000,    61.2323399573677e-018,    1.00000000000000e+000,
@@ -96,7 +100,9 @@ struct RotationMatrixDiffTest: public ::testing::Test {
     angularVelocities.push_back(angularVelocity1);
     angularVelocities.push_back(angularVelocity2);
     angularVelocities.push_back(angularVelocity3);
-
+    angularVelocities.push_back(angularVelocity4);
+    angularVelocities.push_back(angularVelocity5);
+    angularVelocities.push_back(angularVelocity6);
   }
 };
 

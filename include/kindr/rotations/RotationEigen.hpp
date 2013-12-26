@@ -159,7 +159,9 @@ class BoxOperationTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usage
   }
 
   inline static  Left_ boxPlus(const RotationBase<Left_, Usage_>& rotation, const typename internal::get_matrix3X<Left_>::template Matrix3X<1>& vector) {
-    return static_cast<Left_>(rotation.derived()*MapTraits<RotationBase<Left_,Usage_>>::exponentialMap(vector));
+//    return Left_(rotation.derived()*MapTraits<eigen_impl::RotationVector<typename Left_::Scalar, Usage_>>::exponentialMap(vector));
+//    return static_cast<Left_>(rotation.derived()*MapTraits<RotationBase<Left_,Usage_>>::exponentialMap(vector));
+    return static_cast<Left_>(rotation.derived()*MapTraits<RotationBase<eigen_impl::RotationVector<typename Left_::Scalar,Usage_>,Usage_>>::exponentialMap(vector));
   }
 };
 
