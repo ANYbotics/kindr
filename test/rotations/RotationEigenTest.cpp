@@ -33,32 +33,6 @@
 namespace rot = kindr::rotations::eigen_impl;
 namespace quat = kindr::quaternions::eigen_impl;
 
-template <typename RotationImplementation>
-struct RotationTest {
-  typedef RotationImplementation Rotation;
-  typedef typename RotationImplementation::Scalar Scalar;
-
-  static constexpr kindr::rotations::RotationUsage Usage = RotationImplementation::Usage;
-  typedef Eigen::Matrix<Scalar, 3, 1> Vector3;
-  typedef Eigen::Matrix<Scalar, 3, 4> Matrix3x4;
-  Scalar tol;
-  Vector3 vecX, vecY, vecZ, vecGeneric;
-
-  RotationImplementation rotDefaultConstructor;
-  RotationImplementation identity = RotationImplementation(rot::RotationQuaternion<Scalar, Usage>(Eigen::Quaterniond(1, 0, 0, 0).cast<Scalar>()));
-  RotationImplementation halfX =    RotationImplementation(rot::RotationQuaternion<Scalar, Usage>(Eigen::Quaterniond(0, 1, 0, 0).cast<Scalar>()));
-  RotationImplementation halfY =    RotationImplementation(rot::RotationQuaternion<Scalar, Usage>(Eigen::Quaterniond(0, 0, 1, 0).cast<Scalar>()));
-  RotationImplementation halfZ =    RotationImplementation(rot::RotationQuaternion<Scalar, Usage>(Eigen::Quaterniond(0, 0, 0, 1).cast<Scalar>()));
-  RotationImplementation rotGeneric =    RotationImplementation(rot::RotationQuaternion<Scalar, Usage>(Eigen::Quaterniond(1, 0, 0, 0).cast<Scalar>()));
-
-
-  RotationTest() : tol(1e-6),
-      vecX(Vector3::UnitX()),
-      vecY(Vector3::UnitY()),
-      vecZ(Vector3::UnitZ()),
-      vecGeneric(Vector3(2,10,-7))
-  {}
-};
 
 template <typename RotationQuaternionImplementation>
 class RotationQuaternionSingleTest : public ::testing::Test{
@@ -1039,7 +1013,6 @@ TYPED_TEST(RotationQuaternionRotationVectorPairTest, testConversionRotationQuate
   ASSERT_NEAR(rotQuat.y(), this->rotQuatQuarterZ.y(),1e-6);
   ASSERT_NEAR(rotQuat.z(), this->rotQuatQuarterZ.z(),1e-6);
 
-  // TODO: compiles but something is wrong this way around
   rotVec = this->rotQuatIdentity;
   ASSERT_NEAR(rotVec.x(), this->rotVecIdentity.x(),1e-6);
   ASSERT_NEAR(rotVec.y(), this->rotVecIdentity.y(),1e-6);
