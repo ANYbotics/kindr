@@ -60,25 +60,6 @@ struct RotationTest {
   {}
 };
 
-template <typename RotationImplementationPair>
-struct RotationPairsTest : public ::testing::Test  {
-
-  typedef typename RotationImplementationPair::first_type RotationImplementationA;
-  typedef typename RotationImplementationPair::second_type RotationImplementationB;
-
-  RotationTest<RotationImplementationA> rotTestA;
-  RotationTest<RotationImplementationB> rotTestB;
-};
-
-template <typename RotationImplementation>
-struct RotationSingleTest : public ::testing::Test{
-  typedef RotationImplementation Rotation;
-  typedef typename RotationImplementation::Scalar Scalar;
-
-
-
-};
-
 template <typename RotationQuaternionImplementation>
 class RotationQuaternionSingleTest : public ::testing::Test{
  public:
@@ -149,12 +130,23 @@ class RotationVectorSingleTest : public ::testing::Test{
   const RotationVector rotVecIdentity = RotationVector(vecZero);
 };
 
-typedef ::testing::Types<
-    rot::AngleAxisPD,
-    rot::AngleAxisPF,
-    rot::RotationQuaternionPD,
-    rot::RotationQuaternionPF
-> Types;
+template <typename RotationQuaternionRotationVectorImplementationPair>
+struct RotationQuaternionRotationVectorPairTest : public ::testing::Test{
+  typedef typename RotationQuaternionRotationVectorImplementationPair::first_type RotationQuaternion;
+  typedef typename RotationQuaternion::Scalar RotationQuaternionScalar;
+  typedef typename RotationQuaternionRotationVectorImplementationPair::second_type RotationVector;
+  typedef typename RotationVector::Scalar RotationVectorScalar;
+
+  const RotationQuaternion rotQuatQuarterX = RotationQuaternion(1/sqrt(2.0),1/sqrt(2.0),0.0,0.0);
+  const RotationQuaternion rotQuatQuarterY = RotationQuaternion(1/sqrt(2.0),0.0,1/sqrt(2.0),0.0);
+  const RotationQuaternion rotQuatQuarterZ = RotationQuaternion(1/sqrt(2.0),0.0,0.0,1/sqrt(2.0));
+  const RotationQuaternion rotQuatIdentity = RotationQuaternion(1.0,0.0,0.0,0.0);
+
+  const RotationVector rotVecQuarterX = RotationVector(M_PI/2,0.0,0.0);
+  const RotationVector rotVecQuarterY = RotationVector(0.0,M_PI/2,0.0);
+  const RotationVector rotVecQuarterZ = RotationVector(0.0,0.0,M_PI/2);
+  const RotationVector rotVecIdentity = RotationVector(0.0,0.0,0.0);
+};
 
 typedef ::testing::Types<
     rot::RotationQuaternionPD,
@@ -174,10 +166,6 @@ typedef ::testing::Types<
 > RotationQuaternionActiveTypes;
 
 typedef ::testing::Types<
-    std::pair<rot::AngleAxisPD, rot::RotationQuaternionPD>
-> TypePairs;
-
-typedef ::testing::Types<
     std::pair<rot::RotationQuaternionPF, rot::RotationQuaternionPD>,
     std::pair<rot::RotationQuaternionAF, rot::RotationQuaternionAD>
 > TypeQuaternionPairs;
@@ -189,13 +177,24 @@ typedef ::testing::Types<
     rot::RotationVectorAF
 > RotationVectorTypes;
 
-TYPED_TEST_CASE(RotationSingleTest, Types);
+// TODO: casting does not work with different types (e.g. double and float)
+typedef ::testing::Types<
+    std::pair<rot::RotationQuaternionPF, rot::RotationVectorPF>,
+//    std::pair<rot::RotationQuaternionPF, rot::RotationVectorPD>,
+//    std::pair<rot::RotationQuaternionPD, rot::RotationVectorPF>,
+    std::pair<rot::RotationQuaternionPD, rot::RotationVectorPD>,
+    std::pair<rot::RotationQuaternionAF, rot::RotationVectorAF>,
+//    std::pair<rot::RotationQuaternionAF, rot::RotationVectorAD>,
+//    std::pair<rot::RotationQuaternionAD, rot::RotationVectorAF>,
+    std::pair<rot::RotationQuaternionAD, rot::RotationVectorAD>
+> TypeQuaternionRotationVectorPairs;
+
 TYPED_TEST_CASE(RotationQuaternionSingleTest, RotationQuaternionTypes);
 TYPED_TEST_CASE(RotationQuaternionSinglePassiveTest, RotationQuaternionPassiveTypes);
 TYPED_TEST_CASE(RotationQuaternionSingleActiveTest, RotationQuaternionActiveTypes);
-TYPED_TEST_CASE(RotationPairsTest, TypePairs);
 TYPED_TEST_CASE(RotationQuaternionPairTest, TypeQuaternionPairs);
 TYPED_TEST_CASE(RotationVectorSingleTest, RotationVectorTypes);
+TYPED_TEST_CASE(RotationQuaternionRotationVectorPairTest, TypeQuaternionRotationVectorPairs);
 
 
 // --------------------------------------------------------------------------------------------------- //
@@ -907,7 +906,9 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionExponentialMap){
   ASSERT_NEAR(rotQuat.y(), this->rotQuat2.y(),1e-6);
   ASSERT_NEAR(rotQuat.z(), this->rotQuat2.z(),1e-6);
 
-  double norm = 0.1;
+  double norm = 0.1;// --------------------------------------------------------------------------------------------------- //
+  // -------- Testing for casting between different type of rotations and rotation Quaternions --------- //
+  // --------------------------------------------------------------------------------------------------- //
   testVec = this->vec/this->vec.norm()*norm;
   rotQuat.setExponentialMap(testVec);
   ASSERT_NEAR(rotQuat.getDisparityAngle(this->rotQuatIdentity),norm,1e-6);
@@ -1000,10 +1001,68 @@ TYPED_TEST(RotationVectorSingleTest, testRotationVectorConstructors){
   ASSERT_NEAR(rot5.z(), this->rotVec1.z(),1e-6);
 }
 
+// TODO: do the same for all other types of rotation
 
 // --------------------------------------------------------------------------------------------------- //
-// ------------------------------- Testing for casting between classes ------------------------------- //
+// -------- Testing for casting between different type of rotations and rotation Quaternions --------- //
 // --------------------------------------------------------------------------------------------------- //
+
+// Test convertion between rotation quaternion and rotation vectors
+TYPED_TEST(RotationQuaternionRotationVectorPairTest, testConversionRotationQuaternionRotationVector){
+  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
+  typedef typename TestFixture::RotationQuaternion RotationVector;
+  RotationQuaternion rotQuat;
+  RotationVector rotVec;
+
+  // TODO: add generic
+
+  rotQuat = this->rotVecIdentity;
+  ASSERT_NEAR(rotQuat.w(), this->rotQuatIdentity.w(),1e-6);
+  ASSERT_NEAR(rotQuat.x(), this->rotQuatIdentity.x(),1e-6);
+  ASSERT_NEAR(rotQuat.y(), this->rotQuatIdentity.y(),1e-6);
+  ASSERT_NEAR(rotQuat.z(), this->rotQuatIdentity.z(),1e-6);
+  rotQuat = this->rotVecQuarterX;
+  ASSERT_NEAR(rotQuat.w(), this->rotQuatQuarterX.w(),1e-6);
+  ASSERT_NEAR(rotQuat.x(), this->rotQuatQuarterX.x(),1e-6);
+  ASSERT_NEAR(rotQuat.y(), this->rotQuatQuarterX.y(),1e-6);
+  ASSERT_NEAR(rotQuat.z(), this->rotQuatQuarterX.z(),1e-6);
+  rotQuat = this->rotVecQuarterY;
+  ASSERT_NEAR(rotQuat.w(), this->rotQuatQuarterY.w(),1e-6);
+  ASSERT_NEAR(rotQuat.x(), this->rotQuatQuarterY.x(),1e-6);
+  ASSERT_NEAR(rotQuat.y(), this->rotQuatQuarterY.y(),1e-6);
+  ASSERT_NEAR(rotQuat.z(), this->rotQuatQuarterY.z(),1e-6);
+  rotQuat = this->rotVecQuarterZ;
+  ASSERT_NEAR(rotQuat.w(), this->rotQuatQuarterZ.w(),1e-6);
+  ASSERT_NEAR(rotQuat.x(), this->rotQuatQuarterZ.x(),1e-6);
+  ASSERT_NEAR(rotQuat.y(), this->rotQuatQuarterZ.y(),1e-6);
+  ASSERT_NEAR(rotQuat.z(), this->rotQuatQuarterZ.z(),1e-6);
+
+  // TODO: compiles but something is wrong this way around
+  rotVec = this->rotQuatIdentity;
+  ASSERT_NEAR(rotVec.x(), this->rotVecIdentity.x(),1e-6);
+  ASSERT_NEAR(rotVec.y(), this->rotVecIdentity.y(),1e-6);
+  ASSERT_NEAR(rotVec.z(), this->rotVecIdentity.z(),1e-6);
+  rotVec = this->rotQuatQuarterX;
+  ASSERT_NEAR(rotVec.x(), this->rotVecQuarterX.x(),1e-6);
+  ASSERT_NEAR(rotVec.y(), this->rotVecQuarterX.y(),1e-6);
+  ASSERT_NEAR(rotVec.z(), this->rotVecQuarterX.z(),1e-6);
+  rotVec = this->rotQuatQuarterY;
+  ASSERT_NEAR(rotVec.x(), this->rotVecQuarterY.x(),1e-6);
+  ASSERT_NEAR(rotVec.y(), this->rotVecQuarterY.y(),1e-6);
+  ASSERT_NEAR(rotVec.z(), this->rotVecQuarterY.z(),1e-6);
+  rotVec = this->rotQuatQuarterZ;
+  ASSERT_NEAR(rotVec.x(), this->rotVecQuarterZ.x(),1e-6);
+  ASSERT_NEAR(rotVec.y(), this->rotVecQuarterZ.y(),1e-6);
+  ASSERT_NEAR(rotVec.z(), this->rotVecQuarterZ.z(),1e-6);
+}
+
+// --------------------------------------------------------------------------------------------------- //
+// ------------------------------------- Testing Rotation Vector ------------------------------------- //
+// --------------------------------------------------------------------------------------------------- //
+
+
+
+
 
 
 
