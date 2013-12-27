@@ -23,16 +23,16 @@ Addition and subtraction of linear velocities are provided by the kindr::positio
 The following representations are currently provided by the library:
 
 \subsubsection pdiff_interfaces_velocity3 3-dimensional Linear Velocity
-The class kindr::positions::LinearVelocity3Base defines an interface for a 3D-vector representation of a linear velocity in 3D-Space.
+The class kindr::positions::LinearVelocityBase defines an interface for a 3D-vector representation of a linear velocity in 3D-Space.
 The linear velocity of point P expressed in frame A can be stated as:
 
 \f$\boxed{_A\mathbf{v}_{P} = \begin{bmatrix} v_x \\ v_y \\ v_z \end{bmatrix}}\f$
 
 The three components, x, y and z, are stored and can be accessed by
    
- - \ref kindr::positions::LinearVelocity3Base::x() "x()"
- - \ref kindr::positions::LinearVelocity3Base::y() "y()"
- - \ref kindr::positions::LinearVelocity3Base::z() "z()"
+ - \ref kindr::positions::LinearVelocityBase::x() "x()"
+ - \ref kindr::positions::LinearVelocityBase::y() "y()"
+ - \ref kindr::positions::LinearVelocityBase::z() "z()"
 
 
 \section pdiff_implementations Implementations
@@ -40,7 +40,7 @@ Each implementation lies in its own namespace, such that the implementation can 
 For example: 
 \code{.cpp}
 namespace pos = kindr::positions::eigen_impl; // select implementation based on Eigen
-pos::LinearVelocity3D velocity();		     // create 3D-Velocity
+pos::LinearVelocityD velocity();		     // create 3D-Velocity
 \endcode
 If the implementation needs to be changed, only one line of code has to be altered:
 \code{.cpp}
@@ -56,20 +56,20 @@ All types can be included by
 and lie within the namespace kindr::positions::eigen_impl.
 
 \subsubsection pdiff_implementation_linearvelocity3 3D Linear Velocity
-The class \ref kindr::positions::eigen_impl::LinearVelocity3 "LinearVelocity3" stores the three coordinates of the velocity in 3D-space in Eigen::Matrix<PrimType, 3, 1>.
+The class \ref kindr::positions::eigen_impl::LinearVelocity "LinearVelocity" stores the three coordinates of the velocity in 3D-space in Eigen::Matrix<PrimType, 3, 1>.
 
 The following four typedefs are provided for convenience:
- - \ref kindr::positions::eigen_impl::LinearVelocity3D "LinearVelocity3D" for primitive type double
- - \ref kindr::positions::eigen_impl::LinearVelocity3F "LinearVelocity3F" for primitive type float
+ - \ref kindr::positions::eigen_impl::LinearVelocityD "LinearVelocityD" for primitive type double
+ - \ref kindr::positions::eigen_impl::LinearVelocityF "LinearVelocityF" for primitive type float
 
 A velocity can be created as follows:
 \code{.cpp}
 double x = 1.0;
 double y = 2.0;
 double z = 3.0;
-pos::LinearVelocity3D velocity1();		     		// creates a 3D-Velocity with all coordinates equal to zero
-pos::LinearVelocity3D velocity2(x, y, z);	     		// initializes the three coordinates
-pos::LinearVelocity3D velocity3(Eigen::Vector3d(x, y, z)); 	// creates a velocity from an Eigen vector
+pos::LinearVelocityD velocity1();		     		// creates a 3D-Velocity with all coordinates equal to zero
+pos::LinearVelocityD velocity2(x, y, z);	     		// initializes the three coordinates
+pos::LinearVelocityD velocity3(Eigen::Vector3d(x, y, z)); 	// creates a velocity from an Eigen vector
 \endcode
 
 The coordinates can be obtained as follows:
@@ -82,8 +82,8 @@ Eigen::Vector3d vector = velocity1.toImplementation();	// [x;y;z]
 
 Operations with positions:
 \code{.cpp}
-  pos::LinearVelocity3D velocity4 = velocity1 + velocity2;	// addition
-  pos::LinearVelocity3D velocity3 -= velocity1;		// subtraction
+  pos::LinearVelocityD velocity4 = velocity1 + velocity2;	// addition
+  pos::LinearVelocityD velocity3 -= velocity1;		// subtraction
   std::cout << "Velocity 3 is: " << velocity3;		// print velocity
 \endcode
 

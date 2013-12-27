@@ -31,6 +31,7 @@
 
 
 #include "kindr/common/common.hpp"
+#include "kindr/positions/PositionBase.hpp"
 
 namespace kindr {
 namespace positions {
@@ -48,14 +49,7 @@ class PDiffAdditionTraits {
 //  inline static LeftAndRight_ subtract(const LeftAndRight_& lhs, const LeftAndRight_& rhs);
 };
 
-/*! \class get_scalar
- *  \brief Gets the primitive of the position.
- */
-template<typename Position_>
-class get_scalar {
- public:
-//  typedef PrimType Scalar;
-};
+
 
 } // namespace internal
 
@@ -143,7 +137,7 @@ class PositionDiffBase {
 
 };
 
-/*! \class LinearVelocity3Base
+/*! \class LinearVelocityBase
  * \brief Interface for a linear velocity in 3D-space.
  *
  * This class defines the generic interface for a linear velocity in 3D-space.
@@ -154,7 +148,7 @@ class PositionDiffBase {
  *  \ingroup positions
  */
 template<typename Derived_>
-class LinearVelocity3Base : public PositionDiffBase<Derived_> {
+class LinearVelocityBase : public PositionDiffBase<Derived_> {
  public:
   /*! \brief The primitive type of a linear velocity.
    */

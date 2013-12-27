@@ -41,21 +41,21 @@
 namespace pos = kindr::positions::eigen_impl;
 
 template <typename LinearVelocityImplementation>
-struct LinearVelocity3Test: public ::testing::Test {
-  typedef LinearVelocityImplementation LinearVelocity3;
-  typedef typename LinearVelocity3::Scalar Scalar;
+struct LinearVelocityTest: public ::testing::Test {
+  typedef LinearVelocityImplementation LinearVelocity;
+  typedef typename LinearVelocity::Scalar Scalar;
   typedef Eigen::Matrix<Scalar, 3, 1> Vector3;
 
   Scalar tol;
   Vector3 vecZero, vec1, vec2, vecAdd, vecSubtract;
 
-  LinearVelocity3 velDefault;
-  LinearVelocity3 velFromThreeValues;
-  LinearVelocity3 velFromEigen;
-  LinearVelocity3 vel2FromEigen;
-  LinearVelocity3 velFromVel;
+  LinearVelocity velDefault;
+  LinearVelocity velFromThreeValues;
+  LinearVelocity velFromEigen;
+  LinearVelocity vel2FromEigen;
+  LinearVelocity velFromVel;
 
-  LinearVelocity3Test() : tol(1e-6),
+  LinearVelocityTest() : tol(1e-6),
       vecZero(Vector3::Zero()),
       vec1(10,20,30),
       vec2(1,2,3),
@@ -70,16 +70,16 @@ struct LinearVelocity3Test: public ::testing::Test {
 
 
 typedef ::testing::Types<
-    pos::LinearVelocity3D,
-    pos::LinearVelocity3F
+    pos::LinearVelocityD,
+    pos::LinearVelocityF
 > Types;
 
 
-TYPED_TEST_CASE(LinearVelocity3Test, Types);
+TYPED_TEST_CASE(LinearVelocityTest, Types);
 
-TYPED_TEST(LinearVelocity3Test, testLinearVelocity3)
+TYPED_TEST(LinearVelocityTest, testLinearVelocity)
 {
-  typedef typename TestFixture::LinearVelocity3 LinearVelocity3;
+  typedef typename TestFixture::LinearVelocity LinearVelocity;
 
    // default constructor
    ASSERT_EQ(this->velDefault.x(), this->vecZero.x()) << "Default constructor needs to initialize x-component to zero!";
@@ -107,26 +107,26 @@ TYPED_TEST(LinearVelocity3Test, testLinearVelocity3)
    ASSERT_EQ(this->velFromThreeValues.toImplementation()(2,0), this->vec1.z()) << "Z-component needs to correspond to the matrix entry (2,0)!";
 
    // addition
-   LinearVelocity3 velAdd = this->velFromEigen+this->vel2FromEigen;
+   LinearVelocity velAdd = this->velFromEigen+this->vel2FromEigen;
    ASSERT_EQ(velAdd.x(), this->vecAdd.x());
    ASSERT_EQ(velAdd.y(), this->vecAdd.y());
    ASSERT_EQ(velAdd.z(), this->vecAdd.z());
 
    // addition and assignment
-   LinearVelocity3 velAddandAssign(this->velFromEigen);
+   LinearVelocity velAddandAssign(this->velFromEigen);
    velAddandAssign += this->vel2FromEigen;
    ASSERT_EQ(velAddandAssign.x(), this->vecAdd.x());
    ASSERT_EQ(velAddandAssign.y(), this->vecAdd.y());
    ASSERT_EQ(velAddandAssign.z(), this->vecAdd.z());
 
    // subtract
-   LinearVelocity3 velSubtract = this->velFromEigen-this->vel2FromEigen;
+   LinearVelocity velSubtract = this->velFromEigen-this->vel2FromEigen;
    ASSERT_EQ(velSubtract.x(), this->vecSubtract.x());
    ASSERT_EQ(velSubtract.y(), this->vecSubtract.y());
    ASSERT_EQ(velSubtract.z(), this->vecSubtract.z());
 
    // subtract and assignment
-   LinearVelocity3 velSubtractandAssign(this->velFromEigen);
+   LinearVelocity velSubtractandAssign(this->velFromEigen);
    velSubtractandAssign -= this->vel2FromEigen;
    ASSERT_EQ(velSubtractandAssign.x(), this->vecSubtract.x());
    ASSERT_EQ(velSubtractandAssign.y(), this->vecSubtract.y());

@@ -26,8 +26,8 @@
  *
 */
 
-#ifndef KINDR_POSES_HOMOGENEOUSTRANSFORMATION_HPP_
-#define KINDR_POSES_HOMOGENEOUSTRANSFORMATION_HPP_
+#ifndef KINDR_POSES_EIGEN_HOMOGENEOUSTRANSFORMATION_HPP_
+#define KINDR_POSES_EIGEN_HOMOGENEOUSTRANSFORMATION_HPP_
 
 #include "kindr/common/common.hpp"
 #include "kindr/common/assert_macros_eigen.hpp"
@@ -78,7 +78,7 @@ class HomogeneousTransformation : public HomogeneousTransformationBase<Homogeneo
 
   inline TransformationMatrix getTransformationMatrix() const {
     TransformationMatrix mat = TransformationMatrix::Zero();
-    mat.template topLeftCorner<3,3>() =  rotations::eigen_impl::RotationMatrix<Scalar, kindr::rotations::RotationUsage::PASSIVE>(getRotation()).toStoredImplementation();
+    mat.template topLeftCorner<3,3>() =  rotations::eigen_impl::RotationMatrix<Scalar, kindr::rotations::RotationUsage::PASSIVE>(getRotation()).toImplementation();
     mat.template topRightCorner<3,1>() = getPosition().toImplementation();
     mat(3,3) = Scalar(1);
     return mat;
@@ -148,4 +148,4 @@ class TransformationTraits<eigen_impl::HomogeneousTransformation<PrimType_, Posi
 } // namespace kindr
 
 
-#endif /* KINDR_POSES_HOMOGENEOUSTRANSFORMATION_HPP_ */
+#endif /* KINDR_POSES_EIGEN_HOMOGENEOUSTRANSFORMATION_HPP_ */
