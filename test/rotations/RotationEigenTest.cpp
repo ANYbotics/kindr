@@ -902,6 +902,7 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionBoxOperators){
   typedef typename TestFixture::Scalar Scalar;
   typedef typename TestFixture::Vector Vector;
   RotationQuaternion rotQuat;
+  RotationQuaternion rotQuat2;
   Vector testVec;
 
   // Test addition with 0
@@ -915,10 +916,28 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionBoxOperators){
   ASSERT_NEAR(testVec(1),0.0,1e-6);
   ASSERT_NEAR(testVec(2),0.0,1e-6);
 
-  // Test backwards-forward
+  // Test backward-forward
   testVec = this->rotQuat1.boxMinus(this->rotQuat2);
   rotQuat = this->rotQuat2.boxPlus(testVec);
   ASSERT_EQ(rotQuat.isNear(this->rotQuat1,1e-6),true);
+
+  // Test forward-backward
+  testVec = this->vec;
+  rotQuat = this->rotQuat1.boxPlus(testVec);
+  testVec = rotQuat.boxMinus(this->rotQuat1);
+  ASSERT_NEAR(testVec(0),this->vec(0),1e-6);
+  ASSERT_NEAR(testVec(1),this->vec(1),1e-6);
+  ASSERT_NEAR(testVec(2),this->vec(2),1e-6);
+
+  // Test overlap with disparity angle
+  double norm = 0.1;
+  testVec = this->vec/this->vec.norm()*norm;
+  rotQuat = this->rotQuat1.boxPlus(testVec);
+  ASSERT_NEAR(rotQuat.getDisparityAngle(this->rotQuat1),norm,1e-4); // Check distance between both Rotation Quaternions
+  rotQuat2 = this->rotQuat1.boxPlus(2*testVec);
+  ASSERT_NEAR(rotQuat.getDisparityAngle(rotQuat2),norm,1e-4); // Check distance to double
+  rotQuat2 = this->rotQuat1.boxPlus(-testVec);
+  ASSERT_NEAR(rotQuat.getDisparityAngle(rotQuat2),2*norm,1e-4); // Check distance to reverse
 }
 
 //TYPED_TEST(RotationSingleTest, testConstructor){
