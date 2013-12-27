@@ -904,13 +904,21 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionBoxOperators){
   RotationQuaternion rotQuat;
   Vector testVec;
 
+  // Test addition with 0
   testVec.setZero();
   rotQuat = this->rotQuat1.boxPlus(testVec);
-  ASSERT_NEAR(rotQuat.w(), this->rotQuat1.w(),1e-6);
-  ASSERT_NEAR(rotQuat.x(), this->rotQuat1.x(),1e-6);
-  ASSERT_NEAR(rotQuat.y(), this->rotQuat1.y(),1e-6);
-  ASSERT_NEAR(rotQuat.z(), this->rotQuat1.z(),1e-6);
+  ASSERT_EQ(rotQuat.isNear(this->rotQuat1,1e-6),true);
 
+  // Test substraction of same elements
+  testVec = this->rotQuat1.boxMinus(this->rotQuat1);
+  ASSERT_NEAR(testVec(0),0.0,1e-6);
+  ASSERT_NEAR(testVec(1),0.0,1e-6);
+  ASSERT_NEAR(testVec(2),0.0,1e-6);
+
+  // Test backwards-forward
+  testVec = this->rotQuat1.boxMinus(this->rotQuat2);
+  rotQuat = this->rotQuat2.boxPlus(testVec);
+  ASSERT_EQ(rotQuat.isNear(this->rotQuat1,1e-6),true);
 }
 
 //TYPED_TEST(RotationSingleTest, testConstructor){
