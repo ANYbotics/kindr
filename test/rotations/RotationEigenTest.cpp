@@ -133,6 +133,22 @@ struct RotationQuaternionPairTest : public ::testing::Test{
   const typename quat::Quaternion<SecondScalar> quat2 = typename quat::Quaternion<SecondScalar>(0.0,0.36,0.48,0.8);
 };
 
+template <typename RotationVectorImplementation>
+class RotationVectorSingleTest : public ::testing::Test{
+ public:
+  typedef RotationVectorImplementation RotationVector;
+  typedef typename RotationVectorImplementation::Scalar Scalar;
+  typedef Eigen::Matrix<Scalar,3,1> Vector;
+
+  const Vector vec1 = Vector(0.36,0.48,0.8);
+  const Vector vec2 = Vector(0.3,2.0,0.0);
+  const Vector vecZero = Vector(0.0,0.0,0.0);
+
+  const RotationVector rotVec1 = RotationVector(vec1);
+  const RotationVector rotVec2 = RotationVector(vec2);
+  const RotationVector rotVecIdentity = RotationVector(vecZero);
+};
+
 typedef ::testing::Types<
     rot::AngleAxisPD,
     rot::AngleAxisPF,
@@ -166,12 +182,20 @@ typedef ::testing::Types<
     std::pair<rot::RotationQuaternionAF, rot::RotationQuaternionAD>
 > TypeQuaternionPairs;
 
+typedef ::testing::Types<
+    rot::RotationVectorPD,
+    rot::RotationVectorPF,
+    rot::RotationVectorAD,
+    rot::RotationVectorAF
+> RotationVectorTypes;
+
 TYPED_TEST_CASE(RotationSingleTest, Types);
 TYPED_TEST_CASE(RotationQuaternionSingleTest, RotationQuaternionTypes);
 TYPED_TEST_CASE(RotationQuaternionSinglePassiveTest, RotationQuaternionPassiveTypes);
 TYPED_TEST_CASE(RotationQuaternionSingleActiveTest, RotationQuaternionActiveTypes);
 TYPED_TEST_CASE(RotationPairsTest, TypePairs);
 TYPED_TEST_CASE(RotationQuaternionPairTest, TypeQuaternionPairs);
+TYPED_TEST_CASE(RotationVectorSingleTest, RotationVectorTypes);
 
 
 // --------------------------------------------------------------------------------------------------- //
@@ -940,42 +964,46 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionBoxOperators){
   ASSERT_NEAR(rotQuat.getDisparityAngle(rotQuat2),2*norm,1e-4); // Check distance to reverse
 }
 
-//TYPED_TEST(RotationSingleTest, testConstructor){
-//
-//}
-//
-//TYPED_TEST(RotationSingleTest, testRotateVector){
-////  ASSERT_EQ(this->vecGeneric, this->rotDefaultConstructor.rotate(this->vecGeneric));
-////    for(auto & r : {TestFixture::halfX, TestFixture::halfY, TestFixture::halfZ}){
-////      ASSERT_EQ(this->identity, r*r) << r*r; // TODO ASSERT_NEAR
-////      ASSERT_TRUE(rm::rotations::areNearlyEqual(this->identity, r*r, this->tol)); // TODO ASSERT_NEAR
-////
-////      ASSERT_EQ(this->vecX, this->identity.rotate(this->vecX));
-////      ASSERT_EQ(this->vecY, this->identity.rotate(this->vecY));
-////      ASSERT_EQ(this->vecZ, this->identity.rotate(this->vecZ));
-////    }
-//}
 
+// --------------------------------------------------------------------------------------------------- //
+// ------------------ Testing for constructors and getters for other rotation types ------------------ //
+// --------------------------------------------------------------------------------------------------- //
+
+// Testing constructors and getters for Rotation Vector
+TYPED_TEST(RotationVectorSingleTest, testRotationVectorConstructors){
+  typedef typename TestFixture::RotationVector RotationVector;
+  typedef typename TestFixture::Scalar Scalar;
+
+  RotationVector rot;
+  ASSERT_EQ(rot.x(), 0.0);
+  ASSERT_EQ(rot.y(), 0.0);
+  ASSERT_EQ(rot.z(), 0.0);
+
+  RotationVector rot2(this->vec1.x(),this->vec1.y(),this->vec1.z());
+  ASSERT_NEAR(rot2.x(), this->vec1.x(),1e-6);
+  ASSERT_NEAR(rot2.y(), this->vec1.y(),1e-6);
+  ASSERT_NEAR(rot2.z(), this->vec1.z(),1e-6);
+
+  RotationVector rot3(this->vec1);
+  ASSERT_NEAR(rot3.x(), this->vec1.x(),1e-6);
+  ASSERT_NEAR(rot3.y(), this->vec1.y(),1e-6);
+  ASSERT_NEAR(rot3.z(), this->vec1.z(),1e-6);
+
+  RotationVector rot4(this->rotVec1);
+  ASSERT_NEAR(rot4.x(), this->rotVec1.x(),1e-6);
+  ASSERT_NEAR(rot4.y(), this->rotVec1.y(),1e-6);
+  ASSERT_NEAR(rot4.z(), this->rotVec1.z(),1e-6);
+
+  RotationVector rot5(rot4);
+  ASSERT_NEAR(rot5.x(), this->rotVec1.x(),1e-6);
+  ASSERT_NEAR(rot5.y(), this->rotVec1.y(),1e-6);
+  ASSERT_NEAR(rot5.z(), this->rotVec1.z(),1e-6);
+}
 
 
 // --------------------------------------------------------------------------------------------------- //
 // ------------------------------- Testing for casting between classes ------------------------------- //
 // --------------------------------------------------------------------------------------------------- //
-
-
-//// Test constructors
-//TYPED_TEST(RotationSingleTest, testRotationConstructors){
-//  typedef typename TestFixture::Rotation Rotation;
-//  typedef typename TestFixture::Scalar Scalar;
-//
-//  Rotation rot;
-//}
-//
-//TYPED_TEST(RotationPairsTest, testConversion){
-//
-//}
-
-
 
 
 
