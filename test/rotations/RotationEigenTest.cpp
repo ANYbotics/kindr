@@ -179,15 +179,15 @@ typedef ::testing::Types<
     rot::RotationVectorAF
 > RotationVectorTypes;
 
-// TODO: casting does not work with different types (e.g. double and float)
+
 typedef ::testing::Types<
     std::pair<rot::RotationQuaternionPF, rot::RotationVectorPF>,
-//    std::pair<rot::RotationQuaternionPF, rot::RotationVectorPD>,
-//    std::pair<rot::RotationQuaternionPD, rot::RotationVectorPF>,
+    std::pair<rot::RotationQuaternionPF, rot::RotationVectorPD>,
+    std::pair<rot::RotationQuaternionPD, rot::RotationVectorPF>,
     std::pair<rot::RotationQuaternionPD, rot::RotationVectorPD>,
     std::pair<rot::RotationQuaternionAF, rot::RotationVectorAF>,
-//    std::pair<rot::RotationQuaternionAF, rot::RotationVectorAD>,
-//    std::pair<rot::RotationQuaternionAD, rot::RotationVectorAF>,
+    std::pair<rot::RotationQuaternionAF, rot::RotationVectorAD>,
+    std::pair<rot::RotationQuaternionAD, rot::RotationVectorAF>,
     std::pair<rot::RotationQuaternionAD, rot::RotationVectorAD>
 > TypeQuaternionRotationVectorPairs;
 

@@ -535,11 +535,11 @@ class ConversionTraits<eigen_impl::RotationQuaternion<DestPrimType_, Usage_>, ei
     Imaginary imaginary;
     if (v < common::NumTraits<Scalar>::dummy_precision()) {
       real = 1.0;
-      imaginary= 0.5*rotationVector.toImplementation();
+      imaginary= 0.5*rotationVector.toImplementation().template cast<DestPrimType_>();
     }
     else {
       real = cos(v/2);
-      imaginary = sin(v/2)/v*rotationVector.toImplementation();
+      imaginary = sin(v/2)/v*rotationVector.toImplementation().template cast<DestPrimType_>();
     }
     return eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(real, imaginary);
   }
