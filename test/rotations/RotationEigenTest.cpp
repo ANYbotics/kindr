@@ -142,9 +142,9 @@ struct RotationQuaternionRotationVectorPairTest : public ::testing::Test{
   const RotationQuaternion rotQuatQuarterZ = RotationQuaternion(1/sqrt(2.0),0.0,0.0,1/sqrt(2.0));
   const RotationQuaternion rotQuatIdentity = RotationQuaternion(1.0,0.0,0.0,0.0);
 
-  const RotationVector rotVecQuarterX = RotationVector(M_PI/2,0.0,0.0);
-  const RotationVector rotVecQuarterY = RotationVector(0.0,M_PI/2,0.0);
-  const RotationVector rotVecQuarterZ = RotationVector(0.0,0.0,M_PI/2);
+  const RotationVector rotVecQuarterX = RotationVector(M_PI/2.0,0.0,0.0);
+  const RotationVector rotVecQuarterY = RotationVector(0.0,M_PI/2.0,0.0);
+  const RotationVector rotVecQuarterZ = RotationVector(0.0,0.0,M_PI/2.0);
   const RotationVector rotVecIdentity = RotationVector(0.0,0.0,0.0);
 };
 
@@ -1010,7 +1010,7 @@ TYPED_TEST(RotationVectorSingleTest, testRotationVectorConstructors){
 // Test convertion between rotation quaternion and rotation vectors
 TYPED_TEST(RotationQuaternionRotationVectorPairTest, testConversionRotationQuaternionRotationVector){
   typedef typename TestFixture::RotationQuaternion RotationQuaternion;
-  typedef typename TestFixture::RotationQuaternion RotationVector;
+  typedef typename TestFixture::RotationVector RotationVector;
   RotationQuaternion rotQuat;
   RotationVector rotVec;
 

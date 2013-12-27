@@ -390,8 +390,6 @@ class RotationBase {
 template<typename Implementation_, enum RotationUsage Usage_>
 class AngleAxisBase : public RotationBase<Implementation_, Usage_> {
 
-  template<typename OtherDerived_> // todo: necessary?
-  AngleAxisBase& operator =(const RotationBase<OtherDerived_, Usage_>& other);
 };
 
 /*! \brief Representation of a generic rotation vector
@@ -406,8 +404,6 @@ class AngleAxisBase : public RotationBase<Implementation_, Usage_> {
 template<typename Implementation_, enum RotationUsage Usage_>
 class RotationVectorBase : public RotationBase<Implementation_, Usage_> {
 
-  template<typename OtherDerived_> // todo: necessary?
-  RotationVectorBase& operator =(const RotationBase<OtherDerived_, Usage_>& other);
 };
 
 /*! \brief Representation of a generic quaternion rotation
@@ -420,8 +416,6 @@ class RotationVectorBase : public RotationBase<Implementation_, Usage_> {
 template<typename Implementation_, enum RotationUsage Usage_>
 class RotationQuaternionBase : public RotationBase<Implementation_, Usage_> {
 
-  template<typename OtherDerived_>
-  RotationQuaternionBase& operator =(const RotationBase<OtherDerived_, Usage_>& other);
 };
 
 /*! \brief Representation of a generic matrix rotation
@@ -433,9 +427,6 @@ class RotationQuaternionBase : public RotationBase<Implementation_, Usage_> {
  */
 template<typename Implementation_, enum RotationUsage Usage_>
 class RotationMatrixBase : public RotationBase<Implementation_, Usage_> {
-
-  template<typename OtherDerived_>
-  RotationMatrixBase& operator =(const RotationBase<OtherDerived_, Usage_>& other);
 
 };
 
@@ -469,9 +460,6 @@ class EulerAnglesBase : public RotationBase<Implementation_, Usage_> {
 template<typename Implementation_, enum RotationUsage Usage_>
 class EulerAnglesXyzBase : public EulerAnglesBase<Implementation_, Usage_> {
 
-  template<typename OtherDerived_>
-  EulerAnglesXyzBase& operator =(const RotationBase<OtherDerived_, Usage_>& other);
-
 };
 
 /*! \class EulerAnglesZyxBase
@@ -485,9 +473,6 @@ class EulerAnglesXyzBase : public EulerAnglesBase<Implementation_, Usage_> {
  */
 template<typename Implementation_, enum RotationUsage Usage_>
 class EulerAnglesZyxBase : public EulerAnglesBase<Implementation_, Usage_> {
-
-  template<typename OtherDerived_>
-  EulerAnglesZyxBase& operator =(const RotationBase<OtherDerived_, Usage_>& other);
 
 };
 
