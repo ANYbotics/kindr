@@ -88,6 +88,7 @@ add_test( runUnitTestsQuaternions runUnitTestsQuaternions )
 
 set(ROTATION_SRCS
 	test_main.cpp
+	rotations/eigen/RotationQuaternionTest.cpp
 	rotations/RotationEigenTest.cpp
 )
 
