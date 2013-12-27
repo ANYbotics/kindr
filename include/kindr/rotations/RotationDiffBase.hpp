@@ -169,6 +169,13 @@ class AngularVelocityBase : public RotationDiffBase<Implementation_, Usage_> {
 
 };
 
+
+template<typename Implementation_, enum RotationUsage Usage_>
+class LocalAngularVelocityBase : public AngularVelocityBase<Implementation_, Usage_> {
+
+
+};
+
 template<typename Implementation_, enum RotationUsage Usage_>
 class AngleAxisDiffBase : public RotationDiffBase<Implementation_, Usage_> {
  public:
@@ -199,6 +206,20 @@ class EulerAnglesDiffBase : public RotationDiffBase<Implementation_, Usage_> {
  public:
 
 };
+
+
+template<typename Implementation_, enum RotationUsage Usage_>
+class EulerAnglesDiffZyxBase : public EulerAnglesDiffBase<Implementation_, Usage_> {
+ public:
+
+};
+
+template<typename Implementation_, enum RotationUsage Usage_>
+class EulerAnglesDiffXyzBase : public EulerAnglesDiffBase<Implementation_, Usage_> {
+ public:
+
+};
+
 
 
 namespace internal {

@@ -51,7 +51,7 @@ namespace eigen_impl {
  * \ingroup rotations
  */
 template<typename PrimType_, enum RotationUsage Usage_>
-class EulerAnglesZyxDiff : public EulerAnglesDiffBase<EulerAnglesZyxDiff<PrimType_, Usage_>, Usage_> {
+class EulerAnglesZyxDiff : public EulerAnglesDiffZyxBase<EulerAnglesZyxDiff<PrimType_, Usage_>, Usage_> {
  private:
   /*! \brief The base type.
    */

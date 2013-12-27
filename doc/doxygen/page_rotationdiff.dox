@@ -6,26 +6,55 @@ The section \ref rdiff_interface "Interface" describes the functionalities, wher
 \tableofcontents
 
 \section rdiff_interface Interface
-The class kindr::rotations::RotationDiffBase serves as an interface for the time derivative of a rotation. All types of representations of a time derivative of a rotation, such as angular velocitcy and time derivatives of Euler angles, are derived from this base class.
+\subsection rdiff_interface_rotationdiff Time Derivative of a Rotation
+The class kindr::rotations::RotationDiffBase serves as an interface for the time derivative of a rotation. All types of representations of a time derivative of a rotation, such as angular velocity and time derivatives of Euler angles, are derived from this base class.
 
-\subsection rdiff_zero Zero
+\subsubsection rdiff_interfaces_otationdiff_type Type of a Time Derivative of a Rotation
+The type of a rotation is defined by 
+  - the \ref rdiff_interfaces_representations "kind of parameterization" (derivative of angle-axis, quaternion, etc.), 
+  - the primitive data type of the parameters (float/double, etc.) and
+  - the usage type of the rotation (active/passive).
+
+\subsubsection rdiff_interfaces_rotationdiff_constructor Construction of  a Time Derivative of a Rotation
 The default constructor always initializes all derivatives with zero.
 
+  
+\subsubsection rdiff_zero Zero Time Derivatives
 All derivatives can be set to zero by the function \ref kindr::rotations::RotationDiffBase::setZero() "setZero()".
 
-\subsection rdiff_addition_and_subtraction Addition and Subtraction
+\subsubsection rdiff_addition_and_subtraction Addition and Subtraction
 Addition and subtraction of the time derivatives are provided by the kindr::rotations::RotationDiffBase::operator+ and kindr::rotations::RotationDiffBase::operator-, respectively.
 
+\subsubsection rdiff_conversion Conversion between Time Derivatives of Rotations
+There are three kinds of conversions:
+- Conversion between different representations, i.e. between different parameterizations (e.g. rotation quaternion - angle-axis)
+- Conversion between different primitive data types (e.g. float - double)
+- Conversion between different usage types (active - passive)
 
+\paragraph rdiff_interfaces_conversion_representations Conversion between Representations
+The following methods allow to convert between different representations of a rotation:
+\code{.cpp}
+LocalAngularVelocityAD angularVelocity;								// representation of the time derivative
+RotationQuaternionAD rotationQuaternion;							// the rotation the derivative is taken
+RotationQuaternionDiffAD rotationQuaternionDiff(rotationQuaternion, angularVelocity);		// convert using the constructor
+rotationQuaternionDiff = angularVelocity.cast<RotationQuaternionDiffAD>(rotationQuaternion);	// convert using the cast method
+
+\endcode
+
+\paragraph rdiff_interfaces_conversion_primtype Conversion between Primitive Data Types
+Not yet supported.
+
+\paragraph rdiff_interfaces_conversion_usage Conversion between Usage Types
+Not yet supported.
 
 \subsection rdiff_interfaces_representations Representations of Time Derivatives of Rotations
 The following representations are currently provided by the library:
 
-\subsubsection rdiff_interfaces_velocity3 3-dimensional Angular Velocity
+\subsubsection rdiff_interfaces_angularvelocity Angular Velocity
 The class kindr::rotations::AngularVelocityBase defines an interface for an angular velocity in 3D-Space.
 The angular velocity expressed in frame A can be stated as:
 
-\f$\boxed{_K\mathbf{\omega}_{IK} = \begin{bmatrix} \omega_x \\ \omega_y \\ \omega_z \end{bmatrix}}\f$
+\f$\boxed{{}_A\mathbf{\omega}_{I\,A} = \begin{bmatrix} \omega_x \\ \omega_y \\ \omega_z \end{bmatrix}}\f$
 
 The three components, x, y and z, are stored and can be accessed by
    
@@ -33,18 +62,56 @@ The three components, x, y and z, are stored and can be accessed by
  - \ref kindr::rotations::AngularVelocityBase::y() "y()"
  - \ref kindr::rotations::AngularVelocityBase::z() "z()"
 
+\paragraph  rdiff_interfaces_angularvelocity_local Local Angular Velocity
+The class kindr::rotations::LocalAngularVelocityBase defines an interface for a local angular velocity,
+i.e. the angular velocity of a body is expressed in the local, body-fixed frame.
+
+\subsubsection rdiff_interfaces_angleaxisdiff Time Derivative of Angle-Axis
+The class kindr::rotations::AngleAxisDiffBase defines an interface for the time derivative of an angle-axis representation of a rotation:
+
+\f$\boxed{(\dot{\theta}, \dot{\mathbf{n}})}\f$
+
+where \f$\dot{\theta} \in \mathbb{R}\f$ is the time derivative of the rotation angle and \f$\dot{\mathbf{n}} \in \mathbb{R}^3\f$ is the time derivative of the rotation axis.
+
+\subsubsection rdiff_interfaces_rotationvectordiff Time Derivative of Rotation Vector
+The class kindr::rotations::RotationVectorDiffBase defines an interface for the time derivative of a rotation vector representation of a rotation:
+
+\f$\boxed{\dot{\mathbf{\phi}}\in\mathbb{R}^3}\f$
+
+\subsubsection rdiff_interfaces_rotationquaterniondiff Time Derivative of Rotation Quaternion
+The class kindr::rotations::RotationQuaternionDiffBase defines the interface for the time derivative of a Hamiltonian unit quaternion representation of a rotation:
+
+\f$\boxed{\begin{aligned}\dot{P} &= p_0 + p_1 i + p_2 j + p_3 k \in \mathbb{H}, \quad p_i \in \mathbb{R} \\
+i^2 &= j^2=k^2 = ijk = -1 \\
+\end{aligned}}\f$
+
+\subsubsection rdiff_interfaces_rotationmatrixdiff Time Derivative of Rotation Matrix
+The class kindr::rotations::RotationMatrixDiffBase defines the interface for the time derivative of a 3x3 rotation matrix representation of a rotation:
+
+\f$\boxed{\dot{R} = \begin{bmatrix} r_{11} & r_{12} & r_{13} \\  r_{21} & r_{22} & r_{23} \\ r_{31} & r_{32} & r_{33} \end{bmatrix}}\f$
+
+
+\subsubsection rdiff_interfaces_euleranglesdiff Time Derivative of Euler Angles
+The class kindr::rotations::EulerAnglesDiffBase defines the interface for the time derivative of a tuple of three angles.
+
+\subsubsection rdiff_interfaces_eulerangles_zyx_diff Time derivative of Euler Angles ZYX
+The class kindr::rotations::EulerAnglesZyxDiffBase defines the interface for the Z-Y-X convention:
+
+\f$\boxed{(\dot{\psi}, \dot{\theta}, \dot{\phi} ),}\f$
+
+where \f$\dot{\psi}\f$ is the time derivative of the yaw angle, \f$\dot{\theta}\f$ is the time derivative of the pitch angle, and \f$\dot{\phi}\f$ is the time derivative of the roll angle.
+
+\subsubsection rdiff_interfaces_eulerangles_xyz_diff Time Derivative of Euler Angles XYZ
+The class kindr::rotations::EulerAnglesXyzDiffBase defines the interface for the X-Y-Z convention:
+
+\f$\boxed{(\dot{\alpha}, \dot{\beta}, \dot{\gamma},}\f$
+
+where \f$\dot{\gamma}\f$ is the time derivative of the yaw angle, \f$\dot{\beta}\f$ is the time derivative of the pitch angle, and \f$\dot{\alpha}\f$ is the time derivative of the roll angle.
+
 
 \section rdiff_implementations Implementations
 Each implementation lies in its own namespace, such that the implementation can be altered later very easily via namespace alias.
-For example: 
-\code{.cpp}
-namespace rot = kindr::rotations::eigen_impl; // select implementation based on Eigen
-rot::AngularVelocityD velocity();		     // create angular velocity
-\endcode
-If the implementation needs to be changed, only one line of code has to be altered:
-\code{.cpp}
-namespace rot = kindr::rotations::bullet_impl; // select implementation based on bullet	
-\endcode
+
 \subsection rdiff_eigen Eigen
 The library comes along with an implementation based on the <a href="http://eigen.tuxfamily.org">C++ Eigen library</a>.
 
@@ -54,12 +121,12 @@ All types can be included by
 \endcode
 and lie within the namespace kindr::rotations::eigen_impl.
 
-\subsubsection rdiff_implementation_angularvelocity3 3D Angular Velocity
+\subsubsection rdiff_implementation_angularvelocity  Angular Velocity
 The class \ref kindr::rotations::eigen_impl::AngularVelocity "AngularVelocity" stores the three coordinates of the angular velocity in Eigen::Matrix<PrimType, 3, 1>.
 
 The following two typedefs are provided for convenience:
- - \ref kindr::rotations::eigen_impl::AngularVelocityD "AngularVelocityD" for primitive type double
- - \ref kindr::rotations::eigen_impl::AngularVelocityF "AngularVelocityF" for primitive type float
+ - \ref kindr::rotations::eigen_impl::AngularVelocityAD "AngularVelocityAD" for primitive type double
+ - \ref kindr::rotations::eigen_impl::AngularVelocityAF "AngularVelocityAF" for primitive type float
 
 An angular velocity can be created as follows:
 \code{.cpp}

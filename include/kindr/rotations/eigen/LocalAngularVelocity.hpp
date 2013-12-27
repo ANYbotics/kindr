@@ -60,7 +60,7 @@ namespace eigen_impl {
  * \ingroup rotations
  */
 template<typename PrimType_, enum RotationUsage Usage_>
-class LocalAngularVelocity : public AngularVelocityBase<LocalAngularVelocity<PrimType_, Usage_>, Usage_>, private Eigen::Matrix<PrimType_, 3, 1> {
+class LocalAngularVelocity : public LocalAngularVelocityBase<LocalAngularVelocity<PrimType_, Usage_>, Usage_>, private Eigen::Matrix<PrimType_, 3, 1> {
  private:
   /*! \brief The base type.
    */
@@ -222,7 +222,7 @@ class RotationDiffConversionTraits<eigen_impl::LocalAngularVelocity<PrimType_, U
 
 
 
-//! B_\hat{w}_IB = B_n \dot{\theta} + \dot{B_n}*sin(\theta) + B_\hat{n}(1-cos(\theta))
+//! \f$B_\hat{w}_IB = B_n \dot{\theta} + \dot{B_n}*sin(\theta) + B_\hat{n}(1-cos(\theta))$\f
 template<typename PrimType_, enum RotationUsage Usage_>
 class RotationDiffConversionTraits<eigen_impl::LocalAngularVelocity<PrimType_, Usage_>, eigen_impl::AngleAxisDiff<PrimType_, Usage_>, eigen_impl::AngleAxis<PrimType_, Usage_>> {
  public:

@@ -60,14 +60,6 @@ The doxygen documentation can be found here:
 doc/doxygen/doc/html/index.html
 
 
-\subsection build_examples Build  Examples
-\code{.sh}
-mkdir build
-cd build
-cmake ..
-make demo
-\endcode
-
 \subsection build_tests Build Unit Tests
 The unit tests depend on <a href="http://code.google.com/p/googletest/">google tests</a>.
 The GTests are built as soon as the folder gtest exists in the root folder.
@@ -99,7 +91,7 @@ See \ref page_developers "Developers" to learn how to develop this library.
 /*!
 \page page_users Users
 
- - \subpage page_quaternions 
+
  
  \section position_orientation Positions and Rotations
   - \subpage page_positions
@@ -110,7 +102,9 @@ See \ref page_developers "Developers" to learn how to develop this library.
   - \subpage page_pdiff
   - \subpage page_rdiff
 
-
+  \section misc Mathematical Tools
+  
+ - \subpage page_quaternions 
 */
 
 //-----------------------------------------------------------
