@@ -141,6 +141,8 @@ struct RotationQuaternionRotationVectorPairTest : public ::testing::Test{
   const RotationQuaternion rotQuatQuarterY = RotationQuaternion(1/sqrt(2.0),0.0,1/sqrt(2.0),0.0);
   const RotationQuaternion rotQuatQuarterZ = RotationQuaternion(1/sqrt(2.0),0.0,0.0,1/sqrt(2.0));
   const RotationQuaternion rotQuatIdentity = RotationQuaternion(1.0,0.0,0.0,0.0);
+  const RotationQuaternion rotQuat1 = RotationQuaternion(4.0/sqrt(30.0),3.0/sqrt(30.0),1.0/sqrt(30.0),2.0/sqrt(30.0));
+  const RotationQuaternion rotQuat1Conj = RotationQuaternion(4.0/sqrt(30.0),-3.0/sqrt(30.0),-1.0/sqrt(30.0),-2.0/sqrt(30.0));
 
   const RotationVector rotVecQuarterX = RotationVector(M_PI/2,0.0,0.0);
   const RotationVector rotVecQuarterY = RotationVector(0.0,M_PI/2,0.0);
@@ -1060,6 +1062,27 @@ TYPED_TEST(RotationQuaternionRotationVectorPairTest, testConversionRotationQuate
 // ------------------------------------- Testing Rotation Vector ------------------------------------- //
 // --------------------------------------------------------------------------------------------------- //
 
+// Test Rotation Vector Inversion
+TYPED_TEST(RotationQuaternionRotationVectorPairTest, testRotationVectorInversion){
+  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
+  typedef typename TestFixture::RotationQuaternion RotationVector;
+  RotationQuaternion rotQuat;
+  RotationVector rotVec1;
+  RotationVector rotVec2;
+
+  // Use rotation quaternion method as reference
+  rotQuat = this->rotQuat1.inverted();
+  rotVec1 = rotQuat;
+
+  // Use rotation vector method and compare
+  rotVec2 = this->rotQuat1;
+  rotVec2.invert();
+  ASSERT_NEAR(rotVec1.x(),rotVec2.x(),1e-6);
+  ASSERT_NEAR(rotVec1.y(),rotVec2.y(),1e-6);
+  ASSERT_NEAR(rotVec1.z(),rotVec2.z(),1e-6);
+}
+
+// TODO: do the same for all other types of rotation and all other methods
 
 
 
