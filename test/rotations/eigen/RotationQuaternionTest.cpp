@@ -445,6 +445,7 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionUniqueness){
   typedef typename TestFixture::RotationQuaternion RotationQuaternion;
   typedef typename TestFixture::Scalar Scalar;
   RotationQuaternion rotQuat;
+  RotationQuaternion rotQuat2;
 
   // Check uniqueness getter and setter with generic Rotation Quaternions
   rotQuat = RotationQuaternion(-1.0,0.0,0.0,0.0);
@@ -468,29 +469,45 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionUniqueness){
   ASSERT_NEAR(rotQuat.getUnique().y(), 0.0,1e-6);
   ASSERT_NEAR(rotQuat.getUnique().z(), 1.0,1e-6);
   rotQuat = RotationQuaternion(-1.0,0.0,0.0,0.0);
-  rotQuat.setUnique();
+  rotQuat2 = rotQuat.setUnique();
   ASSERT_NEAR(rotQuat.w(), 1.0,1e-6);
   ASSERT_NEAR(rotQuat.x(), 0.0,1e-6);
   ASSERT_NEAR(rotQuat.y(), 0.0,1e-6);
   ASSERT_NEAR(rotQuat.z(), 0.0,1e-6);
+  ASSERT_NEAR(rotQuat2.w(), 1.0,1e-6);
+  ASSERT_NEAR(rotQuat2.x(), 0.0,1e-6);
+  ASSERT_NEAR(rotQuat2.y(), 0.0,1e-6);
+  ASSERT_NEAR(rotQuat2.z(), 0.0,1e-6);
   rotQuat = RotationQuaternion(0.0,-1.0,0.0,0.0);
-  rotQuat.setUnique();
+  rotQuat2 = rotQuat.setUnique();
   ASSERT_NEAR(rotQuat.w(), 0.0,1e-6);
   ASSERT_NEAR(rotQuat.x(), 1.0,1e-6);
   ASSERT_NEAR(rotQuat.y(), 0.0,1e-6);
   ASSERT_NEAR(rotQuat.z(), 0.0,1e-6);
+  ASSERT_NEAR(rotQuat2.w(), 0.0,1e-6);
+  ASSERT_NEAR(rotQuat2.x(), 1.0,1e-6);
+  ASSERT_NEAR(rotQuat2.y(), 0.0,1e-6);
+  ASSERT_NEAR(rotQuat2.z(), 0.0,1e-6);
   rotQuat = RotationQuaternion(0.0,0.0,-1.0,0.0);
-  rotQuat.setUnique();
+  rotQuat2 = rotQuat.setUnique();
   ASSERT_NEAR(rotQuat.w(), 0.0,1e-6);
   ASSERT_NEAR(rotQuat.x(), 0.0,1e-6);
   ASSERT_NEAR(rotQuat.y(), 1.0,1e-6);
   ASSERT_NEAR(rotQuat.z(), 0.0,1e-6);
+  ASSERT_NEAR(rotQuat2.w(), 0.0,1e-6);
+  ASSERT_NEAR(rotQuat2.x(), 0.0,1e-6);
+  ASSERT_NEAR(rotQuat2.y(), 1.0,1e-6);
+  ASSERT_NEAR(rotQuat2.z(), 0.0,1e-6);
   rotQuat = RotationQuaternion(0.0,0.0,0.0,-1.0);
-  rotQuat.setUnique();
+  rotQuat2 = rotQuat.setUnique();
   ASSERT_NEAR(rotQuat.w(), 0.0,1e-6);
   ASSERT_NEAR(rotQuat.x(), 0.0,1e-6);
   ASSERT_NEAR(rotQuat.y(), 0.0,1e-6);
   ASSERT_NEAR(rotQuat.z(), 1.0,1e-6);
+  ASSERT_NEAR(rotQuat2.w(), 0.0,1e-6);
+  ASSERT_NEAR(rotQuat2.x(), 0.0,1e-6);
+  ASSERT_NEAR(rotQuat2.y(), 0.0,1e-6);
+  ASSERT_NEAR(rotQuat2.z(), 1.0,1e-6);
 }
 
 // Test Rotation Quaternion Concatenation

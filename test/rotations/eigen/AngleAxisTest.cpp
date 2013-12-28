@@ -39,24 +39,41 @@ class AngleAxisSingleTest : public ::testing::Test{
  public:
   typedef AngleAxisImplementation AngleAxis;
   typedef typename AngleAxisImplementation::Scalar Scalar;
-  typedef Eigen::Matrix<Scalar,4,1> Vector;
-
-  Vector eigenVectorIdentity;
-  Vector eigenVector4v1;
+  typedef Eigen::Matrix<Scalar,4,1> Vector4;
+  typedef Eigen::Matrix<Scalar,3,1> Vector;
+  typedef typename rot::RotationQuaternion<typename AngleAxisImplementation::Scalar, AngleAxisImplementation::Usage> RotationQuaternion;
+  Vector4 eigenVectorIdentity;
+  Vector4 eigenVector4v1;
   Eigen::AngleAxis<Scalar> eigenAngleAxis;
 
 //  const AngleAxis angleAxis1 = AngleAxis(vec1);
 //  const AngleAxis angleAxis2 = AngleAxis(vec2);
-  const AngleAxis angleAxisIdentity = AngleAxis();
   const AngleAxis angleAxisGeneric1 = AngleAxis(0.2, 2.0/sqrt(4.0+9.0+16.0), 3.0/sqrt(4.0+9.0+16.0), 4.0/sqrt(4.0+9.0+16.0));
   const AngleAxis angleAxisGeneric1Plus2Pi = AngleAxis(0.2+2.0*M_PI, 2.0/sqrt(4.0+9.0+16.0), 3.0/sqrt(4.0+9.0+16.0), 4.0/sqrt(4.0+9.0+16.0));
   const AngleAxis angleAxisGeneric1Minus2Pi = AngleAxis(0.2-2.0*M_PI, 2.0/sqrt(4.0+9.0+16.0), 3.0/sqrt(4.0+9.0+16.0), 4.0/sqrt(4.0+9.0+16.0));
   const AngleAxis angleAxisGeneric2 = AngleAxis(0.6, 2.0/sqrt(4.0+9.0+16.0), 3.0/sqrt(4.0+9.0+16.0), 4.0/sqrt(4.0+9.0+16.0));
+
+  const AngleAxis rotAngleAxisQuarterX = AngleAxis(M_PI/2.0, 1.0, 0.0, 0.0);
+  const AngleAxis rotAngleAxisQuarterY = AngleAxis(M_PI/2.0, 0.0, 1.0, 0.0);
+  const AngleAxis rotAngleAxisQuarterZ = AngleAxis(M_PI/2.0, 0.0, 0.0, 1.0);
+  const AngleAxis rotAngleAxisIdentity = AngleAxis(0.0, 1.0, 0.0, 0.0);
+  const Vector vec = Vector(1.3,-2.5,3.6);
+  const Vector vecX = Vector(1.0,0.0,0.0);
+  const Vector vecY = Vector(0.0,1.0,0.0);
+  const Vector vecZ = Vector(0.0,0.0,1.0);
+
+  AngleAxis rotAngleAxis1;
+  AngleAxis rotAngleAxis2;
+
   AngleAxisSingleTest() {
     eigenVectorIdentity << 0.0, 1.0, 0.0, 0.0;
     eigenVector4v1 << 1.2, 2.0/sqrt(4+9+16), 3.0/sqrt(4+9+16), 4.0/sqrt(4+9+16);
     eigenAngleAxis.angle() = eigenVector4v1(0);
     eigenAngleAxis.axis() = eigenVector4v1.template block<3,1>(1,0);
+
+
+    rotAngleAxis1 = AngleAxis(RotationQuaternion(0.0,0.36,0.48,0.8));
+    rotAngleAxis2 = AngleAxis(RotationQuaternion(4.0/sqrt(30.0),3.0/sqrt(30.0),1.0/sqrt(30.0),2.0/sqrt(30.0)));
   }
 };
 
@@ -66,6 +83,7 @@ struct RotationQuaternionAngleAxisPairTest : public ::testing::Test{
   typedef typename RotationQuaternion::Scalar RotationQuaternionScalar;
   typedef typename RotationQuaternionAngleAxisImplementationPair::second_type AngleAxis;
   typedef typename AngleAxis::Scalar AngleAxisScalar;
+  typedef Eigen::Matrix<RotationQuaternionScalar,3,1> Vector;
 
   const RotationQuaternionScalar rotQuatSmallNumber = kindr::common::NumTraits<RotationQuaternionScalar>::dummy_precision()/10.0;
   const RotationQuaternionScalar angleAxisSmallNumber = kindr::common::NumTraits<AngleAxisScalar>::dummy_precision()/10.0;
@@ -77,10 +95,10 @@ struct RotationQuaternionAngleAxisPairTest : public ::testing::Test{
   const RotationQuaternion rotQuat1 = RotationQuaternion(4.0/sqrt(30.0),3.0/sqrt(30.0),1.0/sqrt(30.0),2.0/sqrt(30.0));
   const RotationQuaternion rotQuat1Conj = RotationQuaternion(4.0/sqrt(30.0),-3.0/sqrt(30.0),-1.0/sqrt(30.0),-2.0/sqrt(30.0));
 
-  const AngleAxis angleAxisQuarterX = AngleAxis(M_PI/2.0, 1.0, 0.0, 0.0);
-  const AngleAxis angleAxisQuarterY = AngleAxis(M_PI/2.0, 0.0, 1.0, 0.0);
-  const AngleAxis angleAxisQuarterZ = AngleAxis(M_PI/2.0, 0.0, 0.0, 1.0);
-  const AngleAxis angleAxisIdentity = AngleAxis(0.0, 1.0, 0.0, 0.0);
+  const AngleAxis rotAngleAxisQuarterX = AngleAxis(M_PI/2.0, 1.0, 0.0, 0.0);
+  const AngleAxis rotAngleAxisQuarterY = AngleAxis(M_PI/2.0, 0.0, 1.0, 0.0);
+  const AngleAxis rotAngleAxisQuarterZ = AngleAxis(M_PI/2.0, 0.0, 0.0, 1.0);
+  const AngleAxis rotAngleAxisIdentity = AngleAxis(0.0, 1.0, 0.0, 0.0);
 
 
 };
@@ -295,47 +313,47 @@ TYPED_TEST(RotationQuaternionAngleAxisPairTest, testConversionRotationQuaternion
 
   // TODO: add generic
 
-  rotQuat = this->angleAxisIdentity;
+  rotQuat = this->rotAngleAxisIdentity;
   ASSERT_NEAR(rotQuat.w(), this->rotQuatIdentity.w(),1e-6);
   ASSERT_NEAR(rotQuat.x(), this->rotQuatIdentity.x(),1e-6);
   ASSERT_NEAR(rotQuat.y(), this->rotQuatIdentity.y(),1e-6);
   ASSERT_NEAR(rotQuat.z(), this->rotQuatIdentity.z(),1e-6);
-  rotQuat = this->angleAxisQuarterX;
+  rotQuat = this->rotAngleAxisQuarterX;
   ASSERT_NEAR(rotQuat.w(), this->rotQuatQuarterX.w(),1e-6);
   ASSERT_NEAR(rotQuat.x(), this->rotQuatQuarterX.x(),1e-6);
   ASSERT_NEAR(rotQuat.y(), this->rotQuatQuarterX.y(),1e-6);
   ASSERT_NEAR(rotQuat.z(), this->rotQuatQuarterX.z(),1e-6);
-  rotQuat = this->angleAxisQuarterY;
+  rotQuat = this->rotAngleAxisQuarterY;
   ASSERT_NEAR(rotQuat.w(), this->rotQuatQuarterY.w(),1e-6);
   ASSERT_NEAR(rotQuat.x(), this->rotQuatQuarterY.x(),1e-6);
   ASSERT_NEAR(rotQuat.y(), this->rotQuatQuarterY.y(),1e-6);
   ASSERT_NEAR(rotQuat.z(), this->rotQuatQuarterY.z(),1e-6);
-  rotQuat = this->angleAxisQuarterZ;
+  rotQuat = this->rotAngleAxisQuarterZ;
   ASSERT_NEAR(rotQuat.w(), this->rotQuatQuarterZ.w(),1e-6);
   ASSERT_NEAR(rotQuat.x(), this->rotQuatQuarterZ.x(),1e-6);
   ASSERT_NEAR(rotQuat.y(), this->rotQuatQuarterZ.y(),1e-6);
   ASSERT_NEAR(rotQuat.z(), this->rotQuatQuarterZ.z(),1e-6);
 
   angleAxis = this->rotQuatIdentity;
-  ASSERT_NEAR(angleAxis.angle(), this->angleAxisIdentity.angle(),1e-6);
-  ASSERT_NEAR(angleAxis.axis().x(), this->angleAxisIdentity.axis().x(),1e-6);
-  ASSERT_NEAR(angleAxis.axis().y(), this->angleAxisIdentity.axis().y(),1e-6);
-  ASSERT_NEAR(angleAxis.axis().z(), this->angleAxisIdentity.axis().z(),1e-6);
+  ASSERT_NEAR(angleAxis.angle(), this->rotAngleAxisIdentity.angle(),1e-6);
+  ASSERT_NEAR(angleAxis.axis().x(), this->rotAngleAxisIdentity.axis().x(),1e-6);
+  ASSERT_NEAR(angleAxis.axis().y(), this->rotAngleAxisIdentity.axis().y(),1e-6);
+  ASSERT_NEAR(angleAxis.axis().z(), this->rotAngleAxisIdentity.axis().z(),1e-6);
   angleAxis = this->rotQuatQuarterX;
-  ASSERT_NEAR(angleAxis.angle(), this->angleAxisQuarterX.angle(),1e-6);
-  ASSERT_NEAR(angleAxis.axis().x(), this->angleAxisQuarterX.axis().x(),1e-6);
-  ASSERT_NEAR(angleAxis.axis().y(), this->angleAxisQuarterX.axis().y(),1e-6);
-  ASSERT_NEAR(angleAxis.axis().z(), this->angleAxisQuarterX.axis().z(),1e-6);
+  ASSERT_NEAR(angleAxis.angle(), this->rotAngleAxisQuarterX.angle(),1e-6);
+  ASSERT_NEAR(angleAxis.axis().x(), this->rotAngleAxisQuarterX.axis().x(),1e-6);
+  ASSERT_NEAR(angleAxis.axis().y(), this->rotAngleAxisQuarterX.axis().y(),1e-6);
+  ASSERT_NEAR(angleAxis.axis().z(), this->rotAngleAxisQuarterX.axis().z(),1e-6);
   angleAxis = this->rotQuatQuarterY;
-  ASSERT_NEAR(angleAxis.angle(), this->angleAxisQuarterY.angle(),1e-6);
-  ASSERT_NEAR(angleAxis.axis().x(), this->angleAxisQuarterY.axis().x(),1e-6);
-  ASSERT_NEAR(angleAxis.axis().y(), this->angleAxisQuarterY.axis().y(),1e-6);
-  ASSERT_NEAR(angleAxis.axis().z(), this->angleAxisQuarterY.axis().z(),1e-6);
+  ASSERT_NEAR(angleAxis.angle(), this->rotAngleAxisQuarterY.angle(),1e-6);
+  ASSERT_NEAR(angleAxis.axis().x(), this->rotAngleAxisQuarterY.axis().x(),1e-6);
+  ASSERT_NEAR(angleAxis.axis().y(), this->rotAngleAxisQuarterY.axis().y(),1e-6);
+  ASSERT_NEAR(angleAxis.axis().z(), this->rotAngleAxisQuarterY.axis().z(),1e-6);
   angleAxis = this->rotQuatQuarterZ;
-  ASSERT_NEAR(angleAxis.angle(), this->angleAxisQuarterY.angle(),1e-6);
-  ASSERT_NEAR(angleAxis.axis().x(), this->angleAxisQuarterZ.axis().x(),1e-6);
-  ASSERT_NEAR(angleAxis.axis().y(), this->angleAxisQuarterZ.axis().y(),1e-6);
-  ASSERT_NEAR(angleAxis.axis().z(), this->angleAxisQuarterZ.axis().z(),1e-6);
+  ASSERT_NEAR(angleAxis.angle(), this->rotAngleAxisQuarterY.angle(),1e-6);
+  ASSERT_NEAR(angleAxis.axis().x(), this->rotAngleAxisQuarterZ.axis().x(),1e-6);
+  ASSERT_NEAR(angleAxis.axis().y(), this->rotAngleAxisQuarterZ.axis().y(),1e-6);
+  ASSERT_NEAR(angleAxis.axis().z(), this->rotAngleAxisQuarterZ.axis().z(),1e-6);
 }
 
 // --------------------------------------------------------------------------------------------------- //
@@ -370,6 +388,128 @@ TYPED_TEST(RotationQuaternionAngleAxisPairTest, testAngleAxisInversion){
   ASSERT_NEAR(angleAxis1.axis().x(),angleAxis4.axis().x(),1e-6);
   ASSERT_NEAR(angleAxis1.axis().y(),angleAxis4.axis().y(),1e-6);
   ASSERT_NEAR(angleAxis1.axis().z(),angleAxis4.axis().z(),1e-6);
+}
+
+
+// Test Angle Axis Vector Rotation
+TYPED_TEST(AngleAxisSingleTest, testVectorRotation){
+  typedef typename TestFixture::AngleAxis AngleAxis;
+  typedef typename TestFixture::Scalar Scalar;
+  typedef typename TestFixture::Vector Vector;
+  AngleAxis rotQuat;
+  Vector testVec;
+  Vector testVec1;
+  Vector testVec2;
+
+  int signSwitch = 2*(AngleAxis::Usage == kindr::rotations::RotationUsage::ACTIVE)-1;
+
+  // Check rotation of base vectors around main axis
+  testVec = this->rotAngleAxisQuarterX.rotate(this->vecX);
+  ASSERT_NEAR(testVec(0), this->vecX(0),1e-6);
+  ASSERT_NEAR(testVec(1), this->vecX(1),1e-6);
+  ASSERT_NEAR(testVec(2), this->vecX(2),1e-6);
+  testVec = this->rotAngleAxisQuarterX.rotate(this->vecY);
+  ASSERT_NEAR(testVec(0), signSwitch*this->vecZ(0),1e-6);
+  ASSERT_NEAR(testVec(1), signSwitch*this->vecZ(1),1e-6);
+  ASSERT_NEAR(testVec(2), signSwitch*this->vecZ(2),1e-6);
+  testVec = this->rotAngleAxisQuarterX.rotate(this->vecZ);
+  ASSERT_NEAR(testVec(0), -signSwitch*this->vecY(0),1e-6);
+  ASSERT_NEAR(testVec(1), -signSwitch*this->vecY(1),1e-6);
+  ASSERT_NEAR(testVec(2), -signSwitch*this->vecY(2),1e-6);
+  testVec = this->rotAngleAxisQuarterY.rotate(this->vecX);
+  ASSERT_NEAR(testVec(0), -signSwitch*this->vecZ(0),1e-6);
+  ASSERT_NEAR(testVec(1), -signSwitch*this->vecZ(1),1e-6);
+  ASSERT_NEAR(testVec(2), -signSwitch*this->vecZ(2),1e-6);
+  testVec = this->rotAngleAxisQuarterY.rotate(this->vecY);
+  ASSERT_NEAR(testVec(0), this->vecY(0),1e-6);
+  ASSERT_NEAR(testVec(1), this->vecY(1),1e-6);
+  ASSERT_NEAR(testVec(2), this->vecY(2),1e-6);
+  testVec = this->rotAngleAxisQuarterY.rotate(this->vecZ);
+  ASSERT_NEAR(testVec(0), signSwitch*this->vecX(0),1e-6);
+  ASSERT_NEAR(testVec(1), signSwitch*this->vecX(1),1e-6);
+  ASSERT_NEAR(testVec(2), signSwitch*this->vecX(2),1e-6);
+  testVec = this->rotAngleAxisQuarterZ.rotate(this->vecX);
+  ASSERT_NEAR(testVec(0), signSwitch*this->vecY(0),1e-6);
+  ASSERT_NEAR(testVec(1), signSwitch*this->vecY(1),1e-6);
+  ASSERT_NEAR(testVec(2), signSwitch*this->vecY(2),1e-6);
+  testVec = this->rotAngleAxisQuarterZ.rotate(this->vecY);
+  ASSERT_NEAR(testVec(0), -signSwitch*this->vecX(0),1e-6);
+  ASSERT_NEAR(testVec(1), -signSwitch*this->vecX(1),1e-6);
+  ASSERT_NEAR(testVec(2), -signSwitch*this->vecX(2),1e-6);
+  testVec = this->rotAngleAxisQuarterZ.rotate(this->vecZ);
+  ASSERT_NEAR(testVec(0), this->vecZ(0),1e-6);
+  ASSERT_NEAR(testVec(1), this->vecZ(1),1e-6);
+  ASSERT_NEAR(testVec(2), this->vecZ(2),1e-6);
+
+  testVec = this->rotAngleAxisQuarterX.inverseRotate(this->vecX);
+  ASSERT_NEAR(testVec(0), this->vecX(0),1e-6);
+  ASSERT_NEAR(testVec(1), this->vecX(1),1e-6);
+  ASSERT_NEAR(testVec(2), this->vecX(2),1e-6);
+  testVec = this->rotAngleAxisQuarterX.inverseRotate(this->vecY);
+  ASSERT_NEAR(testVec(0), -signSwitch*this->vecZ(0),1e-6);
+  ASSERT_NEAR(testVec(1), -signSwitch*this->vecZ(1),1e-6);
+  ASSERT_NEAR(testVec(2), -signSwitch*this->vecZ(2),1e-6);
+  testVec = this->rotAngleAxisQuarterX.inverseRotate(this->vecZ);
+  ASSERT_NEAR(testVec(0), signSwitch*this->vecY(0),1e-6);
+  ASSERT_NEAR(testVec(1), signSwitch*this->vecY(1),1e-6);
+  ASSERT_NEAR(testVec(2), signSwitch*this->vecY(2),1e-6);
+  testVec = this->rotAngleAxisQuarterY.inverseRotate(this->vecX);
+  ASSERT_NEAR(testVec(0), signSwitch*this->vecZ(0),1e-6);
+  ASSERT_NEAR(testVec(1), signSwitch*this->vecZ(1),1e-6);
+  ASSERT_NEAR(testVec(2), signSwitch*this->vecZ(2),1e-6);
+  testVec = this->rotAngleAxisQuarterY.inverseRotate(this->vecY);
+  ASSERT_NEAR(testVec(0), this->vecY(0),1e-6);
+  ASSERT_NEAR(testVec(1), this->vecY(1),1e-6);
+  ASSERT_NEAR(testVec(2), this->vecY(2),1e-6);
+  testVec = this->rotAngleAxisQuarterY.inverseRotate(this->vecZ);
+  ASSERT_NEAR(testVec(0), -signSwitch*this->vecX(0),1e-6);
+  ASSERT_NEAR(testVec(1), -signSwitch*this->vecX(1),1e-6);
+  ASSERT_NEAR(testVec(2), -signSwitch*this->vecX(2),1e-6);
+  testVec = this->rotAngleAxisQuarterZ.inverseRotate(this->vecX);
+  ASSERT_NEAR(testVec(0), -signSwitch*this->vecY(0),1e-6);
+  ASSERT_NEAR(testVec(1), -signSwitch*this->vecY(1),1e-6);
+  ASSERT_NEAR(testVec(2), -signSwitch*this->vecY(2),1e-6);
+  testVec = this->rotAngleAxisQuarterZ.inverseRotate(this->vecY);
+  ASSERT_NEAR(testVec(0), signSwitch*this->vecX(0),1e-6);
+  ASSERT_NEAR(testVec(1), signSwitch*this->vecX(1),1e-6);
+  ASSERT_NEAR(testVec(2), signSwitch*this->vecX(2),1e-6);
+  testVec = this->rotAngleAxisQuarterZ.inverseRotate(this->vecZ);
+  ASSERT_NEAR(testVec(0), this->vecZ(0),1e-6);
+  ASSERT_NEAR(testVec(1), this->vecZ(1),1e-6);
+  ASSERT_NEAR(testVec(2), this->vecZ(2),1e-6);
+
+  // Check rotation with Identity
+  testVec = this->rotAngleAxisIdentity.rotate(this->vecX);
+  ASSERT_NEAR(testVec(0), this->vecX(0),1e-6);
+  ASSERT_NEAR(testVec(1), this->vecX(1),1e-6);
+  ASSERT_NEAR(testVec(2), this->vecX(2),1e-6);
+  testVec = this->rotAngleAxisIdentity.rotate(this->vecY);
+  ASSERT_NEAR(testVec(0), this->vecY(0),1e-6);
+  ASSERT_NEAR(testVec(1), this->vecY(1),1e-6);
+  ASSERT_NEAR(testVec(2), this->vecY(2),1e-6);
+  testVec = this->rotAngleAxisIdentity.rotate(this->vecZ);
+  ASSERT_NEAR(testVec(0), this->vecZ(0),1e-6);
+  ASSERT_NEAR(testVec(1), this->vecZ(1),1e-6);
+  ASSERT_NEAR(testVec(2), this->vecZ(2),1e-6);
+  testVec = this->rotAngleAxisIdentity.inverseRotate(this->vecX);
+  ASSERT_NEAR(testVec(0), this->vecX(0),1e-6);
+  ASSERT_NEAR(testVec(1), this->vecX(1),1e-6);
+  ASSERT_NEAR(testVec(2), this->vecX(2),1e-6);
+  testVec = this->rotAngleAxisIdentity.inverseRotate(this->vecY);
+  ASSERT_NEAR(testVec(0), this->vecY(0),1e-6);
+  ASSERT_NEAR(testVec(1), this->vecY(1),1e-6);
+  ASSERT_NEAR(testVec(2), this->vecY(2),1e-6);
+  testVec = this->rotAngleAxisIdentity.inverseRotate(this->vecZ);
+  ASSERT_NEAR(testVec(0), this->vecZ(0),1e-6);
+  ASSERT_NEAR(testVec(1), this->vecZ(1),1e-6);
+  ASSERT_NEAR(testVec(2), this->vecZ(2),1e-6);
+
+  // Check combination between concatenation and rotate
+  testVec1 = this->rotAngleAxis2.rotate(this->rotAngleAxis1.rotate(this->vec));
+  testVec2 = (this->rotAngleAxis2*this->rotAngleAxis1).rotate(this->vec);
+  ASSERT_NEAR(testVec1(0), testVec2(0),1e-6);
+  ASSERT_NEAR(testVec1(1), testVec2(1),1e-6);
+  ASSERT_NEAR(testVec1(2), testVec2(2),1e-6);
 }
 
 
