@@ -57,11 +57,16 @@ namespace eigen_impl {
  *  \ingroup rotations
  */
 template<typename PrimType_, enum RotationUsage Usage_>
-class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, private Eigen::AngleAxis<PrimType_> {
+class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_> {
  private:
   /*! \brief The base type.
    */
   typedef Eigen::AngleAxis<PrimType_> Base;
+
+  /*! Data container
+   */
+  Base angleAxis_;
+
  public:
   /*! \brief The implementation type.
    *  The implementation type is always an Eigen object.
@@ -82,7 +87,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
   /*! \brief Default constructor using identity rotation.
    */
   AngleAxis()
-    : Base(Base::Identity()) {
+    : angleAxis_(Base::Identity()) {
   }
 
   /*! \brief Constructor using four scalars.
@@ -94,11 +99,11 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
    */
   AngleAxis(Scalar angle, Scalar v1, Scalar v2, Scalar v3) {
     if(Usage_ == RotationUsage::ACTIVE) {
-      Base::angle() = angle;
-      Base::axis() = Vector3(v1,v2,v3);
+      angleAxis_.angle() = angle;
+      angleAxis_.axis() = Vector3(v1,v2,v3);
     } else if(Usage_ == RotationUsage::PASSIVE) {
-      Base::angle() = -angle;
-      Base::axis() = Vector3(v1,v2,v3);
+      angleAxis_.angle() = -angle;
+      angleAxis_.axis() = Vector3(v1,v2,v3);
     }
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input rotation axis has not unit length.");
   }
@@ -139,8 +144,8 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
     if(Usage_ == RotationUsage::ACTIVE) {
       this->toStoredImplementation() = other;
     } else if(Usage_ == RotationUsage::PASSIVE) {
-      Base::angle() = -other.angle();
-      Base::axis() = other.axis();
+      angleAxis_.angle() = -other.angle();
+      angleAxis_.axis() = other.axis();
     }
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input rotation axis has not unit length.");
   }
@@ -150,7 +155,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
    */
   template<typename OtherDerived_>
   inline explicit AngleAxis(const RotationBase<OtherDerived_, Usage_>& other)
-    : Base(internal::ConversionTraits<AngleAxis, OtherDerived_>::convert(other.derived())) {
+    : angleAxis_(internal::ConversionTraits<AngleAxis, OtherDerived_>::convert(other.derived()).toStoredImplementation()) {
   }
 
   /*! \brief Assignment operator using another rotation.
@@ -202,14 +207,14 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
   inline Implementation& toStoredImplementation() {
-    return static_cast<Implementation&>(*this);
+    return static_cast<Implementation&>(angleAxis_);
   }
 
   /*! \brief Cast to the implementation type.
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
   inline const Implementation& toStoredImplementation() const {
-    return static_cast<const Implementation&>(*this);
+    return static_cast<const Implementation&>(angleAxis_);
   }
 
   /*! \brief Returns the rotation angle.
@@ -217,9 +222,9 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
    */
   inline Scalar angle() const {
     if(Usage_ == RotationUsage::ACTIVE) {
-      return Base::angle();
+      return angleAxis_.angle();
     } else if(Usage_ == RotationUsage::PASSIVE) {
-      return -Base::angle();
+      return -angleAxis_.angle();
     }
   }
 
@@ -227,9 +232,9 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
    */
   inline void setAngle(Scalar angle) {
     if(Usage_ == RotationUsage::ACTIVE) {
-      Base::angle() = angle;
+      angleAxis_.angle() = angle;
     } else if(Usage_ == RotationUsage::PASSIVE) {
-      Base::angle() = -angle;
+      angleAxis_.angle() = -angle;
     }
   }
 
@@ -237,20 +242,20 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
    *  \returns rotation axis (vector)
    */
   inline const Vector3& axis() const {
-    return Base::axis();
+    return angleAxis_.axis();
   }
 
   /*! \brief Sets the rotation axis.
    */
   inline void setAxis(const Vector3& axis) {
-    Base::axis() = axis;
+    angleAxis_.axis() = axis;
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input rotation axis has not unit length.");
   }
 
   /*! \brief Sets the rotation axis.
    */
   inline void setAxis(Scalar v1, Scalar v2, Scalar v3) {
-    Base::axis() = Vector3(v1,v2,v3);
+    angleAxis_.axis() = Vector3(v1,v2,v3);
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input rotation axis has not unit length.");
   }
 
@@ -463,8 +468,11 @@ template<typename PrimType_, enum RotationUsage Usage_>
 class ComparisonTraits<eigen_impl::AngleAxis<PrimType_, Usage_>, eigen_impl::AngleAxis<PrimType_, Usage_>> {
  public:
   inline static bool isEqual(const eigen_impl::AngleAxis<PrimType_, Usage_>& a, const eigen_impl::AngleAxis<PrimType_, Usage_>& b){
-    return a.toStoredImplementation().angle() ==  b.toStoredImplementation().angle() &&
-           a.toStoredImplementation().axis()  ==  b.toStoredImplementation().axis();
+    const double tolPercent = 0.01;
+    return common::eigen::compareRelative(a.angle(), b.angle(), tolPercent) &&
+        common::eigen::compareRelative(a.axis().x(), b.axis().x(), tolPercent) &&
+        common::eigen::compareRelative(a.axis().y(), b.axis().y(), tolPercent) &&
+        common::eigen::compareRelative(a.axis().z(), b.axis().z(), tolPercent);
   }
 };
 

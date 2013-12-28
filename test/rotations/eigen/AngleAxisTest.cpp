@@ -49,7 +49,9 @@ class AngleAxisSingleTest : public ::testing::Test{
 //  const AngleAxis angleAxis2 = AngleAxis(vec2);
   const AngleAxis angleAxisIdentity = AngleAxis();
   const AngleAxis angleAxisGeneric1 = AngleAxis(0.2, 2.0/sqrt(4.0+9.0+16.0), 3.0/sqrt(4.0+9.0+16.0), 4.0/sqrt(4.0+9.0+16.0));
-  const AngleAxis angleAxisGeneric2 = AngleAxis(0.2*2.0*M_PI, 2.0/sqrt(4.0+9.0+16.0), 3.0/sqrt(4.0+9.0+16.0), 4.0/sqrt(4.0+9.0+16.0));
+  const AngleAxis angleAxisGeneric1Plus2Pi = AngleAxis(0.2+2.0*M_PI, 2.0/sqrt(4.0+9.0+16.0), 3.0/sqrt(4.0+9.0+16.0), 4.0/sqrt(4.0+9.0+16.0));
+  const AngleAxis angleAxisGeneric1Minus2Pi = AngleAxis(0.2-2.0*M_PI, 2.0/sqrt(4.0+9.0+16.0), 3.0/sqrt(4.0+9.0+16.0), 4.0/sqrt(4.0+9.0+16.0));
+  const AngleAxis angleAxisGeneric2 = AngleAxis(0.6, 2.0/sqrt(4.0+9.0+16.0), 3.0/sqrt(4.0+9.0+16.0), 4.0/sqrt(4.0+9.0+16.0));
   AngleAxisSingleTest() {
     eigenVectorIdentity << 0.0, 1.0, 0.0, 0.0;
     eigenVector4v1 << 1.2, 2.0/sqrt(4+9+16), 3.0/sqrt(4+9+16), 4.0/sqrt(4+9+16);
@@ -174,6 +176,18 @@ TYPED_TEST(AngleAxisSingleTest, testGetters)
   ASSERT_EQ(this->eigenVector4v1(2), rot2.toImplementation().axis().y());
   ASSERT_EQ(this->eigenVector4v1(3), rot2.toImplementation().axis().z());
 
+  AngleAxis rot3(this->angleAxisGeneric1Plus2Pi.getUnique());
+  ASSERT_NEAR(this->angleAxisGeneric1.angle(), rot3.angle(),1e-6);
+  ASSERT_NEAR(this->angleAxisGeneric1.axis().x(), rot3.axis().x(),1e-6);
+  ASSERT_NEAR(this->angleAxisGeneric1.axis().y(), rot3.axis().y(),1e-6);
+  ASSERT_NEAR(this->angleAxisGeneric1.axis().z(), rot3.axis().z(),1e-6);
+
+  AngleAxis rot4(this->angleAxisGeneric1Minus2Pi.getUnique());
+  ASSERT_NEAR(this->angleAxisGeneric1.angle(), rot4.angle(),1e-6);
+  ASSERT_NEAR(this->angleAxisGeneric1.axis().x(), rot4.axis().x(),1e-6);
+  ASSERT_NEAR(this->angleAxisGeneric1.axis().y(), rot4.axis().y(),1e-6);
+  ASSERT_NEAR(this->angleAxisGeneric1.axis().z(), rot4.axis().z(),1e-6);
+
 }
 
 TYPED_TEST(AngleAxisSingleTest, testSetters)
@@ -211,6 +225,30 @@ TYPED_TEST(AngleAxisSingleTest, testSetters)
   ASSERT_EQ(this->eigenVector4v1(2), rot4.axis().y());
   ASSERT_EQ(this->eigenVector4v1(3), rot4.axis().z());
 
+
+  AngleAxis rot5(this->angleAxisGeneric1Plus2Pi);
+  AngleAxis rot6 = rot5.setUnique();
+  ASSERT_NEAR(this->angleAxisGeneric1.angle(), rot5.angle(),1e-6);
+  ASSERT_NEAR(this->angleAxisGeneric1.axis().x(), rot5.axis().x(),1e-6);
+  ASSERT_NEAR(this->angleAxisGeneric1.axis().y(), rot5.axis().y(),1e-6);
+  ASSERT_NEAR(this->angleAxisGeneric1.axis().z(), rot5.axis().z(),1e-6);
+  ASSERT_NEAR(this->angleAxisGeneric1.angle(), rot6.angle(),1e-6);
+  ASSERT_NEAR(this->angleAxisGeneric1.axis().x(), rot6.axis().x(),1e-6);
+  ASSERT_NEAR(this->angleAxisGeneric1.axis().y(), rot6.axis().y(),1e-6);
+  ASSERT_NEAR(this->angleAxisGeneric1.axis().z(), rot6.axis().z(),1e-6);
+
+
+  AngleAxis rot7(this->angleAxisGeneric1Plus2Pi);
+  AngleAxis rot8 = rot7.setUnique();
+  ASSERT_NEAR(this->angleAxisGeneric1.angle(), rot7.angle(),1e-6);
+  ASSERT_NEAR(this->angleAxisGeneric1.axis().x(), rot7.axis().x(),1e-6);
+  ASSERT_NEAR(this->angleAxisGeneric1.axis().y(), rot7.axis().y(),1e-6);
+  ASSERT_NEAR(this->angleAxisGeneric1.axis().z(), rot7.axis().z(),1e-6);
+  ASSERT_NEAR(this->angleAxisGeneric1.angle(), rot8.angle(),1e-6);
+  ASSERT_NEAR(this->angleAxisGeneric1.axis().x(), rot8.axis().x(),1e-6);
+  ASSERT_NEAR(this->angleAxisGeneric1.axis().y(), rot8.axis().y(),1e-6);
+  ASSERT_NEAR(this->angleAxisGeneric1.axis().z(), rot8.axis().z(),1e-6);
+
 }
 
 
@@ -223,8 +261,10 @@ TYPED_TEST(AngleAxisSingleTest, testComparisonEqual){
 
   // Check equality comparison
   rot = this->angleAxisGeneric1;
-  ASSERT_EQ(rot==this->angleAxisGeneric1,true);
-  ASSERT_EQ(rot==this->angleAxisGeneric2,false);
+  ASSERT_EQ(true, rot==this->angleAxisGeneric1);
+  ASSERT_EQ(true, rot==this->angleAxisGeneric1Plus2Pi);
+  ASSERT_EQ(true, rot==this->angleAxisGeneric1Minus2Pi);
+  ASSERT_EQ(false, rot==this->angleAxisGeneric2);
 }
 
 // Test Rotation Quaternion isNear
@@ -236,6 +276,8 @@ TYPED_TEST(AngleAxisSingleTest, testIsNear){
   // Check isNear
   rot = this->angleAxisGeneric1;
   ASSERT_EQ(rot.isNear(this->angleAxisGeneric1,1e-6),true);
+  ASSERT_EQ(rot.isNear(this->angleAxisGeneric1Plus2Pi,1e-6),true);
+  ASSERT_EQ(rot.isNear(this->angleAxisGeneric1Minus2Pi,1e-6),true);
   ASSERT_EQ(rot.isNear(this->angleAxisGeneric2,1e-6),false);
 }
 
@@ -300,7 +342,7 @@ TYPED_TEST(RotationQuaternionAngleAxisPairTest, testConversionRotationQuaternion
 // ------------------------------------- Testing Angle Axis ------------------------------------------ //
 // --------------------------------------------------------------------------------------------------- //
 
-// Test Rotation Vector Inversion
+// Test Angle Axis Inversion
 TYPED_TEST(RotationQuaternionAngleAxisPairTest, testAngleAxisInversion){
   typedef typename TestFixture::RotationQuaternion RotationQuaternion;
   typedef typename TestFixture::AngleAxis AngleAxis;
