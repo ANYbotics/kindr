@@ -57,17 +57,24 @@ struct RotationQuaternionRotationVectorPairTest : public ::testing::Test{
   typedef typename RotationQuaternionRotationVectorImplementationPair::second_type RotationVector;
   typedef typename RotationVector::Scalar RotationVectorScalar;
 
+  const RotationQuaternionScalar rotQuatSmallNumber = kindr::common::NumTraits<RotationQuaternionScalar>::dummy_precision()/10.0;
+  const RotationQuaternionScalar rotVecSmallNumber = kindr::common::NumTraits<RotationVectorScalar>::dummy_precision()/10.0;
+
+
   const RotationQuaternion rotQuatQuarterX = RotationQuaternion(1/sqrt(2.0),1/sqrt(2.0),0.0,0.0);
   const RotationQuaternion rotQuatQuarterY = RotationQuaternion(1/sqrt(2.0),0.0,1/sqrt(2.0),0.0);
   const RotationQuaternion rotQuatQuarterZ = RotationQuaternion(1/sqrt(2.0),0.0,0.0,1/sqrt(2.0));
   const RotationQuaternion rotQuatIdentity = RotationQuaternion(1.0,0.0,0.0,0.0);
   const RotationQuaternion rotQuat1 = RotationQuaternion(4.0/sqrt(30.0),3.0/sqrt(30.0),1.0/sqrt(30.0),2.0/sqrt(30.0));
   const RotationQuaternion rotQuat1Conj = RotationQuaternion(4.0/sqrt(30.0),-3.0/sqrt(30.0),-1.0/sqrt(30.0),-2.0/sqrt(30.0));
+//  const RotationQuaternion rotQuat2 = RotationQuaternion(rotQuatSmallNumber/sqrt(4.0*rotQuatSmallNumber*rotQuatSmallNumber),rotQuatSmallNumber/sqrt(4.0*rotQuatSmallNumber*rotQuatSmallNumber),rotQuatSmallNumber/sqrt(4.0*rotQuatSmallNumber*rotQuatSmallNumber),rotQuatSmallNumber/sqrt(4.0*rotQuatSmallNumber*rotQuatSmallNumber));
 
   const RotationVector rotVecQuarterX = RotationVector(M_PI/2.0,0.0,0.0);
   const RotationVector rotVecQuarterY = RotationVector(0.0,M_PI/2.0,0.0);
   const RotationVector rotVecQuarterZ = RotationVector(0.0,0.0,M_PI/2.0);
   const RotationVector rotVecIdentity = RotationVector(0.0,0.0,0.0);
+//  const RotationVector rotVec2 = RotationVector(2.0*rotQuatSmallNumber/sqrt(4.0*rotQuatSmallNumber*rotQuatSmallNumber),2.0*rotQuatSmallNumber/sqrt(4.0*rotQuatSmallNumber*rotQuatSmallNumber),2.0*rotQuatSmallNumber/sqrt(4.0*rotQuatSmallNumber*rotQuatSmallNumber));
+//  const RotationVector rotVec3 = RotationVector(rotVecSmallNumber,rotVecSmallNumber,rotVecSmallNumber);
 };
 
 
@@ -138,7 +145,7 @@ TYPED_TEST(RotationVectorSingleTest, testRotationVectorConstructors){
 // -------- Testing for casting between different type of rotations and rotation Quaternions --------- //
 // --------------------------------------------------------------------------------------------------- //
 
-// Test convertion between rotation quaternion and rotation vectors
+// Test conversion between rotation quaternion and rotation vectors
 TYPED_TEST(RotationQuaternionRotationVectorPairTest, testConversionRotationQuaternionRotationVector){
   typedef typename TestFixture::RotationQuaternion RotationQuaternion;
   typedef typename TestFixture::RotationVector RotationVector;
@@ -193,7 +200,7 @@ TYPED_TEST(RotationQuaternionRotationVectorPairTest, testConversionRotationQuate
 // Test Rotation Vector Inversion
 TYPED_TEST(RotationQuaternionRotationVectorPairTest, testRotationVectorInversion){
   typedef typename TestFixture::RotationQuaternion RotationQuaternion;
-  typedef typename TestFixture::RotationQuaternion RotationVector;
+  typedef typename TestFixture::RotationVector RotationVector;
   RotationQuaternion rotQuat;
   RotationVector rotVec1;
   RotationVector rotVec2;

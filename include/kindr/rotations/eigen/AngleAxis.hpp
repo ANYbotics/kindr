@@ -106,13 +106,27 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
   /*! \brief Constructor using angle and axis.
    * In debug mode, an assertion is thrown if the rotation vector has not unit length.
    * \param angle   rotation angle
-   * \param vector     rotation vector with unit length (Eigen vector)
+   * \param axis     rotation vector with unit length (Eigen vector)
    */
-  AngleAxis(Scalar angle, const Vector3& vector) {
+  AngleAxis(Scalar angle, const Vector3& axis) {
     if(Usage_ == RotationUsage::ACTIVE) {
-      this->toStoredImplementation() = Base(angle,vector);
+      this->toStoredImplementation() = Base(angle,axis);
     } else if(Usage_ == RotationUsage::PASSIVE) {
-      this->toStoredImplementation() = Base(-angle,vector);
+      this->toStoredImplementation() = Base(-angle,axis);
+    }
+    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input rotation axis has not unit length.");
+  }
+
+
+  /*! \brief Constructor using a 4x1matrix.
+   * In debug mode, an assertion is thrown if the rotation vector has not unit length.
+   * \param vector     4x1-matrix with [angle; axis]
+   */
+  AngleAxis(const Vector4& vector) {
+    if(Usage_ == RotationUsage::ACTIVE) {
+      this->toStoredImplementation() = Base(vector(0),vector.template block<3,1>(1,0));
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      this->toStoredImplementation() = Base(-vector(0),vector.template block<3,1>(1,0));
     }
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input rotation axis has not unit length.");
   }
@@ -121,8 +135,13 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
    *  In debug mode, an assertion is thrown if the rotation vector has not unit length.
    *  \param other   Eigen::AngleAxis<PrimType_>
    */
-  explicit AngleAxis(const Base& other) // explicit on purpose
-    : Base(other) {
+  explicit AngleAxis(const Base& other) { // explicit on purpose
+    if(Usage_ == RotationUsage::ACTIVE) {
+      this->toStoredImplementation() = other;
+    } else if(Usage_ == RotationUsage::PASSIVE) {
+      Base::angle() = -other.angle();
+      Base::axis() = other.axis();
+    }
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input rotation axis has not unit length.");
   }
 
@@ -158,14 +177,17 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
    *  \returns the inverse of the rotation
    */
   AngleAxis inverted() const {
-    return AngleAxis(Base::inverse());
+    Base inverse = this->toImplementation().inverse();
+    inverse.angle() = -inverse.angle();
+    inverse.axis() = -inverse.axis();
+    return AngleAxis(inverse);
   }
 
   /*! \brief Inverts the rotation.
    *  \returns reference
    */
   AngleAxis& invert() {
-    *this = AngleAxis(Base::inverse());
+    *this = this->inverted();
     return *this;
   }
 
@@ -173,11 +195,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
    *  \returns the type used for the implementation
    */
   Implementation toImplementation() const {
-    if(Usage_ == RotationUsage::ACTIVE) {
       return Implementation(this->angle(),this->axis());
-    } else if(Usage_ == RotationUsage::PASSIVE) {
-      return Implementation(-this->angle(),this->axis());
-    }
   }
 
   /*! \brief Cast to the implementation type.
@@ -224,9 +242,23 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
 
   /*! \brief Sets the rotation axis.
    */
-  inline void setAxis(const Vector3 & axis) {
+  inline void setAxis(const Vector3& axis) {
     Base::axis() = axis;
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input rotation axis has not unit length.");
+  }
+
+  /*! \brief Sets the rotation axis.
+   */
+  inline void setAxis(Scalar v1, Scalar v2, Scalar v3) {
+    Base::axis() = Vector3(v1,v2,v3);
+    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input rotation axis has not unit length.");
+  }
+
+  /*! \brief Sets angle-axis from a 4x1-matrix
+   */
+  inline void setVector(const Vector4& vector) {
+    this->setAngle(vector(0));
+    this->setAxis(vector.template block<3,1>(1,0));
   }
 
   /*! \returns the angle and axis in a 4x1 vector [angle; axis].
@@ -243,8 +275,8 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>, pr
    *  \returns reference
    */
   AngleAxis& setIdentity() {
-    this->angle() = static_cast<Scalar>(0);
-    this->axis() << static_cast<Scalar>(1), static_cast<Scalar>(0), static_cast<Scalar>(0);
+    this->setAngle(static_cast<Scalar>(0));
+    this->setAxis(static_cast<Scalar>(1), static_cast<Scalar>(0), static_cast<Scalar>(0));
     return *this;
   }
 
@@ -380,7 +412,7 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::AngleAxis<DestPrimType_, Usage_>, eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::AngleAxis<DestPrimType_, Usage_> convert(const eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>& q) {
-    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::getAngleAxisFromQuaternion<SourcePrimType_, DestPrimType_>(q.toStoredImplementation()));
+    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::getAngleAxisFromQuaternion<SourcePrimType_, DestPrimType_>(q.toImplementation()));
   }
 };
 
@@ -424,17 +456,17 @@ class RotationTraits<eigen_impl::AngleAxis<PrimType_, Usage_>> {
   }
 };
 
-///* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// * Comparison Traits
-// * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-//template<typename PrimType_, enum RotationUsage Usage_>
-//class ComparisonTraits<eigen_impl::AngleAxis<PrimType_, Usage_>> {
-// public:
-//  inline static bool isEqual(const eigen_impl::AngleAxis<PrimType_, Usage_>& a, const eigen_impl::AngleAxis<PrimType_, Usage_>& b){
-//    return a.toStoredImplementation().angle() ==  b.toStoredImplementation().angle() &&
-//           a.toStoredImplementation().axis()  ==  b.toStoredImplementation().axis();
-//  }
-//};
+/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Comparison Traits
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+template<typename PrimType_, enum RotationUsage Usage_>
+class ComparisonTraits<eigen_impl::AngleAxis<PrimType_, Usage_>, eigen_impl::AngleAxis<PrimType_, Usage_>> {
+ public:
+  inline static bool isEqual(const eigen_impl::AngleAxis<PrimType_, Usage_>& a, const eigen_impl::AngleAxis<PrimType_, Usage_>& b){
+    return a.toStoredImplementation().angle() ==  b.toStoredImplementation().angle() &&
+           a.toStoredImplementation().axis()  ==  b.toStoredImplementation().axis();
+  }
+};
 
 } // namespace internal
 } // namespace rotations

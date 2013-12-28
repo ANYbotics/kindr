@@ -147,7 +147,7 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    *  \returns the inverse of the rotation
    */
   RotationVector inverted() const {
-    return RotationVector(AngleAxis<PrimType_, Usage_>(this->toStoredImplementation().norm(), this->toStoredImplementation().normalized()).inverse());
+    return RotationVector(-this->toImplementation());
   }
 
   /*! \brief Inverts the rotation.
