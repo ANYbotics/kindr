@@ -154,8 +154,8 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_> {
    *  \param other   other rotation
    */
   template<typename OtherDerived_>
-  inline explicit AngleAxis(const RotationBase<OtherDerived_, Usage_>& other)
-    : angleAxis_(internal::ConversionTraits<AngleAxis, OtherDerived_>::convert(other.derived()).toStoredImplementation()) {
+  inline explicit AngleAxis(const RotationBase<OtherDerived_, Usage_>& other) {
+    this->toStoredImplementation() = internal::ConversionTraits<AngleAxis, OtherDerived_>::convert(other.derived()).toStoredImplementation();
   }
 
   /*! \brief Assignment operator using another rotation.
@@ -397,7 +397,7 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::AngleAxis<DestPrimType_, Usage_>, eigen_impl::AngleAxis<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::AngleAxis<DestPrimType_, Usage_> convert(const eigen_impl::AngleAxis<SourcePrimType_, Usage_>& a) {
-    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(a.toStoredImplementation().template cast<DestPrimType_>());
+    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(a.toImplementation().template cast<DestPrimType_>());
   }
 };
 

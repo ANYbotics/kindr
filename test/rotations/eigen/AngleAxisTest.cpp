@@ -304,8 +304,62 @@ TYPED_TEST(AngleAxisSingleTest, testIsNear){
 // -------- Testing for casting between different type of rotations and rotation Quaternions --------- //
 // --------------------------------------------------------------------------------------------------- //
 
-// Test conversion between rotation quaternion and rotation vectors
-TYPED_TEST(RotationQuaternionAngleAxisPairTest, testConversionRotationQuaternionAngleAxis){
+
+TYPED_TEST(RotationQuaternionAngleAxisPairTest, testConvertToRotationQuaternionUsingConstructor){
+  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
+  typedef typename TestFixture::AngleAxis AngleAxis;
+
+  RotationQuaternion rotQuat2(this->rotAngleAxisIdentity);
+  ASSERT_NEAR(rotQuat2.w(), this->rotQuatIdentity.w(),1e-6);
+  ASSERT_NEAR(rotQuat2.x(), this->rotQuatIdentity.x(),1e-6);
+  ASSERT_NEAR(rotQuat2.y(), this->rotQuatIdentity.y(),1e-6);
+  ASSERT_NEAR(rotQuat2.z(), this->rotQuatIdentity.z(),1e-6);
+  RotationQuaternion rotQuat3(this->rotAngleAxisQuarterX);
+  ASSERT_NEAR(rotQuat3.w(), this->rotQuatQuarterX.w(),1e-6);
+  ASSERT_NEAR(rotQuat3.x(), this->rotQuatQuarterX.x(),1e-6);
+  ASSERT_NEAR(rotQuat3.y(), this->rotQuatQuarterX.y(),1e-6);
+  ASSERT_NEAR(rotQuat3.z(), this->rotQuatQuarterX.z(),1e-6);
+  RotationQuaternion rotQuat4(this->rotAngleAxisQuarterY);
+  ASSERT_NEAR(rotQuat4.w(), this->rotQuatQuarterY.w(),1e-6);
+  ASSERT_NEAR(rotQuat4.x(), this->rotQuatQuarterY.x(),1e-6);
+  ASSERT_NEAR(rotQuat4.y(), this->rotQuatQuarterY.y(),1e-6);
+  ASSERT_NEAR(rotQuat4.z(), this->rotQuatQuarterY.z(),1e-6);
+  RotationQuaternion rotQuat5(this->rotAngleAxisQuarterZ);
+  ASSERT_NEAR(rotQuat5.w(), this->rotQuatQuarterZ.w(),1e-6);
+  ASSERT_NEAR(rotQuat5.x(), this->rotQuatQuarterZ.x(),1e-6);
+  ASSERT_NEAR(rotQuat5.y(), this->rotQuatQuarterZ.y(),1e-6);
+  ASSERT_NEAR(rotQuat5.z(), this->rotQuatQuarterZ.z(),1e-6);
+}
+
+TYPED_TEST(RotationQuaternionAngleAxisPairTest, testConvertToAngleAxisUsingConstructor){
+  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
+  typedef typename TestFixture::AngleAxis AngleAxis;
+
+  AngleAxis angleAxis2(this->rotQuatIdentity);
+  ASSERT_NEAR(angleAxis2.angle(), this->rotAngleAxisIdentity.angle(),1e-6);
+  ASSERT_NEAR(angleAxis2.axis().x(), this->rotAngleAxisIdentity.axis().x(),1e-6);
+  ASSERT_NEAR(angleAxis2.axis().y(), this->rotAngleAxisIdentity.axis().y(),1e-6);
+  ASSERT_NEAR(angleAxis2.axis().z(), this->rotAngleAxisIdentity.axis().z(),1e-6);
+  AngleAxis angleAxis3(this->rotQuatQuarterX);
+  ASSERT_NEAR(angleAxis3.angle(), this->rotAngleAxisQuarterX.angle(),1e-6);
+  ASSERT_NEAR(angleAxis3.axis().x(), this->rotAngleAxisQuarterX.axis().x(),1e-6);
+  ASSERT_NEAR(angleAxis3.axis().y(), this->rotAngleAxisQuarterX.axis().y(),1e-6);
+  ASSERT_NEAR(angleAxis3.axis().z(), this->rotAngleAxisQuarterX.axis().z(),1e-6);
+  AngleAxis angleAxis4(this->rotQuatQuarterY);
+  ASSERT_NEAR(angleAxis4.angle(), this->rotAngleAxisQuarterY.angle(),1e-6);
+  ASSERT_NEAR(angleAxis4.axis().x(), this->rotAngleAxisQuarterY.axis().x(),1e-6);
+  ASSERT_NEAR(angleAxis4.axis().y(), this->rotAngleAxisQuarterY.axis().y(),1e-6);
+  ASSERT_NEAR(angleAxis4.axis().z(), this->rotAngleAxisQuarterY.axis().z(),1e-6);
+  AngleAxis angleAxis5(this->rotQuatQuarterZ);
+  ASSERT_NEAR(angleAxis5.angle(), this->rotAngleAxisQuarterY.angle(),1e-6);
+  ASSERT_NEAR(angleAxis5.axis().x(), this->rotAngleAxisQuarterZ.axis().x(),1e-6);
+  ASSERT_NEAR(angleAxis5.axis().y(), this->rotAngleAxisQuarterZ.axis().y(),1e-6);
+  ASSERT_NEAR(angleAxis5.axis().z(), this->rotAngleAxisQuarterZ.axis().z(),1e-6);
+
+}
+
+
+TYPED_TEST(RotationQuaternionAngleAxisPairTest, testConvertToRotationQuaternionUsingAssignment) {
   typedef typename TestFixture::RotationQuaternion RotationQuaternion;
   typedef typename TestFixture::AngleAxis AngleAxis;
   RotationQuaternion rotQuat;
@@ -333,6 +387,13 @@ TYPED_TEST(RotationQuaternionAngleAxisPairTest, testConversionRotationQuaternion
   ASSERT_NEAR(rotQuat.x(), this->rotQuatQuarterZ.x(),1e-6);
   ASSERT_NEAR(rotQuat.y(), this->rotQuatQuarterZ.y(),1e-6);
   ASSERT_NEAR(rotQuat.z(), this->rotQuatQuarterZ.z(),1e-6);
+}
+
+TYPED_TEST(RotationQuaternionAngleAxisPairTest, testConvertToAngleAxisUsingAssignment) {
+  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
+  typedef typename TestFixture::AngleAxis AngleAxis;
+  RotationQuaternion rotQuat;
+  AngleAxis angleAxis;
 
   angleAxis = this->rotQuatIdentity;
   ASSERT_NEAR(angleAxis.angle(), this->rotAngleAxisIdentity.angle(),1e-6);
@@ -354,6 +415,64 @@ TYPED_TEST(RotationQuaternionAngleAxisPairTest, testConversionRotationQuaternion
   ASSERT_NEAR(angleAxis.axis().x(), this->rotAngleAxisQuarterZ.axis().x(),1e-6);
   ASSERT_NEAR(angleAxis.axis().y(), this->rotAngleAxisQuarterZ.axis().y(),1e-6);
   ASSERT_NEAR(angleAxis.axis().z(), this->rotAngleAxisQuarterZ.axis().z(),1e-6);
+}
+
+TYPED_TEST(RotationQuaternionAngleAxisPairTest, testConvertToRotationQuaternionUsingParenthesisOperator){
+  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
+  typedef typename TestFixture::AngleAxis AngleAxis;
+  RotationQuaternion rotQuat;
+  AngleAxis angleAxis;
+
+
+  rotQuat(this->rotAngleAxisIdentity);
+  ASSERT_NEAR(rotQuat.w(), this->rotQuatIdentity.w(),1e-6);
+  ASSERT_NEAR(rotQuat.x(), this->rotQuatIdentity.x(),1e-6);
+  ASSERT_NEAR(rotQuat.y(), this->rotQuatIdentity.y(),1e-6);
+  ASSERT_NEAR(rotQuat.z(), this->rotQuatIdentity.z(),1e-6);
+  rotQuat(this->rotAngleAxisQuarterX);
+  ASSERT_NEAR(rotQuat.w(), this->rotQuatQuarterX.w(),1e-6);
+  ASSERT_NEAR(rotQuat.x(), this->rotQuatQuarterX.x(),1e-6);
+  ASSERT_NEAR(rotQuat.y(), this->rotQuatQuarterX.y(),1e-6);
+  ASSERT_NEAR(rotQuat.z(), this->rotQuatQuarterX.z(),1e-6);
+  rotQuat(this->rotAngleAxisQuarterY);
+  ASSERT_NEAR(rotQuat.w(), this->rotQuatQuarterY.w(),1e-6);
+  ASSERT_NEAR(rotQuat.x(), this->rotQuatQuarterY.x(),1e-6);
+  ASSERT_NEAR(rotQuat.y(), this->rotQuatQuarterY.y(),1e-6);
+  ASSERT_NEAR(rotQuat.z(), this->rotQuatQuarterY.z(),1e-6);
+  rotQuat(this->rotAngleAxisQuarterZ);
+  ASSERT_NEAR(rotQuat.w(), this->rotQuatQuarterZ.w(),1e-6);
+  ASSERT_NEAR(rotQuat.x(), this->rotQuatQuarterZ.x(),1e-6);
+  ASSERT_NEAR(rotQuat.y(), this->rotQuatQuarterZ.y(),1e-6);
+  ASSERT_NEAR(rotQuat.z(), this->rotQuatQuarterZ.z(),1e-6);
+}
+
+TYPED_TEST(RotationQuaternionAngleAxisPairTest, testConvertToAngleAxisUsingParenthesisOperator){
+  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
+  typedef typename TestFixture::AngleAxis AngleAxis;
+  RotationQuaternion rotQuat;
+  AngleAxis angleAxis;
+
+  angleAxis(this->rotQuatIdentity);
+  ASSERT_NEAR(angleAxis.angle(), this->rotAngleAxisIdentity.angle(),1e-6);
+  ASSERT_NEAR(angleAxis.axis().x(), this->rotAngleAxisIdentity.axis().x(),1e-6);
+  ASSERT_NEAR(angleAxis.axis().y(), this->rotAngleAxisIdentity.axis().y(),1e-6);
+  ASSERT_NEAR(angleAxis.axis().z(), this->rotAngleAxisIdentity.axis().z(),1e-6);
+  angleAxis(this->rotQuatQuarterX);
+  ASSERT_NEAR(angleAxis.angle(), this->rotAngleAxisQuarterX.angle(),1e-6);
+  ASSERT_NEAR(angleAxis.axis().x(), this->rotAngleAxisQuarterX.axis().x(),1e-6);
+  ASSERT_NEAR(angleAxis.axis().y(), this->rotAngleAxisQuarterX.axis().y(),1e-6);
+  ASSERT_NEAR(angleAxis.axis().z(), this->rotAngleAxisQuarterX.axis().z(),1e-6);
+  angleAxis(this->rotQuatQuarterY);
+  ASSERT_NEAR(angleAxis.angle(), this->rotAngleAxisQuarterY.angle(),1e-6);
+  ASSERT_NEAR(angleAxis.axis().x(), this->rotAngleAxisQuarterY.axis().x(),1e-6);
+  ASSERT_NEAR(angleAxis.axis().y(), this->rotAngleAxisQuarterY.axis().y(),1e-6);
+  ASSERT_NEAR(angleAxis.axis().z(), this->rotAngleAxisQuarterY.axis().z(),1e-6);
+  angleAxis(this->rotQuatQuarterZ);
+  ASSERT_NEAR(angleAxis.angle(), this->rotAngleAxisQuarterY.angle(),1e-6);
+  ASSERT_NEAR(angleAxis.axis().x(), this->rotAngleAxisQuarterZ.axis().x(),1e-6);
+  ASSERT_NEAR(angleAxis.axis().y(), this->rotAngleAxisQuarterZ.axis().y(),1e-6);
+  ASSERT_NEAR(angleAxis.axis().z(), this->rotAngleAxisQuarterZ.axis().z(),1e-6);
+
 }
 
 // --------------------------------------------------------------------------------------------------- //

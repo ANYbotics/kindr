@@ -169,7 +169,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    */
   template<typename OtherDerived_>
   inline explicit RotationQuaternion(const RotationBase<OtherDerived_, Usage_>& other)
-    : rotationQuaternion_(internal::ConversionTraits<RotationQuaternion, OtherDerived_>::convert(other.derived()).toImplementation()) {
+    : rotationQuaternion_(internal::ConversionTraits<RotationQuaternion, OtherDerived_>::convert(other.derived()).toStoredImplementation()) {
   }
 
   inline Scalar w() const {

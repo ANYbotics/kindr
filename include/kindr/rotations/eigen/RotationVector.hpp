@@ -120,7 +120,7 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    */
   template<typename OtherDerived_>
   inline explicit RotationVector(const RotationBase<OtherDerived_, Usage_>& other)
-    : vector_(internal::ConversionTraits<RotationVector, OtherDerived_>::convert(other.derived()).toImplementation()) {
+    : vector_(internal::ConversionTraits<RotationVector, OtherDerived_>::convert(other.derived()).toStoredImplementation()) {
   }
 
   /*! \brief Assignment operator using another rotation.
@@ -368,7 +368,7 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::RotationVector<DestPrimType_, Usage_>, eigen_impl::RotationVector<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::RotationVector<DestPrimType_, Usage_> convert(const eigen_impl::RotationVector<SourcePrimType_, Usage_>& rotationVector) {
-    return eigen_impl::RotationVector<DestPrimType_, Usage_>(rotationVector.toStoredImplementation().template cast<DestPrimType_>());
+    return eigen_impl::RotationVector<DestPrimType_, Usage_>(rotationVector.toImplementation().template cast<DestPrimType_>());
   }
 };
 
