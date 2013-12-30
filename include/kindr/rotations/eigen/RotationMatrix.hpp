@@ -114,7 +114,7 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType_, Usage
    */
   template<typename OtherDerived_>
   inline explicit RotationMatrix(const RotationBase<OtherDerived_, Usage_>& other)
-    : Base(internal::ConversionTraits<RotationMatrix, OtherDerived_>::convert(static_cast<const OtherDerived_&>(other))) {
+    : Base(internal::ConversionTraits<RotationMatrix, OtherDerived_>::convert(other.derived()).toStoredImplementation()) {
   }
 
   /*! \brief Assignment operator using another rotation.
@@ -123,7 +123,7 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType_, Usage
    */
   template<typename OtherDerived_>
   RotationMatrix& operator =(const RotationBase<OtherDerived_, Usage_>& other) {
-    *this = internal::ConversionTraits<RotationMatrix, OtherDerived_>::convert(other.derived());
+    *this = internal::ConversionTraits<RotationMatrix, OtherDerived_>::convert(other.derived()).toStoredImplementation();
     return *this;
   }
 
@@ -133,7 +133,7 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType_, Usage
    */
   template<typename OtherDerived_>
   RotationMatrix& operator ()(const RotationBase<OtherDerived_, Usage_>& other) {
-    *this = internal::ConversionTraits<RotationMatrix, OtherDerived_>::convert(other.derived());
+    *this = internal::ConversionTraits<RotationMatrix, OtherDerived_>::convert(other.derived()).toStoredImplementation();
     return *this;
   }
 
@@ -313,10 +313,10 @@ class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_
   inline static eigen_impl::RotationMatrix<DestPrimType_, Usage_> convert(const eigen_impl::RotationVector<SourcePrimType_, Usage_>& rv) {
     typename eigen_impl::RotationMatrix<DestPrimType_, Usage_>::Implementation matrix;
     typedef typename eigen_impl::RotationVector<SourcePrimType_, Usage_>::Scalar Scalar;
-    const SourcePrimType_ v1 = rv.x();
-    const SourcePrimType_ v2 = rv.y();
-    const SourcePrimType_ v3 = rv.z();
-    const SourcePrimType_ v = rv.toImplementation().norm();
+    const SourcePrimType_ v1 = rv.toStoredImplementation().x();
+    const SourcePrimType_ v2 = rv.toStoredImplementation().y();
+    const SourcePrimType_ v3 = rv.toStoredImplementation().z();
+    const SourcePrimType_ v = rv.toStoredImplementation().norm();
 
     if (v < common::NumTraits<Scalar>::dummy_precision())  {
       matrix << 1.0,  v3, -v2,

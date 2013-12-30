@@ -154,8 +154,8 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_> {
    *  \param other   other rotation
    */
   template<typename OtherDerived_>
-  inline explicit AngleAxis(const RotationBase<OtherDerived_, Usage_>& other) {
-    this->toStoredImplementation() = internal::ConversionTraits<AngleAxis, OtherDerived_>::convert(other.derived()).toStoredImplementation();
+  inline explicit AngleAxis(const RotationBase<OtherDerived_, Usage_>& other)
+    : angleAxis_(internal::ConversionTraits<AngleAxis, OtherDerived_>::convert(other.derived()).toStoredImplementation()) {
   }
 
   /*! \brief Assignment operator using another rotation.
@@ -406,10 +406,10 @@ class ConversionTraits<eigen_impl::AngleAxis<DestPrimType_, Usage_>, eigen_impl:
  public:
   inline static eigen_impl::AngleAxis<DestPrimType_, Usage_> convert(const eigen_impl::RotationVector<SourcePrimType_, Usage_>& rv) {
     typedef typename eigen_impl::RotationVector<SourcePrimType_, Usage_>::Scalar Scalar;
-    if (rv.toStoredImplementation().norm() < common::NumTraits<Scalar>::dummy_precision()) {
+    if (rv.toImplementation().norm() < common::NumTraits<Scalar>::dummy_precision()) {
       return eigen_impl::AngleAxis<DestPrimType_, Usage_>();
     }
-    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(rv.toStoredImplementation().norm(), rv.toStoredImplementation().normalized());
+    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(rv.toImplementation().norm(), rv.toImplementation().normalized());
   }
 };
 
@@ -425,7 +425,7 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::AngleAxis<DestPrimType_, Usage_>, eigen_impl::RotationMatrix<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::AngleAxis<DestPrimType_, Usage_> convert(const eigen_impl::RotationMatrix<SourcePrimType_, Usage_>& R) {
-    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(R.toStoredImplementation()));
+    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(R.toImplementation()));
   }
 };
 
@@ -433,7 +433,7 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::AngleAxis<DestPrimType_, Usage_>, eigen_impl::EulerAnglesXyz<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::AngleAxis<DestPrimType_, Usage_> convert(const eigen_impl::EulerAnglesXyz<SourcePrimType_, Usage_>& xyz) {
-    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::getAngleAxisFromRpy<SourcePrimType_, DestPrimType_>(xyz.toStoredImplementation()));
+    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::getAngleAxisFromRpy<SourcePrimType_, DestPrimType_>(xyz.toImplementation()));
   }
 };
 
@@ -441,7 +441,7 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::AngleAxis<DestPrimType_, Usage_>, eigen_impl::EulerAnglesZyx<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::AngleAxis<DestPrimType_, Usage_> convert(const eigen_impl::EulerAnglesZyx<SourcePrimType_, Usage_>& zyx) {
-    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::getAngleAxisFromYpr<SourcePrimType_, DestPrimType_>(zyx.toStoredImplementation()));
+    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::getAngleAxisFromYpr<SourcePrimType_, DestPrimType_>(zyx.toImplementation()));
   }
 };
 
@@ -457,7 +457,7 @@ class RotationTraits<eigen_impl::AngleAxis<PrimType_, Usage_>> {
  public:
   template<typename get_matrix3X<eigen_impl::AngleAxis<PrimType_, Usage_>>::IndexType Cols>
   inline static typename get_matrix3X<eigen_impl::AngleAxis<PrimType_, Usage_>>::template Matrix3X<Cols> rotate(const eigen_impl::AngleAxis<PrimType_, Usage_>& aa, const typename get_matrix3X<eigen_impl::AngleAxis<PrimType_, Usage_>>::template Matrix3X<Cols>& m){
-    return eigen_impl::RotationMatrix<PrimType_, Usage_>(aa).toStoredImplementation() * m;
+    return eigen_impl::RotationMatrix<PrimType_, Usage_>(aa).rotate(m);
   }
 };
 
