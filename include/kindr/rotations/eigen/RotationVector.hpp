@@ -186,7 +186,7 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    *  \returns reference
    */
   RotationVector& setIdentity() {
-    this->toImplementatoStoredImplementation;
+    vector_ = Base::Zero();
     return *this;
   }
 
@@ -286,14 +286,16 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    */
   RotationVector getUnique() const {
     // todo: test, passive and active
-    RotationVector rotVector(toStoredImplementation());
-
-    const Scalar norm = rotVector.toStoredImplementation().norm();
-    if (norm != Scalar(0)) {
-      const Scalar normWrapped = kindr::common::floatingPointModulo(norm+M_PI,2*M_PI)-M_PI;
-      rotVector.toStoredImplementation()*normWrapped/norm;
-    }
-    return rotVector;
+    AngleAxis<PrimType_, Usage_> angleAxis(*this);
+    RotationVector rotationVector(angleAxis.getUnique());
+//    RotationVector rotVector(toStoredImplementation());
+//
+//    const Scalar norm = rotVector.toStoredImplementation().norm();
+//    if (norm != Scalar(0)) {
+//      const Scalar normWrapped = kindr::common::floatingPointModulo(norm+M_PI,2*M_PI)-M_PI;
+//      rotVector.toStoredImplementation()*normWrapped/norm;
+//    }
+    return rotationVector;
   }
 
   /*! \brief

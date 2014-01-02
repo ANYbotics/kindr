@@ -276,7 +276,26 @@ TYPED_TEST(RotationMatrixSingleTest, testConstructors){
 
   RotationMatrix rot5(rot4);
   KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot5.toImplementation(), 1e-4, "constructor");
+}
 
+TYPED_TEST(RotationMatrixSingleTest, testAssignmentOperator){
+  typedef typename TestFixture::RotationMatrix RotationMatrix;
+  typedef typename TestFixture::Scalar Scalar;
+
+  RotationMatrix rot(this->eigenMatrix3x3v1);
+  RotationMatrix rot1 = rot;
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot1.toImplementation(), 1e-4, "constructor");
+
+}
+
+TYPED_TEST(RotationMatrixSingleTest, testParenthesisOperator) {
+  typedef typename TestFixture::RotationMatrix RotationMatrix;
+  typedef typename TestFixture::Scalar Scalar;
+
+  RotationMatrix rot(this->eigenMatrix3x3v1);
+  RotationMatrix rot1;
+  rot1(rot);
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot1.toImplementation(), 1e-4, "constructor");
 
 }
 

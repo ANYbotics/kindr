@@ -341,17 +341,19 @@ class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_
       const DestPrimType_ t16 = t4*v*v1;
       const DestPrimType_ t17 = t2*v2*v3;
       matrix(0,0) = t5*(t14-t8*(-t9+t10+t11));
-      matrix(0,1) = t2*t5*(t6+t7)*2.0;
-      matrix(0,2) = t2*t5*(t15-t4*v*v2)*2.0;
-      matrix(1,0) = t2*t5*(t6-t7)*-2.0;
+      matrix(1,0) = t2*t5*(t6+t7)*2.0;
+      matrix(2,0) = t2*t5*(t15-t4*v*v2)*2.0;
+      matrix(0,1) = t2*t5*(t6-t7)*-2.0;
       matrix(1,1) = t5*(t14-t8*(t9-t10+t11));
-      matrix(1,2) = t2*t5*(t16+t17)*2.0;
-      matrix(2,0) = t2*t5*(t15+t4*v*v2)*2.0;
-      matrix(2,1) = t2*t5*(t16-t17)*-2.0;
+      matrix(2,1) = t2*t5*(t16+t17)*2.0;
+      matrix(0,2) = t2*t5*(t15+t4*v*v2)*2.0;
+      matrix(1,2) = t2*t5*(t16-t17)*-2.0;
       matrix(2,2) = t5*(t14-t8*(t9+t10-t11));
 
     }
     return eigen_impl::RotationMatrix<DestPrimType_, Usage_>(matrix);
+    // the same as above:
+//    return eigen_impl::RotationMatrix<DestPrimType_, Usage_>(eigen_impl::AngleAxis<SourcePrimType_, Usage_>(rotationVector));
   }
 };
 
@@ -372,7 +374,7 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_impl::RotationMatrix<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::RotationMatrix<DestPrimType_, Usage_> convert(const eigen_impl::RotationMatrix<SourcePrimType_, Usage_>& R) {
-    return eigen_impl::RotationMatrix<DestPrimType_, Usage_>(R.toImplementation().template cast<DestPrimType_>());
+    return eigen_impl::RotationMatrix<DestPrimType_, Usage_>(R.toStoredImplementation().template cast<DestPrimType_>());
   }
 };
 
@@ -468,6 +470,26 @@ class UsageConversionTraits<eigen_impl::RotationMatrix<PrimType_, RotationUsage:
 
   // getActive() does not exist (on purpose)
 };
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Box Operations - required?
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+//template<typename PrimType_, typename Right_, enum RotationUsage Usage_>
+//class BoxOperationTraits<RotationBase<eigen_impl::RotationMatrix<PrimType_, Usage_>, Usage_>, RotationBase<Right_, Usage_>> {
+// public:
+//  inline static typename internal::get_matrix3X<eigen_impl::RotationMatrix<PrimType_, Usage_>>::template Matrix3X<1> boxMinus(const RotationBase<eigen_impl::RotationMatrix<PrimType_, Usage_>, Usage_>& lhs, const RotationBase<Right_, Usage_>& rhs) {
+//    std::cout << "RotMat boxMinus" << std::endl;
+//    return (lhs.derived()*rhs.derived().inverted()).getLogarithmicMap();
+//  }
+//
+//  inline static  eigen_impl::RotationMatrix<PrimType_, Usage_> boxPlus(const RotationBase<eigen_impl::RotationMatrix<PrimType_, Usage_>, Usage_>& rotation, const typename internal::get_matrix3X<eigen_impl::RotationMatrix<PrimType_, Usage_>>::template Matrix3X<1>& vector) {
+////    return Left_(rotation.derived()*MapTraits<eigen_impl::RotationVector<typename Left_::Scalar, Usage_>>::exponentialMap(vector));
+////    return static_cast<Left_>(rotation.derived()*MapTraits<RotationBase<Left_,Usage_>>::exponentialMap(vector));
+//    std::cout << "RotMat boxPlus" << std::endl;
+//    return eigen_impl::RotationMatrix<PrimType_, Usage_>((MapTraits<RotationBase<eigen_impl::RotationVector<typename eigen_impl::RotationMatrix<PrimType_, Usage_>::Scalar,Usage_>,Usage_>>::exponentialMap(vector)*rotation.derived()));
+//  }
+//};
 
 
 } // namespace internal
