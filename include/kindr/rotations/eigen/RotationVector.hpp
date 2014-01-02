@@ -373,6 +373,15 @@ class ConversionTraits<eigen_impl::RotationVector<DestPrimType_, Usage_>, eigen_
 };
 
 template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
+class ConversionTraits<eigen_impl::RotationVector<DestPrimType_, Usage_>, eigen_impl::AngleAxis<SourcePrimType_, Usage_>> {
+ public:
+  inline static eigen_impl::RotationVector<DestPrimType_, Usage_> convert(const eigen_impl::AngleAxis<SourcePrimType_, Usage_>& angleAxis) {
+    return eigen_impl::RotationVector<DestPrimType_, Usage_>(angleAxis.angle()*angleAxis.axis());
+  }
+};
+
+
+template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
 class ConversionTraits<eigen_impl::RotationVector<DestPrimType_, Usage_>, eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::RotationVector<DestPrimType_, Usage_> convert(const eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>& q) {
@@ -388,8 +397,7 @@ template<typename DestPrimType_, typename SourceImplementation_, enum RotationUs
 class ConversionTraits<eigen_impl::RotationVector<DestPrimType_, Usage_>, SourceImplementation_> {
  public:
   inline static eigen_impl::RotationVector<DestPrimType_, Usage_> convert(const SourceImplementation_& rotation) {
-    const eigen_impl::AngleAxis<DestPrimType_, Usage_> angleAxis(rotation);
-    return eigen_impl::RotationVector<DestPrimType_, Usage_>(angleAxis.angle()*angleAxis.axis());
+    return eigen_impl::RotationVector<DestPrimType_, Usage_>(eigen_impl::AngleAxis<DestPrimType_, Usage_>(rotation));
   }
 };
 
@@ -400,14 +408,6 @@ class ConversionTraits<eigen_impl::RotationVector<DestPrimType_, Usage_>, Source
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * Rotation Traits
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-template<typename PrimType_, enum RotationUsage Usage_>
-class RotationTraits<eigen_impl::RotationVector<PrimType_, Usage_>> {
- public:
-  template<typename get_matrix3X<eigen_impl::RotationVector<PrimType_, Usage_>>::IndexType Cols>
-  inline static typename get_matrix3X<eigen_impl::RotationVector<PrimType_, Usage_>>::template Matrix3X<Cols> rotate(const eigen_impl::RotationVector<PrimType_, Usage_>& rv, const typename get_matrix3X<eigen_impl::RotationVector<PrimType_, Usage_>>::template Matrix3X<Cols>& m){
-    return eigen_impl::RotationMatrix<PrimType_, Usage_>(rv).toStoredImplementation() * m;
-  }
-};
 
 ///* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // * Comparison Traits

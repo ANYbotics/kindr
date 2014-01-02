@@ -91,6 +91,7 @@ set(ROTATION_SRCS
 	rotations/eigen/RotationQuaternionTest.cpp
 	rotations/eigen/RotationVectorTest.cpp
 	rotations/eigen/AngleAxisTest.cpp
+	rotations/eigen/RotationMatrixTest.cpp
 	rotations/RotationEigenTest.cpp
 )
 

@@ -308,7 +308,7 @@ class RotationBase {
    */
   template <typename internal::get_matrix3X<Derived_>::IndexType Cols>
   typename internal::get_matrix3X<Derived_>::template Matrix3X<Cols> rotate(const typename internal::get_matrix3X<Derived_>::template Matrix3X<Cols>& matrix) const {
-    return internal::RotationTraits<Derived_>::rotate(this->derived(), matrix);
+    return internal::RotationTraits<RotationBase<Derived_,Usage_>>::rotate(this->derived(), matrix);
   }
 
   /*! \brief Rotates a vector or matrix in reverse.
@@ -316,7 +316,7 @@ class RotationBase {
    */
   template <typename internal::get_matrix3X<Derived_>::IndexType Cols>
   typename internal::get_matrix3X<Derived_>::template Matrix3X<Cols> inverseRotate(const typename internal::get_matrix3X<Derived_>::template Matrix3X<Cols>& matrix) const {
-    return internal::RotationTraits<Derived_>::rotate(this->derived().inverted(), matrix); // todo: may be optimized
+    return internal::RotationTraits<RotationBase<Derived_,Usage_>>::rotate(this->derived().inverted(), matrix); // todo: may be optimized
   }
 
 
@@ -357,14 +357,14 @@ class RotationBase {
    */
   template <typename Position_>
   Position_ rotate(const Position_& position) const {
-    return Position_(internal::RotationTraits<Derived_>::rotate(this->derived(), internal::get_position3<Position_>::getMatrix3(position)));
+    return Position_(internal::RotationTraits<RotationBase<Derived_,Usage_>>::rotate(this->derived(), internal::get_position3<Position_>::getMatrix3(position)));
   }
   /*! \brief Rotates a position in reverse.
    *  \returns the reverse rotated position
    */
   template <typename Position_>
   Position_ inverseRotate(const Position_& position) const {
-    return Position_(internal::RotationTraits<Derived_>::rotate(this->derived().inverted(), internal::get_position3<Position_>::getMatrix3(position)));
+    return Position_(internal::RotationTraits<RotationBase<Derived_,Usage_>>::rotate(this->derived().inverted(), internal::get_position3<Position_>::getMatrix3(position)));
   }
 
 

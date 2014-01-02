@@ -115,6 +115,15 @@ class MultiplicationTraits<RotationBase<LeftAndRight_, Usage_>, RotationBase<Lef
   }
 };
 
+
+
+
+
+
+
+
+
+
 /*! \brief Compares two rotations.
  *  The
  */
@@ -166,7 +175,19 @@ class BoxOperationTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usage
 };
 
 
-
+template<typename Rotation_, enum RotationUsage Usage_>
+class RotationTraits<RotationBase<Rotation_, Usage_> > {
+ public:
+  template<typename get_matrix3X<Rotation_>::IndexType Cols>
+  inline static typename get_matrix3X<Rotation_>::template Matrix3X<Cols> rotate(const RotationBase<Rotation_, Usage_>& rotation, const typename internal::get_matrix3X<Rotation_>::template Matrix3X<Cols>& m){
+//    if (Usage_ == RotationUsage::PASSIVE) {
+//      return eigen_impl::RotationMatrix<typename Rotation_::Scalar, Usage_>(rotation.derived()).toImplementation().transpose()*m;
+//    } else if (Usage_ == RotationUsage::ACTIVE) {
+//      return eigen_impl::RotationMatrix<typename Rotation_::Scalar, Usage_>(rotation.derived()).toImplementation()*m;
+//    }
+    return eigen_impl::RotationMatrix<typename Rotation_::Scalar, Usage_>(rotation.derived()).toImplementation()*m;
+  }
+};
 
 
 } // namespace internal

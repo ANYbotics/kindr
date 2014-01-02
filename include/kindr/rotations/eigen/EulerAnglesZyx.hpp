@@ -531,14 +531,7 @@ class MultiplicationTraits<RotationBase<eigen_impl::EulerAnglesZyx<PrimType_, Ro
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * Rotation Traits
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-template<typename PrimType_, enum RotationUsage Usage_>
-class RotationTraits<eigen_impl::EulerAnglesZyx<PrimType_, Usage_>> {
- public:
-  template<typename get_matrix3X<eigen_impl::EulerAnglesZyx<PrimType_, Usage_>>::IndexType Cols>
-  inline static typename get_matrix3X<eigen_impl::EulerAnglesZyx<PrimType_, Usage_>>::template Matrix3X<Cols> rotate(const eigen_impl::EulerAnglesZyx<PrimType_, Usage_>& zyx, const typename get_matrix3X<eigen_impl::EulerAnglesZyx<PrimType_, Usage_>>::template Matrix3X<Cols>& m){
-    return eigen_impl::RotationMatrix<PrimType_, Usage_>(zyx).toStoredImplementation() * m;
-  }
-};
+
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * Comparison Traits

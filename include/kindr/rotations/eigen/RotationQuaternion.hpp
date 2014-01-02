@@ -556,8 +556,12 @@ class ConversionTraits<eigen_impl::RotationQuaternion<DestPrimType_, Usage_>, ei
 template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
 class ConversionTraits<eigen_impl::RotationQuaternion<DestPrimType_, Usage_>, eigen_impl::RotationMatrix<SourcePrimType_, Usage_>> {
  public:
-  inline static eigen_impl::RotationQuaternion<DestPrimType_, Usage_> convert(const eigen_impl::RotationMatrix<SourcePrimType_, Usage_>& R) {
-    return eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(eigen_impl::getQuaternionFromRotationMatrix<SourcePrimType_, DestPrimType_>(R.toImplementation()));
+  inline static eigen_impl::RotationQuaternion<DestPrimType_, Usage_> convert(const eigen_impl::RotationMatrix<SourcePrimType_, Usage_>& rotationMatrix) {
+    if (Usage_ == RotationUsage::ACTIVE) {
+      return eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(eigen_impl::getQuaternionFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()));
+    } if (Usage_ == RotationUsage::PASSIVE) {
+      return eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(eigen_impl::getQuaternionFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()).inverse());
+    }
   }
 };
 
@@ -584,14 +588,6 @@ class ConversionTraits<eigen_impl::RotationQuaternion<DestPrimType_, Usage_>, ei
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * Rotation Traits
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-template<typename PrimType_, enum RotationUsage Usage_>
-class RotationTraits<eigen_impl::RotationQuaternion<PrimType_, Usage_>> {
- public:
-  template<typename get_matrix3X<eigen_impl::RotationQuaternion<PrimType_, Usage_>>::IndexType Cols>
-  inline static typename get_matrix3X<eigen_impl::RotationQuaternion<PrimType_, Usage_>>::template Matrix3X<Cols> rotate(const eigen_impl::RotationQuaternion<PrimType_, Usage_>& p, const typename get_matrix3X<eigen_impl::RotationQuaternion<PrimType_, Usage_>>::template Matrix3X<Cols>& m){
-    return eigen_impl::RotationMatrix<PrimType_, Usage_>(p).rotate(m);
-  }
-};
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * Comparison Traits

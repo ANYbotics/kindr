@@ -424,8 +424,14 @@ class ConversionTraits<eigen_impl::AngleAxis<DestPrimType_, Usage_>, eigen_impl:
 template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
 class ConversionTraits<eigen_impl::AngleAxis<DestPrimType_, Usage_>, eigen_impl::RotationMatrix<SourcePrimType_, Usage_>> {
  public:
-  inline static eigen_impl::AngleAxis<DestPrimType_, Usage_> convert(const eigen_impl::RotationMatrix<SourcePrimType_, Usage_>& R) {
-    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(R.toImplementation()));
+  inline static eigen_impl::AngleAxis<DestPrimType_, Usage_> convert(const eigen_impl::RotationMatrix<SourcePrimType_, Usage_>& rotationMatrix) {
+
+    if (Usage_ == RotationUsage::ACTIVE) {
+      return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()));
+    } if (Usage_ == RotationUsage::PASSIVE) {
+      return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()).inverse());
+    }
+
   }
 };
 
@@ -452,14 +458,8 @@ class ConversionTraits<eigen_impl::AngleAxis<DestPrimType_, Usage_>, eigen_impl:
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * Rotation Traits
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-template<typename PrimType_, enum RotationUsage Usage_>
-class RotationTraits<eigen_impl::AngleAxis<PrimType_, Usage_>> {
- public:
-  template<typename get_matrix3X<eigen_impl::AngleAxis<PrimType_, Usage_>>::IndexType Cols>
-  inline static typename get_matrix3X<eigen_impl::AngleAxis<PrimType_, Usage_>>::template Matrix3X<Cols> rotate(const eigen_impl::AngleAxis<PrimType_, Usage_>& aa, const typename get_matrix3X<eigen_impl::AngleAxis<PrimType_, Usage_>>::template Matrix3X<Cols>& m){
-    return eigen_impl::RotationMatrix<PrimType_, Usage_>(aa).rotate(m);
-  }
-};
+
+
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * Comparison Traits

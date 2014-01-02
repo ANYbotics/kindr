@@ -130,7 +130,7 @@ namespace eigen {
     for(int c = 0; c < (A).cols(); c++)               \
       {                               \
       double percentError = 0.0;                  \
-      ASSERT_TRUE(rm::eigen::compareRelative( (A)(r,c), (B)(r,c), PERCENT_TOLERANCE, &percentError)) \
+      ASSERT_TRUE(kindr::common::eigen::compareRelative( (A)(r,c), (B)(r,c), PERCENT_TOLERANCE, &percentError)) \
         << MSG << "\nComparing:\n"                \
         << #A << "(" << r << "," << c << ") = " << (A)(r,c) << std::endl \
         << #B << "(" << r << "," << c << ") = " << (B)(r,c) << std::endl \
@@ -145,7 +145,7 @@ namespace eigen {
 
 } // namespace eigen
 } // namespace common
-} // namespace rm
+} // namespace kindr
 
 
 

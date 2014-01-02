@@ -818,6 +818,7 @@ TYPED_TEST(RotationQuaternionAngleAxisPairTest, testAngleAxisInversion){
   AngleAxis angleAxis2;
   AngleAxis angleAxis3;
   AngleAxis angleAxis4;
+  AngleAxis angleAxis5;
 
   // Use rotation quaternion method as reference
   rotQuat = this->rotQuat1.inverted();
@@ -832,11 +833,17 @@ TYPED_TEST(RotationQuaternionAngleAxisPairTest, testAngleAxisInversion){
   ASSERT_NEAR(angleAxis1.axis().z(),angleAxis2.axis().z(),1e-6);
 
   angleAxis3 = this->rotQuat1;
+  angleAxis5 = this->rotQuat1;
   angleAxis4 = angleAxis3.inverted();
   ASSERT_NEAR(angleAxis1.angle(),angleAxis4.angle(),1e-6);
   ASSERT_NEAR(angleAxis1.axis().x(),angleAxis4.axis().x(),1e-6);
   ASSERT_NEAR(angleAxis1.axis().y(),angleAxis4.axis().y(),1e-6);
   ASSERT_NEAR(angleAxis1.axis().z(),angleAxis4.axis().z(),1e-6);
+
+  ASSERT_NEAR(angleAxis3.angle(),angleAxis5.angle(),1e-6);
+  ASSERT_NEAR(angleAxis3.axis().x(),angleAxis5.axis().x(),1e-6);
+  ASSERT_NEAR(angleAxis3.axis().y(),angleAxis5.axis().y(),1e-6);
+  ASSERT_NEAR(angleAxis3.axis().z(),angleAxis5.axis().z(),1e-6);
 }
 
 /* Test getPassive()
