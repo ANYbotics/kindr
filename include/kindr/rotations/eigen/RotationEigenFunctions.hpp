@@ -64,6 +64,15 @@ static Eigen::AngleAxis<TReturn> getAngleAxisFromRotationMatrix(const Eigen::Mat
   return Eigen::AngleAxis<TReturn>(R_BI.template cast<TReturn>());
 }
 
+//template<typename T, typename TReturn = T>
+//static Eigen::Matrix<TReturn,3,1> getRotationVectorFromRotationMatrix(const Eigen::Matrix<T,3,3>& R_BI)
+//{
+//  const Eigen::Matrix<TReturn,3,3> rotationMatrix = R_BI.template cast<TReturn>();
+//
+//  // Bad precision!
+//  return Eigen::Matrix<TReturn, 3, 1>();
+//}
+
 template<typename T, typename TReturn = T>
 static Eigen::AngleAxis<TReturn> getAngleAxisFromRpy(const Eigen::Matrix<T,3,1>& rpy_BI)
 {

@@ -404,6 +404,26 @@ class ConversionTraits<eigen_impl::RotationVector<DestPrimType_, Usage_>, Source
   }
 };
 
+template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
+class ConversionTraits<eigen_impl::RotationVector<DestPrimType_, Usage_>, eigen_impl::RotationMatrix<SourcePrimType_, Usage_>> {
+ public:
+  inline static eigen_impl::RotationVector<DestPrimType_, Usage_> convert(const eigen_impl::RotationMatrix<SourcePrimType_, Usage_>& rotationMatrix) {
+//    if (Usage_ == RotationUsage::ACTIVE) {
+//      return eigen_impl::RotationVector<DestPrimType_, Usage_>(eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(rotationMatrix.toImplementation().cast<DestPrimType_>()));
+//    } if (Usage_ == RotationUsage::PASSIVE) {
+//      return eigen_impl::RotationVector<DestPrimType_, Usage_>(eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(rotationMatrix.toImplementation().transpose().cast<DestPrimType_>()));
+//    }
+
+//        if (Usage_ == RotationUsage::ACTIVE) {
+//          return eigen_impl::RotationVector<DestPrimType_, Usage_>(eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(rotationMatrix));
+//        } if (Usage_ == RotationUsage::PASSIVE) {
+//          return eigen_impl::RotationVector<DestPrimType_, Usage_>(eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(rotationMatrix.inverted()));
+//        }
+//        return eigen_impl::RotationVector<DestPrimType_, Usage_>(eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(rotationMatrix));
+        return eigen_impl::RotationVector<DestPrimType_, Usage_>(eigen_impl::AngleAxis<DestPrimType_, Usage_>(rotationMatrix));
+  }
+};
+
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * Multiplication Traits
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */

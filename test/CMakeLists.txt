@@ -141,10 +141,10 @@ set(POSES_SRCS
 )
 
 # Add test cpp file
-add_executable( runUnitTestsPose  ${POSES_SRCS})
+#add_executable( runUnitTestsPose  ${POSES_SRCS})
 # Link test executable against gtest & gtest_main
-target_link_libraries(runUnitTestsPose  gtest_main gtest pthread )
-add_test( runUnitTestsPose runUnitTestsPose )
+#target_link_libraries(runUnitTestsPose  gtest_main gtest pthread )
+#add_test( runUnitTestsPose runUnitTestsPose )
 
 set(POSESDIFF_SRCS
 	test_main.cpp
@@ -152,9 +152,9 @@ set(POSESDIFF_SRCS
 )
 
 # Add test cpp file
-add_executable( runUnitTestsPoseDiff  ${POSESDIFF_SRCS})
+#add_executable( runUnitTestsPoseDiff  ${POSESDIFF_SRCS})
 # Link test executable against gtest & gtest_main
-target_link_libraries(runUnitTestsPoseDiff  gtest_main gtest pthread )
-add_test( runUnitTestsPoseDiff runUnitTestsPoseDiff )
+#target_link_libraries(runUnitTestsPoseDiff  gtest_main gtest pthread )
+#add_test( runUnitTestsPoseDiff runUnitTestsPoseDiff )
 
 endif()

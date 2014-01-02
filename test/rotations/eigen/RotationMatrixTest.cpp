@@ -606,32 +606,40 @@ TYPED_TEST(RotationMatrixSingleTest, testMaps){
  */
 TYPED_TEST(RotationMatrixSingleTest, testBoxOperators){
   typedef typename TestFixture::RotationMatrix RotationMatrix;
+  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
   typedef typename TestFixture::Scalar Scalar;
   typedef typename TestFixture::Vector Vector;
-  RotationMatrix rotRotationMatrix;
-  RotationMatrix rotRotationMatrix2;
+  RotationMatrix rot1;
+  RotationMatrix rot2;
+
+  RotationMatrix rotRotationMatrix1 = RotationMatrix(RotationQuaternion(0.0,0.36,0.48,0.8));
+  RotationMatrix rotRotationMatrix2 = RotationMatrix(RotationQuaternion(4.0/sqrt(30.0),3.0/sqrt(30.0),1.0/sqrt(30.0),2.0/sqrt(30.0)));
+
+
   Vector testVec;
 
   // Test addition with 0
   testVec.setZero();
-  rotRotationMatrix = this->rotRotationMatrix1.boxPlus(testVec);
-  ASSERT_EQ(rotRotationMatrix.isNear(this->rotRotationMatrix1,1e-6),true);
+  rot1 = rotRotationMatrix1.boxPlus(testVec);
+  ASSERT_EQ(rot1.isNear(rotRotationMatrix1,1e-6),true);
 
   // Test subtraction of same elements
-  testVec = this->rotRotationMatrix1.boxMinus(this->rotRotationMatrix1);
+  testVec = this->rotRotationMatrix1.boxMinus(rotRotationMatrix1);
   ASSERT_NEAR(testVec(0),0.0,1e-6);
   ASSERT_NEAR(testVec(1),0.0,1e-6);
   ASSERT_NEAR(testVec(2),0.0,1e-6);
 
   // Test backward-forward
-  testVec = this->rotRotationMatrix1.boxMinus(this->rotRotationMatrix2);
-  rotRotationMatrix = this->rotRotationMatrix2.boxPlus(testVec);
-  ASSERT_EQ(rotRotationMatrix.isNear(this->rotRotationMatrix1,1e-6),true);
+  testVec = rotRotationMatrix1.boxMinus(rotRotationMatrix2);
+  rot1 = rotRotationMatrix2.boxPlus(testVec);
+  KINDR_ASSERT_DOUBLE_MX_EQ(rotRotationMatrix1.toImplementation(), rot1.toImplementation(), 1e-4, "testBoxOperators");
+
+//  ASSERT_EQ(rot1.isNear(this->rotRotationMatrix1,1e-4),true);
 
   // Test forward-backward
   testVec = this->vec;
-  rotRotationMatrix = this->rotRotationMatrix1.boxPlus(testVec);
-  testVec = rotRotationMatrix.boxMinus(this->rotRotationMatrix1);
+  rot1 = rotRotationMatrix1.boxPlus(testVec);
+  testVec = rot1.boxMinus(rotRotationMatrix1);
   ASSERT_NEAR(testVec(0),this->vec(0),1e-6);
   ASSERT_NEAR(testVec(1),this->vec(1),1e-6);
   ASSERT_NEAR(testVec(2),this->vec(2),1e-6);
@@ -639,12 +647,12 @@ TYPED_TEST(RotationMatrixSingleTest, testBoxOperators){
   // Test overlap with disparity angle
   double norm = 0.1;
   testVec = this->vec/this->vec.norm()*norm;
-  rotRotationMatrix = this->rotRotationMatrix1.boxPlus(testVec);
-  ASSERT_NEAR(rotRotationMatrix.getDisparityAngle(this->rotRotationMatrix1),norm,1e-4); // Check distance between both
-  rotRotationMatrix2 = this->rotRotationMatrix1.boxPlus(2*testVec);
-  ASSERT_NEAR(rotRotationMatrix.getDisparityAngle(rotRotationMatrix2),norm,1e-4); // Check distance to double
-  rotRotationMatrix2 = this->rotRotationMatrix1.boxPlus(-testVec);
-  ASSERT_NEAR(rotRotationMatrix.getDisparityAngle(rotRotationMatrix2),2*norm,1e-4); // Check distance to reverse
+  rot1 = rotRotationMatrix1.boxPlus(testVec);
+  ASSERT_NEAR(rot1.getDisparityAngle(rotRotationMatrix1),norm,1e-4); // Check distance between both
+  rot2 = this->rotRotationMatrix1.boxPlus(2*testVec);
+  ASSERT_NEAR(rot1.getDisparityAngle(rot2),norm,1e-4); // Check distance to double
+  rot2 = rotRotationMatrix1.boxPlus(-testVec);
+  ASSERT_NEAR(rot1.getDisparityAngle(rot2),2*norm,1e-4); // Check distance to reverse
 }
 
 
