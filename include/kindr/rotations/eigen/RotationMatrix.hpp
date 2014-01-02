@@ -313,7 +313,7 @@ class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_
   inline static eigen_impl::RotationMatrix<DestPrimType_, Usage_> convert(const eigen_impl::RotationVector<SourcePrimType_, Usage_>& rotationVector) {
     typename eigen_impl::RotationMatrix<DestPrimType_, Usage_>::Implementation matrix;
     typedef typename eigen_impl::RotationVector<SourcePrimType_, Usage_>::Scalar Scalar;
-    const  typename eigen_impl::RotationVector<DestPrimType_, Usage_>::Implementation rv = rotationVector.toStoredImplementation();
+    const  typename eigen_impl::RotationVector<DestPrimType_, Usage_>::Implementation rv = rotationVector.toStoredImplementation().template cast<DestPrimType_>();
     const SourcePrimType_ v1 = rv.x();
     const SourcePrimType_ v2 = rv.y();
     const SourcePrimType_ v3 = rv.z();

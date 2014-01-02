@@ -378,7 +378,8 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::RotationVector<DestPrimType_, Usage_>, eigen_impl::AngleAxis<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::RotationVector<DestPrimType_, Usage_> convert(const eigen_impl::AngleAxis<SourcePrimType_, Usage_>& angleAxis) {
-    return eigen_impl::RotationVector<DestPrimType_, Usage_>(angleAxis.angle()*angleAxis.axis());
+    const eigen_impl::AngleAxis<DestPrimType_, Usage_> angleAxisDest(angleAxis);
+    return eigen_impl::RotationVector<DestPrimType_, Usage_>(angleAxisDest.angle()*angleAxisDest.axis());
   }
 };
 

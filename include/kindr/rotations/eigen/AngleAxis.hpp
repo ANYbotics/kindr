@@ -404,8 +404,11 @@ class ConversionTraits<eigen_impl::AngleAxis<DestPrimType_, Usage_>, eigen_impl:
 template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
 class ConversionTraits<eigen_impl::AngleAxis<DestPrimType_, Usage_>, eigen_impl::RotationVector<SourcePrimType_, Usage_>> {
  public:
-  inline static eigen_impl::AngleAxis<DestPrimType_, Usage_> convert(const eigen_impl::RotationVector<SourcePrimType_, Usage_>& rv) {
+  inline static eigen_impl::AngleAxis<DestPrimType_, Usage_> convert(const eigen_impl::RotationVector<SourcePrimType_, Usage_>& rotationVector) {
     typedef typename eigen_impl::RotationVector<SourcePrimType_, Usage_>::Scalar Scalar;
+
+    const eigen_impl::RotationVector<DestPrimType_, Usage_> rv(rotationVector);
+
     if (rv.toImplementation().norm() < common::NumTraits<Scalar>::dummy_precision()) {
       return eigen_impl::AngleAxis<DestPrimType_, Usage_>();
     }
@@ -425,7 +428,7 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::AngleAxis<DestPrimType_, Usage_>, eigen_impl::RotationMatrix<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::AngleAxis<DestPrimType_, Usage_> convert(const eigen_impl::RotationMatrix<SourcePrimType_, Usage_>& rotationMatrix) {
-
+//    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()));
     if (Usage_ == RotationUsage::ACTIVE) {
       return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()));
     } if (Usage_ == RotationUsage::PASSIVE) {
