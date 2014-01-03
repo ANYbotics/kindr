@@ -312,7 +312,17 @@ TYPED_TEST(RotationMatrixSingleTest, testGetters)
   KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot1.toImplementation(), 1e-4, "unique");
   KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot2.toImplementation(), 1e-4, "unique");
 
+  RotationMatrix rot3(this->eigenMatrix3x3v1);
+  ASSERT_EQ(this->eigenMatrix3x3v1.determinant(), rot3.determinant());
 
+  RotationMatrix rot4(this->eigenMatrix3x3v1);
+  RotationMatrix rot5 = rot4.transposed();
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot4.toImplementation(), 1e-4, "transposed");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1.transpose(), rot5.toImplementation(), 1e-4, "transposed");
+
+  RotationMatrix rot6 = rot4.transpose();
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1.transpose(), rot4.toImplementation(), 1e-4, "transpose");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1.transpose(), rot6.toImplementation(), 1e-4, "transpose");
 }
 
 TYPED_TEST(RotationMatrixSingleTest, testSetters)

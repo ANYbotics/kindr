@@ -85,7 +85,7 @@ class get_matrix3X {
 template<typename Position_>
 class get_position3 {
  public:
-//  static const Matrix3X& getMatrix3(const Position& position) {
+//  static const Matrix3X& get_matrix3(const Position& position) {
 //    return position.toStoredImplementation();
 //  }
 };
@@ -163,8 +163,8 @@ class MapTraits {
 template<typename Left_, typename Right_>
 class BoxOperationTraits {
  public:
-//  inline static typename internal::get_matrix3X<Left_>::template Matrix3X<1> boxMinus(const RotationBase<Left_, Usage_>& lhs, const RotationBase<Right_, Usage_>& rhs);
-//  inline static Left_ boxPlus(const RotationBase<Left_, Usage_>& rotation, const typename internal::get_matrix3X<Left_>::template Matrix3X<1>& vector);
+//  inline static typename internal::get_matrix3X<Left_>::template Matrix3X<1> box_minus(const RotationBase<Left_, Usage_>& lhs, const RotationBase<Right_, Usage_>& rhs);
+//  inline static Left_ box_plus(const RotationBase<Left_, Usage_>& rotation, const typename internal::get_matrix3X<Left_>::template Matrix3X<1>& vector);
 };
 
 
@@ -292,7 +292,7 @@ class RotationBase {
    */
   template<typename OtherDerived_>
   typename internal::get_scalar<Derived_>::Scalar getDisparityAngle(const RotationBase<OtherDerived_,Usage_>& other) const {
-    return internal::ComparisonTraits<RotationBase<Derived_, Usage_>, RotationBase<OtherDerived_, Usage_>>::getDisparityAngle(this->derived(), other.derived());
+    return internal::ComparisonTraits<RotationBase<Derived_, Usage_>, RotationBase<OtherDerived_, Usage_>>::get_disparity_angle(this->derived(), other.derived());
   }
 
   /*! \brief Compares two rotations with a tolerance.
@@ -325,7 +325,7 @@ class RotationBase {
    * \return  reference to modified rotation
    */
   Derived_& setExponentialMap(const typename internal::get_matrix3X<Derived_>::template Matrix3X<1>& vector)  {
-   static_cast<Derived_ &>(*this) = internal::MapTraits<RotationBase<Derived_,Usage_>>::exponentialMap(vector);
+   static_cast<Derived_ &>(*this) = internal::MapTraits<RotationBase<Derived_,Usage_>>::set_exponential_map(vector);
    return static_cast<Derived_&>(*this);
   }
 
@@ -333,7 +333,7 @@ class RotationBase {
    * \returns vector  Eigen::Matrix<Scalar 3, 1>
    */
   typename internal::get_matrix3X<Derived_>::template Matrix3X<1> getLogarithmicMap() const {
-    return internal::MapTraits<RotationBase<Derived_,Usage_>>::logarithmicMap(this->derived());
+    return internal::MapTraits<RotationBase<Derived_,Usage_>>::get_logarithmic_map(this->derived());
   }
 
   /*! \brief Applies the box minus operation
@@ -341,13 +341,13 @@ class RotationBase {
    */
   template<typename OtherDerived_>
   typename internal::get_matrix3X<Derived_>::template Matrix3X<1> boxMinus(const RotationBase<OtherDerived_,Usage_>& other) const {
-    return internal::BoxOperationTraits<RotationBase<Derived_,Usage_>, RotationBase<OtherDerived_,Usage_>>::boxMinus(this->derived(), other.derived());
+    return internal::BoxOperationTraits<RotationBase<Derived_,Usage_>, RotationBase<OtherDerived_,Usage_>>::box_minus(this->derived(), other.derived());
   }
   /*! \brief Applies the box plus operation
    * \returns rotation
    */
   Derived_ boxPlus(const typename internal::get_matrix3X<Derived_>::template Matrix3X<1>& vector) const {
-    return internal::BoxOperationTraits<RotationBase<Derived_,Usage_>, RotationBase<Derived_,Usage_>>::boxPlus(this->derived(), vector);
+    return internal::BoxOperationTraits<RotationBase<Derived_,Usage_>, RotationBase<Derived_,Usage_>>::box_plus(this->derived(), vector);
   }
 
 
@@ -357,14 +357,14 @@ class RotationBase {
    */
   template <typename Position_>
   Position_ rotate(const Position_& position) const {
-    return Position_(internal::RotationTraits<RotationBase<Derived_,Usage_>>::rotate(this->derived(), internal::get_position3<Position_>::getMatrix3(position)));
+    return Position_(internal::RotationTraits<RotationBase<Derived_,Usage_>>::rotate(this->derived(), internal::get_position3<Position_>::get_matrix3(position)));
   }
   /*! \brief Rotates a position in reverse.
    *  \returns the reverse rotated position
    */
   template <typename Position_>
   Position_ inverseRotate(const Position_& position) const {
-    return Position_(internal::RotationTraits<RotationBase<Derived_,Usage_>>::rotate(this->derived().inverted(), internal::get_position3<Position_>::getMatrix3(position)));
+    return Position_(internal::RotationTraits<RotationBase<Derived_,Usage_>>::rotate(this->derived().inverted(), internal::get_position3<Position_>::get_matrix3(position)));
   }
 
 
