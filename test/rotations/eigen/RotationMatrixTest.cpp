@@ -67,7 +67,7 @@ class RotationMatrixSingleTest : public ::testing::Test{
 //  const RotationMatrix rotRotationMatrixQuarterY = RotationMatrix(M_PI/2.0, 0.0, 1.0, 0.0);
 //  const RotationMatrix rotRotationMatrixQuarterZ = RotationMatrix(M_PI/2.0, 0.0, 0.0, 1.0);
 //  const RotationMatrix rotRotationMatrixIdentity = RotationMatrix(0.0, 1.0, 0.0, 0.0);
-  const Vector vec = Vector(1.3,-2.5,3.6);
+  const Vector vec = Vector(0.3,-1.5,0.6);
   const Vector vecX = Vector(1.0,0.0,0.0);
   const Vector vecY = Vector(0.0,1.0,0.0);
   const Vector vecZ = Vector(0.0,0.0,1.0);
