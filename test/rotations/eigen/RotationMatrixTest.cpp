@@ -360,7 +360,7 @@ TYPED_TEST(RotationMatrixSingleTest, testGetDisparityAngle){
   ASSERT_NEAR(this->rotRotationMatrixIdentity.getDisparityAngle(this->rotRotationMatrixIdentity),0.0,1e-6);
   ASSERT_NEAR(this->rotRotationMatrix2.getDisparityAngle(this->rotRotationMatrix1),this->rotRotationMatrix1.getDisparityAngle(this->rotRotationMatrix2),1e-6);
   ASSERT_NEAR(this->rotRotationMatrix1.getDisparityAngle(this->rotRotationMatrixIdentity),fabs(acos(RotationQuaternion(this->rotRotationMatrix1).w())*2),1e-6);
-  ASSERT_NEAR(this->rotRotationMatrix2.getDisparityAngle(this->rotRotationMatrix1),fabs(acos((RotationQuaternion(this->rotRotationMatrix1).inverted()*RotationQuaternion(this->rotRotationMatrix2)).w())*2),1e-6);
+  ASSERT_NEAR(this->rotRotationMatrix2.getDisparityAngle(this->rotRotationMatrix1),fabs(acos((RotationQuaternion(this->rotRotationMatrix1).inverted()*RotationQuaternion(this->rotRotationMatrix2)).getUnique().w())*2),1e-6);
 }
 
 
@@ -612,9 +612,12 @@ TYPED_TEST(RotationMatrixSingleTest, testBoxOperators){
   RotationMatrix rot1;
   RotationMatrix rot2;
 
-  RotationMatrix rotRotationMatrix1 = RotationMatrix(RotationQuaternion(0.0,0.36,0.48,0.8));
-  RotationMatrix rotRotationMatrix2 = RotationMatrix(RotationQuaternion(4.0/sqrt(30.0),3.0/sqrt(30.0),1.0/sqrt(30.0),2.0/sqrt(30.0)));
-
+//  RotationMatrix rotRotationMatrix1 = RotationMatrix(RotationQuaternion(0.0,0.36,0.48,0.8));
+//  RotationMatrix rotRotationMatrix2 = RotationMatrix(RotationQuaternion(4.0/sqrt(30.0),3.0/sqrt(30.0),1.0/sqrt(30.0),2.0/sqrt(30.0)));
+//  RotationMatrix rotRotationMatrix1 = this->rotRotationMatrix1.getUnique();
+//  RotationMatrix rotRotationMatrix2 = this->rotRotationMatrix2.getUnique();
+    RotationMatrix rotRotationMatrix1 = RotationMatrix(RotationQuaternion(0.0,0.36,0.48,0.8).getUnique());
+    RotationMatrix rotRotationMatrix2 = RotationMatrix(RotationQuaternion(4.0/sqrt(30.0),3.0/sqrt(30.0),1.0/sqrt(30.0),2.0/sqrt(30.0)).getUnique());
 
   Vector testVec;
 
@@ -640,9 +643,9 @@ TYPED_TEST(RotationMatrixSingleTest, testBoxOperators){
   testVec = this->vec;
   rot1 = rotRotationMatrix1.boxPlus(testVec);
   testVec = rot1.boxMinus(rotRotationMatrix1);
-  ASSERT_NEAR(testVec(0),this->vec(0),1e-6);
-  ASSERT_NEAR(testVec(1),this->vec(1),1e-6);
-  ASSERT_NEAR(testVec(2),this->vec(2),1e-6);
+  ASSERT_NEAR(testVec(0),this->vec(0),1e-6) << "testVec: " << testVec.transpose() << " vec: " << this->vec.transpose();
+  ASSERT_NEAR(testVec(1),this->vec(1),1e-6) << "testVec: " << testVec.transpose() << " vec: " << this->vec.transpose();
+  ASSERT_NEAR(testVec(2),this->vec(2),1e-6) << "testVec: " << testVec.transpose() << " vec: " << this->vec.transpose();
 
   // Test overlap with disparity angle
   double norm = 0.1;

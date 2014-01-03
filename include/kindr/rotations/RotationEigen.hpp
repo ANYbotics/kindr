@@ -73,6 +73,9 @@ class get_position3<positions::eigen_impl::Position3<PrimType_>>{
 
 };
 
+/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Multiplication Traits
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 /*! \brief Multiplication of two rotations with different parameterizations
  */
@@ -116,16 +119,12 @@ class MultiplicationTraits<RotationBase<LeftAndRight_, Usage_>, RotationBase<Lef
 };
 
 
-
-
-
-
-
-
-
+/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Comparison Traits
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 /*! \brief Compares two rotations.
- *  The
+ *
  */
 template<typename Left_, typename Right_, enum RotationUsage Usage_>
 class ComparisonTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usage_>> {
@@ -140,6 +139,11 @@ class ComparisonTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usage_>
     return fabs(eigen_impl::AngleAxis<typename Left_::Scalar,  Usage_>(left.derived()*right.derived().inverted()).angle());
   }
 };
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Map Traits
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
 
 template<typename Rotation_, enum RotationUsage Usage_>
 class MapTraits<RotationBase<Rotation_, Usage_>> {
@@ -159,6 +163,9 @@ class MapTraits<RotationBase<Rotation_, Usage_>> {
 
 };
 
+/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Box Operation Traits
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 template<typename Left_, typename Right_, enum RotationUsage Usage_>
 class BoxOperationTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usage_>> {
@@ -168,23 +175,20 @@ class BoxOperationTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usage
   }
 
   inline static  Left_ boxPlus(const RotationBase<Left_, Usage_>& rotation, const typename internal::get_matrix3X<Left_>::template Matrix3X<1>& vector) {
-//    return Left_(rotation.derived()*MapTraits<eigen_impl::RotationVector<typename Left_::Scalar, Usage_>>::exponentialMap(vector));
-//    return static_cast<Left_>(rotation.derived()*MapTraits<RotationBase<Left_,Usage_>>::exponentialMap(vector));
     return Left_(MapTraits<RotationBase<eigen_impl::RotationVector<typename Left_::Scalar,Usage_>,Usage_>>::exponentialMap(vector)*rotation.derived());
   }
 };
 
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Rotation Traits
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 template<typename Rotation_, enum RotationUsage Usage_>
 class RotationTraits<RotationBase<Rotation_, Usage_> > {
  public:
   template<typename get_matrix3X<Rotation_>::IndexType Cols>
   inline static typename get_matrix3X<Rotation_>::template Matrix3X<Cols> rotate(const RotationBase<Rotation_, Usage_>& rotation, const typename internal::get_matrix3X<Rotation_>::template Matrix3X<Cols>& m){
-//    if (Usage_ == RotationUsage::PASSIVE) {
-//      return eigen_impl::RotationMatrix<typename Rotation_::Scalar, Usage_>(rotation.derived()).toImplementation().transpose()*m;
-//    } else if (Usage_ == RotationUsage::ACTIVE) {
-//      return eigen_impl::RotationMatrix<typename Rotation_::Scalar, Usage_>(rotation.derived()).toImplementation()*m;
-//    }
     return eigen_impl::RotationMatrix<typename Rotation_::Scalar, Usage_>(rotation.derived()).toImplementation()*m;
   }
 };
