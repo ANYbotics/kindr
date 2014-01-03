@@ -82,6 +82,10 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage
    */
   typedef PrimType_ Scalar;
 
+  /*! \brief Rotation Vector as 3x1-matrix
+   */
+  typedef Base Vector;
+
   /*! \brief Default constructor using identity rotation.
    */
   EulerAnglesXyz()
@@ -153,6 +157,13 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage
   EulerAnglesXyz& inverted() {
     xyz_ = getInverseRpy<PrimType_, PrimType_>(xyz_);
     return *this;
+  }
+
+  /*! \brief Returns the Euler angles in a vector.
+   *  \returns  vector Eigen::Matrix<Scalar,3, 1>
+   */
+  inline const Vector vector() const {
+    return this->toImplementation();
   }
 
   /*! \brief Returns the type used for the implementation.

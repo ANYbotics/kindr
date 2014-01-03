@@ -82,6 +82,10 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    */
   typedef PrimType_ Scalar;
 
+  /*! \brief Rotation Vector as 3x1-matrix
+   */
+  typedef Base Vector;
+
   /*! \brief Default constructor using identity rotation.
    */
   RotationVector()
@@ -193,7 +197,7 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
   /*! \brief Returns the rotation vector.
    *  \returns the rotation vector (scalar)
    */
-  inline const Implementation vector() const {
+  inline const Vector vector() const {
     return this->toImplementation();
   }
 
