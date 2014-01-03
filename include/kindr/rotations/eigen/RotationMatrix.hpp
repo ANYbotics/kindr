@@ -399,11 +399,9 @@ class MultiplicationTraits<RotationBase<eigen_impl::RotationMatrix<LeftPrimType_
  public:
   inline static eigen_impl::RotationMatrix<LeftPrimType_, Usage_> mult(const eigen_impl::RotationMatrix<LeftPrimType_, Usage_>& lhs, const RotationBase<Right_, Usage_>& rhs) {
     return eigen_impl::RotationMatrix<LeftPrimType_, Usage_>(
-               typename eigen_impl::RotationQuaternion<LeftPrimType_, Usage_>(
-                   (typename eigen_impl::RotationQuaternion<LeftPrimType_,  Usage_>(lhs)).toImplementation() *
-                   (typename eigen_impl::RotationQuaternion<typename get_scalar<Right_>::Scalar, Usage_>(rhs.derived())).toImplementation()
-               )
-           );
+                   lhs.toImplementation() *
+                   typename eigen_impl::RotationMatrix<typename get_scalar<Right_>::Scalar, Usage_>(rhs.derived()).toImplementation()
+                   );
   }
 };
 /*! \brief Multiplication of a rotation matrix (on right hand side) and a rotation with a different parameterization (on left hand side)

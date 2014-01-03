@@ -322,6 +322,43 @@ TYPED_TEST(ConcatenationTest, testAToB) {
 
   this->rotB.rot = this->rotA.rotQuarterZ*this->rotB.rotQuarterZ*this->rotA.rotQuarterZ*this->rotB.rotQuarterZ;
   this->rotB.assertNear(this->rotB.rotIdentity, this->rotB.rot.getUnique(), this->tol, "4 quarters");
+
+  // check concatenation of 3 different quarters
+  this->rotB.rot = this->rotB.rotQuarterX.inverted()*this->rotA.rotQuarterY*this->rotB.rotQuarterX;
+  if(this->rotB.rot.Usage == kindr::rotations::RotationUsage::ACTIVE){
+    this->rotB.rot.invert();
+  }
+  this->rotB.assertNear(this->rotB.rotQuarterZ, this->rotB.rot.getUnique(), this->tol, "concatenation 1");
+
+  this->rotB.rot = this->rotB.rotQuarterX.inverted()*this->rotA.rotQuarterZ*this->rotB.rotQuarterX;
+  if(this->rotB.rot.Usage == kindr::rotations::RotationUsage::ACTIVE){
+    this->rotB.rot.invert();
+  }
+  this->rotB.assertNear(this->rotB.rotQuarterY.inverted(), this->rotB.rot.getUnique(), this->tol, "concatenation 2");
+
+  this->rotB.rot = this->rotB.rotQuarterY.inverted()*this->rotA.rotQuarterX*this->rotB.rotQuarterY;
+  if(this->rotB.rot.Usage == kindr::rotations::RotationUsage::ACTIVE){
+    this->rotB.rot.invert();
+  }
+  this->rotB.assertNear(this->rotB.rotQuarterZ.inverted(), this->rotB.rot.getUnique(), this->tol, "concatenation 3");
+
+  this->rotB.rot = this->rotB.rotQuarterY.inverted()*this->rotA.rotQuarterZ*this->rotB.rotQuarterY;
+  if(this->rotB.rot.Usage == kindr::rotations::RotationUsage::ACTIVE){
+    this->rotB.rot.invert();
+  }
+  this->rotB.assertNear(this->rotB.rotQuarterX, this->rotB.rot.getUnique(), this->tol, "concatenation 4");
+
+  this->rotB.rot = this->rotB.rotQuarterZ.inverted()*this->rotA.rotQuarterX*this->rotB.rotQuarterZ;
+  if(this->rotB.rot.Usage == kindr::rotations::RotationUsage::ACTIVE){
+    this->rotB.rot.invert();
+  }
+  this->rotB.assertNear(this->rotB.rotQuarterY, this->rotB.rot.getUnique(), this->tol, "concatenation 5");
+
+  this->rotB.rot = this->rotB.rotQuarterZ.inverted()*this->rotA.rotQuarterY*this->rotB.rotQuarterZ;
+  if(this->rotB.rot.Usage == kindr::rotations::RotationUsage::ACTIVE){
+    this->rotB.rot.invert();
+  }
+  this->rotB.assertNear(this->rotB.rotQuarterX.inverted(), this->rotB.rot.getUnique(), this->tol, "concatenation 6");
 }
 
 
@@ -344,52 +381,45 @@ TYPED_TEST(ConcatenationTest, testBToA) {
 
   this->rotA.rot = this->rotB.rotQuarterZ*this->rotA.rotQuarterZ*this->rotB.rotQuarterZ*this->rotA.rotQuarterZ;
   this->rotA.assertNear(this->rotA.rotIdentity, this->rotA.rot.getUnique(), this->tol, "4 quarters");
-//  rotRotationVector = this->rotRotationVectorQuarterX*this->rotRotationVectorQuarterX*this->rotRotationVectorQuarterX*this->rotRotationVectorQuarterX;
-//  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorIdentity.toImplementation(), rotRotationVector.toImplementation(), 1e-4, "concatenation");
-//
-//  rotRotationVector = this->rotRotationVectorQuarterY*this->rotRotationVectorQuarterY*this->rotRotationVectorQuarterY*this->rotRotationVectorQuarterY;
-//  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorIdentity.toImplementation(), rotRotationVector.toImplementation(), 1e-4, "concatenation");
-//
-//
-//  rotRotationVector = this->rotRotationVectorQuarterZ*this->rotRotationVectorQuarterZ*this->rotRotationVectorQuarterZ*this->rotRotationVectorQuarterZ;
-//  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorIdentity.toImplementation(), rotRotationVector.toImplementation(), 1e-4, "concatenation");
-//
-//  // Check concatenation of 3 different quarters
-//  rotRotationVector = this->rotRotationVectorQuarterX.inverted()*this->rotRotationVectorQuarterY*this->rotRotationVectorQuarterX;
-//  if(RotationVector::Usage == kindr::rotations::RotationUsage::ACTIVE){
-//    rotRotationVector.invert();
-//  }
-//  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorQuarterZ.toImplementation(), rotRotationVector.toImplementation(), 1e-4, "concatenation");
-//
-//  rotRotationVector = this->rotRotationVectorQuarterX.inverted()*this->rotRotationVectorQuarterZ*this->rotRotationVectorQuarterX;
-//  if(RotationVector::Usage == kindr::rotations::RotationUsage::ACTIVE){
-//    rotRotationVector.invert();
-//  }
-//  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorQuarterY.inverted().toImplementation(), rotRotationVector.toImplementation(), 1e-4, "concatenation");
-//
-//   rotRotationVector = this->rotRotationVectorQuarterY.inverted()*this->rotRotationVectorQuarterX*this->rotRotationVectorQuarterY;
-//  if(RotationVector::Usage == kindr::rotations::RotationUsage::ACTIVE){
-//    rotRotationVector.invert();
-//  }
-//  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorQuarterZ.inverted().toImplementation(), rotRotationVector.toImplementation(), 1e-4, "concatenation");
-//
-//  rotRotationVector = this->rotRotationVectorQuarterY.inverted()*this->rotRotationVectorQuarterZ*this->rotRotationVectorQuarterY;
-//  if(RotationVector::Usage == kindr::rotations::RotationUsage::ACTIVE){
-//    rotRotationVector.invert();
-//  }
-//  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorQuarterX.toImplementation(), rotRotationVector.toImplementation(), 1e-4, "concatenation");
-//
-//  rotRotationVector = this->rotRotationVectorQuarterZ.inverted()*this->rotRotationVectorQuarterX*this->rotRotationVectorQuarterZ;
-//  if(RotationVector::Usage == kindr::rotations::RotationUsage::ACTIVE){
-//    rotRotationVector.invert();
-//  }
-//  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorQuarterY.toImplementation(), rotRotationVector.toImplementation(), 1e-4, "concatenation");
-//
-//  rotRotationVector = this->rotRotationVectorQuarterZ.inverted()*this->rotRotationVectorQuarterY*this->rotRotationVectorQuarterZ;
-//  if(RotationVector::Usage == kindr::rotations::RotationUsage::ACTIVE){
-//    rotRotationVector.invert();
-//  }
-//  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorQuarterX.inverted().toImplementation(), rotRotationVector.toImplementation(), 1e-4, "concatenation");
+
+
+  // Check concatenation of 3 different quarters
+  this->rotA.rot = this->rotA.rotQuarterX.inverted()*this->rotB.rotQuarterY*this->rotA.rotQuarterX;
+  if(this->rotA.rot.Usage == kindr::rotations::RotationUsage::ACTIVE){
+    this->rotA.rot.invert();
+  }
+  this->rotA.assertNear(this->rotA.rotQuarterZ, this->rotA.rot.getUnique(), this->tol, "concatenation 1");
+
+  this->rotA.rot = this->rotA.rotQuarterX.inverted()*this->rotB.rotQuarterZ*this->rotA.rotQuarterX;
+  if(this->rotA.rot.Usage == kindr::rotations::RotationUsage::ACTIVE){
+    this->rotA.rot.invert();
+  }
+  this->rotA.assertNear(this->rotA.rotQuarterY.inverted(), this->rotA.rot.getUnique(), this->tol, "concatenation 2");
+
+  this->rotA.rot = this->rotA.rotQuarterY.inverted()*this->rotB.rotQuarterX*this->rotA.rotQuarterY;
+  if(this->rotA.rot.Usage == kindr::rotations::RotationUsage::ACTIVE){
+    this->rotA.rot.invert();
+  }
+  this->rotA.assertNear(this->rotA.rotQuarterZ.inverted(), this->rotA.rot.getUnique(), this->tol, "concatenation 3");
+
+  this->rotA.rot = this->rotA.rotQuarterY.inverted()*this->rotB.rotQuarterZ*this->rotA.rotQuarterY;
+  if(this->rotA.rot.Usage == kindr::rotations::RotationUsage::ACTIVE){
+    this->rotA.rot.invert();
+  }
+  this->rotA.assertNear(this->rotA.rotQuarterX, this->rotA.rot.getUnique(), this->tol, "concatenation 4");
+
+  this->rotA.rot = this->rotA.rotQuarterZ.inverted()*this->rotB.rotQuarterX*this->rotA.rotQuarterZ;
+  if(this->rotA.rot.Usage == kindr::rotations::RotationUsage::ACTIVE){
+    this->rotA.rot.invert();
+  }
+  this->rotA.assertNear(this->rotA.rotQuarterY, this->rotA.rot.getUnique(), this->tol, "concatenation 5");
+
+  this->rotA.rot = this->rotA.rotQuarterZ.inverted()*this->rotB.rotQuarterY*this->rotA.rotQuarterZ;
+  if(this->rotA.rot.Usage == kindr::rotations::RotationUsage::ACTIVE){
+    this->rotA.rot.invert();
+  }
+  this->rotA.assertNear(this->rotA.rotQuarterX.inverted(), this->rotA.rot.getUnique(), this->tol, "concatenation 6");
+
 
 }
 
