@@ -55,7 +55,7 @@ class AngleAxisSingleTest : public ::testing::Test{
   const AngleAxis rotAngleAxisQuarterY = AngleAxis(M_PI/2.0, 0.0, 1.0, 0.0);
   const AngleAxis rotAngleAxisQuarterZ = AngleAxis(M_PI/2.0, 0.0, 0.0, 1.0);
   const AngleAxis rotAngleAxisIdentity = AngleAxis(0.0, 1.0, 0.0, 0.0);
-  const Vector vec = Vector(1.3,-2.5,3.6);
+  const Vector vec = Vector(0.3,-1.5,0.6);
   const Vector vecX = Vector(1.0,0.0,0.0);
   const Vector vecY = Vector(0.0,1.0,0.0);
   const Vector vecZ = Vector(0.0,0.0,1.0);
@@ -556,17 +556,11 @@ TYPED_TEST(AngleAxisSingleTest, testMaps){
 
   testVec = this->rotAngleAxis1.getLogarithmicMap();
   rotAngleAxis.setExponentialMap(testVec);
-  ASSERT_NEAR(rotAngleAxis.angle(), this->rotAngleAxis1.angle(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.axis().x(), this->rotAngleAxis1.axis().x(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.axis().y(), this->rotAngleAxis1.axis().y(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.axis().z(), this->rotAngleAxis1.axis().z(),1e-6);
+  ASSERT_EQ(rotAngleAxis.isNear(this->rotAngleAxis1,1e-6),true);
 
   testVec = this->rotAngleAxis2.getLogarithmicMap();
   rotAngleAxis.setExponentialMap(testVec);
-  ASSERT_NEAR(rotAngleAxis.angle(), this->rotAngleAxis2.angle(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.axis().x(), this->rotAngleAxis2.axis().x(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.axis().y(), this->rotAngleAxis2.axis().y(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.axis().z(), this->rotAngleAxis2.axis().z(),1e-6);
+  ASSERT_EQ(rotAngleAxis.isNear(this->rotAngleAxis2,1e-6),true);
 
   double norm = 0.1;
   testVec = this->vec/this->vec.norm()*norm;

@@ -55,7 +55,7 @@ class RotationQuaternionSingleTest : public ::testing::Test{
   const RotationQuaternion rotQuat2 = RotationQuaternion(eigenQuat2);
   const RotationQuaternion rotQuatIdentity = RotationQuaternion(eigenQuatIdentity);
 
-  const Vector vec = Vector(1.3,-2.5,3.6);
+  const Vector vec = Vector(0.3,-1.5,0.6);
   const Vector vecX = Vector(1.0,0.0,0.0);
   const Vector vecY = Vector(0.0,1.0,0.0);
   const Vector vecZ = Vector(0.0,0.0,1.0);
@@ -832,17 +832,11 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionExponentialMap){
 
   testVec = this->rotQuat1.getLogarithmicMap();
   rotQuat.setExponentialMap(testVec);
-  ASSERT_NEAR(rotQuat.w(), this->rotQuat1.w(),1e-6);
-  ASSERT_NEAR(rotQuat.x(), this->rotQuat1.x(),1e-6);
-  ASSERT_NEAR(rotQuat.y(), this->rotQuat1.y(),1e-6);
-  ASSERT_NEAR(rotQuat.z(), this->rotQuat1.z(),1e-6);
+  ASSERT_EQ(rotQuat.isNear(this->rotQuat1,1e-6),true);
 
   testVec = this->rotQuat2.getLogarithmicMap();
   rotQuat.setExponentialMap(testVec);
-  ASSERT_NEAR(rotQuat.w(), this->rotQuat2.w(),1e-6);
-  ASSERT_NEAR(rotQuat.x(), this->rotQuat2.x(),1e-6);
-  ASSERT_NEAR(rotQuat.y(), this->rotQuat2.y(),1e-6);
-  ASSERT_NEAR(rotQuat.z(), this->rotQuat2.z(),1e-6);
+  ASSERT_EQ(rotQuat.isNear(this->rotQuat2,1e-6),true);
 
   double norm = 0.1;// --------------------------------------------------------------------------------------------------- //
   // -------- Testing for casting between different type of rotations and rotation Quaternions --------- //

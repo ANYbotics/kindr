@@ -51,7 +51,7 @@ class RotationVectorSingleTest : public ::testing::Test{
   const Vector eigenVector3v1 = Vector(0.36,0.48,0.8);
   const Vector eigenVector3v2 = Vector(0.3,2.0,0.0);
 
-  const Vector vec = Vector(1.3,-2.5,3.6);
+  const Vector vec = Vector(0.3,-1.5,0.6);
   const Vector vecX = Vector(1.0,0.0,0.0);
   const Vector vecY = Vector(0.0,1.0,0.0);
   const Vector vecZ = Vector(0.0,0.0,1.0);
@@ -528,11 +528,11 @@ TYPED_TEST(RotationVectorSingleTest, testMaps){
 
   testVec = this->rotRotationVectorV3.getLogarithmicMap();
   rot.setExponentialMap(testVec);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorV3.toImplementation(), rot.toImplementation(), 1e-4, "maps");
+  ASSERT_EQ(rot.isNear(this->rotRotationVectorV3,1e-6),true);
 
   testVec = this->rotRotationVectorV4.getLogarithmicMap();
   rot.setExponentialMap(testVec);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorV4.toImplementation(), rot.toImplementation(), 1e-4, "maps");
+  ASSERT_EQ(rot.isNear(this->rotRotationVectorV4,1e-6),true);
 
   double norm = 0.1;
   testVec = this->vec/this->vec.norm()*norm;

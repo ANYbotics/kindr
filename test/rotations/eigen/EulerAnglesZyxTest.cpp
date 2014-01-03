@@ -51,7 +51,7 @@ class EulerAnglesZyxSingleTest : public ::testing::Test{
   const Vector eigenVector3v1 = Vector(0.36,0.48,0.8);
   const Vector eigenVector3v2 = Vector(0.3,2.0,0.0);
 
-  const Vector vec = Vector(1.3,-2.5,3.6);
+  const Vector vec = Vector(0.3,-1.5,0.6);
   const Vector vecX = Vector(1.0,0.0,0.0);
   const Vector vecY = Vector(0.0,1.0,0.0);
   const Vector vecZ = Vector(0.0,0.0,1.0);
