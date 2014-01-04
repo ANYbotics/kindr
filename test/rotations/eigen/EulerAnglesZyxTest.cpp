@@ -511,6 +511,8 @@ TYPED_TEST(EulerAnglesZyxSingleTest, testVectorRotation){
 }
 
 
+
+
 /* Test Exponential and Logarithmic Map
  * Assumes getDisparityAngle() of Angle Axis is correct.
  */
@@ -608,42 +610,42 @@ TYPED_TEST(EulerAnglesZyxRotationQuaternionPairTest, testConversionRotationQuate
   // TODO: add generic
 
   rotQuat = this->rotEulerAnglesZyxIdentity;
-  ASSERT_NEAR(rotQuat.w(), this->rotQuatIdentity.w(),1e-6);
-  ASSERT_NEAR(rotQuat.x(), this->rotQuatIdentity.x(),1e-6);
-  ASSERT_NEAR(rotQuat.y(), this->rotQuatIdentity.y(),1e-6);
-  ASSERT_NEAR(rotQuat.z(), this->rotQuatIdentity.z(),1e-6);
+  ASSERT_NEAR(rotQuat.w(), this->rotQuatIdentity.w(),1e-3);
+  ASSERT_NEAR(rotQuat.x(), this->rotQuatIdentity.x(),1e-3);
+  ASSERT_NEAR(rotQuat.y(), this->rotQuatIdentity.y(),1e-3);
+  ASSERT_NEAR(rotQuat.z(), this->rotQuatIdentity.z(),1e-3);
   rotQuat = this->rotEulerAnglesZyxQuarterX;
-  ASSERT_NEAR(rotQuat.w(), this->rotQuatQuarterX.w(),1e-6);
-  ASSERT_NEAR(rotQuat.x(), this->rotQuatQuarterX.x(),1e-6);
-  ASSERT_NEAR(rotQuat.y(), this->rotQuatQuarterX.y(),1e-6);
-  ASSERT_NEAR(rotQuat.z(), this->rotQuatQuarterX.z(),1e-6);
+  ASSERT_NEAR(rotQuat.w(), this->rotQuatQuarterX.w(),1e-3);
+  ASSERT_NEAR(rotQuat.x(), this->rotQuatQuarterX.x(),1e-3);
+  ASSERT_NEAR(rotQuat.y(), this->rotQuatQuarterX.y(),1e-3);
+  ASSERT_NEAR(rotQuat.z(), this->rotQuatQuarterX.z(),1e-3);
   rotQuat = this->rotEulerAnglesZyxQuarterY;
-  ASSERT_NEAR(rotQuat.w(), this->rotQuatQuarterY.w(),1e-6);
-  ASSERT_NEAR(rotQuat.x(), this->rotQuatQuarterY.x(),1e-6);
-  ASSERT_NEAR(rotQuat.y(), this->rotQuatQuarterY.y(),1e-6);
-  ASSERT_NEAR(rotQuat.z(), this->rotQuatQuarterY.z(),1e-6);
+  ASSERT_NEAR(rotQuat.w(), this->rotQuatQuarterY.w(),1e-3);
+  ASSERT_NEAR(rotQuat.x(), this->rotQuatQuarterY.x(),1e-3);
+  ASSERT_NEAR(rotQuat.y(), this->rotQuatQuarterY.y(),1e-3);
+  ASSERT_NEAR(rotQuat.z(), this->rotQuatQuarterY.z(),1e-3);
   rotQuat = this->rotEulerAnglesZyxQuarterZ;
-  ASSERT_NEAR(rotQuat.w(), this->rotQuatQuarterZ.w(),1e-6);
-  ASSERT_NEAR(rotQuat.x(), this->rotQuatQuarterZ.x(),1e-6);
-  ASSERT_NEAR(rotQuat.y(), this->rotQuatQuarterZ.y(),1e-6);
-  ASSERT_NEAR(rotQuat.z(), this->rotQuatQuarterZ.z(),1e-6);
+  ASSERT_NEAR(rotQuat.w(), this->rotQuatQuarterZ.w(),1e-3);
+  ASSERT_NEAR(rotQuat.x(), this->rotQuatQuarterZ.x(),1e-3);
+  ASSERT_NEAR(rotQuat.y(), this->rotQuatQuarterZ.y(),1e-3);
+  ASSERT_NEAR(rotQuat.z(), this->rotQuatQuarterZ.z(),1e-3);
 
   rotEulerAnglesZyx = this->rotQuatIdentity;
-  ASSERT_NEAR(rotEulerAnglesZyx.x(), this->rotEulerAnglesZyxIdentity.x(),1e-6);
-  ASSERT_NEAR(rotEulerAnglesZyx.y(), this->rotEulerAnglesZyxIdentity.y(),1e-6);
-  ASSERT_NEAR(rotEulerAnglesZyx.z(), this->rotEulerAnglesZyxIdentity.z(),1e-6);
+  ASSERT_NEAR(rotEulerAnglesZyx.x(), this->rotEulerAnglesZyxIdentity.x(),1e-3);
+  ASSERT_NEAR(rotEulerAnglesZyx.y(), this->rotEulerAnglesZyxIdentity.y(),1e-3);
+  ASSERT_NEAR(rotEulerAnglesZyx.z(), this->rotEulerAnglesZyxIdentity.z(),1e-3);
   rotEulerAnglesZyx = this->rotQuatQuarterX;
-  ASSERT_NEAR(rotEulerAnglesZyx.x(), this->rotEulerAnglesZyxQuarterX.x(),1e-6);
-  ASSERT_NEAR(rotEulerAnglesZyx.y(), this->rotEulerAnglesZyxQuarterX.y(),1e-6);
-  ASSERT_NEAR(rotEulerAnglesZyx.z(), this->rotEulerAnglesZyxQuarterX.z(),1e-6);
+  ASSERT_NEAR(rotEulerAnglesZyx.x(), this->rotEulerAnglesZyxQuarterX.x(),1e-3);
+  ASSERT_NEAR(rotEulerAnglesZyx.y(), this->rotEulerAnglesZyxQuarterX.y(),1e-3);
+  ASSERT_NEAR(rotEulerAnglesZyx.z(), this->rotEulerAnglesZyxQuarterX.z(),1e-3);
   rotEulerAnglesZyx = this->rotQuatQuarterY;
-  ASSERT_NEAR(rotEulerAnglesZyx.x(), this->rotEulerAnglesZyxQuarterY.x(),1e-6);
-  ASSERT_NEAR(rotEulerAnglesZyx.y(), this->rotEulerAnglesZyxQuarterY.y(),1e-6);
-  ASSERT_NEAR(rotEulerAnglesZyx.z(), this->rotEulerAnglesZyxQuarterY.z(),1e-6);
+  ASSERT_NEAR(rotEulerAnglesZyx.x(), this->rotEulerAnglesZyxQuarterY.x(),1e-3);
+  ASSERT_NEAR(rotEulerAnglesZyx.y(), this->rotEulerAnglesZyxQuarterY.y(),1e-3);
+  ASSERT_NEAR(rotEulerAnglesZyx.z(), this->rotEulerAnglesZyxQuarterY.z(),1e-3);
   rotEulerAnglesZyx = this->rotQuatQuarterZ;
-  ASSERT_NEAR(rotEulerAnglesZyx.x(), this->rotEulerAnglesZyxQuarterZ.x(),1e-6);
-  ASSERT_NEAR(rotEulerAnglesZyx.y(), this->rotEulerAnglesZyxQuarterZ.y(),1e-6);
-  ASSERT_NEAR(rotEulerAnglesZyx.z(), this->rotEulerAnglesZyxQuarterZ.z(),1e-6);
+  ASSERT_NEAR(rotEulerAnglesZyx.x(), this->rotEulerAnglesZyxQuarterZ.x(),1e-3);
+  ASSERT_NEAR(rotEulerAnglesZyx.y(), this->rotEulerAnglesZyxQuarterZ.y(),1e-3);
+  ASSERT_NEAR(rotEulerAnglesZyx.z(), this->rotEulerAnglesZyxQuarterZ.z(),1e-3);
 }
 
 
