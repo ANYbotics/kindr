@@ -181,7 +181,7 @@ struct EulerAnglesZyxTestType {
        (kindr::common::eigen::compareRelative(rotA.getUnique().roll(), rotB.getUnique().roll(), 1e-1) &&
         kindr::common::eigen::compareRelative(rotA.getUnique().pitch(), rotB.getUnique().pitch(), 1e-1) &&
         kindr::common::eigen::compareRelative(rotA.getUnique().yaw(), rotB.getUnique().yaw(), 1e-1))
-    );
+    ) << std::endl << msg;
 
   }
 };
@@ -434,7 +434,7 @@ TYPED_TEST(Conversion2Test, testBToA) {
 }
 
 
-TYPED_TEST(ConcatenationTest, DISABLED_testAToB) {
+TYPED_TEST(ConcatenationTest, testAToB) {
 
   // Check result of multiplication of a generic rotation with identity
   this->rotB.rot = this->rotB.rotGeneric*this->rotA.rotIdentity;
@@ -493,7 +493,7 @@ TYPED_TEST(ConcatenationTest, DISABLED_testAToB) {
 
 
 
-TYPED_TEST(ConcatenationTest, DISABLED_testBToA) {
+TYPED_TEST(ConcatenationTest, testBToA) {
 
   // Check result of multiplication of a generic rotation with identity
   this->rotA.rot = this->rotA.rotGeneric*this->rotB.rotIdentity;
