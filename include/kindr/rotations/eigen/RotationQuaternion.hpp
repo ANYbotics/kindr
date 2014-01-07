@@ -101,7 +101,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, rotationQuaternion_.norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
   }
 
-  RotationQuaternion(const Scalar& real, const Imaginary& imag)
+  RotationQuaternion(Scalar real, const Imaginary& imag)
     : rotationQuaternion_(real,imag(0),imag(1),imag(2)) {
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, rotationQuaternion_.norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
   }
@@ -148,22 +148,6 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
     return rotationQuaternion_.z();
   }
 
-  inline void setW(Scalar w) { // todo: attention: no assertion for unitquaternions
-    rotationQuaternion_.w() = w;
-  }
-
-  inline void setX(Scalar x) {
-    rotationQuaternion_.x() = x;
-  }
-
-  inline void setY(Scalar y) {
-    rotationQuaternion_.y() = y;
-  }
-
-  inline void setZ(Scalar z) {
-    rotationQuaternion_.z() = z;
-  }
-
 
   inline Scalar real() const {
     return this->toUnitQuaternion().real();
@@ -173,11 +157,15 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
     return this->toUnitQuaternion().imaginary();
   }
 
-  inline void setReal(Scalar real) {
-    rotationQuaternion_.w() = real;
+  inline void setValues(Scalar w, Scalar x, Scalar y, Scalar z) {
+    rotationQuaternion_.w() = w;
+    rotationQuaternion_.x() = x;
+    rotationQuaternion_.y() = y;
+    rotationQuaternion_.z() = z;
   }
 
-  inline void setImaginary(Imaginary imag) {
+  inline void setParts(Scalar real, const Imaginary& imag) {
+    rotationQuaternion_.w() = real;
     rotationQuaternion_.x() = imag(0);
     rotationQuaternion_.y() = imag(1);
     rotationQuaternion_.z() = imag(2);

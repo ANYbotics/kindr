@@ -156,9 +156,10 @@ class ComparisonTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usage_>
    *  The disparity angle is defined as the angle of the angle-axis representation of the concatenation of
    *  the first rotation and the inverse of the second rotation. If the disparity angle is zero,
    *  the rotations are equal.
+   *  \returns disparity angle in [-pi,pi)
    */
   inline static typename Left_::Scalar get_disparity_angle(const RotationBase<Left_, Usage_>& left, const RotationBase<Right_, Usage_>& right) {
-    return fabs(eigen_impl::AngleAxis<typename Left_::Scalar,  Usage_>(left.derived()*right.derived().inverted()).angle());
+    return fabs(common::floatingPointModulo(eigen_impl::AngleAxis<typename Left_::Scalar,  Usage_>(left.derived()*right.derived().inverted()).angle() + M_PI,2*M_PI)-M_PI);
   }
 };
 

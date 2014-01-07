@@ -393,10 +393,7 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionSetters){
   ASSERT_NEAR(rot.y(), this->eigenQuatIdentity.y(),1e-6);
   ASSERT_NEAR(rot.z(), this->eigenQuatIdentity.z(),1e-6);
 
-  rot.setW(this->eigenQuat1.w());
-  rot.setX(this->eigenQuat1.x());
-  rot.setY(this->eigenQuat1.y());
-  rot.setZ(this->eigenQuat1.z());
+  rot.setValues(this->eigenQuat1.w(), this->eigenQuat1.x(), this->eigenQuat1.y(), this->eigenQuat1.z());
   ASSERT_NEAR(rot.w(), this->eigenQuat1.w(),1e-6);
   ASSERT_NEAR(rot.x(), this->eigenQuat1.x(),1e-6);
   ASSERT_NEAR(rot.y(), this->eigenQuat1.y(),1e-6);
@@ -408,8 +405,7 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionSetters){
   ASSERT_NEAR(rot.y(), this->eigenQuatIdentity.y(),1e-6);
   ASSERT_NEAR(rot.z(), this->eigenQuatIdentity.z(),1e-6);
 
-  rot.setReal(this->quat1.real());
-  rot.setImaginary(this->quat1.imaginary());
+  rot.setParts(this->quat1.real(), this->quat1.imaginary());
   ASSERT_NEAR(rot.w(), this->eigenQuat1.w(),1e-6);
   ASSERT_NEAR(rot.x(), this->eigenQuat1.x(),1e-6);
   ASSERT_NEAR(rot.y(), this->eigenQuat1.y(),1e-6);

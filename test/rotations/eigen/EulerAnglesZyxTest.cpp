@@ -304,7 +304,7 @@ TYPED_TEST(EulerAnglesZyxSingleTest, testGetDisparityAngle){
   ASSERT_NEAR(this->rotEulerAnglesZyxV3.getDisparityAngle(this->rotEulerAnglesZyxV3),0.0,1e-6);
   ASSERT_NEAR(this->rotEulerAnglesZyxV4.getDisparityAngle(this->rotEulerAnglesZyxV4),0.0,1e-6);
   ASSERT_NEAR(this->rotEulerAnglesZyxIdentity.getDisparityAngle(this->rotEulerAnglesZyxIdentity),0.0,1e-6);
-  ASSERT_NEAR(this->rotEulerAnglesZyxV4.getDisparityAngle(this->rotEulerAnglesZyxV3),this->rotEulerAnglesZyxV3.getDisparityAngle(this->rotEulerAnglesZyxV4),1e-6);
+  ASSERT_NEAR(this->rotEulerAnglesZyxV4.getDisparityAngle(this->rotEulerAnglesZyxV3),fabs(this->rotEulerAnglesZyxV3.getDisparityAngle(this->rotEulerAnglesZyxV4)),1e-6);
   ASSERT_NEAR(this->rotEulerAnglesZyxV3.getDisparityAngle(this->rotEulerAnglesZyxIdentity),fabs(acos(RotationQuaternion(this->rotEulerAnglesZyxV3).w())*2),1e-6);
   ASSERT_NEAR(this->rotEulerAnglesZyxV4.getDisparityAngle(this->rotEulerAnglesZyxV3),fabs(acos((RotationQuaternion(this->rotEulerAnglesZyxV3).inverted()*RotationQuaternion(this->rotEulerAnglesZyxV4)).w())*2),1e-6);
 }
@@ -341,52 +341,50 @@ TYPED_TEST(EulerAnglesZyxSingleTest, testConcatenation){
 
   // Check concatenation of 4 quarters
   rotEulerAnglesZyx = this->rotEulerAnglesZyxQuarterX*this->rotEulerAnglesZyxQuarterX*this->rotEulerAnglesZyxQuarterX*this->rotEulerAnglesZyxQuarterX;
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotEulerAnglesZyxIdentity.toImplementation(), rotEulerAnglesZyx.toImplementation(), 1e-4, "concatenation");
+  ASSERT_EQ(rotEulerAnglesZyx.isNear(this->rotEulerAnglesZyxIdentity,1e-6),true);
 
   rotEulerAnglesZyx = this->rotEulerAnglesZyxQuarterY*this->rotEulerAnglesZyxQuarterY*this->rotEulerAnglesZyxQuarterY*this->rotEulerAnglesZyxQuarterY;
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotEulerAnglesZyxIdentity.toImplementation(), rotEulerAnglesZyx.toImplementation(), 1e-4, "concatenation");
-
+  ASSERT_EQ(rotEulerAnglesZyx.isNear(this->rotEulerAnglesZyxIdentity,1e-6),true);
 
   rotEulerAnglesZyx = this->rotEulerAnglesZyxQuarterZ*this->rotEulerAnglesZyxQuarterZ*this->rotEulerAnglesZyxQuarterZ*this->rotEulerAnglesZyxQuarterZ;
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotEulerAnglesZyxIdentity.toImplementation(), rotEulerAnglesZyx.toImplementation(), 1e-4, "concatenation");
+  ASSERT_EQ(rotEulerAnglesZyx.isNear(this->rotEulerAnglesZyxIdentity,1e-6),true);
 
   // Check concatenation of 3 different quarters
   rotEulerAnglesZyx = this->rotEulerAnglesZyxQuarterX.inverted()*this->rotEulerAnglesZyxQuarterY*this->rotEulerAnglesZyxQuarterX;
   if(EulerAnglesZyx::Usage == kindr::rotations::RotationUsage::ACTIVE){
     rotEulerAnglesZyx.invert();
   }
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotEulerAnglesZyxQuarterZ.toImplementation(), rotEulerAnglesZyx.toImplementation(), 1e-4, "concatenation");
+  ASSERT_EQ(rotEulerAnglesZyx.isNear(this->rotEulerAnglesZyxQuarterZ,1e-6),true);
 
   rotEulerAnglesZyx = this->rotEulerAnglesZyxQuarterX.inverted()*this->rotEulerAnglesZyxQuarterZ*this->rotEulerAnglesZyxQuarterX;
   if(EulerAnglesZyx::Usage == kindr::rotations::RotationUsage::ACTIVE){
     rotEulerAnglesZyx.invert();
   }
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotEulerAnglesZyxQuarterY.inverted().toImplementation(), rotEulerAnglesZyx.toImplementation(), 1e-4, "concatenation");
+  ASSERT_EQ(rotEulerAnglesZyx.isNear(this->rotEulerAnglesZyxQuarterY.inverted(),1e-6),true);
 
-   rotEulerAnglesZyx = this->rotEulerAnglesZyxQuarterY.inverted()*this->rotEulerAnglesZyxQuarterX*this->rotEulerAnglesZyxQuarterY;
+  rotEulerAnglesZyx = this->rotEulerAnglesZyxQuarterY.inverted()*this->rotEulerAnglesZyxQuarterX*this->rotEulerAnglesZyxQuarterY;
   if(EulerAnglesZyx::Usage == kindr::rotations::RotationUsage::ACTIVE){
     rotEulerAnglesZyx.invert();
   }
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotEulerAnglesZyxQuarterZ.inverted().toImplementation(), rotEulerAnglesZyx.toImplementation(), 1e-4, "concatenation");
+  ASSERT_EQ(rotEulerAnglesZyx.isNear(this->rotEulerAnglesZyxQuarterZ.inverted(),1e-6),true);
 
   rotEulerAnglesZyx = this->rotEulerAnglesZyxQuarterY.inverted()*this->rotEulerAnglesZyxQuarterZ*this->rotEulerAnglesZyxQuarterY;
   if(EulerAnglesZyx::Usage == kindr::rotations::RotationUsage::ACTIVE){
     rotEulerAnglesZyx.invert();
   }
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotEulerAnglesZyxQuarterX.toImplementation(), rotEulerAnglesZyx.toImplementation(), 1e-4, "concatenation");
+  ASSERT_EQ(rotEulerAnglesZyx.isNear(this->rotEulerAnglesZyxQuarterX,1e-6),true);
 
   rotEulerAnglesZyx = this->rotEulerAnglesZyxQuarterZ.inverted()*this->rotEulerAnglesZyxQuarterX*this->rotEulerAnglesZyxQuarterZ;
   if(EulerAnglesZyx::Usage == kindr::rotations::RotationUsage::ACTIVE){
     rotEulerAnglesZyx.invert();
   }
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotEulerAnglesZyxQuarterY.toImplementation(), rotEulerAnglesZyx.toImplementation(), 1e-4, "concatenation");
+  ASSERT_EQ(rotEulerAnglesZyx.isNear(this->rotEulerAnglesZyxQuarterY,1e-6),true);
 
   rotEulerAnglesZyx = this->rotEulerAnglesZyxQuarterZ.inverted()*this->rotEulerAnglesZyxQuarterY*this->rotEulerAnglesZyxQuarterZ;
   if(EulerAnglesZyx::Usage == kindr::rotations::RotationUsage::ACTIVE){
     rotEulerAnglesZyx.invert();
   }
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotEulerAnglesZyxQuarterX.inverted().toImplementation(), rotEulerAnglesZyx.toImplementation(), 1e-4, "concatenation");
-
+  ASSERT_EQ(rotEulerAnglesZyx.isNear(this->rotEulerAnglesZyxQuarterX.inverted(),1e-6),true);
 }
 
 

@@ -45,7 +45,7 @@ namespace common {
  * Similar to matlab's mod(); Not similar to fmod():    floatingPointModulo(-3,4)= 1   fmod(-3,4)= -3
  */
 template<typename T>
-T floatingPointModulo(const T& x, const T& y)
+T floatingPointModulo(T x, T y)
 {
     static_assert(!std::numeric_limits<T>::is_exact , "floatingPointModulo: floating-point type expected");
 
@@ -88,21 +88,21 @@ T floatingPointModulo(const T& x, const T& y)
 
 //! wrap angle to [x1..x2)
 template<typename T>
-inline T wrapAngle(const T& angle, const T& x1, const T& x2)
+inline T wrapAngle(T angle, T x1, T x2)
 {
     return floatingPointModulo(angle-x1, x2-x1) + x1;
 }
 
 //! wrap angle to [-PI..PI)
 template<typename T>
-inline T wrapPosNegPI(const T& angle)
+inline T wrapPosNegPI(T angle)
 {
     return floatingPointModulo(angle + M_PI, 2*M_PI) - M_PI;
 }
 
 //! wrap angle to [0..2*PI)
 template<typename T>
-inline T wrapTwoPI(const T& angle)
+inline T wrapTwoPI(T angle)
 {
     return floatingPointModulo(angle, 2*M_PI);
 }
@@ -137,8 +137,7 @@ class NumTraits : GenericNumTraits<T> {
 };
 
 template<>
-class NumTraits<float>
-  : GenericNumTraits<float>
+class NumTraits<float> : GenericNumTraits<float>
 {
  public:
   static inline float dummy_precision() { return 1e-5f; }
@@ -152,8 +151,7 @@ class NumTraits<double> : GenericNumTraits<double>
 };
 
 template<>
-class NumTraits<long double>
-  : GenericNumTraits<long double>
+class NumTraits<long double> : GenericNumTraits<long double>
 {
  public:
   static inline long double dummy_precision() { return 1e-15l; }

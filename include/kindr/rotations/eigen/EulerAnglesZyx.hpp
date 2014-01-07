@@ -38,6 +38,7 @@
 #include "kindr/rotations/RotationBase.hpp"
 #include "kindr/rotations/eigen/RotationEigenFunctions.hpp"
 
+
 namespace kindr {
 namespace rotations {
 namespace eigen_impl {
@@ -139,7 +140,7 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
    *  \returns the inverse of the rotation
    */
   EulerAnglesZyx inverted() const {
-    return EulerAnglesZyx(getInverseRpy<PrimType_, PrimType_>(this->toImplementation()));
+    return EulerAnglesZyx(getInverseYpr<PrimType_, PrimType_>(this->toImplementation()));
   }
 
   /*! \brief Inverts the rotation.
@@ -264,81 +265,61 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
    *  This function is used to compare different rotations.
    *  \returns copy of the Euler angles rotation which is unique
    */
-  EulerAnglesZyx getUnique() const {  // wraps angles into [-pi,pi),[-pi/2,pi/2),[-pi,pi)
-    Base zyx(kindr::common::floatingPointModulo(yaw()  +M_PI,2*M_PI)-M_PI,
-                        kindr::common::floatingPointModulo(pitch()+M_PI,2*M_PI)-M_PI,
-                        kindr::common::floatingPointModulo(roll() +M_PI,2*M_PI)-M_PI); // wraps all angles into [-pi,pi)
-     if(zyx.y() >= M_PI/2)
-     {
-       if(zyx.x() >= 0) {
-         zyx.x() = (zyx.x() - M_PI);
-       } else {
-         zyx.x() = (zyx.x() + M_PI);
-       }
+  EulerAnglesZyx getUnique() const {
+    Base zyx(kindr::common::floatingPointModulo(z()+M_PI,2*M_PI)-M_PI,
+             kindr::common::floatingPointModulo(y()+M_PI,2*M_PI)-M_PI,
+             kindr::common::floatingPointModulo(x()+M_PI,2*M_PI)-M_PI); // wrap all angles into [-pi,pi)
 
-       zyx.y() = (-(zyx.y() - M_PI));
+    // wrap angles into [-pi,pi),[-pi/2,pi/2),[-pi,pi)
+    if(zyx.y() < -M_PI/2)
+    {
+      if(zyx.z() < 0) {
+        zyx.z() = zyx.z() + M_PI;
+      } else {
+        zyx.z() = zyx.z() - M_PI;
+      }
 
-       if(zyx.z() >= 0) {
-         zyx.z() = (zyx.z() - M_PI);
-       } else {
-         zyx.z() = (zyx.z() + M_PI);
-       }
-     }
-     else if(zyx.y() < -M_PI/2)
-     {
-       if(zyx.x() >= 0) {
-         zyx.x() = (zyx.z() - M_PI);
-       } else {
-         zyx.x() = (zyx.z() + M_PI);
-       }
+      zyx.y() = -(zyx.y() + M_PI);
 
-       zyx.y() = (-(zyx.y() + M_PI));
+      if(zyx.x() < 0) {
+        zyx.x() = zyx.x() + M_PI;
+      } else {
+        zyx.x() = zyx.x() - M_PI;
+      }
+    }
+    else if(zyx.y() == -M_PI/2)
+    {
+      zyx.z() += zyx.x();
+      zyx.x() = 0;
+    }
+    else if(-M_PI/2 < zyx.y() && zyx.y() < M_PI/2)
+    {
+      // ok
+    }
+    else if(M_PI/2 == zyx.y())
+    {
+      // todo: M_PI/2 should not be in range, other formula?
+      zyx.z() -= zyx.x();
+      zyx.x() = 0;
+    }
+    else // M_PI/2 < zyx.y()
+    {
+      if(zyx.z() < 0) {
+        zyx.z() = zyx.z() + M_PI;
+      } else {
+        zyx.z() = zyx.z() - M_PI;
+      }
 
-       if(zyx.z() >= 0) {
-         zyx.z() = (zyx.z() - M_PI);
-       } else {
-         zyx.z() = (zyx.z() + M_PI);
-       }
-     }
+      zyx.y() = -(zyx.y() - M_PI);
 
-     return EulerAnglesZyx(zyx);
+      if(zyx.x() < 0) {
+        zyx.x() = zyx.x() + M_PI;
+      } else {
+        zyx.x() = zyx.x() - M_PI;
+      }
+    }
 
-//    EulerAnglesZyx zyx(kindr::common::floatingPointModulo(yaw()  +M_PI,2*M_PI)-M_PI,
-//                       kindr::common::floatingPointModulo(pitch()+M_PI,2*M_PI)-M_PI,
-//                       kindr::common::floatingPointModulo(roll() +M_PI,2*M_PI)-M_PI); // wraps all angles into [-pi,pi)
-//    if(zyx.pitch() >= M_PI/2)
-//    {
-//      if(zyx.yaw() >= 0) {
-//        zyx.setYaw(zyx.yaw() - M_PI);
-//      } else {
-//        zyx.setYaw(zyx.yaw() + M_PI);
-//      }
-//
-//      zyx.setPitch(-(zyx.pitch() - M_PI));
-//
-//      if(zyx.roll() >= 0) {
-//        zyx.setRoll(zyx.roll() - M_PI);
-//      } else {
-//        zyx.setRoll(zyx.roll() + M_PI);
-//      }
-//    }
-//    else if(zyx.pitch() < -M_PI/2)
-//    {
-//      if(zyx.yaw() >= 0) {
-//        zyx.setYaw(zyx.yaw() - M_PI);
-//      } else {
-//        zyx.setYaw(zyx.yaw() + M_PI);
-//      }
-//
-//      zyx.setPitch(-(zyx.pitch() + M_PI));
-//
-//      if(zyx.roll() >= 0) {
-//        zyx.setRoll(zyx.roll() - M_PI);
-//      } else {
-//        zyx.setRoll(zyx.roll() + M_PI);
-//      }
-//    }
-//    return zyx;
+    return EulerAnglesZyx(zyx);
   }
 
   /*! \brief Modifies the Euler angles rotation such that the angles lie in [-pi,pi),[-pi/2,pi/2),[-pi,pi).

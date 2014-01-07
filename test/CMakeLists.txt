@@ -92,7 +92,7 @@ set(ROTATION_SRCS
 	rotations/eigen/RotationVectorTest.cpp
 	rotations/eigen/AngleAxisTest.cpp
 	rotations/eigen/RotationMatrixTest.cpp
-	#rotations/eigen/EulerAnglesZyxTest.cpp
+	rotations/eigen/EulerAnglesZyxTest.cpp
 	rotations/RotationEigenTest.cpp
 )
 
