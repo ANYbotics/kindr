@@ -98,8 +98,8 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    *  \param y      second entry of the rotation vector
    *  \param z      third entry of the rotation vector
    */
-  RotationVector(Scalar x, Scalar y, Scalar z) {
-    vector_ << x,y,z;
+  RotationVector(Scalar x, Scalar y, Scalar z)
+    : vector_(x,y,z) {
   }
 
 
@@ -107,8 +107,8 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    *
    *  \param other   Eigen::Matrix<Scalar, 3, 1>
    */
-  explicit RotationVector(const Base& other) { // explicit on purpose
-    vector_ = other;
+  explicit RotationVector(const Base& other) // explicit on purpose
+    : vector_(other) {
   }
 
   /*! \brief Constructor using another rotation.

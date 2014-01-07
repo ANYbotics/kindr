@@ -96,19 +96,13 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  \param y     third entry of the quaternion = n2*sin(phi/2)
    *  \param z     fourth entry of the quaternion = n3*sin(phi/2)
    */
-  RotationQuaternion(Scalar w, Scalar x, Scalar y, Scalar z) {
-    rotationQuaternion_.w() = w;
-    rotationQuaternion_.x() = x;
-    rotationQuaternion_.y() = y;
-    rotationQuaternion_.z() = z;
+  RotationQuaternion(Scalar w, Scalar x, Scalar y, Scalar z)
+    : rotationQuaternion_(w,x,y,z) {
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, rotationQuaternion_.norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
   }
 
-  RotationQuaternion(const Scalar& real, const Imaginary& imag) {
-    rotationQuaternion_.w() = real;
-    rotationQuaternion_.x() = imag(0);
-    rotationQuaternion_.y() = imag(1);
-    rotationQuaternion_.z() = imag(2);
+  RotationQuaternion(const Scalar& real, const Imaginary& imag)
+    : rotationQuaternion_(real,imag(0),imag(1),imag(2)) {
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, rotationQuaternion_.norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
   }
 
@@ -125,11 +119,8 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    *  In debug mode, an assertion is thrown if the quaternion has not unit length.
    *  \param other   quaternions::UnitQuaternion
    */
-  explicit RotationQuaternion(const Base& other) {
-    rotationQuaternion_.w() = other.w();
-    rotationQuaternion_.x() = other.x();
-    rotationQuaternion_.y() = other.y();
-    rotationQuaternion_.z() = other.z();
+  explicit RotationQuaternion(const Base& other)
+    : rotationQuaternion_(other.w(), other.x(), other.y(), other.z()) {
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, rotationQuaternion_.norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
   }
 

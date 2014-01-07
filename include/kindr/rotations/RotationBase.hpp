@@ -301,7 +301,6 @@ class RotationBase {
   template<typename OtherDerived_>
   bool isNear(const RotationBase<OtherDerived_,Usage_>& other, typename internal::get_scalar<Derived_>::Scalar tol) const {
     const typename internal::get_scalar<Derived_>::Scalar angle = this->getDisparityAngle(other);
-    std::cout << "disparity angle = " << angle << std::endl;
     return (angle <= tol);
   }
 

@@ -97,9 +97,8 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_> {
    *  \param v2      second entry of the rotation axis vector
    *  \param v3      third entry of the rotation axis vector
    */
-  AngleAxis(Scalar angle, Scalar v1, Scalar v2, Scalar v3) {
-    angleAxis_.angle() = angle;
-    angleAxis_.axis() = Vector3(v1,v2,v3);
+  AngleAxis(Scalar angle, Scalar v1, Scalar v2, Scalar v3)
+    : angleAxis_(angle,Vector3(v1,v2,v3)) {
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input rotation axis has not unit length.");
   }
 
@@ -108,8 +107,8 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_> {
    * \param angle   rotation angle
    * \param axis     rotation vector with unit length (Eigen vector)
    */
-  AngleAxis(Scalar angle, const Vector3& axis) {
-    this->toImplementation() = Base(angle,axis);
+  AngleAxis(Scalar angle, const Vector3& axis)
+    : angleAxis_(angle,axis) {
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input rotation axis has not unit length.");
   }
 
@@ -118,8 +117,8 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_> {
    * In debug mode, an assertion is thrown if the rotation vector has not unit length.
    * \param vector     4x1-matrix with [angle; axis]
    */
-  AngleAxis(const Vector4& vector) {
-    this->toImplementation() = Base(vector(0),vector.template block<3,1>(1,0));
+  AngleAxis(const Vector4& vector)
+    : angleAxis_(vector(0),vector.template block<3,1>(1,0)) {
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input rotation axis has not unit length.");
   }
 
@@ -127,8 +126,8 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_> {
    *  In debug mode, an assertion is thrown if the rotation vector has not unit length.
    *  \param other   Eigen::AngleAxis<PrimType_>
    */
-  explicit AngleAxis(const Base& other) { // explicit on purpose
-    this->toImplementation() = other;
+  explicit AngleAxis(const Base& other) // explicit on purpose
+    : angleAxis_(other) {
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->axis().norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input rotation axis has not unit length.");
   }
 

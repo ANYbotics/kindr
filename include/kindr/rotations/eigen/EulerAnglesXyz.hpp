@@ -97,15 +97,15 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage
    *  \param pitch    second rotation angle around Y' axis
    *  \param yaw      third rotation angle around Z'' axis
    */
-  EulerAnglesXyz(Scalar roll, Scalar pitch, Scalar yaw) {
-    xyz_ << roll,pitch,yaw;
+  EulerAnglesXyz(Scalar roll, Scalar pitch, Scalar yaw)
+    : xyz_(roll,pitch,yaw) {
   }
 
   /*! \brief Constructor using Eigen::Matrix.
    *  \param other   Eigen::Matrix<PrimType_,3,1> [roll; pitch; yaw]
    */
-  explicit EulerAnglesXyz(const Base& other) {
-    xyz_ = other;
+  explicit EulerAnglesXyz(const Base& other)
+  : xyz_(other) {
   }
 
   /*! \brief Constructor using another rotation.
