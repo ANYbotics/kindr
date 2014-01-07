@@ -86,7 +86,7 @@ template<typename Position_>
 class get_position3 {
  public:
 //  static const Matrix3X& get_matrix3(const Position& position) {
-//    return position.toStoredImplementation();
+//    return position.toImplementation();
 //  }
 };
 
@@ -120,7 +120,7 @@ template<typename Left_, typename Right_>
 class ComparisonTraits {
  public:
   inline static bool isEqual(const Left_& left, const Right_& right) {
-    return left.toStoredImplementation() == Left_(right).toStoredImplementation();
+    return left.toImplementation() == Left_(right).toImplementation();
   }
 };
 
@@ -300,7 +300,9 @@ class RotationBase {
    */
   template<typename OtherDerived_>
   bool isNear(const RotationBase<OtherDerived_,Usage_>& other, typename internal::get_scalar<Derived_>::Scalar tol) const {
-    return (this->getDisparityAngle(other) <= tol);
+    const typename internal::get_scalar<Derived_>::Scalar angle = this->getDisparityAngle(other);
+    std::cout << "disparity angle = " << angle << std::endl;
+    return (angle <= tol);
   }
 
   /*! \brief Rotates a vector or a matrix column-wise.

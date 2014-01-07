@@ -96,22 +96,14 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
    *  \param roll     third rotation angle around X'' axis
    */
   EulerAnglesZyx(Scalar yaw, Scalar pitch, Scalar roll) {
-    if(Usage_ == RotationUsage::ACTIVE) {
-      zyx_ << yaw,pitch,roll;
-    } else if(Usage_ == RotationUsage::PASSIVE) {
-      zyx_<< -yaw,-pitch,-roll;
-    }
+    zyx_ << yaw,pitch,roll;
   }
 
   /*! \brief Constructor using Eigen::Matrix.
    *  \param other   Eigen::Matrix<PrimType_,3,1> [roll; pitch; yaw]
    */
   explicit EulerAnglesZyx(const Base& other) {
-    if(Usage_ == RotationUsage::ACTIVE) {
-      zyx_ = other;
-    } else if(Usage_ == RotationUsage::PASSIVE) {
-      zyx_ = -other;
-    }
+    zyx_ = other;
   }
 
   /*! \brief Constructor using another rotation.
@@ -119,7 +111,7 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
    */
   template<typename OtherDerived_>
   inline explicit EulerAnglesZyx(const RotationBase<OtherDerived_, Usage_>& other)
-    : zyx_(internal::ConversionTraits<EulerAnglesZyx, OtherDerived_>::convert(other.derived()).toStoredImplementation()) {
+    : zyx_(internal::ConversionTraits<EulerAnglesZyx, OtherDerived_>::convert(other.derived()).toImplementation()) {
   }
 
   /*! \brief Assignment operator using another rotation.
@@ -128,7 +120,7 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
    */
   template<typename OtherDerived_>
   EulerAnglesZyx& operator =(const RotationBase<OtherDerived_, Usage_>& other) {
-    this->toStoredImplementation() = internal::ConversionTraits<EulerAnglesZyx, OtherDerived_>::convert(other.derived()).toStoredImplementation();
+    this->toImplementation() = internal::ConversionTraits<EulerAnglesZyx, OtherDerived_>::convert(other.derived()).toImplementation();
     return *this;
   }
 
@@ -139,7 +131,7 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
    */
   template<typename OtherDerived_>
   EulerAnglesZyx& operator ()(const RotationBase<OtherDerived_, Usage_>& other) {
-    this->toStoredImplementation() = internal::ConversionTraits<EulerAnglesZyx, OtherDerived_>::convert(other.derived()).toStoredImplementation();
+    this->toImplementation() = internal::ConversionTraits<EulerAnglesZyx, OtherDerived_>::convert(other.derived()).toImplementation();
     return *this;
   }
 
@@ -165,28 +157,17 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
     return this->toImplementation();
   }
 
-  /*! \brief Returns the type used for the implementation.
-   *  \returns the type used for the implementation
-   */
-  Implementation toImplementation() const {
-    if(Usage_ == RotationUsage::ACTIVE) {
-      return zyx_;
-    } else if(Usage_ == RotationUsage::PASSIVE) {
-      return -zyx_;
-    }
-  }
-
   /*! \brief Cast to the implementation type.
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
-  inline Base& toStoredImplementation() {
+  inline Base& toImplementation() {
     return static_cast<Base&>(zyx_);
   }
 
   /*! \brief Cast to the implementation type.
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
-  inline const Base& toStoredImplementation() const {
+  inline const Base& toImplementation() const {
     return static_cast<const Base&>(zyx_);
   }
 
@@ -194,136 +175,88 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
    *  \returns yaw angle (scalar)
    */
   inline Scalar yaw() const {
-    if(Usage_ == RotationUsage::ACTIVE) {
-      return zyx_(0);
-    } else if(Usage_ == RotationUsage::PASSIVE) {
-      return -zyx_(0);
-    }
+    return zyx_(0);
   }
 
   /*! \brief Gets pitch (Y') angle.
    *  \returns pitch angle (scalar)
    */
   inline Scalar pitch() const {
-    if(Usage_ == RotationUsage::ACTIVE) {
-      return zyx_(1);
-    } else if(Usage_ == RotationUsage::PASSIVE) {
-      return -zyx_(1);
-    }
+    return zyx_(1);
   }
 
   /*! \brief Gets roll (X'') angle.
    *  \returns roll angle (scalar)
    */
   inline Scalar roll() const {
-    if(Usage_ == RotationUsage::ACTIVE) {
-      return zyx_(2);
-    } else if(Usage_ == RotationUsage::PASSIVE) {
-      return -zyx_(2);
-    }
+    return zyx_(2);
   }
 
   /*! \brief Sets yaw (Z) angle.
    */
   inline void setYaw(Scalar yaw) {
-    if(Usage_ == RotationUsage::ACTIVE) {
-      zyx_(0) = yaw;
-    } else if(Usage_ == RotationUsage::PASSIVE) {
-      zyx_(0) = -yaw;
-    }
+    zyx_(0) = yaw;
   }
 
   /*! \brief Sets pitch (Y') angle.
    */
   inline void setPitch(Scalar pitch) {
-    if(Usage_ == RotationUsage::ACTIVE) {
-      zyx_(1) = pitch;
-    } else if(Usage_ == RotationUsage::PASSIVE) {
-      zyx_(1) = -pitch;
-    }
+    zyx_(1) = pitch;
   }
 
   /*! \brief Sets roll (X'') angle.
    */
   inline void setRoll(Scalar roll) {
-    if(Usage_ == RotationUsage::ACTIVE) {
-      zyx_(2) = roll;
-    } else if(Usage_ == RotationUsage::PASSIVE) {
-      zyx_(2) = -roll;
-    }
+    zyx_(2) = roll;
   }
 
   /*! \brief Reading access to yaw (Z) angle.
    *  \returns yaw angle (scalar) with reading access
    */
   inline Scalar z() const {
-    if(Usage_ == RotationUsage::ACTIVE) {
-      return zyx_(0);
-    } else if(Usage_ == RotationUsage::PASSIVE) {
-      return -zyx_(0);
-    }
+    return zyx_(0);
   }
 
   /*! \brief Reading access to pitch (Y') angle.
    *  \returns pitch angle (scalar) with reading access
    */
   inline Scalar y() const {
-    if(Usage_ == RotationUsage::ACTIVE) {
-      return zyx_(1);
-    } else if(Usage_ == RotationUsage::PASSIVE) {
-      return -zyx_(1);
-    }
+    return zyx_(1);
   }
 
   /*! \brief Reading access to roll (X'') angle.
    *  \returns roll angle (scalar) with reading access
    */
   inline Scalar x() const {
-    if(Usage_ == RotationUsage::ACTIVE) {
-      return zyx_(2);
-    } else if(Usage_ == RotationUsage::PASSIVE) {
-      return -zyx_(2);
-    }
+    return zyx_(2);
   }
 
   /*! \brief Writing access to yaw (Z) angle.
    *  \returns yaw angle (scalar) with writing access
    */
   inline void setZ(Scalar z) {
-    if(Usage_ == RotationUsage::ACTIVE) {
-      zyx_(0) = z;
-    } else if(Usage_ == RotationUsage::PASSIVE) {
-      zyx_(0) = -z;
-    }
+    zyx_(0) = z;
   }
 
   /*! \brief Writing access to pitch (Y') angle.
    *  \returns pitch angle (scalar) with writing access
    */
   inline void setY(Scalar y) {
-    if(Usage_ == RotationUsage::ACTIVE) {
-      zyx_(1) = y;
-    } else if(Usage_ == RotationUsage::PASSIVE) {
-      zyx_(1) = -y;
-    }
+    zyx_(1) = y;
   }
 
   /*! \brief Writing access to roll (X'') angle.
    *  \returns roll angle (scalar) with writing access
    */
   inline void setX(Scalar x) {
-    if(Usage_ == RotationUsage::ACTIVE) {
-      zyx_(2) = x;
-    } else if(Usage_ == RotationUsage::PASSIVE) {
-      zyx_(2) = -x;
-    }
+    zyx_(2) = x;
   }
 
   /*! \brief Sets the rotation to identity.
    *  \returns reference
    */
   EulerAnglesZyx& setIdentity() {
-    this->toStoredImplementation().setZero();
+    this->toImplementation().setZero();
     return *this;
   }
 
@@ -523,11 +456,7 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_>, eigen_impl::RotationMatrix<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_> convert(const eigen_impl::RotationMatrix<SourcePrimType_, Usage_>& R) {
-    if (Usage_ == RotationUsage::ACTIVE) {
-      return eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_>(eigen_impl::getYprFromRotationMatrix<SourcePrimType_, DestPrimType_>(R.toImplementation().transpose()));
-    } else if (Usage_ == RotationUsage::PASSIVE) {
-      return eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_>(eigen_impl::getYprFromRotationMatrix<SourcePrimType_, DestPrimType_>(R.toImplementation()));
-    }
+    return eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_>(eigen_impl::getYprFromRotationMatrix<SourcePrimType_, DestPrimType_>(R.toImplementation().transpose()));
   }
 };
 
@@ -555,8 +484,8 @@ class ConversionTraits<eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_>, eigen_
 // public:
 //  inline static eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE> mult(const eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE>& a, const eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE>& b) {
 //    return eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE>(eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>(
-//                                                                 eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>(a).toStoredImplementation()*
-//                                                                 eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>(b).toStoredImplementation()));
+//                                                                 eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>(a).toImplementation()*
+//                                                                 eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>(b).toImplementation()));
 //  }
 //};
 //
@@ -565,8 +494,8 @@ class ConversionTraits<eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_>, eigen_
 // public:
 //  inline static eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE> mult(const eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE>& a, const eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE>& b) {
 //    return eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE>(eigen_impl::RotationQuaternion<PrimType_, RotationUsage::PASSIVE>(
-//                                                                 eigen_impl::RotationQuaternion<PrimType_, RotationUsage::PASSIVE>(a).toStoredImplementation()*
-//                                                                 eigen_impl::RotationQuaternion<PrimType_, RotationUsage::PASSIVE>(b).toStoredImplementation()));
+//                                                                 eigen_impl::RotationQuaternion<PrimType_, RotationUsage::PASSIVE>(a).toImplementation()*
+//                                                                 eigen_impl::RotationQuaternion<PrimType_, RotationUsage::PASSIVE>(b).toImplementation()));
 //  }
 //};
 
@@ -575,8 +504,8 @@ class ConversionTraits<eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_>, eigen_
 // public:
 //  inline static eigen_impl::EulerAnglesZyx<PrimType_, Usage_> mult(const eigen_impl::EulerAnglesZyx<PrimType_, Usage_>& a, const eigen_impl::EulerAnglesZyx<PrimType_, Usage_>& b) {
 //    return eigen_impl::EulerAnglesZyx<PrimType_, Usage_>(eigen_impl::RotationQuaternion<PrimType_, Usage_>(
-//                                                                 eigen_impl::RotationQuaternion<PrimType_, Usage_>(a).toStoredImplementation()*
-//                                                                 eigen_impl::RotationQuaternion<PrimType_, Usage_>(b).toStoredImplementation()));
+//                                                                 eigen_impl::RotationQuaternion<PrimType_, Usage_>(a).toImplementation()*
+//                                                                 eigen_impl::RotationQuaternion<PrimType_, Usage_>(b).toImplementation()));
 //  }
 //};
 

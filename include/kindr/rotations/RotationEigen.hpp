@@ -84,16 +84,27 @@ class MultiplicationTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usa
  public:
   //! Default multiplication of rotations converts the representations of the rotations to rotation quaternions and multiplies them
   inline static Left_ mult(const RotationBase<Left_, Usage_>& lhs, const RotationBase<Right_, Usage_>& rhs) {
-    if(Usage_ == RotationUsage::ACTIVE){
+//    if(Usage_ == RotationUsage::ACTIVE){
+//      return Left_(typename eigen_impl::RotationQuaternion<typename Left_::Scalar,  Usage_>(
+//                 (typename eigen_impl::RotationQuaternion<typename Left_::Scalar,  Usage_>(lhs.derived())).toImplementation() *
+//                 (typename eigen_impl::RotationQuaternion<typename Right_::Scalar, Usage_>(rhs.derived())).toImplementation()
+//                 ));
+//    } else {
+//      return Left_(typename eigen_impl::RotationQuaternion<typename Left_::Scalar,  Usage_>(
+//                 (typename eigen_impl::RotationQuaternion<typename Right_::Scalar,  Usage_>(rhs.derived())).toImplementation() *
+//                 (typename eigen_impl::RotationQuaternion<typename Left_::Scalar, Usage_>(lhs.derived())).toImplementation()
+//                 ));
+//    }
+    if(Usage_ == RotationUsage::ACTIVE) {
       return Left_(typename eigen_impl::RotationQuaternion<typename Left_::Scalar,  Usage_>(
-                 (typename eigen_impl::RotationQuaternion<typename Left_::Scalar,  Usage_>(lhs.derived())).toImplementation() *
-                 (typename eigen_impl::RotationQuaternion<typename Right_::Scalar, Usage_>(rhs.derived())).toImplementation()
-                 ));
+                  (typename eigen_impl::RotationQuaternion<typename Left_::Scalar,  Usage_>(lhs.derived())).toImplementation() *
+                  (typename eigen_impl::RotationQuaternion<typename Right_::Scalar, Usage_>(rhs.derived())).toImplementation()
+                  ));
     } else {
       return Left_(typename eigen_impl::RotationQuaternion<typename Left_::Scalar,  Usage_>(
-                 (typename eigen_impl::RotationQuaternion<typename Right_::Scalar,  Usage_>(rhs.derived())).toImplementation() *
-                 (typename eigen_impl::RotationQuaternion<typename Left_::Scalar, Usage_>(lhs.derived())).toImplementation()
-                 ));
+                  (typename eigen_impl::RotationQuaternion<typename Right_::Scalar, Usage_>(rhs.derived())).toImplementation() *
+                  (typename eigen_impl::RotationQuaternion<typename Left_::Scalar,  Usage_>(lhs.derived())).toImplementation()
+                  ));
     }
   }
 };
@@ -104,17 +115,28 @@ template<typename LeftAndRight_, enum RotationUsage Usage_>
 class MultiplicationTraits<RotationBase<LeftAndRight_, Usage_>, RotationBase<LeftAndRight_, Usage_>> {
  public:
   inline static LeftAndRight_ mult(const RotationBase<LeftAndRight_, Usage_>& lhs, const RotationBase<LeftAndRight_, Usage_>& rhs) {
-    if(Usage_ == RotationUsage::ACTIVE){
-      return LeftAndRight_(typename eigen_impl::RotationQuaternion<typename LeftAndRight_::Scalar,  Usage_>(
-                 (typename eigen_impl::RotationQuaternion<typename LeftAndRight_::Scalar,  Usage_>(lhs.derived())).toImplementation() *
-                 (typename eigen_impl::RotationQuaternion<typename LeftAndRight_::Scalar, Usage_>(rhs.derived())).toImplementation()
-                 ));
+//    if(Usage_ == RotationUsage::ACTIVE){
+//      return LeftAndRight_(typename eigen_impl::RotationQuaternion<typename LeftAndRight_::Scalar,  Usage_>(
+//                 (typename eigen_impl::RotationQuaternion<typename LeftAndRight_::Scalar,  Usage_>(lhs.derived())).toImplementation() *
+//                 (typename eigen_impl::RotationQuaternion<typename LeftAndRight_::Scalar, Usage_>(rhs.derived())).toImplementation()
+//                 ));
+//    } else {
+//    return LeftAndRight_(typename eigen_impl::RotationQuaternion<typename LeftAndRight_::Scalar,  Usage_>(
+//      (typename eigen_impl::RotationQuaternion<typename LeftAndRight_::Scalar,  Usage_>(rhs.derived())).toImplementation() *
+//      (typename eigen_impl::RotationQuaternion<typename LeftAndRight_::Scalar, Usage_>(lhs.derived())).toImplementation()
+//      ));
+//    }
+    if(Usage_ == RotationUsage::ACTIVE) {
+      return LeftAndRight_(typename eigen_impl::RotationQuaternion<typename LeftAndRight_::Scalar, Usage_>(
+                          (typename eigen_impl::RotationQuaternion<typename LeftAndRight_::Scalar, Usage_>(lhs.derived())).toImplementation() *
+                          (typename eigen_impl::RotationQuaternion<typename LeftAndRight_::Scalar, Usage_>(rhs.derived())).toImplementation()
+                          ));
+    } else {
+      return LeftAndRight_(typename eigen_impl::RotationQuaternion<typename LeftAndRight_::Scalar, Usage_>(
+                          (typename eigen_impl::RotationQuaternion<typename LeftAndRight_::Scalar, Usage_>(rhs.derived())).toImplementation() *
+                          (typename eigen_impl::RotationQuaternion<typename LeftAndRight_::Scalar, Usage_>(lhs.derived())).toImplementation()
+                          ));
     }
-    return LeftAndRight_(typename eigen_impl::RotationQuaternion<typename LeftAndRight_::Scalar,  Usage_>(
-      (typename eigen_impl::RotationQuaternion<typename LeftAndRight_::Scalar,  Usage_>(rhs.derived())).toImplementation() *
-      (typename eigen_impl::RotationQuaternion<typename LeftAndRight_::Scalar, Usage_>(lhs.derived())).toImplementation()
-      ));
-
   }
 };
 
@@ -143,7 +165,6 @@ class ComparisonTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usage_>
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * Map Traits
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-
 
 template<typename Rotation_, enum RotationUsage Usage_>
 class MapTraits<RotationBase<Rotation_, Usage_>> {
@@ -189,7 +210,11 @@ class RotationTraits<RotationBase<Rotation_, Usage_> > {
  public:
   template<typename get_matrix3X<Rotation_>::IndexType Cols>
   inline static typename get_matrix3X<Rotation_>::template Matrix3X<Cols> rotate(const RotationBase<Rotation_, Usage_>& rotation, const typename internal::get_matrix3X<Rotation_>::template Matrix3X<Cols>& m){
-    return eigen_impl::RotationMatrix<typename Rotation_::Scalar, Usage_>(rotation.derived()).toImplementation()*m;
+    if(Usage_ == RotationUsage::ACTIVE){
+      return eigen_impl::RotationMatrix<typename Rotation_::Scalar, Usage_>(rotation.derived()).toImplementation()*m;
+    } else {
+      return eigen_impl::RotationMatrix<typename Rotation_::Scalar, Usage_>(rotation.derived().inverted()).toImplementation()*m;
+    }
   }
 };
 

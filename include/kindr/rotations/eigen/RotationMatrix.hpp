@@ -94,7 +94,12 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType_, Usage
   RotationMatrix(Scalar r11, Scalar r12, Scalar r13,
                  Scalar r21, Scalar r22, Scalar r23,
                  Scalar r31, Scalar r32, Scalar r33) {
-    *this << r11,r12,r13,r21,r22,r23,r31,r32,r33;
+    if(Usage_ == RotationUsage::ACTIVE)
+    {
+      *this << r11,r12,r13,r21,r22,r23,r31,r32,r33;
+    } else {
+      *this << r11,r21,r31,r12,r22,r32,r13,r23,r33;
+    }
     KINDR_ASSERT_MATRIX_NEAR_DBG(std::runtime_error, this->toImplementation() * this->toImplementation().transpose(), Base::Identity(), static_cast<Scalar>(1e-4), "Input matrix is not orthogonal.");
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, this->determinant(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input matrix determinant is not 1.");
   }
@@ -104,7 +109,14 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType_, Usage
    *  \param other   Eigen::Matrix<PrimType_,3,3>
    */
   explicit RotationMatrix(const Base& other)
-  : Base(other) {
+  // : Base(other)
+  {
+    if(Usage_ == RotationUsage::ACTIVE)
+    {
+      this->toImplementation() = other;
+    } else {
+      this->toImplementation() = other.transpose();
+    }
     KINDR_ASSERT_MATRIX_NEAR_DBG(std::runtime_error, other * other.transpose(), Base::Identity(), static_cast<Scalar>(1e-4), "Input matrix is not orthogonal.");
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, other.determinant(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input matrix determinant is not 1.");
   }
@@ -114,7 +126,9 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType_, Usage
    */
   template<typename OtherDerived_>
   inline explicit RotationMatrix(const RotationBase<OtherDerived_, Usage_>& other)
-    : Base(internal::ConversionTraits<RotationMatrix, OtherDerived_>::convert(other.derived()).toStoredImplementation()) {
+  // : Base(internal::ConversionTraits<RotationMatrix, OtherDerived_>::convert(other.derived()).toImplementation())
+  {
+    this->toImplementation() = internal::ConversionTraits<RotationMatrix, OtherDerived_>::convert(other.derived()).toImplementation();
   }
 
   /*! \brief Assignment operator using another rotation.
@@ -123,7 +137,7 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType_, Usage
    */
   template<typename OtherDerived_>
   RotationMatrix& operator =(const RotationBase<OtherDerived_, Usage_>& other) {
-    this->toStoredImplementation() = internal::ConversionTraits<RotationMatrix, OtherDerived_>::convert(other.derived()).toStoredImplementation();
+    this->toImplementation() = internal::ConversionTraits<RotationMatrix, OtherDerived_>::convert(other.derived()).toImplementation();
     return *this;
   }
 
@@ -133,7 +147,7 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType_, Usage
    */
   template<typename OtherDerived_>
   RotationMatrix& operator ()(const RotationBase<OtherDerived_, Usage_>& other) {
-    this->toStoredImplementation() = internal::ConversionTraits<RotationMatrix, OtherDerived_>::convert(other.derived()).toStoredImplementation();
+    this->toImplementation() = internal::ConversionTraits<RotationMatrix, OtherDerived_>::convert(other.derived()).toImplementation();
     return *this;
   }
 
@@ -141,14 +155,16 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType_, Usage
    *  \returns the inverse of the rotation
    */
   RotationMatrix inverted() const {
-    return RotationMatrix(toStoredImplementation().transpose());
+    RotationMatrix matrix;
+    matrix.toImplementation() = this->toImplementation().transpose();
+    return matrix;
   }
 
   /*! \brief Inverts the rotation.
    *  \returns reference
    */
   RotationMatrix& invert() {
-    *this = RotationMatrix(toStoredImplementation().transpose());
+    *this = this->inverted();
     return *this;
   }
 
@@ -156,14 +172,16 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType_, Usage
    *  \returns the inverse of the rotation
    */
   RotationMatrix transposed() const {
-    return RotationMatrix(toStoredImplementation().transpose());
+    RotationMatrix matrix;
+    matrix.toImplementation() = this->toImplementation().transpose();
+    return matrix;
   }
 
   /*! \brief Transposes the rotation matrix.
    *  \returns reference
    */
   RotationMatrix& transpose() {
-    *this = RotationMatrix(toStoredImplementation().transpose());
+    *this = this->transposed();
     return *this;
   }
 
@@ -171,42 +189,45 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType_, Usage
    *  \returns determinant of the rotation matrix
    */
   Scalar determinant() const {
-  return toStoredImplementation().determinant();
-  }
-
-  /*! \brief Returns the type used for the implementation.
-   *  \returns the type used for the implementation
-   */
-  Implementation toImplementation() const {
-    return toStoredImplementation();
+  return toImplementation().determinant();
   }
 
   /*! \brief Cast to the implementation type.
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
-  inline Implementation& toStoredImplementation() {
+  inline Implementation& toImplementation() {
     return static_cast<Implementation&>(*this);
   }
 
   /*! \brief Cast to the implementation type.
    *  \returns the implementation for direct manipulation (recommended only for advanced users)
    */
-  inline const Implementation& toStoredImplementation() const {
+  inline const Implementation& toImplementation() const {
     return static_cast<const Implementation&>(*this);
   }
 
   /*! \brief Reading access to the rotation matrix.
    *  \returns rotation matrix (matrix) with reading access
    */
-  inline const Implementation& matrix() const {
-    return toImplementation();
+  inline Implementation matrix() const {
+    if(Usage_ == RotationUsage::ACTIVE)
+    {
+      return this->toImplementation();
+    } else {
+      return this->toImplementation().transpose();
+    }
   }
 
-  /*! \brief  Reading access to the rotation matrix.
-   *  \returns rotation matrix (matrix) with reading access
+  /*! \brief  Writing access to the rotation matrix.
+   *  \returns rotation matrix (matrix) with writing access
    */
-  inline Implementation matrix() {
-    return toImplementation();
+  inline void setMatrix(const Implementation & input) {
+    if(Usage_ == RotationUsage::ACTIVE)
+    {
+      this->toImplementation() = input;
+    } else {
+      this->toImplementation() = input.transpose();
+    }
   }
 
   /*! \brief Sets the rotation to identity.
@@ -250,7 +271,11 @@ class RotationMatrix : public RotationMatrixBase<RotationMatrix<PrimType_, Usage
    *  \returns std::stream object
    */
   friend std::ostream& operator << (std::ostream& out, const RotationMatrix& rotationMatrix) {
-    out << rotationMatrix.toImplementation();
+    if(Usage_ == RotationUsage::ACTIVE) {
+      out << rotationMatrix.toImplementation();
+    } else {
+      out << rotationMatrix.inverted().toImplementation();
+    }
     return out;
   }
 };
@@ -303,7 +328,9 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_impl::AngleAxis<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::RotationMatrix<DestPrimType_, Usage_> convert(const eigen_impl::AngleAxis<SourcePrimType_, Usage_>& aa) {
-    return eigen_impl::RotationMatrix<DestPrimType_, Usage_>(eigen_impl::getRotationMatrixFromAngleAxis<SourcePrimType_, DestPrimType_>(aa.toStoredImplementation()));
+    eigen_impl::RotationMatrix<DestPrimType_, Usage_> matrix;
+    matrix.toImplementation() = eigen_impl::getRotationMatrixFromAngleAxis<SourcePrimType_, DestPrimType_>(aa.toImplementation());
+    return matrix;
   }
 };
 
@@ -311,16 +338,16 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_impl::RotationVector<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::RotationMatrix<DestPrimType_, Usage_> convert(const eigen_impl::RotationVector<SourcePrimType_, Usage_>& rotationVector) {
-    typename eigen_impl::RotationMatrix<DestPrimType_, Usage_>::Implementation matrix;
+    typename eigen_impl::RotationMatrix<DestPrimType_, Usage_>::Implementation matrixdata;
     typedef typename eigen_impl::RotationVector<SourcePrimType_, Usage_>::Scalar Scalar;
-    const  typename eigen_impl::RotationVector<DestPrimType_, Usage_>::Implementation rv = rotationVector.toStoredImplementation().template cast<DestPrimType_>();
+    const  typename eigen_impl::RotationVector<DestPrimType_, Usage_>::Implementation rv = rotationVector.toImplementation().template cast<DestPrimType_>();
     const SourcePrimType_ v1 = rv.x();
     const SourcePrimType_ v2 = rv.y();
     const SourcePrimType_ v3 = rv.z();
     const SourcePrimType_ v = rv.norm();
 
     if (v < common::NumTraits<Scalar>::dummy_precision())  {
-      matrix << 1.0,  v3, -v2,
+      matrixdata << 1.0,  v3, -v2,
                         -v3, 1.0,  v1,
                           v2, -v1, 1.0;
     } else {
@@ -340,18 +367,22 @@ class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_
       const DestPrimType_ t15 = t2*v1*v3;
       const DestPrimType_ t16 = t4*v*v1;
       const DestPrimType_ t17 = t2*v2*v3;
-      matrix(0,0) = t5*(t14-t8*(-t9+t10+t11));
-      matrix(1,0) = t2*t5*(t6+t7)*2.0;
-      matrix(2,0) = t2*t5*(t15-t4*v*v2)*2.0;
-      matrix(0,1) = t2*t5*(t6-t7)*-2.0;
-      matrix(1,1) = t5*(t14-t8*(t9-t10+t11));
-      matrix(2,1) = t2*t5*(t16+t17)*2.0;
-      matrix(0,2) = t2*t5*(t15+t4*v*v2)*2.0;
-      matrix(1,2) = t2*t5*(t16-t17)*-2.0;
-      matrix(2,2) = t5*(t14-t8*(t9+t10-t11));
+      matrixdata(0,0) = t5*(t14-t8*(-t9+t10+t11));
+      matrixdata(1,0) = t2*t5*(t6+t7)*2.0;
+      matrixdata(2,0) = t2*t5*(t15-t4*v*v2)*2.0;
+      matrixdata(0,1) = t2*t5*(t6-t7)*-2.0;
+      matrixdata(1,1) = t5*(t14-t8*(t9-t10+t11));
+      matrixdata(2,1) = t2*t5*(t16+t17)*2.0;
+      matrixdata(0,2) = t2*t5*(t15+t4*v*v2)*2.0;
+      matrixdata(1,2) = t2*t5*(t16-t17)*-2.0;
+      matrixdata(2,2) = t5*(t14-t8*(t9+t10-t11));
 
     }
-    return eigen_impl::RotationMatrix<DestPrimType_, Usage_>(matrix);
+
+    eigen_impl::RotationMatrix<DestPrimType_, Usage_> matrix;
+    matrix.toImplementation() = matrixdata;
+    return matrix;
+
     // the same as above:
 //    return eigen_impl::RotationMatrix<DestPrimType_, Usage_>(eigen_impl::AngleAxis<SourcePrimType_, Usage_>(rotationVector));
   }
@@ -361,7 +392,9 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::RotationMatrix<DestPrimType_, Usage_> convert(const eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>& q) {
-    return eigen_impl::RotationMatrix<DestPrimType_, Usage_>(eigen_impl::getRotationMatrixFromQuaternion<SourcePrimType_, DestPrimType_>(q.toStoredImplementation()));
+    eigen_impl::RotationMatrix<DestPrimType_, Usage_> matrix;
+    matrix.toImplementation() = eigen_impl::getRotationMatrixFromQuaternion<SourcePrimType_, DestPrimType_>(q.toImplementation());
+    return matrix;
   }
 };
 
@@ -369,7 +402,9 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_impl::RotationMatrix<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::RotationMatrix<DestPrimType_, Usage_> convert(const eigen_impl::RotationMatrix<SourcePrimType_, Usage_>& R) {
-    return eigen_impl::RotationMatrix<DestPrimType_, Usage_>(R.toStoredImplementation().template cast<DestPrimType_>());
+    eigen_impl::RotationMatrix<DestPrimType_, Usage_> matrix;
+    matrix.toImplementation() = R.toImplementation().template cast<DestPrimType_>();
+    return matrix;
   }
 };
 
@@ -377,7 +412,9 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_impl::EulerAnglesXyz<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::RotationMatrix<DestPrimType_, Usage_> convert(const eigen_impl::EulerAnglesXyz<SourcePrimType_, Usage_>& xyz) {
-    return eigen_impl::RotationMatrix<DestPrimType_, Usage_>(eigen_impl::getRotationMatrixFromRpy<SourcePrimType_, DestPrimType_>(xyz.toStoredImplementation()));
+    eigen_impl::RotationMatrix<DestPrimType_, Usage_> matrix;
+    matrix.toImplementation() = eigen_impl::getRotationMatrixFromRpy<SourcePrimType_, DestPrimType_>(xyz.toImplementation());
+    return matrix;
   }
 };
 
@@ -385,39 +422,131 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_impl::EulerAnglesZyx<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::RotationMatrix<DestPrimType_, Usage_> convert(const eigen_impl::EulerAnglesZyx<SourcePrimType_, Usage_>& zyx) {
-    return eigen_impl::RotationMatrix<DestPrimType_, Usage_>(eigen_impl::getRotationMatrixFromYpr<SourcePrimType_, DestPrimType_>(zyx.toStoredImplementation()));
+    eigen_impl::RotationMatrix<DestPrimType_, Usage_> matrix;
+    matrix.toImplementation() = eigen_impl::getRotationMatrixFromYpr<SourcePrimType_, DestPrimType_>(zyx.toImplementation());
+    return matrix;
   }
 };
+
+
+//template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
+//class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_impl::AngleAxis<SourcePrimType_, Usage_>> {
+// public:
+//  inline static eigen_impl::RotationMatrix<DestPrimType_, Usage_> convert(const eigen_impl::AngleAxis<SourcePrimType_, Usage_>& aa) {
+//    return eigen_impl::RotationMatrix<DestPrimType_, Usage_>(eigen_impl::getRotationMatrixFromAngleAxis<SourcePrimType_, DestPrimType_>(aa.toImplementation()));
+//  }
+//};
+//
+//template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
+//class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_impl::RotationVector<SourcePrimType_, Usage_>> {
+// public:
+//  inline static eigen_impl::RotationMatrix<DestPrimType_, Usage_> convert(const eigen_impl::RotationVector<SourcePrimType_, Usage_>& rotationVector) {
+//    typename eigen_impl::RotationMatrix<DestPrimType_, Usage_>::Implementation matrix;
+//    typedef typename eigen_impl::RotationVector<SourcePrimType_, Usage_>::Scalar Scalar;
+//    const  typename eigen_impl::RotationVector<DestPrimType_, Usage_>::Implementation rv = rotationVector.toImplementation().template cast<DestPrimType_>();
+//    const SourcePrimType_ v1 = rv.x();
+//    const SourcePrimType_ v2 = rv.y();
+//    const SourcePrimType_ v3 = rv.z();
+//    const SourcePrimType_ v = rv.norm();
+//
+//    if (v < common::NumTraits<Scalar>::dummy_precision())  {
+//      matrix << 1.0,  v3, -v2,
+//                        -v3, 1.0,  v1,
+//                          v2, -v1, 1.0;
+//    } else {
+//      const DestPrimType_ t3 = v*(1.0/2.0);
+//      const DestPrimType_ t2 = sin(t3);
+//      const DestPrimType_ t4 = cos(t3);
+//      const DestPrimType_ t5 = 1.0/(v*v);
+//      const DestPrimType_ t6 = t4*v*v3;
+//      const DestPrimType_ t7 = t2*v1*v2;
+//      const DestPrimType_ t8 = t2*t2;
+//      const DestPrimType_ t9 = v1*v1;
+//      const DestPrimType_ t10 = v2*v2;
+//      const DestPrimType_ t11 = v3*v3;
+//      const DestPrimType_ t12 = v*v;
+//      const DestPrimType_ t13 = t4*t4;
+//      const DestPrimType_ t14 = t12*t13;
+//      const DestPrimType_ t15 = t2*v1*v3;
+//      const DestPrimType_ t16 = t4*v*v1;
+//      const DestPrimType_ t17 = t2*v2*v3;
+//      matrix(0,0) = t5*(t14-t8*(-t9+t10+t11));
+//      matrix(1,0) = t2*t5*(t6+t7)*2.0;
+//      matrix(2,0) = t2*t5*(t15-t4*v*v2)*2.0;
+//      matrix(0,1) = t2*t5*(t6-t7)*-2.0;
+//      matrix(1,1) = t5*(t14-t8*(t9-t10+t11));
+//      matrix(2,1) = t2*t5*(t16+t17)*2.0;
+//      matrix(0,2) = t2*t5*(t15+t4*v*v2)*2.0;
+//      matrix(1,2) = t2*t5*(t16-t17)*-2.0;
+//      matrix(2,2) = t5*(t14-t8*(t9+t10-t11));
+//
+//    }
+//    return eigen_impl::RotationMatrix<DestPrimType_, Usage_>(matrix);
+//    // the same as above:
+////    return eigen_impl::RotationMatrix<DestPrimType_, Usage_>(eigen_impl::AngleAxis<SourcePrimType_, Usage_>(rotationVector));
+//  }
+//};
+//
+//template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
+//class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>> {
+// public:
+//  inline static eigen_impl::RotationMatrix<DestPrimType_, Usage_> convert(const eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>& q) {
+//    return eigen_impl::RotationMatrix<DestPrimType_, Usage_>(eigen_impl::getRotationMatrixFromQuaternion<SourcePrimType_, DestPrimType_>(q.toImplementation()));
+//  }
+//};
+//
+//template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
+//class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_impl::RotationMatrix<SourcePrimType_, Usage_>> {
+// public:
+//  inline static eigen_impl::RotationMatrix<DestPrimType_, Usage_> convert(const eigen_impl::RotationMatrix<SourcePrimType_, Usage_>& R) {
+//    return eigen_impl::RotationMatrix<DestPrimType_, Usage_>(R.toImplementation().template cast<DestPrimType_>());
+//  }
+//};
+//
+//template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
+//class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_impl::EulerAnglesXyz<SourcePrimType_, Usage_>> {
+// public:
+//  inline static eigen_impl::RotationMatrix<DestPrimType_, Usage_> convert(const eigen_impl::EulerAnglesXyz<SourcePrimType_, Usage_>& xyz) {
+//    return eigen_impl::RotationMatrix<DestPrimType_, Usage_>(eigen_impl::getRotationMatrixFromRpy<SourcePrimType_, DestPrimType_>(xyz.toImplementation()));
+//  }
+//};
+//
+//template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
+//class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_impl::EulerAnglesZyx<SourcePrimType_, Usage_>> {
+// public:
+//  inline static eigen_impl::RotationMatrix<DestPrimType_, Usage_> convert(const eigen_impl::EulerAnglesZyx<SourcePrimType_, Usage_>& zyx) {
+//    return eigen_impl::RotationMatrix<DestPrimType_, Usage_>(eigen_impl::getRotationMatrixFromYpr<SourcePrimType_, DestPrimType_>(zyx.toImplementation()));
+//  }
+//};
+
+
+
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * Multiplication Traits
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-/*! \brief Multiplication of a rotation matrix (on left hand side) and a rotation with a different parameterization (on right hand side)
- */
-template<typename LeftPrimType_, typename Right_, enum RotationUsage Usage_>
-class MultiplicationTraits<RotationBase<eigen_impl::RotationMatrix<LeftPrimType_, Usage_>, Usage_>, RotationBase<Right_, Usage_>> {
- public:
-  inline static eigen_impl::RotationMatrix<LeftPrimType_, Usage_> mult(const eigen_impl::RotationMatrix<LeftPrimType_, Usage_>& lhs, const RotationBase<Right_, Usage_>& rhs) {
-    return eigen_impl::RotationMatrix<LeftPrimType_, Usage_>(
-                   lhs.toImplementation() *
-                   typename eigen_impl::RotationMatrix<typename get_scalar<Right_>::Scalar, Usage_>(rhs.derived()).toImplementation()
-                   );
-  }
-};
-/*! \brief Multiplication of a rotation matrix (on right hand side) and a rotation with a different parameterization (on left hand side)
- */
-template<typename Left_, typename RightPrimType_ , enum RotationUsage Usage_>
-class MultiplicationTraits<RotationBase<Left_, Usage_>,RotationBase<eigen_impl::RotationMatrix<RightPrimType_, Usage_>, Usage_>> {
- public:
-  inline static Left_ mult( const RotationBase<Left_, Usage_>& lhs, const eigen_impl::RotationMatrix<RightPrimType_, Usage_>& rhs) {
-    return Left_(
-            eigen_impl::RotationMatrix<typename get_scalar<Left_>::Scalar, Usage_>(
-                eigen_impl::RotationMatrix<RightPrimType_, Usage_>(lhs.derived()).toImplementation() *
-                rhs.toImplementation()
-            )
-           );
-  }
-};
+///*! \brief Multiplication of a rotation matrix (on left hand side) and a rotation with a different parameterization (on right hand side)
+// */
+//template<typename LeftPrimType_, typename Right_, enum RotationUsage Usage_>
+//class MultiplicationTraits<RotationBase<eigen_impl::RotationMatrix<LeftPrimType_, Usage_>, Usage_>, RotationBase<Right_, Usage_>> {
+// public:
+//  inline static eigen_impl::RotationMatrix<LeftPrimType_, Usage_> mult(const eigen_impl::RotationMatrix<LeftPrimType_, Usage_>& lhs, const RotationBase<Right_, Usage_>& rhs) {
+//    eigen_impl::RotationMatrix<LeftPrimType_, Usage_> result;
+//    result.toImplementation() = lhs.toImplementation() * typename eigen_impl::RotationMatrix<typename get_scalar<Right_>::Scalar, Usage_>(rhs.derived()).toImplementation();
+//    return result;
+//  }
+//};
+///*! \brief Multiplication of a rotation matrix (on right hand side) and a rotation with a different parameterization (on left hand side)
+// */
+//template<typename Left_, typename RightPrimType_ , enum RotationUsage Usage_>
+//class MultiplicationTraits<RotationBase<Left_, Usage_>,RotationBase<eigen_impl::RotationMatrix<RightPrimType_, Usage_>, Usage_>> {
+// public:
+//  inline static Left_ mult( const RotationBase<Left_, Usage_>& lhs, const eigen_impl::RotationMatrix<RightPrimType_, Usage_>& rhs) {
+//    Left_ result;
+//    result.toImplementation() = Left_(eigen_impl::RotationMatrix<RightPrimType_, Usage_>(lhs.derived()).toImplementation() * rhs.toImplementation());
+//    return result;
+//  }
+//};
 
 /*! \brief Multiplication of two rotation matrices
  */
@@ -425,9 +554,55 @@ template<typename PrimType_, enum RotationUsage Usage_>
 class MultiplicationTraits<RotationBase<eigen_impl::RotationMatrix<PrimType_, Usage_>, Usage_>, RotationBase<eigen_impl::RotationMatrix<PrimType_, Usage_>, Usage_>> {
  public:
   inline static eigen_impl::RotationMatrix<PrimType_, Usage_> mult(const eigen_impl::RotationMatrix<PrimType_, Usage_>& lhs, const eigen_impl::RotationMatrix<PrimType_, Usage_>& rhs) {
-    return  eigen_impl::RotationMatrix<PrimType_, Usage_>(lhs.toImplementation() * rhs.toImplementation());
+    if(Usage_ == RotationUsage::ACTIVE) {
+      eigen_impl::RotationMatrix<PrimType_, Usage_> result;
+      result.toImplementation() = lhs.toImplementation() * rhs.toImplementation();
+      return result;
+    } else {
+      eigen_impl::RotationMatrix<PrimType_, Usage_> result;
+      result.toImplementation() = rhs.toImplementation() * lhs.toImplementation();
+      return result;
+    }
   }
 };
+
+
+///*! \brief Multiplication of a rotation matrix (on left hand side) and a rotation with a different parameterization (on right hand side)
+// */
+//template<typename LeftPrimType_, typename Right_, enum RotationUsage Usage_>
+//class MultiplicationTraits<RotationBase<eigen_impl::RotationMatrix<LeftPrimType_, Usage_>, Usage_>, RotationBase<Right_, Usage_>> {
+// public:
+//  inline static eigen_impl::RotationMatrix<LeftPrimType_, Usage_> mult(const eigen_impl::RotationMatrix<LeftPrimType_, Usage_>& lhs, const RotationBase<Right_, Usage_>& rhs) {
+//    return eigen_impl::RotationMatrix<LeftPrimType_, Usage_>(
+//                   lhs.toImplementation() *
+//                   typename eigen_impl::RotationMatrix<typename get_scalar<Right_>::Scalar, Usage_>(rhs.derived()).toImplementation()
+//                   );
+//  }
+//};
+///*! \brief Multiplication of a rotation matrix (on right hand side) and a rotation with a different parameterization (on left hand side)
+// */
+//template<typename Left_, typename RightPrimType_ , enum RotationUsage Usage_>
+//class MultiplicationTraits<RotationBase<Left_, Usage_>,RotationBase<eigen_impl::RotationMatrix<RightPrimType_, Usage_>, Usage_>> {
+// public:
+//  inline static Left_ mult( const RotationBase<Left_, Usage_>& lhs, const eigen_impl::RotationMatrix<RightPrimType_, Usage_>& rhs) {
+//    return Left_(
+//            eigen_impl::RotationMatrix<typename get_scalar<Left_>::Scalar, Usage_>(
+//                eigen_impl::RotationMatrix<RightPrimType_, Usage_>(lhs.derived()).toImplementation() *
+//                rhs.toImplementation()
+//            )
+//           );
+//  }
+//};
+//
+///*! \brief Multiplication of two rotation matrices
+// */
+//template<typename PrimType_, enum RotationUsage Usage_>
+//class MultiplicationTraits<RotationBase<eigen_impl::RotationMatrix<PrimType_, Usage_>, Usage_>, RotationBase<eigen_impl::RotationMatrix<PrimType_, Usage_>, Usage_>> {
+// public:
+//  inline static eigen_impl::RotationMatrix<PrimType_, Usage_> mult(const eigen_impl::RotationMatrix<PrimType_, Usage_>& lhs, const eigen_impl::RotationMatrix<PrimType_, Usage_>& rhs) {
+//    return  eigen_impl::RotationMatrix<PrimType_, Usage_>(lhs.toImplementation() * rhs.toImplementation());
+//  }
+//};
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * Rotation Traits
@@ -437,7 +612,8 @@ class RotationTraits<eigen_impl::RotationMatrix<PrimType_, Usage_>> {
  public:
   template<typename get_matrix3X<eigen_impl::RotationMatrix<PrimType_, Usage_>>::IndexType Cols>
   inline static typename get_matrix3X<eigen_impl::RotationMatrix<PrimType_, Usage_>>::template Matrix3X<Cols> rotate(const eigen_impl::RotationMatrix<PrimType_, Usage_>& R, const typename get_matrix3X<eigen_impl::RotationMatrix<PrimType_, Usage_>>::template Matrix3X<Cols>& m){
-    return R.toStoredImplementation() * m;
+    std::cout << "HERE" << std::endl;
+    return R.toImplementation() * m;
   }
 };
 
@@ -454,7 +630,7 @@ template<typename PrimType_>
 class UsageConversionTraits<eigen_impl::RotationMatrix<PrimType_, RotationUsage::PASSIVE>,RotationUsage::PASSIVE> {
  public:
   inline static typename get_other_usage<eigen_impl::RotationMatrix<PrimType_, RotationUsage::PASSIVE>>::OtherUsage getActive(const eigen_impl::RotationMatrix<PrimType_,RotationUsage::PASSIVE>& in) {
-    return typename get_other_usage<eigen_impl::RotationMatrix<PrimType_, RotationUsage::PASSIVE>>::OtherUsage(in.toImplementation());
+    return typename get_other_usage<eigen_impl::RotationMatrix<PrimType_, RotationUsage::PASSIVE>>::OtherUsage(in.inverted().toImplementation());
   }
 
   // getPassive() does not exist (on purpose)
