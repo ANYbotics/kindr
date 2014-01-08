@@ -155,7 +155,6 @@ class MapTraits {
 //  typename internal::get_matrix3X<Derived_>::template Matrix3X<1> getLogarithmicMap();
 };
 
-
 /*! \brief Traits for box operations
  *  \class BoxOperationTraits
  *  (only for advanced users)
@@ -167,7 +166,14 @@ class BoxOperationTraits {
 //  inline static Left_ box_plus(const RotationBase<Left_, Usage_>& rotation, const typename internal::get_matrix3X<Left_>::template Matrix3X<1>& vector);
 };
 
-
+/*! \brief Traits for setting a rotation from two vectors
+ *  \class RotationTraits
+ *  (only for advanced users)
+ */
+template<typename Rotation_>
+class SetFromVectorsTraits {
+ public:
+};
 
 
 
@@ -367,14 +373,13 @@ class RotationBase {
   Position_ inverseRotate(const Position_& position) const {
     return Position_(internal::RotationTraits<RotationBase<Derived_,Usage_>>::rotate(this->derived().inverted(), internal::get_position3<Position_>::get_matrix3(position)));
   }
+
+  template <typename Vector_>
+  void setFromVectors(const Vector_& v1, const Vector_& v2) {
+    internal::SetFromVectorsTraits<RotationBase<Derived_,Usage_>>::setFromVectors(this->derived(), v1, v2);
+  }
 };
 
-
-template <typename Vector_>
-class AdditionalFunctions {
- public:
-  static typename internal::get_scalar<Vector_>::Scalar calculateAngleBetweenVectors(const Vector_& v1, const Vector_& v2);
-};
 
 
 /*! \brief Representation of a generic angle axis rotation

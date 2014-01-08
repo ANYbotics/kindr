@@ -607,15 +607,14 @@ class MultiplicationTraits<RotationBase<eigen_impl::RotationMatrix<PrimType_, Us
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * Rotation Traits
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-template<typename PrimType_, enum RotationUsage Usage_>
-class RotationTraits<eigen_impl::RotationMatrix<PrimType_, Usage_>> {
- public:
-  template<typename get_matrix3X<eigen_impl::RotationMatrix<PrimType_, Usage_>>::IndexType Cols>
-  inline static typename get_matrix3X<eigen_impl::RotationMatrix<PrimType_, Usage_>>::template Matrix3X<Cols> rotate(const eigen_impl::RotationMatrix<PrimType_, Usage_>& R, const typename get_matrix3X<eigen_impl::RotationMatrix<PrimType_, Usage_>>::template Matrix3X<Cols>& m){
-    std::cout << "HERE" << std::endl;
-    return R.toImplementation() * m;
-  }
-};
+//template<typename PrimType_, enum RotationUsage Usage_>
+//class RotationTraits<eigen_impl::RotationMatrix<PrimType_, Usage_>> {
+// public:
+//  template<typename get_matrix3X<eigen_impl::RotationMatrix<PrimType_, Usage_>>::IndexType Cols>
+//  inline static typename get_matrix3X<eigen_impl::RotationMatrix<PrimType_, Usage_>>::template Matrix3X<Cols> rotate(const eigen_impl::RotationMatrix<PrimType_, Usage_>& R, const typename get_matrix3X<eigen_impl::RotationMatrix<PrimType_, Usage_>>::template Matrix3X<Cols>& m){
+//    return R.toImplementation() * m;
+//  }
+//};
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * Comparison Traits

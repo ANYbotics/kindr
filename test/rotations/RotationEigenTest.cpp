@@ -647,49 +647,49 @@ TYPED_TEST(ConcatenationTest, testBToA) {
 }
 
 
-// Additional Functions Test
-
-
-template <typename PrimType_>
-class AdditionalFunctionsTest : public ::testing::Test{
- public:
-  // Scalar
-  typedef PrimType_ Scalar;
-
-  // Vector
-  typedef Eigen::Matrix<Scalar,3,1> Vector;
-
-
-  // Testing Vectors
-  const Vector vec = Vector(0.3,-1.5,0.6);
-  const Vector vecX = Vector(1.0,0.0,0.0);
-  const Vector vecY = Vector(0.0,1.0,0.0);
-  const Vector vecZ = Vector(0.0,0.0,1.0);
-};
-
-
-typedef ::testing::Types<
-    double,
-    float
-> AdditionalFunctionsTypes;
-
-
-TYPED_TEST_CASE(AdditionalFunctionsTest, AdditionalFunctionsTypes);
-
-// Testing constructors and getters for Rotation Vector
-TYPED_TEST(AdditionalFunctionsTest, testCalculateAngleBetweenVectors){
-  typedef typename TestFixture::Vector Vector;
-  typedef typename TestFixture::Scalar Scalar;
-
-  ASSERT_NEAR(kindr::rotations::AdditionalFunctions<Vector>::calculateAngleBetweenVectors(this->vec, this->vec), 0.0, 1e-3);
-  ASSERT_NEAR(kindr::rotations::AdditionalFunctions<Vector>::calculateAngleBetweenVectors(this->vec, -this->vec), M_PI, 1e-3);
-
-  ASSERT_NEAR(kindr::rotations::AdditionalFunctions<Vector>::calculateAngleBetweenVectors(this->vecX, this->vecY), M_PI/2, 1e-3);
-  ASSERT_NEAR(kindr::rotations::AdditionalFunctions<Vector>::calculateAngleBetweenVectors(this->vecY, this->vecX), M_PI/2, 1e-3);
-  ASSERT_NEAR(kindr::rotations::AdditionalFunctions<Vector>::calculateAngleBetweenVectors(this->vecX, this->vecZ), M_PI/2, 1e-3);
-  ASSERT_NEAR(kindr::rotations::AdditionalFunctions<Vector>::calculateAngleBetweenVectors(this->vecZ, this->vecX), M_PI/2, 1e-3);
-  ASSERT_NEAR(kindr::rotations::AdditionalFunctions<Vector>::calculateAngleBetweenVectors(this->vecY, this->vecZ), M_PI/2, 1e-3);
-  ASSERT_NEAR(kindr::rotations::AdditionalFunctions<Vector>::calculateAngleBetweenVectors(this->vecZ, this->vecY), M_PI/2, 1e-3);
-}
+//// Additional Functions Test
+//
+//
+//template <typename PrimType_>
+//class AdditionalFunctionsTest : public ::testing::Test{
+// public:
+//  // Scalar
+//  typedef PrimType_ Scalar;
+//
+//  // Vector
+//  typedef Eigen::Matrix<Scalar,3,1> Vector;
+//
+//
+//  // Testing Vectors
+//  const Vector vec = Vector(0.3,-1.5,0.6);
+//  const Vector vecX = Vector(1.0,0.0,0.0);
+//  const Vector vecY = Vector(0.0,1.0,0.0);
+//  const Vector vecZ = Vector(0.0,0.0,1.0);
+//};
+//
+//
+//typedef ::testing::Types<
+//    double,
+//    float
+//> AdditionalFunctionsTypes;
+//
+//
+//TYPED_TEST_CASE(AdditionalFunctionsTest, AdditionalFunctionsTypes);
+//
+//// Testing constructors and getters for Rotation Vector
+//TYPED_TEST(AdditionalFunctionsTest, testCalculateAngleBetweenVectors){
+//  typedef typename TestFixture::Vector Vector;
+//  typedef typename TestFixture::Scalar Scalar;
+//
+//  ASSERT_NEAR(kindr::rotations::AdditionalFunctions<Vector>::calculateAngleBetweenVectors(this->vec, this->vec), 0.0, 1e-3);
+//  ASSERT_NEAR(kindr::rotations::AdditionalFunctions<Vector>::calculateAngleBetweenVectors(this->vec, -this->vec), M_PI, 1e-3);
+//
+//  ASSERT_NEAR(kindr::rotations::AdditionalFunctions<Vector>::calculateAngleBetweenVectors(this->vecX, this->vecY), M_PI/2, 1e-3);
+//  ASSERT_NEAR(kindr::rotations::AdditionalFunctions<Vector>::calculateAngleBetweenVectors(this->vecY, this->vecX), M_PI/2, 1e-3);
+//  ASSERT_NEAR(kindr::rotations::AdditionalFunctions<Vector>::calculateAngleBetweenVectors(this->vecX, this->vecZ), M_PI/2, 1e-3);
+//  ASSERT_NEAR(kindr::rotations::AdditionalFunctions<Vector>::calculateAngleBetweenVectors(this->vecZ, this->vecX), M_PI/2, 1e-3);
+//  ASSERT_NEAR(kindr::rotations::AdditionalFunctions<Vector>::calculateAngleBetweenVectors(this->vecY, this->vecZ), M_PI/2, 1e-3);
+//  ASSERT_NEAR(kindr::rotations::AdditionalFunctions<Vector>::calculateAngleBetweenVectors(this->vecZ, this->vecY), M_PI/2, 1e-3);
+//}
 
 

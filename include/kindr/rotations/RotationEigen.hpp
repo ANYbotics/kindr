@@ -215,7 +215,7 @@ class BoxOperationTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usage
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 template<typename Rotation_, enum RotationUsage Usage_>
-class RotationTraits<RotationBase<Rotation_, Usage_> > {
+class RotationTraits<RotationBase<Rotation_, Usage_>> {
  public:
   template<typename get_matrix3X<Rotation_>::IndexType Cols>
   inline static typename get_matrix3X<Rotation_>::template Matrix3X<Cols> rotate(const RotationBase<Rotation_, Usage_>& rotation, const typename internal::get_matrix3X<Rotation_>::template Matrix3X<Cols>& m){
@@ -228,19 +228,25 @@ class RotationTraits<RotationBase<Rotation_, Usage_> > {
 };
 
 
-} // namespace internal
 
+/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * SetFromVectors Traits
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-
-
-template<typename PrimType_>
-class AdditionalFunctions<Eigen::Matrix<PrimType_, 3, 1>> {
+template<typename Rotation_, enum RotationUsage Usage_>
+class SetFromVectorsTraits<RotationBase<Rotation_, Usage_>> {
  public:
-  static PrimType_ calculateAngleBetweenVectors(Eigen::Matrix<PrimType_, 3, 1> v1, Eigen::Matrix<PrimType_, 3, 1> v2) {
-    return acos(v1.dot(v2)/(v1.norm()*v2.norm()));
+  template<typename PrimType_>
+  inline static void setFromVectors(Rotation_& rot, const Eigen::Matrix<PrimType_, 3, 1>& v1, const Eigen::Matrix<PrimType_, 3, 1>& v2) {
+    const PrimType_ angle = acos(v1.dot(v2)/(v1.norm()*v2.norm()));
+    const Eigen::Matrix<PrimType_, 3, 1> axis = (v1.cross(v2)).normalized();
+    rot = eigen_impl::AngleAxis<PrimType_, Usage_>(angle,axis);
   }
 };
 
+
+
+} // namespace internal
 
 
 
