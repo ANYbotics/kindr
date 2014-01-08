@@ -367,9 +367,13 @@ class RotationBase {
   Position_ inverseRotate(const Position_& position) const {
     return Position_(internal::RotationTraits<RotationBase<Derived_,Usage_>>::rotate(this->derived().inverted(), internal::get_position3<Position_>::get_matrix3(position)));
   }
+};
 
 
-
+template <typename Vector_>
+class AdditionalFunctions {
+ public:
+  static typename internal::get_scalar<Vector_>::Scalar calculateAngleBetweenVectors(const Vector_& v1, const Vector_& v2);
 };
 
 

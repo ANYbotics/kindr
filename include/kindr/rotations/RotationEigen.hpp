@@ -59,6 +59,8 @@ class EulerAnglesXyz;
 } // namespace eigen_impl
 
 
+
+
 namespace internal {
 
 template<typename PrimType_>
@@ -70,8 +72,14 @@ class get_position3<positions::eigen_impl::Position3<PrimType_>>{
   static const Matrix3X& get_matrix3(const Position& position) {
     return position.toImplementation();
   }
-
 };
+
+template<typename PrimType_>
+class get_scalar<Eigen::Matrix<PrimType_, 3, 1>> {
+ public:
+  typedef PrimType_ Scalar;
+};
+
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * Multiplication Traits
@@ -221,6 +229,17 @@ class RotationTraits<RotationBase<Rotation_, Usage_> > {
 
 
 } // namespace internal
+
+
+
+
+template<typename PrimType_>
+class AdditionalFunctions<Eigen::Matrix<PrimType_, 3, 1>> {
+ public:
+  static PrimType_ calculateAngleBetweenVectors(Eigen::Matrix<PrimType_, 3, 1> v1, Eigen::Matrix<PrimType_, 3, 1> v2) {
+    return acos(v1.dot(v2)/(v1.norm()*v2.norm()));
+  }
+};
 
 
 
