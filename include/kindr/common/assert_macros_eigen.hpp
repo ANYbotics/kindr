@@ -24,7 +24,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
-*/
+ */
 
 #ifndef ASSERT_MACROS_EIGEN_HPP_
 #define ASSERT_MACROS_EIGEN_HPP_
@@ -32,6 +32,8 @@
 #include <cmath>
 #include "assert_macros.hpp"
 #include <Eigen/Core>
+
+#include "common.hpp"
 
 
 namespace kindr {
@@ -43,21 +45,42 @@ namespace eigen {
 
 inline bool compareRelative(double a, double b, double percentTolerance, double * percentError = NULL)
 {
-// \todo: does anyone have a better idea?
+  // \todo: does anyone have a better idea?
   double fa = fabs(a);
   double fb = fabs(b);
   if( (fa < 1e-15 && fb < 1e-15) ||  // Both zero.
-  (fa == 0.0  && fb < 1e-6)  ||  // One exactly zero and the other small
-  (fb == 0.0  && fa < 1e-6) )    // ditto
-return true;
+      (fa == 0.0  && fb < 1e-6)  ||  // One exactly zero and the other small
+      (fb == 0.0  && fa < 1e-6) )    // ditto
+    return true;
 
   double diff = fabs(a - b)/std::max(fa,fb);
   if(diff > percentTolerance * 1e-2)
-{
-  if(percentError)
-  *percentError = diff * 100.0;
-  return false;
+  {
+    if(percentError)
+      *percentError = diff * 100.0;
+    return false;
+  }
+  return true;
 }
+
+
+inline bool compareRelativePeriodic(double a, double b, double periodlength, double percentTolerance, double * percentError = NULL)
+{
+  // \todo: does anyone have a better idea?
+  double fa = floatingPointModulo(a, periodlength); // a now lies in [0,periodlength)
+  double fb = floatingPointModulo(b, periodlength); // b now lies in [0,periodlength)
+  if( ((periodlength - 1e-15 < fa || fa < 1e-15) && (periodlength - 1e-15 < fb || fb < 1e-15)) ||  // Both zero or near periodlength
+      (fa == 0.0  && fb < 1e-6)                                                                ||  // One exactly zero and the other small
+      (fb == 0.0  && fa < 1e-6) )                                                                  // ditto
+    return true;
+
+  double diff = std::min(floatingPointModulo(a - b, periodlength), floatingPointModulo(b - a, periodlength))/periodlength;
+  if(diff > percentTolerance * 1e-2)
+  {
+    if(percentError)
+      *percentError = diff * 100.0;
+    return false;
+  }
   return true;
 }
 
@@ -101,16 +124,16 @@ return true;
       } \
     }
 #define KINDR_ASSERT_SCALAR_NEAR_DBG(exceptionType, A, B, PERCENT_TOLERANCE, MESSAGE) \
-  double percentError = 0.0; \
-  if(!kindr::common::eigen::compareRelative( (A), (B), PERCENT_TOLERANCE, &percentError)) \
-  { \
-    std::stringstream kindr_assert_stringstream;  \
-    kindr_assert_stringstream << MESSAGE << "\nComparing Scalars:\n"  \
-    << "Scalar 1: " << #A << " = " << (A) << std::endl \
-    << "Scalar 2: " << #B << " = " << (B) << std::endl \
-    << "Error was " << percentError << "% > " << PERCENT_TOLERANCE << "%\n"; \
-    kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
-  }
+    double percentError = 0.0; \
+    if(!kindr::common::eigen::compareRelative( (A), (B), PERCENT_TOLERANCE, &percentError)) \
+    { \
+      std::stringstream kindr_assert_stringstream;  \
+      kindr_assert_stringstream << MESSAGE << "\nComparing Scalars:\n"  \
+      << "Scalar 1: " << #A << " = " << (A) << std::endl \
+      << "Scalar 2: " << #B << " = " << (B) << std::endl \
+      << "Error was " << percentError << "% > " << PERCENT_TOLERANCE << "%\n"; \
+      kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
+    }
 #define PRINT(MESSAGE) std::cout << MESSAGE << std::endl;
 #endif
 
@@ -118,39 +141,39 @@ return true;
 
 
 #define KINDR_ASSERT_MAT_IS_FINITE(exceptionType, matrix, message)   \
-  {                 \
-  for(int r = 0; r < matrix.rows(); ++r)        \
     {                 \
-      for(int c = 0; c < matrix.cols(); ++c)        \
-  {               \
-    if(!std::isfinite(matrix(r,c)))       \
+  for(int r = 0; r < matrix.rows(); ++r)        \
+  {                 \
+    for(int c = 0; c < matrix.cols(); ++c)        \
+    {               \
+      if(!std::isfinite(matrix(r,c)))       \
       {               \
         std::stringstream kindr_assert_stringstream;   \
         kindr_assert_stringstream << "debug assert( isfinite(" << #matrix << "(" << r << ", " << c << ") ) failed. [ isfinite(" << matrix(r,c) << " ) ]" << message << std::endl << matrix; \
         kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
       }               \
-  }               \
-     }                  \
-}
+    }               \
+  }                  \
+    }
 
 
 #ifndef NDEBUG
 
 #define KINDR_ASSERT_MAT_IS_FINITE_DBG(exceptionType, matrix, message)   \
-  {                 \
-  for(int r = 0; r < matrix.rows(); ++r)        \
     {                 \
-      for(int c = 0; c < matrix.cols(); ++c)        \
-  {               \
-    if(!std::isfinite(matrix(r,c)))       \
+  for(int r = 0; r < matrix.rows(); ++r)        \
+  {                 \
+    for(int c = 0; c < matrix.cols(); ++c)        \
+    {               \
+      if(!std::isfinite(matrix(r,c)))       \
       {               \
         std::stringstream kindr_assert_stringstream;   \
         kindr_assert_stringstream << "assert( isfinite(" << #matrix << "(" << r << ", " << c << ") ) failed. [ isfinite(" << matrix(r,c) << " ) ]" << message << std::endl << matrix; \
         kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
       }               \
-  }               \
-     }                  \
-}
+    }               \
+  }                  \
+    }
 
 
 #else

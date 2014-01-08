@@ -24,7 +24,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
-*/
+ */
 #ifndef GTEST_EIGEN_HPP_
 #define GTEST_EIGEN_HPP_
 
@@ -56,90 +56,105 @@ namespace eigen {
 
 
 
-    template<typename M1, typename M2>
-    void assertEqual(const M1 & A, const M2 & B, kindr::source_file_pos const & sfp, std::string const & message = "")
+template<typename M1, typename M2>
+void assertEqual(const M1 & A, const M2 & B, kindr::source_file_pos const & sfp, std::string const & message = "")
+{
+  ASSERT_EQ((size_t)A.rows(),(size_t)B.rows()) << message << "\nMatrix A:\n" << A << "\nand matrix B\n" << B << "\nare not the same\n" << sfp.toString();
+  ASSERT_EQ((size_t)A.cols(),(size_t)B.cols()) << message << "\nMatrix A:\n" << A << "\nand matrix B\n" << B << "\nare not the same\n" << sfp.toString();
+
+  for(int r = 0; r < A.rows(); r++)
+  {
+    for(int c = 0; c < A.cols(); c++)
     {
-        ASSERT_EQ((size_t)A.rows(),(size_t)B.rows()) << message << "\nMatrix A:\n" << A << "\nand matrix B\n" << B << "\nare not the same\n" << sfp.toString();
-      ASSERT_EQ((size_t)A.cols(),(size_t)B.cols()) << message << "\nMatrix A:\n" << A << "\nand matrix B\n" << B << "\nare not the same\n" << sfp.toString();
+      ASSERT_EQ(A(r,c),B(r,c)) << message << "\nEquality comparison failed at (" << r << "," << c << ")\n" << sfp.toString()
+                                           << "\nMatrix A:\n" << A << "\nand matrix B\n" << B;
+    }
+  }
+}
 
-      for(int r = 0; r < A.rows(); r++)
+
+template<typename M1, typename M2, typename T>
+void assertNear(const M1 & A, const M2 & B, T tolerance, kindr::source_file_pos const & sfp, std::string const & message = "")
+{
+  // Note: If these assertions fail, they only abort this subroutine.
+  // see: http://code.google.com/p/googletest/wiki/AdvancedGuide#Using_Assertions_in_Sub-routines
+  // \todo better handling of this
+  ASSERT_EQ((size_t)A.rows(),(size_t)B.rows()) << message << "\nMatrix A:\n" << A << "\nand matrix B\n" << B << "\nare not the same\n" << sfp.toString();
+  ASSERT_EQ((size_t)A.cols(),(size_t)B.cols()) << message << "\nMatrix A:\n" << A << "\nand matrix B\n" << B << "\nare not the same\n" << sfp.toString();
+
+  for(int r = 0; r < A.rows(); r++)
+  {
+    for(int c = 0; c < A.cols(); c++)
     {
-      for(int c = 0; c < A.cols(); c++)
-      {
-        ASSERT_EQ(A(r,c),B(r,c)) << message << "\nEquality comparison failed at (" << r << "," << c << ")\n" << sfp.toString()
-                                       << "\nMatrix A:\n" << A << "\nand matrix B\n" << B;
-      }
+      ASSERT_NEAR(A(r,c),B(r,c),tolerance) << message << "\nTolerance comparison failed at (" << r << "," << c << ")\n" << sfp.toString()
+                               << "\nMatrix A:\n" << A << "\nand matrix B\n" << B;
     }
-    }
+  }
+}
 
+template<typename M1, typename M2, typename T>
+void expectNear(const M1 & A, const M2 & B, T tolerance, kindr::source_file_pos const & sfp, std::string const & message = "")
+{
+  EXPECT_EQ((size_t)A.rows(),(size_t)B.rows()) << message << "\nMatrix A:\n" << A << "\nand matrix B\n" << B << "\nare not the same\n" << sfp.toString();
+  EXPECT_EQ((size_t)A.cols(),(size_t)B.cols()) << message << "\nMatrix A:\n" << A << "\nand matrix B\n" << B << "\nare not the same\n" << sfp.toString();
 
-    template<typename M1, typename M2, typename T>
-    void assertNear(const M1 & A, const M2 & B, T tolerance, kindr::source_file_pos const & sfp, std::string const & message = "")
+  for(int r = 0; r < A.rows(); r++)
+  {
+    for(int c = 0; c < A.cols(); c++)
     {
-      // Note: If these assertions fail, they only abort this subroutine.
-      // see: http://code.google.com/p/googletest/wiki/AdvancedGuide#Using_Assertions_in_Sub-routines
-      // \todo better handling of this
-        ASSERT_EQ((size_t)A.rows(),(size_t)B.rows()) << message << "\nMatrix A:\n" << A << "\nand matrix B\n" << B << "\nare not the same\n" << sfp.toString();
-      ASSERT_EQ((size_t)A.cols(),(size_t)B.cols()) << message << "\nMatrix A:\n" << A << "\nand matrix B\n" << B << "\nare not the same\n" << sfp.toString();
+      EXPECT_NEAR(A(r,c),B(r,c),tolerance) << message << "\nTolerance comparison failed at (" << r << "," << c << ")\n" << sfp.toString()
+                               << "\nMatrix A:\n" << A << "\nand matrix B\n" << B;
+    }
+  }
+}
 
-      for(int r = 0; r < A.rows(); r++)
+
+template<typename M1>
+void assertFinite(const M1 & A, kindr::source_file_pos const & sfp, std::string const & message = "")
+{
+  for(int r = 0; r < A.rows(); r++)
+  {
+    for(int c = 0; c < A.cols(); c++)
     {
-      for(int c = 0; c < A.cols(); c++)
-      {
-        ASSERT_NEAR(A(r,c),B(r,c),tolerance) << message << "\nTolerance comparison failed at (" << r << "," << c << ")\n" << sfp.toString()
-                           << "\nMatrix A:\n" << A << "\nand matrix B\n" << B;
-      }
+      ASSERT_TRUE(std::isfinite(A(r,c))) << sfp.toString() << std::endl << "Check for finite values failed at A(" << r << "," << c << "). Matrix A:" << std::endl << A << std::endl;
     }
-    }
-
-    template<typename M1, typename M2, typename T>
-    void expectNear(const M1 & A, const M2 & B, T tolerance, kindr::source_file_pos const & sfp, std::string const & message = "")
-    {
-      EXPECT_EQ((size_t)A.rows(),(size_t)B.rows()) << message << "\nMatrix A:\n" << A << "\nand matrix B\n" << B << "\nare not the same\n" << sfp.toString();
-      EXPECT_EQ((size_t)A.cols(),(size_t)B.cols()) << message << "\nMatrix A:\n" << A << "\nand matrix B\n" << B << "\nare not the same\n" << sfp.toString();
-
-      for(int r = 0; r < A.rows(); r++)
-        {
-          for(int c = 0; c < A.cols(); c++)
-            {
-              EXPECT_NEAR(A(r,c),B(r,c),tolerance) << message << "\nTolerance comparison failed at (" << r << "," << c << ")\n" << sfp.toString()
-                           << "\nMatrix A:\n" << A << "\nand matrix B\n" << B;
-            }
-        }
-    }
-
-
-    template<typename M1>
-    void assertFinite(const M1 & A, kindr::source_file_pos const & sfp, std::string const & message = "")
-    {
-      for(int r = 0; r < A.rows(); r++)
-    {
-      for(int c = 0; c < A.cols(); c++)
-      {
-        ASSERT_TRUE(std::isfinite(A(r,c))) << sfp.toString() << std::endl << "Check for finite values failed at A(" << r << "," << c << "). Matrix A:" << std::endl << A << std::endl;
-      }
-    }
-    }
+  }
+}
 
 
 #define KINDR_ASSERT_DOUBLE_MX_EQ(A, B, PERCENT_TOLERANCE, MSG)       \
     ASSERT_EQ((size_t)(A).rows(), (size_t)(B).rows())  << MSG << "\nMatrix " << #A << ":\n" << A << "\nand matrix " << #B << "\n" << B << "\nare not the same size"; \
     ASSERT_EQ((size_t)(A).cols(), (size_t)(B).cols())  << MSG << "\nMatrix " << #A << ":\n" << A << "\nand matrix " << #B << "\n" << B << "\nare not the same size"; \
     for(int r = 0; r < (A).rows(); r++)                 \
-      {                                 \
-    for(int c = 0; c < (A).cols(); c++)               \
+    {                                 \
+      for(int c = 0; c < (A).cols(); c++)               \
       {                               \
-      double percentError = 0.0;                  \
-      ASSERT_TRUE(kindr::common::eigen::compareRelative( (A)(r,c), (B)(r,c), PERCENT_TOLERANCE, &percentError)) \
+        double percentError = 0.0;                  \
+        ASSERT_TRUE(kindr::common::eigen::compareRelative( (A)(r,c), (B)(r,c), PERCENT_TOLERANCE, &percentError)) \
         << MSG << "\nComparing:\n"                \
         << #A << "(" << r << "," << c << ") = " << (A)(r,c) << std::endl \
         << #B << "(" << r << "," << c << ") = " << (B)(r,c) << std::endl \
         << "Error was " << percentError << "% > " << PERCENT_TOLERANCE << "%\n" \
         << "\nMatrix " << #A << ":\n" << A << "\nand matrix " << #B << "\n" << B; \
       }                               \
-      }
+    }
 
-
+#define KINDR_ASSERT_DOUBLE_MX_EQ_PERIODIC(A, B, PERIODLENGTH, PERCENT_TOLERANCE, MSG) \
+    ASSERT_EQ((size_t)(A).rows(), (size_t)(B).rows())  << MSG << "\nMatrix " << #A << ":\n" << A << "\nand matrix " << #B << "\n" << B << "\nare not the same size"; \
+    ASSERT_EQ((size_t)(A).cols(), (size_t)(B).cols())  << MSG << "\nMatrix " << #A << ":\n" << A << "\nand matrix " << #B << "\n" << B << "\nare not the same size"; \
+    for(int r = 0; r < (A).rows(); r++)                 \
+    {                                 \
+      for(int c = 0; c < (A).cols(); c++)               \
+      {                               \
+        double percentError = 0.0;                  \
+        ASSERT_TRUE(kindr::common::eigen::compareRelativePeriodic( (A)(r,c), (B)(r,c), PERIODLENGTH, PERCENT_TOLERANCE, &percentError)) \
+        << MSG << "\nComparing:\n"                \
+        << #A << "(" << r << "," << c << ") = " << (A)(r,c) << std::endl \
+        << #B << "(" << r << "," << c << ") = " << (B)(r,c) << std::endl \
+        << "Error was " << percentError << "% > " << PERCENT_TOLERANCE << "%\n" \
+        << "\nMatrix " << #A << ":\n" << A << "\nand matrix " << #B << "\n" << B; \
+      }                               \
+    }
 
 
 

@@ -238,44 +238,43 @@ TYPED_TEST(EulerAnglesZyxSingleTest, testUniqueness){
   // Check uniqueness getter and setter with generic Rotation Quaternions
   rotEulerAnglesZyx = RotationQuaternion(-1.0,0.0,0.0,0.0);
   rotEulerAnglesZyxUnique =  RotationQuaternion(1.0,0.0,0.0,0.0);
-  KINDR_ASSERT_DOUBLE_MX_EQ(rotEulerAnglesZyxUnique.getUnique().toImplementation(), rotEulerAnglesZyx.getUnique().toImplementation(), 1e-2, "unique");
+  KINDR_ASSERT_DOUBLE_MX_EQ_PERIODIC(rotEulerAnglesZyxUnique.getUnique().toImplementation(), rotEulerAnglesZyx.getUnique().toImplementation(), 2*M_PI, 1e-2, "unique");
 
   rotEulerAnglesZyx = RotationQuaternion(0.0,-1.0,0.0,0.0);
   rotEulerAnglesZyxUnique = RotationQuaternion(0.0,1.0,0.0,0.0);
-  KINDR_ASSERT_DOUBLE_MX_EQ(rotEulerAnglesZyxUnique.getUnique().toImplementation(), rotEulerAnglesZyx.getUnique().toImplementation(), 1e-2, "unique");
+  KINDR_ASSERT_DOUBLE_MX_EQ_PERIODIC(rotEulerAnglesZyxUnique.getUnique().toImplementation(), rotEulerAnglesZyx.getUnique().toImplementation(), 2*M_PI, 1e-2, "unique");
 
   rotEulerAnglesZyx = RotationQuaternion(0.0,0.0,-1.0,0.0);
   rotEulerAnglesZyxUnique = RotationQuaternion(0.0,0.0,1.0,0.0);
-  KINDR_ASSERT_DOUBLE_MX_EQ(rotEulerAnglesZyxUnique.getUnique().toImplementation(), rotEulerAnglesZyx.getUnique().toImplementation(), 1e-2, "unique");
+  KINDR_ASSERT_DOUBLE_MX_EQ_PERIODIC(rotEulerAnglesZyxUnique.getUnique().toImplementation(), rotEulerAnglesZyx.getUnique().toImplementation(), 2*M_PI, 1e-2, "unique");
 
   rotEulerAnglesZyx = RotationQuaternion(0.0,0.0,0.0,1.0);
   rotEulerAnglesZyxUnique = RotationQuaternion(0.0,0.0,0.0,-1.0);
-  KINDR_ASSERT_DOUBLE_MX_EQ(rotEulerAnglesZyxUnique.getUnique().toImplementation(), rotEulerAnglesZyx.getUnique().toImplementation(), 1e-2, "unique");
+  KINDR_ASSERT_DOUBLE_MX_EQ_PERIODIC(rotEulerAnglesZyxUnique.getUnique().toImplementation(), rotEulerAnglesZyx.getUnique().toImplementation(), 2*M_PI, 1e-2, "unique");
 
   rotEulerAnglesZyx = RotationQuaternion(1.0,0.0,0.0,0.0);
   rotEulerAnglesZyxUnique = RotationQuaternion(-1.0,0.0,0.0,0.0);
   rotEulerAnglesZyxV2 = rotEulerAnglesZyx.setUnique();
-  KINDR_ASSERT_DOUBLE_MX_EQ(rotEulerAnglesZyxUnique.getUnique().toImplementation(), rotEulerAnglesZyx.toImplementation(), 1e-2, "unique");
-  KINDR_ASSERT_DOUBLE_MX_EQ(rotEulerAnglesZyxUnique.getUnique().toImplementation(), rotEulerAnglesZyxV2.toImplementation(), 1e-2, "unique");
+  KINDR_ASSERT_DOUBLE_MX_EQ_PERIODIC(rotEulerAnglesZyxUnique.getUnique().toImplementation(), rotEulerAnglesZyx.toImplementation(), 2*M_PI, 1e-2, "unique");
+  KINDR_ASSERT_DOUBLE_MX_EQ_PERIODIC(rotEulerAnglesZyxUnique.getUnique().toImplementation(), rotEulerAnglesZyxV2.toImplementation(), 2*M_PI, 1e-2, "unique");
 
   rotEulerAnglesZyx = RotationQuaternion(0.0,1.0,0.0,0.0);
   rotEulerAnglesZyxUnique = RotationQuaternion(0.0,-1.0,0.0,0.0);
   rotEulerAnglesZyxV2 = rotEulerAnglesZyx.setUnique();
-  KINDR_ASSERT_DOUBLE_MX_EQ(rotEulerAnglesZyxUnique.getUnique().toImplementation(), rotEulerAnglesZyx.toImplementation(), 1e-2, "unique");
-  KINDR_ASSERT_DOUBLE_MX_EQ(rotEulerAnglesZyxUnique.getUnique().toImplementation(), rotEulerAnglesZyxV2.toImplementation(), 1e-2, "unique");
+  KINDR_ASSERT_DOUBLE_MX_EQ_PERIODIC(rotEulerAnglesZyxUnique.getUnique().toImplementation(), rotEulerAnglesZyx.toImplementation(), 2*M_PI, 1e-2, "unique");
+  KINDR_ASSERT_DOUBLE_MX_EQ_PERIODIC(rotEulerAnglesZyxUnique.getUnique().toImplementation(), rotEulerAnglesZyxV2.toImplementation(), 2*M_PI, 1e-2, "unique");
 
   rotEulerAnglesZyx = RotationQuaternion(0.0,0.0,1.0,0.0);
   rotEulerAnglesZyxUnique = RotationQuaternion(0.0,0.0,-1.0,0.0);
   rotEulerAnglesZyxV2 = rotEulerAnglesZyx.setUnique();
-  KINDR_ASSERT_DOUBLE_MX_EQ(rotEulerAnglesZyxUnique.getUnique().toImplementation(), rotEulerAnglesZyx.toImplementation(), 1e-2, "unique");
-  KINDR_ASSERT_DOUBLE_MX_EQ(rotEulerAnglesZyxUnique.getUnique().toImplementation(), rotEulerAnglesZyxV2.toImplementation(), 1e-2, "unique");
+  KINDR_ASSERT_DOUBLE_MX_EQ_PERIODIC(rotEulerAnglesZyxUnique.getUnique().toImplementation(), rotEulerAnglesZyx.toImplementation(), 2*M_PI, 1e-2, "unique");
 
 
   rotEulerAnglesZyx = RotationQuaternion(0.0,0.0,0.0,1.0);
   rotEulerAnglesZyxUnique = RotationQuaternion(0.0,0.0,0.0,-1.0);
   rotEulerAnglesZyxV2 = rotEulerAnglesZyx.setUnique();
-  KINDR_ASSERT_DOUBLE_MX_EQ(rotEulerAnglesZyxUnique.getUnique().toImplementation(), rotEulerAnglesZyx.toImplementation(), 1e-2, "unique");
-  KINDR_ASSERT_DOUBLE_MX_EQ(rotEulerAnglesZyxUnique.getUnique().toImplementation(), rotEulerAnglesZyxV2.toImplementation(), 1e-2, "unique");
+  KINDR_ASSERT_DOUBLE_MX_EQ_PERIODIC(rotEulerAnglesZyxUnique.getUnique().toImplementation(), rotEulerAnglesZyx.toImplementation(), 2*M_PI, 1e-2, "unique");
+  KINDR_ASSERT_DOUBLE_MX_EQ_PERIODIC(rotEulerAnglesZyxUnique.getUnique().toImplementation(), rotEulerAnglesZyxV2.toImplementation(), 2*M_PI, 1e-2, "unique");
 
 }
 
