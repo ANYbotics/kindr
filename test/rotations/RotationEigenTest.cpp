@@ -32,6 +32,7 @@
 #include <string>
 #include "kindr/common/assert_macros_eigen.hpp"
 
+
 namespace rot = kindr::rotations::eigen_impl;
 namespace quat = kindr::quaternions::eigen_impl;
 
@@ -144,7 +145,7 @@ struct AngleAxisTestType {
   Rotation rot;
 
   void assertNear(const Rotation_& rotA, const Rotation_& rotB, double tol=1e-6, const std::string& msg = "") {
-    ASSERT_NEAR(rotA.angle(), rotB.angle(), tol) << msg;
+    ASSERT_EQ(true, kindr::common::eigen::compareRelativePeriodic(rotA.angle(), rotB.angle(), 2*M_PI, 1e-1)) << msg;
     ASSERT_NEAR(rotA.axis().x(), rotB.axis().x(), tol) << msg;
     ASSERT_NEAR(rotA.axis().y(), rotB.axis().y(), tol) << msg;
     ASSERT_NEAR(rotA.axis().z(), rotB.axis().z(), tol) << msg;
@@ -174,13 +175,12 @@ struct EulerAnglesZyxTestType {
 //    ASSERT_NEAR(rotA.pitch(), rotB.pitch(), tolX)<< "rotA: " << rotAIn << " rotAUnique: " << rotAIn.getUnique() << "\nrotB: " << rotBIn << " rotBUnique: " << rotBIn.getUnique() << "\n" << msg;
 //    ASSERT_NEAR(rotA.yaw(), rotB.yaw(), tolX)  << "rotA: " << rotAIn << " rotAUnique: " << rotAIn.getUnique() << "\nrotB: " << rotBIn << " rotBUnique: " << rotBIn.getUnique() << "\n" << msg;
 
-
-    ASSERT_EQ(true, (kindr::common::eigen::compareRelative(rotA.roll(), rotB.roll(), 1e-1) &&
-        kindr::common::eigen::compareRelative(rotA.pitch(), rotB.pitch(), 1e-1) &&
-        kindr::common::eigen::compareRelative(rotA.yaw(), rotB.yaw(), 1e-1)) ||
-       (kindr::common::eigen::compareRelative(rotA.getUnique().roll(), rotB.getUnique().roll(), 1e-1) &&
-        kindr::common::eigen::compareRelative(rotA.getUnique().pitch(), rotB.getUnique().pitch(), 1e-1) &&
-        kindr::common::eigen::compareRelative(rotA.getUnique().yaw(), rotB.getUnique().yaw(), 1e-1))
+    ASSERT_EQ(true, (kindr::common::eigen::compareRelativePeriodic(rotA.roll(), rotB.roll(), 2*M_PI, 1e-1) &&
+                     kindr::common::eigen::compareRelativePeriodic(rotA.pitch(), rotB.pitch(), 2*M_PI, 1e-1) &&
+                     kindr::common::eigen::compareRelativePeriodic(rotA.yaw(), rotB.yaw(), 2*M_PI, 1e-1)) ||
+                    (kindr::common::eigen::compareRelativePeriodic(rotA.getUnique().roll(), rotB.getUnique().roll(), 2*M_PI, 1e-1) &&
+                     kindr::common::eigen::compareRelativePeriodic(rotA.getUnique().pitch(), rotB.getUnique().pitch(), 2*M_PI, 1e-1) &&
+                     kindr::common::eigen::compareRelativePeriodic(rotA.getUnique().yaw(), rotB.getUnique().yaw(), 2*M_PI, 1e-1))
     ) << std::endl << msg;
 
   }
@@ -384,31 +384,31 @@ typedef ::testing::Types<
     std::pair<RotationMatrixTestType<rot::RotationMatrixPF>, AngleAxisTestType<rot::AngleAxisPF>>,
     std::pair<RotationMatrixTestType<rot::RotationMatrixPD>, AngleAxisTestType<rot::AngleAxisPD>>,
     std::pair<RotationMatrixTestType<rot::RotationMatrixAF>, AngleAxisTestType<rot::AngleAxisAF>>,
-    std::pair<RotationMatrixTestType<rot::RotationMatrixAD>, AngleAxisTestType<rot::AngleAxisAD>>
+    std::pair<RotationMatrixTestType<rot::RotationMatrixAD>, AngleAxisTestType<rot::AngleAxisAD>>,
 
-//    // Rotation Quaternion <-> Euler Angles ZYX
-//     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPF>>,
-//     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>>,
-//     std::pair<RotationQuaternionTestType<rot::RotationQuaternionAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
-//     std::pair<RotationQuaternionTestType<rot::RotationQuaternionAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>,
-//
-//     // Rotation Vector <-> Euler Angles ZYX
-//     std::pair<RotationVectorTestType<rot::RotationVectorPF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPF>>,
-//     std::pair<RotationVectorTestType<rot::RotationVectorPD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>>,
-//     std::pair<RotationVectorTestType<rot::RotationVectorAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
-//     std::pair<RotationVectorTestType<rot::RotationVectorAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>,
-//
-//     // Angle-Axis <-> Euler Angles ZYX
-//     std::pair<AngleAxisTestType<rot::AngleAxisPF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPF>>,
-//     std::pair<AngleAxisTestType<rot::AngleAxisPD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>>,
-//     std::pair<AngleAxisTestType<rot::AngleAxisAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
-//     std::pair<AngleAxisTestType<rot::AngleAxisAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>,
-//
-//     // Rotation Matrix <-> Euler Angles ZYX
-//     std::pair<RotationMatrixTestType<rot::RotationMatrixPF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPF>>,
-//     std::pair<RotationMatrixTestType<rot::RotationMatrixPD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>>,
-//     std::pair<RotationMatrixTestType<rot::RotationMatrixAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
-//     std::pair<RotationMatrixTestType<rot::RotationMatrixAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>
+    // Rotation Quaternion <-> Euler Angles ZYX
+    std::pair<RotationQuaternionTestType<rot::RotationQuaternionPF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPF>>,
+    std::pair<RotationQuaternionTestType<rot::RotationQuaternionPD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>>,
+    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
+    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>,
+
+    // Rotation Vector <-> Euler Angles ZYX
+    std::pair<RotationVectorTestType<rot::RotationVectorPF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPF>>,
+    std::pair<RotationVectorTestType<rot::RotationVectorPD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>>,
+    std::pair<RotationVectorTestType<rot::RotationVectorAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
+    std::pair<RotationVectorTestType<rot::RotationVectorAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>,
+
+    // Angle-Axis <-> Euler Angles ZYX
+    std::pair<AngleAxisTestType<rot::AngleAxisPF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPF>>,
+    std::pair<AngleAxisTestType<rot::AngleAxisPD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>>,
+    std::pair<AngleAxisTestType<rot::AngleAxisAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
+    std::pair<AngleAxisTestType<rot::AngleAxisAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>,
+
+    // Rotation Matrix <-> Euler Angles ZYX
+    std::pair<RotationMatrixTestType<rot::RotationMatrixPF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPF>>,
+    std::pair<RotationMatrixTestType<rot::RotationMatrixPD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>>,
+    std::pair<RotationMatrixTestType<rot::RotationMatrixAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
+    std::pair<RotationMatrixTestType<rot::RotationMatrixAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>
 
 > TypeRotationPrimTypePairs;
 

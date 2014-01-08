@@ -270,8 +270,10 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
              kindr::common::floatingPointModulo(y()+M_PI,2*M_PI)-M_PI,
              kindr::common::floatingPointModulo(x()+M_PI,2*M_PI)-M_PI); // wrap all angles into [-pi,pi)
 
+    const double tol = 1e-3;
+
     // wrap angles into [-pi,pi),[-pi/2,pi/2),[-pi,pi)
-    if(zyx.y() < -M_PI/2)
+    if(zyx.y() < -M_PI/2 - tol)
     {
       if(zyx.z() < 0) {
         zyx.z() = zyx.z() + M_PI;
@@ -287,22 +289,22 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
         zyx.x() = zyx.x() - M_PI;
       }
     }
-    else if(zyx.y() == -M_PI/2)
+    else if(-M_PI/2 - tol <= zyx.y() && zyx.y() <= -M_PI/2 + tol)
     {
       zyx.z() += zyx.x();
       zyx.x() = 0;
     }
-    else if(-M_PI/2 < zyx.y() && zyx.y() < M_PI/2)
+    else if(-M_PI/2 + tol < zyx.y() && zyx.y() < M_PI/2 - tol)
     {
       // ok
     }
-    else if(M_PI/2 == zyx.y())
+    else if(M_PI/2 - tol <= zyx.y() && zyx.y() <= M_PI/2 + tol)
     {
       // todo: M_PI/2 should not be in range, other formula?
       zyx.z() -= zyx.x();
       zyx.x() = 0;
     }
-    else // M_PI/2 < zyx.y()
+    else // M_PI/2 + tol < zyx.y()
     {
       if(zyx.z() < 0) {
         zyx.z() = zyx.z() + M_PI;
