@@ -453,7 +453,7 @@ static Eigen::Matrix<TReturn,3,1> getRpyFromQuaternion(const Eigen::Quaternion<T
 //
 //  return rpy_BI;
 
-  return p_BI.toRotationMatrix().eulerAngles(0, 1, 2);
+  return (p_BI.toRotationMatrix().eulerAngles(0, 1, 2)).template cast<TReturn>();
 }
 
 template<typename T, typename TReturn = T>
@@ -471,8 +471,8 @@ static Eigen::Matrix<TReturn,3,1> getRpyFromRotationMatrix(const Eigen::Matrix<T
 template<typename T, typename TReturn = T>
 static Eigen::Matrix<TReturn,3,1> getRpyFromYpr(const Eigen::Matrix<T,3,1>& ypr_BI)
 {
-  return getRpyFromQuaternion(getQuaternionFromYpr(ypr_BI.template cast<TReturn>()));
-//  return getRpyFromAngleAxis(getAngleAxisFromYpr(ypr_BI));
+  return getRpyFromQuaternion(getQuaternionFromYpr(ypr_BI)).template cast<TReturn>();
+//  return getRpyFromQuaternion(getQuaternionFromYpr(ypr_BI.template cast<TReturn>()));
 }
 
 
@@ -569,8 +569,8 @@ static Eigen::Matrix<TReturn,3,1> getYprFromRotationMatrix(const Eigen::Matrix<T
 template<typename T, typename TReturn = T>
 static Eigen::Matrix<TReturn,3,1> getYprFromRpy(const Eigen::Matrix<T,3,1>& rpy_BI)
 {
-  return getYprFromQuaternion(getQuaternionFromRpy(rpy_BI.template cast<TReturn>()));
-//  return getYprFromAngleAxis(getAngleAxisFromRpy(rpy_BI));
+  return getYprFromQuaternion(getQuaternionFromRpy(rpy_BI)).template cast<TReturn>();
+//  return getYprFromQuaternion(getQuaternionFromRpy(rpy_BI.template cast<TReturn>()));
 }
 
 

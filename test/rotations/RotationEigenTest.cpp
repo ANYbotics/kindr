@@ -83,6 +83,11 @@ struct Conversion2Test : public ConversionTest<ImplementationPair_> {
 
 };
 
+template <typename ImplementationPair_>
+struct Conversion3Test : public ConversionTest<ImplementationPair_> {
+
+};
+
 
 template <typename ImplementationPair_>
 struct ConcatenationTest : public ConversionTest<ImplementationPair_> {
@@ -174,6 +179,32 @@ struct EulerAnglesZyxTestType {
 //    ASSERT_NEAR(rotA.roll(), rotB.roll(), tolX) << "rotA: " << rotAIn << " rotAUnique: " << rotAIn.getUnique() << "\nrotB: " << rotBIn << " rotBUnique: " << rotBIn.getUnique() << "\n" << msg;
 //    ASSERT_NEAR(rotA.pitch(), rotB.pitch(), tolX)<< "rotA: " << rotAIn << " rotAUnique: " << rotAIn.getUnique() << "\nrotB: " << rotBIn << " rotBUnique: " << rotBIn.getUnique() << "\n" << msg;
 //    ASSERT_NEAR(rotA.yaw(), rotB.yaw(), tolX)  << "rotA: " << rotAIn << " rotAUnique: " << rotAIn.getUnique() << "\nrotB: " << rotBIn << " rotBUnique: " << rotBIn.getUnique() << "\n" << msg;
+
+    ASSERT_EQ(true, (kindr::common::eigen::compareRelativePeriodic(rotA.roll(), rotB.roll(), 2*M_PI, 1e-1) &&
+                     kindr::common::eigen::compareRelativePeriodic(rotA.pitch(), rotB.pitch(), 2*M_PI, 1e-1) &&
+                     kindr::common::eigen::compareRelativePeriodic(rotA.yaw(), rotB.yaw(), 2*M_PI, 1e-1)) ||
+                    (kindr::common::eigen::compareRelativePeriodic(rotA.getUnique().roll(), rotB.getUnique().roll(), 2*M_PI, 1e-1) &&
+                     kindr::common::eigen::compareRelativePeriodic(rotA.getUnique().pitch(), rotB.getUnique().pitch(), 2*M_PI, 1e-1) &&
+                     kindr::common::eigen::compareRelativePeriodic(rotA.getUnique().yaw(), rotB.getUnique().yaw(), 2*M_PI, 1e-1))
+    ) << std::endl << msg;
+
+  }
+};
+
+template <typename Rotation_>
+struct EulerAnglesXyzTestType {
+  typedef Rotation_ Rotation;
+  typedef typename Rotation::Scalar Scalar;
+
+  const Rotation rotQuarterX = Rotation(M_PI/2.0, 0.0, 0.0);
+  const Rotation rotQuarterY = Rotation(0.0, M_PI/2.0, 0.0);
+  const Rotation rotQuarterZ = Rotation(0.0, 0.0, M_PI/2.0);
+  const Rotation rotIdentity = Rotation(0.0, 0.0, 0.0);
+  const Rotation rotGeneric = Rotation(0.2, 0.3, 0.4);
+
+  Rotation rot;
+
+  void assertNear(const Rotation_& rotA, const Rotation_& rotB, double tol=1e-6, const std::string& msg = "") {
 
     ASSERT_EQ(true, (kindr::common::eigen::compareRelativePeriodic(rotA.roll(), rotB.roll(), 2*M_PI, 1e-1) &&
                      kindr::common::eigen::compareRelativePeriodic(rotA.pitch(), rotB.pitch(), 2*M_PI, 1e-1) &&
@@ -355,6 +386,59 @@ typedef ::testing::Types<
 > TypeRotation2Pairs;
 
 typedef ::testing::Types<
+    // Rotation Quaternion <-> Euler Angles XYZ
+    std::pair<RotationQuaternionTestType<rot::RotationQuaternionPF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPF>>,
+    std::pair<RotationQuaternionTestType<rot::RotationQuaternionPF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPD>>,
+    std::pair<RotationQuaternionTestType<rot::RotationQuaternionPD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPF>>,
+    std::pair<RotationQuaternionTestType<rot::RotationQuaternionPD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPD>>,
+    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
+    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
+    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
+    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
+
+    // Rotation Vector <-> Euler Angles XYZ
+    std::pair<RotationVectorTestType<rot::RotationVectorPF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPF>>,
+    std::pair<RotationVectorTestType<rot::RotationVectorPF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPD>>,
+    std::pair<RotationVectorTestType<rot::RotationVectorPD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPF>>,
+    std::pair<RotationVectorTestType<rot::RotationVectorPD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPD>>,
+    std::pair<RotationVectorTestType<rot::RotationVectorAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
+    std::pair<RotationVectorTestType<rot::RotationVectorAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
+    std::pair<RotationVectorTestType<rot::RotationVectorAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
+    std::pair<RotationVectorTestType<rot::RotationVectorAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
+
+    // Angle-Axis <-> Euler Angles XYZ
+    std::pair<AngleAxisTestType<rot::AngleAxisPF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPF>>,
+    std::pair<AngleAxisTestType<rot::AngleAxisPF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPD>>,
+    std::pair<AngleAxisTestType<rot::AngleAxisPD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPF>>,
+    std::pair<AngleAxisTestType<rot::AngleAxisPD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPD>>,
+    std::pair<AngleAxisTestType<rot::AngleAxisAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
+    std::pair<AngleAxisTestType<rot::AngleAxisAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
+    std::pair<AngleAxisTestType<rot::AngleAxisAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
+    std::pair<AngleAxisTestType<rot::AngleAxisAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
+
+    // Rotation Matrix <-> Euler Angles XYZ
+    std::pair<RotationMatrixTestType<rot::RotationMatrixPF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPF>>,
+    std::pair<RotationMatrixTestType<rot::RotationMatrixPF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPD>>,
+    std::pair<RotationMatrixTestType<rot::RotationMatrixPD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPF>>,
+    std::pair<RotationMatrixTestType<rot::RotationMatrixPD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPD>>,
+    std::pair<RotationMatrixTestType<rot::RotationMatrixAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
+    std::pair<RotationMatrixTestType<rot::RotationMatrixAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
+    std::pair<RotationMatrixTestType<rot::RotationMatrixAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
+    std::pair<RotationMatrixTestType<rot::RotationMatrixAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
+
+    // Euler Angles ZYX <-> Euler Angles XYZ
+    std::pair<EulerAnglesZyxTestType<rot::EulerAnglesZyxPF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPF>>,
+    std::pair<EulerAnglesZyxTestType<rot::EulerAnglesZyxPF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPD>>,
+    std::pair<EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPF>>,
+    std::pair<EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPD>>,
+    std::pair<EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
+    std::pair<EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
+    std::pair<EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
+    std::pair<EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>
+
+> TypeRotation3Pairs;
+
+typedef ::testing::Types<
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPF>, RotationVectorTestType<rot::RotationVectorPF>>,
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPD>, RotationVectorTestType<rot::RotationVectorPD>>,
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionAF>, RotationVectorTestType<rot::RotationVectorAF>>,
@@ -415,13 +499,18 @@ typedef ::testing::Types<
 
 TYPED_TEST_CASE(ConversionTest, TypeRotationPairs);
 TYPED_TEST_CASE(Conversion2Test, TypeRotation2Pairs);
+TYPED_TEST_CASE(Conversion3Test, TypeRotation3Pairs);
 TYPED_TEST_CASE(ConcatenationTest, TypeRotationPrimTypePairs);
 
 TYPED_TEST(ConversionTest, testAToB) {
   this->convertAToB();
 }
 
-TYPED_TEST(Conversion2Test, DISABLED_testAToB) {
+TYPED_TEST(Conversion2Test, testAToB) {
+  this->convertAToB();
+}
+
+TYPED_TEST(Conversion3Test, testAToB) {
   this->convertAToB();
 }
 
@@ -430,6 +519,10 @@ TYPED_TEST(ConversionTest, testBToA) {
 }
 
 TYPED_TEST(Conversion2Test, testBToA) {
+  this->convertBToA();
+}
+
+TYPED_TEST(Conversion3Test, testBToA) {
   this->convertBToA();
 }
 

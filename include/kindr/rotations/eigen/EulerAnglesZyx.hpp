@@ -257,7 +257,7 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
    *  \returns reference
    */
   EulerAnglesZyx& setIdentity() {
-    this->toImplementation().setZero();
+    zyx_.setZero();
     return *this;
   }
 

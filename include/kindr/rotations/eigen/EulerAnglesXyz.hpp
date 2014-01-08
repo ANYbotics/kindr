@@ -122,7 +122,7 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage
    */
   template<typename OtherDerived_>
   EulerAnglesXyz& operator =(const RotationBase<OtherDerived_, Usage_>& other) {
-    *this = internal::ConversionTraits<EulerAnglesXyz, OtherDerived_>::convert(other.derived());
+    this->toImplementation() = internal::ConversionTraits<EulerAnglesXyz, OtherDerived_>::convert(other.derived()).toImplementation();
     return *this;
   }
 
@@ -132,7 +132,7 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage
    */
   template<typename OtherDerived_>
   EulerAnglesXyz& operator ()(const RotationBase<OtherDerived_, Usage_>& other) {
-    *this = internal::ConversionTraits<EulerAnglesXyz, OtherDerived_>::convert(other.derived());
+    this->toImplementation() = internal::ConversionTraits<EulerAnglesXyz, OtherDerived_>::convert(other.derived()).toImplementation();
     return *this;
   }
 
@@ -140,14 +140,14 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage
    *  \returns the inverse of the rotation
    */
   EulerAnglesXyz inverted() const {
-    return EulerAnglesXyz(getInverseRpy<PrimType_, PrimType_>(xyz_));
+    return EulerAnglesXyz(getInverseRpy<PrimType_, PrimType_>(this->toImplementation()));
   }
 
   /*! \brief Inverts the rotation.
    *  \returns reference
    */
-  EulerAnglesXyz& inverted() {
-    xyz_ = getInverseRpy<PrimType_, PrimType_>(xyz_);
+  EulerAnglesXyz& invert() {
+    *this = this->inverted();
     return *this;
   }
 
@@ -263,42 +263,62 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage
    *  \returns copy of the Euler angles rotation which is unique
    */
   EulerAnglesXyz getUnique() const {
-    EulerAnglesXyz xyz(kindr::common::floatingPointModulo(roll() +M_PI,2*M_PI)-M_PI,
-                       kindr::common::floatingPointModulo(pitch()+M_PI,2*M_PI)-M_PI,
-                       kindr::common::floatingPointModulo(yaw()  +M_PI,2*M_PI)-M_PI); // wraps all angles into [-pi,pi)
-    if(xyz.pitch() >= M_PI/2)  // wraps angles into [-pi,pi),[-pi/2,pi/2),[-pi,pi)
+    Base xyz(kindr::common::floatingPointModulo(x()+M_PI,2*M_PI)-M_PI,
+             kindr::common::floatingPointModulo(y()+M_PI,2*M_PI)-M_PI,
+             kindr::common::floatingPointModulo(z()+M_PI,2*M_PI)-M_PI); // wrap all angles into [-pi,pi)
+
+    const double tol = 1e-3;
+
+    // wrap angles into [-pi,pi),[-pi/2,pi/2),[-pi,pi)
+    if(xyz.y() < -M_PI/2 - tol)
     {
-      if(xyz.roll() >= 0) {
-        xyz.setRoll(xyz.roll() - M_PI);
+      if(xyz.x() < 0) {
+        xyz.x() = xyz.x() + M_PI;
       } else {
-        xyz.setRoll(xyz.roll() + M_PI);
+        xyz.x() = xyz.x() - M_PI;
       }
 
-      xyz.setPitch(-(xyz.pitch() - M_PI));
+      xyz.y() = -(xyz.y() + M_PI);
 
-      if(xyz.yaw() >= 0) {
-        xyz.setYaw(xyz.getYaw - M_PI);
+      if(xyz.z() < 0) {
+        xyz.z() = xyz.z() + M_PI;
       } else {
-        xyz.setYaw(xyz.getYaw + M_PI);
+        xyz.z() = xyz.z() - M_PI;
       }
     }
-    else if(xyz.pitch() < -M_PI/2)
+    else if(-M_PI/2 - tol <= xyz.y() && xyz.y() <= -M_PI/2 + tol)
     {
-      if(xyz.roll() >= 0) {
-        xyz.setRoll(xyz.roll() - M_PI);
+      xyz.x() -= xyz.z();
+      xyz.z() = 0;
+    }
+    else if(-M_PI/2 + tol < xyz.y() && xyz.y() < M_PI/2 - tol)
+    {
+      // ok
+    }
+    else if(M_PI/2 - tol <= xyz.y() && xyz.y() <= M_PI/2 + tol)
+    {
+      // todo: M_PI/2 should not be in range, other formula?
+      xyz.x() += xyz.z();
+      xyz.z() = 0;
+    }
+    else // M_PI/2 + tol < xyz.y()
+    {
+      if(xyz.x() < 0) {
+        xyz.x() = xyz.x() + M_PI;
       } else {
-        xyz.setRoll(xyz.roll() + M_PI);
+        xyz.x() = xyz.x() - M_PI;
       }
 
-      xyz.setPitch(-(xyz.pitch() + M_PI));
+      xyz.y() = -(xyz.y() - M_PI);
 
-      if(xyz.yaw() >= 0) {
-        xyz.setYaw(xyz.yaw() - M_PI);
+      if(xyz.z() < 0) {
+        xyz.z() = xyz.z() + M_PI;
       } else {
-        xyz.setYaw(xyz.yaw() + M_PI);
+        xyz.z() = xyz.z() - M_PI;
       }
     }
-    return xyz;
+
+    return EulerAnglesXyz(xyz);
   }
 
   /*! \brief Modifies the Euler angles rotation such that the angles lie in [-pi,pi),[-pi/2,pi/2),[-pi,pi).
@@ -392,7 +412,8 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::EulerAnglesXyz<DestPrimType_, Usage_>, eigen_impl::AngleAxis<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::EulerAnglesXyz<DestPrimType_, Usage_> convert(const eigen_impl::AngleAxis<SourcePrimType_, Usage_>& aa) {
-    return eigen_impl::EulerAnglesXyz<DestPrimType_, Usage_>(eigen_impl::getRpyFromAngleAxis<SourcePrimType_, DestPrimType_>(aa.toImplementation()));
+//    return eigen_impl::EulerAnglesXyz<DestPrimType_, Usage_>(eigen_impl::getRpyFromAngleAxis<SourcePrimType_, DestPrimType_>(aa.toImplementation()));
+    return eigen_impl::EulerAnglesXyz<DestPrimType_, Usage_>(eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(aa));
   }
 };
 
