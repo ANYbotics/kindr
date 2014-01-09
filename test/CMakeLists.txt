@@ -41,10 +41,7 @@ find_package(Eigen REQUIRED)
 
 include_directories(${EIGEN_INCLUDE_DIRS})
 include_directories(../include)
-#include_directories(../common/include)
-#include_directories(../quaternions/include)
-#include_directories(../positions/include)
-#include_directories(../linear_algebra/include)
+
 
 #add_executable( rot_example EXCLUDE_FROM_ALL ./src/example.cpp)
 #ADD_CUSTOM_TARGET(demo_rotations rot_example DEPENDS rot_example) 
@@ -119,10 +116,10 @@ set(ROTATIONDIFF_SRCS
 )
 
 # Add test cpp file
-#add_executable( runUnitTestsRotationDiff ${ROTATIONDIFF_SRCS})
+add_executable( runUnitTestsRotationDiff ${ROTATIONDIFF_SRCS})
 # Link test executable against gtest & gtest_main
-#target_link_libraries(runUnitTestsRotationDiff gtest_main gtest pthread  )
-#add_test(runUnitTestsRotationDiff runUnitTestsRotationDiff )
+target_link_libraries(runUnitTestsRotationDiff gtest_main gtest pthread  )
+add_test(runUnitTestsRotationDiff runUnitTestsRotationDiff )
 
 set(POSITIONS_SRCS
 	test_main.cpp
@@ -143,10 +140,10 @@ set(POSES_SRCS
 )
 
 # Add test cpp file
-#add_executable( runUnitTestsPose  ${POSES_SRCS})
+add_executable( runUnitTestsPose  ${POSES_SRCS})
 # Link test executable against gtest & gtest_main
-#target_link_libraries(runUnitTestsPose  gtest_main gtest pthread )
-#add_test( runUnitTestsPose runUnitTestsPose )
+target_link_libraries(runUnitTestsPose  gtest_main gtest pthread )
+add_test( runUnitTestsPose runUnitTestsPose )
 
 set(POSESDIFF_SRCS
 	test_main.cpp
@@ -154,9 +151,9 @@ set(POSESDIFF_SRCS
 )
 
 # Add test cpp file
-#add_executable( runUnitTestsPoseDiff  ${POSESDIFF_SRCS})
+add_executable( runUnitTestsPoseDiff  ${POSESDIFF_SRCS})
 # Link test executable against gtest & gtest_main
-#target_link_libraries(runUnitTestsPoseDiff  gtest_main gtest pthread )
-#add_test( runUnitTestsPoseDiff runUnitTestsPoseDiff )
+target_link_libraries(runUnitTestsPoseDiff  gtest_main gtest pthread )
+add_test( runUnitTestsPoseDiff runUnitTestsPoseDiff )
 
 endif()

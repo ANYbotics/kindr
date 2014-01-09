@@ -46,21 +46,24 @@ An active rotation can be obtained from a passive rotation by the method \ref ki
 
 This has the advantage that rotations are type-safe and other users can immediately recognize whether a rotation is used as an active or passive transformation.
 
-\subsubsection rotations_interfaces_rotation_constructor Construction of  a Rotation
+\subsubsection rotations_interfaces_rotation_constructor Construction of a Rotation
 The default constructor of a rotation always creates an identity rotation.
 If the library is built with debugging symbols, an assertion is thrown if a rotation is constructed with parameter values that do not represent a valid rotation.
 
 \subsubsection rotations_interfaces_rotation_identity Identity Rotation
 Any rotation can be set equal to the identity rotation by the method \ref kindr::rotations::RotationBase::setIdentity() "setIdentity()".
 
-
+\subsubsection rotations_interfaces_rotation_fromVectors Rotation from Two Vectors
+A rotation that describes the relative orientation of two vectors can be initialized by means of the method  \ref kindr::rotations::RotationBase::setFromVectors() "setFromVectors()".
 \subsubsection rotations_interfaces_rotation_unique Unique Rotation
 A rotation can be represented in different ways. The quaternion 
-\f$Q = q_0 + q_1 i + q_2 j + q_3 k\f$ and the quaternion \f$Q = -q_0 - q_1 i - q_2 j - q_3 k\f$, for instance, represent the same rotation. However, sometimes a unique representation is desired, e.g. to compare two rotations.
+\f$Q = q_0 + q_1 i + q_2 j + q_3 k\f$ and the quaternion \f$Q = -q_0 - q_1 i - q_2 j - q_3 k\f$, for instance, represent the same rotation. However, sometimes a unique representation is desired.
 
 A unique representation is obtained by
 - \ref kindr::rotations::RotationBase::getUnique() "getUnique()": gets a copy of the presentation, which is unique, and
 - \ref kindr::rotations::RotationBase::setUnique() "setUnique()": sets the representation to the unique representation.
+
+Note that numerical issues may cause problems when this method is used to compare two rotations. We therefore recommend to use the method \ref kindr::rotations::RotationBase::isNear() "isNear()" (see below).
 
 \subsubsection rotations_interfaces_rotation_inverse Inverse of a Rotation
 The inverse of a rotation is provided by two methods:
