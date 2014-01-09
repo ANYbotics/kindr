@@ -183,6 +183,7 @@ inline bool compareRelativePeriodic(double a, double b, double periodlength, dou
 #endif
 
 
+
 } // namespace eigen
 } // namespace common
 } // namespace rm

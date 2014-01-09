@@ -238,6 +238,14 @@ class RotationBase {
    *  (only for advanced users)
    *  \returns the derived rotation
    */
+  Derived_& derived() {
+    return static_cast<Derived_&>(*this);
+  }
+
+  /*! \brief Gets the derived rotation.
+   *  (only for advanced users)
+   *  \returns the derived rotation
+   */
   const Derived_& derived() const {
     return static_cast<const Derived_&>(*this);
   }

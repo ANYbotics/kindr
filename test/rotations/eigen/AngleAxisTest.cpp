@@ -286,6 +286,17 @@ TYPED_TEST(AngleAxisSingleTest, testSetters)
   ASSERT_NEAR(this->angleAxisGeneric1.axis().y(), rot8.axis().y(),1e-6);
   ASSERT_NEAR(this->angleAxisGeneric1.axis().z(), rot8.axis().z(),1e-6);
 
+  rot.setFromVectors(this->vec, this->vec);
+  ASSERT_NEAR(rot.angle(), this->rotAngleAxisIdentity.angle(),1e-6);
+  ASSERT_NEAR(rot.axis().x(), this->rotAngleAxisIdentity.axis().x(),1e-6);
+  ASSERT_NEAR(rot.axis().y(), this->rotAngleAxisIdentity.axis().y(),1e-6);
+  ASSERT_NEAR(rot.axis().z(), this->rotAngleAxisIdentity.axis().z(),1e-6);
+
+  rot.setFromVectors(this->vecX, this->vecY);
+  ASSERT_NEAR(rot.angle(), this->rotAngleAxisQuarterZ.angle(),1e-6);
+  ASSERT_NEAR(rot.axis().x(), this->rotAngleAxisQuarterZ.axis().x(),1e-6);
+  ASSERT_NEAR(rot.axis().y(), this->rotAngleAxisQuarterZ.axis().y(),1e-6);
+  ASSERT_NEAR(rot.axis().z(), this->rotAngleAxisQuarterZ.axis().z(),1e-6);
 }
 
 

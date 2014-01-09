@@ -151,7 +151,6 @@ TYPED_TEST(AngleAxisDiffTest, testAngleAxisDiffGetters)
   ASSERT_EQ(this->eigenVector4v1(1), rotDiff.vector()(1));
   ASSERT_EQ(this->eigenVector4v1(2), rotDiff.vector()(2));
   ASSERT_EQ(this->eigenVector4v1(3), rotDiff.vector()(3));
-
 }
 
 TYPED_TEST(AngleAxisDiffTest, testAngleAxisDiffSetters)
@@ -175,7 +174,6 @@ TYPED_TEST(AngleAxisDiffTest, testAngleAxisDiffSetters)
   ASSERT_EQ(this->eigenVector4v1(1), rotDiff2.axis().x());
   ASSERT_EQ(this->eigenVector4v1(2), rotDiff2.axis().y());
   ASSERT_EQ(this->eigenVector4v1(3), rotDiff2.axis().z());
-
 }
 
 

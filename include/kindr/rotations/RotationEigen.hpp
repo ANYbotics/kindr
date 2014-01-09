@@ -92,17 +92,6 @@ class MultiplicationTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usa
  public:
   //! Default multiplication of rotations converts the representations of the rotations to rotation quaternions and multiplies them
   inline static Left_ mult(const RotationBase<Left_, Usage_>& lhs, const RotationBase<Right_, Usage_>& rhs) {
-//    if(Usage_ == RotationUsage::ACTIVE){
-//      return Left_(typename eigen_impl::RotationQuaternion<typename Left_::Scalar,  Usage_>(
-//                 (typename eigen_impl::RotationQuaternion<typename Left_::Scalar,  Usage_>(lhs.derived())).toImplementation() *
-//                 (typename eigen_impl::RotationQuaternion<typename Right_::Scalar, Usage_>(rhs.derived())).toImplementation()
-//                 ));
-//    } else {
-//      return Left_(typename eigen_impl::RotationQuaternion<typename Left_::Scalar,  Usage_>(
-//                 (typename eigen_impl::RotationQuaternion<typename Right_::Scalar,  Usage_>(rhs.derived())).toImplementation() *
-//                 (typename eigen_impl::RotationQuaternion<typename Left_::Scalar, Usage_>(lhs.derived())).toImplementation()
-//                 ));
-//    }
     if(Usage_ == RotationUsage::ACTIVE) {
       return Left_(typename eigen_impl::RotationQuaternion<typename Left_::Scalar,  Usage_>(
                   (typename eigen_impl::RotationQuaternion<typename Left_::Scalar,  Usage_>(lhs.derived())).toImplementation() *
@@ -123,17 +112,6 @@ template<typename LeftAndRight_, enum RotationUsage Usage_>
 class MultiplicationTraits<RotationBase<LeftAndRight_, Usage_>, RotationBase<LeftAndRight_, Usage_>> {
  public:
   inline static LeftAndRight_ mult(const RotationBase<LeftAndRight_, Usage_>& lhs, const RotationBase<LeftAndRight_, Usage_>& rhs) {
-//    if(Usage_ == RotationUsage::ACTIVE){
-//      return LeftAndRight_(typename eigen_impl::RotationQuaternion<typename LeftAndRight_::Scalar,  Usage_>(
-//                 (typename eigen_impl::RotationQuaternion<typename LeftAndRight_::Scalar,  Usage_>(lhs.derived())).toImplementation() *
-//                 (typename eigen_impl::RotationQuaternion<typename LeftAndRight_::Scalar, Usage_>(rhs.derived())).toImplementation()
-//                 ));
-//    } else {
-//    return LeftAndRight_(typename eigen_impl::RotationQuaternion<typename LeftAndRight_::Scalar,  Usage_>(
-//      (typename eigen_impl::RotationQuaternion<typename LeftAndRight_::Scalar,  Usage_>(rhs.derived())).toImplementation() *
-//      (typename eigen_impl::RotationQuaternion<typename LeftAndRight_::Scalar, Usage_>(lhs.derived())).toImplementation()
-//      ));
-//    }
     if(Usage_ == RotationUsage::ACTIVE) {
       return LeftAndRight_(typename eigen_impl::RotationQuaternion<typename LeftAndRight_::Scalar, Usage_>(
                           (typename eigen_impl::RotationQuaternion<typename LeftAndRight_::Scalar, Usage_>(lhs.derived())).toImplementation() *
@@ -238,9 +216,20 @@ class SetFromVectorsTraits<RotationBase<Rotation_, Usage_>> {
  public:
   template<typename PrimType_>
   inline static void setFromVectors(Rotation_& rot, const Eigen::Matrix<PrimType_, 3, 1>& v1, const Eigen::Matrix<PrimType_, 3, 1>& v2) {
-    const PrimType_ angle = acos(v1.dot(v2)/(v1.norm()*v2.norm()));
-    const Eigen::Matrix<PrimType_, 3, 1> axis = (v1.cross(v2)).normalized();
-    rot = eigen_impl::AngleAxis<PrimType_, Usage_>(angle,axis);
+    const PrimType_ temp = v1.norm()*v2.norm();
+    KINDR_ASSERT_TRUE(std::runtime_error, temp != 0, "At least one vector has zero length.");
+
+    const PrimType_ angle = acos(v1.dot(v2)/temp);
+    const PrimType_ tol = 1e-3;
+
+    if(0 <= angle && angle < tol) {
+      rot.setIdentity();
+    } else if(M_PI - tol < angle && angle < M_PI + tol) {
+      rot = eigen_impl::AngleAxis<PrimType_, Usage_>(angle, Eigen::Matrix<PrimType_, 3, 1>(1,0,0));
+    } else {
+      const Eigen::Matrix<PrimType_, 3, 1> axis = (v1.cross(v2)).normalized();
+      rot = eigen_impl::AngleAxis<PrimType_, Usage_>(angle, axis);
+    }
   }
 };
 

@@ -395,6 +395,12 @@ TYPED_TEST(RotationMatrixSingleTest, testSetters)
   RotationMatrix rot2 = rot1.setUnique();
   KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot1.matrix(), 1e-4, "unique");
   KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot2.matrix(), 1e-4, "unique");
+
+  rot.setFromVectors(this->vec, this->vec);
+  KINDR_ASSERT_DOUBLE_MX_EQ(rot.matrix(), this->rotRotationMatrixIdentity.matrix(), 1e-4, "setFromVectors");
+
+  rot.setFromVectors(this->vecX, this->vecY);
+  KINDR_ASSERT_DOUBLE_MX_EQ(rot.matrix(), this->rotRotationMatrixQuarterZ.matrix(), 1e-4, "setFromVectors");
 }
 
 

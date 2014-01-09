@@ -221,7 +221,15 @@ TYPED_TEST(RotationVectorSingleTest, testSetters)
   rot.setIdentity();
   KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenVector3Identity, rot.toImplementation(), 1e-4, "identity");
 
+  rot.setFromVectors(this->vec, this->vec);
+  ASSERT_NEAR(rot.x(), this->rotRotationVectorIdentity.x(),1e-6);
+  ASSERT_NEAR(rot.y(), this->rotRotationVectorIdentity.y(),1e-6);
+  ASSERT_NEAR(rot.z(), this->rotRotationVectorIdentity.z(),1e-6);
 
+  rot.setFromVectors(this->vecX, this->vecY);
+  ASSERT_NEAR(rot.x(), this->rotRotationVectorQuarterZ.x(),1e-6);
+  ASSERT_NEAR(rot.y(), this->rotRotationVectorQuarterZ.y(),1e-6);
+  ASSERT_NEAR(rot.z(), this->rotRotationVectorQuarterZ.z(),1e-6);
 }
 
 /* Test Uniqueness

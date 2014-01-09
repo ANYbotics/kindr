@@ -221,7 +221,15 @@ TYPED_TEST(EulerAnglesXyzSingleTest, testSetters)
   rot.setIdentity();
   KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenVector3Identity, rot.toImplementation(), 1e-4, "identity");
 
+  rot.setFromVectors(this->vec, this->vec);
+  ASSERT_NEAR(rot.x(), this->rotEulerAnglesXyzIdentity.x(),1e-6);
+  ASSERT_NEAR(rot.y(), this->rotEulerAnglesXyzIdentity.y(),1e-6);
+  ASSERT_NEAR(rot.z(), this->rotEulerAnglesXyzIdentity.z(),1e-6);
 
+  rot.setFromVectors(this->vecX, this->vecY);
+  ASSERT_NEAR(rot.x(), this->rotEulerAnglesXyzQuarterZ.x(),1e-6);
+  ASSERT_NEAR(rot.y(), this->rotEulerAnglesXyzQuarterZ.y(),1e-6);
+  ASSERT_NEAR(rot.z(), this->rotEulerAnglesXyzQuarterZ.z(),1e-6);
 }
 
 /* Test Uniqueness
