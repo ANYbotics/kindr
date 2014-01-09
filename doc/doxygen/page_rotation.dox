@@ -72,10 +72,13 @@ The inverse of a rotation is provided by two methods:
 
 \subsubsection rotations_interfaces_rotation_composition Composition of a Rotation
 A rotation can be composed of other rotations.
-The multiplication operator enables the composition for passive rotations as follows:
+The multiplication operator enables to concatenate rotations as follows:
 \code{.cpp}
 C_DA = C_DC*C_CB*C_BA;
 \endcode
+Due to numerical issues, the result of the concatenation may become an invalid rotation. Due to speed considerations, the user is responsible to guarentee that the parameter values represent a valid rotation.
+The library therefore offers the method \ref kindr::rotations::RotationBase::fix() "fix()" to project the parameters to the admissible space. The method would, for instance, normalize the rotation quaternion.
+
 
 \subsubsection rotations_interfaces_rotation_rotate Rotation of a Vector or a Matrix
 To rotate a vector or a matrix columnwise, the following methods are provided:
