@@ -513,6 +513,22 @@ TYPED_TEST(RotationMatrixSingleTest, testConcatenation){
 }
 
 
+// Test fix
+TYPED_TEST(RotationMatrixSingleTest, testFix){
+  typedef typename TestFixture::RotationMatrix RotationMatrix;
+  typedef typename TestFixture::Scalar Scalar;
+  RotationMatrix rot;
+  RotationMatrix rotModified;
+
+  // Check fix
+  rot = this->rotRotationMatrix1;
+  rotModified = rot;
+  rotModified.toImplementation() *= 1.1;
+  rotModified.fix();
+  KINDR_ASSERT_DOUBLE_MX_EQ(rotModified.matrix(), rot.matrix(), 1e-4, "fix");
+}
+
+
 // Test Vector Rotation
 TYPED_TEST(RotationMatrixSingleTest, testVectorRotation){
   typedef typename TestFixture::RotationMatrix RotationMatrix;

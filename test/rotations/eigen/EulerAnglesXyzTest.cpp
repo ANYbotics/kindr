@@ -395,6 +395,24 @@ TYPED_TEST(EulerAnglesXyzSingleTest, testConcatenation){
 }
 
 
+// Test fix
+TYPED_TEST(EulerAnglesXyzSingleTest, testFix){
+  typedef typename TestFixture::EulerAnglesXyz EulerAnglesXyz;
+  typedef typename TestFixture::Scalar Scalar;
+  EulerAnglesXyz rot;
+  EulerAnglesXyz rotModified;
+
+  // Check fix
+  rot = this->rotEulerAnglesXyzV1;
+  rotModified = rot;
+//  rotModified.toImplementation() *= 1.1; // nothing to be fixed, just checking the function
+  rotModified.fix();
+  ASSERT_NEAR(rotModified.x(), rot.x(),1e-6);
+  ASSERT_NEAR(rotModified.y(), rot.y(),1e-6);
+  ASSERT_NEAR(rotModified.z(), rot.z(),1e-6);
+}
+
+
 // Test Vector Rotation
 TYPED_TEST(EulerAnglesXyzSingleTest, testVectorRotation){
   typedef typename TestFixture::EulerAnglesXyz EulerAnglesXyz;

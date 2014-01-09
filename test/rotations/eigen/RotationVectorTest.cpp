@@ -398,6 +398,24 @@ TYPED_TEST(RotationVectorSingleTest, testConcatenation){
 }
 
 
+// Test fix
+TYPED_TEST(RotationVectorSingleTest, testFix){
+  typedef typename TestFixture::RotationVector RotationVector;
+  typedef typename TestFixture::Scalar Scalar;
+  RotationVector rot;
+  RotationVector rotModified;
+
+  // Check fix
+  rot = this->rotRotationVectorV1;
+  rotModified = rot;
+//  rotModified.toImplementation() *= 1.1; // nothing to be fixed, just checking the function
+  rotModified.fix();
+  ASSERT_NEAR(rotModified.x(), rot.x(),1e-6);
+  ASSERT_NEAR(rotModified.y(), rot.y(),1e-6);
+  ASSERT_NEAR(rotModified.z(), rot.z(),1e-6);
+}
+
+
 // Test Vector Rotation
 TYPED_TEST(RotationVectorSingleTest, testVectorRotation){
   typedef typename TestFixture::RotationVector RotationVector;

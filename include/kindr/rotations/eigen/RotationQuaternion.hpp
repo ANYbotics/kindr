@@ -501,13 +501,17 @@ class ComparisonTraits<eigen_impl::RotationQuaternion<PrimType_, Usage_>, eigen_
             a.toImplementation().y() ==  b.toImplementation().y() &&
             a.toImplementation().z() ==  b.toImplementation().z();
    }
+};
 
-//   inline static bool isNear(const eigen_impl::RotationQuaternion<PrimType_, Usage_>& a, const eigen_impl::RotationQuaternion<PrimType_, Usage_>& b, PrimType_ tol){
-//     return fabs(a.toImplementation().w() - b.toImplementation().w()) < tol &&
-//            fabs(a.toImplementation().x() - b.toImplementation().x()) < tol &&
-//            fabs(a.toImplementation().y() - b.toImplementation().y()) < tol &&
-//            fabs(a.toImplementation().z() - b.toImplementation().z()) < tol;
-//   }
+/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Fixing Traits
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+template<typename PrimType_, enum RotationUsage Usage_>
+class FixingTraits<eigen_impl::RotationQuaternion<PrimType_, Usage_>> {
+ public:
+  inline static void fix(eigen_impl::RotationQuaternion<PrimType_, Usage_>& q) {
+    q.toImplementation().normalize();
+  }
 };
 
 } // namespace internal

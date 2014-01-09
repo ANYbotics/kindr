@@ -598,6 +598,27 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionConcatenation){
   ASSERT_NEAR(rotQuat.getUnique().z(), this->rotQuatQuarterX.inverted().getUnique().z(),1e-6);
 }
 
+
+// Test fix
+TYPED_TEST(RotationQuaternionSingleTest, testFix){
+  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
+  typedef typename TestFixture::Scalar Scalar;
+  RotationQuaternion rot;
+  RotationQuaternion rotModified;
+
+  // Check fix
+  rot = this->rotQuat1;
+  rotModified.toImplementation().w() = rot.toImplementation().w()*1.1;
+  rotModified.toImplementation().x() = rot.toImplementation().x()*1.1;
+  rotModified.toImplementation().y() = rot.toImplementation().y()*1.1;
+  rotModified.toImplementation().z() = rot.toImplementation().z()*1.1;
+  rotModified.fix();
+  ASSERT_NEAR(rotModified.w(), rot.w(),1e-6);
+  ASSERT_NEAR(rotModified.x(), rot.x(),1e-6);
+  ASSERT_NEAR(rotModified.y(), rot.y(),1e-6);
+  ASSERT_NEAR(rotModified.z(), rot.z(),1e-6);
+}
+
 // Test Rotation Quaternion Vector Rotation
 TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionVectorRotation){
   typedef typename TestFixture::RotationQuaternion RotationQuaternion;

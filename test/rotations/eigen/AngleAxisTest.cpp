@@ -426,6 +426,25 @@ TYPED_TEST(AngleAxisSingleTest, testConcatenation){
 }
 
 
+// Test fix
+TYPED_TEST(AngleAxisSingleTest, testFix){
+  typedef typename TestFixture::AngleAxis AngleAxis;
+  typedef typename TestFixture::Scalar Scalar;
+  AngleAxis rot;
+  AngleAxis rotModified;
+
+  // Check fix
+  rot = this->angleAxisGeneric1;
+  rotModified = rot;
+  rotModified.toImplementation().axis() *= 1.1;
+  rotModified.fix();
+  ASSERT_NEAR(rotModified.angle(), rot.angle(),1e-6);
+  ASSERT_NEAR(rotModified.axis().x(), rot.axis().x(),1e-6);
+  ASSERT_NEAR(rotModified.axis().y(), rot.axis().y(),1e-6);
+  ASSERT_NEAR(rotModified.axis().z(), rot.axis().z(),1e-6);
+}
+
+
 
 // Test Vector Rotation
 TYPED_TEST(AngleAxisSingleTest, testVectorRotation){

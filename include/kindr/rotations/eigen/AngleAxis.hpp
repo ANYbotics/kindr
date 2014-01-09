@@ -440,6 +440,17 @@ class ComparisonTraits<eigen_impl::AngleAxis<PrimType_, Usage_>, eigen_impl::Ang
   }
 };
 
+/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Fixing Traits
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+template<typename PrimType_, enum RotationUsage Usage_>
+class FixingTraits<eigen_impl::AngleAxis<PrimType_, Usage_>> {
+ public:
+  inline static void fix(eigen_impl::AngleAxis<PrimType_, Usage_>& aa) {
+    aa.setAxis(aa.axis().normalized());
+  }
+};
+
 } // namespace internal
 } // namespace rotations
 } // namespace kindr

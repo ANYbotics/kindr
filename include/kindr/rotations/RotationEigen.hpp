@@ -225,7 +225,7 @@ class SetFromVectorsTraits<RotationBase<Rotation_, Usage_>> {
     if(0 <= angle && angle < tol) {
       rot.setIdentity();
     } else if(M_PI - tol < angle && angle < M_PI + tol) {
-      rot = eigen_impl::AngleAxis<PrimType_, Usage_>(angle, Eigen::Matrix<PrimType_, 3, 1>(1,0,0));
+      rot = eigen_impl::AngleAxis<PrimType_, Usage_>(angle, 1, 0, 0);
     } else {
       const Eigen::Matrix<PrimType_, 3, 1> axis = (v1.cross(v2)).normalized();
       rot = eigen_impl::AngleAxis<PrimType_, Usage_>(angle, axis);
