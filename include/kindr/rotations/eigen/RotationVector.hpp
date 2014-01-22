@@ -345,7 +345,7 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::RotationVector<DestPrimType_, Usage_>, eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::RotationVector<DestPrimType_, Usage_> convert(const eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>& q) {
-    if (q.imaginary().norm() < common::NumTraits<SourcePrimType_>::dummy_precision()) {
+    if (1.0-q.real()*q.real() < common::NumTraits<SourcePrimType_>::dummy_precision()) {
       return eigen_impl::RotationVector<DestPrimType_, Usage_>(2.0*q.imaginary().template cast<DestPrimType_>());
     }
     return eigen_impl::RotationVector<DestPrimType_, Usage_>((2.0*acos(q.real())/sqrt(1.0-q.real()*q.real())*q.imaginary()).template cast<DestPrimType_>());
