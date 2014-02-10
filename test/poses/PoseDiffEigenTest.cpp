@@ -75,8 +75,4 @@ TYPED_TEST(TwistTest, testInitial)
   std::cout << twist.getVector(rot) << std::endl;
 }
 
-TEST(TwistTestDevelopment, test)
-{
-  pose::TwistD twist;
-  std::cout << twist.getVector() << std::endl;
-}
+

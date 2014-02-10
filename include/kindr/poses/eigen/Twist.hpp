@@ -143,8 +143,8 @@ class TwistLinearVelocityLocalAngularVelocity: public Twist<PrimType_, positions
 
 };
 
-typedef TwistLinearVelocityLocalAngularVelocity<double> TwistD;
-typedef TwistLinearVelocityLocalAngularVelocity<float> TwistF;
+typedef TwistLinearVelocityLocalAngularVelocity<double> TwistLinearVelocityLocalAngularVelocityD;
+typedef TwistLinearVelocityLocalAngularVelocity<float> TwistLinearVelocityLocalAngularVelocityF;
 
 } // namespace eigen_impl
 
