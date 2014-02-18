@@ -81,3 +81,22 @@ add_subdirectory(doc/doxygen)
 
 ADD_CUSTOM_TARGET(demo DEPENDS demo_rotations)
 
+# Generate FindKindr.cmake file
+file(WRITE cmake/FindKindr.cmake
+"# This file was automatically generated during the installation of the Kindr library
+# and can be used through cmake to find the corresponding header files. A copy of this
+# file was created in ${CMAKE_ROOT}/Modules (depending on the CMAKE_ROOT variable).
+
+set(Kindr_INCLUDE_DIRS
+${CMAKE_INSTALL_PREFIX}/include/Kindr/include
+)
+set(Kindr_FOUND TRUE)
+message(\"-- Kindr found (include: ${CMAKE_INSTALL_PREFIX}/include/Kindr/include)\")
+"
+)
+
+# Setting for make install
+install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_INSTALL_PREFIX}/include/Kindr)")
+install(DIRECTORY include DESTINATION ${CMAKE_INSTALL_PREFIX}/include/Kindr)
+install(FILES cmake/FindKindr.cmake DESTINATION ${CMAKE_ROOT}/Modules)
+
