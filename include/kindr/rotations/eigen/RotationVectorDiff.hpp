@@ -220,12 +220,14 @@ class RotationDiffConversionTraits<eigen_impl::RotationVectorDiff<PrimType_, Usa
 //    const PrimType_ angle = rv.norm();
 //
 //    if (angle < common::NumTraits<Scalar>::dummy_precision()) {
-//      return eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>(angularVelocity.toImplementation());
+//      return eigen_impl::RotationVectorDiff<PrimType_, Usage_>(angularVelocity.toImplementation());
 //    }
 //
 //    const Matrix3x3 rv_hat = linear_algebra::getSkewMatrixFromVector(rv);
 //    const Vector rvDiff = (Matrix3x3::Identity() + 0.5*rv_hat + (1.0/(angle*angle) - sin(angle)/(2.0*angle*(1.0-cos(angle))))*rv_hat*rv_hat)*angularVelocity.toImplementation();
-//    return eigen_impl::RotationVectorDiff<PrimType_, RotationUsage::ACTIVE>(rvDiff);
+//    return eigen_impl::RotationVectorDiff<PrimType_, Usage_>(rvDiff);
+    // end not tested
+
 
     const PrimType_ v = rotationVector.vector().norm();
     const PrimType_ w1 = angularVelocity.x();

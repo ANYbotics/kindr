@@ -1,4 +1,6 @@
  /*! \page page_rdiff Time Derivatives of Rotations
+ 
+WARNING: the implementation is still experimental. See unit tests.
 
 This library defines an \ref rdiff_interface "interface" for time derivatives of rotations to enable different representations of the time derivative (angular velocity, time derivatives of Euler angles, time derivative of quaternion, etc.) and different \ref rdiff_implementations "implementations" (based on Eigen, Bullet, etc.). 
 The section \ref rdiff_interface "Interface" describes the functionalities, whereas the section \ref rdiff_implementations "Implementation" shows some examples.

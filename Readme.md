@@ -31,6 +31,7 @@ kindr$ mkdir build
 kindr$ cd build
 kindr$ cmake ..
 kindr$ make
+kindr$ sudo make install
 ```
 
 Building the documentation:

@@ -47,6 +47,12 @@ cmake ..
 make
 \endcode
 
+The library can additionally be installed by
+\code{.sh}
+sudo make install
+\endcode
+This will copy the file FindKindr.cmake to the module path of CMake.
+
 \subsection build_doc Build this Documentation
 <a href="http://www.stack.nl/~dimitri/doxygen/" >Doxygen</a> needs to be installed to create this documentation.
 
