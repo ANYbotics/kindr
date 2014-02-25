@@ -156,15 +156,26 @@ add_executable( runUnitTestsPoseDiff  ${POSESDIFF_SRCS})
 target_link_libraries(runUnitTestsPoseDiff  gtest_main gtest pthread )
 add_test( runUnitTestsPoseDiff runUnitTestsPoseDiff )
 
-set(FORCE_SRCS
+set(VECTOR_SRCS
 	test_main.cpp
 	vector/VectorTest.cpp
 )
 
 # Add test cpp file
-add_executable( runUnitTestsVector  ${FORCE_SRCS})
+add_executable( runUnitTestsVector  ${VECTOR_SRCS})
 # Link test executable against gtest & gtest_main
 target_link_libraries(runUnitTestsVector  gtest_main gtest pthread )
 add_test( runUnitTestsVector runUnitTestsVector )
+
+set(FORCE_SRCS
+	test_main.cpp
+	phys_quant/ForceTest.cpp
+)
+
+# Add test cpp file
+add_executable( runUnitTestsForce  ${FORCE_SRCS})
+# Link test executable against gtest & gtest_main
+target_link_libraries(runUnitTestsForce  gtest_main gtest pthread )
+add_test( runUnitTestsForce runUnitTestsForce )
 
 endif()
