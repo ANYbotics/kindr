@@ -26,8 +26,8 @@
  *
 */
 
-#ifndef COMMON_HPP_
-#define COMMON_HPP_
+#ifndef KINDR_COMMON_COMMON_HPP_
+#define KINDR_COMMON_COMMON_HPP_
 
 #include <cmath>
 #include <cassert>
@@ -162,4 +162,4 @@ class NumTraits<long double> : GenericNumTraits<long double>
 } // namespace kindr
 
 
-#endif /* COMMON_HPP_ */
+#endif /* KINDR_COMMON_COMMON_HPP_ */
