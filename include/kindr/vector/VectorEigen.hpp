@@ -357,6 +357,20 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
     return this->toImplementation().minCoeff();
   }
 
+  /*! \brief Sum of the components.
+   *  \returns sum.
+   */
+  Scalar sum() const {
+    return this->toImplementation().sum();
+  }
+
+  /*! \brief Mean of the components.
+   *  \returns mean.
+   */
+  Scalar mean() const {
+    return this->toImplementation().mean();
+  }
+
   /*! \brief Used for printing the object with std::cout.
    *  \returns std::stream object
    */

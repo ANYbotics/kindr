@@ -184,6 +184,8 @@ TYPED_TEST(Vector3Test, testVector3)
 //  std::cout << (vectorNormalized != vectorNormalized) << std::endl;
 //  std::cout << vectorNormalized.isSimilarTo(vectorNormalized, 1e-6) << std::endl;
 //  std::cout << vectorNormalized.isSimilarTo(vector2FromEigenBackup, 1e-6) << std::endl;
+//  std::cout << vectorNormalized.sum() << std::endl;
+//  std::cout << vectorNormalized.mean() << std::endl;
 }
 
 
@@ -360,5 +362,7 @@ TYPED_TEST(VectorTest, testVector)
 //  std::cout << (vectorNormalized != vectorNormalized) << std::endl;
 //  std::cout << vectorNormalized.isSimilarTo(vectorNormalized, 1e-6) << std::endl;
 //  std::cout << vectorNormalized.isSimilarTo(vector2FromEigenBackup, 1e-6) << std::endl;
+//  std::cout << vectorNormalized.sum() << std::endl;
+//  std::cout << vectorNormalized.mean() << std::endl;
 }
 

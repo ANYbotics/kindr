@@ -275,6 +275,16 @@ class VectorBase {
    *  \returns minimum.
    */
   Scalar min() const;
+
+  /*! \brief Sum of the components.
+   *  \returns sum.
+   */
+  Scalar sum() const;
+
+  /*! \brief Mean of the components.
+   *  \returns mean.
+   */
+  Scalar mean() const;
 };
 
 
