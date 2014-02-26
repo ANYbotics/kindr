@@ -113,28 +113,74 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
   }
 
   /*! \brief Addition of two vectors.
+   * \param other   other vector
+   * \returns sum
    */
-  using VectorBase<Vector<PrimType_, Dimension_>>::operator+; // otherwise ambiguous VectorBase and Eigen
+  Vector<PrimType_, Dimension_> operator+(const Vector<PrimType_, Dimension_>& other) const {
+    return Vector<PrimType_, Dimension_>(this->toImplementation() + other.toImplementation());
+  }
 
   /*! \brief Subtraction of two vectors.
+   * \param other   other vector
+   * \returns difference
    */
-  using VectorBase<Vector<PrimType_, Dimension_>>::operator-; // otherwise ambiguous VectorBase and Eigen
+  Vector<PrimType_, Dimension_> operator-(const Vector<PrimType_, Dimension_>& other) const {
+    return Vector<PrimType_, Dimension_>(this->toImplementation() - other.toImplementation());
+  }
+
+  /*! \brief Multiplies vector with a scalar.
+   * \param factor   factor
+   * \returns product
+   */
+  template<typename PrimTypeFactor_>
+  Vector<PrimType_, Dimension_> operator*(PrimTypeFactor_ factor) const {
+    return Vector<PrimType_, Dimension_>(this->toImplementation()*(PrimType_)factor);
+  }
+
+  /*! \brief Divides vector by a scalar.
+   * \param divisor   divisor
+   * \returns quotient
+   */
+  template<typename PrimTypeDivisor_>
+  Vector<PrimType_, Dimension_> operator/(PrimTypeDivisor_ divisor) const {
+    return Vector<PrimType_, Dimension_>(this->toImplementation()/(PrimType_)divisor);
+  }
 
   /*! \brief Addition of two vectors.
    * \param other   other vector
+   * \returns reference
    */
-  template<typename Other_>
-  Vector<PrimType_, Dimension_>& operator +=(const Other_& other) {
+  Vector<PrimType_, Dimension_>& operator +=(const Vector<PrimType_, Dimension_>& other) {
     this->toImplementation() += other.toImplementation();
     return *this;
   }
 
   /*! \brief Subtraction of two vectors.
    * \param other   other vector
+   * \returns reference
    */
-  template<typename Other_>
-  Vector<PrimType_, Dimension_>& operator -=(const Other_& other) {
+  Vector<PrimType_, Dimension_>& operator -=(const Vector<PrimType_, Dimension_>& other) {
     this->toImplementation() -= other.toImplementation();
+    return *this;
+  }
+
+  /*! \brief Multiplies vector with a scalar.
+   * \param factor   factor
+   * \returns reference
+   */
+  template<typename PrimTypeFactor_>
+  Vector<PrimType_, Dimension_> operator*=(PrimTypeFactor_ factor) const {
+    this->toImplementation() *= (PrimType_)factor;
+    return *this;
+  }
+
+  /*! \brief Divides vector by a scalar.
+   * \param divisor   divisor
+   * \returns reference
+   */
+  template<typename PrimTypeDivisor_>
+  Vector<PrimType_, Dimension_> operator/=(PrimTypeDivisor_ divisor) const {
+    this->toImplementation() /= (PrimType_)divisor;
     return *this;
   }
 
@@ -191,6 +237,15 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
   }
 };
 
+
+/*! \brief Multiplies vector with a scalar.
+ * \param factor   factor
+ * \returns product
+ */
+template<typename PrimTypeFactor_, typename PrimType_, int Dimension_>
+Vector<PrimType_, Dimension_> operator*(PrimTypeFactor_ factor, const Vector<PrimType_, Dimension_> & vector) {
+  return vector*(PrimType_)factor;
+}
 
 
 
@@ -275,44 +330,117 @@ class Vector3 : public Vector3Base<Vector3<PrimType_> >, private Eigen::Matrix<P
     return static_cast<const Implementation&>(*this);
   }
 
-  /*!\brief Get x-coordinate of the vector
-   * \returns the x-coordinate of the vector
+  /*!\brief Get x-coordinate of the vector (copy)
+   * \returns the x-coordinate of the vector (copy)
    */
-  using Implementation::x;
+  Scalar x() const {
+    return this->toImplementation().x();
+  }
 
-  /*!\brief Get y-coordinate of the vector
-   * \returns the y-coordinate of the vector
+  /*!\brief Get x-coordinate of the vector (reference)
+   * \returns the x-coordinate of the vector (reference)
    */
-  using Implementation::y;
+  Scalar& x() {
+    return this->toImplementation().x();
+  }
 
-  /*!\brief Get z-coordinate of the vector
-   * \returns the z-coordinate of the vector
+  /*!\brief Get y-coordinate of the vector (copy)
+   * \returns the y-coordinate of the vector (copy)
    */
-  using Implementation::z;
+  Scalar y() const {
+    return this->toImplementation().y();
+  }
 
-  /*! \brief Addition of two vectors.
+  /*!\brief Get y-coordinate of the vector (reference)
+   * \returns the y-coordinate of the vector (reference)
    */
-  using Vector3Base<Vector3<PrimType_>>::operator+; // otherwise ambiguous VectorBase and Eigen
+  Scalar& y() {
+    return this->toImplementation().y();
+  }
 
-  /*! \brief Subtraction of two vectors.
+  /*!\brief Get z-coordinate of the vector (copy)
+   * \returns the z-coordinate of the vector (copy)
    */
-  using Vector3Base<Vector3<PrimType_>>::operator-; // otherwise ambiguous VectorBase and Eigen
+  Scalar z() const {
+    return this->toImplementation().z();
+  }
+
+  /*!\brief Get z-coordinate of the vector (reference)
+   * \returns the z-coordinate of the vector (reference)
+   */
+  Scalar& z() {
+    return this->toImplementation().z();
+  }
 
   /*! \brief Addition of two vectors.
    * \param other   other vector
+   * \returns sum
    */
-  template<typename Other_>
-  Vector3<PrimType_>& operator +=(const Other_& other) {
+  Vector3<PrimType_> operator+(const Vector3<PrimType_>& other) const {
+    return Vector3<PrimType_>(this->toImplementation() + other.toImplementation());
+  }
+
+  /*! \brief Subtraction of two vectors.
+   * \param other   other vector
+   * \returns difference
+   */
+  Vector3<PrimType_> operator-(const Vector3<PrimType_>& other) const {
+    return Vector3<PrimType_>(this->toImplementation() - other.toImplementation());
+  }
+
+  /*! \brief Multiplies vector with a scalar.
+   * \param factor   factor
+   * \returns product
+   */
+  template<typename PrimTypeFactor_>
+  Vector3<PrimType_> operator*(PrimTypeFactor_ factor) const {
+    return Vector3<PrimType_>(this->toImplementation()*(PrimType_)factor);
+  }
+
+  /*! \brief Divides vector by a scalar.
+   * \param divisor   divisor
+   * \returns quotient
+   */
+  template<typename PrimTypeDivisor_>
+  Vector3<PrimType_> operator/(Scalar divisor) const {
+    return Vector3<PrimType_>(this->toImplementation()/(PrimType_)divisor);
+  }
+
+  /*! \brief Addition of two vectors.
+   * \param other   other vector
+   * \returns reference
+   */
+  Vector3<PrimType_>& operator+=(const Vector3<PrimType_>& other) {
     this->toImplementation() += other.toImplementation();
     return *this;
   }
 
   /*! \brief Subtraction of two vectors.
    * \param other   other vector
+   * \returns reference
    */
-  template<typename Other_>
-  Vector3<PrimType_>& operator -=(const Other_& other) {
+  Vector3<PrimType_>& operator-=(const Vector3<PrimType_>& other) {
     this->toImplementation() -= other.toImplementation();
+    return *this;
+  }
+
+  /*! \brief Multiplies vector with a scalar.
+   * \param factor   factor
+   * \returns reference
+   */
+  template<typename PrimTypeFactor_>
+  Vector3<PrimType_> operator*=(PrimTypeFactor_ factor) const {
+    this->toImplementation() *= (PrimType_)factor;
+    return *this;
+  }
+
+  /*! \brief Divides vector by a scalar.
+   * \param divisor   divisor
+   * \returns reference
+   */
+  template<typename PrimTypeDivisor_>
+  Vector3<PrimType_> operator/=(PrimTypeDivisor_ divisor) const {
+    this->toImplementation() /= (PrimType_)divisor;
     return *this;
   }
 
@@ -370,6 +498,16 @@ class Vector3 : public Vector3Base<Vector3<PrimType_> >, private Eigen::Matrix<P
 };
 
 
+/*! \brief Multiplies vector with a scalar.
+ * \param factor   factor
+ * \returns product
+ */
+template<typename PrimTypeFactor_, typename PrimType_>
+Vector3<PrimType_> operator*(PrimTypeFactor_ factor, const Vector3<PrimType_> & vector) {
+  return vector*(PrimType_)factor;
+}
+
+
 //! \brief 3D-Vector with primitive type double
 typedef Vector3<double>  Vector3D;
 
@@ -409,9 +547,9 @@ class get_dimension<eigen_impl::Vector3<PrimType_>>{
   static constexpr int Dimension = 3;
 };
 
-
-
 } // namespace internal
+
+
 } // namespace vector
 } // namespace kindr
 
