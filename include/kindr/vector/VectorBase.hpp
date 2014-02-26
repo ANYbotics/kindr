@@ -40,27 +40,27 @@ namespace vector {
 //! Internal stuff (only for developers)
 namespace internal {
 
-/*! \brief Addition traits for vectors
- *  \class AdditionTraits
- *  (only for advanced users)
- */
-template<typename LeftAndRight_>
-class AdditionTraits {
- public:
-//  inline static LeftAndRight_ add(const LeftAndRight_& lhs, const LeftAndRight_& rhs);
-//  inline static LeftAndRight_ subtract(const LeftAndRight_& lhs, const LeftAndRight_& rhs);
-};
-
-/*! \brief Addition traits for vectors
- *  \class AdditionTraits
- *  (only for advanced users)
- */
-template<typename Derived_>
-class AccessTraits {
- public:
-//  inline static Derived_ access(const Derived_& vector, int index);
-//  inline static Derived_& accessRef(const Derived_& vector, int index);
-};
+///*! \brief Addition traits for vectors
+// *  \class AdditionTraits
+// *  (only for advanced users)
+// */
+//template<typename LeftAndRight_>
+//class AdditionTraits {
+// public:
+////  inline static LeftAndRight_ add(const LeftAndRight_& lhs, const LeftAndRight_& rhs);
+////  inline static LeftAndRight_ subtract(const LeftAndRight_& lhs, const LeftAndRight_& rhs);
+//};
+//
+///*! \brief Addition traits for vectors
+// *  \class AdditionTraits
+// *  (only for advanced users)
+// */
+//template<typename Derived_>
+//class AccessTraits {
+// public:
+////  inline static Derived_ access(const Derived_& vector, int index);
+////  inline static Derived_& accessRef(const Derived_& vector, int index);
+//};
 
 /*! \class get_scalar
  *  \brief Gets the primitive of the vector.
@@ -98,6 +98,10 @@ class VectorBase {
    */
   typedef typename internal::get_scalar<Derived_>::Scalar Scalar;
 
+  /*! \brief The dimension of the vector.
+   */
+  static constexpr int Dimension = internal::get_dimension<Derived_>::Dimension;
+
   /*! \brief Default constructor.
    *
     *  Creates a vector with zero coefficients.
@@ -134,7 +138,6 @@ class VectorBase {
     return static_cast<const Derived_&>(*this);
   }
 
-
   /*! \brief Sets the vector to zero.
    *  \returns reference
    */
@@ -143,44 +146,83 @@ class VectorBase {
   /*! \brief Accesses an entry of the vector.
    *  \returns A copy of an entry of the vector.
    */
-  Scalar operator ()(int index) const {
-    return internal::AdditionTraits<VectorBase<Derived_>>::acces(this->derived(), index);
-  }
+  Scalar operator()(int index) const;
 
   /*! \brief Accesses an entry of the vector.
    *  \returns A reference to an entry of the vector.
    */
-  Scalar& operator ()(int index) {
-    return internal::AdditionTraits<VectorBase<Derived_>>::accessRef(this->derived(), index);
-  }
+  Scalar& operator()(int index);
 
   /*! \brief Addition of two vectors.
-   *  \returns sum of the two vectors.
+   * \param other   other vector
+   * \returns sum
    */
-  template<typename OtherDerived_>
-  Derived_ operator +(const VectorBase<OtherDerived_>& other) const {
-    return internal::AdditionTraits<VectorBase<Derived_>>::add(this->derived(), other.derived());
-  }
+  Derived_ operator+(const VectorBase<Derived_>& other) const;
 
   /*! \brief Subtraction of two vectors.
-   *  \returns result of the subtraction of the two vectors.
+   * \param other   other vector
+   * \returns difference
    */
-  template<typename OtherDerived_>
-  Derived_ operator -(const VectorBase<OtherDerived_>& other) const {
-    return internal::AdditionTraits<VectorBase<Derived_>>::subtract(this->derived(), other.derived());
-  }
+  Derived_ operator-(const VectorBase<Derived_>& other) const;
 
-  /*! \brief Addition and assignment.
-   *  \returns sum of the two vectors.
+  /*! \brief Multiplies vector with a scalar.
+   * \param factor   factor
+   * \returns product
    */
-  template<typename OtherDerived_>
-  Derived_& operator +=(const VectorBase<OtherDerived_>& other);
+  template<typename PrimTypeFactor_>
+  Derived_ operator*(PrimTypeFactor_ factor) const;
 
-  /*! \brief Subtraction and assignment.
-   *  \returns result of the subtraction of the two vectors.
+  /*! \brief Divides vector by a scalar.
+   * \param divisor   divisor
+   * \returns quotient
    */
-  template<typename OtherDerived_>
-  Derived_& operator -=(const VectorBase<OtherDerived_>& other);
+  template<typename PrimTypeDivisor_>
+  Derived_ operator/(PrimTypeDivisor_ divisor) const;
+
+  /*! \brief Addition and assignment of two vectors.
+   * \param other   other vector
+   * \returns reference
+   */
+  Derived_& operator+=(const VectorBase<Derived_>& other);
+
+  /*! \brief Subtraction and assignment of two vectors.
+   * \param other   other vector
+   * \returns reference
+   */
+  Derived_& operator-=(const VectorBase<Derived_>& other);
+
+  /*! \brief Multiplication with a scalar and assignment.
+   * \param factor   factor
+   * \returns reference
+   */
+  template<typename PrimTypeFactor_>
+  Derived_& operator*=(PrimTypeFactor_ factor);
+
+  /*! \brief Division by a scalar and assignment.
+   * \param divisor   divisor
+   * \returns reference
+   */
+  template<typename PrimTypeDivisor_>
+  Derived_& operator/=(PrimTypeDivisor_ divisor);
+
+  /*! \brief Comparison operator.
+   * \param other   other vector
+   * \returns true if equal
+   */
+  bool operator==(const VectorBase<Derived_>& other) const;
+
+  /*! \brief Comparison operator.
+   * \param other   other vector
+   * \returns true if unequal
+   */
+  bool operator!=(const VectorBase<Derived_>& other) const;
+
+  /*! \brief Comparison function.
+   * \param other   other vector
+   * \param tol   tolerance
+   * \returns true if similar within tolerance
+   */
+  bool isSimilarTo(const VectorBase<Derived_>& other, Scalar tol) const;
 
   /*! \brief Norm of the vector.
    *  \returns norm.
@@ -206,56 +248,83 @@ class VectorBase {
    *  \returns cross product.
    */
   Derived_ cross(const VectorBase<Derived_>& other) const;
+
+  /*! \brief Elementwise product with other vector.
+   *  \param other   other vector
+   *  \returns elementwise product.
+   */
+  Derived_ elementwiseMultiplication(const VectorBase<Derived_>& other) const;
+
+  /*! \brief Elementwise product with other vector.
+   *  \param other   other vector
+   *  \returns elementwise product.
+   */
+  Derived_ elementwiseDivision(const VectorBase<Derived_>& other) const;
+
+  /*! \brief Absolute components.
+   *  \returns absolute components.
+   */
+  Derived_ abs() const;
+
+  /*! \brief Maximum of the components.
+   *  \returns maximum.
+   */
+  Scalar max() const;
+
+  /*! \brief Minimum of the components.
+   *  \returns minimum.
+   */
+  Scalar min() const;
 };
 
 
-namespace internal {
-
-template<typename LeftAndRight_>
-class AdditionTraits<VectorBase<LeftAndRight_>> {
- public:
-  /*! \brief The primitive type of a vector coordinate.
-   */
-  typedef typename internal::get_scalar<LeftAndRight_>::Scalar Scalar;
-  /*! \returns the sum of two vectors
-   * \param lhs left-hand side
-   * \param rhs right-hand side
-   */
-  inline static LeftAndRight_ add(const VectorBase<LeftAndRight_>& lhs, const VectorBase<LeftAndRight_>& rhs) {
-    return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() + rhs.derived().toImplementation()));
-  }
-  /*! \returns the subtraction of two vectors
-   * \param lhs left-hand side
-   * \param rhs right-hand side
-   */
-  inline static LeftAndRight_ subtract(const VectorBase<LeftAndRight_>& lhs, const VectorBase<LeftAndRight_>& rhs) {
-    return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() - rhs.derived().toImplementation()));
-  }
-};
-
-template<typename Derived_>
-class AccessTraits<VectorBase<Derived_>> {
- public:
-  /*! \brief The primitive type of a vector coordinate.
-   */
-  typedef typename internal::get_scalar<Derived_>::Scalar Scalar;
-  /*! \returns A copy of an entry of the vector.
-   * \param vector Vector
-   * \param index Index
-   */
-  inline static Scalar access(const VectorBase<Derived_>& vector, int index) {
-    return vector.derived().toImplementation()(index);
-  }
-  /*! \returns A copy of an entry of the vector.
-   * \param vector Vector
-   * \param index Index
-   */
-  inline static Scalar& accessRef(const VectorBase<Derived_>& vector, int index) {
-    return vector.derived().toImplementation()(index);
-  }
-};
-
-} // namespace internal
+//namespace internal {
+//
+//template<typename LeftAndRight_>
+//class AdditionTraits<VectorBase<LeftAndRight_>> {
+// public:
+//  /*! \brief The primitive type of a vector coordinate.
+//   */
+//  typedef typename internal::get_scalar<LeftAndRight_>::Scalar Scalar;
+//  /*! \returns the sum of two vectors
+//   * \param lhs left-hand side
+//   * \param rhs right-hand side
+//   */
+//  inline static LeftAndRight_ add(const VectorBase<LeftAndRight_>& lhs, const VectorBase<LeftAndRight_>& rhs) {
+//    return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() + rhs.derived().toImplementation()));
+//  }
+//  /*! \returns the subtraction of two vectors
+//   * \param lhs left-hand side
+//   * \param rhs right-hand side
+//   */
+//  inline static LeftAndRight_ subtract(const VectorBase<LeftAndRight_>& lhs, const VectorBase<LeftAndRight_>& rhs) {
+//    return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() - rhs.derived().toImplementation()));
+//  }
+//};
+//
+//template<typename Derived_>
+//class AccessTraits<VectorBase<Derived_>> {
+// public:
+//  /*! \brief The primitive type of a vector coordinate.
+//   */
+//  typedef typename internal::get_scalar<Derived_>::Scalar Scalar;
+//  /*! \returns A copy of an entry of the vector.
+//   * \param vector Vector
+//   * \param index Index
+//   */
+//  inline static Scalar access(const VectorBase<Derived_>& vector, int index) {
+//    return vector.derived().toImplementation()(index);
+//  }
+//  /*! \returns A copy of an entry of the vector.
+//   * \param vector Vector
+//   * \param index Index
+//   */
+//  inline static Scalar& accessRef(const VectorBase<Derived_>& vector, int index) {
+//    return vector.derived().toImplementation()(index);
+//  }
+//};
+//
+//} // namespace internal
 
 } // namespace vector
 } // namespace kindr

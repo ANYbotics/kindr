@@ -81,14 +81,14 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
    *  \param other   Vector<PrimTypeOther_, Dimension_>
    */
   template<typename PrimTypeOther_>
-  Vector(const Vector<PrimTypeOther_, Dimension_> & other)
+  Vector(const Vector<PrimTypeOther_, Dimension_>& other)
     : Implementation(other.toImplementation().template cast<PrimType_>()) {
   }
 
   /*! \brief Constructor using Eigen::Matrix.
    *  \param other   Eigen::Matrix<PrimType_,Dimension_,1>
    */
-  explicit Vector(const Implementation & other)
+  explicit Vector(const Implementation& other)
     : Implementation(other) {
   }
 
@@ -102,11 +102,11 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
     : Implementation(x,y,z) {
   }
 
-  /*! \brief Operator () using Eigen::Matrix.
-   *  \param other   Eigen::Matrix<PrimType_,Dimension_,1>
+  /*! \brief Sets all components of the vector to zero.
+   * \returns reference
    */
-  Vector<PrimType_, Dimension_>& operator ()(const Implementation& other) {
-    this->toImplementation() = other;
+  Vector<PrimType_, Dimension_>& setZero() {
+    Implementation::setZero();
     return *this;
   }
 
@@ -214,50 +214,71 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
     return Vector<PrimType_, Dimension_>(this->toImplementation()/(PrimType_)divisor);
   }
 
-  /*! \brief Addition of two vectors.
+  /*! \brief Addition and assignment of two vectors.
    * \param other   other vector
    * \returns reference
    */
-  Vector<PrimType_, Dimension_>& operator +=(const Vector<PrimType_, Dimension_>& other) {
+  Vector<PrimType_, Dimension_>& operator+=(const Vector<PrimType_, Dimension_>& other) {
     this->toImplementation() += other.toImplementation();
     return *this;
   }
 
-  /*! \brief Subtraction of two vectors.
+  /*! \brief Subtraction and assignment of two vectors.
    * \param other   other vector
    * \returns reference
    */
-  Vector<PrimType_, Dimension_>& operator -=(const Vector<PrimType_, Dimension_>& other) {
+  Vector<PrimType_, Dimension_>& operator-=(const Vector<PrimType_, Dimension_>& other) {
     this->toImplementation() -= other.toImplementation();
     return *this;
   }
 
-  /*! \brief Multiplies vector with a scalar.
+  /*! \brief Multiplication with a scalar and assignment.
    * \param factor   factor
    * \returns reference
    */
   template<typename PrimTypeFactor_>
-  Vector<PrimType_, Dimension_> operator*=(PrimTypeFactor_ factor) const {
+  Vector<PrimType_, Dimension_>& operator*=(PrimTypeFactor_ factor) {
     this->toImplementation() *= (PrimType_)factor;
     return *this;
   }
 
-  /*! \brief Divides vector by a scalar.
+  /*! \brief Division by a scalar and assignment.
    * \param divisor   divisor
    * \returns reference
    */
   template<typename PrimTypeDivisor_>
-  Vector<PrimType_, Dimension_> operator/=(PrimTypeDivisor_ divisor) const {
+  Vector<PrimType_, Dimension_>& operator/=(PrimTypeDivisor_ divisor) {
     this->toImplementation() /= (PrimType_)divisor;
     return *this;
   }
 
-  /*! \brief Sets all components of the vector to zero.
-   * \returns reference
+  /*! \brief Comparison operator.
+   * \param other   other vector
+   * \returns true if equal
    */
-  Vector<PrimType_, Dimension_>& setZero() {
-    Implementation::setZero();
-    return *this;
+  bool operator==(const Vector<PrimType_, Dimension_>& other) const {
+    return this->toImplementation() == other.toImplementation();
+  }
+
+  /*! \brief Comparison operator.
+   * \param other   other vector
+   * \returns true if unequal
+   */
+  bool operator!=(const Vector<PrimType_, Dimension_>& other) const {
+    return this->toImplementation() != other.toImplementation();
+  }
+
+  /*! \brief Comparison function.
+   * \param other   other vector
+   * \param tol   tolerance
+   * \returns true if similar within tolerance
+   */
+  bool isSimilarTo(const Vector<PrimType_, Dimension_>& other, Scalar tol) const {
+    if((*this - other).abs().max() < tol) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   /*! \brief Norm of the vector.
@@ -351,7 +372,7 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
  * \returns product
  */
 template<typename PrimTypeFactor_, typename PrimType_, int Dimension_>
-Vector<PrimType_, Dimension_> operator*(PrimTypeFactor_ factor, const Vector<PrimType_, Dimension_> & vector) {
+Vector<PrimType_, Dimension_> operator*(PrimTypeFactor_ factor, const Vector<PrimType_, Dimension_>& vector) {
   return vector*(PrimType_)factor;
 }
 
@@ -371,7 +392,7 @@ namespace internal {
 /*! \brief Gets the primitive type of the vector
  */
 template<typename PrimType_, int Dimension_>
-class get_scalar<eigen_impl::Vector<PrimType_, Dimension_>>{
+class get_scalar<eigen_impl::Vector<PrimType_, Dimension_>> {
  public:
   typedef PrimType_ Scalar;
 };
@@ -379,7 +400,7 @@ class get_scalar<eigen_impl::Vector<PrimType_, Dimension_>>{
 /*! \brief Gets the dimension of the vector
  */
 template<typename PrimType_, int Dimension_>
-class get_dimension<eigen_impl::Vector<PrimType_, Dimension_>>{
+class get_dimension<eigen_impl::Vector<PrimType_, Dimension_>> {
  public:
   static constexpr int Dimension = Dimension_;
 };

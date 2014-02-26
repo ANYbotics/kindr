@@ -180,6 +180,10 @@ TYPED_TEST(Vector3Test, testVector3)
 //  std::cout << vectorNormalized.abs() << std::endl;
 //  std::cout << vectorNormalized.max() << std::endl;
 //  std::cout << vectorNormalized.min() << std::endl;
+//  std::cout << (vectorNormalized == vectorNormalized) << std::endl;
+//  std::cout << (vectorNormalized != vectorNormalized) << std::endl;
+//  std::cout << vectorNormalized.isSimilarTo(vectorNormalized, 1e-6) << std::endl;
+//  std::cout << vectorNormalized.isSimilarTo(vector2FromEigenBackup, 1e-6) << std::endl;
 }
 
 
@@ -214,8 +218,8 @@ struct VectorTest: public ::testing::Test {
     vecAdd << 11,22,33,44,55;
     vecSubtract << 9,18,27,36,45;
     vectorFromMultipleValues << vec1(0),vec1(1),vec1(2),vec1(3),vec1(4);
-    vectorFromEigen(vec1);
-    vector2FromEigen(vec2);
+    vectorFromEigen = Vector(vec1);
+    vector2FromEigen = Vector(vec2);
     vectorFromVector = vectorFromEigen;
   }
 };
@@ -352,5 +356,9 @@ TYPED_TEST(VectorTest, testVector)
 //  std::cout << vectorNormalized.abs() << std::endl;
 //  std::cout << vectorNormalized.max() << std::endl;
 //  std::cout << vectorNormalized.min() << std::endl;
+//  std::cout << (vectorNormalized == vectorNormalized) << std::endl;
+//  std::cout << (vectorNormalized != vectorNormalized) << std::endl;
+//  std::cout << vectorNormalized.isSimilarTo(vectorNormalized, 1e-6) << std::endl;
+//  std::cout << vectorNormalized.isSimilarTo(vector2FromEigenBackup, 1e-6) << std::endl;
 }
 
