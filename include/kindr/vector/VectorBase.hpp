@@ -165,8 +165,8 @@ class VectorBase {
   template<typename Output_, int DimensionOutput_>
   Output_ tail() const;
 
-  /*!\brief Get a block of the vector (copy)
-   * \returns a block of the vector (copy)
+  /*!\brief Get a segment of the vector (copy)
+   * \returns a segment of the vector (copy)
    */
   template<typename Output_, int Start_, int DimensionOutput_>
   Output_ segment() const;

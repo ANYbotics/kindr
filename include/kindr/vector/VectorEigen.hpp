@@ -134,8 +134,8 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
     return Vector<PrimType_, DimensionOutput_>(this->toImplementation().tail(DimensionOutput_));
   }
 
-  /*!\brief Get a block of the vector (copy)
-   * \returns a block of the vector (copy)
+  /*!\brief Get a segment of the vector (copy)
+   * \returns a segment of the vector (copy)
    */
   template<int Start_, int DimensionOutput_>
   Vector<PrimType_, DimensionOutput_> segment() const {
