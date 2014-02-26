@@ -171,6 +171,15 @@ TYPED_TEST(Vector3Test, testVector3)
   ASSERT_NEAR(this->vector2FromEigen.x(), eigenVectorNormalized.x(), 1e-6);
   ASSERT_NEAR(this->vector2FromEigen.y(), eigenVectorNormalized.y(), 1e-6);
   ASSERT_NEAR(this->vector2FromEigen.z(), eigenVectorNormalized.z(), 1e-6);
+
+//  std::cout << vectorNormalized << std::endl;
+//  std::cout << vectorNormalized.dot(vectorNormalized) << std::endl;
+//  std::cout << vectorNormalized.cross(vectorNormalized) << std::endl;
+//  std::cout << vectorNormalized.elementwiseMultiplication(vectorNormalized) << std::endl;
+//  std::cout << vectorNormalized.elementwiseDivision(vectorNormalized) << std::endl;
+//  std::cout << vectorNormalized.abs() << std::endl;
+//  std::cout << vectorNormalized.max() << std::endl;
+//  std::cout << vectorNormalized.min() << std::endl;
 }
 
 
@@ -216,10 +225,10 @@ struct VectorTest: public ::testing::Test {
 typedef ::testing::Types<
     vector::Vector<double, 5>,
     vector::Vector<float, 5>
-> Types5D;
+> Types5;
 
 
-TYPED_TEST_CASE(VectorTest, Types5D);
+TYPED_TEST_CASE(VectorTest, Types5);
 
 TYPED_TEST(VectorTest, testVector)
 {
@@ -335,5 +344,13 @@ TYPED_TEST(VectorTest, testVector)
   ASSERT_NEAR(this->vector2FromEigen(2), eigenVectorNormalized(2), 1e-6);
   ASSERT_NEAR(this->vector2FromEigen(3), eigenVectorNormalized(3), 1e-6);
   ASSERT_NEAR(this->vector2FromEigen(4), eigenVectorNormalized(4), 1e-6);
+
+//  std::cout << vectorNormalized << std::endl;
+//  std::cout << vectorNormalized.dot(vectorNormalized) << std::endl;
+//  std::cout << vectorNormalized.elementwiseMultiplication(vectorNormalized) << std::endl;
+//  std::cout << vectorNormalized.elementwiseDivision(vectorNormalized) << std::endl;
+//  std::cout << vectorNormalized.abs() << std::endl;
+//  std::cout << vectorNormalized.max() << std::endl;
+//  std::cout << vectorNormalized.min() << std::endl;
 }
 

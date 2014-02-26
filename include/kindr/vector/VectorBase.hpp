@@ -208,49 +208,6 @@ class VectorBase {
   Derived_ cross(const VectorBase<Derived_>& other) const;
 };
 
-/*! \class Vector3Base
- * \brief Interface for a vector in 3D-space.
- *
- * This class defines the generic interface for a vector in 3D-space.
- * More precisely an interface to store and access the three coordinates of a vector of a point is provided.
-
- * \tparam Derived_ the derived class that should implement the vector.
- *
- *  \ingroup vectors
- */
-template<typename Derived_>
-class Vector3Base : public VectorBase<Derived_> {
- public:
-  /*! \brief The primitive type of a vector coordinate.
-   */
-  typedef typename internal::get_scalar<Derived_>::Scalar Scalar;
-
-  /*! \returns the x-coordinate of the 3D-vector
-   */
-  inline Scalar x() const;
-
-  /*! \returns the x-coordinate of the 3D-vector
-   */
-  inline Scalar& x();
-
-  /*! \returns the y-coordinate of the 3D-vector
-   */
-  inline Scalar y() const;
-
-  /*! \returns the y-coordinate of the 3D-vector
-   */
-  inline Scalar& y();
-
-  /*! \returns the z-coordinate of the 3D-vector
-   */
-  inline Scalar z() const;
-
-  /*! \returns the z-coordinate of the 3D-vector
-   */
-  inline Scalar& z();
-
-};
-
 
 namespace internal {
 
