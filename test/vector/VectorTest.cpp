@@ -50,7 +50,7 @@ template <typename VectorImplementation>
 struct Vector3Test: public ::testing::Test {
   typedef VectorImplementation Vector3;
   typedef typename Vector3::Scalar Scalar;
-  typedef Eigen::Matrix<Scalar, 3, 1> EigenVector3;
+  typedef typename Vector3::Implementation EigenVector3;
 
   Scalar tol;
   EigenVector3 vecZero, vec1, vec2, vecAdd, vecSubtract;
@@ -86,6 +86,7 @@ TYPED_TEST_CASE(Vector3Test, Types);
 TYPED_TEST(Vector3Test, testVector3)
 {
   typedef typename TestFixture::Vector3 Vector3;
+  typedef typename TestFixture::EigenVector3 EigenVector3;
 
   // default constructor
   ASSERT_EQ(this->vectorDefault.x(), this->vecZero.x()) << "Default constructor needs to initialize x-component to zero!";
@@ -139,21 +140,37 @@ TYPED_TEST(Vector3Test, testVector3)
   ASSERT_EQ(vectorSubtractandAssign.z(), this->vecSubtract.z());
 
   // setZero
-  Vector3 vec2backup(this->vec2);
-  this->vec2.setZero();
-  ASSERT_EQ(this->vec2.x(), this->vecZero.x());
-  ASSERT_EQ(this->vec2.y(), this->vecZero.y());
-  ASSERT_EQ(this->vec2.z(), this->vecZero.z());
+  Vector3 vector2FromEigenBackup(this->vec2);
+  this->vector2FromEigen.setZero();
+  ASSERT_EQ(this->vector2FromEigen.x(), this->vecZero.x());
+  ASSERT_EQ(this->vector2FromEigen.y(), this->vecZero.y());
+  ASSERT_EQ(this->vector2FromEigen.z(), this->vecZero.z());
 
-  // assign 1
-  this->vec2(0) = vec2backup(0);
-  ASSERT_EQ(this->vec2.x(), vec2backup.x());
+  // bracket assign 1
+  this->vector2FromEigen(0) = vector2FromEigenBackup(0);
+  ASSERT_EQ(this->vector2FromEigen.x(), vector2FromEigenBackup.x());
 
-  // assign 2
-  this->vec2 << vec2backup(0),vec2backup(1),vec2backup(2);
-  ASSERT_EQ(this->vec2.x(), vec2backup.x());
-  ASSERT_EQ(this->vec2.y(), vec2backup.y());
-  ASSERT_EQ(this->vec2.z(), vec2backup.z());
+  // << assign 2
+  this->vector2FromEigen << vector2FromEigenBackup(0),vector2FromEigenBackup(1),vector2FromEigenBackup(2);
+  ASSERT_EQ(this->vector2FromEigen.x(), vector2FromEigenBackup.x());
+  ASSERT_EQ(this->vector2FromEigen.y(), vector2FromEigenBackup.y());
+  ASSERT_EQ(this->vector2FromEigen.z(), vector2FromEigenBackup.z());
+
+  // norm
+  ASSERT_NEAR(this->vector2FromEigen.norm(), std::sqrt(this->vector2FromEigen(0)*this->vector2FromEigen(0) + this->vector2FromEigen(1)*this->vector2FromEigen(1) + this->vector2FromEigen(2)*this->vector2FromEigen(2)), 1e-6);
+
+  // normalized
+  EigenVector3 eigenVectorNormalized(this->vec2.normalized());
+  Vector3 vectorNormalized(this->vector2FromEigen.normalized());
+  ASSERT_NEAR(vectorNormalized.x(), eigenVectorNormalized.x(), 1e-6);
+  ASSERT_NEAR(vectorNormalized.y(), eigenVectorNormalized.y(), 1e-6);
+  ASSERT_NEAR(vectorNormalized.z(), eigenVectorNormalized.z(), 1e-6);
+
+  // normalize
+  this->vector2FromEigen.normalize();
+  ASSERT_NEAR(this->vector2FromEigen.x(), eigenVectorNormalized.x(), 1e-6);
+  ASSERT_NEAR(this->vector2FromEigen.y(), eigenVectorNormalized.y(), 1e-6);
+  ASSERT_NEAR(this->vector2FromEigen.z(), eigenVectorNormalized.z(), 1e-6);
 }
 
 
@@ -207,6 +224,7 @@ TYPED_TEST_CASE(VectorTest, Types5D);
 TYPED_TEST(VectorTest, testVector)
 {
   typedef typename TestFixture::Vector Vector;
+  typedef typename TestFixture::EigenVector EigenVector;
 
   // default constructor
   ASSERT_EQ(this->vectorDefault(0), this->vecZero(0)) << "Default constructor needs to initialize component 1 to zero!";
@@ -278,24 +296,44 @@ TYPED_TEST(VectorTest, testVector)
   ASSERT_EQ(vectorSubtractandAssign(4), this->vecSubtract(4));
 
   // setZero
-  Vector vec2backup(this->vec2);
-  this->vec2.setZero();
-  ASSERT_EQ(this->vec2(0), this->vecZero(0));
-  ASSERT_EQ(this->vec2(1), this->vecZero(1));
-  ASSERT_EQ(this->vec2(2), this->vecZero(2));
-  ASSERT_EQ(this->vec2(3), this->vecZero(3));
-  ASSERT_EQ(this->vec2(4), this->vecZero(4));
+  Vector vector2FromEigenBackup(this->vec2);
+  this->vector2FromEigen.setZero();
+  ASSERT_EQ(this->vector2FromEigen(0), this->vecZero(0));
+  ASSERT_EQ(this->vector2FromEigen(1), this->vecZero(1));
+  ASSERT_EQ(this->vector2FromEigen(2), this->vecZero(2));
+  ASSERT_EQ(this->vector2FromEigen(3), this->vecZero(3));
+  ASSERT_EQ(this->vector2FromEigen(4), this->vecZero(4));
 
-  // assign 1
-  this->vec2(0) = vec2backup(0);
-  ASSERT_EQ(this->vec2(0), vec2backup(0));
+  // bracket assign 1
+  this->vector2FromEigen(0) = vector2FromEigenBackup(0);
+  ASSERT_EQ(this->vector2FromEigen(0), vector2FromEigenBackup(0));
 
-  // assign 2
-  this->vec2 << vec2backup(0),vec2backup(1),vec2backup(2),vec2backup(3),vec2backup(4);
-  ASSERT_EQ(this->vec2(0), vec2backup(0));
-  ASSERT_EQ(this->vec2(1), vec2backup(1));
-  ASSERT_EQ(this->vec2(2), vec2backup(2));
-  ASSERT_EQ(this->vec2(3), vec2backup(3));
-  ASSERT_EQ(this->vec2(4), vec2backup(4));
+  // << assign 2
+  this->vector2FromEigen << vector2FromEigenBackup(0),vector2FromEigenBackup(1),vector2FromEigenBackup(2),vector2FromEigenBackup(3),vector2FromEigenBackup(4);
+  ASSERT_EQ(this->vector2FromEigen(0), vector2FromEigenBackup(0));
+  ASSERT_EQ(this->vector2FromEigen(1), vector2FromEigenBackup(1));
+  ASSERT_EQ(this->vector2FromEigen(2), vector2FromEigenBackup(2));
+  ASSERT_EQ(this->vector2FromEigen(3), vector2FromEigenBackup(3));
+  ASSERT_EQ(this->vector2FromEigen(4), vector2FromEigenBackup(4));
+
+  // norm
+  ASSERT_NEAR(this->vector2FromEigen.norm(), std::sqrt(this->vector2FromEigen(0)*this->vector2FromEigen(0) + this->vector2FromEigen(1)*this->vector2FromEigen(1) + this->vector2FromEigen(2)*this->vector2FromEigen(2) + this->vector2FromEigen(3)*this->vector2FromEigen(3) + this->vector2FromEigen(4)*this->vector2FromEigen(4)), 1e-6);
+
+  // normalized
+  EigenVector eigenVectorNormalized(this->vec2.normalized());
+  Vector vectorNormalized(this->vector2FromEigen.normalized());
+  ASSERT_NEAR(vectorNormalized(0), eigenVectorNormalized(0), 1e-6);
+  ASSERT_NEAR(vectorNormalized(1), eigenVectorNormalized(1), 1e-6);
+  ASSERT_NEAR(vectorNormalized(2), eigenVectorNormalized(2), 1e-6);
+  ASSERT_NEAR(vectorNormalized(3), eigenVectorNormalized(3), 1e-6);
+  ASSERT_NEAR(vectorNormalized(4), eigenVectorNormalized(4), 1e-6);
+
+  // normalize
+  this->vector2FromEigen.normalize();
+  ASSERT_NEAR(this->vector2FromEigen(0), eigenVectorNormalized(0), 1e-6);
+  ASSERT_NEAR(this->vector2FromEigen(1), eigenVectorNormalized(1), 1e-6);
+  ASSERT_NEAR(this->vector2FromEigen(2), eigenVectorNormalized(2), 1e-6);
+  ASSERT_NEAR(this->vector2FromEigen(3), eigenVectorNormalized(3), 1e-6);
+  ASSERT_NEAR(this->vector2FromEigen(4), eigenVectorNormalized(4), 1e-6);
 }
 

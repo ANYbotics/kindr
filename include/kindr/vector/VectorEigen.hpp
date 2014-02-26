@@ -138,12 +138,48 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
     return *this;
   }
 
-  /*! \brief Sets all coordinates of the vector to zero.
+  /*! \brief Sets all components of the vector to zero.
    * \returns reference
    */
   Vector<PrimType_, Dimension_>& setZero() {
     Implementation::setZero();
     return *this;
+  }
+
+  /*! \brief Norm of the vector.
+   *  \returns norm.
+   */
+  Scalar norm() {
+    return this->toImplementation().norm();
+  }
+
+  /*! \brief Normalizes the vector.
+   *  \returns reference.
+   */
+  Vector<PrimType_, Dimension_>& normalize() {
+    this->toImplementation().normalize();
+    return *this;
+  }
+
+  /*! \brief Get a normalized version of the vector.
+   *  \returns normalized vector.
+   */
+  Vector<PrimType_, Dimension_> normalized() {
+    return Vector<PrimType_, Dimension_>(this->toImplementation().normalized());
+  }
+
+  /*! \brief Dot product with other vector.
+   *  \returns dot product.
+   */
+  Scalar dot(const Vector<PrimType_, Dimension_>& other) {
+    return this->toImplementation().dot(other.toImplementation());
+  }
+
+  /*! \brief Cross product with other vector.
+   *  \returns cross product.
+   */
+  Vector<PrimType_, Dimension_> cross(const Vector<PrimType_, Dimension_>& other) {
+    return Vector<PrimType_, Dimension_>(this->toImplementation().cross(other.toImplementation()));
   }
 
   /*! \brief Used for printing the object with std::cout.
@@ -286,6 +322,42 @@ class Vector3 : public Vector3Base<Vector3<PrimType_> >, private Eigen::Matrix<P
   Vector3<PrimType_>& setZero() {
     Implementation::setZero();
     return *this;
+  }
+
+  /*! \brief Norm of the vector.
+   *  \returns norm.
+   */
+  Scalar norm() {
+    return this->toImplementation().norm();
+  }
+
+  /*! \brief Normalizes the vector.
+   *  \returns reference.
+   */
+  Vector3<PrimType_>& normalize() {
+    this->toImplementation().normalize();
+    return *this;
+  }
+
+  /*! \brief Get a normalized version of the vector.
+   *  \returns normalized vector.
+   */
+  Vector3<PrimType_> normalized() {
+    return Vector3<PrimType_>(this->toImplementation().normalized());
+  }
+
+  /*! \brief Dot product with other vector.
+   *  \returns dot product.
+   */
+  Scalar dot(const Vector3<PrimType_>& other) {
+    return this->toImplementation().dot(other.toImplementation());
+  }
+
+  /*! \brief Cross product with other vector.
+   *  \returns cross product.
+   */
+  Vector3<PrimType_> cross(const Vector3<PrimType_>& other) {
+    return Vector3<PrimType_>(this->toImplementation().cross(other.toImplementation()));
   }
 
   /*! \brief Used for printing the object with std::cout.

@@ -51,6 +51,17 @@ class AdditionTraits {
 //  inline static LeftAndRight_ subtract(const LeftAndRight_& lhs, const LeftAndRight_& rhs);
 };
 
+/*! \brief Addition traits for vectors
+ *  \class AdditionTraits
+ *  (only for advanced users)
+ */
+template<typename Derived_>
+class AccessTraits {
+ public:
+//  inline static Derived_ access(const Derived_& vector, int index);
+//  inline static Derived_& accessRef(const Derived_& vector, int index);
+};
+
 /*! \class get_scalar
  *  \brief Gets the primitive of the vector.
  */
@@ -171,6 +182,30 @@ class VectorBase {
   template<typename OtherDerived_>
   Derived_& operator -=(const VectorBase<OtherDerived_>& other);
 
+  /*! \brief Norm of the vector.
+   *  \returns norm.
+   */
+  Scalar norm() const;
+
+  /*! \brief Normalizes the vector.
+   *  \returns reference.
+   */
+  Derived_& normalize();
+
+  /*! \brief Get a normalized version of the vector.
+   *  \returns normalized vector.
+   */
+  Derived_ normalized() const;
+
+  /*! \brief Dot product with other vector.
+   *  \returns dot product.
+   */
+  Scalar dot(const VectorBase<Derived_>& other) const;
+
+  /*! \brief Cross product with other vector.
+   *  \returns cross product.
+   */
+  Derived_ cross(const VectorBase<Derived_>& other) const;
 };
 
 /*! \class Vector3Base
@@ -186,10 +221,6 @@ class VectorBase {
 template<typename Derived_>
 class Vector3Base : public VectorBase<Derived_> {
  public:
-//  /*! \brief The primitive type of a vector coordinate.
-//   */
-//  typedef typename internal::get_scalar<Derived_>::Scalar Scalar;
-//
   /*! \brief The primitive type of a vector coordinate.
    */
   typedef typename internal::get_scalar<Derived_>::Scalar Scalar;
@@ -229,20 +260,6 @@ class AdditionTraits<VectorBase<LeftAndRight_>> {
   /*! \brief The primitive type of a vector coordinate.
    */
   typedef typename internal::get_scalar<LeftAndRight_>::Scalar Scalar;
-  /*! \returns A copy of an entry of the vector.
-   * \param vector Vector
-   * \param index Index
-   */
-  inline static Scalar access(const VectorBase<LeftAndRight_>& vector, int index) {
-    return vector.derived().toImplementation()(index);
-  }
-  /*! \returns A copy of an entry of the vector.
-   * \param vector Vector
-   * \param index Index
-   */
-  inline static Scalar& accessRef(const VectorBase<LeftAndRight_>& vector, int index) {
-    return vector.derived().toImplementation()(index);
-  }
   /*! \returns the sum of two vectors
    * \param lhs left-hand side
    * \param rhs right-hand side
@@ -256,6 +273,28 @@ class AdditionTraits<VectorBase<LeftAndRight_>> {
    */
   inline static LeftAndRight_ subtract(const VectorBase<LeftAndRight_>& lhs, const VectorBase<LeftAndRight_>& rhs) {
     return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() - rhs.derived().toImplementation()));
+  }
+};
+
+template<typename Derived_>
+class AccessTraits<VectorBase<Derived_>> {
+ public:
+  /*! \brief The primitive type of a vector coordinate.
+   */
+  typedef typename internal::get_scalar<Derived_>::Scalar Scalar;
+  /*! \returns A copy of an entry of the vector.
+   * \param vector Vector
+   * \param index Index
+   */
+  inline static Scalar access(const VectorBase<Derived_>& vector, int index) {
+    return vector.derived().toImplementation()(index);
+  }
+  /*! \returns A copy of an entry of the vector.
+   * \param vector Vector
+   * \param index Index
+   */
+  inline static Scalar& accessRef(const VectorBase<Derived_>& vector, int index) {
+    return vector.derived().toImplementation()(index);
   }
 };
 
