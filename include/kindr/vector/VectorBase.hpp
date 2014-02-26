@@ -153,6 +153,24 @@ class VectorBase {
    */
   Scalar& operator()(int index);
 
+  /*!\brief Get the head of the vector (copy)
+   * \returns the head of the vector (copy)
+   */
+  template<typename Output_, int DimensionOutput_>
+  Output_ head() const;
+
+  /*!\brief Get the tail of the vector (copy)
+   * \returns the tail of the vector (copy)
+   */
+  template<typename Output_, int DimensionOutput_>
+  Output_ tail() const;
+
+  /*!\brief Get a block of the vector (copy)
+   * \returns a block of the vector (copy)
+   */
+  template<typename Output_, int Start_, int DimensionOutput_>
+  Output_ segment() const;
+
   /*! \brief Addition of two vectors.
    * \param other   other vector
    * \returns sum

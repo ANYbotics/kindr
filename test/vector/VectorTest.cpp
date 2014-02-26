@@ -186,6 +186,9 @@ TYPED_TEST(Vector3Test, testVector3)
 //  std::cout << vectorNormalized.isSimilarTo(vector2FromEigenBackup, 1e-6) << std::endl;
 //  std::cout << vectorNormalized.sum() << std::endl;
 //  std::cout << vectorNormalized.mean() << std::endl;
+//  std::cout << vectorNormalized.template head<2>() << std::endl;
+//  std::cout << vectorNormalized.template tail<2>() << std::endl;
+//    std::cout << vectorNormalized.template segment<1,2>() << std::endl;
 }
 
 
@@ -364,5 +367,8 @@ TYPED_TEST(VectorTest, testVector)
 //  std::cout << vectorNormalized.isSimilarTo(vector2FromEigenBackup, 1e-6) << std::endl;
 //  std::cout << vectorNormalized.sum() << std::endl;
 //  std::cout << vectorNormalized.mean() << std::endl;
+//  std::cout << vectorNormalized.template head<2>() << std::endl;
+//  std::cout << vectorNormalized.template tail<2>() << std::endl;
+//  std::cout << vectorNormalized.template segment<1,2>() << std::endl;
 }
 

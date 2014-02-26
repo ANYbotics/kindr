@@ -118,6 +118,30 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
    */
   using Implementation::operator();
 
+  /*!\brief Get the head of the vector (copy)
+   * \returns the head of the vector (copy)
+   */
+  template<int DimensionOutput_>
+  Vector<PrimType_, DimensionOutput_> head() const {
+    return Vector<PrimType_, DimensionOutput_>(this->toImplementation().head(DimensionOutput_));
+  }
+
+  /*!\brief Get the tail of the vector (copy)
+   * \returns the tail of the vector (copy)
+   */
+  template<int DimensionOutput_>
+  Vector<PrimType_, DimensionOutput_> tail() const {
+    return Vector<PrimType_, DimensionOutput_>(this->toImplementation().tail(DimensionOutput_));
+  }
+
+  /*!\brief Get a block of the vector (copy)
+   * \returns a block of the vector (copy)
+   */
+  template<int Start_, int DimensionOutput_>
+  Vector<PrimType_, DimensionOutput_> segment() const {
+    return Vector<PrimType_, DimensionOutput_>(this->toImplementation().block<DimensionOutput_,1>(Start_,0));
+  }
+
   /*!\brief Get x-coordinate of the vector (copy)
    * \returns the x-coordinate of the vector (copy)
    */
@@ -391,11 +415,41 @@ Vector<PrimType_, Dimension_> operator*(PrimTypeFactor_ factor, const Vector<Pri
 }
 
 
+//! \brief 1D-Vector with primitive type double
+typedef Vector<double,1>  Vector1D;
+
+//! \brief 1D-Vector with primitive type float
+typedef Vector<float,1>  Vector1F;
+
+//! \brief 2D-Vector with primitive type double
+typedef Vector<double,2>  Vector2D;
+
+//! \brief 2D-Vector with primitive type float
+typedef Vector<float,2>  Vector2F;
+
 //! \brief 3D-Vector with primitive type double
 typedef Vector<double,3>  Vector3D;
 
 //! \brief 3D-Vector with primitive type float
 typedef Vector<float,3>  Vector3F;
+
+//! \brief 4D-Vector with primitive type double
+typedef Vector<double,4>  Vector4D;
+
+//! \brief 4D-Vector with primitive type float
+typedef Vector<float,4>  Vector4F;
+
+//! \brief 5D-Vector with primitive type double
+typedef Vector<double,5>  Vector5D;
+
+//! \brief 5D-Vector with primitive type float
+typedef Vector<float,5>  Vector5F;
+
+//! \brief 6D-Vector with primitive type double
+typedef Vector<double,6>  Vector6D;
+
+//! \brief 6D-Vector with primitive type float
+typedef Vector<float,6>  Vector6F;
 
 } // namespace eigen_impl
 
