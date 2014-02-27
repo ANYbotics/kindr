@@ -35,6 +35,7 @@
 #include "kindr/common/common.hpp"
 #include "kindr/common/assert_macros_eigen.hpp"
 #include "kindr/vector/VectorBase.hpp"
+#include "kindr/phys_quant/PhysicalType.hpp"
 
 namespace kindr {
 namespace vector {
@@ -46,16 +47,17 @@ namespace eigen_impl {
  *
  * This class implements a vector in n-dimensional-space.
  * More precisely an interface to store and access the coordinates of a vector of a point in n-dimensional-space is provided.
+ * \tparam PhysicalType_  Physical type of the vector.
  * \tparam PrimType_  Primitive type of the coordinates.
  * \tparam Dimension_  Dimension of the vector.
  * \ingroup vectors
  */
-template<typename PrimType_, int Dimension_>
-class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen::Matrix<PrimType_, Dimension_, 1> {
+template<enum phys_quant::PhysicalType PhysicalType_, typename PrimType_, int Dimension_>
+class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >, private Eigen::Matrix<PrimType_, Dimension_, 1> {
  private:
   /*! \brief The base type.
    */
-  typedef VectorBase<Vector<PrimType_, Dimension_> > Base;
+  typedef VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> > Base;
  public:
   /*! \brief The implementation type.
    *
@@ -77,11 +79,19 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
     : Implementation(Implementation::Zero()) {
   }
 
-  /*! \brief Constructor using other Vector.
-   *  \param other   Vector<PrimTypeOther_, Dimension_>
+  /*! \brief Constructor using other vector without physical type.
+   *  \param other   Vector<PhysicalType::None, OtherPrimType_, Dimension_>
    */
-  template<typename PrimTypeOther_>
-  Vector(const Vector<PrimTypeOther_, Dimension_>& other)
+  template<typename OtherPrimType_>
+  Vector(const Vector<phys_quant::PhysicalType::None, OtherPrimType_, Dimension_>& other)
+    : Implementation(other.toImplementation().template cast<PrimType_>()) {
+  }
+
+  /*! \brief Constructor using other vector of the same physical type.
+   *  \param other   Vector<PhysicalType_, OtherPrimType_, Dimension_>
+   */
+  template<typename OtherPrimType_, enum phys_quant::PhysicalType PhysicalTypeCopy_ = PhysicalType_> // using SFINAE because if the physical type is none, there would exist two similar constructors
+  Vector(const Vector<PhysicalType_, OtherPrimType_, Dimension_>& other, typename std::enable_if<PhysicalTypeCopy_ != phys_quant::PhysicalType::None>::type* = nullptr)
     : Implementation(other.toImplementation().template cast<PrimType_>()) {
   }
 
@@ -105,7 +115,7 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
   /*! \brief Sets all components of the vector to zero.
    * \returns reference
    */
-  Vector<PrimType_, Dimension_>& setZero() {
+  Vector<PhysicalType_, PrimType_, Dimension_>& setZero() {
     Implementation::setZero();
     return *this;
   }
@@ -122,24 +132,24 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
    * \returns the head of the vector (copy)
    */
   template<int DimensionOutput_>
-  Vector<PrimType_, DimensionOutput_> head() const {
-    return Vector<PrimType_, DimensionOutput_>(this->toImplementation().head(DimensionOutput_));
+  Vector<PhysicalType_, PrimType_, DimensionOutput_> head() const {
+    return Vector<PhysicalType_, PrimType_, DimensionOutput_>(this->toImplementation().head(DimensionOutput_));
   }
 
   /*!\brief Get the tail of the vector (copy)
    * \returns the tail of the vector (copy)
    */
   template<int DimensionOutput_>
-  Vector<PrimType_, DimensionOutput_> tail() const {
-    return Vector<PrimType_, DimensionOutput_>(this->toImplementation().tail(DimensionOutput_));
+  Vector<PhysicalType_, PrimType_, DimensionOutput_> tail() const {
+    return Vector<PhysicalType_, PrimType_, DimensionOutput_>(this->toImplementation().tail(DimensionOutput_));
   }
 
   /*!\brief Get a segment of the vector (copy)
    * \returns a segment of the vector (copy)
    */
   template<int Start_, int DimensionOutput_>
-  Vector<PrimType_, DimensionOutput_> segment() const {
-    return Vector<PrimType_, DimensionOutput_>(this->toImplementation().block<DimensionOutput_,1>(Start_,0));
+  Vector<PhysicalType_, PrimType_, DimensionOutput_> segment() const {
+    return Vector<PhysicalType_, PrimType_, DimensionOutput_>(this->toImplementation().block<DimensionOutput_,1>(Start_,0));
   }
 
   /*!\brief Get x-coordinate of the vector (copy)
@@ -208,16 +218,16 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
    * \param other   other vector
    * \returns sum
    */
-  Vector<PrimType_, Dimension_> operator+(const Vector<PrimType_, Dimension_>& other) const {
-    return Vector<PrimType_, Dimension_>(this->toImplementation() + other.toImplementation());
+  Vector<PhysicalType_, PrimType_, Dimension_> operator+(const Vector<PhysicalType_, PrimType_, Dimension_>& other) const {
+    return Vector<PhysicalType_, PrimType_, Dimension_>(this->toImplementation() + other.toImplementation());
   }
 
   /*! \brief Subtraction of two vectors.
    * \param other   other vector
    * \returns difference
    */
-  Vector<PrimType_, Dimension_> operator-(const Vector<PrimType_, Dimension_>& other) const {
-    return Vector<PrimType_, Dimension_>(this->toImplementation() - other.toImplementation());
+  Vector<PhysicalType_, PrimType_, Dimension_> operator-(const Vector<PhysicalType_, PrimType_, Dimension_>& other) const {
+    return Vector<PhysicalType_, PrimType_, Dimension_>(this->toImplementation() - other.toImplementation());
   }
 
   /*! \brief Multiplies vector with a scalar.
@@ -225,8 +235,8 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
    * \returns product
    */
   template<typename PrimTypeFactor_>
-  Vector<PrimType_, Dimension_> operator*(PrimTypeFactor_ factor) const {
-    return Vector<PrimType_, Dimension_>(this->toImplementation()*(PrimType_)factor);
+  Vector<PhysicalType_, PrimType_, Dimension_> operator*(PrimTypeFactor_ factor) const {
+    return Vector<PhysicalType_, PrimType_, Dimension_>(this->toImplementation()*(PrimType_)factor);
   }
 
   /*! \brief Divides vector by a scalar.
@@ -234,15 +244,15 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
    * \returns quotient
    */
   template<typename PrimTypeDivisor_>
-  Vector<PrimType_, Dimension_> operator/(PrimTypeDivisor_ divisor) const {
-    return Vector<PrimType_, Dimension_>(this->toImplementation()/(PrimType_)divisor);
+  Vector<PhysicalType_, PrimType_, Dimension_> operator/(PrimTypeDivisor_ divisor) const {
+    return Vector<PhysicalType_, PrimType_, Dimension_>(this->toImplementation()/(PrimType_)divisor);
   }
 
   /*! \brief Addition and assignment of two vectors.
    * \param other   other vector
    * \returns reference
    */
-  Vector<PrimType_, Dimension_>& operator+=(const Vector<PrimType_, Dimension_>& other) {
+  Vector<PhysicalType_, PrimType_, Dimension_>& operator+=(const Vector<PhysicalType_, PrimType_, Dimension_>& other) {
     this->toImplementation() += other.toImplementation();
     return *this;
   }
@@ -251,7 +261,7 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
    * \param other   other vector
    * \returns reference
    */
-  Vector<PrimType_, Dimension_>& operator-=(const Vector<PrimType_, Dimension_>& other) {
+  Vector<PhysicalType_, PrimType_, Dimension_>& operator-=(const Vector<PhysicalType_, PrimType_, Dimension_>& other) {
     this->toImplementation() -= other.toImplementation();
     return *this;
   }
@@ -261,7 +271,7 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
    * \returns reference
    */
   template<typename PrimTypeFactor_>
-  Vector<PrimType_, Dimension_>& operator*=(PrimTypeFactor_ factor) {
+  Vector<PhysicalType_, PrimType_, Dimension_>& operator*=(PrimTypeFactor_ factor) {
     this->toImplementation() *= (PrimType_)factor;
     return *this;
   }
@@ -271,7 +281,7 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
    * \returns reference
    */
   template<typename PrimTypeDivisor_>
-  Vector<PrimType_, Dimension_>& operator/=(PrimTypeDivisor_ divisor) {
+  Vector<PhysicalType_, PrimType_, Dimension_>& operator/=(PrimTypeDivisor_ divisor) {
     this->toImplementation() /= (PrimType_)divisor;
     return *this;
   }
@@ -280,7 +290,7 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
    * \param other   other vector
    * \returns true if equal
    */
-  bool operator==(const Vector<PrimType_, Dimension_>& other) const {
+  bool operator==(const Vector<PhysicalType_, PrimType_, Dimension_>& other) const {
     return this->toImplementation() == other.toImplementation();
   }
 
@@ -288,7 +298,7 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
    * \param other   other vector
    * \returns true if unequal
    */
-  bool operator!=(const Vector<PrimType_, Dimension_>& other) const {
+  bool operator!=(const Vector<PhysicalType_, PrimType_, Dimension_>& other) const {
     return this->toImplementation() != other.toImplementation();
   }
 
@@ -297,7 +307,7 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
    * \param tol   tolerance
    * \returns true if similar within tolerance
    */
-  bool isSimilarTo(const Vector<PrimType_, Dimension_>& other, Scalar tol) const {
+  bool isSimilarTo(const Vector<PhysicalType_, PrimType_, Dimension_>& other, Scalar tol) const {
     if((*this - other).abs().max() < tol) {
       return true;
     } else {
@@ -315,7 +325,7 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
   /*! \brief Normalizes the vector.
    *  \returns reference.
    */
-  Vector<PrimType_, Dimension_>& normalize() {
+  Vector<PhysicalType_, PrimType_, Dimension_>& normalize() {
     this->toImplementation().normalize();
     return *this;
   }
@@ -323,15 +333,15 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
   /*! \brief Get a normalized version of the vector.
    *  \returns normalized vector.
    */
-  Vector<PrimType_, Dimension_> normalized() const {
-    return Vector<PrimType_, Dimension_>(this->toImplementation().normalized());
+  Vector<PhysicalType_, PrimType_, Dimension_> normalized() const {
+    return Vector<PhysicalType_, PrimType_, Dimension_>(this->toImplementation().normalized());
   }
 
   /*! \brief Dot product with other vector.
    *  \param other   other vector
    *  \returns dot product.
    */
-  Scalar dot(const Vector<PrimType_, Dimension_>& other) const {
+  Scalar dot(const Vector<PhysicalType_, PrimType_, Dimension_>& other) const {
     return this->toImplementation().dot(other.toImplementation());
   }
 
@@ -339,32 +349,34 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
    *  \param other   other vector
    *  \returns cross product.
    */
-  template<int DimensionCopy_ = Dimension_>
-  Vector<PrimType_, Dimension_> cross(const Vector<PrimType_, Dimension_>& other, typename std::enable_if<DimensionCopy_ == 3>::type* = nullptr) const {
-    return Vector<PrimType_, Dimension_>(this->toImplementation().cross(other.toImplementation()));
+  template<enum phys_quant::PhysicalType PhysicalTypeOther_, int DimensionCopy_ = Dimension_>
+  Vector<PhysicalType_, PrimType_, Dimension_> cross(const Vector<PhysicalTypeOther_, PrimType_, Dimension_>& other, typename std::enable_if<DimensionCopy_ == 3>::type* = nullptr) const {
+    return Vector<PhysicalType_, PrimType_, Dimension_>(this->toImplementation().cross(other.toImplementation()));
   }
 
   /*! \brief Elementwise product with other vector.
    *  \param other   other vector
    *  \returns elementwise product.
    */
-  Vector<PrimType_, Dimension_> elementwiseMultiplication(const Vector<PrimType_, Dimension_>& other) const {
-    return Vector<PrimType_, Dimension_>(this->toImplementation().cwiseProduct(other.toImplementation()));
+  template<enum phys_quant::PhysicalType PhysicalTypeOther_>
+  Vector<PhysicalType_, PrimType_, Dimension_> elementwiseMultiplication(const Vector<PhysicalTypeOther_, PrimType_, Dimension_>& other) const {
+    return Vector<PhysicalType_, PrimType_, Dimension_>(this->toImplementation().cwiseProduct(other.toImplementation()));
   }
 
   /*! \brief Elementwise product with other vector.
    *  \param other   other vector
    *  \returns elementwise product.
    */
-  Vector<PrimType_, Dimension_> elementwiseDivision(const Vector<PrimType_, Dimension_>& other) const {
-    return Vector<PrimType_, Dimension_>(this->toImplementation().cwiseQuotient(other.toImplementation()));
+  template<enum phys_quant::PhysicalType PhysicalTypeOther_>
+  Vector<PhysicalType_, PrimType_, Dimension_> elementwiseDivision(const Vector<PhysicalTypeOther_, PrimType_, Dimension_>& other) const {
+    return Vector<PhysicalType_, PrimType_, Dimension_>(this->toImplementation().cwiseQuotient(other.toImplementation()));
   }
 
   /*! \brief Absolute components.
    *  \returns absolute components.
    */
-  Vector<PrimType_, Dimension_> abs() const {
-    return Vector<PrimType_, Dimension_>(this->toImplementation().cwiseAbs());
+  Vector<PhysicalType_, PrimType_, Dimension_> abs() const {
+    return Vector<PhysicalType_, PrimType_, Dimension_>(this->toImplementation().cwiseAbs());
   }
 
   /*! \brief Maximum of the components.
@@ -398,7 +410,7 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
   /*! \brief Used for printing the object with std::cout.
    *  \returns std::stream object
    */
-  friend std::ostream& operator << (std::ostream& out, const Vector<PrimType_, Dimension_>& vector) {
+  friend std::ostream& operator << (std::ostream& out, const Vector<PhysicalType_, PrimType_, Dimension_>& vector) {
     out << vector.transpose();
     return out;
   }
@@ -409,47 +421,72 @@ class Vector : public VectorBase<Vector<PrimType_, Dimension_> >, private Eigen:
  * \param factor   factor
  * \returns product
  */
-template<typename PrimTypeFactor_, typename PrimType_, int Dimension_>
-Vector<PrimType_, Dimension_> operator*(PrimTypeFactor_ factor, const Vector<PrimType_, Dimension_>& vector) {
+template<enum phys_quant::PhysicalType PhysicalType_, typename PrimTypeFactor_, typename PrimType_, int Dimension_>
+Vector<PhysicalType_, PrimType_, Dimension_> operator*(PrimTypeFactor_ factor, const Vector<PhysicalType_, PrimType_, Dimension_>& vector) {
   return vector*(PrimType_)factor;
 }
 
 
-//! \brief 1D-Vector with primitive type double
-typedef Vector<double,1>  Vector1D;
-
-//! \brief 1D-Vector with primitive type float
-typedef Vector<float,1>  Vector1F;
-
-//! \brief 2D-Vector with primitive type double
-typedef Vector<double,2>  Vector2D;
-
-//! \brief 2D-Vector with primitive type float
-typedef Vector<float,2>  Vector2F;
-
 //! \brief 3D-Vector with primitive type double
-typedef Vector<double,3>  Vector3D;
-
+typedef Vector<phys_quant::PhysicalType::None, double, 3> Vector3D;
 //! \brief 3D-Vector with primitive type float
-typedef Vector<float,3>  Vector3F;
+typedef Vector<phys_quant::PhysicalType::None, float,  3> Vector3F;
 
-//! \brief 4D-Vector with primitive type double
-typedef Vector<double,4>  Vector4D;
 
-//! \brief 4D-Vector with primitive type float
-typedef Vector<float,4>  Vector4F;
 
-//! \brief 5D-Vector with primitive type double
-typedef Vector<double,5>  Vector5D;
+//! \brief 3D-Length-Vector with primitive type double
+typedef Vector<phys_quant::PhysicalType::Length, double, 3> Length3D;
+//! \brief 3D-Length-Vector with primitive type float
+typedef Vector<phys_quant::PhysicalType::Length, float,  3> Length3F;
 
-//! \brief 5D-Vector with primitive type float
-typedef Vector<float,5>  Vector5F;
+//! \brief 3D-Velocity-Vector with primitive type double
+typedef Vector<phys_quant::PhysicalType::Velocity, double, 3> Velocity3D;
+//! \brief 3D-Velocity-Vector with primitive type float
+typedef Vector<phys_quant::PhysicalType::Velocity, float,  3> Velocity3F;
 
-//! \brief 6D-Vector with primitive type double
-typedef Vector<double,6>  Vector6D;
+//! \brief 3D-Acceleration-Vector with primitive type double
+typedef Vector<phys_quant::PhysicalType::Acceleration, double, 3> Acceleration3D;
+//! \brief 3D-Acceleration-Vector with primitive type float
+typedef Vector<phys_quant::PhysicalType::Acceleration, float,  3> Acceleration3F;
 
-//! \brief 6D-Vector with primitive type float
-typedef Vector<float,6>  Vector6F;
+//! \brief 3D-Force-Vector with primitive type double
+typedef Vector<phys_quant::PhysicalType::Force, double, 3> Force3D;
+//! \brief 3D-Force-Vector with primitive type float
+typedef Vector<phys_quant::PhysicalType::Force, float,  3> Force3F;
+
+//! \brief 3D-Momentum-Vector with primitive type double
+typedef Vector<phys_quant::PhysicalType::Momentum, double, 3> Momentum3D;
+//! \brief 3D-Momentum-Vector with primitive type float
+typedef Vector<phys_quant::PhysicalType::Momentum, float,  3> Momentum3F;
+
+
+
+//! \brief 3D-Angle-Vector with primitive type double
+typedef Vector<phys_quant::PhysicalType::Angle, double, 3> Angle3D;
+//! \brief 3D-Angle-Vector with primitive type float
+typedef Vector<phys_quant::PhysicalType::Angle, float,  3> Angle3F;
+
+//! \brief 3D-AngularVelocity-Vector with primitive type double
+typedef Vector<phys_quant::PhysicalType::AngularVelocity, double, 3> AngularVelocity3D;
+//! \brief 3D-AngularVelocity-Vector with primitive type float
+typedef Vector<phys_quant::PhysicalType::AngularVelocity, float,  3> AngularVelocity3F;
+
+//! \brief 3D-AngularAcceleration-Vector with primitive type double
+typedef Vector<phys_quant::PhysicalType::AngularAcceleration, double, 3> AngularAcceleration3D;
+//! \brief 3D-AngularAcceleration-Vector with primitive type float
+typedef Vector<phys_quant::PhysicalType::AngularAcceleration, float,  3> AngularAcceleration3F;
+
+//! \brief 3D-Torque-Vector with primitive type double
+typedef Vector<phys_quant::PhysicalType::Torque, double, 3> Torque3D;
+//! \brief 3D-Torque-Vector with primitive type float
+typedef Vector<phys_quant::PhysicalType::Torque, float,  3> Torque3F;
+
+//! \brief 3D-AngularMomentum-Vector with primitive type double
+typedef Vector<phys_quant::PhysicalType::AngularMomentum, double, 3> AngularMomentum3D;
+//! \brief 3D-AngularMomentum-Vector with primitive type float
+typedef Vector<phys_quant::PhysicalType::AngularMomentum, float,  3> AngularMomentum3F;
+
+
 
 } // namespace eigen_impl
 
@@ -459,16 +496,16 @@ namespace internal {
 
 /*! \brief Gets the primitive type of the vector
  */
-template<typename PrimType_, int Dimension_>
-class get_scalar<eigen_impl::Vector<PrimType_, Dimension_>> {
+template<enum phys_quant::PhysicalType PhysicalType_, typename PrimType_, int Dimension_>
+class get_scalar<eigen_impl::Vector<PhysicalType_, PrimType_, Dimension_>> {
  public:
   typedef PrimType_ Scalar;
 };
 
 /*! \brief Gets the dimension of the vector
  */
-template<typename PrimType_, int Dimension_>
-class get_dimension<eigen_impl::Vector<PrimType_, Dimension_>> {
+template<enum phys_quant::PhysicalType PhysicalType_, typename PrimType_, int Dimension_>
+class get_dimension<eigen_impl::Vector<PhysicalType_, PrimType_, Dimension_>> {
  public:
   static constexpr int Dimension = Dimension_;
 };

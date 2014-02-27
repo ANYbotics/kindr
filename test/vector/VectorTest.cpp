@@ -232,8 +232,8 @@ struct VectorTest: public ::testing::Test {
 
 
 typedef ::testing::Types<
-    vector::Vector<double, 5>,
-    vector::Vector<float, 5>
+    vector::Vector<kindr::phys_quant::PhysicalType::None, double, 5>,
+    vector::Vector<kindr::phys_quant::PhysicalType::None, float,  5>
 > Types5;
 
 
