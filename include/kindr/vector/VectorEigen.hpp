@@ -426,65 +426,97 @@ Vector<PhysicalType_, PrimType_, Dimension_> operator*(PrimTypeFactor_ factor, c
   return vector*(PrimType_)factor;
 }
 
+//! \brief Unitless-Vector
+template <typename PrimType_, int Dimension_>
+using VectorUnitless = Vector<phys_quant::PhysicalType::None, PrimType_, Dimension_>;
+//! \brief 3D-Unitless-Vector with primitive type double
+typedef VectorUnitless<double, 3> Vector3D;
+//! \brief 3D-Unitless-Vector with primitive type float
+typedef VectorUnitless<float,  3> Vector3F;
 
-//! \brief 3D-Vector with primitive type double
-typedef Vector<phys_quant::PhysicalType::None, double, 3> Vector3D;
-//! \brief 3D-Vector with primitive type float
-typedef Vector<phys_quant::PhysicalType::None, float,  3> Vector3F;
 
 
-
+//! \brief Length-Vector
+template <typename PrimType_, int Dimension_>
+using Length = Vector<phys_quant::PhysicalType::Length, PrimType_, Dimension_>;
 //! \brief 3D-Length-Vector with primitive type double
-typedef Vector<phys_quant::PhysicalType::Length, double, 3> Length3D;
+typedef Length<double, 3> Length3D;
 //! \brief 3D-Length-Vector with primitive type float
-typedef Vector<phys_quant::PhysicalType::Length, float,  3> Length3F;
+typedef Length<float,  3> Length3F;
 
+//! \brief Velocity-Vector
+template <typename PrimType_, int Dimension_>
+using Velocity = Vector<phys_quant::PhysicalType::Velocity, PrimType_, Dimension_>;
 //! \brief 3D-Velocity-Vector with primitive type double
-typedef Vector<phys_quant::PhysicalType::Velocity, double, 3> Velocity3D;
+typedef Velocity<double, 3> Velocity3D;
 //! \brief 3D-Velocity-Vector with primitive type float
-typedef Vector<phys_quant::PhysicalType::Velocity, float,  3> Velocity3F;
+typedef Velocity<float,  3> Velocity3F;
 
+//! \brief Acceleration-Vector
+template <typename PrimType_, int Dimension_>
+using Acceleration = Vector<phys_quant::PhysicalType::Acceleration, PrimType_, Dimension_>;
 //! \brief 3D-Acceleration-Vector with primitive type double
-typedef Vector<phys_quant::PhysicalType::Acceleration, double, 3> Acceleration3D;
+typedef Acceleration<double, 3> Acceleration3D;
 //! \brief 3D-Acceleration-Vector with primitive type float
-typedef Vector<phys_quant::PhysicalType::Acceleration, float,  3> Acceleration3F;
+typedef Acceleration<float,  3> Acceleration3F;
 
+//! \brief Force-Vector
+template <typename PrimType_, int Dimension_>
+using Force = Vector<phys_quant::PhysicalType::Force, PrimType_, Dimension_>;
 //! \brief 3D-Force-Vector with primitive type double
-typedef Vector<phys_quant::PhysicalType::Force, double, 3> Force3D;
+typedef Force<double, 3> Force3D;
 //! \brief 3D-Force-Vector with primitive type float
-typedef Vector<phys_quant::PhysicalType::Force, float,  3> Force3F;
+typedef Force<float,  3> Force3F;
 
+//! \brief Momentum-Vector
+template <typename PrimType_, int Dimension_>
+using Momentum = Vector<phys_quant::PhysicalType::Momentum, PrimType_, Dimension_>;
 //! \brief 3D-Momentum-Vector with primitive type double
-typedef Vector<phys_quant::PhysicalType::Momentum, double, 3> Momentum3D;
+typedef Momentum<double, 3> Momentum3D;
 //! \brief 3D-Momentum-Vector with primitive type float
-typedef Vector<phys_quant::PhysicalType::Momentum, float,  3> Momentum3F;
+typedef Momentum<float,  3> Momentum3F;
 
 
 
+//! \brief Angle-Vector
+template <typename PrimType_, int Dimension_>
+using Angle = Vector<phys_quant::PhysicalType::Angle, PrimType_, Dimension_>;
 //! \brief 3D-Angle-Vector with primitive type double
-typedef Vector<phys_quant::PhysicalType::Angle, double, 3> Angle3D;
+typedef Angle<double, 3> Angle3D;
 //! \brief 3D-Angle-Vector with primitive type float
-typedef Vector<phys_quant::PhysicalType::Angle, float,  3> Angle3F;
+typedef Angle<float,  3> Angle3F;
 
+//! \brief AngularVelocity-Vector
+template <typename PrimType_, int Dimension_>
+using AngularVelocity = Vector<phys_quant::PhysicalType::AngularVelocity, PrimType_, Dimension_>;
 //! \brief 3D-AngularVelocity-Vector with primitive type double
-typedef Vector<phys_quant::PhysicalType::AngularVelocity, double, 3> AngularVelocity3D;
+typedef AngularVelocity<double, 3> AngularVelocity3D;
 //! \brief 3D-AngularVelocity-Vector with primitive type float
-typedef Vector<phys_quant::PhysicalType::AngularVelocity, float,  3> AngularVelocity3F;
+typedef AngularVelocity<float,  3> AngularVelocity3F;
 
+//! \brief AngularAcceleration-Vector
+template <typename PrimType_, int Dimension_>
+using AngularAcceleration = Vector<phys_quant::PhysicalType::AngularAcceleration, PrimType_, Dimension_>;
 //! \brief 3D-AngularAcceleration-Vector with primitive type double
-typedef Vector<phys_quant::PhysicalType::AngularAcceleration, double, 3> AngularAcceleration3D;
+typedef AngularAcceleration<double, 3> AngularAcceleration3D;
 //! \brief 3D-AngularAcceleration-Vector with primitive type float
-typedef Vector<phys_quant::PhysicalType::AngularAcceleration, float,  3> AngularAcceleration3F;
+typedef AngularAcceleration<float,  3> AngularAcceleration3F;
 
+//! \brief Torque-Vector
+template <typename PrimType_, int Dimension_>
+using Torque = Vector<phys_quant::PhysicalType::Torque, PrimType_, Dimension_>;
 //! \brief 3D-Torque-Vector with primitive type double
-typedef Vector<phys_quant::PhysicalType::Torque, double, 3> Torque3D;
+typedef Torque<double, 3> Torque3D;
 //! \brief 3D-Torque-Vector with primitive type float
-typedef Vector<phys_quant::PhysicalType::Torque, float,  3> Torque3F;
+typedef Torque<float,  3> Torque3F;
 
+//! \brief AngularMomentum-Vector
+template <typename PrimType_, int Dimension_>
+using AngularMomentum = Vector<phys_quant::PhysicalType::AngularMomentum, PrimType_, Dimension_>;
 //! \brief 3D-AngularMomentum-Vector with primitive type double
-typedef Vector<phys_quant::PhysicalType::AngularMomentum, double, 3> AngularMomentum3D;
+typedef AngularMomentum<double, 3> AngularMomentum3D;
 //! \brief 3D-AngularMomentum-Vector with primitive type float
-typedef Vector<phys_quant::PhysicalType::AngularMomentum, float,  3> AngularMomentum3F;
+typedef AngularMomentum<float,  3> AngularMomentum3F;
 
 
 
