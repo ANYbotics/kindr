@@ -140,7 +140,7 @@ class EulerAnglesXyz : public EulerAnglesXyzBase<EulerAnglesXyz<PrimType_, Usage
    *  \returns the inverse of the rotation
    */
   EulerAnglesXyz inverted() const {
-    return EulerAnglesXyz(getInverseRpy<PrimType_, PrimType_>(this->toImplementation()));
+    return EulerAnglesXyz(eigen_internal::getInverseRpy<PrimType_, PrimType_>(this->toImplementation()));
   }
 
   /*! \brief Inverts the rotation.
@@ -429,7 +429,7 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::EulerAnglesXyz<DestPrimType_, Usage_>, eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::EulerAnglesXyz<DestPrimType_, Usage_> convert(const eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>& q) {
-    return eigen_impl::EulerAnglesXyz<DestPrimType_, Usage_>(eigen_impl::getRpyFromQuaternion<SourcePrimType_, DestPrimType_>(q.toImplementation()));
+    return eigen_impl::EulerAnglesXyz<DestPrimType_, Usage_>(eigen_impl::eigen_internal::getRpyFromQuaternion<SourcePrimType_, DestPrimType_>(q.toImplementation()));
   }
 };
 
@@ -437,7 +437,7 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::EulerAnglesXyz<DestPrimType_, Usage_>, eigen_impl::RotationMatrix<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::EulerAnglesXyz<DestPrimType_, Usage_> convert(const eigen_impl::RotationMatrix<SourcePrimType_, Usage_>& R) {
-    return eigen_impl::EulerAnglesXyz<DestPrimType_, Usage_>(eigen_impl::getRpyFromRotationMatrix<SourcePrimType_, DestPrimType_>(R.toImplementation()));
+    return eigen_impl::EulerAnglesXyz<DestPrimType_, Usage_>(eigen_impl::eigen_internal::getRpyFromRotationMatrix<SourcePrimType_, DestPrimType_>(R.toImplementation()));
   }
 };
 
@@ -453,7 +453,7 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::EulerAnglesXyz<DestPrimType_, Usage_>, eigen_impl::EulerAnglesZyx<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::EulerAnglesXyz<DestPrimType_, Usage_> convert(const eigen_impl::EulerAnglesZyx<SourcePrimType_, Usage_>& zyx) {
-    return eigen_impl::EulerAnglesXyz<DestPrimType_, Usage_>(eigen_impl::getRpyFromYpr<SourcePrimType_, DestPrimType_>(zyx.toImplementation()));
+    return eigen_impl::EulerAnglesXyz<DestPrimType_, Usage_>(eigen_impl::eigen_internal::getRpyFromYpr<SourcePrimType_, DestPrimType_>(zyx.toImplementation()));
   }
 };
 

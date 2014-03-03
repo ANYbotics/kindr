@@ -341,7 +341,7 @@ class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_
  public:
   inline static eigen_impl::RotationMatrix<DestPrimType_, Usage_> convert(const eigen_impl::AngleAxis<SourcePrimType_, Usage_>& aa) {
     eigen_impl::RotationMatrix<DestPrimType_, Usage_> matrix;
-    matrix.toImplementation() = eigen_impl::getRotationMatrixFromAngleAxis<SourcePrimType_, DestPrimType_>(aa.toImplementation());
+    matrix.toImplementation() = eigen_impl::eigen_internal::getRotationMatrixFromAngleAxis<SourcePrimType_, DestPrimType_>(aa.toImplementation());
     return matrix;
   }
 };
@@ -405,7 +405,7 @@ class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_
  public:
   inline static eigen_impl::RotationMatrix<DestPrimType_, Usage_> convert(const eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>& q) {
     eigen_impl::RotationMatrix<DestPrimType_, Usage_> matrix;
-    matrix.toImplementation() = eigen_impl::getRotationMatrixFromQuaternion<SourcePrimType_, DestPrimType_>(q.toImplementation());
+    matrix.toImplementation() = eigen_impl::eigen_internal::getRotationMatrixFromQuaternion<SourcePrimType_, DestPrimType_>(q.toImplementation());
     return matrix;
   }
 };
@@ -425,7 +425,7 @@ class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_
  public:
   inline static eigen_impl::RotationMatrix<DestPrimType_, Usage_> convert(const eigen_impl::EulerAnglesXyz<SourcePrimType_, Usage_>& xyz) {
     eigen_impl::RotationMatrix<DestPrimType_, Usage_> matrix;
-    matrix.toImplementation() = eigen_impl::getRotationMatrixFromRpy<SourcePrimType_, DestPrimType_>(xyz.toImplementation());
+    matrix.toImplementation() = eigen_impl::eigen_internal::getRotationMatrixFromRpy<SourcePrimType_, DestPrimType_>(xyz.toImplementation());
     return matrix;
   }
 };
@@ -435,7 +435,7 @@ class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_
  public:
   inline static eigen_impl::RotationMatrix<DestPrimType_, Usage_> convert(const eigen_impl::EulerAnglesZyx<SourcePrimType_, Usage_>& zyx) {
     eigen_impl::RotationMatrix<DestPrimType_, Usage_> matrix;
-    matrix.toImplementation() = eigen_impl::getRotationMatrixFromYpr<SourcePrimType_, DestPrimType_>(zyx.toImplementation());
+    matrix.toImplementation() = eigen_impl::eigen_internal::getRotationMatrixFromYpr<SourcePrimType_, DestPrimType_>(zyx.toImplementation());
     return matrix;
   }
 };
