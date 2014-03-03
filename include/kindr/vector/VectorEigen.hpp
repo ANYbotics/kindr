@@ -368,9 +368,9 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
     return Vector<PhysicalType_, PrimType_, Dimension_>(this->toImplementation().cwiseProduct(other.toImplementation()));
   }
 
-  /*! \brief Elementwise product with other vector.
+  /*! \brief Elementwise division by other vector.
    *  \param other   other vector
-   *  \returns elementwise product.
+   *  \returns elementwise quotient.
    */
   template<enum phys_quant::PhysicalType PhysicalTypeOther_>
   typename internal::DivisionReturnTypeTrait<Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeOther_, PrimType_, Dimension_>>::ReturnType
