@@ -156,7 +156,7 @@ class LinearVelocityBase : public PositionDiffBase<Derived_> {
 
   /*! \returns the x-coordinate of the 3D linear velocity
    */
-  inline const Scalar& x() const;
+  inline Scalar x() const;
 
   /*! \returns the x-coordinate of the 3D linear velocity
    */
@@ -164,7 +164,7 @@ class LinearVelocityBase : public PositionDiffBase<Derived_> {
 
   /*! \returns the y-coordinate of the 3D linear velocity
    */
-  inline const Scalar& y() const;
+  inline Scalar y() const;
 
   /*! \returns the y-coordinate of the 3D linear velocity
    */
@@ -172,7 +172,7 @@ class LinearVelocityBase : public PositionDiffBase<Derived_> {
 
   /*! \returns the z-coordinate of the 3D-position
    */
-  inline Scalar& z() const;
+  inline Scalar z() const;
 
   /*! \returns the z-coordinate of the 3D linear velocity
    */
