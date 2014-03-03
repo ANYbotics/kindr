@@ -42,6 +42,8 @@ namespace vector {
 //! Implementation of rotations based on the C++ Eigen library
 namespace eigen_impl {
 
+
+
 /*! \class Vector
  * \brief Vector in n-dimensional-space.
  *
@@ -350,7 +352,8 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
    *  \returns cross product.
    */
   template<enum phys_quant::PhysicalType PhysicalTypeOther_, int DimensionCopy_ = Dimension_>
-  Vector<PhysicalType_, PrimType_, Dimension_> cross(const Vector<PhysicalTypeOther_, PrimType_, Dimension_>& other, typename std::enable_if<DimensionCopy_ == 3>::type* = nullptr) const {
+  typename internal::MultiplicationReturnTypeTrait<Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeOther_, PrimType_, Dimension_>>::ReturnType
+  cross(const Vector<PhysicalTypeOther_, PrimType_, Dimension_>& other, typename std::enable_if<DimensionCopy_ == 3>::type* = nullptr) const {
     return Vector<PhysicalType_, PrimType_, Dimension_>(this->toImplementation().cross(other.toImplementation()));
   }
 
@@ -359,7 +362,8 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
    *  \returns elementwise product.
    */
   template<enum phys_quant::PhysicalType PhysicalTypeOther_>
-  Vector<PhysicalType_, PrimType_, Dimension_> elementwiseMultiplication(const Vector<PhysicalTypeOther_, PrimType_, Dimension_>& other) const {
+  typename internal::MultiplicationReturnTypeTrait<Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeOther_, PrimType_, Dimension_>>::ReturnType
+  elementwiseMultiplication(const Vector<PhysicalTypeOther_, PrimType_, Dimension_>& other) const {
     return Vector<PhysicalType_, PrimType_, Dimension_>(this->toImplementation().cwiseProduct(other.toImplementation()));
   }
 
@@ -368,7 +372,8 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
    *  \returns elementwise product.
    */
   template<enum phys_quant::PhysicalType PhysicalTypeOther_>
-  Vector<PhysicalType_, PrimType_, Dimension_> elementwiseDivision(const Vector<PhysicalTypeOther_, PrimType_, Dimension_>& other) const {
+  typename internal::DivisionReturnTypeTrait<Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeOther_, PrimType_, Dimension_>>::ReturnType
+  elementwiseDivision(const Vector<PhysicalTypeOther_, PrimType_, Dimension_>& other) const {
     return Vector<PhysicalType_, PrimType_, Dimension_>(this->toImplementation().cwiseQuotient(other.toImplementation()));
   }
 
@@ -540,6 +545,18 @@ template<enum phys_quant::PhysicalType PhysicalType_, typename PrimType_, int Di
 class get_dimension<eigen_impl::Vector<PhysicalType_, PrimType_, Dimension_>> {
  public:
   static constexpr int Dimension = Dimension_;
+};
+
+template<enum phys_quant::PhysicalType PhysicalType1_, enum phys_quant::PhysicalType PhysicalType2_, typename PrimType_, int Dimension_>
+class MultiplicationReturnTypeTrait<eigen_impl::Vector<PhysicalType1_, PrimType_, Dimension_>, eigen_impl::Vector<PhysicalType2_, PrimType_, Dimension_>>
+{
+  typedef eigen_impl::Vector<phys_quant::PhysicalType::None, PrimType_, Dimension_> ReturnType;
+};
+
+template<enum phys_quant::PhysicalType PhysicalType1_, enum phys_quant::PhysicalType PhysicalType2_, typename PrimType_, int Dimension_>
+class DivisionReturnTypeTrait<eigen_impl::Vector<PhysicalType1_, PrimType_, Dimension_>, eigen_impl::Vector<PhysicalType2_, PrimType_, Dimension_>>
+{
+  typedef eigen_impl::Vector<phys_quant::PhysicalType::None, PrimType_, Dimension_> ReturnType;
 };
 
 } // namespace internal

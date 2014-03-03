@@ -80,6 +80,18 @@ class get_dimension {
 //  typedef PrimType Scalar;
 };
 
+template<typename factor1, typename factor2>
+class MultiplicationReturnTypeTrait
+{
+ public:
+};
+
+template<typename dividend, typename divisor>
+class DivisionReturnTypeTrait
+{
+ public:
+};
+
 } // namespace internal
 
 /*! \class VectorBase
@@ -265,22 +277,22 @@ class VectorBase {
   /*! \brief Cross product with other vector.
    *  \returns cross product.
    */
-  template<typename OtherDerived_>
-  Derived_ cross(const VectorBase<OtherDerived_>& other) const;
+  template<typename ReturnDerived_, typename OtherDerived_>
+  ReturnDerived_ cross(const VectorBase<OtherDerived_>& other) const;
 
   /*! \brief Elementwise product with other vector.
    *  \param other   other vector
    *  \returns elementwise product.
    */
-  template<typename OtherDerived_>
-  Derived_ elementwiseMultiplication(const VectorBase<OtherDerived_>& other) const;
+  template<typename ReturnDerived_, typename OtherDerived_>
+  ReturnDerived_ elementwiseMultiplication(const VectorBase<OtherDerived_>& other) const;
 
   /*! \brief Elementwise product with other vector.
    *  \param other   other vector
    *  \returns elementwise product.
    */
-  template<typename OtherDerived_>
-  Derived_ elementwiseDivision(const VectorBase<OtherDerived_>& other) const;
+  template<typename ReturnDerived_, typename OtherDerived_>
+  ReturnDerived_ elementwiseDivision(const VectorBase<OtherDerived_>& other) const;
 
   /*! \brief Absolute components.
    *  \returns absolute components.
