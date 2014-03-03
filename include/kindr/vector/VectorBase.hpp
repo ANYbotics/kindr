@@ -265,19 +265,22 @@ class VectorBase {
   /*! \brief Cross product with other vector.
    *  \returns cross product.
    */
-  Derived_ cross(const VectorBase<Derived_>& other) const;
+  template<typename OtherDerived_>
+  Derived_ cross(const VectorBase<OtherDerived_>& other) const;
 
   /*! \brief Elementwise product with other vector.
    *  \param other   other vector
    *  \returns elementwise product.
    */
-  Derived_ elementwiseMultiplication(const VectorBase<Derived_>& other) const;
+  template<typename OtherDerived_>
+  Derived_ elementwiseMultiplication(const VectorBase<OtherDerived_>& other) const;
 
   /*! \brief Elementwise product with other vector.
    *  \param other   other vector
    *  \returns elementwise product.
    */
-  Derived_ elementwiseDivision(const VectorBase<Derived_>& other) const;
+  template<typename OtherDerived_>
+  Derived_ elementwiseDivision(const VectorBase<OtherDerived_>& other) const;
 
   /*! \brief Absolute components.
    *  \returns absolute components.
