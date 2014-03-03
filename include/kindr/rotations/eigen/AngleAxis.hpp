@@ -386,7 +386,7 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::AngleAxis<DestPrimType_, Usage_>, eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::AngleAxis<DestPrimType_, Usage_> convert(const eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>& q) {
-    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::getAngleAxisFromQuaternion<SourcePrimType_, DestPrimType_>(q.toImplementation()));
+    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::eigen_internal::getAngleAxisFromQuaternion<SourcePrimType_, DestPrimType_>(q.toImplementation()));
   }
 };
 
@@ -395,7 +395,7 @@ class ConversionTraits<eigen_impl::AngleAxis<DestPrimType_, Usage_>, eigen_impl:
  public:
   inline static eigen_impl::AngleAxis<DestPrimType_, Usage_> convert(const eigen_impl::RotationMatrix<SourcePrimType_, Usage_>& rotationMatrix) {
 //    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()));
-    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()));
+    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::eigen_internal::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()));
   }
 };
 
@@ -403,7 +403,7 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::AngleAxis<DestPrimType_, Usage_>, eigen_impl::EulerAnglesXyz<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::AngleAxis<DestPrimType_, Usage_> convert(const eigen_impl::EulerAnglesXyz<SourcePrimType_, Usage_>& xyz) {
-    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::getAngleAxisFromRpy<SourcePrimType_, DestPrimType_>(xyz.toImplementation()));
+    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::eigen_internal::getAngleAxisFromRpy<SourcePrimType_, DestPrimType_>(xyz.toImplementation()));
   }
 };
 
@@ -411,7 +411,7 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::AngleAxis<DestPrimType_, Usage_>, eigen_impl::EulerAnglesZyx<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::AngleAxis<DestPrimType_, Usage_> convert(const eigen_impl::EulerAnglesZyx<SourcePrimType_, Usage_>& zyx) {
-    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::getAngleAxisFromYpr<SourcePrimType_, DestPrimType_>(zyx.toImplementation()));
+    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::eigen_internal::getAngleAxisFromYpr<SourcePrimType_, DestPrimType_>(zyx.toImplementation()));
   }
 };
 
