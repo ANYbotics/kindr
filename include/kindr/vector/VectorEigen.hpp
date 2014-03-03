@@ -343,7 +343,8 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
    *  \param other   other vector
    *  \returns dot product.
    */
-  Scalar dot(const Vector<PhysicalType_, PrimType_, Dimension_>& other) const {
+  template<enum phys_quant::PhysicalType PhysicalTypeOther_>
+  Scalar dot(const Vector<PhysicalTypeOther_, PrimType_, Dimension_>& other) const {
     return this->toImplementation().dot(other.toImplementation());
   }
 
