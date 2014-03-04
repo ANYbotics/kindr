@@ -25,12 +25,14 @@ enum class PhysicalType {
   Length,
   Velocity,
   Acceleration,
+  Jerk,
   Force,
   Momentum,
 
   Angle,
   AngularVelocity,
   AngularAcceleration,
+  AngularJerk,
   Torque,
   AngularMomentum
 };

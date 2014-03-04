@@ -114,6 +114,13 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
     : Implementation(x,y,z) {
   }
 
+  /*! \brief Get zero element.
+   * \returns zero element
+   */
+  static Vector<PhysicalType_, PrimType_, Dimension_> Zero() {
+    return Vector<PhysicalType_, PrimType_, Dimension_>(Implementation::Zero());
+  }
+
   /*! \brief Sets all components of the vector to zero.
    * \returns reference
    */
@@ -548,12 +555,16 @@ class get_dimension<eigen_impl::Vector<PhysicalType_, PrimType_, Dimension_>> {
   static constexpr int Dimension = Dimension_;
 };
 
+/*! \brief Gets the return type of a multiplication
+ */
 template<enum phys_quant::PhysicalType PhysicalType1_, enum phys_quant::PhysicalType PhysicalType2_, typename PrimType_, int Dimension_>
 class MultiplicationReturnTypeTrait<eigen_impl::Vector<PhysicalType1_, PrimType_, Dimension_>, eigen_impl::Vector<PhysicalType2_, PrimType_, Dimension_>>
 {
   typedef eigen_impl::Vector<phys_quant::PhysicalType::None, PrimType_, Dimension_> ReturnType;
 };
 
+/*! \brief Gets the return type of a multiplication
+ */
 template<enum phys_quant::PhysicalType PhysicalType1_, enum phys_quant::PhysicalType PhysicalType2_, typename PrimType_, int Dimension_>
 class DivisionReturnTypeTrait<eigen_impl::Vector<PhysicalType1_, PrimType_, Dimension_>, eigen_impl::Vector<PhysicalType2_, PrimType_, Dimension_>>
 {

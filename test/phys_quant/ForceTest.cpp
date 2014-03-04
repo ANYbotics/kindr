@@ -83,6 +83,8 @@ TYPED_TEST(ForceTorqueTest, testForce)
   Torque t1(v);
 
 //  Force f2 = t1 + f1;
-//  std::cout << f2 << std::endl;
+  std::cout << f1 << std::endl;
+  f1 = Force::Zero();
+  std::cout << f1 << std::endl;
 }
 
