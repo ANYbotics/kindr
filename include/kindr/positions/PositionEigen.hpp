@@ -29,11 +29,11 @@
 #ifndef KINDR_POSITIONS_POSITIONEIGEN_HPP_
 #define KINDR_POSITIONS_POSITIONEIGEN_HPP_
 
-#include <Eigen/Core>
 
 #include "kindr/common/common.hpp"
 #include "kindr/common/assert_macros_eigen.hpp"
 #include "kindr/positions/PositionBase.hpp"
+#include "kindr/vector/VectorEigen.hpp"
 
 namespace kindr {
 namespace positions {
@@ -49,17 +49,17 @@ namespace eigen_impl {
  * \ingroup positions
  */
 template<typename PrimType_>
-class Position3 : public Position3Base<Position3<PrimType_>>, private Eigen::Matrix<PrimType_, 3, 1> {
+class Position3 : public Position3Base<Position3<PrimType_>>, public vector::eigen_impl::Vector<phys_quant::PhysicalType::Length, PrimType_, 3> {
  private:
   /*! \brief The base type.
    */
-  typedef Eigen::Matrix<PrimType_, 3, 1> Base;
+  typedef vector::eigen_impl::Vector<phys_quant::PhysicalType::Length, PrimType_, 3> Base;
  public:
   /*! \brief The implementation type.
    *
    *  The implementation type is always an Eigen object.
    */
-  typedef Base Implementation;
+  typedef typename Base::Implementation Implementation;
 
   /*! \brief The primitive type of the coordinates.
    */
@@ -80,26 +80,32 @@ class Position3 : public Position3Base<Position3<PrimType_>>, private Eigen::Mat
     : Base(x, y, z) {
   }
 
+  /*! \brief Constructor using Vector.
+   *  \param other   vector::eigen_impl::Vector<phys_quant::PhysicalType::Length, PrimType_, 3>
+   */
+  explicit Position3(const Base& other)
+    : Base(other) {
+  }
 
   /*! \brief Constructor using Eigen::Vector3.
    *  \param other   Eigen::Matrix<PrimType_,3,1>
    */
-  explicit Position3(const Base& other)
+  explicit Position3(const Implementation& other)
     : Base(other) {
-   }
-
-  /*! \brief Cast to the implementation type.
-   *  \returns the implementation (recommended only for advanced users)
-   */
-  inline Implementation& toImplementation() {
-    return static_cast<Implementation&>(*this);
   }
 
-  /*! \brief Cast to the implementation type.
-   *  \returns the implementation (recommended only for advanced users)
+  /*! \brief Cast to the base type.
+   *  \returns the base (recommended only for advanced users)
    */
-  inline const Implementation& toImplementation() const {
-    return static_cast<const Implementation&>(*this);
+  inline Base& toBase() {
+    return static_cast<Base&>(*this);
+  }
+
+  /*! \brief Cast to the base type.
+   *  \returns the base (recommended only for advanced users)
+   */
+  inline const Base& toBase() const {
+    return static_cast<const Base&>(*this);
   }
 
   /*!\brief Get x-coordinate of the position
@@ -130,7 +136,7 @@ class Position3 : public Position3Base<Position3<PrimType_>>, private Eigen::Mat
    */
   template<typename Other_>
   Position3<PrimType_>& operator +=(const Other_& other) {
-    this->toImplementation() += other.toImplementation();
+    this->toBase() += other.toBase();
     return *this;
   }
 
@@ -139,24 +145,8 @@ class Position3 : public Position3Base<Position3<PrimType_>>, private Eigen::Mat
    */
   template<typename Other_>
   Position3<PrimType_>& operator -=(const Other_& other) {
-    this->toImplementation() -= other.toImplementation();
+    this->toBase() -= other.toBase();
     return *this;
-  }
-
-  /*! \brief Sets all coordinates of the position to zero.
-   * \returns reference
-   */
-  Position3<PrimType_>& setZero() {
-    Base::setZero();
-    return *this;
-  }
-
-  /*! \brief Used for printing the object with std::cout.
-   *  \returns std::stream object
-   */
-  friend std::ostream& operator << (std::ostream& out, const Position3& position) {
-    out << position.transpose();
-    return out;
   }
 };
 

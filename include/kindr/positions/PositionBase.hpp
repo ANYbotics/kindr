@@ -143,7 +143,6 @@ class PositionBase {
    */
   template<typename OtherDerived_>
   Derived_& operator -=(const PositionBase<OtherDerived_>& other);
-
 };
 
 /*! \class Position3Base
@@ -186,7 +185,6 @@ class Position3Base : public PositionBase<Derived_> {
   /*! \returns the z-coordinate of the 3D-position
    */
   inline Scalar& z();
-
 };
 
 
@@ -200,14 +198,14 @@ class AdditionTraits<PositionBase<LeftAndRight_>> {
    * \param rhs right-hand side
    */
   inline static LeftAndRight_ add(const PositionBase<LeftAndRight_>& lhs, const PositionBase<LeftAndRight_>& rhs) {
-    return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() + rhs.derived().toImplementation()));
+    return LeftAndRight_(lhs.derived().toBase() + rhs.derived().toBase());
   }
   /*! \returns the subtraction of two positions
    * \param lhs left-hand side
    * \param rhs right-hand side
    */
   inline static LeftAndRight_ subtract(const PositionBase<LeftAndRight_>& lhs, const PositionBase<LeftAndRight_>& rhs) {
-    return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() - rhs.derived().toImplementation()));
+    return LeftAndRight_(lhs.derived().toBase() - rhs.derived().toBase());
   }
 };
 

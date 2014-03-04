@@ -134,7 +134,6 @@ class PositionDiffBase {
    */
   template<typename OtherDerived_>
   Derived_& operator -=(const PositionDiffBase<OtherDerived_>& other);
-
 };
 
 /*! \class LinearVelocityBase
@@ -177,7 +176,6 @@ class LinearVelocityBase : public PositionDiffBase<Derived_> {
   /*! \returns the z-coordinate of the 3D linear velocity
    */
   inline Scalar& z();
-
 };
 
 
@@ -191,14 +189,14 @@ class PDiffAdditionTraits<PositionDiffBase<LeftAndRight_>> {
    * \param rhs right-hand side
    */
   inline static LeftAndRight_ add(const PositionDiffBase<LeftAndRight_>& lhs, const PositionDiffBase<LeftAndRight_>& rhs) {
-    return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() + rhs.derived().toImplementation()));
+    return LeftAndRight_(lhs.derived().toBase() + rhs.derived().toBase());
   }
   /*! \returns the subtraction of two linear velocities
    * \param lhs left-hand side
    * \param rhs right-hand side
    */
   inline static LeftAndRight_ subtract(const PositionDiffBase<LeftAndRight_>& lhs, const PositionDiffBase<LeftAndRight_>& rhs) {
-    return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() - rhs.derived().toImplementation()));
+    return LeftAndRight_(lhs.derived().toBase() - rhs.derived().toBase());
   }
 };
 

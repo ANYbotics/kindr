@@ -28,11 +28,11 @@
 #ifndef KINDR_POSITIONS_PDIFFEIGEN_HPP_
 #define KINDR_POSITIONS_PDIFFEIGEN_HPP_
 
-#include <Eigen/Core>
 
 #include "kindr/common/common.hpp"
 #include "kindr/common/assert_macros_eigen.hpp"
 #include "kindr/positions/PositionDiffBase.hpp"
+#include "kindr/vector/VectorEigen.hpp"
 
 namespace kindr {
 namespace positions {
@@ -47,17 +47,17 @@ namespace eigen_impl {
  * \ingroup positions
  */
 template<typename PrimType_>
-class LinearVelocity : public LinearVelocityBase<LinearVelocity<PrimType_>>, private Eigen::Matrix<PrimType_, 3, 1> {
+class LinearVelocity : public LinearVelocityBase<LinearVelocity<PrimType_>>, public vector::eigen_impl::Vector<phys_quant::PhysicalType::Velocity, PrimType_, 3> {
  private:
   /*! \brief The base type.
    */
-  typedef Eigen::Matrix<PrimType_, 3, 1> Base;
+  typedef vector::eigen_impl::Vector<phys_quant::PhysicalType::Velocity, PrimType_, 3> Base;
  public:
   /*! \brief The implementation type.
    *
    *  The implementation type is always an Eigen object.
    */
-  typedef Base Implementation;
+  typedef typename Base::Implementation Implementation;
 
   /*! \brief The primitive type of the coordinates.
    */
@@ -78,26 +78,32 @@ class LinearVelocity : public LinearVelocityBase<LinearVelocity<PrimType_>>, pri
     : Base(x, y, z) {
   }
 
+  /*! \brief Constructor using Vector.
+   *  \param other   vector::eigen_impl::Vector<phys_quant::PhysicalType::Velocity, PrimType_, 3>
+   */
+  explicit LinearVelocity(const Base& other)
+    : Base(other) {
+  }
 
   /*! \brief Constructor using Eigen::Vector3.
    *  \param other   Eigen::Matrix<PrimType_,3,1>
    */
-  explicit LinearVelocity(const Base& other)
+  explicit LinearVelocity(const Implementation& other)
     : Base(other) {
-   }
-
-  /*! \brief Cast to the implementation type.
-   *  \returns the implementation (recommended only for advanced users)
-   */
-  inline Implementation& toImplementation() {
-    return static_cast<Implementation&>(*this);
   }
 
-  /*! \brief Cast to the implementation type.
-   *  \returns the implementation (recommended only for advanced users)
+  /*! \brief Cast to the base type.
+   *  \returns the base (recommended only for advanced users)
    */
-  inline const Implementation& toImplementation() const {
-    return static_cast<const Implementation&>(*this);
+  inline Base& toBase() {
+    return static_cast<Base&>(*this);
+  }
+
+  /*! \brief Cast to the base type.
+   *  \returns the base (recommended only for advanced users)
+   */
+  inline const Base& toBase() const {
+    return static_cast<const Base&>(*this);
   }
 
   /*!\brief Get x-coordinate of the linear velocity
@@ -128,7 +134,7 @@ class LinearVelocity : public LinearVelocityBase<LinearVelocity<PrimType_>>, pri
    */
   template<typename Other_>
   LinearVelocity<PrimType_>& operator +=(const Other_& other) {
-    this->toImplementation() += other.toImplementation();
+    this->toBase() += other.toBase();
     return *this;
   }
 
@@ -137,24 +143,8 @@ class LinearVelocity : public LinearVelocityBase<LinearVelocity<PrimType_>>, pri
    */
   template<typename Other_>
   LinearVelocity<PrimType_>& operator -=(const Other_& other) {
-    this->toImplementation() -= other.toImplementation();
+    this->toBase() -= other.toBase();
     return *this;
-  }
-
-  /*! \brief Sets all components of the velocity to zero.
-   * \returns reference
-   */
-  LinearVelocity<PrimType_>& setZero() {
-    Base::setZero();
-    return *this;
-  }
-
-  /*! \brief Used for printing the object with std::cout.
-   *  \returns std::stream object
-   */
-  friend std::ostream& operator << (std::ostream& out, const LinearVelocity& velocity) {
-    out << velocity.transpose();
-    return out;
   }
 };
 
