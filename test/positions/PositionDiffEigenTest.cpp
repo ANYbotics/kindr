@@ -47,7 +47,9 @@ struct LinearVelocityTest: public ::testing::Test {
   typedef Eigen::Matrix<Scalar, 3, 1> Vector3;
 
   Scalar tol;
-  Vector3 vecZero, vec1, vec2, vecAdd, vecSubtract;
+  Scalar factor;
+  Scalar divisor;
+  Vector3 vecZero, vec1, vec2, vecAdd, vecSubtract, vecMult, vecDiv;
 
   LinearVelocity velDefault;
   LinearVelocity velFromThreeValues;
@@ -56,11 +58,15 @@ struct LinearVelocityTest: public ::testing::Test {
   LinearVelocity velFromVel;
 
   LinearVelocityTest() : tol(1e-6),
+      factor(2),
+      divisor(2),
       vecZero(Vector3::Zero()),
       vec1(10,20,30),
       vec2(1,2,3),
       vecAdd(11,22,33),
       vecSubtract(9,18,27),
+      vecMult(20,40,60),
+      vecDiv(5,10,15),
       velFromThreeValues(vec1.x(), vec1.y(), vec1.z()),
       velFromEigen(vec1),
       vel2FromEigen(vec2),
@@ -132,5 +138,36 @@ TYPED_TEST(LinearVelocityTest, testLinearVelocity)
    ASSERT_EQ(velSubtractandAssign.y(), this->vecSubtract.y());
    ASSERT_EQ(velSubtractandAssign.z(), this->vecSubtract.z());
 
+   // multiplication a)
+   LinearVelocity velMultA = this->velFromEigen * this->factor;
+   ASSERT_EQ(velMultA.x(), this->vecMult.x());
+   ASSERT_EQ(velMultA.y(), this->vecMult.y());
+   ASSERT_EQ(velMultA.z(), this->vecMult.z());
+
+   // multiplication b)
+   LinearVelocity velMultB = this->factor * this->velFromEigen;
+   ASSERT_EQ(velMultB.x(), this->vecMult.x());
+   ASSERT_EQ(velMultB.y(), this->vecMult.y());
+   ASSERT_EQ(velMultB.z(), this->vecMult.z());
+
+   // multiplication and assignment
+   LinearVelocity velMultAndAssign(this->velFromEigen);
+   velMultAndAssign *= this->factor;
+   ASSERT_EQ(velMultAndAssign.x(), this->vecMult.x());
+   ASSERT_EQ(velMultAndAssign.y(), this->vecMult.y());
+   ASSERT_EQ(velMultAndAssign.z(), this->vecMult.z());
+
+   // division
+   LinearVelocity velDiv = this->velFromEigen / this->divisor;
+   ASSERT_EQ(velDiv.x(), this->vecDiv.x());
+   ASSERT_EQ(velDiv.y(), this->vecDiv.y());
+   ASSERT_EQ(velDiv.z(), this->vecDiv.z());
+
+   // division and assignment
+   LinearVelocity velDivAndAssign(this->velFromEigen);
+   velDivAndAssign /= this->divisor;
+   ASSERT_EQ(velDivAndAssign.x(), this->vecDiv.x());
+   ASSERT_EQ(velDivAndAssign.y(), this->vecDiv.y());
+   ASSERT_EQ(velDivAndAssign.z(), this->vecDiv.z());
 }
 

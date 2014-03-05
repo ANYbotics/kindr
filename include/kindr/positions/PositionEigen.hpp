@@ -131,8 +131,17 @@ class Position3 : public Position3Base<Position3<PrimType_>>, public vector::eig
    */
   using Position3Base<Position3<PrimType_>>::operator-; // otherwise ambiguous PositionBase and Eigen
 
-  /*! \brief Addition of two positions.
+  /*! \brief Multiplication of a position and a factor.
+   */
+  using Position3Base<Position3<PrimType_>>::operator*; // otherwise ambiguous PositionBase and Eigen
+
+  /*! \brief Division of a position by a factor.
+   */
+  using Position3Base<Position3<PrimType_>>::operator/; // otherwise ambiguous PositionBase and Eigen
+
+  /*! \brief Addition and assignment.
    * \param other   other position
+   * \returns reference
    */
   template<typename Other_>
   Position3<PrimType_>& operator +=(const Other_& other) {
@@ -140,15 +149,46 @@ class Position3 : public Position3Base<Position3<PrimType_>>, public vector::eig
     return *this;
   }
 
-  /*! \brief Subtraction of two positions.
+  /*! \brief Subtraction and assignment.
    * \param other   other position
+   * \returns reference
    */
   template<typename Other_>
   Position3<PrimType_>& operator -=(const Other_& other) {
     this->toBase() -= other.toBase();
     return *this;
   }
+
+  /*! \brief Multiplication and assignment.
+   * \param factor   factor
+   * \returns reference
+   */
+  template<typename FactorPrimType_>
+  Position3<PrimType_>& operator *=(FactorPrimType_ factor) {
+    this->toBase() *= (PrimType_)factor;
+    return *this;
+  }
+
+  /*! \brief Division and assignment.
+   * \param divisor   divisor
+   * \returns reference
+   */
+  template<typename DivisorPrimType_>
+  Position3<PrimType_>& operator /=(DivisorPrimType_ divisor) {
+    this->toBase() /= (PrimType_)divisor;
+    return *this;
+  }
 };
+
+
+/*! \brief Multiplies a position with a scalar.
+ * \param factor   factor
+ * \returns product
+ */
+template<typename FactorPrimType_, typename PrimType_>
+Position3<PrimType_> operator*(FactorPrimType_ factor, const Position3<PrimType_>& position) {
+  return position*(PrimType_)factor;
+}
 
 
 //! \brief 3D-Position with primitive type double
@@ -164,7 +204,7 @@ namespace internal {
 /*! \brief Gets the primitive type of the coordinates
  */
 template<typename PrimType_>
-class get_scalar<eigen_impl::Position3<PrimType_>>{
+class get_scalar<eigen_impl::Position3<PrimType_>> {
  public:
   typedef PrimType_ Scalar;
 };

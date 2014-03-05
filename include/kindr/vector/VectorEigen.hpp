@@ -430,7 +430,7 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
 };
 
 
-/*! \brief Multiplies vector with a scalar.
+/*! \brief Multiplies a vector with a scalar.
  * \param factor   factor
  * \returns product
  */

@@ -129,8 +129,17 @@ class LinearVelocity : public LinearVelocityBase<LinearVelocity<PrimType_>>, pub
    */
   using LinearVelocityBase<LinearVelocity<PrimType_>>::operator-; // otherwise ambiguous PositionBase and Eigen
 
-  /*! \brief Addition of two linear velocities.
+  /*! \brief Multiplication of a linear velocity and a factor.
+   */
+  using LinearVelocityBase<LinearVelocity<PrimType_>>::operator*; // otherwise ambiguous PositionBase and Eigen
+
+  /*! \brief Division of a linear velocity by a factor.
+   */
+  using LinearVelocityBase<LinearVelocity<PrimType_>>::operator/; // otherwise ambiguous PositionBase and Eigen
+
+  /*! \brief Addition and assignment.
    * \param other   other linear velocity
+   * \returns reference
    */
   template<typename Other_>
   LinearVelocity<PrimType_>& operator +=(const Other_& other) {
@@ -138,15 +147,46 @@ class LinearVelocity : public LinearVelocityBase<LinearVelocity<PrimType_>>, pub
     return *this;
   }
 
-  /*! \brief Subtraction of two linear velocities.
+  /*! \brief Subtraction and assignment.
    * \param other   other linear velocity
+   * \returns reference
    */
   template<typename Other_>
   LinearVelocity<PrimType_>& operator -=(const Other_& other) {
     this->toBase() -= other.toBase();
     return *this;
   }
+
+  /*! \brief Multiplication and assignment.
+   * \param factor   factor
+   * \returns reference
+   */
+  template<typename FactorPrimType_>
+  LinearVelocity<PrimType_>& operator *=(FactorPrimType_ factor) {
+    this->toBase() *= (PrimType_)factor;
+    return *this;
+  }
+
+  /*! \brief Division and assignment.
+   * \param divisor   divisor
+   * \returns reference
+   */
+  template<typename DivisorPrimType_>
+  LinearVelocity<PrimType_>& operator /=(DivisorPrimType_ divisor) {
+    this->toBase() /= (PrimType_)divisor;
+    return *this;
+  }
 };
+
+
+/*! \brief Multiplies a linear velocity with a scalar.
+ * \param factor   factor
+ * \returns product
+ */
+template<typename FactorPrimType_, typename PrimType_>
+LinearVelocity<PrimType_> operator*(FactorPrimType_ factor, const LinearVelocity<PrimType_>& linearVelocity) {
+  return linearVelocity*(PrimType_)factor;
+}
 
 
 //! \brief Linear velocity in 3D space with primitive type double
@@ -162,7 +202,7 @@ namespace internal {
 /*! \brief Gets the primitive type of the coordinates
  */
 template<typename PrimType_>
-class get_scalar<eigen_impl::LinearVelocity<PrimType_>>{
+class get_scalar<eigen_impl::LinearVelocity<PrimType_>> {
  public:
   typedef PrimType_ Scalar;
 };

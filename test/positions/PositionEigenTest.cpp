@@ -47,7 +47,9 @@ struct Position3Test: public ::testing::Test {
   typedef Eigen::Matrix<Scalar, 3, 1> Vector3;
 
   Scalar tol;
-  Vector3 vecZero, vec1, vec2, vecAdd, vecSubtract;
+  Scalar factor;
+  Scalar divisor;
+  Vector3 vecZero, vec1, vec2, vecAdd, vecSubtract, vecMult, vecDiv;
 
   Pos3 posDefault;
   Pos3 posFromThreeValues;
@@ -56,11 +58,15 @@ struct Position3Test: public ::testing::Test {
   Pos3 posFromPos;
 
   Position3Test() : tol(1e-6),
+      factor(2),
+      divisor(2),
       vecZero(Vector3::Zero()),
       vec1(10,20,30),
       vec2(1,2,3),
       vecAdd(11,22,33),
       vecSubtract(9,18,27),
+      vecMult(20,40,60),
+      vecDiv(5,10,15),
       posFromThreeValues(vec1.x(), vec1.y(), vec1.z()),
       posFromEigen(vec1),
       pos2FromEigen(vec2),
@@ -119,18 +125,49 @@ TYPED_TEST(Position3Test, testPosition3)
   ASSERT_EQ(posAddandAssign.y(), this->vecAdd.y());
   ASSERT_EQ(posAddandAssign.z(), this->vecAdd.z());
 
-  // subtract
+  // subtraction
   Pos3 posSubtract = this->posFromEigen-this->pos2FromEigen;
   ASSERT_EQ(posSubtract.x(), this->vecSubtract.x());
   ASSERT_EQ(posSubtract.y(), this->vecSubtract.y());
   ASSERT_EQ(posSubtract.z(), this->vecSubtract.z());
 
-  // subtract and assignment
+  // subtraction and assignment
   Pos3 posSubtractandAssign(this->posFromEigen);
   posSubtractandAssign -= this->pos2FromEigen;
   ASSERT_EQ(posSubtractandAssign.x(), this->vecSubtract.x());
   ASSERT_EQ(posSubtractandAssign.y(), this->vecSubtract.y());
   ASSERT_EQ(posSubtractandAssign.z(), this->vecSubtract.z());
 
+  // multiplication a)
+  Pos3 posMultA = this->posFromEigen * this->factor;
+  ASSERT_EQ(posMultA.x(), this->vecMult.x());
+  ASSERT_EQ(posMultA.y(), this->vecMult.y());
+  ASSERT_EQ(posMultA.z(), this->vecMult.z());
+
+  // multiplication b)
+  Pos3 posMultB = this->factor * this->posFromEigen;
+  ASSERT_EQ(posMultB.x(), this->vecMult.x());
+  ASSERT_EQ(posMultB.y(), this->vecMult.y());
+  ASSERT_EQ(posMultB.z(), this->vecMult.z());
+
+  // multiplication and assignment
+  Pos3 posMultAndAssign(this->posFromEigen);
+  posMultAndAssign *= this->factor;
+  ASSERT_EQ(posMultAndAssign.x(), this->vecMult.x());
+  ASSERT_EQ(posMultAndAssign.y(), this->vecMult.y());
+  ASSERT_EQ(posMultAndAssign.z(), this->vecMult.z());
+
+  // division
+  Pos3 posDiv = this->posFromEigen / this->divisor;
+  ASSERT_EQ(posDiv.x(), this->vecDiv.x());
+  ASSERT_EQ(posDiv.y(), this->vecDiv.y());
+  ASSERT_EQ(posDiv.z(), this->vecDiv.z());
+
+  // division and assignment
+  Pos3 posDivAndAssign(this->posFromEigen);
+  posDivAndAssign /= this->divisor;
+  ASSERT_EQ(posDivAndAssign.x(), this->vecDiv.x());
+  ASSERT_EQ(posDivAndAssign.y(), this->vecDiv.y());
+  ASSERT_EQ(posDivAndAssign.z(), this->vecDiv.z());
 }
 
