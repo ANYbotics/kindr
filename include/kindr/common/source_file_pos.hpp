@@ -25,8 +25,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
 */
-#ifndef SM_SOURCE_FILE_POS_HPP
-#define SM_SOURCE_FILE_POS_HPP
+#ifndef KINDR_SOURCE_FILE_POS_HPP
+#define KINDR_SOURCE_FILE_POS_HPP
 
 #include <string>
 #include <iostream>
