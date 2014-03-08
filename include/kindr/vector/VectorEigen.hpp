@@ -85,7 +85,7 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
    *  \param other   Vector<PhysicalType::None, OtherPrimType_, Dimension_>
    */
   template<typename OtherPrimType_>
-  Vector(const Vector<phys_quant::PhysicalType::None, OtherPrimType_, Dimension_>& other)
+  Vector(const Vector<phys_quant::PhysicalType::Undefined, OtherPrimType_, Dimension_>& other)
     : Implementation(other.toImplementation().template cast<PrimType_>()) {
   }
 
@@ -93,7 +93,7 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
    *  \param other   Vector<PhysicalType_, OtherPrimType_, Dimension_>
    */
   template<typename OtherPrimType_, enum phys_quant::PhysicalType PhysicalTypeCopy_ = PhysicalType_> // using SFINAE because if the physical type is none, there would exist two similar constructors
-  Vector(const Vector<PhysicalType_, OtherPrimType_, Dimension_>& other, typename std::enable_if<PhysicalTypeCopy_ != phys_quant::PhysicalType::None>::type* = nullptr)
+  Vector(const Vector<PhysicalType_, OtherPrimType_, Dimension_>& other, typename std::enable_if<PhysicalTypeCopy_ != phys_quant::PhysicalType::Undefined>::type* = nullptr)
     : Implementation(other.toImplementation().template cast<PrimType_>()) {
   }
 
@@ -441,7 +441,7 @@ Vector<PhysicalType_, PrimType_, Dimension_> operator*(PrimTypeFactor_ factor, c
 
 //! \brief Unitless-Vector
 template <typename PrimType_, int Dimension_>
-using VectorUnitless = Vector<phys_quant::PhysicalType::None, PrimType_, Dimension_>;
+using VectorUnitless = Vector<phys_quant::PhysicalType::Undefined, PrimType_, Dimension_>;
 //! \brief 3D-Unitless-Vector with primitive type double
 typedef VectorUnitless<double, 3> Vector3D;
 //! \brief 3D-Unitless-Vector with primitive type float
@@ -560,7 +560,7 @@ class get_dimension<eigen_impl::Vector<PhysicalType_, PrimType_, Dimension_>> {
 template<enum phys_quant::PhysicalType PhysicalType1_, enum phys_quant::PhysicalType PhysicalType2_, typename PrimType_, int Dimension_>
 class MultiplicationReturnTypeTrait<eigen_impl::Vector<PhysicalType1_, PrimType_, Dimension_>, eigen_impl::Vector<PhysicalType2_, PrimType_, Dimension_>>
 {
-  typedef eigen_impl::Vector<phys_quant::PhysicalType::None, PrimType_, Dimension_> ReturnType;
+  typedef eigen_impl::Vector<phys_quant::PhysicalType::Undefined, PrimType_, Dimension_> ReturnType;
 };
 
 /*! \brief Gets the return type of a multiplication
@@ -568,7 +568,7 @@ class MultiplicationReturnTypeTrait<eigen_impl::Vector<PhysicalType1_, PrimType_
 template<enum phys_quant::PhysicalType PhysicalType1_, enum phys_quant::PhysicalType PhysicalType2_, typename PrimType_, int Dimension_>
 class DivisionReturnTypeTrait<eigen_impl::Vector<PhysicalType1_, PrimType_, Dimension_>, eigen_impl::Vector<PhysicalType2_, PrimType_, Dimension_>>
 {
-  typedef eigen_impl::Vector<phys_quant::PhysicalType::None, PrimType_, Dimension_> ReturnType;
+  typedef eigen_impl::Vector<phys_quant::PhysicalType::Undefined, PrimType_, Dimension_> ReturnType;
 };
 
 } // namespace internal
