@@ -235,6 +235,11 @@ class VectorBase {
   template<typename PrimTypeDivisor_>
   Derived_& operator/=(PrimTypeDivisor_ divisor);
 
+  /*! \brief Negation of a vector.
+   * \returns negative vector
+   */
+  Derived_ operator-() const;
+
   /*! \brief Comparison operator.
    * \param other   other vector
    * \returns true if equal
