@@ -82,18 +82,10 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
   }
 
   /*! \brief Constructor using other vector without physical type.
-   *  \param other   Vector<PhysicalType::None, OtherPrimType_, Dimension_>
+   *  \param other   Vector<OtherPhysicalType_, OtherPrimType_, Dimension_>
    */
-  template<typename OtherPrimType_>
-  Vector(const Vector<phys_quant::PhysicalType::Undefined, OtherPrimType_, Dimension_>& other)
-    : Implementation(other.toImplementation().template cast<PrimType_>()) {
-  }
-
-  /*! \brief Constructor using other vector of the same physical type.
-   *  \param other   Vector<PhysicalType_, OtherPrimType_, Dimension_>
-   */
-  template<typename OtherPrimType_, enum phys_quant::PhysicalType PhysicalTypeCopy_ = PhysicalType_> // using SFINAE because if the physical type is none, there would exist two similar constructors
-  Vector(const Vector<PhysicalType_, OtherPrimType_, Dimension_>& other, typename std::enable_if<PhysicalTypeCopy_ != phys_quant::PhysicalType::Undefined>::type* = nullptr)
+  template<enum phys_quant::PhysicalType OtherPhysicalType_, typename OtherPrimType_>
+  explicit Vector(const Vector<OtherPhysicalType_, OtherPrimType_, Dimension_>& other)
     : Implementation(other.toImplementation().template cast<PrimType_>()) {
   }
 
@@ -572,6 +564,96 @@ class DivisionReturnTypeTrait<eigen_impl::Vector<PhysicalType1_, PrimType_, Dime
  public:
   typedef eigen_impl::Vector<phys_quant::PhysicalType::Undefined, PrimType_, Dimension_> ReturnType;
 };
+
+/*! \brief Specializes multiplication and division traits for the triple (factor1 != factor2)
+ */
+#define KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(FACTOR1, FACTOR2, PRODUCT) \
+    template<typename PrimType_, int Dimension_> \
+    class MultiplicationReturnTypeTrait<eigen_impl::Vector<phys_quant::PhysicalType::FACTOR1, PrimType_, Dimension_>, eigen_impl::Vector<phys_quant::PhysicalType::FACTOR2, PrimType_, Dimension_>> \
+    { \
+     public: \
+      typedef eigen_impl::Vector<phys_quant::PhysicalType::PRODUCT, PrimType_, Dimension_> ReturnType; \
+    }; \
+    template<typename PrimType_, int Dimension_> \
+    class MultiplicationReturnTypeTrait<eigen_impl::Vector<phys_quant::PhysicalType::FACTOR2, PrimType_, Dimension_>, eigen_impl::Vector<phys_quant::PhysicalType::FACTOR1, PrimType_, Dimension_>> \
+    { \
+     public: \
+      typedef eigen_impl::Vector<phys_quant::PhysicalType::PRODUCT, PrimType_, Dimension_> ReturnType; \
+    }; \
+    template<typename PrimType_, int Dimension_> \
+    class DivisionReturnTypeTrait<eigen_impl::Vector<phys_quant::PhysicalType::PRODUCT, PrimType_, Dimension_>, eigen_impl::Vector<phys_quant::PhysicalType::FACTOR1, PrimType_, Dimension_>> \
+    { \
+     public: \
+      typedef eigen_impl::Vector<phys_quant::PhysicalType::FACTOR2, PrimType_, Dimension_> ReturnType; \
+    }; \
+    template<typename PrimType_, int Dimension_> \
+    class DivisionReturnTypeTrait<eigen_impl::Vector<phys_quant::PhysicalType::PRODUCT, PrimType_, Dimension_>, eigen_impl::Vector<phys_quant::PhysicalType::FACTOR2, PrimType_, Dimension_>> \
+    { \
+     public: \
+      typedef eigen_impl::Vector<phys_quant::PhysicalType::FACTOR1, PrimType_, Dimension_> ReturnType; \
+    };
+
+/*! \brief Specializes multiplication and division traits for the triple (factor1 == factor2)
+ */
+#define KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_B(FACTOR1AND2, PRODUCT) \
+    template<typename PrimType_, int Dimension_> \
+    class MultiplicationReturnTypeTrait<eigen_impl::Vector<phys_quant::PhysicalType::FACTOR1AND2, PrimType_, Dimension_>, eigen_impl::Vector<phys_quant::PhysicalType::FACTOR1AND2, PrimType_, Dimension_>> \
+    { \
+     public: \
+      typedef eigen_impl::Vector<phys_quant::PhysicalType::PRODUCT, PrimType_, Dimension_> ReturnType; \
+    }; \
+    template<typename PrimType_, int Dimension_> \
+    class DivisionReturnTypeTrait<eigen_impl::Vector<phys_quant::PhysicalType::PRODUCT, PrimType_, Dimension_>, eigen_impl::Vector<phys_quant::PhysicalType::FACTOR1AND2, PrimType_, Dimension_>> \
+    { \
+     public: \
+      typedef eigen_impl::Vector<phys_quant::PhysicalType::FACTOR1AND2, PrimType_, Dimension_> ReturnType; \
+    };
+
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_B(Undefined, Undefined)
+
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Time, Time)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Mass, Mass)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Inertia, Inertia)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Energy, Energy)
+
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Length, Length)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Velocity, Velocity)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Acceleration, Acceleration)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Jerk, Jerk)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Force, Force)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Momentum, Momentum)
+
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Angle, Angle)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, AngularVelocity, AngularVelocity)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, AngularAcceleration, AngularAcceleration)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, AngularJerk, AngularJerk)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Torque, Torque)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, AngularMomentum, AngularMomentum)
+
+//KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Length, Angle, Length)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Length, AngularVelocity, Velocity)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Length, AngularAcceleration, Acceleration)
+
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Length, AngularJerk, Jerk)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Length, Force, Torque)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Length, Momentum, AngularMomentum)
+
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Time, Acceleration, Velocity)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Time, Velocity, Length)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Time, AngularAcceleration, AngularVelocity)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Time, AngularVelocity, Angle)
+
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Time, Jerk, Force)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Time, Force, Momentum)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Time, AngularJerk, Torque)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Time, Torque, AngularMomentum)
+
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Mass, Acceleration, Force)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Mass, Velocity, Momentum)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Inertia, AngularAcceleration, Torque)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Inertia, AngularVelocity, AngularMomentum)
+
+
 
 } // namespace internal
 

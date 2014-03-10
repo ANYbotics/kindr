@@ -98,7 +98,7 @@ TYPED_TEST_CASE(VectorTest, Types5);
 TYPED_TEST(VectorTest, testVector)
 {
   typedef typename TestFixture::Vector Vector;
-  typedef vector::Vector<kindr::phys_quant::PhysicalType::Velocity, typename TestFixture::Scalar, 5> OtherVector;
+  typedef vector::Vector<kindr::phys_quant::PhysicalType::Undefined, typename TestFixture::Scalar, 5> OtherVector;
   OtherVector vector2FromEigenOtherType(this->vec2);
   typedef typename TestFixture::EigenVector EigenVector;
 
@@ -241,7 +241,7 @@ TYPED_TEST(VectorTest, testVector)
   typedef Eigen::Matrix<double, 3, 1> EigenVector3;
   typedef vector::Vector<kindr::phys_quant::PhysicalType::Length, double, 3> Length3d;
   typedef vector::Vector<kindr::phys_quant::PhysicalType::Force, double, 3> Force3d;
-  typedef vector::Vector<kindr::phys_quant::PhysicalType::Undefined, double, 3> Vector3d;
+  typedef vector::Vector<kindr::phys_quant::PhysicalType::Torque, double, 3> Vector3d;
   EigenVector3 crossVectorEigen1(1,2,3);
   EigenVector3 crossVectorEigen2(3,2,1);
   Length3d crossVector1(crossVectorEigen1);
