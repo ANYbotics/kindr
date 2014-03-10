@@ -49,7 +49,16 @@ class PDiffAdditionTraits {
 //  inline static LeftAndRight_ subtract(const LeftAndRight_& lhs, const LeftAndRight_& rhs);
 };
 
-
+/*! \brief Multiplication traits for linear velocities
+ *  \class MultiplicationTraits
+ *  (only for advanced users)
+ */
+template<typename LinearVelocity_, typename ScalarPrimType_>
+class PDiffMultiplicationTraits {
+ public:
+//  inline static LinearVelocity_ multiply(const LinearVelocity_& lhs, Scalar rhs);
+//  inline static LinearVelocity_ divide(const LinearVelocity_& lhs, Scalar rhs);
+};
 
 } // namespace internal
 
@@ -112,30 +121,63 @@ class PositionDiffBase {
    */
   template<typename OtherDerived_>
   Derived_ operator +(const PositionDiffBase<OtherDerived_>& other) const {
-    return internal::PDiffAdditionTraits<PositionDiffBase<Derived_>>::add(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
+    return internal::PDiffAdditionTraits<PositionDiffBase<Derived_>>::add(this->derived(), other.derived());
   }
 
-  /*! \brief Subtraction of two time derivatives.
-   *  \returns result of the subtraction of the two two time derivatives.
+  /*! \brief Subtraction of two linear velocities.
+   *  \returns result of the subtraction of the two linear velocities.
    */
   template<typename OtherDerived_>
   Derived_ operator -(const PositionDiffBase<OtherDerived_>& other) const {
-    return internal::PDiffAdditionTraits<PositionDiffBase<Derived_>>::subtract(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
+    return internal::PDiffAdditionTraits<PositionDiffBase<Derived_>>::subtract(this->derived(), other.derived());
+  }
+
+  /*! \brief Multiplication of a linear velocity with a scalar.
+   *  \returns product of a linear velocity and a scalar.
+   */
+  template<typename FactorPrimType_>
+  Derived_ operator *(FactorPrimType_ factor) const {
+    return internal::PDiffMultiplicationTraits<PositionDiffBase<Derived_>, FactorPrimType_>::multiply(this->derived(), factor);
+  }
+
+  /*! \brief Division of a linear velocity by a scalar.
+   *  \returns division of a linear velocity by a scalar.
+   */
+  template<typename DivisorPrimType_>
+  Derived_ operator /(DivisorPrimType_ divisor) const {
+    return internal::PDiffMultiplicationTraits<PositionDiffBase<Derived_>, DivisorPrimType_>::divide(this->derived(), divisor);
   }
 
   /*! \brief Addition and assignment.
-   *  \returns sum of the two linear velocities.
+   *  \returns reference.
    */
   template<typename OtherDerived_>
   Derived_& operator +=(const PositionDiffBase<OtherDerived_>& other);
 
   /*! \brief Subtraction and assignment.
-   *  \returns result of the subtraction of the two linear velocities.
+   *  \returns reference.
    */
   template<typename OtherDerived_>
   Derived_& operator -=(const PositionDiffBase<OtherDerived_>& other);
 
+  /*! \brief Multiplication and assignment.
+   *  \returns reference.
+   */
+  template<typename FactorPrimType_>
+  Derived_& operator *=(FactorPrimType_ factor);
+
+  /*! \brief Division and assignment.
+   *  \returns reference.
+   */
+  template<typename DivisorPrimType_>
+  Derived_& operator /=(DivisorPrimType_ divisor);
 };
+
+
+template<typename LinearVelocity_, typename FactorPrimType_>
+LinearVelocity_ operator *(FactorPrimType_ factor, const PositionDiffBase<LinearVelocity_>& linearVelocity) {
+  return linearVelocity*factor;
+}
 
 /*! \class LinearVelocityBase
  * \brief Interface for a linear velocity in 3D-space.
@@ -177,7 +219,6 @@ class LinearVelocityBase : public PositionDiffBase<Derived_> {
   /*! \returns the z-coordinate of the 3D linear velocity
    */
   inline Scalar& z();
-
 };
 
 
@@ -191,14 +232,33 @@ class PDiffAdditionTraits<PositionDiffBase<LeftAndRight_>> {
    * \param rhs right-hand side
    */
   inline static LeftAndRight_ add(const PositionDiffBase<LeftAndRight_>& lhs, const PositionDiffBase<LeftAndRight_>& rhs) {
-    return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() + rhs.derived().toImplementation()));
+    return LeftAndRight_(lhs.derived().toBase() + rhs.derived().toBase());
   }
   /*! \returns the subtraction of two linear velocities
    * \param lhs left-hand side
    * \param rhs right-hand side
    */
   inline static LeftAndRight_ subtract(const PositionDiffBase<LeftAndRight_>& lhs, const PositionDiffBase<LeftAndRight_>& rhs) {
-    return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() - rhs.derived().toImplementation()));
+    return LeftAndRight_(lhs.derived().toBase() - rhs.derived().toBase());
+  }
+};
+
+template<typename LinearVelocity_, typename ScalarPrimType_>
+class PDiffMultiplicationTraits<PositionDiffBase<LinearVelocity_>, ScalarPrimType_> {
+ public:
+  /*! \returns the product of a linear velocity and a scalar
+   * \param lhs left-hand side (position)
+   * \param rhs right-hand side (scalar)
+   */
+  inline static LinearVelocity_ multiply(const PositionDiffBase<LinearVelocity_>& linearVelocity, ScalarPrimType_ factor) {
+    return LinearVelocity_(linearVelocity.derived().toBase() * static_cast<typename get_scalar<LinearVelocity_>::Scalar>(factor));
+  }
+  /*! \returns the division of a linear velocity by a scalar
+   * \param lhs left-hand side (position)
+   * \param rhs right-hand side (scalar)
+   */
+  inline static LinearVelocity_ divide(const PositionDiffBase<LinearVelocity_>& linearVelocity, ScalarPrimType_ divisor) {
+    return LinearVelocity_(linearVelocity.derived().toBase() / static_cast<typename get_scalar<LinearVelocity_>::Scalar>(divisor));
   }
 };
 

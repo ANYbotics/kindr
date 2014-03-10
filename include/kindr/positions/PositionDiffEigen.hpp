@@ -28,11 +28,11 @@
 #ifndef KINDR_POSITIONS_PDIFFEIGEN_HPP_
 #define KINDR_POSITIONS_PDIFFEIGEN_HPP_
 
-#include <Eigen/Core>
 
 #include "kindr/common/common.hpp"
 #include "kindr/common/assert_macros_eigen.hpp"
 #include "kindr/positions/PositionDiffBase.hpp"
+#include "kindr/vector/VectorEigen.hpp"
 
 namespace kindr {
 namespace positions {
@@ -47,17 +47,17 @@ namespace eigen_impl {
  * \ingroup positions
  */
 template<typename PrimType_>
-class LinearVelocity : public LinearVelocityBase<LinearVelocity<PrimType_>>, private Eigen::Matrix<PrimType_, 3, 1> {
+class LinearVelocity : public LinearVelocityBase<LinearVelocity<PrimType_>>, public vector::eigen_impl::Vector<phys_quant::PhysicalType::Velocity, PrimType_, 3> {
  private:
   /*! \brief The base type.
    */
-  typedef Eigen::Matrix<PrimType_, 3, 1> Base;
+  typedef vector::eigen_impl::Vector<phys_quant::PhysicalType::Velocity, PrimType_, 3> Base;
  public:
   /*! \brief The implementation type.
    *
    *  The implementation type is always an Eigen object.
    */
-  typedef Base Implementation;
+  typedef typename Base::Implementation Implementation;
 
   /*! \brief The primitive type of the coordinates.
    */
@@ -78,26 +78,32 @@ class LinearVelocity : public LinearVelocityBase<LinearVelocity<PrimType_>>, pri
     : Base(x, y, z) {
   }
 
+  /*! \brief Constructor using Vector.
+   *  \param other   vector::eigen_impl::Vector<phys_quant::PhysicalType::Velocity, PrimType_, 3>
+   */
+  explicit LinearVelocity(const Base& other)
+    : Base(other) {
+  }
 
   /*! \brief Constructor using Eigen::Vector3.
    *  \param other   Eigen::Matrix<PrimType_,3,1>
    */
-  explicit LinearVelocity(const Base& other)
+  explicit LinearVelocity(const Implementation& other)
     : Base(other) {
-   }
-
-  /*! \brief Cast to the implementation type.
-   *  \returns the implementation (recommended only for advanced users)
-   */
-  inline Implementation& toImplementation() {
-    return static_cast<Implementation&>(*this);
   }
 
-  /*! \brief Cast to the implementation type.
-   *  \returns the implementation (recommended only for advanced users)
+  /*! \brief Cast to the base type.
+   *  \returns the base (recommended only for advanced users)
    */
-  inline const Implementation& toImplementation() const {
-    return static_cast<const Implementation&>(*this);
+  inline Base& toBase() {
+    return static_cast<Base&>(*this);
+  }
+
+  /*! \brief Cast to the base type.
+   *  \returns the base (recommended only for advanced users)
+   */
+  inline const Base& toBase() const {
+    return static_cast<const Base&>(*this);
   }
 
   /*!\brief Get x-coordinate of the linear velocity
@@ -123,40 +129,64 @@ class LinearVelocity : public LinearVelocityBase<LinearVelocity<PrimType_>>, pri
    */
   using LinearVelocityBase<LinearVelocity<PrimType_>>::operator-; // otherwise ambiguous PositionBase and Eigen
 
-  /*! \brief Addition of two linear velocities.
+  /*! \brief Multiplication of a linear velocity and a factor.
+   */
+  using LinearVelocityBase<LinearVelocity<PrimType_>>::operator*; // otherwise ambiguous PositionBase and Eigen
+
+  /*! \brief Division of a linear velocity by a factor.
+   */
+  using LinearVelocityBase<LinearVelocity<PrimType_>>::operator/; // otherwise ambiguous PositionBase and Eigen
+
+  /*! \brief Addition and assignment.
    * \param other   other linear velocity
+   * \returns reference
    */
   template<typename Other_>
   LinearVelocity<PrimType_>& operator +=(const Other_& other) {
-    this->toImplementation() += other.toImplementation();
+    this->toBase() += other.toBase();
     return *this;
   }
 
-  /*! \brief Subtraction of two linear velocities.
+  /*! \brief Subtraction and assignment.
    * \param other   other linear velocity
+   * \returns reference
    */
   template<typename Other_>
   LinearVelocity<PrimType_>& operator -=(const Other_& other) {
-    this->toImplementation() -= other.toImplementation();
+    this->toBase() -= other.toBase();
     return *this;
   }
 
-  /*! \brief Sets all components of the velocity to zero.
+  /*! \brief Multiplication and assignment.
+   * \param factor   factor
    * \returns reference
    */
-  LinearVelocity<PrimType_>& setZero() {
-    Base::setZero();
+  template<typename FactorPrimType_>
+  LinearVelocity<PrimType_>& operator *=(FactorPrimType_ factor) {
+    this->toBase() *= (PrimType_)factor;
     return *this;
   }
 
-  /*! \brief Used for printing the object with std::cout.
-   *  \returns std::stream object
+  /*! \brief Division and assignment.
+   * \param divisor   divisor
+   * \returns reference
    */
-  friend std::ostream& operator << (std::ostream& out, const LinearVelocity& velocity) {
-    out << velocity.transpose();
-    return out;
+  template<typename DivisorPrimType_>
+  LinearVelocity<PrimType_>& operator /=(DivisorPrimType_ divisor) {
+    this->toBase() /= (PrimType_)divisor;
+    return *this;
   }
 };
+
+
+/*! \brief Multiplies a linear velocity with a scalar.
+ * \param factor   factor
+ * \returns product
+ */
+template<typename FactorPrimType_, typename PrimType_>
+LinearVelocity<PrimType_> operator*(FactorPrimType_ factor, const LinearVelocity<PrimType_>& linearVelocity) {
+  return linearVelocity*(PrimType_)factor;
+}
 
 
 //! \brief Linear velocity in 3D space with primitive type double
@@ -172,7 +202,7 @@ namespace internal {
 /*! \brief Gets the primitive type of the coordinates
  */
 template<typename PrimType_>
-class get_scalar<eigen_impl::LinearVelocity<PrimType_>>{
+class get_scalar<eigen_impl::LinearVelocity<PrimType_>> {
  public:
   typedef PrimType_ Scalar;
 };

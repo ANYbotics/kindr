@@ -63,16 +63,16 @@ class EulerAnglesXyz;
 
 namespace internal {
 
-template<typename PrimType_>
-class get_position3<positions::eigen_impl::Position3<PrimType_>>{
- private:
-  typedef typename positions::eigen_impl::Position3<PrimType_> Position;
-  typedef typename Position::Implementation Matrix3X;
- public:
-  static const Matrix3X& get_matrix3(const Position& position) {
-    return position.toImplementation();
-  }
-};
+//template<typename PrimType_>
+//class get_position3<positions::eigen_impl::Position3<PrimType_>>{
+// private:
+//  typedef typename positions::eigen_impl::Position3<PrimType_> Position;
+//  typedef typename Position::Implementation Matrix3X;
+// public:
+//  static const Matrix3X& get_matrix3(const Position& position) {
+//    return position.toImplementation();
+//  }
+//};
 
 template<typename PrimType_>
 class get_scalar<Eigen::Matrix<PrimType_, 3, 1>> {
@@ -201,6 +201,15 @@ class RotationTraits<RotationBase<Rotation_, Usage_>> {
       return eigen_impl::RotationMatrix<typename Rotation_::Scalar, Usage_>(rotation.derived()).toImplementation()*m;
     } else {
       return eigen_impl::RotationMatrix<typename Rotation_::Scalar, Usage_>(rotation.derived().inverted()).toImplementation()*m;
+    }
+  }
+
+  template<typename Vector_>
+  inline static Vector_ rotate(const RotationBase<Rotation_, Usage_>& rotation, const Vector_& vector){
+    if(Usage_ == RotationUsage::ACTIVE){
+      return Vector_(rotation.derived().toImplementation()*vector.toImplementation());
+    } else {
+      return Vector_(rotation.derived().inverted().toImplementation()*vector.toImplementation());
     }
   }
 };
