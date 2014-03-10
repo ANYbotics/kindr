@@ -34,11 +34,13 @@
 #include <gtest/gtest.h>
 
 #include "kindr/vector/VectorEigen.hpp"
+#include "kindr/rotations/RotationEigen.hpp"
 #include "kindr/common/gtest_eigen.hpp"
 
 
 
 namespace vector = kindr::vector::eigen_impl;
+namespace rotations = kindr::rotations::eigen_impl;
 
 
 
@@ -280,5 +282,13 @@ TYPED_TEST(VectorTest, testVector)
   ASSERT_EQ(segmentResult(0), segmentVector(0));
   ASSERT_EQ(segmentResult(1), segmentVector(1));
   ASSERT_EQ(segmentResult(2), segmentVector(2));
+
+  // rotate
+  Length3d length(1,2,3);
+  rotations::RotationMatrixPD rot(rotations::AngleAxisPD(M_PI, 0, 0, 1));
+  Length3d result = rot.rotate(length);
+  ASSERT_NEAR(result(0), - length(0), this->tol);
+  ASSERT_NEAR(result(1), - length(1), this->tol);
+  ASSERT_NEAR(result(2),   length(2), this->tol);
 }
 
