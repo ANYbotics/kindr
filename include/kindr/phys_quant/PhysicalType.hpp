@@ -15,7 +15,7 @@ namespace phys_quant {
 
 
 enum class PhysicalType {
-  None,
+  Undefined,
 
   Time,
   Mass,
