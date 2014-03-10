@@ -616,7 +616,7 @@ KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Mass, Mass)
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Inertia, Inertia)
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Energy, Energy)
 
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Length, Length)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Length, Length) // Length/Length = Undefined
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Velocity, Velocity)
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Acceleration, Acceleration)
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Jerk, Jerk)
@@ -630,7 +630,7 @@ KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, AngularJerk, AngularJerk)
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Torque, Torque)
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, AngularMomentum, AngularMomentum)
 
-//KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Length, Angle, Length)
+//KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Length, Angle, Length) // Length/Length = Angle -> ambiguous, explicit cast to Angle if needed
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Length, AngularVelocity, Velocity)
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Length, AngularAcceleration, Acceleration)
 
