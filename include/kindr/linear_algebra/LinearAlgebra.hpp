@@ -31,6 +31,7 @@
 #include <Eigen/SVD>
 
 namespace kindr {
+//! Linear algebra methods
 namespace linear_algebra {
 
 /*!

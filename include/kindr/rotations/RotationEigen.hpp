@@ -35,6 +35,7 @@
 
 namespace kindr {
 namespace rotations {
+//! Implementation of rotations based on the C++ Eigen library
 namespace eigen_impl {
 
 template<typename PrimType_, enum RotationUsage Usage_>

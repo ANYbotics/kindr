@@ -37,6 +37,7 @@
 
 
 namespace kindr {
+//! Common methods
 namespace common {
 
 /*! \brief Floating-point modulo

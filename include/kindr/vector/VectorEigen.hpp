@@ -39,7 +39,7 @@
 
 namespace kindr {
 namespace vector {
-//! Implementation of rotations based on the C++ Eigen library
+//! Implementation of vector based on the C++ Eigen library
 namespace eigen_impl {
 
 
@@ -49,9 +49,9 @@ namespace eigen_impl {
  *
  * This class implements a vector in n-dimensional-space.
  * More precisely an interface to store and access the coordinates of a vector of a point in n-dimensional-space is provided.
- * \tparam PhysicalType_  Physical type of the vector.
- * \tparam PrimType_  Primitive type of the coordinates.
- * \tparam Dimension_  Dimension of the vector.
+ * \tparam PhysicalType_    Physical type of the vector.
+ * \tparam PrimType_        Primitive type of the coordinates.
+ * \tparam Dimension_       Dimension of the vector.
  * \ingroup vectors
  */
 template<enum phys_quant::PhysicalType PhysicalType_, typename PrimType_, int Dimension_>

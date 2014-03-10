@@ -37,7 +37,7 @@
 
 namespace kindr {
 namespace positions {
-//! Implementation of rotations based on the C++ Eigen library
+//! Implementation of positions based on the C++ Eigen library
 namespace eigen_impl {
 
 /*! \class Position3

@@ -107,6 +107,7 @@ See \ref page_developers "Developers" to learn how to develop this library.
  \section velocities Time Derivatives of Positions and Rotations
   - \subpage page_pdiff
   - \subpage page_rdiff
+  - \subpage page_posesdiff
 
   \section misc Mathematical Tools
   

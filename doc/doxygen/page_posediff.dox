@@ -1,0 +1,17 @@
+/**
+ * \defgroup posesdiff Time Derivatives of Poses
+ *  \see \ref page_posesdiff "Chapter Time Derivatives of Poses" 
+ */
+ 
+ /*! \page page_posesdiff Time Derivatives of Poses
+
+This library defines an \ref posesdiff_interface "interface" for the time derivative of a pose (position and orientation) of a rigid body or a (displacement) frame to enable different representations of a time derivative of a pose (twist, etc.) and different \ref posesdiff_implementations "implementations" (based on Eigen, Bullet, etc.). 
+The section \ref posesdiff_interface "Interface" describes the functionalities, whereas the section \ref posesdiff_implementations "Implementation" shows some examples.
+
+\tableofcontents
+
+\section posesdiff_interface Interface
+
+\section posesdiff_implementations Implementations
+
+*/
