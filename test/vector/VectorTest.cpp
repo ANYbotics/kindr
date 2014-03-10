@@ -171,6 +171,14 @@ TYPED_TEST(VectorTest, testVector)
   ASSERT_EQ(vectorSubtractandAssign(3), this->vecSubtract(3));
   ASSERT_EQ(vectorSubtractandAssign(4), this->vecSubtract(4));
 
+  // negation
+  Vector vectorNegated = - this->vector1FromEigen;
+  ASSERT_EQ(vectorNegated(0), - this->vector1FromEigen(0));
+  ASSERT_EQ(vectorNegated(1), - this->vector1FromEigen(1));
+  ASSERT_EQ(vectorNegated(2), - this->vector1FromEigen(2));
+  ASSERT_EQ(vectorNegated(3), - this->vector1FromEigen(3));
+  ASSERT_EQ(vectorNegated(4), - this->vector1FromEigen(4));
+
   // setZero
   Vector vector2FromEigenBackup(this->vec2);
   this->vector2FromEigen.setZero();

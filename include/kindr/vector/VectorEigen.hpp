@@ -287,6 +287,13 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
     return *this;
   }
 
+  /*! \brief Negation of a vector.
+   * \returns negative vector
+   */
+  Vector<PhysicalType_, PrimType_, Dimension_> operator-() const {
+    return Vector<PhysicalType_, PrimType_, Dimension_>(-this->toImplementation());
+  }
+
   /*! \brief Comparison operator.
    * \param other   other vector
    * \returns true if equal
