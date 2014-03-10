@@ -44,7 +44,7 @@ add_definitions(-std=c++0x)
 SET(CMAKE_BUILD_TYPE Debug)
 
 
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/gtest/")
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/gtest/" AND BUILD_TEST)
 	message(STATUS "Building GTests!")
 	option(BUILD_GTEST "build gtest" ON)
 	add_subdirectory(gtest gtest)
@@ -73,7 +73,9 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 #add_subdirectory(poses)
 
 # Add test
-add_subdirectory(test)
+if(BUILD_GTEST)
+	add_subdirectory(test)
+endif()
 
 
 # Add Doxygen documentation
