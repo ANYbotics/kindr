@@ -47,175 +47,25 @@ namespace vector = kindr::vector::eigen_impl;
 
 
 template <typename VectorImplementation>
-struct Vector3Test: public ::testing::Test {
-  typedef VectorImplementation Vector3;
-  typedef typename Vector3::Scalar Scalar;
-  typedef typename Vector3::Implementation EigenVector3;
-
-  Scalar tol;
-  EigenVector3 vecZero, vec1, vec2, vecAdd, vecSubtract;
-
-  Vector3 vectorDefault;
-  Vector3 vectorFromThreeValues;
-  Vector3 vectorFromEigen;
-  Vector3 vector2FromEigen;
-  Vector3 vectorFromVector;
-
-  Vector3Test() : tol(1e-6),
-      vecZero(EigenVector3::Zero()),
-      vec1(10,20,30),
-      vec2(1,2,3),
-      vecAdd(11,22,33),
-      vecSubtract(9,18,27),
-      vectorFromThreeValues(vec1.x(), vec1.y(), vec1.z()),
-      vectorFromEigen(vec1),
-      vector2FromEigen(vec2),
-      vectorFromVector(vectorFromEigen)
-  {}
-};
-
-
-typedef ::testing::Types<
-    vector::Vector3D,
-    vector::Vector3F
-> Types;
-
-
-TYPED_TEST_CASE(Vector3Test, Types);
-
-TYPED_TEST(Vector3Test, testVector3)
-{
-  typedef typename TestFixture::Vector3 Vector3;
-  typedef typename TestFixture::EigenVector3 EigenVector3;
-
-  // default constructor
-  ASSERT_EQ(this->vectorDefault.x(), this->vecZero.x()) << "Default constructor needs to initialize x-component to zero!";
-  ASSERT_EQ(this->vectorDefault.y(), this->vecZero.y()) << "Default constructor needs to initialize y-component to zero!";
-  ASSERT_EQ(this->vectorDefault.z(), this->vecZero.z()) << "Default constructor needs to initialize z-component to zero!";
-
-  // constructor with three values (x,y,z)
-  ASSERT_EQ(this->vectorFromThreeValues.x(), this->vec1.x()) << "Three-Value Constructor needs to first initialize x-component!";
-  ASSERT_EQ(this->vectorFromThreeValues.y(), this->vec1.y()) << "Three-Value Constructor needs to second initialize y-component!";
-  ASSERT_EQ(this->vectorFromThreeValues.z(), this->vec1.z()) << "Three-Value Constructor needs to third initialize z-component!";
-
-  // constructor with Eigen vector
-  ASSERT_EQ(this->vectorFromEigen.x(), this->vec1.x()) << "Base Constructor needs to first initialize x-component!";
-  ASSERT_EQ(this->vectorFromEigen.y(), this->vec1.y()) << "Base Constructor needs to second initialize y-component!";
-  ASSERT_EQ(this->vectorFromEigen.z(), this->vec1.z()) << "Base Constructor needs to third initialize z-component!";
-
-  // constructor with Vector3
-  ASSERT_EQ(this->vectorFromVector.x(), this->vec1.x());
-  ASSERT_EQ(this->vectorFromVector.y(), this->vec1.y());
-  ASSERT_EQ(this->vectorFromVector.z(), this->vec1.z());
-
-  // toImplementation
-  ASSERT_EQ(this->vectorFromThreeValues.toImplementation()(0,0), this->vec1.x()) << "X-component needs to correspond to the matrix entry (0,0)!";
-  ASSERT_EQ(this->vectorFromThreeValues.toImplementation()(1,0), this->vec1.y()) << "Y-component needs to correspond to the matrix entry (1,0)!";
-  ASSERT_EQ(this->vectorFromThreeValues.toImplementation()(2,0), this->vec1.z()) << "Z-component needs to correspond to the matrix entry (2,0)!";
-
-  // addition
-  Vector3 vectorAdd = this->vectorFromEigen+this->vector2FromEigen;
-  ASSERT_EQ(vectorAdd.x(), this->vecAdd.x());
-  ASSERT_EQ(vectorAdd.y(), this->vecAdd.y());
-  ASSERT_EQ(vectorAdd.z(), this->vecAdd.z());
-
-  // addition and assignment
-  Vector3 vectorAddandAssign(this->vectorFromEigen);
-  vectorAddandAssign += this->vector2FromEigen;
-  ASSERT_EQ(vectorAddandAssign.x(), this->vecAdd.x());
-  ASSERT_EQ(vectorAddandAssign.y(), this->vecAdd.y());
-  ASSERT_EQ(vectorAddandAssign.z(), this->vecAdd.z());
-
-  // subtract
-  Vector3 vectorSubtract = this->vectorFromEigen-this->vector2FromEigen;
-  ASSERT_EQ(vectorSubtract.x(), this->vecSubtract.x());
-  ASSERT_EQ(vectorSubtract.y(), this->vecSubtract.y());
-  ASSERT_EQ(vectorSubtract.z(), this->vecSubtract.z());
-
-  // subtract and assignment
-  Vector3 vectorSubtractandAssign(this->vectorFromEigen);
-  vectorSubtractandAssign -= this->vector2FromEigen;
-  ASSERT_EQ(vectorSubtractandAssign.x(), this->vecSubtract.x());
-  ASSERT_EQ(vectorSubtractandAssign.y(), this->vecSubtract.y());
-  ASSERT_EQ(vectorSubtractandAssign.z(), this->vecSubtract.z());
-
-  // setZero
-  Vector3 vector2FromEigenBackup(this->vec2);
-  this->vector2FromEigen.setZero();
-  ASSERT_EQ(this->vector2FromEigen.x(), this->vecZero.x());
-  ASSERT_EQ(this->vector2FromEigen.y(), this->vecZero.y());
-  ASSERT_EQ(this->vector2FromEigen.z(), this->vecZero.z());
-
-  // bracket assign 1
-  this->vector2FromEigen(0) = vector2FromEigenBackup(0);
-  ASSERT_EQ(this->vector2FromEigen.x(), vector2FromEigenBackup.x());
-
-  // << assign 2
-  this->vector2FromEigen << vector2FromEigenBackup(0),vector2FromEigenBackup(1),vector2FromEigenBackup(2);
-  ASSERT_EQ(this->vector2FromEigen.x(), vector2FromEigenBackup.x());
-  ASSERT_EQ(this->vector2FromEigen.y(), vector2FromEigenBackup.y());
-  ASSERT_EQ(this->vector2FromEigen.z(), vector2FromEigenBackup.z());
-
-  // norm
-  ASSERT_NEAR(this->vector2FromEigen.norm(), std::sqrt(this->vector2FromEigen(0)*this->vector2FromEigen(0) + this->vector2FromEigen(1)*this->vector2FromEigen(1) + this->vector2FromEigen(2)*this->vector2FromEigen(2)), 1e-6);
-
-  // normalized
-  EigenVector3 eigenVectorNormalized(this->vec2.normalized());
-  Vector3 vectorNormalized(this->vector2FromEigen.normalized());
-  ASSERT_NEAR(vectorNormalized.x(), eigenVectorNormalized.x(), 1e-6);
-  ASSERT_NEAR(vectorNormalized.y(), eigenVectorNormalized.y(), 1e-6);
-  ASSERT_NEAR(vectorNormalized.z(), eigenVectorNormalized.z(), 1e-6);
-
-  // normalize
-  this->vector2FromEigen.normalize();
-  ASSERT_NEAR(this->vector2FromEigen.x(), eigenVectorNormalized.x(), 1e-6);
-  ASSERT_NEAR(this->vector2FromEigen.y(), eigenVectorNormalized.y(), 1e-6);
-  ASSERT_NEAR(this->vector2FromEigen.z(), eigenVectorNormalized.z(), 1e-6);
-
-//  std::cout << vectorNormalized << std::endl;
-//  std::cout << vectorNormalized.dot(vectorNormalized) << std::endl;
-//  std::cout << vectorNormalized.cross(vectorNormalized) << std::endl;
-//  std::cout << vectorNormalized.elementwiseMultiplication(vectorNormalized) << std::endl;
-//  std::cout << vectorNormalized.elementwiseDivision(vectorNormalized) << std::endl;
-//  std::cout << vectorNormalized.abs() << std::endl;
-//  std::cout << vectorNormalized.max() << std::endl;
-//  std::cout << vectorNormalized.min() << std::endl;
-//  std::cout << (vectorNormalized == vectorNormalized) << std::endl;
-//  std::cout << (vectorNormalized != vectorNormalized) << std::endl;
-//  std::cout << vectorNormalized.isSimilarTo(vectorNormalized, 1e-6) << std::endl;
-//  std::cout << vectorNormalized.isSimilarTo(vector2FromEigenBackup, 1e-6) << std::endl;
-//  std::cout << vectorNormalized.sum() << std::endl;
-//  std::cout << vectorNormalized.mean() << std::endl;
-//  std::cout << vectorNormalized.template head<2>() << std::endl;
-//  std::cout << vectorNormalized.template tail<2>() << std::endl;
-//    std::cout << vectorNormalized.template segment<1,2>() << std::endl;
-}
-
-
-
-
-
-
-
-
-
-template <typename VectorImplementation>
 struct VectorTest: public ::testing::Test {
   typedef VectorImplementation Vector;
   typedef typename Vector::Scalar Scalar;
-//  const int length = Vector::Dimension;
   typedef typename Vector::Implementation EigenVector;
 
-  Scalar tol;
+  Scalar tol, sum, max, min, mean;
   EigenVector vecZero, vec1, vec2, vecAdd, vecSubtract;
 
   Vector vectorDefault;
   Vector vectorFromMultipleValues;
-  Vector vectorFromEigen;
+  Vector vector1FromEigen;
   Vector vector2FromEigen;
   Vector vectorFromVector;
 
-  VectorTest() : tol(1e-6)
+  VectorTest() : tol(1e-6),
+                 sum(150),
+                 max(50),
+                 min(10),
+                 mean(30)
   {
     vecZero = EigenVector::Zero();
     vec1 << 10,20,30,40,50;
@@ -223,9 +73,9 @@ struct VectorTest: public ::testing::Test {
     vecAdd << 11,22,33,44,55;
     vecSubtract << 9,18,27,36,45;
     vectorFromMultipleValues << vec1(0),vec1(1),vec1(2),vec1(3),vec1(4);
-    vectorFromEigen = Vector(vec1);
+    vector1FromEigen = Vector(vec1);
     vector2FromEigen = Vector(vec2);
-    vectorFromVector = vectorFromEigen;
+    vectorFromVector = vector1FromEigen;
   }
 };
 
@@ -233,7 +83,11 @@ struct VectorTest: public ::testing::Test {
 
 typedef ::testing::Types<
     vector::Vector<kindr::phys_quant::PhysicalType::None, double, 5>,
-    vector::Vector<kindr::phys_quant::PhysicalType::None, float,  5>
+    vector::Vector<kindr::phys_quant::PhysicalType::None, float,  5>,
+    vector::Vector<kindr::phys_quant::PhysicalType::Force, double, 5>,
+    vector::Vector<kindr::phys_quant::PhysicalType::Force, float,  5>,
+    vector::Vector<kindr::phys_quant::PhysicalType::Length, double, 5>,
+    vector::Vector<kindr::phys_quant::PhysicalType::Length, float,  5>
 > Types5;
 
 
@@ -242,6 +96,8 @@ TYPED_TEST_CASE(VectorTest, Types5);
 TYPED_TEST(VectorTest, testVector)
 {
   typedef typename TestFixture::Vector Vector;
+  typedef vector::Vector<kindr::phys_quant::PhysicalType::Velocity, typename TestFixture::Scalar, 5> OtherVector;
+  OtherVector vector2FromEigenOtherType(this->vec2);
   typedef typename TestFixture::EigenVector EigenVector;
 
   // default constructor
@@ -259,11 +115,11 @@ TYPED_TEST(VectorTest, testVector)
   ASSERT_EQ(this->vectorFromMultipleValues(4), this->vec1(4)) << "Multi-Value Constructor needs to initialize component 5!";
 
   // constructor with Eigen vector
-  ASSERT_EQ(this->vectorFromEigen(0), this->vec1(0)) << "Base Constructor needs to initialize component 1!";
-  ASSERT_EQ(this->vectorFromEigen(1), this->vec1(1)) << "Base Constructor needs to initialize component 2!";
-  ASSERT_EQ(this->vectorFromEigen(2), this->vec1(2)) << "Base Constructor needs to initialize component 3!";
-  ASSERT_EQ(this->vectorFromEigen(3), this->vec1(3)) << "Base Constructor needs to initialize component 4!";
-  ASSERT_EQ(this->vectorFromEigen(4), this->vec1(4)) << "Base Constructor needs to initialize component 5!";
+  ASSERT_EQ(this->vector1FromEigen(0), this->vec1(0)) << "Base Constructor needs to initialize component 1!";
+  ASSERT_EQ(this->vector1FromEigen(1), this->vec1(1)) << "Base Constructor needs to initialize component 2!";
+  ASSERT_EQ(this->vector1FromEigen(2), this->vec1(2)) << "Base Constructor needs to initialize component 3!";
+  ASSERT_EQ(this->vector1FromEigen(3), this->vec1(3)) << "Base Constructor needs to initialize component 4!";
+  ASSERT_EQ(this->vector1FromEigen(4), this->vec1(4)) << "Base Constructor needs to initialize component 5!";
 
   // constructor with Vector
   ASSERT_EQ(this->vectorFromVector(0), this->vec1(0));
@@ -280,7 +136,7 @@ TYPED_TEST(VectorTest, testVector)
   ASSERT_EQ(this->vectorFromMultipleValues.toImplementation()(4,0), this->vec1(4)) << "Component 5 needs to correspond to the matrix entry (2,0)!";
 
   // addition
-  Vector vectorAdd = this->vectorFromEigen+this->vector2FromEigen;
+  Vector vectorAdd = this->vector1FromEigen+this->vector2FromEigen;
   ASSERT_EQ(vectorAdd(0), this->vecAdd(0));
   ASSERT_EQ(vectorAdd(1), this->vecAdd(1));
   ASSERT_EQ(vectorAdd(2), this->vecAdd(2));
@@ -288,7 +144,7 @@ TYPED_TEST(VectorTest, testVector)
   ASSERT_EQ(vectorAdd(4), this->vecAdd(4));
 
   // addition and assignment
-  Vector vectorAddandAssign(this->vectorFromEigen);
+  Vector vectorAddandAssign(this->vector1FromEigen);
   vectorAddandAssign += this->vector2FromEigen;
   ASSERT_EQ(vectorAddandAssign(0), this->vecAdd(0));
   ASSERT_EQ(vectorAddandAssign(1), this->vecAdd(1));
@@ -297,7 +153,7 @@ TYPED_TEST(VectorTest, testVector)
   ASSERT_EQ(vectorAddandAssign(4), this->vecAdd(4));
 
   // subtract
-  Vector vectorSubtract = this->vectorFromEigen-this->vector2FromEigen;
+  Vector vectorSubtract = this->vector1FromEigen-this->vector2FromEigen;
   ASSERT_EQ(vectorSubtract(0), this->vecSubtract(0));
   ASSERT_EQ(vectorSubtract(1), this->vecSubtract(1));
   ASSERT_EQ(vectorSubtract(2), this->vecSubtract(2));
@@ -305,7 +161,7 @@ TYPED_TEST(VectorTest, testVector)
   ASSERT_EQ(vectorSubtract(4), this->vecSubtract(4));
 
   // subtract and assignment
-  Vector vectorSubtractandAssign(this->vectorFromEigen);
+  Vector vectorSubtractandAssign(this->vector1FromEigen);
   vectorSubtractandAssign -= this->vector2FromEigen;
   ASSERT_EQ(vectorSubtractandAssign(0), this->vecSubtract(0));
   ASSERT_EQ(vectorSubtractandAssign(1), this->vecSubtract(1));
@@ -340,35 +196,89 @@ TYPED_TEST(VectorTest, testVector)
   // normalized
   EigenVector eigenVectorNormalized(this->vec2.normalized());
   Vector vectorNormalized(this->vector2FromEigen.normalized());
-  ASSERT_NEAR(vectorNormalized(0), eigenVectorNormalized(0), 1e-6);
-  ASSERT_NEAR(vectorNormalized(1), eigenVectorNormalized(1), 1e-6);
-  ASSERT_NEAR(vectorNormalized(2), eigenVectorNormalized(2), 1e-6);
-  ASSERT_NEAR(vectorNormalized(3), eigenVectorNormalized(3), 1e-6);
-  ASSERT_NEAR(vectorNormalized(4), eigenVectorNormalized(4), 1e-6);
+  ASSERT_NEAR(vectorNormalized(0), eigenVectorNormalized(0), this->tol);
+  ASSERT_NEAR(vectorNormalized(1), eigenVectorNormalized(1), this->tol);
+  ASSERT_NEAR(vectorNormalized(2), eigenVectorNormalized(2), this->tol);
+  ASSERT_NEAR(vectorNormalized(3), eigenVectorNormalized(3), this->tol);
+  ASSERT_NEAR(vectorNormalized(4), eigenVectorNormalized(4), this->tol);
 
   // normalize
-  this->vector2FromEigen.normalize();
-  ASSERT_NEAR(this->vector2FromEigen(0), eigenVectorNormalized(0), 1e-6);
-  ASSERT_NEAR(this->vector2FromEigen(1), eigenVectorNormalized(1), 1e-6);
-  ASSERT_NEAR(this->vector2FromEigen(2), eigenVectorNormalized(2), 1e-6);
-  ASSERT_NEAR(this->vector2FromEigen(3), eigenVectorNormalized(3), 1e-6);
-  ASSERT_NEAR(this->vector2FromEigen(4), eigenVectorNormalized(4), 1e-6);
+  Vector vectorNormalized2(this->vec2);
+  vectorNormalized2.normalize();
+  ASSERT_NEAR(vectorNormalized2(0), eigenVectorNormalized(0), this->tol);
+  ASSERT_NEAR(vectorNormalized2(1), eigenVectorNormalized(1), this->tol);
+  ASSERT_NEAR(vectorNormalized2(2), eigenVectorNormalized(2), this->tol);
+  ASSERT_NEAR(vectorNormalized2(3), eigenVectorNormalized(3), this->tol);
+  ASSERT_NEAR(vectorNormalized2(4), eigenVectorNormalized(4), this->tol);
 
-//  std::cout << vectorNormalized << std::endl;
-//  std::cout << vectorNormalized.dot(vectorNormalized) << std::endl;
-//  std::cout << vectorNormalized.elementwiseMultiplication(vectorNormalized) << std::endl;
-//  std::cout << vectorNormalized.elementwiseDivision(vectorNormalized) << std::endl;
-//  std::cout << vectorNormalized.abs() << std::endl;
-//  std::cout << vectorNormalized.max() << std::endl;
-//  std::cout << vectorNormalized.min() << std::endl;
-//  std::cout << (vectorNormalized == vectorNormalized) << std::endl;
-//  std::cout << (vectorNormalized != vectorNormalized) << std::endl;
-//  std::cout << vectorNormalized.isSimilarTo(vectorNormalized, 1e-6) << std::endl;
-//  std::cout << vectorNormalized.isSimilarTo(vector2FromEigenBackup, 1e-6) << std::endl;
-//  std::cout << vectorNormalized.sum() << std::endl;
-//  std::cout << vectorNormalized.mean() << std::endl;
-//  std::cout << vectorNormalized.template head<2>() << std::endl;
-//  std::cout << vectorNormalized.template tail<2>() << std::endl;
-//  std::cout << vectorNormalized.template segment<1,2>() << std::endl;
+  // is similar to
+  ASSERT_TRUE(vectorNormalized2.isSimilarTo(Vector(eigenVectorNormalized), this->tol));
+
+//  // ==
+//  ASSERT_TRUE(vectorNormalized2 == Vector(eigenVectorNormalized));
+//
+//  // !=
+//  ASSERT_FALSE(vectorNormalized2 != Vector(eigenVectorNormalized));
+
+  // sum
+  ASSERT_EQ(this->vector1FromEigen.sum(), this->sum);
+
+  // max
+  ASSERT_EQ(this->vector1FromEigen.max(), this->max);
+
+  // min
+  ASSERT_EQ(this->vector1FromEigen.min(), this->min);
+
+  // mean
+  ASSERT_EQ(this->vector1FromEigen.mean(), this->mean);
+
+  // dot
+  ASSERT_NEAR(this->vector1FromEigen.dot(this->vector1FromEigen), this->vec1.dot(this->vec1), this->tol);
+
+  // cross
+  typedef Eigen::Matrix<double, 3, 1> EigenVector3;
+  typedef vector::Vector<kindr::phys_quant::PhysicalType::Length, double, 3> Length3d;
+  typedef vector::Vector<kindr::phys_quant::PhysicalType::Force, double, 3> Force3d;
+  typedef vector::Vector<kindr::phys_quant::PhysicalType::None, double, 3> Vector3d;
+  EigenVector3 crossVectorEigen1(1,2,3);
+  EigenVector3 crossVectorEigen2(3,2,1);
+  Length3d crossVector1(crossVectorEigen1);
+  Force3d crossVector2(crossVectorEigen2);
+  EigenVector3 crossProductResult(crossVectorEigen1.cross(crossVectorEigen2));
+  Vector3d crossProductVector(crossVector1.cross(crossVector2));
+  ASSERT_NEAR(crossProductVector(0), crossProductResult(0), this->tol);
+  ASSERT_NEAR(crossProductVector(1), crossProductResult(1), this->tol);
+  ASSERT_NEAR(crossProductVector(2), crossProductResult(2), this->tol);
+
+  // elementwise multiplication
+  Vector elementwiseMultiplicationVector(this->vector1FromEigen.elementwiseMultiplication(vector2FromEigenOtherType));
+  ASSERT_EQ(elementwiseMultiplicationVector(0), this->vec1(0)*this->vec2(0));
+  ASSERT_EQ(elementwiseMultiplicationVector(1), this->vec1(1)*this->vec2(1));
+  ASSERT_EQ(elementwiseMultiplicationVector(2), this->vec1(2)*this->vec2(2));
+  ASSERT_EQ(elementwiseMultiplicationVector(3), this->vec1(3)*this->vec2(3));
+  ASSERT_EQ(elementwiseMultiplicationVector(4), this->vec1(4)*this->vec2(4));
+
+  // elementwise division
+  Vector elementwiseDivisionVector(this->vector1FromEigen.elementwiseDivision(vector2FromEigenOtherType));
+  ASSERT_EQ(elementwiseDivisionVector(0), this->vec1(0)/this->vec2(0));
+  ASSERT_EQ(elementwiseDivisionVector(1), this->vec1(1)/this->vec2(1));
+  ASSERT_EQ(elementwiseDivisionVector(2), this->vec1(2)/this->vec2(2));
+  ASSERT_EQ(elementwiseDivisionVector(3), this->vec1(3)/this->vec2(3));
+  ASSERT_EQ(elementwiseDivisionVector(4), this->vec1(4)/this->vec2(4));
+
+  // head & tail
+  auto headAndTailResult(this->vec1.head(2) + this->vec1.tail(2));
+  Vector vector1FromEigen2(this->vector1FromEigen);
+  auto headAndTailVector(vector1FromEigen2.template head<2>() + vector1FromEigen2.template tail<2>());
+  ASSERT_EQ(headAndTailResult(0), headAndTailVector(0));
+  ASSERT_EQ(headAndTailResult(1), headAndTailVector(1));
+
+  // segment
+  EigenVector vec12(this->vec1);
+  auto segmentResult(vec12.block(1,0,3,1));
+  auto segmentVector(vector1FromEigen2.template segment<1,3>());
+  ASSERT_EQ(segmentResult(0), segmentVector(0));
+  ASSERT_EQ(segmentResult(1), segmentVector(1));
+  ASSERT_EQ(segmentResult(2), segmentVector(2));
 }
 

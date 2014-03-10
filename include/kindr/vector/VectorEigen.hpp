@@ -158,7 +158,7 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
    */
   template<int Start_, int DimensionOutput_>
   Vector<PhysicalType_, PrimType_, DimensionOutput_> segment() const {
-    return Vector<PhysicalType_, PrimType_, DimensionOutput_>(this->toImplementation().block<DimensionOutput_,1>(Start_,0));
+    return Vector<PhysicalType_, PrimType_, DimensionOutput_>(this->toImplementation().block(Start_,0,DimensionOutput_,1)); // todo: use templated block()
   }
 
   /*!\brief Get x-coordinate of the vector (copy)
@@ -362,7 +362,7 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
   template<enum phys_quant::PhysicalType PhysicalTypeOther_, int DimensionCopy_ = Dimension_>
   typename internal::MultiplicationReturnTypeTrait<Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeOther_, PrimType_, Dimension_>>::ReturnType
   cross(const Vector<PhysicalTypeOther_, PrimType_, Dimension_>& other, typename std::enable_if<DimensionCopy_ == 3>::type* = nullptr) const {
-    return Vector<PhysicalType_, PrimType_, Dimension_>(this->toImplementation().cross(other.toImplementation()));
+    return typename internal::MultiplicationReturnTypeTrait<Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeOther_, PrimType_, Dimension_>>::ReturnType(this->toImplementation().cross(other.toImplementation()));
   }
 
   /*! \brief Elementwise product with other vector.
@@ -372,7 +372,7 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
   template<enum phys_quant::PhysicalType PhysicalTypeOther_>
   typename internal::MultiplicationReturnTypeTrait<Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeOther_, PrimType_, Dimension_>>::ReturnType
   elementwiseMultiplication(const Vector<PhysicalTypeOther_, PrimType_, Dimension_>& other) const {
-    return Vector<PhysicalType_, PrimType_, Dimension_>(this->toImplementation().cwiseProduct(other.toImplementation()));
+    return typename internal::MultiplicationReturnTypeTrait<Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeOther_, PrimType_, Dimension_>>::ReturnType(this->toImplementation().cwiseProduct(other.toImplementation()));
   }
 
   /*! \brief Elementwise division by other vector.
@@ -382,7 +382,7 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
   template<enum phys_quant::PhysicalType PhysicalTypeOther_>
   typename internal::DivisionReturnTypeTrait<Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeOther_, PrimType_, Dimension_>>::ReturnType
   elementwiseDivision(const Vector<PhysicalTypeOther_, PrimType_, Dimension_>& other) const {
-    return Vector<PhysicalType_, PrimType_, Dimension_>(this->toImplementation().cwiseQuotient(other.toImplementation()));
+    return typename internal::DivisionReturnTypeTrait<Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeOther_, PrimType_, Dimension_>>::ReturnType(this->toImplementation().cwiseQuotient(other.toImplementation()));
   }
 
   /*! \brief Absolute components.
@@ -560,6 +560,7 @@ class get_dimension<eigen_impl::Vector<PhysicalType_, PrimType_, Dimension_>> {
 template<enum phys_quant::PhysicalType PhysicalType1_, enum phys_quant::PhysicalType PhysicalType2_, typename PrimType_, int Dimension_>
 class MultiplicationReturnTypeTrait<eigen_impl::Vector<PhysicalType1_, PrimType_, Dimension_>, eigen_impl::Vector<PhysicalType2_, PrimType_, Dimension_>>
 {
+ public:
   typedef eigen_impl::Vector<phys_quant::PhysicalType::None, PrimType_, Dimension_> ReturnType;
 };
 
@@ -568,6 +569,7 @@ class MultiplicationReturnTypeTrait<eigen_impl::Vector<PhysicalType1_, PrimType_
 template<enum phys_quant::PhysicalType PhysicalType1_, enum phys_quant::PhysicalType PhysicalType2_, typename PrimType_, int Dimension_>
 class DivisionReturnTypeTrait<eigen_impl::Vector<PhysicalType1_, PrimType_, Dimension_>, eigen_impl::Vector<PhysicalType2_, PrimType_, Dimension_>>
 {
+ public:
   typedef eigen_impl::Vector<phys_quant::PhysicalType::None, PrimType_, Dimension_> ReturnType;
 };
 
