@@ -32,7 +32,7 @@
 
 #include "kindr/common/common.hpp"
 #include "kindr/common/assert_macros_eigen.hpp"
-#include "kindr/positions/PositionDiffEigen.hpp"
+#include "kindr/phys_quant/PhysicalQuantitiesEigen.hpp"
 #include "kindr/rotations/RotationDiffEigen.hpp"
 #include "kindr/poses/PoseDiffBase.hpp"
 
@@ -96,9 +96,9 @@ class Twist : public TwistBase<Twist<PrimType_, PositionDiff_, RotationDiff_>>, 
 };
 
 template<typename PrimType_>
-class TwistLinearVelocityRotationQuaternionDiff: public Twist<PrimType_, positions::eigen_impl::LinearVelocity<PrimType_>, rotations::eigen_impl::RotationQuaternionDiff<PrimType_, rotations::RotationUsage::ACTIVE>> {
+class TwistLinearVelocityRotationQuaternionDiff: public Twist<PrimType_, kindr::phys_quant::eigen_impl::Velocity<PrimType_, 3>, rotations::eigen_impl::RotationQuaternionDiff<PrimType_, rotations::RotationUsage::ACTIVE>> {
  private:
-  typedef Twist<PrimType_,kindr::positions::eigen_impl::LinearVelocity<PrimType_>, kindr::rotations::eigen_impl::RotationQuaternionDiff<PrimType_, kindr::rotations::RotationUsage::ACTIVE>> Base;
+  typedef Twist<PrimType_, kindr::phys_quant::eigen_impl::Velocity<PrimType_, 3>, kindr::rotations::eigen_impl::RotationQuaternionDiff<PrimType_, kindr::rotations::RotationUsage::ACTIVE>> Base;
  public:
   typedef PrimType_ Scalar;
   typedef typename Base::PositionDiff PositionDiff;
@@ -118,9 +118,9 @@ typedef TwistLinearVelocityRotationQuaternionDiff<float> TwistLinearVelocityRota
 
 
 template<typename PrimType_>
-class TwistLinearVelocityLocalAngularVelocity: public Twist<PrimType_, positions::eigen_impl::LinearVelocity<PrimType_>, rotations::eigen_impl::LocalAngularVelocity<PrimType_, rotations::RotationUsage::ACTIVE>> {
+class TwistLinearVelocityLocalAngularVelocity: public Twist<PrimType_, kindr::phys_quant::eigen_impl::Velocity<PrimType_, 3>, rotations::eigen_impl::LocalAngularVelocity<PrimType_, rotations::RotationUsage::ACTIVE>> {
  private:
-  typedef Twist<PrimType_,kindr::positions::eigen_impl::LinearVelocity<PrimType_>, kindr::rotations::eigen_impl::LocalAngularVelocity<PrimType_, kindr::rotations::RotationUsage::ACTIVE>> Base;
+  typedef Twist<PrimType_, kindr::phys_quant::eigen_impl::Velocity<PrimType_, 3>, kindr::rotations::eigen_impl::LocalAngularVelocity<PrimType_, kindr::rotations::RotationUsage::ACTIVE>> Base;
  public:
   typedef PrimType_ Scalar;
   typedef typename Base::PositionDiff PositionDiff;

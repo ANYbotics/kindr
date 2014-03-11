@@ -31,8 +31,8 @@
 #define KINDR_POSES_POSEDIFFBASE_HPP_
 
 
-#include "kindr/rotations/RotationDiffBase.hpp"
-#include "kindr/positions/PositionDiffBase.hpp"
+//#include "kindr/rotations/RotationDiffBase.hpp"
+//#include "kindr/positions/PositionDiffBase.hpp"
 
 
 namespace kindr {

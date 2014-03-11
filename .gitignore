@@ -65,3 +65,6 @@ gtest-1.7.0/*
 *.tdo
 *-converted-to.pdf
 *~
+
+cmake/FindKindr.cmake
+

@@ -1,5 +1,4 @@
 /*
-  /*
  * Copyright (c) 2013, Christian Gehring, Hannes Sommer, Paul Furgale, Remo Diethelm
  * All rights reserved.
  *
@@ -26,68 +25,31 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
 */
+#ifndef KINDR_PHYS_QUANT_PHYSICALQUANTITIES_HPP_
+#define KINDR_PHYS_QUANT_PHYSICALQUANTITIES_HPP_
 
-#include <iostream>
 
-#include <Eigen/Core>
+#include "kindr/phys_quant/eigen/Typeless.hpp"
 
-#include <gtest/gtest.h>
+#include "kindr/phys_quant/eigen/Time.hpp"
+#include "kindr/phys_quant/eigen/Mass.hpp"
+#include "kindr/phys_quant/eigen/Inertia.hpp"
+#include "kindr/phys_quant/eigen/Power.hpp"
+#include "kindr/phys_quant/eigen/Energy.hpp"
 
-#include "kindr/vector/VectorEigen.hpp"
-#include "kindr/phys_quant/PhysicalQuantitiesEigen.hpp"
+#include "kindr/phys_quant/eigen/Jerk.hpp"
+#include "kindr/phys_quant/eigen/Acceleration.hpp"
+#include "kindr/phys_quant/eigen/Velocity.hpp"
+#include "kindr/phys_quant/eigen/Position.hpp"
 #include "kindr/phys_quant/eigen/Force.hpp"
+#include "kindr/phys_quant/eigen/Momentum.hpp"
+
+#include "kindr/phys_quant/eigen/AngularJerk.hpp"
+#include "kindr/phys_quant/eigen/AngularAcceleration.hpp"
+#include "kindr/phys_quant/eigen/AngularVelocity.hpp"
+#include "kindr/phys_quant/eigen/Angle.hpp"
 #include "kindr/phys_quant/eigen/Torque.hpp"
-#include "kindr/common/gtest_eigen.hpp"
+#include "kindr/phys_quant/eigen/AngularMomentum.hpp"
 
 
-
-namespace vector = kindr::phys_quant::eigen_impl;
-
-
-
-template <typename ForceImplementation>
-struct ForceTorqueTest: public ::testing::Test {
-  typedef ForceImplementation Force;
-  typedef typename Force::Scalar Scalar;
-//  const int length = Force::Dimension;
-  typedef typename Force::Implementation EigenVector;
-
-  Scalar tol;
-  EigenVector vecZero, vec1, vec2, vecAdd, vecSubtract;
-
-  Force forceDefault;
-  Force vectorFromMultipleValues;
-  Force forceFromEigen;
-  Force force2FromEigen;
-  Force forceFromForce;
-
-  ForceTorqueTest() : tol(1e-6)
-  {
-
-  }
-};
-
-
-typedef ::testing::Types<
-    vector::VectorTypeless3D
-> Types3;
-
-
-TYPED_TEST_CASE(ForceTorqueTest, Types3);
-
-TYPED_TEST(ForceTorqueTest, testForce)
-{
-  typedef vector::VectorTypeless3D Vector;
-  typedef vector::Force3D Force;
-  typedef vector::Torque3D Torque;
-
-  Vector v(1,2,3);
-  Force f1(v);
-  Torque t1(v);
-
-//  Force f2 = t1 + f1;
-  std::cout << f1 << std::endl;
-  f1 = Force::Zero();
-  std::cout << f1 << std::endl;
-}
-
+#endif /* KINDR_PHYS_QUANT_PHYSICALQUANTITIES_HPP_ */

@@ -35,10 +35,11 @@
 
 #include "kindr/poses/PoseEigen.hpp"
 #include "kindr/poses/PoseBase.hpp"
+#include "kindr/phys_quant/PhysicalQuantitiesEigen.hpp"
 
 
 namespace pose = kindr::poses::eigen_impl;
-namespace pos = kindr::positions::eigen_impl;
+namespace pos = kindr::phys_quant::eigen_impl;
 namespace rot = kindr::rotations::eigen_impl;
 
 

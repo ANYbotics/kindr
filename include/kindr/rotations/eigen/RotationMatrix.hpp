@@ -358,7 +358,7 @@ class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_
     const SourcePrimType_ v3 = rv.z();
     const SourcePrimType_ v = rv.norm();
 
-    if (v < common::NumTraits<Scalar>::dummy_precision())  {
+    if (v < common::internal::NumTraits<Scalar>::dummy_precision())  {
       matrixdata << 1.0,  v3, -v2,
                         -v3, 1.0,  v1,
                           v2, -v1, 1.0;

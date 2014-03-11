@@ -52,17 +52,17 @@ struct RotationDiffPairTest : public ::testing::Test {
 
   RotationDiffPairTest() {
     rotations.push_back(Rotation(AngleAxis()));   // identity rotation
-    rotations.push_back(Rotation(AngleAxis(kindr::common::NumTraits<RotationScalar>::dummy_precision()/10.0, 1, 0, 0)));  // small angle
-    rotations.push_back(Rotation(AngleAxis(kindr::common::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 1, 0)));  // small angle
-    rotations.push_back(Rotation(AngleAxis(kindr::common::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 0, 1)));  // small angle
+    rotations.push_back(Rotation(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 1, 0, 0)));  // small angle
+    rotations.push_back(Rotation(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 1, 0)));  // small angle
+    rotations.push_back(Rotation(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 0, 1)));  // small angle
     rotations.push_back(Rotation(AngleAxis(1.3, 1, 0, 0))); // large angle
     rotations.push_back(Rotation(AngleAxis(1.3, 0, 1, 0))); // large angle
     rotations.push_back(Rotation(AngleAxis(1.3, 0, 0, 1))); // large angle
 
     angularVelocities.push_back(LocalAngularVelocity());  // zero velocity
-    angularVelocities.push_back(LocalAngularVelocity(kindr::common::NumTraits<RotationScalar>::dummy_precision()/10.0, 0.0, 0.0));
-    angularVelocities.push_back(LocalAngularVelocity(0.0, kindr::common::NumTraits<RotationScalar>::dummy_precision()/10.0, 0.0));
-    angularVelocities.push_back(LocalAngularVelocity(0.0, 0.0, kindr::common::NumTraits<RotationScalar>::dummy_precision()/10.0));
+    angularVelocities.push_back(LocalAngularVelocity(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0.0, 0.0));
+    angularVelocities.push_back(LocalAngularVelocity(0.0, kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0.0));
+    angularVelocities.push_back(LocalAngularVelocity(0.0, 0.0, kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0));
     angularVelocities.push_back(LocalAngularVelocity(0.1, 0.0, 0.0));
     angularVelocities.push_back(LocalAngularVelocity(0.0, 0.1, 0.0));
     angularVelocities.push_back(LocalAngularVelocity(0.0, 0.0, 0.1));

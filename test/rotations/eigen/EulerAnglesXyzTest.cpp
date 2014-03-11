@@ -82,8 +82,8 @@ struct EulerAnglesXyzRotationQuaternionPairTest : public ::testing::Test{
   typedef typename RotationQuaternionEulerAnglesXyzImplementationPair::second_type EulerAnglesXyz;
   typedef typename EulerAnglesXyz::Scalar EulerAnglesXyzScalar;
 
-  const RotationQuaternionScalar rotQuatSmallNumber = kindr::common::NumTraits<RotationQuaternionScalar>::dummy_precision()/10.0;
-  const RotationQuaternionScalar rotEulerAnglesXyzSmallNumber = kindr::common::NumTraits<EulerAnglesXyzScalar>::dummy_precision()/10.0;
+  const RotationQuaternionScalar rotQuatSmallNumber = kindr::common::internal::NumTraits<RotationQuaternionScalar>::dummy_precision()/10.0;
+  const RotationQuaternionScalar rotEulerAnglesXyzSmallNumber = kindr::common::internal::NumTraits<EulerAnglesXyzScalar>::dummy_precision()/10.0;
 
 
   const RotationQuaternion rotQuatQuarterX = RotationQuaternion(1/sqrt(2.0),1/sqrt(2.0),0.0,0.0);

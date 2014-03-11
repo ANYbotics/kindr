@@ -438,99 +438,6 @@ Vector<PhysicalType_, PrimType_, Dimension_> operator*(PrimTypeFactor_ factor, c
   return vector*(PrimType_)factor;
 }
 
-//! \brief Unitless-Vector
-template <typename PrimType_, int Dimension_>
-using VectorUnitless = Vector<phys_quant::PhysicalType::Undefined, PrimType_, Dimension_>;
-//! \brief 3D-Unitless-Vector with primitive type double
-typedef VectorUnitless<double, 3> Vector3D;
-//! \brief 3D-Unitless-Vector with primitive type float
-typedef VectorUnitless<float,  3> Vector3F;
-
-
-
-//! \brief Length-Vector
-template <typename PrimType_, int Dimension_>
-using Length = Vector<phys_quant::PhysicalType::Length, PrimType_, Dimension_>;
-//! \brief 3D-Length-Vector with primitive type double
-typedef Length<double, 3> Length3D;
-//! \brief 3D-Length-Vector with primitive type float
-typedef Length<float,  3> Length3F;
-
-//! \brief Velocity-Vector
-template <typename PrimType_, int Dimension_>
-using Velocity = Vector<phys_quant::PhysicalType::Velocity, PrimType_, Dimension_>;
-//! \brief 3D-Velocity-Vector with primitive type double
-typedef Velocity<double, 3> Velocity3D;
-//! \brief 3D-Velocity-Vector with primitive type float
-typedef Velocity<float,  3> Velocity3F;
-
-//! \brief Acceleration-Vector
-template <typename PrimType_, int Dimension_>
-using Acceleration = Vector<phys_quant::PhysicalType::Acceleration, PrimType_, Dimension_>;
-//! \brief 3D-Acceleration-Vector with primitive type double
-typedef Acceleration<double, 3> Acceleration3D;
-//! \brief 3D-Acceleration-Vector with primitive type float
-typedef Acceleration<float,  3> Acceleration3F;
-
-//! \brief Force-Vector
-template <typename PrimType_, int Dimension_>
-using Force = Vector<phys_quant::PhysicalType::Force, PrimType_, Dimension_>;
-//! \brief 3D-Force-Vector with primitive type double
-typedef Force<double, 3> Force3D;
-//! \brief 3D-Force-Vector with primitive type float
-typedef Force<float,  3> Force3F;
-
-//! \brief Momentum-Vector
-template <typename PrimType_, int Dimension_>
-using Momentum = Vector<phys_quant::PhysicalType::Momentum, PrimType_, Dimension_>;
-//! \brief 3D-Momentum-Vector with primitive type double
-typedef Momentum<double, 3> Momentum3D;
-//! \brief 3D-Momentum-Vector with primitive type float
-typedef Momentum<float,  3> Momentum3F;
-
-
-
-//! \brief Angle-Vector
-template <typename PrimType_, int Dimension_>
-using Angle = Vector<phys_quant::PhysicalType::Angle, PrimType_, Dimension_>;
-//! \brief 3D-Angle-Vector with primitive type double
-typedef Angle<double, 3> Angle3D;
-//! \brief 3D-Angle-Vector with primitive type float
-typedef Angle<float,  3> Angle3F;
-
-//! \brief AngularVelocity-Vector
-template <typename PrimType_, int Dimension_>
-using AngularVelocity = Vector<phys_quant::PhysicalType::AngularVelocity, PrimType_, Dimension_>;
-//! \brief 3D-AngularVelocity-Vector with primitive type double
-typedef AngularVelocity<double, 3> AngularVelocity3D;
-//! \brief 3D-AngularVelocity-Vector with primitive type float
-typedef AngularVelocity<float,  3> AngularVelocity3F;
-
-//! \brief AngularAcceleration-Vector
-template <typename PrimType_, int Dimension_>
-using AngularAcceleration = Vector<phys_quant::PhysicalType::AngularAcceleration, PrimType_, Dimension_>;
-//! \brief 3D-AngularAcceleration-Vector with primitive type double
-typedef AngularAcceleration<double, 3> AngularAcceleration3D;
-//! \brief 3D-AngularAcceleration-Vector with primitive type float
-typedef AngularAcceleration<float,  3> AngularAcceleration3F;
-
-//! \brief Torque-Vector
-template <typename PrimType_, int Dimension_>
-using Torque = Vector<phys_quant::PhysicalType::Torque, PrimType_, Dimension_>;
-//! \brief 3D-Torque-Vector with primitive type double
-typedef Torque<double, 3> Torque3D;
-//! \brief 3D-Torque-Vector with primitive type float
-typedef Torque<float,  3> Torque3F;
-
-//! \brief AngularMomentum-Vector
-template <typename PrimType_, int Dimension_>
-using AngularMomentum = Vector<phys_quant::PhysicalType::AngularMomentum, PrimType_, Dimension_>;
-//! \brief 3D-AngularMomentum-Vector with primitive type double
-typedef AngularMomentum<double, 3> AngularMomentum3D;
-//! \brief 3D-AngularMomentum-Vector with primitive type float
-typedef AngularMomentum<float,  3> AngularMomentum3F;
-
-
 
 } // namespace eigen_impl
 
@@ -560,7 +467,7 @@ template<enum phys_quant::PhysicalType PhysicalType1_, enum phys_quant::Physical
 class MultiplicationReturnTypeTrait<eigen_impl::Vector<PhysicalType1_, PrimType_, Dimension_>, eigen_impl::Vector<PhysicalType2_, PrimType_, Dimension_>>
 {
  public:
-  typedef eigen_impl::Vector<phys_quant::PhysicalType::Undefined, PrimType_, Dimension_> ReturnType;
+  typedef eigen_impl::Vector<phys_quant::PhysicalType::Typeless, PrimType_, Dimension_> ReturnType;
 };
 
 /*! \brief Gets the return type of a multiplication
@@ -569,7 +476,7 @@ template<enum phys_quant::PhysicalType PhysicalType1_, enum phys_quant::Physical
 class DivisionReturnTypeTrait<eigen_impl::Vector<PhysicalType1_, PrimType_, Dimension_>, eigen_impl::Vector<PhysicalType2_, PrimType_, Dimension_>>
 {
  public:
-  typedef eigen_impl::Vector<phys_quant::PhysicalType::Undefined, PrimType_, Dimension_> ReturnType;
+  typedef eigen_impl::Vector<phys_quant::PhysicalType::Typeless, PrimType_, Dimension_> ReturnType;
 };
 
 /*! \brief Specializes multiplication and division traits for the triple (factor1 != factor2)
@@ -616,43 +523,45 @@ class DivisionReturnTypeTrait<eigen_impl::Vector<PhysicalType1_, PrimType_, Dime
       typedef eigen_impl::Vector<phys_quant::PhysicalType::FACTOR1AND2, PrimType_, Dimension_> ReturnType; \
     };
 
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_B(Undefined, Undefined)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_B(Typeless, Typeless)
 
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Time, Time)
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Mass, Mass)
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Inertia, Inertia)
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Energy, Energy)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Time, Time)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Mass, Mass)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Inertia, Inertia)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Power, Power)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Energy, Energy)
 
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Length, Length) // Length/Length = Undefined
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Velocity, Velocity)
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Acceleration, Acceleration)
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Jerk, Jerk)
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Force, Force)
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Momentum, Momentum)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Jerk, Jerk)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Velocity, Velocity)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Acceleration, Acceleration)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Position, Position) // Position/Position = Typeless
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Force, Force)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Momentum, Momentum)
 
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Angle, Angle)
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, AngularVelocity, AngularVelocity)
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, AngularAcceleration, AngularAcceleration)
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, AngularJerk, AngularJerk)
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, Torque, Torque)
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Undefined, AngularMomentum, AngularMomentum)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, AngularJerk, AngularJerk)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, AngularAcceleration, AngularAcceleration)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, AngularVelocity, AngularVelocity)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Angle, Angle)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Torque, Torque)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, AngularMomentum, AngularMomentum)
 
-//KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Length, Angle, Length) // Length/Length = Angle -> ambiguous, explicit cast to Angle if needed
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Length, AngularVelocity, Velocity)
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Length, AngularAcceleration, Acceleration)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Position, AngularJerk, Jerk)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Position, AngularAcceleration, Acceleration)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Position, AngularVelocity, Velocity)
+//KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Position, Angle, Position) // Position/Position = Angle -> ambiguous, explicit cast to Angle if needed
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Position, Force, Torque)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Position, Momentum, AngularMomentum)
 
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Length, AngularJerk, Jerk)
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Length, Force, Torque)
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Length, Momentum, AngularMomentum)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Time, Power, Energy)
 
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Time, Jerk, Acceleration)
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Time, Acceleration, Velocity)
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Time, Velocity, Length)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Time, Velocity, Position)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Time, Force, Momentum)
+
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Time, AngularJerk, AngularAcceleration)
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Time, AngularAcceleration, AngularVelocity)
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Time, AngularVelocity, Angle)
-
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Time, Jerk, Force)
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Time, Force, Momentum)
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Time, AngularJerk, Torque)
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Time, Torque, AngularMomentum)
 
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Mass, Acceleration, Force)

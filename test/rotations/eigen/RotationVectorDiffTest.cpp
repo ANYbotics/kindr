@@ -55,16 +55,16 @@ struct RotationVectorDiffTest: public ::testing::Test {
   Vector3 eigenVector3v1 = Vector3(2.2, 3.3, 4.4);
 
   LocalAngularVelocity angularVelocity1 = LocalAngularVelocity(0.0, 0.0, 0.0);
-  LocalAngularVelocity angularVelocity2 = LocalAngularVelocity(kindr::common::NumTraits<Scalar>::dummy_precision()/10.0, 0.0, 0.0);
-  LocalAngularVelocity angularVelocity3 = LocalAngularVelocity(0.0, kindr::common::NumTraits<Scalar>::dummy_precision()/10.0, 0.0);
-  LocalAngularVelocity angularVelocity4 = LocalAngularVelocity(0.0, 0.0, kindr::common::NumTraits<Scalar>::dummy_precision()/10.0);
+  LocalAngularVelocity angularVelocity2 = LocalAngularVelocity(kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0, 0.0, 0.0);
+  LocalAngularVelocity angularVelocity3 = LocalAngularVelocity(0.0, kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0, 0.0);
+  LocalAngularVelocity angularVelocity4 = LocalAngularVelocity(0.0, 0.0, kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0);
   LocalAngularVelocity angularVelocity5 = LocalAngularVelocity(0.1, 0.3, 0.2);
   LocalAngularVelocity angularVelocity6 = LocalAngularVelocity(0.4, 0.3, 0.8);
 
   Rotation rotation1 = Rotation(0.0, 0.0, 0.0);
-  Rotation rotation2 = Rotation(kindr::common::NumTraits<Scalar>::dummy_precision()/10.0, 0.0, 0.0);
-  Rotation rotation3 = Rotation(0.0, kindr::common::NumTraits<Scalar>::dummy_precision()/10.0, 0.0);
-  Rotation rotation4 = Rotation(0.0, 0.0, kindr::common::NumTraits<Scalar>::dummy_precision()/10.0);
+  Rotation rotation2 = Rotation(kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0, 0.0, 0.0);
+  Rotation rotation3 = Rotation(0.0, kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0, 0.0);
+  Rotation rotation4 = Rotation(0.0, 0.0, kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0);
   Rotation rotation5 = Rotation(0.1, 0.1, 0.1);
   Rotation rotation6 = Rotation(0.1, 1.3, 0.1);
   Rotation rotation7 = Rotation(0.1, 0.1, 1.3);

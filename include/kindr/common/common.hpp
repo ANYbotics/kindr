@@ -109,6 +109,8 @@ inline T wrapTwoPI(T angle)
 }
 
 
+namespace internal {
+
 
 template<typename T>
 class GenericNumTraits {
@@ -158,7 +160,7 @@ class NumTraits<long double> : GenericNumTraits<long double>
   static inline long double dummy_precision() { return 1e-15l; }
 };
 
-
+} // namespace internal
 } // namespace common
 } // namespace kindr
 

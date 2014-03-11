@@ -33,12 +33,12 @@
 
 #include <gtest/gtest.h>
 
-#include "kindr/positions/PositionDiffEigen.hpp"
+#include "kindr/phys_quant/PhysicalQuantitiesEigen.hpp"
 #include "kindr/common/gtest_eigen.hpp"
 
 
 
-namespace pos = kindr::positions::eigen_impl;
+namespace pos = kindr::phys_quant::eigen_impl;
 
 template <typename LinearVelocityImplementation>
 struct LinearVelocityTest: public ::testing::Test {
@@ -76,8 +76,8 @@ struct LinearVelocityTest: public ::testing::Test {
 
 
 typedef ::testing::Types<
-    pos::LinearVelocityD,
-    pos::LinearVelocityF
+    pos::Velocity3D,
+    pos::Velocity3F
 > Types;
 
 

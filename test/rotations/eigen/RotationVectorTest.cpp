@@ -82,8 +82,8 @@ struct RotationVectorRotationQuaternionPairTest : public ::testing::Test{
   typedef typename RotationQuaternionRotationVectorImplementationPair::second_type RotationVector;
   typedef typename RotationVector::Scalar RotationVectorScalar;
 
-  const RotationQuaternionScalar rotQuatSmallNumber = kindr::common::NumTraits<RotationQuaternionScalar>::dummy_precision()/10.0;
-  const RotationQuaternionScalar rotVecSmallNumber = kindr::common::NumTraits<RotationVectorScalar>::dummy_precision()/10.0;
+  const RotationQuaternionScalar rotQuatSmallNumber = kindr::common::internal::NumTraits<RotationQuaternionScalar>::dummy_precision()/10.0;
+  const RotationQuaternionScalar rotVecSmallNumber = kindr::common::internal::NumTraits<RotationVectorScalar>::dummy_precision()/10.0;
 
 
   const RotationQuaternion rotQuatQuarterX = RotationQuaternion(1/sqrt(2.0),1/sqrt(2.0),0.0,0.0);

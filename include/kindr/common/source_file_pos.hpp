@@ -25,8 +25,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
 */
-#ifndef KINDR_SOURCE_FILE_POS_HPP
-#define KINDR_SOURCE_FILE_POS_HPP
+#ifndef KINDR_COMMON_SOURCE_FILE_POS_HPP
+#define KINDR_COMMON_SOURCE_FILE_POS_HPP
 
 #include <string>
 #include <iostream>
@@ -34,41 +34,44 @@
 // A class and macro that gives you the current file position.
 
 namespace kindr {
+namespace common {
+namespace internal {
 
-  class source_file_pos
+class source_file_pos
+{
+ public:
+  std::string function;
+  std::string file;
+  int line;
+
+  source_file_pos(std::string function, std::string file, int line) :
+    function(function), file(file), line(line) {}
+
+  operator std::string()
   {
-  public:
-    std::string function;
-    std::string file;
-    int line;
+    return toString();
+  }
 
-    source_file_pos(std::string function, std::string file, int line) :
-      function(function), file(file), line(line) {}
+  std::string toString() const
+  {
+    std::stringstream s;
+    s << file << ":" << line << ": " << function << "()";
+    return s.str();
+  }
+};
 
-    operator std::string()
-    {
-      return toString();
-    }
+} // namespace internal
+} // namespace common
+} // namespace kindr
 
-    std::string toString() const
-    {
-      std::stringstream s;
-      s << file << ":" << line << ": " << function << "()";
-      return s.str();
-    }
-
-  };
-
-}// namespace kindr
-
-inline std::ostream & operator<<(std::ostream & out, const kindr::source_file_pos & sfp)
+inline std::ostream & operator<<(std::ostream & out, const kindr::common::internal::source_file_pos & sfp)
 {
   out << sfp.file << ":" << sfp.line << ": " << sfp.function << "()";
   return out;
 }
 
 
-#define KINDR_SOURCE_FILE_POS kindr::source_file_pos(__FUNCTION__,__FILE__,__LINE__)
+#define KINDR_SOURCE_FILE_POS kindr::common::internal::source_file_pos(__FUNCTION__,__FILE__,__LINE__)
 
 #endif
 

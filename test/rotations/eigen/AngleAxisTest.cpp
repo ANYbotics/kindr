@@ -83,8 +83,8 @@ struct RotationQuaternionAngleAxisPairTest : public ::testing::Test{
   typedef typename AngleAxis::Scalar AngleAxisScalar;
   typedef Eigen::Matrix<RotationQuaternionScalar,3,1> Vector;
 
-  const RotationQuaternionScalar rotQuatSmallNumber = kindr::common::NumTraits<RotationQuaternionScalar>::dummy_precision()/10.0;
-  const RotationQuaternionScalar angleAxisSmallNumber = kindr::common::NumTraits<AngleAxisScalar>::dummy_precision()/10.0;
+  const RotationQuaternionScalar rotQuatSmallNumber = kindr::common::internal::NumTraits<RotationQuaternionScalar>::dummy_precision()/10.0;
+  const RotationQuaternionScalar angleAxisSmallNumber = kindr::common::internal::NumTraits<AngleAxisScalar>::dummy_precision()/10.0;
 
   const RotationQuaternion rotQuatQuarterX = RotationQuaternion(1/sqrt(2.0),1/sqrt(2.0),0.0,0.0);
   const RotationQuaternion rotQuatQuarterY = RotationQuaternion(1/sqrt(2.0),0.0,1/sqrt(2.0),0.0);

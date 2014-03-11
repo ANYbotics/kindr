@@ -51,7 +51,7 @@ namespace common {
   namespace internal {
 
     template<typename KINDR_EXCEPTION_T>
-    inline void kindr_throw_exception(std::string const & exceptionType, kindr::source_file_pos sfp, std::string const & message)
+    inline void kindr_throw_exception(std::string const & exceptionType, kindr::common::internal::source_file_pos sfp, std::string const & message)
     {
       std::stringstream kindr_assert_stringstream;
 #ifdef _WIN32
@@ -67,14 +67,14 @@ namespace common {
     inline void kindr_throw_exception(std::string const & exceptionType, std::string const & function, std::string const & file,
                    int line, std::string const & message)
     {
-      kindr_throw_exception<KINDR_EXCEPTION_T>(exceptionType, kindr::source_file_pos(function,file,line),message);
+      kindr_throw_exception<KINDR_EXCEPTION_T>(exceptionType, kindr::common::internal::source_file_pos(function,file,line),message);
     }
 
 
   } // namespace internal
 
   template<typename KINDR_EXCEPTION_T>
-  inline void kindr_assert_throw(bool assert_condition, std::string message, kindr::source_file_pos sfp) {
+  inline void kindr_assert_throw(bool assert_condition, std::string message, kindr::common::internal::source_file_pos sfp) {
     if(!assert_condition)
       {
     internal::kindr_throw_exception<KINDR_EXCEPTION_T>("", sfp,message);

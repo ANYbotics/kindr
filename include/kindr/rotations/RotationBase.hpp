@@ -78,18 +78,6 @@ class get_matrix3X {
 //  }
 };
 
-///*! \brief This class determines the correct matrix type for each rotation which is used for position rotations
-// *  \class get_position3
-// *  (only for advanced users)
-// */
-//template<typename Position_>
-//class get_position3 {
-// public:
-////  static const Matrix3X& get_matrix3(const Position& position) {
-////    return position.toImplementation();
-////  }
-//};
-
 /*! \brief Usage conversion traits for converting active and passive rotations into each other
  *  \class UsageConversionTraits
  *  (only for advanced users)

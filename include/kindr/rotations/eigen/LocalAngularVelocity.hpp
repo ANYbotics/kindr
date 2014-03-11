@@ -229,7 +229,7 @@ class RotationDiffConversionTraits<eigen_impl::LocalAngularVelocity<PrimType_, U
   inline static eigen_impl::LocalAngularVelocity<PrimType_, Usage_> convert(const eigen_impl::AngleAxis<PrimType_, Usage_>& angleAxis, const eigen_impl::AngleAxisDiff<PrimType_, Usage_>& angleAxisDiff) {
     typedef typename eigen_impl::AngleAxis<PrimType_, Usage_>::Scalar Scalar;
 
-    if (angleAxis.angle() < common::NumTraits<Scalar>::dummy_precision()) {
+    if (angleAxis.angle() < common::internal::NumTraits<Scalar>::dummy_precision()) {
       return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(angleAxisDiff.axis());
       KINDR_ASSERT_TRUE(std::runtime_error,  false, "Conversion of AngleAxisDiff to LocalAngularVelocity is NOT YET TESTED FOR SMALL ANGLES!");
     }
@@ -267,7 +267,7 @@ class RotationDiffConversionTraits<eigen_impl::LocalAngularVelocity<PrimType_, U
     const PrimType_ dv3 = rotationVectorDiff.z();
 
 
-    if (v < common::NumTraits<Scalar>::dummy_precision()) {
+    if (v < common::internal::NumTraits<Scalar>::dummy_precision()) {
       // small angle
       const PrimType_ t2 = v3*(1.0/2.0);
       const PrimType_ t3 = v1*v2*(1.0/4.0);

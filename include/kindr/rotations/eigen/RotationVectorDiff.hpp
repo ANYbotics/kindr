@@ -238,7 +238,7 @@ class RotationDiffConversionTraits<eigen_impl::RotationVectorDiff<PrimType_, Usa
     const PrimType_ v3 = rotationVector.z();
 
 
-    if (v < common::NumTraits<Scalar>::dummy_precision()) {
+    if (v < common::internal::NumTraits<Scalar>::dummy_precision()) {
       // small angle
       const PrimType_ t2 = v1*v1;
       const PrimType_ t3 = v2*v2;

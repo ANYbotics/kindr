@@ -31,7 +31,7 @@
 
 #include "kindr/common/common.hpp"
 #include "kindr/common/assert_macros_eigen.hpp"
-#include "kindr/positions/PositionEigen.hpp"
+#include "kindr/phys_quant/PhysicalQuantitiesEigen.hpp"
 #include "kindr/rotations/RotationEigen.hpp"
 #include "kindr/poses/PoseBase.hpp"
 
@@ -96,9 +96,9 @@ class HomogeneousTransformation : public HomogeneousTransformationBase<Homogeneo
 };
 
 template<typename PrimType_>
-class HomogeneousTransformationPosition3RotationQuaternion: public HomogeneousTransformation<PrimType_, positions::eigen_impl::Position3<PrimType_>, rotations::eigen_impl::RotationQuaternion<PrimType_, rotations::RotationUsage::PASSIVE>> {
+class HomogeneousTransformationPosition3RotationQuaternion: public HomogeneousTransformation<PrimType_, phys_quant::eigen_impl::Position<PrimType_, 3>, rotations::eigen_impl::RotationQuaternion<PrimType_, rotations::RotationUsage::PASSIVE>> {
  private:
-  typedef HomogeneousTransformation<PrimType_,kindr::positions::eigen_impl::Position3<PrimType_>, kindr::rotations::eigen_impl::RotationQuaternion<PrimType_, kindr::rotations::RotationUsage::PASSIVE>> Base;
+  typedef HomogeneousTransformation<PrimType_, phys_quant::eigen_impl::Position<PrimType_, 3>, kindr::rotations::eigen_impl::RotationQuaternion<PrimType_, kindr::rotations::RotationUsage::PASSIVE>> Base;
  public:
   typedef PrimType_ Scalar;
   typedef typename Base::Position Position;

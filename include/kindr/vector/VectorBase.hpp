@@ -40,28 +40,6 @@ namespace vector {
 //! Internal stuff (only for developers)
 namespace internal {
 
-///*! \brief Addition traits for vectors
-// *  \class AdditionTraits
-// *  (only for advanced users)
-// */
-//template<typename LeftAndRight_>
-//class AdditionTraits {
-// public:
-////  inline static LeftAndRight_ add(const LeftAndRight_& lhs, const LeftAndRight_& rhs);
-////  inline static LeftAndRight_ subtract(const LeftAndRight_& lhs, const LeftAndRight_& rhs);
-//};
-//
-///*! \brief Addition traits for vectors
-// *  \class AdditionTraits
-// *  (only for advanced users)
-// */
-//template<typename Derived_>
-//class AccessTraits {
-// public:
-////  inline static Derived_ access(const Derived_& vector, int index);
-////  inline static Derived_& accessRef(const Derived_& vector, int index);
-//};
-
 /*! \class get_scalar
  *  \brief Gets the primitive of the vector.
  */
@@ -325,54 +303,6 @@ class VectorBase {
   Scalar mean() const;
 };
 
-
-//namespace internal {
-//
-//template<typename LeftAndRight_>
-//class AdditionTraits<VectorBase<LeftAndRight_>> {
-// public:
-//  /*! \brief The primitive type of a vector coordinate.
-//   */
-//  typedef typename internal::get_scalar<LeftAndRight_>::Scalar Scalar;
-//  /*! \returns the sum of two vectors
-//   * \param lhs left-hand side
-//   * \param rhs right-hand side
-//   */
-//  inline static LeftAndRight_ add(const VectorBase<LeftAndRight_>& lhs, const VectorBase<LeftAndRight_>& rhs) {
-//    return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() + rhs.derived().toImplementation()));
-//  }
-//  /*! \returns the subtraction of two vectors
-//   * \param lhs left-hand side
-//   * \param rhs right-hand side
-//   */
-//  inline static LeftAndRight_ subtract(const VectorBase<LeftAndRight_>& lhs, const VectorBase<LeftAndRight_>& rhs) {
-//    return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() - rhs.derived().toImplementation()));
-//  }
-//};
-//
-//template<typename Derived_>
-//class AccessTraits<VectorBase<Derived_>> {
-// public:
-//  /*! \brief The primitive type of a vector coordinate.
-//   */
-//  typedef typename internal::get_scalar<Derived_>::Scalar Scalar;
-//  /*! \returns A copy of an entry of the vector.
-//   * \param vector Vector
-//   * \param index Index
-//   */
-//  inline static Scalar access(const VectorBase<Derived_>& vector, int index) {
-//    return vector.derived().toImplementation()(index);
-//  }
-//  /*! \returns A copy of an entry of the vector.
-//   * \param vector Vector
-//   * \param index Index
-//   */
-//  inline static Scalar& accessRef(const VectorBase<Derived_>& vector, int index) {
-//    return vector.derived().toImplementation()(index);
-//  }
-//};
-//
-//} // namespace internal
 
 } // namespace vector
 } // namespace kindr

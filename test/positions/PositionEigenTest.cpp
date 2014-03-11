@@ -33,12 +33,12 @@
 
 #include <gtest/gtest.h>
 
-#include "kindr/positions/PositionEigen.hpp"
+#include "kindr/phys_quant/PhysicalQuantitiesEigen.hpp"
 #include "kindr/common/gtest_eigen.hpp"
 
 
 
-namespace pos = kindr::positions::eigen_impl;
+namespace pos = kindr::phys_quant::eigen_impl;
 
 template <typename PositionImplementation>
 struct Position3Test: public ::testing::Test {

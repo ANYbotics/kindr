@@ -30,7 +30,7 @@
 #define KINDR_ROTATIONS_ROTATIONEIGEN_HPP_
 
 #include "kindr/rotations/RotationBase.hpp"
-#include "kindr/positions/PositionEigen.hpp"
+//#include "kindr/positions/PositionEigen.hpp"
 #include "kindr/linear_algebra/LinearAlgebra.hpp"
 
 namespace kindr {

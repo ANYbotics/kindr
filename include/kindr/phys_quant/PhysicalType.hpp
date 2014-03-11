@@ -37,30 +37,31 @@ namespace phys_quant {
 /*! \class PhysicalType
  * \brief Physical type of a vector.
  *
- * This enum class contains all possible physical type a vector can have in kindr.
+ * This enum class contains all possible physical types a vector can have in kindr.
  * \ingroup phys_quant
  */
 enum class PhysicalType {
-  Undefined, // 0
+  Typeless, // 0
 
   Time, // 1
   Mass, // 2
   Inertia, // 3
-  Energy, // 4
+  Power, // 4
+  Energy, // 5
 
-  Acceleration, // 5
-  Velocity, // 6
-  Length, // 7
-  Jerk, // 8
-  Force, // 9
-  Momentum, // 10
+  Jerk, // 6
+  Acceleration, // 7
+  Velocity, // 8
+  Position, // 9
+  Force, // 10
+  Momentum, // 11
 
-  AngularAcceleration, // 11
-  AngularVelocity, // 12
-  Angle, // 13
-  AngularJerk, // 14
-  Torque, // 15
-  AngularMomentum // 16
+  AngularJerk, // 12
+  AngularAcceleration, // 13
+  AngularVelocity, // 14
+  Angle, // 15
+  Torque, // 16
+  AngularMomentum // 17
 };
 
 
