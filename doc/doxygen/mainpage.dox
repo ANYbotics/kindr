@@ -99,19 +99,20 @@ See \ref page_developers "Developers" to learn how to develop this library.
 
 
  
- \section position_orientation Positions and Rotations
-  - \subpage page_positions
+ \section orientation_pose Rotations and Poses
   - \subpage page_rotations 
   - \subpage page_poses
  
- \section velocities Time Derivatives of Positions and Rotations
-  - \subpage page_pdiff
+ \section velocities Time Derivatives of Rotations and Poses
   - \subpage page_rdiff
   - \subpage page_posesdiff
 
-  \section misc Mathematical Tools
-  
- - \subpage page_quaternions 
+ \section misc Mathematical Tools
+  - \subpage page_quaternion
+
+ \section vectors Vectors
+  - \subpage page_vector
+ 
 */
 
 //-----------------------------------------------------------

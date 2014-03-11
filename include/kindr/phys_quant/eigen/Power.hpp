@@ -9,7 +9,7 @@
 #define KINDR_PHYS_QUANT_EIGEN_POWER_HPP_
 
 #include "kindr/phys_quant/PhysicalType.hpp"
-#include "kindr/vector/VectorEigen.hpp"
+#include "kindr/vectors/VectorEigen.hpp"
 
 
 namespace kindr {

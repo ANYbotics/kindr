@@ -168,7 +168,7 @@ add_test( runUnitTestsPoseDiff runUnitTestsPoseDiff )
 
 set(VECTOR_SRCS
 	test_main.cpp
-	vector/VectorTest.cpp
+	vectors/VectorsTest.cpp
 )
 
 # Add test cpp file

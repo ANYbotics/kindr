@@ -9,7 +9,7 @@
 #define KINDR_PHYS_QUANT_EIGEN_ANGLE_HPP_
 
 #include "kindr/phys_quant/PhysicalType.hpp"
-#include "kindr/vector/VectorEigen.hpp"
+#include "kindr/vectors/VectorEigen.hpp"
 
 
 namespace kindr {
@@ -18,7 +18,7 @@ namespace eigen_impl {
 
 //! \brief Angle-Vector
 template <typename PrimType_, int Dimension_>
-using Angle = vector::eigen_impl::Vector<phys_quant::PhysicalType::Angle, PrimType_, Dimension_>;
+using Angle = vectors::eigen_impl::Vector<phys_quant::PhysicalType::Angle, PrimType_, Dimension_>;
 //! \brief 3D-Angle-Vector with primitive type double
 typedef Angle<double, 3> Angle3D;
 //! \brief 3D-Angle-Vector with primitive type float

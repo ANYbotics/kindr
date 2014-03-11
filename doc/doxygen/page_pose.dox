@@ -21,7 +21,7 @@ Each implementation lies in its own namespace, such that the implementation can 
 For example: 
 \code{.cpp}
 namespace pos = kindr::poses::eigen_impl; // select implementation based on Eigen
-pos::Position3D position();		     // create 3D-Position
+pos::Position3D position;		     // create 3D-Position
 \endcode
 If the implementation needs to be changed, only one line of code has to be altered:
 \code{.cpp}

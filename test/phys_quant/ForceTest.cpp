@@ -33,7 +33,7 @@
 
 #include <gtest/gtest.h>
 
-#include "kindr/vector/VectorEigen.hpp"
+#include "kindr/vectors/VectorEigen.hpp"
 #include "kindr/phys_quant/PhysicalQuantitiesEigen.hpp"
 #include "kindr/phys_quant/eigen/Force.hpp"
 #include "kindr/phys_quant/eigen/Torque.hpp"
@@ -41,7 +41,7 @@
 
 
 
-namespace vector = kindr::phys_quant::eigen_impl;
+namespace vectors = kindr::phys_quant::eigen_impl;
 
 
 
@@ -69,7 +69,7 @@ struct ForceTorqueTest: public ::testing::Test {
 
 
 typedef ::testing::Types<
-    vector::VectorTypeless3D
+    vectors::VectorTypeless3D
 > Types3;
 
 
@@ -77,9 +77,9 @@ TYPED_TEST_CASE(ForceTorqueTest, Types3);
 
 TYPED_TEST(ForceTorqueTest, testForce)
 {
-  typedef vector::VectorTypeless3D Vector;
-  typedef vector::Force3D Force;
-  typedef vector::Torque3D Torque;
+  typedef vectors::VectorTypeless3D Vector;
+  typedef vectors::Force3D Force;
+  typedef vectors::Torque3D Torque;
 
   Vector v(1,2,3);
   Force f1(v);

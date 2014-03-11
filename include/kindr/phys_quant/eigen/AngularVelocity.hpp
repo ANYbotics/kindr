@@ -9,7 +9,7 @@
 #define KINDR_PHYS_QUANT_EIGEN_ANGULARVELOCITY_HPP_
 
 #include "kindr/phys_quant/PhysicalType.hpp"
-#include "kindr/vector/VectorEigen.hpp"
+#include "kindr/vectors/VectorEigen.hpp"
 
 
 namespace kindr {
@@ -18,7 +18,7 @@ namespace eigen_impl {
 
 //! \brief AngularVelocity-Vector
 template <typename PrimType_, int Dimension_>
-using AngularVelocity = vector::eigen_impl::Vector<phys_quant::PhysicalType::AngularVelocity, PrimType_, Dimension_>;
+using AngularVelocity = vectors::eigen_impl::Vector<phys_quant::PhysicalType::AngularVelocity, PrimType_, Dimension_>;
 //! \brief 3D-AngularVelocity-Vector with primitive type double
 typedef AngularVelocity<double, 3> AngularVelocity3D;
 //! \brief 3D-AngularVelocity-Vector with primitive type float

@@ -9,7 +9,7 @@
 #define KINDR_PHYS_QUANT_EIGEN_POSITION_HPP_
 
 #include "kindr/phys_quant/PhysicalType.hpp"
-#include "kindr/vector/VectorEigen.hpp"
+#include "kindr/vectors/VectorEigen.hpp"
 
 
 namespace kindr {
@@ -18,7 +18,7 @@ namespace eigen_impl {
 
 //! \brief Position-Vector
 template <typename PrimType_, int Dimension_>
-using Position = vector::eigen_impl::Vector<phys_quant::PhysicalType::Position, PrimType_, Dimension_>;
+using Position = vectors::eigen_impl::Vector<phys_quant::PhysicalType::Position, PrimType_, Dimension_>;
 //! \brief 3D-Position-Vector with primitive type double
 typedef Position<double, 3> Position3D;
 //! \brief 3D-Position-Vector with primitive type float
