@@ -326,7 +326,7 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
   /*! \brief Norm of the vector.
    *  \returns norm.
    */
-  Scalar norm() {
+  Scalar norm() const {
     return this->toImplementation().norm();
   }
 
