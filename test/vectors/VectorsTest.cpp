@@ -97,10 +97,17 @@ TYPED_TEST_CASE(VectorTest, Types5);
 
 TYPED_TEST(VectorTest, testVector)
 {
+  // vector typedefs
   typedef typename TestFixture::Vector Vector;
   typedef vectors::Vector<kindr::phys_quant::PhysicalType::Typeless, typename TestFixture::Scalar, 5> OtherVector;
   OtherVector vector2FromEigenOtherType(this->vec2);
   typedef typename TestFixture::EigenVector EigenVector;
+
+  // vector typedefs (dimension 3)
+  typedef Eigen::Matrix<double, 3, 1> EigenVector3;
+  typedef vectors::Vector<kindr::phys_quant::PhysicalType::Position, double, 3> Length3d;
+  typedef vectors::Vector<kindr::phys_quant::PhysicalType::Force, double, 3> Force3d;
+  typedef vectors::Vector<kindr::phys_quant::PhysicalType::Torque, double, 3> Torque3d;
 
   // default constructor
   ASSERT_EQ(this->vectorDefault(0), this->vecZero(0)) << "Default constructor needs to initialize component 1 to zero!";
@@ -129,6 +136,59 @@ TYPED_TEST(VectorTest, testVector)
   ASSERT_EQ(this->vectorFromVector(2), this->vec1(2));
   ASSERT_EQ(this->vectorFromVector(3), this->vec1(3));
   ASSERT_EQ(this->vectorFromVector(4), this->vec1(4));
+
+  // constructor with x, y, z
+  Length3d constructorXYZ(1, 2, 3);
+  ASSERT_EQ(constructorXYZ.x(), 1);
+  ASSERT_EQ(constructorXYZ.y(), 2);
+  ASSERT_EQ(constructorXYZ.z(), 3);
+
+  // Zero()
+  Vector zero;
+  zero << 1,2,3,4,5;
+  zero = Vector::Zero();
+  ASSERT_EQ(zero(0), 0);
+  ASSERT_EQ(zero(1), 0);
+  ASSERT_EQ(zero(2), 0);
+  ASSERT_EQ(zero(3), 0);
+  ASSERT_EQ(zero(4), 0);
+
+  // setZero()
+  zero << 1,2,3,4,5;
+  zero.setZero();
+  ASSERT_EQ(zero(0), 0);
+  ASSERT_EQ(zero(1), 0);
+  ASSERT_EQ(zero(2), 0);
+  ASSERT_EQ(zero(3), 0);
+  ASSERT_EQ(zero(4), 0);
+
+  // UnitX()
+  Length3d unit;
+  unit = Length3d::UnitX();
+  ASSERT_EQ(unit(0), 1);
+  ASSERT_EQ(unit(1), 0);
+  ASSERT_EQ(unit(2), 0);
+
+  // UnitY()
+  unit = Length3d::UnitY();
+  ASSERT_EQ(unit(0), 0);
+  ASSERT_EQ(unit(1), 1);
+  ASSERT_EQ(unit(2), 0);
+
+  // UnitZ()
+  unit = Length3d::UnitZ();
+  ASSERT_EQ(unit(0), 0);
+  ASSERT_EQ(unit(1), 0);
+  ASSERT_EQ(unit(2), 1);
+
+  // x(), y(), z()
+  Length3d xyz;
+  xyz.x() = 1;
+  xyz.y() = 2;
+  xyz.z() = 3;
+  ASSERT_EQ(xyz(0), 1);
+  ASSERT_EQ(xyz(1), 2);
+  ASSERT_EQ(xyz(2), 3);
 
   // toImplementation
   ASSERT_EQ(this->vectorFromMultipleValues.toImplementation()(0,0), this->vec1(0)) << "Component 1 needs to correspond to the matrix entry (0,0)!";
@@ -179,16 +239,8 @@ TYPED_TEST(VectorTest, testVector)
   ASSERT_EQ(vectorNegated(3), - this->vector1FromEigen(3));
   ASSERT_EQ(vectorNegated(4), - this->vector1FromEigen(4));
 
-  // setZero
-  Vector vector2FromEigenBackup(this->vec2);
-  this->vector2FromEigen.setZero();
-  ASSERT_EQ(this->vector2FromEigen(0), this->vecZero(0));
-  ASSERT_EQ(this->vector2FromEigen(1), this->vecZero(1));
-  ASSERT_EQ(this->vector2FromEigen(2), this->vecZero(2));
-  ASSERT_EQ(this->vector2FromEigen(3), this->vecZero(3));
-  ASSERT_EQ(this->vector2FromEigen(4), this->vecZero(4));
-
   // bracket assign 1
+  Vector vector2FromEigenBackup(this->vec2);
   this->vector2FromEigen(0) = vector2FromEigenBackup(0);
   ASSERT_EQ(this->vector2FromEigen(0), vector2FromEigenBackup(0));
 
@@ -246,16 +298,12 @@ TYPED_TEST(VectorTest, testVector)
   ASSERT_NEAR(this->vector1FromEigen.dot(this->vector1FromEigen), this->vec1.dot(this->vec1), this->tol);
 
   // cross
-  typedef Eigen::Matrix<double, 3, 1> EigenVector3;
-  typedef vectors::Vector<kindr::phys_quant::PhysicalType::Position, double, 3> Length3d;
-  typedef vectors::Vector<kindr::phys_quant::PhysicalType::Force, double, 3> Force3d;
-  typedef vectors::Vector<kindr::phys_quant::PhysicalType::Torque, double, 3> Vector3d;
   EigenVector3 crossVectorEigen1(1,2,3);
   EigenVector3 crossVectorEigen2(3,2,1);
   Length3d crossVector1(crossVectorEigen1);
   Force3d crossVector2(crossVectorEigen2);
   EigenVector3 crossProductResult(crossVectorEigen1.cross(crossVectorEigen2));
-  Vector3d crossProductVector(crossVector1.cross(crossVector2));
+  Torque3d crossProductVector(crossVector1.cross(crossVector2));
   ASSERT_NEAR(crossProductVector(0), crossProductResult(0), this->tol);
   ASSERT_NEAR(crossProductVector(1), crossProductResult(1), this->tol);
   ASSERT_NEAR(crossProductVector(2), crossProductResult(2), this->tol);

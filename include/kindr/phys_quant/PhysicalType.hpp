@@ -38,7 +38,7 @@ namespace phys_quant {
  * \brief Physical type of a vector.
  *
  * This enum class contains all possible physical types a vector can have in kindr.
- * \ingroup phys_quant
+ * \ingroup vectors
  */
 enum class PhysicalType {
   Typeless, // 0

@@ -121,6 +121,27 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
     return *this;
   }
 
+  /*! \brief Get the unity vector in x.
+   * \returns the unity vector in x
+   */
+  static Vector<PhysicalType_, PrimType_, Dimension_> UnitX() {
+    return Vector<PhysicalType_, PrimType_, Dimension_>(Implementation::UnitX());
+  }
+
+  /*! \brief Get the unity vector in y.
+   * \returns the unity vector in y
+   */
+  static Vector<PhysicalType_, PrimType_, Dimension_> UnitY() {
+    return Vector<PhysicalType_, PrimType_, Dimension_>(Implementation::UnitY());
+  }
+
+  /*! \brief Get the unity vector in z.
+   * \returns the unity vector in z
+   */
+  static Vector<PhysicalType_, PrimType_, Dimension_> UnitZ() {
+    return Vector<PhysicalType_, PrimType_, Dimension_>(Implementation::UnitZ());
+  }
+
   /*! \brief Set values.
    */
   using Implementation::operator<<;
@@ -326,7 +347,7 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
   /*! \brief Norm of the vector.
    *  \returns norm.
    */
-  Scalar norm() {
+  Scalar norm() const {
     return this->toImplementation().norm();
   }
 

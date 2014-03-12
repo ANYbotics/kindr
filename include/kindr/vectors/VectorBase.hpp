@@ -128,6 +128,11 @@ class VectorBase {
     return static_cast<const Derived_&>(*this);
   }
 
+  /*! \brief Get zero element.
+   * \returns zero element
+   */
+  static Derived_ Zero();
+
   /*! \brief Sets the vector to zero.
    *  \returns reference
    */
