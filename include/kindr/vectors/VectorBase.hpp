@@ -26,8 +26,8 @@
  *
 */
 
-#ifndef KINDR_PHYSICALQUANTITIES_VECTORBASE_HPP_
-#define KINDR_PHYSICALQUANTITIES_VECTORBASE_HPP_
+#ifndef KINDR_VECTORS_VECTORBASE_HPP_
+#define KINDR_VECTORS_VECTORBASE_HPP_
 
 
 #include "kindr/common/common.hpp"
@@ -36,7 +36,7 @@ namespace kindr {
 //! Generic vector interface
 /*! \ingroup vectors
  */
-namespace vector {
+namespace vectors {
 //! Internal stuff (only for developers)
 namespace internal {
 
@@ -304,8 +304,8 @@ class VectorBase {
 };
 
 
-} // namespace vector
+} // namespace vectors
 } // namespace kindr
 
 
-#endif /* KINDR_PHYSICALQUANTITIES_VECTORBASE_HPP_ */
+#endif /* KINDR_VECTORS_VECTORBASE_HPP_ */

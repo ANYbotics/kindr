@@ -1,0 +1,102 @@
+/**
+ * \defgroup vectors Vectors
+ */
+ 
+ /*! \page page_vector Vectors
+
+This library defines a \ref vectors_interface "interface" for a vector.
+It is possible to assign a certain physical type to the vector, such as position or velocity. 
+The section \ref vectors_interface "Interface" describes the functionalities, whereas the section \ref vectors_implementations "Implementation" shows some examples.
+
+\tableofcontents
+
+\section vectors_interface Interface
+The class kindr::vectors::VectorBase serves as an interface for a vector.
+Vectors of all physical types are derived from this base class.
+
+\subsection physical_quantities Physical quantities:
+The following representations are currently provided by the library:
+
+ - Typeless
+ 
+ - Time
+ - Mass
+ - Inertia
+ - Power
+ - Energy
+ 
+ - Jerk
+ - Acceleration
+ - Velocity
+ - Position
+ - Force
+ - Momentum
+ 
+ - AngularJerk
+ - AngularAcceleration
+ - AngularVelocity
+ - Angle
+ - Torque
+ - AngularMomentum
+
+\subsection vectors_constructor Constructor
+The default constructor always initializes all coordinates equal to zero.
+Other (explicit) constructors use another vector or the implementation type.
+If the dimension of the vector is three, there is a constructor which accepts x, y and z as arguments.
+
+\subsection vectors_operators Operators
+All possible operators (+, -, *, /, +=, -=, *=, /=, (), <<) can be used for a vector object.
+However it is not possible to add or subtract vectors of different physical types.
+Elementwise multiplication and division is only possible for predefined triples of physical types.
+The \ref kindr::vectors::VectorBase::dot() "dot" product can be used, as well as the \ref kindr::vectors::VectorBase::cross() "cross" product (for vectors of dimension three).
+
+\subsection vectors_other_methods Other methods
+All coordinates can be set to zero by the function \ref kindr::vectors::VectorBase::setZero() "setZero()".
+The vector can be normalized with \ref kindr::vectors::VectorBase::normalize() "normalize()".
+There are methods which return the \ref kindr::vectors::VectorBase::max() "biggest" or the \ref kindr::vectors::VectorBase::min() "smallest" element, the \ref kindr::vectors::VectorBase::sum() "sum" or the \ref kindr::vectors::VectorBase::mean() "mean" of the entries.
+If the dimension of the vector is three, the coordinates can be accessed by x(), y() and z().
+
+\section vectors_implementations Implementations
+Each implementation lies in its own namespace, such that the implementation can be altered later very easily via namespace alias.
+For example: 
+\code{.cpp}
+namespace vec = kindr::vectors::eigen_impl; // select implementation based on Eigen
+vec::Position3D position;		     // create 3D-Position
+\endcode
+If the implementation needs to be changed, only one line of code has to be altered:
+\code{.cpp}
+namespace vec = kindr::vectors::bullet_impl; // select implementation based on bullet	
+\endcode
+
+\subsection vectors_eigen Eigen
+The library comes along with an implementation based on the <a href="http://eigen.tuxfamily.org">C++ Eigen library</a>.
+
+All types can be included by
+\code{.cpp}
+#include <kindr/vectors/PhysicalQuantitiesEigen.hpp>
+\endcode
+and lie within the namespace kindr::vectors::eigen_impl.
+
+
+
+
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+
+
+*/

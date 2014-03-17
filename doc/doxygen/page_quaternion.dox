@@ -1,9 +1,9 @@
 /**
  * \defgroup quaternions Quaternions
- *  \see \ref page_quaternions "Chapter Quaternions" 
+ *  \see \ref page_quaternion "Chapter Quaternions" 
  */
  
- /*! \page page_quaternions Quaternions
+ /*! \page page_quaternion Quaternions
 This library defines an \ref quaternion_interface "interface" for quaternions to enable different \ref quaternion_implementations "implementations".
 
 Note that these quaternions should not be used to represent rotations! Use a \ref kindr::rotations::RotationQuaternionBase "RotationQuaternion" instead as explained on page \ref page_rotations "Rotations".

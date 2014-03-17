@@ -26,19 +26,19 @@
  *
 */
 
-#ifndef KINDR_PHYSICALQUANTITIES_VECTOR_HPP_
-#define KINDR_PHYSICALQUANTITIES_VECTOR_HPP_
+#ifndef KINDR_VECTORS_VECTOR_HPP_
+#define KINDR_VECTORS_VECTOR_HPP_
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
 #include "kindr/common/common.hpp"
 #include "kindr/common/assert_macros_eigen.hpp"
-#include "kindr/vector/VectorBase.hpp"
+#include "kindr/vectors/VectorBase.hpp"
 #include "kindr/phys_quant/PhysicalType.hpp"
 
 namespace kindr {
-namespace vector {
+namespace vectors {
 //! Implementation of vector based on the C++ Eigen library
 namespace eigen_impl {
 
@@ -532,8 +532,8 @@ KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Power, Power)
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Energy, Energy)
 
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Jerk, Jerk)
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Velocity, Velocity)
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Acceleration, Acceleration)
+KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Velocity, Velocity)
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Position, Position) // Position/Position = Typeless
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Force, Force)
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Momentum, Momentum)
@@ -574,11 +574,11 @@ KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Inertia, AngularVelocity, AngularMomen
 } // namespace internal
 
 
-} // namespace vector
+} // namespace vectors
 } // namespace kindr
 
 
 
 
 
-#endif /* KINDR_PHYSICALQUANTITIES_VECTOR_HPP_ */
+#endif /* KINDR_VECTORS_VECTOR_HPP_ */

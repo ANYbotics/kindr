@@ -33,13 +33,13 @@
 
 #include <gtest/gtest.h>
 
-#include "kindr/vector/VectorEigen.hpp"
+#include "kindr/vectors/VectorEigen.hpp"
 #include "kindr/rotations/RotationEigen.hpp"
 #include "kindr/common/gtest_eigen.hpp"
 
 
 
-namespace vector = kindr::vector::eigen_impl;
+namespace vectors = kindr::vectors::eigen_impl;
 namespace rotations = kindr::rotations::eigen_impl;
 
 
@@ -84,12 +84,12 @@ struct VectorTest: public ::testing::Test {
 
 
 typedef ::testing::Types<
-    vector::Vector<kindr::phys_quant::PhysicalType::Typeless, double, 5>,
-    vector::Vector<kindr::phys_quant::PhysicalType::Typeless, float,  5>,
-    vector::Vector<kindr::phys_quant::PhysicalType::Force, double, 5>,
-    vector::Vector<kindr::phys_quant::PhysicalType::Force, float,  5>,
-    vector::Vector<kindr::phys_quant::PhysicalType::Position, double, 5>,
-    vector::Vector<kindr::phys_quant::PhysicalType::Position, float,  5>
+    vectors::Vector<kindr::phys_quant::PhysicalType::Typeless, double, 5>,
+    vectors::Vector<kindr::phys_quant::PhysicalType::Typeless, float,  5>,
+    vectors::Vector<kindr::phys_quant::PhysicalType::Force, double, 5>,
+    vectors::Vector<kindr::phys_quant::PhysicalType::Force, float,  5>,
+    vectors::Vector<kindr::phys_quant::PhysicalType::Position, double, 5>,
+    vectors::Vector<kindr::phys_quant::PhysicalType::Position, float,  5>
 > Types5;
 
 
@@ -98,7 +98,7 @@ TYPED_TEST_CASE(VectorTest, Types5);
 TYPED_TEST(VectorTest, testVector)
 {
   typedef typename TestFixture::Vector Vector;
-  typedef vector::Vector<kindr::phys_quant::PhysicalType::Typeless, typename TestFixture::Scalar, 5> OtherVector;
+  typedef vectors::Vector<kindr::phys_quant::PhysicalType::Typeless, typename TestFixture::Scalar, 5> OtherVector;
   OtherVector vector2FromEigenOtherType(this->vec2);
   typedef typename TestFixture::EigenVector EigenVector;
 
@@ -247,9 +247,9 @@ TYPED_TEST(VectorTest, testVector)
 
   // cross
   typedef Eigen::Matrix<double, 3, 1> EigenVector3;
-  typedef vector::Vector<kindr::phys_quant::PhysicalType::Position, double, 3> Length3d;
-  typedef vector::Vector<kindr::phys_quant::PhysicalType::Force, double, 3> Force3d;
-  typedef vector::Vector<kindr::phys_quant::PhysicalType::Torque, double, 3> Vector3d;
+  typedef vectors::Vector<kindr::phys_quant::PhysicalType::Position, double, 3> Length3d;
+  typedef vectors::Vector<kindr::phys_quant::PhysicalType::Force, double, 3> Force3d;
+  typedef vectors::Vector<kindr::phys_quant::PhysicalType::Torque, double, 3> Vector3d;
   EigenVector3 crossVectorEigen1(1,2,3);
   EigenVector3 crossVectorEigen2(3,2,1);
   Length3d crossVector1(crossVectorEigen1);

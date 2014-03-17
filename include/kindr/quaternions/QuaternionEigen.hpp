@@ -399,7 +399,7 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType_>> {
 
   inline Vector4 vector() const {
     Vector4 vector4;
-    vector4 << Base::w(), Base::x(), Base::y(), Base::z();
+    vector4 <<  unitQuternion_.w(),  unitQuternion_.x(),  unitQuternion_.y(),  unitQuternion_.z();
     return vector4;
   }
 
