@@ -74,10 +74,10 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::
   }
 
   /*! \brief Constructor using four scalars.
-   *  \param w     first entry of the quaternion = cos(phi/2)
-   *  \param x     second entry of the quaternion = n1*sin(phi/2)
-   *  \param y     third entry of the quaternion = n2*sin(phi/2)
-   *  \param z     fourth entry of the quaternion = n3*sin(phi/2)
+   *  \param w     first entry of the quaternion
+   *  \param x     second entry of the quaternion
+   *  \param y     third entry of the quaternion
+   *  \param z     fourth entry of the quaternion
    */
   Quaternion(Scalar w, Scalar x, Scalar y, Scalar z)
     : Base(w,x,y,z) {
