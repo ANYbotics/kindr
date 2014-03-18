@@ -129,7 +129,6 @@ TYPED_TEST(LocalAngularVelocityTest, testSetters)
   ASSERT_EQ(this->eigenVector3vZero.x(), angVel1.x());
   ASSERT_EQ(this->eigenVector3vZero.y(), angVel1.y());
   ASSERT_EQ(this->eigenVector3vZero.z(), angVel1.z());
-
 }
 
 TYPED_TEST(LocalAngularVelocityTest, testAddition)
@@ -164,6 +163,25 @@ TYPED_TEST(LocalAngularVelocityTest, testAddition)
   ASSERT_EQ(this->eigenVector3vSubtract3from2.x(), velSubtractandAssign.x());
   ASSERT_EQ(this->eigenVector3vSubtract3from2.y(), velSubtractandAssign.y());
   ASSERT_EQ(this->eigenVector3vSubtract3from2.z(), velSubtractandAssign.z());
+}
 
+TYPED_TEST(LocalAngularVelocityTest, testMultiplication)
+{
+  typedef typename TestFixture::LocalAngularVelocity LocalAngularVelocity;
+
+  LocalAngularVelocity angVel2(this->eigenVector3v2);
+  LocalAngularVelocity angVel3(this->eigenVector3v3);
+
+  // multiplication 1
+  LocalAngularVelocity mult1 = angVel3 * 10;
+  ASSERT_EQ(angVel3.x(), mult1.x());
+  ASSERT_EQ(angVel3.y(), mult1.y());
+  ASSERT_EQ(angVel3.z(), mult1.z());
+
+  // multiplication 2
+  LocalAngularVelocity mult2 = 10 * angVel3;
+  ASSERT_EQ(angVel3.x(), mult2.x());
+  ASSERT_EQ(angVel3.y(), mult2.y());
+  ASSERT_EQ(angVel3.z(), mult2.z());
 }
 

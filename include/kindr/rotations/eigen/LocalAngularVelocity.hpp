@@ -37,6 +37,7 @@
 #include "kindr/rotations/RotationDiffBase.hpp"
 #include "kindr/rotations/RotationEigen.hpp"
 #include "kindr/quaternions/QuaternionEigen.hpp"
+#include "kindr/phys_quant/eigen/AngularVelocity.hpp"
 #include "kindr/linear_algebra/LinearAlgebra.hpp"
 
 
@@ -60,17 +61,17 @@ namespace eigen_impl {
  * \ingroup rotations
  */
 template<typename PrimType_, enum RotationUsage Usage_>
-class LocalAngularVelocity : public LocalAngularVelocityBase<LocalAngularVelocity<PrimType_, Usage_>, Usage_>, private Eigen::Matrix<PrimType_, 3, 1> {
+class LocalAngularVelocity : public LocalAngularVelocityBase<LocalAngularVelocity<PrimType_, Usage_>, Usage_>, public phys_quant::eigen_impl::AngularVelocity<PrimType_, 3> {
  private:
   /*! \brief The base type.
    */
-  typedef Eigen::Matrix<PrimType_, 3, 1> Base;
+  typedef phys_quant::eigen_impl::AngularVelocity<PrimType_, 3> Base;
  public:
   /*! \brief The implementation type.
    *
    *  The implementation type is always an Eigen object.
    */
-  typedef Base Implementation;
+  typedef typename Base::Implementation Implementation;
 
   /*! \brief The primitive type of the velocities.
    */
@@ -91,14 +92,19 @@ class LocalAngularVelocity : public LocalAngularVelocityBase<LocalAngularVelocit
     : Base(x, y, z) {
   }
 
-
-  /*! \brief Constructor using Eigen::Matrix<Scalar,3,1>.
-   *  \param other   Eigen::Matrix<Scalar,3,1>
+  /*! \brief Constructor using vector class.
+   *  \param other   phys_quant::eigen_impl::AngularVelocity<PrimType_, 3>
    */
   explicit LocalAngularVelocity(const Base& other)
     : Base(other) {
    }
 
+  /*! Constructor with three components (x,y,z)
+   * \param vector  Eigen::Matrix<Scalar,3,1>
+   */
+  LocalAngularVelocity(const Implementation & vector)
+    : Base(vector) {
+  }
 
   /*! Constructor with a time derivative of a rotation with a different parameterization
    *
@@ -110,55 +116,51 @@ class LocalAngularVelocity : public LocalAngularVelocityBase<LocalAngularVelocit
     : Base(internal::RotationDiffConversionTraits<LocalAngularVelocity, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived())){
   }
 
-  inline Base vector() const {
-    Base vector;
-    vector << x(), y(), z();
-    return vector;
+  inline Implementation vector() const {
+    return Base::toImplementation();
   }
 
-  /*! \brief Cast to the implementation type.
-   *  \returns the implementation (recommended only for advanced users)
+  /*! \brief Cast to the base type.
+   *  \returns the base (recommended only for advanced users)
    */
-  inline Implementation& toImplementation() {
-    return static_cast<Implementation&>(*this);
+  inline Base& toBase() {
+    return static_cast<Base&>(*this);
   }
 
-  /*! \brief Cast to the implementation type.
-   *  \returns the implementation (recommended only for advanced users)
+  /*! \brief Cast to the base type.
+   *  \returns the base (recommended only for advanced users)
    */
-  inline const Implementation& toImplementation() const {
-    return static_cast<const Implementation&>(*this);
+  inline const Base& toBase() const {
+    return static_cast<const Base&>(*this);
   }
-
-  /*!\brief Get x-coordinate of the angular velocity expressed in body fixed (local) frame
-   * \returns the x-coordinate of the angular velocity
-   */
-  using Base::x;
-
-  /*!\brief Get y-coordinate of the angular velocity expressed in body fixed (local) frame
-   * \returns the y-coordinate of the angular velocity
-   */
-  using Base::y;
-
-  /*!\brief Get z-coordinate of the angular velocity expressed in body fixed (local) frame
-   * \returns the z-coordinate of the angular velocity
-   */
-  using Base::z;
 
   /*! \brief Addition of two angular velocities.
    */
-  using AngularVelocityBase<LocalAngularVelocity<PrimType_, Usage_>,Usage_>::operator+; // otherwise ambiguous PositionBase and Eigen
+  template<typename Other_>
+  LocalAngularVelocity operator +(const Other_& other) {
+    return LocalAngularVelocity(this->toBase() + other.toBase());
+  }
 
   /*! \brief Subtraction of two angular velocities.
    */
-  using AngularVelocityBase<LocalAngularVelocity<PrimType_, Usage_>, Usage_>::operator-; // otherwise ambiguous PositionBase and Eigen
+  template<typename Other_>
+  LocalAngularVelocity operator -(const Other_& other) {
+    return LocalAngularVelocity(this->toBase() - other.toBase());
+  }
+
+  /*! \brief Multiplication of an angular velocity with a scalar.
+   */
+  template<typename PrimTypeFactor_>
+  LocalAngularVelocity operator *(const PrimTypeFactor_& factor) {
+    return LocalAngularVelocity(this->toBase()*factor);
+  }
 
   /*! \brief Addition of two angular velocities.
    * \param other   other angular velocity
    */
   template<typename Other_>
   LocalAngularVelocity& operator +=(const Other_& other) {
-    this->toImplementation() += other.toImplementation();
+    this->toBase() += other.toBase();
     return *this;
   }
 
@@ -167,7 +169,7 @@ class LocalAngularVelocity : public LocalAngularVelocityBase<LocalAngularVelocit
    */
   template<typename Other_>
   LocalAngularVelocity& operator -=(const Other_& other) {
-    this->toImplementation() -= other.toImplementation();
+    this->toBase() -= other.toBase();
     return *this;
   }
 
@@ -178,15 +180,14 @@ class LocalAngularVelocity : public LocalAngularVelocityBase<LocalAngularVelocit
     Base::setZero();
     return *this;
   }
-
-  /*! \brief Used for printing the object with std::cout.
-   *  \returns std::stream object
-   */
-  friend std::ostream& operator << (std::ostream& out, const LocalAngularVelocity& velocity) {
-    out << velocity.toImplementation().transpose();
-    return out;
-  }
 };
+
+/*! \brief Multiplication of an angular velocity with a scalar.
+ */
+template<typename PrimType_, enum RotationUsage Usage_, typename PrimTypeFactor_>
+LocalAngularVelocity<PrimType_, Usage_> operator *(const PrimTypeFactor_& factor, const LocalAngularVelocity<PrimType_, Usage_>& localAngularVelocity) {
+  return LocalAngularVelocity<PrimType_, Usage_>(localAngularVelocity.toBase()*factor);
+}
 
 //! \brief 3D angular velocity with primitive type double
 typedef LocalAngularVelocity<double, RotationUsage::PASSIVE>  LocalAngularVelocityPD;
