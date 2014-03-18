@@ -137,21 +137,21 @@ class LocalAngularVelocity : public LocalAngularVelocityBase<LocalAngularVelocit
   /*! \brief Addition of two angular velocities.
    */
   template<typename Other_>
-  LocalAngularVelocity operator +(const Other_& other) {
+  LocalAngularVelocity operator +(const Other_& other) const {
     return LocalAngularVelocity(this->toBase() + other.toBase());
   }
 
   /*! \brief Subtraction of two angular velocities.
    */
   template<typename Other_>
-  LocalAngularVelocity operator -(const Other_& other) {
+  LocalAngularVelocity operator -(const Other_& other) const {
     return LocalAngularVelocity(this->toBase() - other.toBase());
   }
 
   /*! \brief Multiplication of an angular velocity with a scalar.
    */
   template<typename PrimTypeFactor_>
-  LocalAngularVelocity operator *(const PrimTypeFactor_& factor) {
+  LocalAngularVelocity operator *(const PrimTypeFactor_& factor) const {
     return LocalAngularVelocity(this->toBase()*factor);
   }
 

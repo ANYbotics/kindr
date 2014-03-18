@@ -135,8 +135,8 @@ TYPED_TEST(LocalAngularVelocityTest, testAddition)
 {
   typedef typename TestFixture::LocalAngularVelocity LocalAngularVelocity;
 
-  LocalAngularVelocity angVel2(this->eigenVector3v2);
-  LocalAngularVelocity angVel3(this->eigenVector3v3);
+  const LocalAngularVelocity angVel2(this->eigenVector3v2);
+  const LocalAngularVelocity angVel3(this->eigenVector3v3);
 
   // addition
   LocalAngularVelocity velAdd = angVel2+angVel3;
@@ -169,8 +169,8 @@ TYPED_TEST(LocalAngularVelocityTest, testMultiplication)
 {
   typedef typename TestFixture::LocalAngularVelocity LocalAngularVelocity;
 
-  LocalAngularVelocity angVel2(this->eigenVector3v2);
-  LocalAngularVelocity angVel3(this->eigenVector3v3);
+  const LocalAngularVelocity angVel2(this->eigenVector3v2);
+  const LocalAngularVelocity angVel3(this->eigenVector3v3);
 
   // multiplication 1
   LocalAngularVelocity mult1 = angVel3 * 10;
