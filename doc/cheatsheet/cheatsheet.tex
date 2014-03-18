@@ -45,6 +45,7 @@
  \usepackage{ifpdf}
 \usepackage{sectsty}
 \usepackage{tikz}
+\usepackage{mathtools} % \mathclap for underbrace
 \paragraphfont{\small}
 
 % To make this come out properly in landscape mode, do one of the following
@@ -270,17 +271,21 @@ Rot. quaternion as vector: $\vp = \begin{bmatrix} p_0 & p_1 & p_2 & p_3 \end{bma
 
 Conjugate: $P^\ast = (p_0, -\imquatvec{p})$ \\
 Inverse: $P^{-1} = P^\ast = (p_0, -\imquatvec{p})$ \\
+%  The Eq. 109 and Eq. 111 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006. are wrong, they should be switched.
 Quaternion multiplication: $\begin{aligned}Q \cdot P &= (q_0, \imquatvec{q})\cdot(p_0, \imquatvec{p}) = (q_0 p_0 - \imquatvec{q}^\transpose \imquatvec{p}, q_{0} \imquatvec{p} + p_0 \imquatvec{q} + \imquatvec{q} \times \imquatvec{p}) \quad \Leftrightarrow \\
-	   \vq \otimes \vp &= \vQ(\vq)\vp = \begin{pmatrix}q_0 & -\imquatvec{q}^\transpose \\  \imquatvec{q} & q_0\identity_{3 \times 3}+\hat{\imquatvec{p}} \\ \end{pmatrix} \begin{pmatrix} p_0 \\ p_1 \\ p_2 \\ p_3 \end{pmatrix} 
+	   \vq \otimes \vp &= \underbrace{\vQ(\vq)}_{\mathclap{\text{quaternion matrix}}}\vp \, = \, \begin{pmatrix}q_0 & -\imquatvec{q}^\transpose \\  \imquatvec{q} & q_0\identity_{3 \times 3}+\hat{\imquatvec{q}} \\ \end{pmatrix} \begin{pmatrix} p_0 \\ p_1 \\ p_2 \\ p_3 \end{pmatrix} 
 	  = \begin{pmatrix} 
  q_0 & -q_1 & -q_2 & -q_3 \\
  q_1 &  q_0 & -q_3 &  q_2 \\
  q_2 &  q_3 &  q_0 & -q_1 \\
- q_3 & -q_2 &  q_1 &  q_0 \\ \end{pmatrix}\begin{pmatrix} p_0 \\ p_1 \\ p_2 \\ p_3 \end{pmatrix} = \vQ(\vp)^\transpose \vq \\
+ q_3 & -q_2 &  q_1 &  q_0 \\ \end{pmatrix}\begin{pmatrix} p_0 \\ p_1 \\ p_2 \\ p_3 \end{pmatrix} \\
+ &= \underbrace{\bar{\vQ}(\vp)}_{\mathclap{\text{conjugate quat. matrix}}}\vq \, = \, \begin{pmatrix}p_0 & -\imquatvec{p}^\transpose \\  \imquatvec{p} & p_0\identity_{3 \times 3}-\hat{\imquatvec{p}} \\ \end{pmatrix} \begin{pmatrix} q_0 \\ q_1 \\ q_2 \\ q_3 \end{pmatrix} 
+	  = \begin{pmatrix} 
+ p_0 & -p_1 & -p_2 & -p_3 \\
+ p_1 &  p_0 & p_3 &  -p_2 \\
+ p_2 &  -p_3 &  p_0 & p_1 \\
+ p_3 & p_2 &  -p_1 &  p_0 \\ \end{pmatrix}\begin{pmatrix} q_0 \\ q_1 \\ q_2 \\ q_3 \end{pmatrix} \\
 \end{aligned}$ \\
-
-
-
 
 
 %$\begin{aligned}{}_B\vr_{OP} &= {}_I\vr_{OP} + 2a_0\tilde{\va} {}_I\vr_{OP} + 2 \tilde{\va}^2 {}_I\vr_{OP}, \quad  \text{(Eigen)} \\
@@ -535,7 +540,7 @@ $\boxed{\vM \mathrm{\Delta} \vu - \vh \mathrm{\Delta} t = \vW \vP}  \quad \left\
 \rule{0.3\linewidth}{0.25pt}
 \scriptsize
 
-Copyright \copyright\ 2013 Autonomous Systems Lab, ETH Zurich (asl.ethz.ch)\\
+Copyright \copyright\ 2014 Autonomous Systems Lab, ETH Zurich (asl.ethz.ch)\\
 Contact: Christian Gehring (gehrinch@ethz.ch) \\
 
 \end{multicols}
