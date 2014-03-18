@@ -29,6 +29,7 @@
 #ifndef KINDR_ROTATIONS_ROTATIONEIGEN_HPP_
 #define KINDR_ROTATIONS_ROTATIONEIGEN_HPP_
 
+#include "kindr/common/assert_macros.hpp"
 #include "kindr/rotations/RotationBase.hpp"
 //#include "kindr/positions/PositionEigen.hpp"
 #include "kindr/linear_algebra/LinearAlgebra.hpp"
