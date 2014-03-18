@@ -185,7 +185,7 @@ class LocalAngularVelocity : public LocalAngularVelocityBase<LocalAngularVelocit
 /*! \brief Multiplication of an angular velocity with a scalar.
  */
 template<typename PrimType_, enum RotationUsage Usage_, typename PrimTypeFactor_>
-LocalAngularVelocity<PrimType_, Usage_> operator *(const PrimTypeFactor_& factor, const LocalAngularVelocity<PrimType_, Usage_>& localAngularVelocity) {
+LocalAngularVelocity<PrimType_, Usage_> operator *(PrimTypeFactor_ factor, const LocalAngularVelocity<PrimType_, Usage_>& localAngularVelocity) {
   return LocalAngularVelocity<PrimType_, Usage_>(localAngularVelocity.toBase()*factor);
 }
 
