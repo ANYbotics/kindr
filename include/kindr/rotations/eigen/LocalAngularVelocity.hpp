@@ -110,6 +110,12 @@ class LocalAngularVelocity : public LocalAngularVelocityBase<LocalAngularVelocit
     : Base(internal::RotationDiffConversionTraits<LocalAngularVelocity, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived())){
   }
 
+  inline Base vector() const {
+    Base vector;
+    vector << x(), y(), z();
+    return vector;
+  }
+
   /*! \brief Cast to the implementation type.
    *  \returns the implementation (recommended only for advanced users)
    */

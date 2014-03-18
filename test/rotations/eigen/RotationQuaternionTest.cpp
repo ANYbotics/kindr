@@ -598,6 +598,29 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionConcatenation){
   ASSERT_NEAR(rotQuat.getUnique().z(), this->rotQuatQuarterX.inverted().getUnique().z(),1e-6);
 }
 
+// Testing of special matrices
+TYPED_TEST (RotationQuaternionSingleTest, testRotationQuaternionSingleSpecialMatrices) {
+  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
+  RotationQuaternion quat1 = this->rotQuat1;
+  RotationQuaternion quat2 = this->rotQuat2;
+
+  // Qleft
+  RotationQuaternion concatenation1 = quat1 * quat2;
+  RotationQuaternion concatenation2(quat1.getQuaternionMatrix() * quat2.vector());
+  ASSERT_NEAR(concatenation1.w(),concatenation2.w(), 1e-3);
+  ASSERT_NEAR(concatenation1.x(),concatenation2.x(), 1e-3);
+  ASSERT_NEAR(concatenation1.y(),concatenation2.y(), 1e-3);
+  ASSERT_NEAR(concatenation1.z(),concatenation2.z(), 1e-3);
+
+  // Qright
+  RotationQuaternion concatenation3 = quat1 * quat2;
+  RotationQuaternion concatenation4(quat2.getConjugateQuaternionMatrix() * quat1.vector());
+  ASSERT_NEAR(concatenation3.w(),concatenation4.w(), 1e-3);
+  ASSERT_NEAR(concatenation3.x(),concatenation4.x(), 1e-3);
+  ASSERT_NEAR(concatenation3.y(),concatenation4.y(), 1e-3);
+  ASSERT_NEAR(concatenation3.z(),concatenation4.z(), 1e-3);
+}
+
 
 // Test fix
 TYPED_TEST(RotationQuaternionSingleTest, testFix){

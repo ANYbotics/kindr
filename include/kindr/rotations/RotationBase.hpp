@@ -40,11 +40,6 @@ namespace kindr {
  */
 namespace rotations {
 
-enum class RotationUsage {
-  ACTIVE,
-  PASSIVE
-};
-
 //! Internal stuff (only for developers)
 namespace internal {
 

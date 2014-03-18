@@ -71,6 +71,9 @@ class RotationQuaternionDiff : public RotationQuaternionDiffBase<RotationQuatern
   //! the imaginary type, i.e., Eigen::Quaternion<>
   typedef Eigen::Matrix<PrimType_, 3, 1> Imaginary;
 
+  //! quaternion as 4x1 matrix: [w; x; y; z]
+  typedef Eigen::Matrix<PrimType_,4,1> Vector4;
+
   /*! \brief Default constructor sets all derivatives to zero
    *
    */
@@ -90,6 +93,10 @@ class RotationQuaternionDiff : public RotationQuaternionDiffBase<RotationQuatern
    */
   RotationQuaternionDiff(Scalar w, Scalar x, Scalar y, Scalar z)
     : Base(w,x,y,z) {
+  }
+
+  RotationQuaternionDiff(const Vector4 & vec)
+    : Base(vec(0),vec(1),vec(2),vec(3)) {
   }
 
   RotationQuaternionDiff(const Scalar& real, const Imaginary& imag)
@@ -151,9 +158,9 @@ class RotationQuaternionDiff : public RotationQuaternionDiffBase<RotationQuatern
   using Base::y;
   using Base::z;
 
-  using Base::vector;
   using Base::real;
   using Base::imaginary;
+  using Base::vector;
 
   /*! \brief Sets all time derivatives to zero.
    *  \returns reference

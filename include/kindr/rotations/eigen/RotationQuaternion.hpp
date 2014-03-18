@@ -83,6 +83,9 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
   //! the imaginary type, i.e., Eigen::Quaternion<>
   typedef Eigen::Matrix<PrimType_,3,1> Imaginary;
 
+  //! quaternion as 4x1 matrix: [w; x; y; z]
+  typedef Eigen::Matrix<PrimType_,4,1> Vector4;
+
   /*! \brief Default constructor using identity rotation.
    */
   RotationQuaternion()
@@ -101,8 +104,22 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, rotationQuaternion_.norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
   }
 
+  /*! \brief Constructor using real and imaginary part.
+   *  In debug mode, an assertion is thrown if the quaternion has not unit length.
+   *  \param real   real part (PrimType_)
+   *  \param imag   imaginary part (Eigen::Matrix<PrimType_,3,1>)
+   */
   RotationQuaternion(Scalar real, const Imaginary& imag)
     : rotationQuaternion_(real,imag(0),imag(1),imag(2)) {
+    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, rotationQuaternion_.norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
+  }
+
+  /*! \brief Constructor using Eigen::Matrix<PrimType_,4,1>.
+   *  In debug mode, an assertion is thrown if the quaternion has not unit length.
+   *  \param other   Eigen::Matrix<PrimType_,4,1>
+   */
+  RotationQuaternion(const Vector4 & vec)
+    : rotationQuaternion_(vec(0),vec(1),vec(2),vec(3)) {
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, rotationQuaternion_.norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
   }
 
@@ -155,6 +172,12 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
 
   inline Imaginary imaginary() const {
     return this->toUnitQuaternion().imaginary();
+  }
+
+  inline Vector4 vector() const {
+    Vector4 vector4;
+    vector4 << w(), x(), y(), z();
+    return vector4;
   }
 
   inline void setValues(Scalar w, Scalar x, Scalar y, Scalar z) {
@@ -331,6 +354,92 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
         }
       }
     }
+  }
+
+  /*! \brief Returns the quaternion matrix Qleft: q*p = Qleft(q)*p
+   *  This function can be used to get the derivative of the concatenation with respect to the right quaternion.
+   *  \returns the quaternion matrix Qleft
+   */
+  Eigen::Matrix<PrimType_,4,4> getQuaternionMatrix() {
+    Eigen::Matrix<PrimType_,4,4> Qleft;
+    if(Usage_ == rotations::RotationUsage::ACTIVE)
+    {
+      Qleft(0,0) =  w();      Qleft(0,1) = -x();      Qleft(0,2) = -y();      Qleft(0,3) = -z();
+      Qleft(1,0) =  x();      Qleft(1,1) =  w();      Qleft(1,2) = -z();      Qleft(1,3) =  y();
+      Qleft(2,0) =  y();      Qleft(2,1) =  z();      Qleft(2,2) =  w();      Qleft(2,3) = -x();
+      Qleft(3,0) =  z();      Qleft(3,1) = -y();      Qleft(3,2) =  x();      Qleft(3,3) =  w();
+    }
+    if(Usage_ == rotations::RotationUsage::PASSIVE)
+    {
+      Qleft(0,0) =  w();      Qleft(0,1) = -x();      Qleft(0,2) = -y();      Qleft(0,3) = -z();
+      Qleft(1,0) =  x();      Qleft(1,1) =  w();      Qleft(1,2) =  z();      Qleft(1,3) = -y();
+      Qleft(2,0) =  y();      Qleft(2,1) = -z();      Qleft(2,2) =  w();      Qleft(2,3) =  x();
+      Qleft(3,0) =  z();      Qleft(3,1) =  y();      Qleft(3,2) = -x();      Qleft(3,3) =  w();
+    }
+    return Qleft;
+  }
+
+  /*! \brief Returns the quaternion matrix Qright: q*p = Qright(p)*q
+   *  This function can be used to get the derivative of the concatenation with respect to the left quaternion.
+   *  \returns the quaternion matrix Qright
+   */
+  Eigen::Matrix<PrimType_,4,4> getConjugateQuaternionMatrix() {
+    Eigen::Matrix<PrimType_,4,4> Qright;
+    if(Usage_ == rotations::RotationUsage::ACTIVE)
+    {
+      Qright(0,0) =  w();      Qright(0,1) = -x();      Qright(0,2) = -y();      Qright(0,3) = -z();
+      Qright(1,0) =  x();      Qright(1,1) =  w();      Qright(1,2) =  z();      Qright(1,3) = -y();
+      Qright(2,0) =  y();      Qright(2,1) = -z();      Qright(2,2) =  w();      Qright(2,3) =  x();
+      Qright(3,0) =  z();      Qright(3,1) =  y();      Qright(3,2) = -x();      Qright(3,3) =  w();
+    }
+    if(Usage_ == rotations::RotationUsage::PASSIVE)
+    {
+      Qright(0,0) =  w();      Qright(0,1) = -x();      Qright(0,2) = -y();      Qright(0,3) = -z();
+      Qright(1,0) =  x();      Qright(1,1) =  w();      Qright(1,2) = -z();      Qright(1,3) =  y();
+      Qright(2,0) =  y();      Qright(2,1) =  z();      Qright(2,2) =  w();      Qright(2,3) = -x();
+      Qright(3,0) =  z();      Qright(3,1) = -y();      Qright(3,2) =  x();      Qright(3,3) =  w();
+    }
+    return Qright;
+  }
+
+  /*! \brief Returns the global quaternion diff matrix H: GlobalAngularVelocity = 2*H*qdiff, qdiff = 0.5*H^T*GlobalAngularVelocity
+   *  \returns the global quaternion diff matrix H
+   */
+  Eigen::Matrix<PrimType_,3,4> getGlobalQuaternionDiffMatrix() {
+    Eigen::Matrix<PrimType_,3,4> H;
+    if(Usage_ == rotations::RotationUsage::ACTIVE) // x, y, z * -1
+    {
+      H(0,0) =  x();      H(0,1) =  w();      H(0,2) =  z();      H(0,3) = -y();
+      H(1,0) =  y();      H(1,1) = -z();      H(1,2) =  w();      H(1,3) =  x();
+      H(2,0) =  z();      H(2,1) =  y();      H(2,2) = -x();      H(2,3) =  w();
+    }
+    if(Usage_ == rotations::RotationUsage::PASSIVE)
+    {
+      H(0,0) = -x();      H(0,1) =  w();      H(0,2) = -z();      H(0,3) =  y();
+      H(1,0) = -y();      H(1,1) =  z();      H(1,2) =  w();      H(1,3) = -x();
+      H(2,0) = -z();      H(2,1) = -y();      H(2,2) =  x();      H(2,3) =  w();
+    }
+    return H;
+  }
+
+  /*! \brief Returns the local quaternion diff matrix HBar: LocalAngularVelocity = 2*HBar*qdiff, qdiff = 0.5*HBar^T*LocalAngularVelocity
+   *  \returns the local quaternion diff matrix HBar
+   */
+  Eigen::Matrix<PrimType_,3,4> getLocalQuaternionDiffMatrix() {
+    Eigen::Matrix<PrimType_,3,4> HBar;
+    if(Usage_ == rotations::RotationUsage::ACTIVE) // x, y, z * -1
+    {
+      HBar(0,0) =  x();      HBar(0,1) =  w();      HBar(0,2) = -z();      HBar(0,3) =  y();
+      HBar(1,0) =  y();      HBar(1,1) =  z();      HBar(1,2) =  w();      HBar(1,3) = -x();
+      HBar(2,0) =  z();      HBar(2,1) = -y();      HBar(2,2) =  x();      HBar(2,3) =  w();
+    }
+    if(Usage_ == rotations::RotationUsage::PASSIVE)
+    {
+      HBar(0,0) = -x();      HBar(0,1) =  w();      HBar(0,2) =  z();      HBar(0,3) = -y();
+      HBar(1,0) = -y();      HBar(1,1) = -z();      HBar(1,2) =  w();      HBar(1,3) =  x();
+      HBar(2,0) = -z();      HBar(2,1) =  y();      HBar(2,2) = -x();      HBar(2,3) =  w();
+    }
+    return HBar;
   }
 
   /*! \brief Modifies the quaternion rotation such that w >= 0.
