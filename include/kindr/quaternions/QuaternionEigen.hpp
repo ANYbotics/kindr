@@ -73,21 +73,34 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::
     : Base(Implementation(0,0,0,0)) {
   }
 
+  /*! \brief Constructor using four scalars.
+   *  \param w     first entry of the quaternion
+   *  \param x     second entry of the quaternion
+   *  \param y     third entry of the quaternion
+   *  \param z     fourth entry of the quaternion
+   */
   Quaternion(Scalar w, Scalar x, Scalar y, Scalar z)
     : Base(w,x,y,z) {
   }
 
+  /*! \brief Constructor using real and imaginary part.
+   *  \param real   real part (PrimType_)
+   *  \param imag   imaginary part (Eigen::Matrix<PrimType_,3,1>)
+   */
   Quaternion(Scalar real, const Imaginary& imag)
     : Base(real,imag(0),imag(1),imag(2)) {
+  }
+
+  /*! \brief Constructor using Eigen::Matrix<PrimType_,4,1>.
+   *  \param other   Eigen::Matrix<PrimType_,4,1>
+   */
+  Quaternion(const Vector4& vector4)
+    : Base(vector4(0),vector4(1),vector4(2),vector4(3)) {
   }
 
   // create from Eigen::Quaternion
   explicit Quaternion(const Base& other)
     : Base(other) {
-  }
-
-  Quaternion(const Vector4& vector4)
-    : Base(vector4(0),vector4(1),vector4(2),vector4(3)) {
   }
 
   /*! \returns the inverse of the quaternion
@@ -133,8 +146,8 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::
 //	  return this->isEqual(other);
 //  }
 
-  template<typename PrimType_In>
-  Quaternion& operator ()(const Quaternion<PrimType_In>& other) {
+  template<typename PrimTypeIn_>
+  Quaternion& operator ()(const Quaternion<PrimTypeIn_>& other) {
 //	*this = other.template cast<PrimType_>();
 	this->w() = static_cast<PrimType_>(other.w());
 	this->x() = static_cast<PrimType_>(other.x());
@@ -143,8 +156,8 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::
 	return *this;
   }
 
-  template<typename PrimType_In>
-  Quaternion& operator ()(const UnitQuaternion<PrimType_In>& other) {
+  template<typename PrimTypeIn_>
+  Quaternion& operator ()(const UnitQuaternion<PrimTypeIn_>& other) {
 //	*this = other.uq.template cast<PrimType_>(); // uq is private
 	this->w() = static_cast<PrimType_>(other.w());
 	this->x() = static_cast<PrimType_>(other.x());
@@ -205,11 +218,9 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::
 
   inline Vector4 vector() const {
     Vector4 vector4;
-    vector4 << Base::w(), Base::x(), Base::y(), Base::z();
+    vector4 << w(), x(), y(), z();
     return vector4;
   }
-
-
 
   inline Scalar norm() const {
     return Base::norm();
@@ -236,7 +247,53 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::
     return UnitQuaternion<PrimType_>(this->Base::normalized());
   }
 
+  /*! \brief Returns the quaternion matrix Qleft: q*p = Qleft(q)*p
+   *  This function can be used to get the derivative of the concatenation with respect to the right quaternion.
+   *  \returns the quaternion matrix Qleft
+   */
+  template<enum rotations::RotationUsage Usage_>
+  Eigen::Matrix<PrimType_,4,4> getQuaternionMatrix() {
+    Eigen::Matrix<PrimType_,4,4> Qleft;
+    if(Usage_ == rotations::RotationUsage::ACTIVE)
+    {
+      Qleft(0,0) =  w();      Qleft(0,1) = -x();      Qleft(0,2) = -y();      Qleft(0,3) = -z();
+      Qleft(1,0) =  x();      Qleft(1,1) =  w();      Qleft(1,2) = -z();      Qleft(1,3) =  y();
+      Qleft(2,0) =  y();      Qleft(2,1) =  z();      Qleft(2,2) =  w();      Qleft(2,3) = -x();
+      Qleft(3,0) =  z();      Qleft(3,1) = -y();      Qleft(3,2) =  x();      Qleft(3,3) =  w();
+    }
+    if(Usage_ == rotations::RotationUsage::PASSIVE)
+    {
+      Qleft(0,0) =  w();      Qleft(0,1) = -x();      Qleft(0,2) = -y();      Qleft(0,3) = -z();
+      Qleft(1,0) =  x();      Qleft(1,1) =  w();      Qleft(1,2) =  z();      Qleft(1,3) = -y();
+      Qleft(2,0) =  y();      Qleft(2,1) = -z();      Qleft(2,2) =  w();      Qleft(2,3) =  x();
+      Qleft(3,0) =  z();      Qleft(3,1) =  y();      Qleft(3,2) = -x();      Qleft(3,3) =  w();
+    }
+    return Qleft;
+  }
 
+  /*! \brief Returns the quaternion matrix Qright: q*p = Qright(p)*q
+   *  This function can be used to get the derivative of the concatenation with respect to the left quaternion.
+   *  \returns the quaternion matrix Qright
+   */
+  template<enum rotations::RotationUsage Usage_>
+  Eigen::Matrix<PrimType_,4,4> getConjugateQuaternionMatrix() {
+    Eigen::Matrix<PrimType_,4,4> Qright;
+    if(Usage_ == rotations::RotationUsage::ACTIVE)
+    {
+      Qright(0,0) =  w();      Qright(0,1) = -x();      Qright(0,2) = -y();      Qright(0,3) = -z();
+      Qright(1,0) =  x();      Qright(1,1) =  w();      Qright(1,2) =  z();      Qright(1,3) = -y();
+      Qright(2,0) =  y();      Qright(2,1) = -z();      Qright(2,2) =  w();      Qright(2,3) =  x();
+      Qright(3,0) =  z();      Qright(3,1) =  y();      Qright(3,2) = -x();      Qright(3,3) =  w();
+    }
+    if(Usage_ == rotations::RotationUsage::PASSIVE)
+    {
+      Qright(0,0) =  w();      Qright(0,1) = -x();      Qright(0,2) = -y();      Qright(0,3) = -z();
+      Qright(1,0) =  x();      Qright(1,1) =  w();      Qright(1,2) = -z();      Qright(1,3) =  y();
+      Qright(2,0) =  y();      Qright(2,1) =  z();      Qright(2,2) =  w();      Qright(2,3) = -x();
+      Qright(3,0) =  z();      Qright(3,1) = -y();      Qright(3,2) =  x();      Qright(3,3) =  w();
+    }
+    return Qright;
+  }
 };
 
 //! Quaternion using double
@@ -287,11 +344,20 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType_>> {
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-4, "Input quaternion has not unit length.");
   }
 
+  /*! \brief Constructor using real and imaginary part.
+   *  In debug mode, an assertion is thrown if the quaternion has not unit length.
+   *  \param real   real part (PrimType_)
+   *  \param imag   imaginary part (Eigen::Matrix<PrimType_,3,1>)
+   */
   UnitQuaternion(Scalar real, const Imaginary& imag)
     : unitQuternion_(real,imag) {
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-4, "Input quaternion has not unit length.");
   }
 
+  /*! \brief Constructor using Eigen::Matrix<PrimType_,4,1>.
+   *  In debug mode, an assertion is thrown if the quaternion has not unit length.
+   *  \param other   Eigen::Matrix<PrimType_,4,1>
+   */
   UnitQuaternion(const Vector4& vector4)
     : unitQuternion_(vector4(0),vector4(1),vector4(2),vector4(3)) {
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), 1, 1e-4, "Input quaternion has not unit length.");
@@ -320,8 +386,8 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType_>> {
 	    return *this;
   }
 
-  template<typename PrimType_In>
-  UnitQuaternion& operator ()(const UnitQuaternion<PrimType_In>& other) {
+  template<typename PrimTypeIn_>
+  UnitQuaternion& operator ()(const UnitQuaternion<PrimTypeIn_>& other) {
 //	uq = other.uq;
 	this->w() = static_cast<PrimType_>(other.w());
 	this->x() = static_cast<PrimType_>(other.x());
@@ -330,8 +396,8 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType_>> {
 	return *this;
   }
 
-  template<typename PrimType_In>
-  UnitQuaternion& operator ()(const Quaternion<PrimType_In>& other) {
+  template<typename PrimTypeIn_>
+  UnitQuaternion& operator ()(const Quaternion<PrimTypeIn_>& other) {
 //		*this = (UnitQuaternion)quat;
 //	uq = other.template cast<PrimType_>();
 	this->w() = static_cast<PrimType_>(other.w());
@@ -399,7 +465,7 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType_>> {
 
   inline Vector4 vector() const {
     Vector4 vector4;
-    vector4 <<  unitQuternion_.w(),  unitQuternion_.x(),  unitQuternion_.y(),  unitQuternion_.z();
+    vector4 << w(), x(), y(), z();
     return vector4;
   }
 
@@ -441,7 +507,53 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType_>> {
     return unitQuternion_.toImplementation();
   }
 
+  /*! \brief Returns the quaternion matrix Qleft: q*p = Qleft(q)*p
+   *  This function can be used to get the derivative of the concatenation with respect to the right quaternion.
+   *  \returns the quaternion matrix Qleft
+   */
+  template<enum rotations::RotationUsage Usage_>
+  Eigen::Matrix<PrimType_,4,4> getQuaternionMatrix() {
+    Eigen::Matrix<PrimType_,4,4> Qleft;
+    if(Usage_ == rotations::RotationUsage::ACTIVE)
+    {
+      Qleft(0,0) =  w();      Qleft(0,1) = -x();      Qleft(0,2) = -y();      Qleft(0,3) = -z();
+      Qleft(1,0) =  x();      Qleft(1,1) =  w();      Qleft(1,2) = -z();      Qleft(1,3) =  y();
+      Qleft(2,0) =  y();      Qleft(2,1) =  z();      Qleft(2,2) =  w();      Qleft(2,3) = -x();
+      Qleft(3,0) =  z();      Qleft(3,1) = -y();      Qleft(3,2) =  x();      Qleft(3,3) =  w();
+    }
+    if(Usage_ == rotations::RotationUsage::PASSIVE)
+    {
+      Qleft(0,0) =  w();      Qleft(0,1) = -x();      Qleft(0,2) = -y();      Qleft(0,3) = -z();
+      Qleft(1,0) =  x();      Qleft(1,1) =  w();      Qleft(1,2) =  z();      Qleft(1,3) = -y();
+      Qleft(2,0) =  y();      Qleft(2,1) = -z();      Qleft(2,2) =  w();      Qleft(2,3) =  x();
+      Qleft(3,0) =  z();      Qleft(3,1) =  y();      Qleft(3,2) = -x();      Qleft(3,3) =  w();
+    }
+    return Qleft;
+  }
 
+  /*! \brief Returns the quaternion matrix Qright: q*p = Qright(p)*q
+   *  This function can be used to get the derivative of the concatenation with respect to the left quaternion.
+   *  \returns the quaternion matrix Qright
+   */
+  template<enum rotations::RotationUsage Usage_>
+  Eigen::Matrix<PrimType_,4,4> getConjugateQuaternionMatrix() {
+    Eigen::Matrix<PrimType_,4,4> Qright;
+    if(Usage_ == rotations::RotationUsage::ACTIVE)
+    {
+      Qright(0,0) =  w();      Qright(0,1) = -x();      Qright(0,2) = -y();      Qright(0,3) = -z();
+      Qright(1,0) =  x();      Qright(1,1) =  w();      Qright(1,2) =  z();      Qright(1,3) = -y();
+      Qright(2,0) =  y();      Qright(2,1) = -z();      Qright(2,2) =  w();      Qright(2,3) =  x();
+      Qright(3,0) =  z();      Qright(3,1) =  y();      Qright(3,2) = -x();      Qright(3,3) =  w();
+    }
+    if(Usage_ == rotations::RotationUsage::PASSIVE)
+    {
+      Qright(0,0) =  w();      Qright(0,1) = -x();      Qright(0,2) = -y();      Qright(0,3) = -z();
+      Qright(1,0) =  x();      Qright(1,1) =  w();      Qright(1,2) = -z();      Qright(1,3) =  y();
+      Qright(2,0) =  y();      Qright(2,1) =  z();      Qright(2,2) =  w();      Qright(2,3) = -x();
+      Qright(3,0) =  z();      Qright(3,1) = -y();      Qright(3,2) =  x();      Qright(3,3) =  w();
+    }
+    return Qright;
+  }
 };
 
 //! Unit quaternion using double

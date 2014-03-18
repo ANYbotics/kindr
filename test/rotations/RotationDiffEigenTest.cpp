@@ -122,6 +122,77 @@ TYPED_TEST(RotationDiffPairTest, testConversionToLocalAngularVelocity)
        ASSERT_NEAR(angularVelocity.z(),angularVelocity2.z(),1e-6) << "rotation: " << rotation << " angularVelocity: " << angularVelocity  << " angularVelocity2: " << angularVelocity2 << " rotDiff: " << rotDiff;
      }
   }
+}
 
+
+
+
+
+
+
+template <typename ImplementationPair>
+struct RotationDiffSingleTest : public ::testing::Test {
+  typedef typename ImplementationPair::first_type RotationQuaternion;
+  typedef typename RotationQuaternion::Scalar RotationScalar;
+  typedef typename ImplementationPair::second_type RotationQuaternionDiff;
+  typedef typename RotationQuaternionDiff::Scalar RotationDiffScalar;
+  typedef rot::LocalAngularVelocity<RotationDiffScalar, RotationQuaternionDiff::Usage> LocalAngularVelocity;
+//  typedef rot::GlobalAngularVelocity<RotationDiffScalar, RotationDiff::Usage> GlobalAngularVelocity;
+  typedef typename rot::AngleAxis<RotationScalar, RotationQuaternion::Usage> AngleAxis;
+  std::vector<RotationQuaternion> rotationQuaternions;
+  std::vector<LocalAngularVelocity> angularVelocities;
+
+  RotationDiffSingleTest() {
+    rotationQuaternions.push_back(RotationQuaternion(AngleAxis()));   // identity rotation
+    rotationQuaternions.push_back(RotationQuaternion(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 1, 0, 0)));  // small angle
+    rotationQuaternions.push_back(RotationQuaternion(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 1, 0)));  // small angle
+    rotationQuaternions.push_back(RotationQuaternion(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 0, 1)));  // small angle
+    rotationQuaternions.push_back(RotationQuaternion(AngleAxis(1.3, 1, 0, 0))); // large angle
+    rotationQuaternions.push_back(RotationQuaternion(AngleAxis(1.3, 0, 1, 0))); // large angle
+    rotationQuaternions.push_back(RotationQuaternion(AngleAxis(1.3, 0, 0, 1))); // large angle
+
+    angularVelocities.push_back(LocalAngularVelocity());  // zero velocity
+    angularVelocities.push_back(LocalAngularVelocity(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0.0, 0.0));
+    angularVelocities.push_back(LocalAngularVelocity(0.0, kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0.0));
+    angularVelocities.push_back(LocalAngularVelocity(0.0, 0.0, kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0));
+    angularVelocities.push_back(LocalAngularVelocity(0.1, 0.0, 0.0));
+    angularVelocities.push_back(LocalAngularVelocity(0.0, 0.1, 0.0));
+    angularVelocities.push_back(LocalAngularVelocity(0.0, 0.0, 0.1));
+
+    angularVelocities.push_back(LocalAngularVelocity(2.2, 3.3, 4.4));
+  }
+
+};
+
+typedef ::testing::Types<
+  std::pair<rot::RotationQuaternionAD, rot::RotationQuaternionDiffAD>,
+  std::pair<rot::RotationQuaternionAF, rot::RotationQuaternionDiffAF>,
+  std::pair<rot::RotationQuaternionPD, rot::RotationQuaternionDiffPD>,
+  std::pair<rot::RotationQuaternionPF, rot::RotationQuaternionDiffPF>
+> QuaternionTypes;
+
+TYPED_TEST_CASE(RotationDiffSingleTest, QuaternionTypes);
+
+TYPED_TEST(RotationDiffSingleTest, testConversionToLocalAngularVelocity)
+{
+  typedef typename TestFixture::RotationQuaternionDiff RotationQuaternionDiff;
+  typedef typename TestFixture::LocalAngularVelocity LocalAngularVelocity;
+
+  for (auto rotQuat : this->rotationQuaternions) {
+     for (auto angularVelocity : this->angularVelocities) {
+       RotationQuaternionDiff rotQuatDiff(rotQuat, angularVelocity);
+
+       LocalAngularVelocity angularVelocity2(2*rotQuat.getLocalQuaternionDiffMatrix()*rotQuatDiff.vector());
+       ASSERT_NEAR(angularVelocity.x(),angularVelocity2.x(),1e-6);
+       ASSERT_NEAR(angularVelocity.y(),angularVelocity2.y(),1e-6);
+       ASSERT_NEAR(angularVelocity.z(),angularVelocity2.z(),1e-6);
+
+       RotationQuaternionDiff rotQuatDiff2(0.5*rotQuat.getLocalQuaternionDiffMatrix().transpose()*angularVelocity.vector());
+       ASSERT_NEAR(rotQuatDiff.w(),rotQuatDiff2.w(),1e-6);
+       ASSERT_NEAR(rotQuatDiff.x(),rotQuatDiff2.x(),1e-6);
+       ASSERT_NEAR(rotQuatDiff.y(),rotQuatDiff2.y(),1e-6);
+       ASSERT_NEAR(rotQuatDiff.z(),rotQuatDiff2.z(),1e-6);
+     }
+  }
 }
 

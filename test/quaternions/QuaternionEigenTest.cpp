@@ -292,7 +292,7 @@ TYPED_TEST (QuaternionsSingleTest, testQuaternionSingleNormalization) {
 }
 
 // Testing of casting to implementation
-TYPED_TEST (QuaternionsSingleTest, testQuaternionSinglImplementationCast) {
+TYPED_TEST (QuaternionsSingleTest, testQuaternionSingleImplementationCast) {
   typedef typename TestFixture::Quaternion Quaternion;
   typedef typename TestFixture::QuaternionScalar QuaternionScalar;
   typedef typename TestFixture::EigenQuat EigenQuat;
@@ -304,6 +304,29 @@ TYPED_TEST (QuaternionsSingleTest, testQuaternionSinglImplementationCast) {
   ASSERT_EQ(testEigenQuat.x(),this->eigenQuat1.x());
   ASSERT_EQ(testEigenQuat.y(),this->eigenQuat1.y());
   ASSERT_EQ(testEigenQuat.z(),this->eigenQuat1.z());
+}
+
+// Testing of special matrices
+TYPED_TEST (QuaternionsSingleTest, testQuaternionSingleSpecialMatrices) {
+  typedef typename TestFixture::Quaternion Quaternion;
+  Quaternion quat1 = this->quat1;
+  Quaternion quat2 = this->quat2;
+
+  // Qleft
+  Quaternion concatenation1 = quat1 * quat2;
+  Quaternion concatenation2(quat1.template getQuaternionMatrix<kindr::rotations::RotationUsage::ACTIVE>() * quat2.vector());
+  ASSERT_NEAR(concatenation1.w(),concatenation2.w(), 1e-3);
+  ASSERT_NEAR(concatenation1.x(),concatenation2.x(), 1e-3);
+  ASSERT_NEAR(concatenation1.y(),concatenation2.y(), 1e-3);
+  ASSERT_NEAR(concatenation1.z(),concatenation2.z(), 1e-3);
+
+  // Qright
+  Quaternion concatenation3 = quat1 * quat2;
+  Quaternion concatenation4(quat2.template getConjugateQuaternionMatrix<kindr::rotations::RotationUsage::ACTIVE>() * quat1.vector());
+  ASSERT_NEAR(concatenation3.w(),concatenation4.w(), 1e-3);
+  ASSERT_NEAR(concatenation3.x(),concatenation4.x(), 1e-3);
+  ASSERT_NEAR(concatenation3.y(),concatenation4.y(), 1e-3);
+  ASSERT_NEAR(concatenation3.z(),concatenation4.z(), 1e-3);
 }
 
 // Test simple casting (()-operator) between type and non-unit and unit quaternions
@@ -519,7 +542,7 @@ TYPED_TEST (UnitQuaternionsSingleTest, testUnitQuaternionSingleNormalization) {
 }
 
 // Testing of casting to implementation for UnitQuaternion
-TYPED_TEST (UnitQuaternionsSingleTest, testUnitQuaternionSinglImplementationCast) {
+TYPED_TEST (UnitQuaternionsSingleTest, testUnitQuaternionSingleImplementationCast) {
   typedef typename TestFixture::UnitQuaternion UnitQuaternion;
   typedef typename TestFixture::UnitQuaternionScalar UnitQuaternionScalar;
   typedef typename TestFixture::EigenQuat EigenQuat;
@@ -531,6 +554,29 @@ TYPED_TEST (UnitQuaternionsSingleTest, testUnitQuaternionSinglImplementationCast
   ASSERT_EQ(testEigenQuat.x(),this->eigenQuat1.x());
   ASSERT_EQ(testEigenQuat.y(),this->eigenQuat1.y());
   ASSERT_EQ(testEigenQuat.z(),this->eigenQuat1.z());
+}
+
+// Testing of special matrices
+TYPED_TEST (UnitQuaternionsSingleTest, testUnitQuaternionSingleSpecialMatrices) {
+  typedef typename TestFixture::UnitQuaternion UnitQuaternion;
+  UnitQuaternion quat1 = this->quat1;
+  UnitQuaternion quat2 = this->quat2;
+
+  // Qleft
+  UnitQuaternion concatenation1 = quat1 * quat2;
+  UnitQuaternion concatenation2(quat1.template getQuaternionMatrix<kindr::rotations::RotationUsage::ACTIVE>() * quat2.vector());
+  ASSERT_NEAR(concatenation1.w(),concatenation2.w(), 1e-3);
+  ASSERT_NEAR(concatenation1.x(),concatenation2.x(), 1e-3);
+  ASSERT_NEAR(concatenation1.y(),concatenation2.y(), 1e-3);
+  ASSERT_NEAR(concatenation1.z(),concatenation2.z(), 1e-3);
+
+  // Qright
+  UnitQuaternion concatenation3 = quat1 * quat2;
+  UnitQuaternion concatenation4(quat2.template getConjugateQuaternionMatrix<kindr::rotations::RotationUsage::ACTIVE>() * quat1.vector());
+  ASSERT_NEAR(concatenation3.w(),concatenation4.w(), 1e-3);
+  ASSERT_NEAR(concatenation3.x(),concatenation4.x(), 1e-3);
+  ASSERT_NEAR(concatenation3.y(),concatenation4.y(), 1e-3);
+  ASSERT_NEAR(concatenation3.z(),concatenation4.z(), 1e-3);
 }
 
 
