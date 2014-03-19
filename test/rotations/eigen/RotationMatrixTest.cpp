@@ -668,7 +668,7 @@ TYPED_TEST(RotationMatrixSingleTest, testMaps){
 
   testVec = this->rotRotationMatrix1.getLogarithmicMap();
   rotRotationMatrix.setExponentialMap(testVec);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrix1.matrix(), rotRotationMatrix.matrix(), 1e-4, "maps");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrix1.matrix(), rotRotationMatrix.matrix(), 1e-3, "maps");
 
   testVec = this->rotRotationMatrix2.getLogarithmicMap();
   rotRotationMatrix.setExponentialMap(testVec);
