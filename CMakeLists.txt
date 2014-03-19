@@ -40,7 +40,7 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 endif()
 
-add_definitions(-std=c++0x)
+add_definitions(-std=c++11)
 
 # Don't build tests if not specified.
 if(NOT BUILD_TEST)
