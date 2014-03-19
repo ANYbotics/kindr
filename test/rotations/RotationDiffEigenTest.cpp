@@ -52,12 +52,12 @@ struct RotationDiffPairTest : public ::testing::Test {
 
   RotationDiffPairTest() {
     rotations.push_back(Rotation(AngleAxis()));   // identity rotation
-    rotations.push_back(Rotation(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 1, 0, 0)));  // small angle
-    rotations.push_back(Rotation(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 1, 0)));  // small angle
-    rotations.push_back(Rotation(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 0, 1)));  // small angle
-    rotations.push_back(Rotation(AngleAxis(1.3, 1, 0, 0))); // large angle
-    rotations.push_back(Rotation(AngleAxis(1.3, 0, 1, 0))); // large angle
-    rotations.push_back(Rotation(AngleAxis(1.3, 0, 0, 1))); // large angle
+    rotations.push_back(Rotation(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 1.0, 0, 0)));  // small angle
+    rotations.push_back(Rotation(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 1.0, 0)));  // small angle
+    rotations.push_back(Rotation(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 0, 1.0)));  // small angle
+    rotations.push_back(Rotation(AngleAxis(1.3, 1.0, 0, 0))); // large angle
+    rotations.push_back(Rotation(AngleAxis(1.3, 0, 1.0, 0))); // large angle
+    rotations.push_back(Rotation(AngleAxis(1.3, 0, 0, 1.0))); // large angle
 
     angularVelocities.push_back(LocalAngularVelocity());  // zero velocity
     angularVelocities.push_back(LocalAngularVelocity(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0.0, 0.0));
@@ -144,12 +144,12 @@ struct RotationDiffSingleTest : public ::testing::Test {
 
   RotationDiffSingleTest() {
     rotationQuaternions.push_back(RotationQuaternion(AngleAxis()));   // identity rotation
-    rotationQuaternions.push_back(RotationQuaternion(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 1, 0, 0)));  // small angle
-    rotationQuaternions.push_back(RotationQuaternion(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 1, 0)));  // small angle
-    rotationQuaternions.push_back(RotationQuaternion(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 0, 1)));  // small angle
-    rotationQuaternions.push_back(RotationQuaternion(AngleAxis(1.3, 1, 0, 0))); // large angle
-    rotationQuaternions.push_back(RotationQuaternion(AngleAxis(1.3, 0, 1, 0))); // large angle
-    rotationQuaternions.push_back(RotationQuaternion(AngleAxis(1.3, 0, 0, 1))); // large angle
+    rotationQuaternions.push_back(RotationQuaternion(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 1.0, 0, 0)));  // small angle
+    rotationQuaternions.push_back(RotationQuaternion(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 1.0, 0)));  // small angle
+    rotationQuaternions.push_back(RotationQuaternion(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 0, 1.0)));  // small angle
+    rotationQuaternions.push_back(RotationQuaternion(AngleAxis(1.3, 1.0, 0, 0))); // large angle
+    rotationQuaternions.push_back(RotationQuaternion(AngleAxis(1.3, 0, 1.0, 0))); // large angle
+    rotationQuaternions.push_back(RotationQuaternion(AngleAxis(1.3, 0, 0, 1.0))); // large angle
 
     angularVelocities.push_back(LocalAngularVelocity());  // zero velocity
     angularVelocities.push_back(LocalAngularVelocity(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0.0, 0.0));
@@ -182,8 +182,8 @@ TYPED_TEST(RotationDiffSingleTest, testConversionToLocalAngularVelocity)
      for (auto angularVelocity : this->angularVelocities) {
        RotationQuaternionDiff rotQuatDiff(rotQuat, angularVelocity);
 
-       LocalAngularVelocity angularVelocity2(2*rotQuat.getLocalQuaternionDiffMatrix()*rotQuatDiff.vector());
-       ASSERT_NEAR(angularVelocity.x(),angularVelocity2.x(),1e-6);
+       LocalAngularVelocity angularVelocity2(2.0*rotQuat.getLocalQuaternionDiffMatrix()*rotQuatDiff.vector());
+       ASSERT_NEAR(angularVelocity.x(),angularVelocity2.x(),1e-6) << "rquat: " << rotQuat;
        ASSERT_NEAR(angularVelocity.y(),angularVelocity2.y(),1e-6);
        ASSERT_NEAR(angularVelocity.z(),angularVelocity2.z(),1e-6);
 
