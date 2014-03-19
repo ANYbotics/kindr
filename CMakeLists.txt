@@ -32,17 +32,23 @@ project(kindr)
 #set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
-# Set Build Type
-#   * None (CMAKE_C_FLAGS or CMAKE_CXX_FLAGS used)
-#   * Debug (CMAKE_C_FLAGS_DEBUG or CMAKE_CXX_FLAGS_DEBUG)
-#   * Release (CMAKE_C_FLAGS_RELEASE or CMAKE_CXX_FLAGS_RELEASE)
-#   * RelWithDebInfo (CMAKE_C_FLAGS_RELWITHDEBINFO or CMAKE_CXX_FLAGS_RELWITHDEBINFO
-#   * MinSizeRel (CMAKE_C_FLAGS_MINSIZEREL or CMAKE_CXX_FLAGS_MINSIZEREL) 
-set(CMAKE_BUILD_TYPE Debug)
+# Noisily default to Release build
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  message(STATUS "Setting build type to 'Release' as none was specified.")
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
+    "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+endif()
 
-add_definitions(-std=c++0x)
-SET(CMAKE_BUILD_TYPE Debug)
+add_definitions(-std=c++11)
 
+# Don't build tests if not specified.
+if(NOT BUILD_TEST)
+  message(STATUS "Setting build-tests to false as not specified.")
+  set(BUILD_TEST false CACHE BOOL "Choose whether to build tests." FORCE)
+  set_property(CACHE BUILD_TEST PROPERTY STRINGS
+    "True" "False")
+endif()
 
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/gtest/" AND BUILD_TEST)
 	message(STATUS "Building GTests!")
