@@ -55,22 +55,22 @@ endif()
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
 # Add common
-#add_subdirectory(common)
+add_subdirectory(common)
 
 # Add linear algebra 
-#add_subdirectory(linear_algebra)
+add_subdirectory(linear_algebra)
 
 # Add quaternions
-#add_subdirectory(quaternions)
+add_subdirectory(quaternions)
 
 # Add rotations
-#add_subdirectory(rotations)
+add_subdirectory(rotations)
 
 # Add positions
-#add_subdirectory(positions)
+add_subdirectory(positions)
 
 # Add poses
-#add_subdirectory(poses)
+add_subdirectory(poses)
 
 # Add test
 if(BUILD_GTEST)
