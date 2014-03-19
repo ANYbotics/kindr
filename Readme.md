@@ -63,6 +63,6 @@ kindr$ unzip gtest-1.7.0.zip
 kindr$ ln -s gtest-1.7.0 gtest
 kindr$ mkdir build
 kindr$ cd build
-kindr$ cmake ..
+kindr$ cmake -DBUILD_TEST ..
 kindr$ make
 ```
