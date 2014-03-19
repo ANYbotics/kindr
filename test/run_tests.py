@@ -16,6 +16,14 @@ def main(argv=sys.argv[1:]):
     if not os.path.exists(test_dir):
       os.makedirs(test_dir)
     
+    for the_file in os.listdir(test_dir):
+      file_path = os.path.join(test_dir, the_file)
+      try:
+          if os.path.isfile(file_path):
+              os.unlink(file_path)
+      except Exception, e:
+          print(e)
+    
     for cmd in tests:
         test_cmd = "./" + cmd + " --gtest_output=xml:" + working_dir + "/test_results/"
         print("Running: ", test_cmd)
