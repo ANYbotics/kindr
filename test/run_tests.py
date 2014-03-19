@@ -24,13 +24,22 @@ def main(argv=sys.argv[1:]):
       except Exception, e:
           print(e)
     
+    commands = []
+    
     for cmd in tests:
         test_cmd = "./" + cmd + " --gtest_output=xml:" + working_dir + "/test_results/"
         print("Running: ", test_cmd)
         rc = subprocess.call(test_cmd, cwd=working_dir, shell=True)
+        
+        status = "OK" 
         if rc:
-            break
-
+            status = "DIED"            
+        
+        commands.insert(0, [status, test_cmd])
+            
+    print("Ran the following commands: ")
+    for cmd in commands:
+      print("-- ", cmd[0], " ", cmd[1])
 
 if __name__ == '__main__':
     sys.exit(main())
