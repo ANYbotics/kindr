@@ -312,8 +312,8 @@ TYPED_TEST(EulerAnglesXyzSingleTest, testGetDisparityAngle){
   ASSERT_NEAR(this->rotEulerAnglesXyzV4.getDisparityAngle(this->rotEulerAnglesXyzV4),0.0,1e-6);
   ASSERT_NEAR(this->rotEulerAnglesXyzIdentity.getDisparityAngle(this->rotEulerAnglesXyzIdentity),0.0,1e-6);
   ASSERT_NEAR(this->rotEulerAnglesXyzV4.getDisparityAngle(this->rotEulerAnglesXyzV3),fabs(this->rotEulerAnglesXyzV3.getDisparityAngle(this->rotEulerAnglesXyzV4)),1e-6);
-  ASSERT_NEAR(this->rotEulerAnglesXyzV3.getDisparityAngle(this->rotEulerAnglesXyzIdentity),fabs(acos(RotationQuaternion(this->rotEulerAnglesXyzV3).w())*2),1e-6);
-  ASSERT_NEAR(this->rotEulerAnglesXyzV4.getDisparityAngle(this->rotEulerAnglesXyzV3),fabs(acos((RotationQuaternion(this->rotEulerAnglesXyzV3).inverted()*RotationQuaternion(this->rotEulerAnglesXyzV4)).w())*2),1e-6);
+  ASSERT_NEAR(this->rotEulerAnglesXyzV3.getDisparityAngle(this->rotEulerAnglesXyzIdentity),std::abs(acos(RotationQuaternion(this->rotEulerAnglesXyzV3).w())*2.0),1e-6);
+  ASSERT_NEAR(this->rotEulerAnglesXyzV4.getDisparityAngle(this->rotEulerAnglesXyzV3),std::abs(acos((RotationQuaternion(this->rotEulerAnglesXyzV3).inverted()*RotationQuaternion(this->rotEulerAnglesXyzV4)).w())*2.0),1e-6);
 }
 
 /* Test isNear
