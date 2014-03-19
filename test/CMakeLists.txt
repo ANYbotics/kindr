@@ -58,8 +58,6 @@ if (BUILD_GTEST)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 include_directories(test)
 
-set(UNIT_TEST_TARGETS)
-
 # This macro globs all tests to a list so we can run them post-build.
 macro(add_gtest target)
   set(sources  ${ARGV})
@@ -75,16 +73,12 @@ set(LINEARALGEBRA_SRCS
       test_main.cpp 
       linear_algebra/SkewMatrixFromVectorTest.cpp
 )
-
-# Add test cpp file
 add_gtest(runUnitTestsLinearAlgebra ${LINEARALGEBRA_SRCS})
 
 set(QUATERNIONS_SRCS
 	test_main.cpp
 	quaternions/QuaternionEigenTest.cpp
 )
-
-# Add test cpp file
 add_gtest( runUnitTestsQuaternions ${QUATERNIONS_SRCS} )
 
 set(ROTATION_SRCS
@@ -97,8 +91,6 @@ set(ROTATION_SRCS
 	rotations/eigen/EulerAnglesXyzTest.cpp
 	rotations/RotationEigenTest.cpp
 )
-
-# Add test cpp file
 add_gtest( runUnitTestsRotation ${ROTATION_SRCS})
 
 set(ROTATIONDIFF_SRCS
@@ -112,24 +104,18 @@ set(ROTATIONDIFF_SRCS
 	rotations/eigen/EulerAnglesZyxDiffTest.cpp
 	rotations/eigen/EulerAnglesXyzDiffTest.cpp
 )
-
-# Add test cpp file
 add_gtest( runUnitTestsRotationDiff ${ROTATIONDIFF_SRCS})
 
 set(POSITIONS_SRCS
 	test_main.cpp
 	positions/PositionEigenTest.cpp
 )
-
-# Add test cpp file
 add_gtest( runUnitTestsPositions  ${POSITIONS_SRCS})
 
 set(POSITIONSDIFF_SRCS
 	test_main.cpp
 	positions/PositionDiffEigenTest.cpp
 )
-
-# Add test cpp file
 add_gtest( runUnitTestsPositionsDiff  ${POSITIONSDIFF_SRCS})
 
 
@@ -137,32 +123,24 @@ set(POSES_SRCS
 	test_main.cpp
 	poses/PoseEigenTest.cpp
 )
-
-# Add test cpp file
 add_gtest( runUnitTestsPose  ${POSES_SRCS})
 
 set(POSESDIFF_SRCS
 	test_main.cpp
 	poses/PoseDiffEigenTest.cpp
 )
-
-# Add test cpp file
 add_gtest( runUnitTestsPoseDiff  ${POSESDIFF_SRCS})
 
 set(VECTOR_SRCS
 	test_main.cpp
 	vectors/VectorsTest.cpp
 )
-
-# Add test cpp file
 add_gtest( runUnitTestsVector  ${VECTOR_SRCS})
 
 set(FORCE_SRCS
 	test_main.cpp
 	phys_quant/ForceTest.cpp
 )
-
-# Add test cpp file
 add_gtest( runUnitTestsForce  ${FORCE_SRCS})
 
 
