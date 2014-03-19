@@ -31,15 +31,11 @@ def main(argv=sys.argv[1:]):
         print("Running: ", test_cmd)
         rc = subprocess.call(test_cmd, cwd=working_dir, shell=True)
         
-        status = "OK" 
-        if rc:
-            status = "DIED"            
-        
-        commands.insert(0, [status, test_cmd])
+        commands.insert(0, test_cmd)
             
     print("Ran the following commands: ")
     for cmd in commands:
-      print("-- ", cmd[0], " ", cmd[1])
+      print("-- ", cmd)
 
 if __name__ == '__main__':
     sys.exit(main())
