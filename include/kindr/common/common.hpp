@@ -38,17 +38,6 @@
 
 namespace kindr {
 
-
-namespace rotations {
-
-enum class RotationUsage {
-  ACTIVE,
-  PASSIVE
-};
-
-} // namespace rotations
-
-
 //! Common methods
 namespace common {
 
