@@ -58,17 +58,26 @@ if (BUILD_GTEST)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 include_directories(test)
 
+set(UNIT_TEST_TARGETS)
+
+# This macro globs all tests to a list so we can run them post-build.
+macro(add_gtest target)
+  set(sources  ${ARGV})
+  LIST(REMOVE_ITEM sources ${target})
+  add_executable(${target} test_main.cpp ${sources})
+  message("Building test for " ${sources})
+  set(UNIT_TEST_TARGETS ${UNIT_TEST_TARGETS} ${target})
+  target_link_libraries(${target} gtest gtest_main pthread)
+  add_test(${target} ${target})
+endmacro(add_gtest)
+
 set(LINEARALGEBRA_SRCS
       test_main.cpp 
       linear_algebra/SkewMatrixFromVectorTest.cpp
 )
 
 # Add test cpp file
-add_executable( runUnitTestsLinearAlgebra  ${LINEARALGEBRA_SRCS})
-# Link test executable against gtest & gtest_main
-target_link_libraries(runUnitTestsLinearAlgebra gtest gtest_main)
-add_test( runUnitTestsLinearAlgebra runUnitTestsLinearAlgebra )
-
+add_gtest(runUnitTestsLinearAlgebra ${LINEARALGEBRA_SRCS})
 
 set(QUATERNIONS_SRCS
 	test_main.cpp
@@ -76,12 +85,7 @@ set(QUATERNIONS_SRCS
 )
 
 # Add test cpp file
-add_executable( runUnitTestsQuaternions  ${QUATERNIONS_SRCS})
-# Link test executable against gtest & gtest_main
-target_link_libraries(runUnitTestsQuaternions  gtest_main gtest pthread )
-add_test( runUnitTestsQuaternions runUnitTestsQuaternions )
-
-
+add_gtest( runUnitTestsQuaternions ${QUATERNIONS_SRCS} )
 
 set(ROTATION_SRCS
 	test_main.cpp
@@ -95,12 +99,7 @@ set(ROTATION_SRCS
 )
 
 # Add test cpp file
-add_executable( runUnitTestsRotation ${ROTATION_SRCS})
-# Link test executable against gtest & gtest_main
-target_link_libraries(runUnitTestsRotation gtest_main gtest pthread  )
-add_test(runUnitTestsRotation runUnitTestsRotation )
-
-
+add_gtest( runUnitTestsRotation ${ROTATION_SRCS})
 
 set(ROTATIONDIFF_SRCS
 	test_main.cpp
@@ -112,14 +111,10 @@ set(ROTATIONDIFF_SRCS
 	rotations/eigen/RotationMatrixDiffTest.cpp
 	rotations/eigen/EulerAnglesZyxDiffTest.cpp
 	rotations/eigen/EulerAnglesXyzDiffTest.cpp
-
 )
 
 # Add test cpp file
-add_executable( runUnitTestsRotationDiff ${ROTATIONDIFF_SRCS})
-# Link test executable against gtest & gtest_main
-target_link_libraries(runUnitTestsRotationDiff gtest_main gtest pthread  )
-add_test(runUnitTestsRotationDiff runUnitTestsRotationDiff )
+add_gtest( runUnitTestsRotationDiff ${ROTATIONDIFF_SRCS})
 
 set(POSITIONS_SRCS
 	test_main.cpp
@@ -127,10 +122,7 @@ set(POSITIONS_SRCS
 )
 
 # Add test cpp file
-add_executable( runUnitTestsPositions  ${POSITIONS_SRCS})
-# Link test executable against gtest & gtest_main
-target_link_libraries(runUnitTestsPositions  gtest_main gtest pthread )
-add_test( runUnitTestsPositions runUnitTestsPositions )
+add_gtest( runUnitTestsPositions  ${POSITIONS_SRCS})
 
 set(POSITIONSDIFF_SRCS
 	test_main.cpp
@@ -138,10 +130,7 @@ set(POSITIONSDIFF_SRCS
 )
 
 # Add test cpp file
-add_executable( runUnitTestsPositionsDiff  ${POSITIONSDIFF_SRCS})
-# Link test executable against gtest & gtest_main
-target_link_libraries(runUnitTestsPositionsDiff  gtest_main gtest pthread )
-add_test( runUnitTestsPositionsDiff runUnitTestsPositionsDiff )
+add_gtest( runUnitTestsPositionsDiff  ${POSITIONSDIFF_SRCS})
 
 
 set(POSES_SRCS
@@ -150,10 +139,7 @@ set(POSES_SRCS
 )
 
 # Add test cpp file
-add_executable( runUnitTestsPose  ${POSES_SRCS})
-# Link test executable against gtest & gtest_main
-target_link_libraries(runUnitTestsPose  gtest_main gtest pthread )
-add_test( runUnitTestsPose runUnitTestsPose )
+add_gtest( runUnitTestsPose  ${POSES_SRCS})
 
 set(POSESDIFF_SRCS
 	test_main.cpp
@@ -161,10 +147,7 @@ set(POSESDIFF_SRCS
 )
 
 # Add test cpp file
-add_executable( runUnitTestsPoseDiff  ${POSESDIFF_SRCS})
-# Link test executable against gtest & gtest_main
-target_link_libraries(runUnitTestsPoseDiff  gtest_main gtest pthread )
-add_test( runUnitTestsPoseDiff runUnitTestsPoseDiff )
+add_gtest( runUnitTestsPoseDiff  ${POSESDIFF_SRCS})
 
 set(VECTOR_SRCS
 	test_main.cpp
@@ -172,10 +155,7 @@ set(VECTOR_SRCS
 )
 
 # Add test cpp file
-add_executable( runUnitTestsVector  ${VECTOR_SRCS})
-# Link test executable against gtest & gtest_main
-target_link_libraries(runUnitTestsVector  gtest_main gtest pthread )
-add_test( runUnitTestsVector runUnitTestsVector )
+add_gtest( runUnitTestsVector  ${VECTOR_SRCS})
 
 set(FORCE_SRCS
 	test_main.cpp
@@ -183,9 +163,16 @@ set(FORCE_SRCS
 )
 
 # Add test cpp file
-add_executable( runUnitTestsForce  ${FORCE_SRCS})
-# Link test executable against gtest & gtest_main
-target_link_libraries(runUnitTestsForce  gtest_main gtest pthread )
-add_test( runUnitTestsForce runUnitTestsForce )
+add_gtest( runUnitTestsForce  ${FORCE_SRCS})
 
+
+# Run all unit tests post-build.
+add_custom_target(run_tests ALL
+                  DEPENDS ${UNIT_TEST_TARGETS}
+)
+add_custom_command(TARGET run_tests
+                   COMMENT "Running tests"
+                   POST_BUILD COMMAND ${PROJECT_SOURCE_DIR}/test/run_tests.py ${CMAKE_BINARY_DIR} ${UNIT_TEST_TARGETS}
+                   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)
 endif()
