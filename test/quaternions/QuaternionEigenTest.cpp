@@ -306,6 +306,28 @@ TYPED_TEST (QuaternionsSingleTest, testQuaternionSingleImplementationCast) {
   ASSERT_EQ(testEigenQuat.z(),this->eigenQuat1.z());
 }
 
+// Testing vector() and constructor from vector
+TYPED_TEST (QuaternionsSingleTest, testQuaternionSingleVectorAndVectorConstructor) {
+  typedef typename TestFixture::Quaternion Quaternion;
+  typedef typename TestFixture::QuaternionScalar QuaternionScalar;
+  typedef Eigen::Matrix<QuaternionScalar, 4, 1> Vector4;
+  Quaternion quat = this->quat1;
+
+  // vector()
+  Vector4 vector = quat.vector();
+  ASSERT_NEAR(quat.w(),vector(0), 1e-3);
+  ASSERT_NEAR(quat.x(),vector(1), 1e-3);
+  ASSERT_NEAR(quat.y(),vector(2), 1e-3);
+  ASSERT_NEAR(quat.z(),vector(3), 1e-3);
+
+  // constructor from vector
+  Quaternion quatFromVector(vector);
+  ASSERT_NEAR(quat.w(),quatFromVector.w(), 1e-3);
+  ASSERT_NEAR(quat.x(),quatFromVector.x(), 1e-3);
+  ASSERT_NEAR(quat.y(),quatFromVector.y(), 1e-3);
+  ASSERT_NEAR(quat.z(),quatFromVector.z(), 1e-3);
+}
+
 // Testing of special matrices
 TYPED_TEST (QuaternionsSingleTest, testQuaternionSingleSpecialMatrices) {
   typedef typename TestFixture::Quaternion Quaternion;
@@ -314,7 +336,7 @@ TYPED_TEST (QuaternionsSingleTest, testQuaternionSingleSpecialMatrices) {
 
   // Qleft
   Quaternion concatenation1 = quat1 * quat2;
-  Quaternion concatenation2(quat1.template getQuaternionMatrix<kindr::rotations::RotationUsage::ACTIVE>() * quat2.vector());
+  Quaternion concatenation2(quat1.getQuaternionMatrix() * quat2.vector());
   ASSERT_NEAR(concatenation1.w(),concatenation2.w(), 1e-3);
   ASSERT_NEAR(concatenation1.x(),concatenation2.x(), 1e-3);
   ASSERT_NEAR(concatenation1.y(),concatenation2.y(), 1e-3);
@@ -322,7 +344,7 @@ TYPED_TEST (QuaternionsSingleTest, testQuaternionSingleSpecialMatrices) {
 
   // Qright
   Quaternion concatenation3 = quat1 * quat2;
-  Quaternion concatenation4(quat2.template getConjugateQuaternionMatrix<kindr::rotations::RotationUsage::ACTIVE>() * quat1.vector());
+  Quaternion concatenation4(quat2.getConjugateQuaternionMatrix() * quat1.vector());
   ASSERT_NEAR(concatenation3.w(),concatenation4.w(), 1e-3);
   ASSERT_NEAR(concatenation3.x(),concatenation4.x(), 1e-3);
   ASSERT_NEAR(concatenation3.y(),concatenation4.y(), 1e-3);
@@ -564,7 +586,7 @@ TYPED_TEST (UnitQuaternionsSingleTest, testUnitQuaternionSingleSpecialMatrices) 
 
   // Qleft
   UnitQuaternion concatenation1 = quat1 * quat2;
-  UnitQuaternion concatenation2(quat1.template getQuaternionMatrix<kindr::rotations::RotationUsage::ACTIVE>() * quat2.vector());
+  UnitQuaternion concatenation2(quat1.getQuaternionMatrix() * quat2.vector());
   ASSERT_NEAR(concatenation1.w(),concatenation2.w(), 1e-3);
   ASSERT_NEAR(concatenation1.x(),concatenation2.x(), 1e-3);
   ASSERT_NEAR(concatenation1.y(),concatenation2.y(), 1e-3);
@@ -572,11 +594,33 @@ TYPED_TEST (UnitQuaternionsSingleTest, testUnitQuaternionSingleSpecialMatrices) 
 
   // Qright
   UnitQuaternion concatenation3 = quat1 * quat2;
-  UnitQuaternion concatenation4(quat2.template getConjugateQuaternionMatrix<kindr::rotations::RotationUsage::ACTIVE>() * quat1.vector());
+  UnitQuaternion concatenation4(quat2.getConjugateQuaternionMatrix() * quat1.vector());
   ASSERT_NEAR(concatenation3.w(),concatenation4.w(), 1e-3);
   ASSERT_NEAR(concatenation3.x(),concatenation4.x(), 1e-3);
   ASSERT_NEAR(concatenation3.y(),concatenation4.y(), 1e-3);
   ASSERT_NEAR(concatenation3.z(),concatenation4.z(), 1e-3);
+}
+
+// Testing vector() and constructor from vector
+TYPED_TEST (UnitQuaternionsSingleTest, testQuaternionSingleVectorAndVectorConstructor) {
+  typedef typename TestFixture::UnitQuaternion UnitQuaternion;
+  typedef typename TestFixture::UnitQuaternionScalar UnitQuaternionScalar;
+  typedef Eigen::Matrix<UnitQuaternionScalar, 4, 1> Vector4;
+  UnitQuaternion quat = this->quat1;
+
+  // vector()
+  Vector4 vector = quat.vector();
+  ASSERT_NEAR(quat.w(),vector(0), 1e-3);
+  ASSERT_NEAR(quat.x(),vector(1), 1e-3);
+  ASSERT_NEAR(quat.y(),vector(2), 1e-3);
+  ASSERT_NEAR(quat.z(),vector(3), 1e-3);
+
+  // constructor from vector
+  UnitQuaternion quatFromVector(vector);
+  ASSERT_NEAR(quat.w(),quatFromVector.w(), 1e-3);
+  ASSERT_NEAR(quat.x(),quatFromVector.x(), 1e-3);
+  ASSERT_NEAR(quat.y(),quatFromVector.y(), 1e-3);
+  ASSERT_NEAR(quat.z(),quatFromVector.z(), 1e-3);
 }
 
 

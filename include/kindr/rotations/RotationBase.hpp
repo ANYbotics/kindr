@@ -40,6 +40,14 @@ namespace kindr {
  */
 namespace rotations {
 
+/*! \brief This enum class determines the usage type for each rotation
+ *  \class RotationUsage
+ */
+enum class RotationUsage {
+  ACTIVE,
+  PASSIVE
+};
+
 //! Internal stuff (only for developers)
 namespace internal {
 

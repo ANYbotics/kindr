@@ -251,23 +251,12 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::
    *  This function can be used to get the derivative of the concatenation with respect to the right quaternion.
    *  \returns the quaternion matrix Qleft
    */
-  template<enum rotations::RotationUsage Usage_>
   Eigen::Matrix<PrimType_,4,4> getQuaternionMatrix() {
     Eigen::Matrix<PrimType_,4,4> Qleft;
-    if(Usage_ == rotations::RotationUsage::ACTIVE)
-    {
-      Qleft(0,0) =  w();      Qleft(0,1) = -x();      Qleft(0,2) = -y();      Qleft(0,3) = -z();
-      Qleft(1,0) =  x();      Qleft(1,1) =  w();      Qleft(1,2) = -z();      Qleft(1,3) =  y();
-      Qleft(2,0) =  y();      Qleft(2,1) =  z();      Qleft(2,2) =  w();      Qleft(2,3) = -x();
-      Qleft(3,0) =  z();      Qleft(3,1) = -y();      Qleft(3,2) =  x();      Qleft(3,3) =  w();
-    }
-    if(Usage_ == rotations::RotationUsage::PASSIVE)
-    {
-      Qleft(0,0) =  w();      Qleft(0,1) = -x();      Qleft(0,2) = -y();      Qleft(0,3) = -z();
-      Qleft(1,0) =  x();      Qleft(1,1) =  w();      Qleft(1,2) =  z();      Qleft(1,3) = -y();
-      Qleft(2,0) =  y();      Qleft(2,1) = -z();      Qleft(2,2) =  w();      Qleft(2,3) =  x();
-      Qleft(3,0) =  z();      Qleft(3,1) =  y();      Qleft(3,2) = -x();      Qleft(3,3) =  w();
-    }
+    Qleft(0,0) =  w();      Qleft(0,1) = -x();      Qleft(0,2) = -y();      Qleft(0,3) = -z();
+    Qleft(1,0) =  x();      Qleft(1,1) =  w();      Qleft(1,2) = -z();      Qleft(1,3) =  y();
+    Qleft(2,0) =  y();      Qleft(2,1) =  z();      Qleft(2,2) =  w();      Qleft(2,3) = -x();
+    Qleft(3,0) =  z();      Qleft(3,1) = -y();      Qleft(3,2) =  x();      Qleft(3,3) =  w();
     return Qleft;
   }
 
@@ -275,23 +264,12 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::
    *  This function can be used to get the derivative of the concatenation with respect to the left quaternion.
    *  \returns the quaternion matrix Qright
    */
-  template<enum rotations::RotationUsage Usage_>
   Eigen::Matrix<PrimType_,4,4> getConjugateQuaternionMatrix() {
     Eigen::Matrix<PrimType_,4,4> Qright;
-    if(Usage_ == rotations::RotationUsage::ACTIVE)
-    {
-      Qright(0,0) =  w();      Qright(0,1) = -x();      Qright(0,2) = -y();      Qright(0,3) = -z();
-      Qright(1,0) =  x();      Qright(1,1) =  w();      Qright(1,2) =  z();      Qright(1,3) = -y();
-      Qright(2,0) =  y();      Qright(2,1) = -z();      Qright(2,2) =  w();      Qright(2,3) =  x();
-      Qright(3,0) =  z();      Qright(3,1) =  y();      Qright(3,2) = -x();      Qright(3,3) =  w();
-    }
-    if(Usage_ == rotations::RotationUsage::PASSIVE)
-    {
-      Qright(0,0) =  w();      Qright(0,1) = -x();      Qright(0,2) = -y();      Qright(0,3) = -z();
-      Qright(1,0) =  x();      Qright(1,1) =  w();      Qright(1,2) = -z();      Qright(1,3) =  y();
-      Qright(2,0) =  y();      Qright(2,1) =  z();      Qright(2,2) =  w();      Qright(2,3) = -x();
-      Qright(3,0) =  z();      Qright(3,1) = -y();      Qright(3,2) =  x();      Qright(3,3) =  w();
-    }
+    Qright(0,0) =  w();      Qright(0,1) = -x();      Qright(0,2) = -y();      Qright(0,3) = -z();
+    Qright(1,0) =  x();      Qright(1,1) =  w();      Qright(1,2) =  z();      Qright(1,3) = -y();
+    Qright(2,0) =  y();      Qright(2,1) = -z();      Qright(2,2) =  w();      Qright(2,3) =  x();
+    Qright(3,0) =  z();      Qright(3,1) =  y();      Qright(3,2) = -x();      Qright(3,3) =  w();
     return Qright;
   }
 };
@@ -511,23 +489,12 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType_>> {
    *  This function can be used to get the derivative of the concatenation with respect to the right quaternion.
    *  \returns the quaternion matrix Qleft
    */
-  template<enum rotations::RotationUsage Usage_>
   Eigen::Matrix<PrimType_,4,4> getQuaternionMatrix() {
     Eigen::Matrix<PrimType_,4,4> Qleft;
-    if(Usage_ == rotations::RotationUsage::ACTIVE)
-    {
-      Qleft(0,0) =  w();      Qleft(0,1) = -x();      Qleft(0,2) = -y();      Qleft(0,3) = -z();
-      Qleft(1,0) =  x();      Qleft(1,1) =  w();      Qleft(1,2) = -z();      Qleft(1,3) =  y();
-      Qleft(2,0) =  y();      Qleft(2,1) =  z();      Qleft(2,2) =  w();      Qleft(2,3) = -x();
-      Qleft(3,0) =  z();      Qleft(3,1) = -y();      Qleft(3,2) =  x();      Qleft(3,3) =  w();
-    }
-    if(Usage_ == rotations::RotationUsage::PASSIVE)
-    {
-      Qleft(0,0) =  w();      Qleft(0,1) = -x();      Qleft(0,2) = -y();      Qleft(0,3) = -z();
-      Qleft(1,0) =  x();      Qleft(1,1) =  w();      Qleft(1,2) =  z();      Qleft(1,3) = -y();
-      Qleft(2,0) =  y();      Qleft(2,1) = -z();      Qleft(2,2) =  w();      Qleft(2,3) =  x();
-      Qleft(3,0) =  z();      Qleft(3,1) =  y();      Qleft(3,2) = -x();      Qleft(3,3) =  w();
-    }
+    Qleft(0,0) =  w();      Qleft(0,1) = -x();      Qleft(0,2) = -y();      Qleft(0,3) = -z();
+    Qleft(1,0) =  x();      Qleft(1,1) =  w();      Qleft(1,2) = -z();      Qleft(1,3) =  y();
+    Qleft(2,0) =  y();      Qleft(2,1) =  z();      Qleft(2,2) =  w();      Qleft(2,3) = -x();
+    Qleft(3,0) =  z();      Qleft(3,1) = -y();      Qleft(3,2) =  x();      Qleft(3,3) =  w();
     return Qleft;
   }
 
@@ -535,23 +502,12 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType_>> {
    *  This function can be used to get the derivative of the concatenation with respect to the left quaternion.
    *  \returns the quaternion matrix Qright
    */
-  template<enum rotations::RotationUsage Usage_>
   Eigen::Matrix<PrimType_,4,4> getConjugateQuaternionMatrix() {
     Eigen::Matrix<PrimType_,4,4> Qright;
-    if(Usage_ == rotations::RotationUsage::ACTIVE)
-    {
-      Qright(0,0) =  w();      Qright(0,1) = -x();      Qright(0,2) = -y();      Qright(0,3) = -z();
-      Qright(1,0) =  x();      Qright(1,1) =  w();      Qright(1,2) =  z();      Qright(1,3) = -y();
-      Qright(2,0) =  y();      Qright(2,1) = -z();      Qright(2,2) =  w();      Qright(2,3) =  x();
-      Qright(3,0) =  z();      Qright(3,1) =  y();      Qright(3,2) = -x();      Qright(3,3) =  w();
-    }
-    if(Usage_ == rotations::RotationUsage::PASSIVE)
-    {
-      Qright(0,0) =  w();      Qright(0,1) = -x();      Qright(0,2) = -y();      Qright(0,3) = -z();
-      Qright(1,0) =  x();      Qright(1,1) =  w();      Qright(1,2) = -z();      Qright(1,3) =  y();
-      Qright(2,0) =  y();      Qright(2,1) =  z();      Qright(2,2) =  w();      Qright(2,3) = -x();
-      Qright(3,0) =  z();      Qright(3,1) = -y();      Qright(3,2) =  x();      Qright(3,3) =  w();
-    }
+    Qright(0,0) =  w();      Qright(0,1) = -x();      Qright(0,2) = -y();      Qright(0,3) = -z();
+    Qright(1,0) =  x();      Qright(1,1) =  w();      Qright(1,2) =  z();      Qright(1,3) = -y();
+    Qright(2,0) =  y();      Qright(2,1) = -z();      Qright(2,2) =  w();      Qright(2,3) =  x();
+    Qright(3,0) =  z();      Qright(3,1) =  y();      Qright(3,2) = -x();      Qright(3,3) =  w();
     return Qright;
   }
 };

@@ -5,7 +5,7 @@
 This library provides interfaces and implementations of kinematic and dynamic quantities for robotics.
 
 \section source_code Source Code
-The source code is available at <a href="http://bitbucket.org/ethz-asl-lr/c_kindr">http://bitbucket.org/ethz-asl-lr/c_kindr</a>
+The source code is available at <a href="http://github.com/ethz-asl/kindr">http://github.com/ethz-asl/kindr</a>
 
 \section license License
 This library is <a href="http://www.gnu.org/philosophy/free-sw.html">Free Software</a> and is licensed under <a href="http://opensource.org/licenses/BSD-3-Clause">BSD 3-Clause</a>.
