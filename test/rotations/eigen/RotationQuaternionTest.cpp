@@ -33,6 +33,7 @@
 namespace rot = kindr::rotations::eigen_impl;
 namespace quat = kindr::quaternions::eigen_impl;
 
+using namespace kindr::common::test;
 
 template <typename RotationQuaternionImplementation>
 class RotationQuaternionSingleTest : public ::testing::Test{
@@ -880,8 +881,8 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionGetDisparityAngle
   ASSERT_NEAR(this->rotQuat2.getDisparityAngle(this->rotQuat2),0.0,1e-6);
   ASSERT_NEAR(this->rotQuatIdentity.getDisparityAngle(this->rotQuatIdentity),0.0,1e-6);
   ASSERT_NEAR(this->rotQuat2.getDisparityAngle(this->rotQuat1),this->rotQuat1.getDisparityAngle(this->rotQuat2),1e-6);
-  ASSERT_NEAR(this->rotQuat1.getDisparityAngle(this->rotQuatIdentity),fabs(acos(this->rotQuat1.w())*2),1e-6);
-  ASSERT_NEAR(this->rotQuat2.getDisparityAngle(this->rotQuat1),fabs(acos((this->rotQuat1.inverted()*this->rotQuat2).w())*2),1e-6);
+  ASSERT_NEAR(this->rotQuat1.getDisparityAngle(this->rotQuatIdentity),calcRotationQuatDisparityAngleToIdentity(this->rotQuat1),1e-6);
+  ASSERT_NEAR(this->rotQuat2.getDisparityAngle(this->rotQuat1),calcRotationQuatDisparityAngle(this->rotQuat1, this->rotQuat2),1e-6);
 }
 
 // Test Rotation Quaternion Exponential and Logarithmic Map
