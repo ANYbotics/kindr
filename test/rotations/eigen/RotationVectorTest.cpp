@@ -33,6 +33,7 @@
 namespace rot = kindr::rotations::eigen_impl;
 namespace quat = kindr::quaternions::eigen_impl;
 
+using namespace kindr::common::test;
 
 template <typename Rotation_>
 class RotationVectorSingleTest : public ::testing::Test{
@@ -313,8 +314,8 @@ TYPED_TEST(RotationVectorSingleTest, testGetDisparityAngle){
   ASSERT_NEAR(this->rotRotationVectorV4.getDisparityAngle(this->rotRotationVectorV4),0.0,1e-6);
   ASSERT_NEAR(this->rotRotationVectorIdentity.getDisparityAngle(this->rotRotationVectorIdentity),0.0,1e-6);
   ASSERT_NEAR(this->rotRotationVectorV4.getDisparityAngle(this->rotRotationVectorV3),this->rotRotationVectorV3.getDisparityAngle(this->rotRotationVectorV4),1e-6);
-  ASSERT_NEAR(this->rotRotationVectorV3.getDisparityAngle(this->rotRotationVectorIdentity),fabs(acos(RotationQuaternion(this->rotRotationVectorV3).w())*2),1e-6);
-  ASSERT_NEAR(this->rotRotationVectorV4.getDisparityAngle(this->rotRotationVectorV3),fabs(acos((RotationQuaternion(this->rotRotationVectorV3).inverted()*RotationQuaternion(this->rotRotationVectorV4)).w())*2),1e-6);
+  ASSERT_NEAR(this->rotRotationVectorV3.getDisparityAngle(this->rotRotationVectorIdentity),getQuatDisparityAngleToIdentity(RotationQuaternion(this->rotRotationVectorV3)),1e-6);
+  ASSERT_NEAR(this->rotRotationVectorV4.getDisparityAngle(this->rotRotationVectorV3),getQuatDisparityAngle(RotationQuaternion(this->rotRotationVectorV3), RotationQuaternion(this->rotRotationVectorV4)),1e-6);
 }
 
 /* Test isNear

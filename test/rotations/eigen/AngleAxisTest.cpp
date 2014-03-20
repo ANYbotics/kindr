@@ -33,6 +33,7 @@
 namespace rot = kindr::rotations::eigen_impl;
 namespace quat = kindr::quaternions::eigen_impl;
 
+using namespace kindr::common::test;
 
 template <typename Rotation_>
 class AngleAxisSingleTest : public ::testing::Test{
@@ -324,8 +325,8 @@ TYPED_TEST(AngleAxisSingleTest, testGetDisparityAngle){
   ASSERT_NEAR(this->rotAngleAxis2.getDisparityAngle(this->rotAngleAxis2),0.0,1e-6);
   ASSERT_NEAR(this->rotAngleAxisIdentity.getDisparityAngle(this->rotAngleAxisIdentity),0.0,1e-6);
   ASSERT_NEAR(this->rotAngleAxis2.getDisparityAngle(this->rotAngleAxis1),this->rotAngleAxis1.getDisparityAngle(this->rotAngleAxis2),1e-6);
-  ASSERT_NEAR(this->rotAngleAxis1.getDisparityAngle(this->rotAngleAxisIdentity),fabs(acos(RotationQuaternion(this->rotAngleAxis1).w())*2),1e-6);
-  ASSERT_NEAR(this->rotAngleAxis2.getDisparityAngle(this->rotAngleAxis1),fabs(acos((RotationQuaternion(this->rotAngleAxis1).inverted()*RotationQuaternion(this->rotAngleAxis2)).w())*2),1e-6);
+  ASSERT_NEAR(this->rotAngleAxis1.getDisparityAngle(this->rotAngleAxisIdentity),getQuatDisparityAngleToIdentity(RotationQuaternion(this->rotAngleAxis1)),1e-6);
+  ASSERT_NEAR(this->rotAngleAxis2.getDisparityAngle(this->rotAngleAxis1),getQuatDisparityAngle(RotationQuaternion(this->rotAngleAxis1), RotationQuaternion(this->rotAngleAxis2)),1e-6);
 }
 
 
