@@ -122,8 +122,12 @@
  \input{styles/def}
 % -----------------------------------------------------------------------
 \DeclareGraphicsExtensions{.pdf,.eps}
- \DeclareMathOperator{\tr}{tr}
 
+ \DeclareMathOperator{\tr}{tr}
+ \DeclareMathOperator{\logmap}{log}
+ \DeclareMathOperator{\expmap}{exp}
+ \DeclareMathOperator{\logmatrix}{logM}
+ \DeclareMathOperator{\expmatrix}{expM}
 % identity matrix
 \newcommand\identity{\mathds{1}}
 \newcommand\zero{\mathbf{0}}
@@ -185,6 +189,7 @@ Identity matrix & $\identity_{n\times m}$ & ${n \times m}$-matrix  \\  \hline
 Coordinate system (CS) & ${\ve_x^A,\ve_y^A,\ve_z^A}$ & Cartesian right-hand system $A$ with basis (unit) vectors $\ve$  \\ \hline
 Inertial frame & ${\ve_x^I,\ve_y^I,\ve_z^I}$ & Global / inertial / world coordinate system (never moves) \\ \hline
 Body-fixed frame & ${\ve_x^B,\ve_y^B,\ve_z^B}$ & Local / body-fixed coordinate system (moves with body) \\ \hline
+Rotation & $\cR \in \mathrm{SO}(3)$ & generic rotation (for all parameterizations) \\ \hline
 Machine precision & $\epsilon$ & \\ \hline
 %Translational velocity & $\linvel{I}{P} \in \mathbb{R}^3 $  & translational velocity of point $P$ expressed in CS $I$ \\ \hline
 %Angular velocity & $\rotvel{I}{I}{B} \in \mathbb{R}^3 $ & ang. velocity of CS $B$ w.r.t. to CS $B$ expressed in CS $I$ \\ \hline
@@ -198,8 +203,10 @@ Machine precision & $\epsilon$ & \\ \hline
 \begin{tabular}{|l|l|}
 \hline
 Cross product & $\va \times \vb = \begin{bmatrix} a_1 \\ a_2 \\ a_3\end{bmatrix} \times \begin{bmatrix} b_1 \\ b_2 \\ b_3\end{bmatrix} \Leftrightarrow (\va)^\wedge \vb = \hat{\va}\vb = \begin{bmatrix} 0 & -a_3 & a_2 \\ a_3 & 0 & -a_1 \\ -a_2 & a_1 & 0 \end{bmatrix} \begin{bmatrix} b_1 \\ b_2 \\ b_3\end{bmatrix}$ \\ \hline
+Skew/unskew &  $ \va = \hat{\va}^\vee$ \\ \hline
 Euclidean norm & $\norm{\va} = \sqrt{\va^T\va} = \sqrt{a_1^2 + \ldots + a_n^2}$ \\ \hline
-Quaternion multiplicator & $ \vq\otimes\vp  \Leftrightarrow Q\cdot P $ \\ \hline
+Exponential map for matrix & $\expmatrix: \mathbb{R}^3 \rightarrow \mathbb{R}^3,  \vA \mapsto e^\vA, \quad \vA \in \mathbb{R}^{3\times 3}$ \\ \hline
+Logarithmic map for matrix & $\logmatrix: \mathbb{R}^3 \rightarrow \mathbb{R}^3, \vA \mapsto \log{\vA}, \quad  \vA \in \mathbb{R}^{3\times 3}$\\ \hline
 \end{tabular}
 
 \section{Position \& Orientation}
@@ -215,15 +222,20 @@ Homogeneous pos. vector & ${}_A\bar{\vr}_{O\!P} = \begin{bmatrix}\postranspose{A
 \subsection{Orientation/Rotation}
 \parbox[t]{0.7\columnwidth}{\null
   \vskip-\abovecaptionskip
-\begin{tabular}[h!]{l@{ }l@{ }l@{ }l}
- 1) & Active Rotation: & $\cR^A: {}_A\color{blue}{\vr_{O\!P}} \color{black}\mapsto {}_A\color{green!50!black}{\vr_{O\!Q}} $ & (rotates the vector $\vr_{O\!P}$) \\
- 2) & Passive Rotation:& $\cR^P: {}_A\color{blue}{\vr_{O\!P}} \color{black}\mapsto \color{red}{}_B\color{blue}{\vr_{O\!P}} $ & (rotates the frame $(\ve_x^A,\ve_y^A,\ve_z^A)$)\\
+\begin{tabular}[h!]{l@{ }l@{ }l@{ }}
+ 1) & Active Rotation: & $\cR^A: {}_A\color{blue}{\vr_{O\!P}} \color{black}\mapsto {}_A\color{green!50!black}{\vr_{O\!Q}} $ (rotates the vector $\vr_{O\!P}$) \\
+ 2) & Passive Rotation:& $\cR^P: {}_A\color{blue}{\vr_{O\!P}} \color{black}\mapsto \color{red}{}_B\color{blue}{\vr_{O\!P}} $ (rotates the frame $(\ve_x^A,\ve_y^A,\ve_z^A)$)\\
  3) & Inversion: & $\cR^{A^{-1}}(\vr) = \cR^P(\vr)$ \\ 
- 4) & Concatenation: & \multicolumn{2}{l}{$\begin{aligned}\cR_2^A\left(\cR_1^A(\vr)\right) &= \left(\cR_2^A \otimes \cR_1^A\right)(\vr) \\ 
+ 4) & Concatenation: & \multicolumn{1}{l}{$\begin{aligned}\cR_2^A\left(\cR_1^A(\vr)\right) &= \left(\cR_2^A \otimes \cR_1^A\right)(\vr) \\ 
 											    &= \left(\cR_1^{A^{-1}} \otimes \cR_2^{A^{-1}}\right)(\vr) \\
                                             \cR_2^P\left(\cR_1^P(\vr)\right) &= \left(\cR_2^P \otimes \cR_1^P\right)(\vr) \\ 
 									     &= \left(\cR_1^{P^{-1}} \otimes \cR_2^{P^{-1}}\right)(\vr) \\
 					      \end{aligned}$} \\
+ 5) & Exponential map: & $ \expmap: \mathbb{R}^3 \rightarrow \mathrm{SO}(3), \vv \mapsto \expmatrix(\hat{\vv}), \quad \vv \in \mathbb{R}^3$ \\
+ 6) & Logarithmic map: & $ \logmap: \mathrm{SO}(3) \rightarrow \mathbb{R}^3, \cR \mapsto \logmatrix(\cR)^\vee, \quad \cR \in \mathrm{SO}(3)$ \\ 
+ 7) & Box plus: & $\cR_{2} = \cR_{1} \boxplus \vv = \expmap{(\vv)} \otimes \cR_{1}, \quad  \cR_1, \cR_2 \in \mathrm{SO}(3), \vv \in \mathbb{R}^3$   \\
+ 8) & Box minus: & $\vv = \cR_{1} \boxminus \cR_2 = \logmap{(\cR_1\otimes\cR_2^{-1})}, \quad \cR_1, \cR_2 \in \mathrm{SO}(3), \vv \in \mathbb{R}^3$  \\ 
+ 9) & Discrete integration: & $\cR^{k+1} = \cR^k \boxplus ({}_B\vom_{I\!B}\Delta t)$ \\
 \end{tabular}
 }
 \parbox[t]{0.25\columnwidth}{\null
@@ -512,7 +524,7 @@ $\vu = \begin{pmatrix} {}_I \vv_B \\ \rotvel{B}{I}{B} \\ \dot{\varphi}_1 \\ \vdo
 $\dot{\vu} = \begin{pmatrix} {}_I \va_B \\ {}_B\vps_{I\!B} \\ \ddot{\varphi}_1 \\ \vdots \\ \ddot{\varphi}_{n_j} \end{pmatrix} \in \mathbb{R}^{6+n_j}$
 \\
 \end{tabular}
-$\dot{\vq} = \vF \vu, \quad \vF = \begin{pmatrix} \vI_{3\times 3} & \mathbf{0} & \mathbf{0} \\ \mathbf{0} & \frac{1}{2}\bar{\vH}^\mathsf{T} & \mathbf{0} \\ \mathbf{0} & \mathbf{0} & \vI_{n_j\times n_j} \end{pmatrix} \quad \Leftrightarrow \quad \vu = \bar{\vF}\dot{\vq}, \quad \bar{\vF} = \begin{pmatrix} \vI_{3x3} & \mathbf{0} & \mathbf{0} \\ \mathbf{0} & 2\bar{\vH} & \mathbf{0} \\ \mathbf{0} & \mathbf{0} & \vI_{n_j \times n_j} \end{pmatrix}$ \\
+$\dot{\vq} = \vF \vu, \quad \vF = \begin{pmatrix} \identity_{3\times 3} & \mathbf{0} & \mathbf{0} \\ \mathbf{0} & \frac{1}{2}\bar{\vH}^\mathsf{T} & \mathbf{0} \\ \mathbf{0} & \mathbf{0} & \identity_{n_j\times n_j} \end{pmatrix} \quad \Leftrightarrow \quad \vu = \bar{\vF}\dot{\vq}, \quad \bar{\vF} = \begin{pmatrix} \identity_{3x3} & \mathbf{0} & \mathbf{0} \\ \mathbf{0} & 2\bar{\vH} & \mathbf{0} \\ \mathbf{0} & \mathbf{0} & \identity_{n_j \times n_j} \end{pmatrix}$ \\
 
 \subsection{Equations of Motion with Contacts and no Impulses}
 \begin{tabular}{@{}ll@{}}
