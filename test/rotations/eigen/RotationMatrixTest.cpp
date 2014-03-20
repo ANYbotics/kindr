@@ -742,6 +742,16 @@ TYPED_TEST(RotationMatrixSingleTest, testBoxOperators){
   ASSERT_NEAR(rot1.getDisparityAngle(rot2),norm,1e-4); // Check distance to double
   rot2 = rotRotationMatrix1.boxPlus(-testVec);
   ASSERT_NEAR(rot1.getDisparityAngle(rot2),2*norm,1e-4); // Check distance to reverse
+
+  // Test groundtruth data
+  RotationMatrix rotRotationMatrix3(1.0, 0.0, 0.0,
+                                    0.0, 0.0, 1.0,
+                                    0.0, -1.0, 0.0);
+  RotationMatrix rotRotationMatrix4 = rotRotationMatrix3.boxPlus(1e-5*Vector(1.0, 0.0, 0.0));
+  RotationMatrix rotRotationMatrix4Correct(1.0000e+00,            0.0,            0.0,
+                                          0.0,   1.0000e-05,   1.0000e+00,
+                                          0.0,  -1.0000e+00,   1.0000e-05);
+  KINDR_ASSERT_DOUBLE_MX_EQ(rotRotationMatrix4Correct.matrix(), rotRotationMatrix4.matrix(), 1e-4, "boxPlus");
 }
 
 
