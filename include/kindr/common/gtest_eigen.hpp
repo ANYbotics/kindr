@@ -35,7 +35,24 @@
 
 namespace kindr {
 namespace common {
+
+namespace test {
+
+template <typename T>
+double getQuatDisparityAngleToIdentity(const T & quat){
+  const double wAbs = fabs(quat.w());
+  return acos(wAbs)*2;
+}
+
+template <typename T>
+double getQuatDisparityAngle(const T & q1, const T & q2){
+  return getQuatDisparityAngleToIdentity(q1.inverted() * q2);
+}
+
+}
+
 namespace eigen {
+
 
 
 //    template<int N>

@@ -173,15 +173,15 @@ TYPED_TEST(LocalAngularVelocityTest, testMultiplication)
   const LocalAngularVelocity angVel3(this->eigenVector3v3);
 
   // multiplication 1
-  LocalAngularVelocity mult1 = angVel3 * 10;
-  ASSERT_EQ(angVel3.x(), mult1.x());
-  ASSERT_EQ(angVel3.y(), mult1.y());
-  ASSERT_EQ(angVel3.z(), mult1.z());
+  LocalAngularVelocity mult1 = angVel3 * 10.0;
+  ASSERT_EQ(angVel2.x(), mult1.x());
+  ASSERT_EQ(angVel2.y(), mult1.y());
+  ASSERT_EQ(angVel2.z(), mult1.z());
 
   // multiplication 2
-  LocalAngularVelocity mult2 = 10 * angVel3;
-  ASSERT_EQ(angVel3.x(), mult2.x());
-  ASSERT_EQ(angVel3.y(), mult2.y());
-  ASSERT_EQ(angVel3.z(), mult2.z());
+  LocalAngularVelocity mult2 = 10.0 * angVel3;
+  ASSERT_EQ(angVel2.x(), mult2.x());
+  ASSERT_EQ(angVel2.y(), mult2.y());
+  ASSERT_EQ(angVel2.z(), mult2.z());
 }
 

@@ -33,6 +33,7 @@
 namespace rot = kindr::rotations::eigen_impl;
 namespace quat = kindr::quaternions::eigen_impl;
 
+using namespace kindr::common::test;
 
 template <typename Rotation_>
 class RotationMatrixSingleTest : public ::testing::Test{
@@ -430,8 +431,8 @@ TYPED_TEST(RotationMatrixSingleTest, testGetDisparityAngle){
   ASSERT_NEAR(this->rotRotationMatrix2.getDisparityAngle(this->rotRotationMatrix2),0.0,1e-6);
   ASSERT_NEAR(this->rotRotationMatrixIdentity.getDisparityAngle(this->rotRotationMatrixIdentity),0.0,1e-6);
   ASSERT_NEAR(this->rotRotationMatrix2.getDisparityAngle(this->rotRotationMatrix1),this->rotRotationMatrix1.getDisparityAngle(this->rotRotationMatrix2),1e-6);
-  ASSERT_NEAR(this->rotRotationMatrix1.getDisparityAngle(this->rotRotationMatrixIdentity),fabs(acos(RotationQuaternion(this->rotRotationMatrix1).w())*2),1e-6);
-  ASSERT_NEAR(this->rotRotationMatrix2.getDisparityAngle(this->rotRotationMatrix1),fabs(acos((RotationQuaternion(this->rotRotationMatrix1).inverted()*RotationQuaternion(this->rotRotationMatrix2)).getUnique().w())*2),1e-6);
+  ASSERT_NEAR(this->rotRotationMatrix1.getDisparityAngle(this->rotRotationMatrixIdentity),getQuatDisparityAngleToIdentity(RotationQuaternion(this->rotRotationMatrix1)),1e-6);
+  ASSERT_NEAR(this->rotRotationMatrix2.getDisparityAngle(this->rotRotationMatrix1),getQuatDisparityAngle(RotationQuaternion(this->rotRotationMatrix1), RotationQuaternion(this->rotRotationMatrix2)),1e-6);
 }
 
 
@@ -668,7 +669,7 @@ TYPED_TEST(RotationMatrixSingleTest, testMaps){
 
   testVec = this->rotRotationMatrix1.getLogarithmicMap();
   rotRotationMatrix.setExponentialMap(testVec);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrix1.matrix(), rotRotationMatrix.matrix(), 1e-4, "maps");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrix1.matrix(), rotRotationMatrix.matrix(), 1e-3, "maps");
 
   testVec = this->rotRotationMatrix2.getLogarithmicMap();
   rotRotationMatrix.setExponentialMap(testVec);
