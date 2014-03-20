@@ -35,7 +35,7 @@ cmake_minimum_required (VERSION 2.8)
 #set(ROS_BUILD_TYPE Debug)
 set(ROS_BUILD_TYPE Release)
 
-add_definitions(-std=c++0x)
+add_definitions(-std=c++0x -Wno-enum-compare)
 
 find_package(Eigen REQUIRED)
 
