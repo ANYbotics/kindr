@@ -33,6 +33,7 @@
 namespace rot = kindr::rotations::eigen_impl;
 namespace quat = kindr::quaternions::eigen_impl;
 
+using namespace kindr::common::test;
 
 template <typename Rotation_>
 class EulerAnglesXyzSingleTest : public ::testing::Test{
@@ -312,8 +313,8 @@ TYPED_TEST(EulerAnglesXyzSingleTest, testGetDisparityAngle){
   ASSERT_NEAR(this->rotEulerAnglesXyzV4.getDisparityAngle(this->rotEulerAnglesXyzV4),0.0,1e-6);
   ASSERT_NEAR(this->rotEulerAnglesXyzIdentity.getDisparityAngle(this->rotEulerAnglesXyzIdentity),0.0,1e-6);
   ASSERT_NEAR(this->rotEulerAnglesXyzV4.getDisparityAngle(this->rotEulerAnglesXyzV3),fabs(this->rotEulerAnglesXyzV3.getDisparityAngle(this->rotEulerAnglesXyzV4)),1e-6);
-  ASSERT_NEAR(this->rotEulerAnglesXyzV3.getDisparityAngle(this->rotEulerAnglesXyzIdentity),fabs(acos(RotationQuaternion(this->rotEulerAnglesXyzV3).w())*2),1e-6);
-  ASSERT_NEAR(this->rotEulerAnglesXyzV4.getDisparityAngle(this->rotEulerAnglesXyzV3),fabs(acos((RotationQuaternion(this->rotEulerAnglesXyzV3).inverted()*RotationQuaternion(this->rotEulerAnglesXyzV4)).w())*2),1e-6);
+  ASSERT_NEAR(this->rotEulerAnglesXyzV3.getDisparityAngle(this->rotEulerAnglesXyzIdentity),getQuatDisparityAngleToIdentity(RotationQuaternion(this->rotEulerAnglesXyzV3)),1e-6);
+  ASSERT_NEAR(this->rotEulerAnglesXyzV4.getDisparityAngle(this->rotEulerAnglesXyzV3),getQuatDisparityAngle(RotationQuaternion(this->rotEulerAnglesXyzV3), RotationQuaternion(this->rotEulerAnglesXyzV4)),1e-6);
 }
 
 /* Test isNear
