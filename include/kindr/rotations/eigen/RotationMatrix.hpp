@@ -362,10 +362,16 @@ class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_
     std::cout << "norm of rot vect: " << v << " " << v1 << " "<< " " << v2 << " " <<v3 << std::endl;
 //    if (v < 1e-3)  {
       std::cout << "small number rot vector!!!!\n";
-      matrixdata << 1.0,  v3, -v2,
-                        -v3, 1.0,  v1,
-                          v2, -v1, 1.0;
+      // active to passive
+//      matrixdata << 1.0,  v3, -v2,
+//                        -v3, 1.0,  v1,
+//                          v2, -v1, 1.0;
+
+      matrixdata << 1.0,  -v3, v2,
+                    v3, 1.0,  -v1,
+                   -v2, v1, 1.0;
     } else {
+      // active rotation vector to active matrix // not matlab code (is transposed)
       const DestPrimType_ t3 = v*(1.0/2.0);
       const DestPrimType_ t2 = sin(t3);
       const DestPrimType_ t4 = cos(t3);
@@ -392,10 +398,13 @@ class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_
       matrixdata(1,2) = t2*t5*(t16-t17)*-2.0;
       matrixdata(2,2) = t5*(t14-t8*(t9+t10-t11));
 
+
+
     }
 
-    eigen_impl::RotationMatrix<DestPrimType_, Usage_> matrix;
-    matrix.toImplementation() = matrixdata;
+//    eigen_impl::RotationMatrix<DestPrimType_, Usage_> matrix;
+//    matrix.toImplementation() = matrixdata;
+    eigen_impl::RotationMatrix<DestPrimType_, Usage_> matrix(matrixdata);
     return matrix;
 
     // the same as above:
@@ -520,6 +529,42 @@ class UsageConversionTraits<eigen_impl::RotationMatrix<PrimType_, RotationUsage:
 //  inline static  eigen_impl::RotationMatrix<LeftPrimType_, Usage_> box_plus(const eigen_impl::RotationMatrix<RightPrimType_, Usage_>& rotation, const typename internal::get_matrix3X<eigen_impl::RotationMatrix<RightPrimType_, Usage_>>::template Matrix3X<1>& vector) {
 //    return eigen_impl::RotationMatrix<LeftPrimType_, Usage_>((MapTraits<RotationBase<eigen_impl::RotationMatrix<RightPrimType_,Usage_>, Usage_>>::set_exponential_map(vector)).toImplementation()*rotation.toImplementation());
 //  }
+//};
+
+
+//template<typename PrimType_, enum RotationUsage Usage_>
+//class MapTraits<eigen_impl::RotationMatrix<PrimType_, Usage_>> {
+// public:
+//
+//  inline static eigen_impl::RotationMatrix<PrimType_, Usage_> set_exponential_map(const typename internal::get_matrix3X<eigen_impl::RotationMatrix<PrimType_, Usage_>>::template Matrix3X<1>& vector) {
+//    typedef typename get_scalar<eigen_impl::RotationMatrix<PrimType_, Usage_>>::Scalar Scalar;
+//    if (Usage_ == RotationUsage::ACTIVE) {
+//      return eigen_impl::RotationMatrix<PrimType_, Usage_>(eigen_impl::RotationVector<Scalar, Usage_>(vector));
+//    }
+//    if (Usage_ == RotationUsage::PASSIVE) {
+//      return eigen_impl::RotationMatrix<PrimType_, Usage_>(eigen_impl::RotationVector<Scalar, Usage_>(vector));
+//    }
+//  }
+//
+////  inline static typename internal::get_matrix3X<Rotation_>::template Matrix3X<1> get_logarithmic_map(const Rotation_& rotation) {
+////    typedef typename get_scalar<Rotation_>::Scalar Scalar;
+////    eigen_impl::RotationVector<Scalar, Rotation_::Usage> rotationVector(rotation);
+////    return rotationVector.getUnique().toImplementation();
+////  }
+//
+//  inline static typename internal::get_matrix3X<eigen_impl::RotationMatrix<PrimType_, Usage_>>::template Matrix3X<1> get_logarithmic_map(const eigen_impl::RotationMatrix<PrimType_, Usage_>& rotation) {
+//    typedef typename get_scalar<eigen_impl::RotationMatrix<PrimType_, Usage_>>::Scalar Scalar;
+//
+//
+//
+//    if (Usage_ == RotationUsage::ACTIVE) {
+//      return eigen_impl::RotationVector<Scalar, Usage_>(rotation).toImplementation();
+//    }
+//    if (Usage_ == RotationUsage::PASSIVE) {
+//      return eigen_impl::RotationVector<Scalar, Usage_>(rotation).toImplementation();
+//    }
+//  }
+//
 //};
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

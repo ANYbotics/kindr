@@ -188,7 +188,7 @@ class RotationDiffConversionTraits<eigen_impl::RotationMatrixDiff<PrimType_, Usa
     }
     if (Usage_ == RotationUsage::PASSIVE) {
 
-      return eigen_impl::RotationMatrixDiff<PrimType_, Usage_>(-rotationMatrix.toImplementation()*linear_algebra::getSkewMatrixFromVector(angularVelocity.toImplementation()));
+      return eigen_impl::RotationMatrixDiff<PrimType_, Usage_>(linear_algebra::getSkewMatrixFromVector(angularVelocity.toImplementation())*rotationMatrix.matrix());
     }
 
   }

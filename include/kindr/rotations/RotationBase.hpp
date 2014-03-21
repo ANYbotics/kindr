@@ -353,7 +353,7 @@ class RotationBase {
     return internal::RotationTraits<RotationBase<Derived_,Usage_>>::rotate(this->derived().inverted(), vector);
   }
 
-  /*! \brief Sets the rotation using an exponential map
+  /*! \brief Sets the rotation using an exponential map @todo avoid altering the rotation
    * \param vector  Eigen::Matrix<Scalar 3, 1>
    * \return  reference to modified rotation
    */

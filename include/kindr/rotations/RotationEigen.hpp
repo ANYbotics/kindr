@@ -144,7 +144,7 @@ class ComparisonTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usage_>
    *  The disparity angle is defined as the angle of the angle-axis representation of the concatenation of
    *  the first rotation and the inverse of the second rotation. If the disparity angle is zero,
    *  the rotations are equal.
-   *  \returns disparity angle in [-pi,pi)
+   *  \returns disparity angle in [-pi,pi) @todo: is this range correct?
    */
   inline static typename Left_::Scalar get_disparity_angle(const RotationBase<Left_, Usage_>& left, const RotationBase<Right_, Usage_>& right) {
     return fabs(common::floatingPointModulo(eigen_impl::AngleAxis<typename Left_::Scalar,  Usage_>(left.derived()*right.derived().inverted()).angle() + M_PI,2*M_PI)-M_PI);
@@ -155,19 +155,39 @@ class ComparisonTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usage_>
  * Map Traits
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-template<typename Rotation_> // todo: remove template param Usage_
+template<typename Rotation_>
 class MapTraits<RotationBase<Rotation_, Rotation_::Usage>> {
  public:
 
   inline static Rotation_ set_exponential_map(const typename internal::get_matrix3X<Rotation_>::template Matrix3X<1>& vector) {
     typedef typename get_scalar<Rotation_>::Scalar Scalar;
+//    if (Rotation_::Usage == RotationUsage::ACTIVE) {
+//      return Rotation_(eigen_impl::RotationVector<Scalar, Rotation_::Usage>(vector));
+//    }
+//    if (Rotation_::Usage == RotationUsage::PASSIVE) {
+//      return Rotation_(eigen_impl::RotationVector<Scalar, Rotation_::Usage>(vector));
+//    }
     return Rotation_(eigen_impl::RotationVector<Scalar, Rotation_::Usage>(vector));
   }
 
+//  inline static typename internal::get_matrix3X<Rotation_>::template Matrix3X<1> get_logarithmic_map(const Rotation_& rotation) {
+//    typedef typename get_scalar<Rotation_>::Scalar Scalar;
+//    eigen_impl::RotationVector<Scalar, Rotation_::Usage> rotationVector(rotation);
+//    return rotationVector.getUnique().toImplementation();
+//  }
+
   inline static typename internal::get_matrix3X<Rotation_>::template Matrix3X<1> get_logarithmic_map(const Rotation_& rotation) {
     typedef typename get_scalar<Rotation_>::Scalar Scalar;
-    eigen_impl::RotationVector<Scalar, Rotation_::Usage> rotationVector(rotation);
-    return rotationVector.getUnique().toImplementation();
+
+
+    return eigen_impl::RotationVector<Scalar, Rotation_::Usage>(rotation).getUnique().toImplementation();
+
+//    if (Rotation_::Usage == RotationUsage::ACTIVE) {
+//      return eigen_impl::RotationVector<Scalar, Rotation_::Usage>(rotation).getUnique().toImplementation();
+//    }
+//    if (Rotation_::Usage == RotationUsage::PASSIVE) {
+//      return -eigen_impl::RotationVector<Scalar, Rotation_::Usage>(rotation).getUnique().toImplementation();
+//    }
   }
 
 };
