@@ -745,8 +745,13 @@ TYPED_TEST(RotationMatrixSingleTest, testBoxOperators){
 
   // Test groundtruth data
   RotationMatrix rotRotationMatrix3(1.0, 0.0, 0.0,
-                                    0.0, 0.0, 1.0,
-                                    0.0, -1.0, 0.0);
+                                    0.0, 6.1232339957367697e-17, 1.0,
+                                    0.0, -1.0, 6.1232339957367697e-17);
+  Vector test = 1e-5*Vector(1.0, 0.0, 0.0);
+  std::cout << "test vector: " << test  << std::endl;
+  std::cout << "test vector norm: " << test.norm() << std::endl;
+  std::cout << "rot vector: " << kindr::rotations::eigen_impl::RotationVector<Scalar, RotationMatrix::Usage>(test) << std::endl;
+
   RotationMatrix rotRotationMatrix4 = rotRotationMatrix3.boxPlus(1e-5*Vector(1.0, 0.0, 0.0));
   RotationMatrix rotRotationMatrix4Correct(1.0000e+00,            0.0,            0.0,
                                           0.0,   1.0000e-05,   1.0000e+00,

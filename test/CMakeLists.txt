@@ -83,13 +83,13 @@ add_gtest( runUnitTestsQuaternions ${QUATERNIONS_SRCS} )
 
 set(ROTATION_SRCS
 	test_main.cpp
-	rotations/eigen/RotationQuaternionTest.cpp
-	rotations/eigen/RotationVectorTest.cpp
-	rotations/eigen/AngleAxisTest.cpp
+	#rotations/eigen/RotationQuaternionTest.cpp
+	#rotations/eigen/RotationVectorTest.cpp
+	#rotations/eigen/AngleAxisTest.cpp
 	rotations/eigen/RotationMatrixTest.cpp
-	rotations/eigen/EulerAnglesZyxTest.cpp
-	rotations/eigen/EulerAnglesXyzTest.cpp
-	rotations/RotationEigenTest.cpp
+	#rotations/eigen/EulerAnglesZyxTest.cpp
+	#rotations/eigen/EulerAnglesXyzTest.cpp
+	#rotations/RotationEigenTest.cpp
 )
 add_gtest( runUnitTestsRotation ${ROTATION_SRCS})
 

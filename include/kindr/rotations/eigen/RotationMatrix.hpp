@@ -359,7 +359,9 @@ class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_
     const SourcePrimType_ v = rv.norm();
 
     if (v < common::internal::NumTraits<Scalar>::dummy_precision())  {
-//      std::cout << "small number rot vector!!!!\n";
+    std::cout << "norm of rot vect: " << v << " " << v1 << " "<< " " << v2 << " " <<v3 << std::endl;
+//    if (v < 1e-3)  {
+      std::cout << "small number rot vector!!!!\n";
       matrixdata << 1.0,  v3, -v2,
                         -v3, 1.0,  v1,
                           v2, -v1, 1.0;
@@ -516,7 +518,7 @@ class UsageConversionTraits<eigen_impl::RotationMatrix<PrimType_, RotationUsage:
 //  }
 //
 //  inline static  eigen_impl::RotationMatrix<LeftPrimType_, Usage_> box_plus(const eigen_impl::RotationMatrix<RightPrimType_, Usage_>& rotation, const typename internal::get_matrix3X<eigen_impl::RotationMatrix<RightPrimType_, Usage_>>::template Matrix3X<1>& vector) {
-//    return eigen_impl::RotationMatrix<LeftPrimType_, Usage_>((MapTraits<RotationBase<eigen_impl::RotationMatrix<RightPrimType_,Usage_>, Usage_>>::set_exponential_map(vector))*rotation);
+//    return eigen_impl::RotationMatrix<LeftPrimType_, Usage_>((MapTraits<RotationBase<eigen_impl::RotationMatrix<RightPrimType_,Usage_>, Usage_>>::set_exponential_map(vector)).toImplementation()*rotation.toImplementation());
 //  }
 //};
 

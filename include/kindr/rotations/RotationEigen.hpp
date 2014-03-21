@@ -183,8 +183,12 @@ class BoxOperationTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usage
     return (lhs.derived()*rhs.derived().inverted()).getLogarithmicMap();
   }
 
+//  inline static  Left_ box_plus(const RotationBase<Left_, Usage_>& rotation, const typename internal::get_matrix3X<Left_>::template Matrix3X<1>& vector) {
+//    return Left_(MapTraits<RotationBase<eigen_impl::RotationVector<typename Left_::Scalar,Usage_>,Usage_>>::set_exponential_map(vector)*rotation.derived());
+//  }
+
   inline static  Left_ box_plus(const RotationBase<Left_, Usage_>& rotation, const typename internal::get_matrix3X<Left_>::template Matrix3X<1>& vector) {
-    return Left_(MapTraits<RotationBase<eigen_impl::RotationVector<typename Left_::Scalar,Usage_>,Usage_>>::set_exponential_map(vector)*rotation.derived());
+    return Left_(MapTraits<RotationBase<Left_,Usage_>>::set_exponential_map(vector)*rotation.derived());
   }
 };
 
