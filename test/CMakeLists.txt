@@ -87,8 +87,8 @@ set(ROTATION_SRCS
 	rotations/eigen/RotationVectorTest.cpp
 	rotations/eigen/AngleAxisTest.cpp
 	rotations/eigen/RotationMatrixTest.cpp
-	#rotations/eigen/EulerAnglesZyxTest.cpp
-	#rotations/eigen/EulerAnglesXyzTest.cpp
+	rotations/eigen/EulerAnglesZyxTest.cpp
+	rotations/eigen/EulerAnglesXyzTest.cpp
 	rotations/RotationEigenTest.cpp
 )
 add_gtest( runUnitTestsRotation ${ROTATION_SRCS})
@@ -99,7 +99,7 @@ set(ROTATIONDIFF_SRCS
 	#rotations/eigen/LocalAngularVelocityTest.cpp
 	#rotations/eigen/AngleAxisDiffTest.cpp
 	#rotations/eigen/RotationVectorDiffTest.cpp
-	#rotations/eigen/RotationQuaternionDiffTest.cpp
+	rotations/eigen/RotationQuaternionDiffTest.cpp
 	rotations/eigen/RotationMatrixDiffTest.cpp
 	#rotations/eigen/EulerAnglesZyxDiffTest.cpp
 	#rotations/eigen/EulerAnglesXyzDiffTest.cpp

@@ -55,7 +55,7 @@ struct RotationQuaternionDiffTest: public ::testing::Test {
 
   LocalAngularVelocity angularVelocity1 = LocalAngularVelocity(0.0, 0.0, 0.0);
   LocalAngularVelocity angularVelocity2 = LocalAngularVelocity(0.4, 0.3, 0.8);
-  LocalAngularVelocity angularVelocity3 = LocalAngularVelocity(40, 52, 99);
+  LocalAngularVelocity angularVelocity3 = LocalAngularVelocity(40, 52, 99)*0.001;
   LocalAngularVelocity angularVelocity4 = LocalAngularVelocity(kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0, 0.0, 0.0);
   LocalAngularVelocity angularVelocity5 = LocalAngularVelocity(0.0, kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0, 0.0);
   LocalAngularVelocity angularVelocity6 = LocalAngularVelocity(0.0, 0.0, kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0);
@@ -208,7 +208,7 @@ TYPED_TEST(RotationQuaternionDiffTest, testFiniteDifference)
   typedef typename TestFixture::RotationDiff RotationDiff;
   typedef typename TestFixture::RotationDiff::Imaginary Vector3;
 
- const  double dt = 0.00000001;
+ const  double dt = 1e-5;
   for (auto rotation : this->rotations) {
     for (auto angularVelocity : this->angularVelocities) {
       // Finite difference method for checking derivatives
@@ -216,10 +216,10 @@ TYPED_TEST(RotationQuaternionDiffTest, testFiniteDifference)
       Rotation rotationNext = rotation.boxPlus(dt*angularVelocity.toImplementation());
       Scalar dreal = (rotationNext.real()-rotation.real())/dt;
       Vector3 dimag = (rotationNext.imaginary()-rotation.imaginary())/dt;
-      ASSERT_NEAR(rotationDiff.w(),dreal,1e-6) << "rotation: " << rotation << " angular velocity: " << angularVelocity << " diff: " << rotationDiff;
-      ASSERT_NEAR(rotationDiff.x(),dimag(0),1e-6) << "rotation: " << rotation << " angular velocity: " << angularVelocity  << " diff: " << rotationDiff;
-      ASSERT_NEAR(rotationDiff.y(),dimag(1),1e-6) << "rotation: " << rotation << " angular velocity: " << angularVelocity << " diff: " << rotationDiff;
-      ASSERT_NEAR(rotationDiff.z(),dimag(2),1e-6) << "rotation: " << rotation << " angular velocity: " << angularVelocity << " diff: " << rotationDiff;
+      ASSERT_NEAR(rotationDiff.w(),dreal,1e-3) << "rotation: " << rotation << " angular velocity: " << angularVelocity << " diff: " << rotationDiff;
+      ASSERT_NEAR(rotationDiff.x(),dimag(0),1e-3) << "rotation: " << rotation << " angular velocity: " << angularVelocity  << " diff: " << rotationDiff;
+      ASSERT_NEAR(rotationDiff.y(),dimag(1),1e-3) << "rotation: " << rotation << " angular velocity: " << angularVelocity << " diff: " << rotationDiff;
+      ASSERT_NEAR(rotationDiff.z(),dimag(2),1e-3) << "rotation: " << rotation << " angular velocity: " << angularVelocity << " diff: " << rotationDiff;
 
     }
   }
