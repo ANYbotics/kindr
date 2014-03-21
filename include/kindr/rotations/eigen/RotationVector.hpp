@@ -377,7 +377,42 @@ class ConversionTraits<eigen_impl::RotationVector<DestPrimType_, Usage_>, eigen_
 //          return eigen_impl::RotationVector<DestPrimType_, Usage_>(eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(rotationMatrix.inverted()));
 //        }
 //        return eigen_impl::RotationVector<DestPrimType_, Usage_>(eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(rotationMatrix));
-        return eigen_impl::RotationVector<DestPrimType_, Usage_>(eigen_impl::AngleAxis<DestPrimType_, Usage_>(rotationMatrix));
+
+    // ok
+    return eigen_impl::RotationVector<DestPrimType_, Usage_>(eigen_impl::AngleAxis<DestPrimType_, Usage_>(rotationMatrix));
+
+
+
+//      if (Usage_ == RotationUsage::ACTIVE) {
+//        return eigen_impl::RotationVector<DestPrimType_, Usage_>(eigen_impl::AngleAxis<DestPrimType_, Usage_>(rotationMatrix));
+//      } if (Usage_ == RotationUsage::PASSIVE) {
+//        return eigen_impl::RotationVector<DestPrimType_, Usage_>(eigen_impl::AngleAxis<DestPrimType_, Usage_>(rotationMatrix));
+//      }
+
+//    typename eigen_impl::RotationMatrix<DestPrimType_, Usage_>::Implementation C = rotationMatrix.toImplementation().template cast<DestPrimType_>();
+//    typename eigen_impl::RotationVector<DestPrimType_, Usage_>::Vector p;
+//    // Sometimes, because of roundoff error, the value of tr ends up outside
+//    // the valid range of arccos. Truncate to the valid range.
+//    double tr = std::max(-1.0, std::min( (C(0,0) + C(1,1) + C(2,2) - 1.0) * 0.5, 1.0));
+//    double a = acos( tr ) ;
+//
+//    if(fabs(a) < 1e-14){
+//        return eigen_impl::RotationVector<DestPrimType_, Usage_>();
+//    }
+//
+//    p[0] = (C(2,1) - C(1,2));
+//    p[1] = (C(0,2) - C(2,0));
+//    p[2] = (C(1,0) - C(0,1));
+//    double n2 = p.norm();
+//    if(fabs(n2) < 1e-14)
+//      return eigen_impl::RotationVector<DestPrimType_, Usage_>();
+//
+//    double scale = -a/n2;
+//    p = scale * p;
+//
+//
+//    return eigen_impl::RotationVector<DestPrimType_, Usage_>(p);
+
   }
 };
 

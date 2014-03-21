@@ -200,7 +200,7 @@ template<typename Left_, typename Right_, enum RotationUsage Usage_>
 class BoxOperationTraits<RotationBase<Left_, Usage_>, RotationBase<Right_, Usage_>> {
  public:
   inline static typename internal::get_matrix3X<Left_>::template Matrix3X<1> box_minus(const RotationBase<Left_, Usage_>& lhs, const RotationBase<Right_, Usage_>& rhs) {
-    return (lhs.derived()*rhs.derived().inverted()).getLogarithmicMap();
+    return (lhs.derived()*rhs.derived().inverted()).logarithmicMap();
   }
 
 //  inline static  Left_ box_plus(const RotationBase<Left_, Usage_>& rotation, const typename internal::get_matrix3X<Left_>::template Matrix3X<1>& vector) {

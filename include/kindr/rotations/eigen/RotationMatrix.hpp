@@ -359,14 +359,12 @@ class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_
     const SourcePrimType_ v = rv.norm();
 
     if (v < common::internal::NumTraits<Scalar>::dummy_precision())  {
-    std::cout << "norm of rot vect: " << v << " " << v1 << " "<< " " << v2 << " " <<v3 << std::endl;
-//    if (v < 1e-3)  {
-      std::cout << "small number rot vector!!!!\n";
+
       // active to passive
 //      matrixdata << 1.0,  v3, -v2,
 //                        -v3, 1.0,  v1,
 //                          v2, -v1, 1.0;
-
+      // active to active
       matrixdata << 1.0,  -v3, v2,
                     v3, 1.0,  -v1,
                    -v2, v1, 1.0;
@@ -402,13 +400,10 @@ class ConversionTraits<eigen_impl::RotationMatrix<DestPrimType_, Usage_>, eigen_
 
     }
 
-//    eigen_impl::RotationMatrix<DestPrimType_, Usage_> matrix;
-//    matrix.toImplementation() = matrixdata;
-    eigen_impl::RotationMatrix<DestPrimType_, Usage_> matrix(matrixdata);
+    eigen_impl::RotationMatrix<DestPrimType_, Usage_> matrix;
+    matrix.toImplementation() = matrixdata;
     return matrix;
 
-    // the same as above:
-//    return eigen_impl::RotationMatrix<DestPrimType_, Usage_>(eigen_impl::AngleAxis<SourcePrimType_, Usage_>(rotationVector));
   }
 };
 

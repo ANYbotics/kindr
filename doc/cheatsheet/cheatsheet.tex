@@ -227,9 +227,9 @@ Homogeneous pos. vector & ${}_A\bar{\vr}_{O\!P} = \begin{bmatrix}\postranspose{A
  2) & Passive Rotation:& $\cR^P: {}_A\color{blue}{\vr_{O\!P}} \color{black}\mapsto \color{red}{}_B\color{blue}{\vr_{O\!P}} $ (rotates the frame $(\ve_x^A,\ve_y^A,\ve_z^A)$)\\
  3) & Inversion: & $\cR^{A^{-1}}(\vr) = \cR^P(\vr)$ \\ 
  4) & Concatenation: & \multicolumn{1}{l}{$\begin{aligned}\cR_2^A\left(\cR_1^A(\vr)\right) &= \left(\cR_2^A \otimes \cR_1^A\right)(\vr) \\ 
-											    &= \left(\cR_1^{A^{-1}} \otimes \cR_2^{A^{-1}}\right)(\vr) \\
+											    &= \left(\cR_1^{A^{-1}} \otimes \cR_2^{A^{-1}}\right)^{-1}(\vr) \\
                                             \cR_2^P\left(\cR_1^P(\vr)\right) &= \left(\cR_2^P \otimes \cR_1^P\right)(\vr) \\ 
-									     &= \left(\cR_1^{P^{-1}} \otimes \cR_2^{P^{-1}}\right)(\vr) \\
+									     &= \left(\cR_1^{P^{-1}} \otimes \cR_2^{P^{-1}}\right)^{-1}(\vr) \\
 					      \end{aligned}$} \\
  5) & Exponential map: & $ \expmap: \mathbb{R}^3 \rightarrow \mathrm{SO}(3), \vv \mapsto \expmatrix(\hat{\vv}), \quad \vv \in \mathbb{R}^3$ \\
  6) & Logarithmic map: & $ \logmap: \mathrm{SO}(3) \rightarrow \mathbb{R}^3, \cR \mapsto \logmatrix(\cR)^\vee, \quad \cR \in \mathrm{SO}(3)$ \\ 

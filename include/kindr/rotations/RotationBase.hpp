@@ -357,15 +357,14 @@ class RotationBase {
    * \param vector  Eigen::Matrix<Scalar 3, 1>
    * \return  reference to modified rotation
    */
-  Derived_& setExponentialMap(const typename internal::get_matrix3X<Derived_>::template Matrix3X<1>& vector)  {
-   static_cast<Derived_ &>(*this) = internal::MapTraits<RotationBase<Derived_,Usage_>>::set_exponential_map(vector);
-   return static_cast<Derived_&>(*this);
+  Derived_ exponentialMap(const typename internal::get_matrix3X<Derived_>::template Matrix3X<1>& vector)  {
+   return internal::MapTraits<RotationBase<Derived_,Usage_>>::set_exponential_map(vector);
   }
 
   /*! \brief Gets the logarithmic map from the rotation
    * \returns vector  Eigen::Matrix<Scalar 3, 1>
    */
-  typename internal::get_matrix3X<Derived_>::template Matrix3X<1> getLogarithmicMap() const {
+  typename internal::get_matrix3X<Derived_>::template Matrix3X<1> logarithmicMap() const {
     return internal::MapTraits<RotationBase<Derived_,Usage_>>::get_logarithmic_map(this->derived());
   }
 

@@ -661,27 +661,27 @@ TYPED_TEST(RotationMatrixSingleTest, testMaps){
   RotationMatrix rotRotationMatrix;
   Vector testVec;
 
-  testVec = this->rotRotationMatrixIdentity.getLogarithmicMap();
+  testVec = this->rotRotationMatrixIdentity.logarithmicMap();
   ASSERT_NEAR(testVec(0), 0.0,1e-6);
   ASSERT_NEAR(testVec(1), 0.0,1e-6);
   ASSERT_NEAR(testVec(2), 0.0,1e-6);
 
-  testVec = this->rotRotationMatrix1.getLogarithmicMap();
-  rotRotationMatrix.setExponentialMap(testVec);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrix1.matrix(), rotRotationMatrix.matrix(), 1e-3, "maps");
+  testVec = this->rotRotationMatrix1.logarithmicMap();
+  RotationMatrix rotRotationMatrixExpMap = rotRotationMatrix.exponentialMap(testVec);
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrix1.matrix(), rotRotationMatrixExpMap.matrix(), 1e-3, "maps");
 
-  testVec = this->rotRotationMatrix2.getLogarithmicMap();
-  rotRotationMatrix.setExponentialMap(testVec);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrix2.matrix(), rotRotationMatrix.matrix(), 1e-4, "maps");
+  testVec = this->rotRotationMatrix2.logarithmicMap();
+  rotRotationMatrixExpMap = rotRotationMatrix.exponentialMap(testVec);
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrix2.matrix(), rotRotationMatrixExpMap.matrix(), 1e-4, "maps");
 
   double norm = 0.1;
   testVec = this->vec/this->vec.norm()*norm;
-  rotRotationMatrix.setExponentialMap(testVec);
-  ASSERT_NEAR(rotRotationMatrix.getDisparityAngle(this->rotRotationMatrixIdentity),norm,1e-6);
+  rotRotationMatrixExpMap = rotRotationMatrix.exponentialMap(testVec);
+  ASSERT_NEAR(rotRotationMatrixExpMap.getDisparityAngle(this->rotRotationMatrixIdentity),norm,1e-6);
 
   testVec.setZero();
-  rotRotationMatrix.setExponentialMap(testVec);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixIdentity.matrix(), rotRotationMatrix.matrix(), 1e-4, "maps");
+  rotRotationMatrixExpMap = rotRotationMatrix.exponentialMap(testVec);
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixIdentity.matrix(), rotRotationMatrixExpMap.matrix(), 1e-4, "maps");
 
 }
 
@@ -691,20 +691,70 @@ TYPED_TEST(RotationMatrixSingleTest, testExpMap){
   typedef typename TestFixture::RotationQuaternion RotationQuaternion;
   typedef typename TestFixture::Scalar Scalar;
   typedef typename TestFixture::Vector Vector;
+  typedef typename TestFixture::Matrix3x3 Matrix;
 
   RotationMatrix identity;
 
   Vector vectorInput(1.0, 0.0, 0.0);
-  RotationMatrix rotMat = identity.setExponentialMap(vectorInput);
+  RotationMatrix rotMat = identity.exponentialMap(vectorInput);
 
 
-  RotationMatrix rotMatCorrect(1.000000000000000e+00,                         0,                         0,
+  RotationMatrix rotMatCorrect;
+  rotMatCorrect.toImplementation() << 1.000000000000000e+00,                         0,                         0,
                       0,     5.403023058681397e-01,    -8.414709848078965e-01,
-                      0,     8.414709848078965e-01,     5.403023058681398e-01);
+                      0,     8.414709848078965e-01,     5.403023058681398e-01;
 
   KINDR_ASSERT_DOUBLE_MX_EQ(rotMat.matrix(), rotMatCorrect.matrix(), 1e-4, "testExpMap");
 
 }
+
+TYPED_TEST(RotationMatrixSingleTest, testBoxPlus){
+  typedef typename TestFixture::RotationMatrix RotationMatrix;
+  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
+  typedef typename TestFixture::Scalar Scalar;
+  typedef typename TestFixture::Vector Vector;
+  typedef typename TestFixture::Matrix3x3 Matrix;
+
+  // Test groundtruth data
+   RotationMatrix rotRotationMatrix3;
+
+   rotRotationMatrix3.toImplementation() << 1.0, 0.0, 0.0,
+                                     0.0, 0, 1.0,
+                                     0.0, -1.0, 0;
+ //  Vector test = 1e-5*Vector(1.0, 0.0, 0.0);
+ //  std::cout << "test vector: " << test  << std::endl;
+ //  std::cout << "test vector norm: " << test.norm() << std::endl;
+ //  std::cout << "rot vector: " << kindr::rotations::eigen_impl::RotationVector<Scalar, RotationMatrix::Usage>(test) << std::endl;
+
+   Vector vectorInput = 1e-5*Vector(1.0, 0.0, 0.0);
+   RotationMatrix rotRotationMatrix4 = rotRotationMatrix3.boxPlus(vectorInput);
+   RotationMatrix rotRotationMatrix4Correct;
+
+   rotRotationMatrix4Correct.toImplementation() <<     1.000000000000000e+00,   0,     0,
+                                                 0,     9.999999999833334e-06,     9.999999999500001e-01,
+                                                 0,    -9.999999999500001e-01,     9.999999999833334e-06;
+   KINDR_ASSERT_DOUBLE_MX_EQ(rotRotationMatrix4Correct.matrix(), rotRotationMatrix4.matrix(), 1e-4, "boxPlus");
+}
+
+
+TYPED_TEST(RotationMatrixSingleTest, testBoxMinus){
+  typedef typename TestFixture::RotationMatrix RotationMatrix;
+  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
+  typedef typename TestFixture::Scalar Scalar;
+  typedef typename TestFixture::Vector Vector;
+
+  RotationMatrix rotRotationMatrix3(1.0, 0.0, 0.0,
+                                    0.0, 0, 1.0,
+                                    0.0, -1.0, 0);
+
+  RotationMatrix rotRotationMatrix4Correct(     1.000000000000000e+00,   0,     0,
+                                                0,     9.999999999833334e-06,     9.999999999500001e-01,
+                                                0,    -9.999999999500001e-01,     9.999999999833334e-06);
+  Vector vectorInput = 1e-5*Vector(1.0, 0.0, 0.0);
+  Vector vector = rotRotationMatrix3.boxMinus(rotRotationMatrix4Correct);
+  KINDR_ASSERT_DOUBLE_MX_EQ(vectorInput, vector, 1e-4, "boxMinus");
+}
+
 
 /*  Test Box Operations
  * Assumes isNear() of Angle Axis is correct.
@@ -717,25 +767,10 @@ TYPED_TEST(RotationMatrixSingleTest, testBoxOperators){
   typedef typename TestFixture::Vector Vector;
 
 
-  // Test groundtruth data
-  RotationMatrix rotRotationMatrix3(1.0, 0.0, 0.0,
-                                    0.0, 0, 1.0,
-                                    0.0, -1.0, 0);
-//  Vector test = 1e-5*Vector(1.0, 0.0, 0.0);
-//  std::cout << "test vector: " << test  << std::endl;
-//  std::cout << "test vector norm: " << test.norm() << std::endl;
-//  std::cout << "rot vector: " << kindr::rotations::eigen_impl::RotationVector<Scalar, RotationMatrix::Usage>(test) << std::endl;
-
-  Vector vectorInput = 1e-5*Vector(1.0, 0.0, 0.0);
-  RotationMatrix rotRotationMatrix4 = rotRotationMatrix3.boxPlus(vectorInput);
-  RotationMatrix rotRotationMatrix4Correct(     1.000000000000000e+00,   0,     0,
-                                                0,     9.999999999833334e-06,     9.999999999500001e-01,
-                                                0,    -9.999999999500001e-01,     9.999999999833334e-06);
-  KINDR_ASSERT_DOUBLE_MX_EQ(rotRotationMatrix4Correct.matrix(), rotRotationMatrix4.matrix(), 1e-4, "boxPlus");
 
 
-  Vector vector = rotRotationMatrix3.boxMinus(rotRotationMatrix4Correct);
-  KINDR_ASSERT_DOUBLE_MX_EQ(vectorInput, vector, 1e-4, "boxMinus");
+
+
 
 
   RotationMatrix rot1;
