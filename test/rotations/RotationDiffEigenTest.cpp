@@ -51,7 +51,7 @@ struct RotationDiffPairTest : public ::testing::Test {
   std::vector<LocalAngularVelocity> angularVelocities;
 
   RotationDiffPairTest() {
-    rotations.push_back(Rotation(AngleAxis()));   // identity rotation
+    rotations.push_back(Rotation());   // identity rotation
     rotations.push_back(Rotation(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 1.0, 0, 0)));  // small angle
     rotations.push_back(Rotation(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 1.0, 0)));  // small angle
     rotations.push_back(Rotation(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 0, 1.0)));  // small angle
@@ -183,15 +183,15 @@ TYPED_TEST(RotationDiffSingleTest, testConversionToLocalAngularVelocity)
        RotationQuaternionDiff rotQuatDiff(rotQuat, angularVelocity);
 
        LocalAngularVelocity angularVelocity2(2.0*rotQuat.getLocalQuaternionDiffMatrix()*rotQuatDiff.vector());
-       ASSERT_NEAR(angularVelocity.x(),angularVelocity2.x(),1e-6) << "rquat: " << rotQuat;
-       ASSERT_NEAR(angularVelocity.y(),angularVelocity2.y(),1e-6);
-       ASSERT_NEAR(angularVelocity.z(),angularVelocity2.z(),1e-6);
+       ASSERT_NEAR(angularVelocity.x(),angularVelocity2.x(),1e-3) << "rquat: " << rotQuat;
+       ASSERT_NEAR(angularVelocity.y(),angularVelocity2.y(),1e-3);
+       ASSERT_NEAR(angularVelocity.z(),angularVelocity2.z(),1e-3);
 
        RotationQuaternionDiff rotQuatDiff2(0.5*rotQuat.getLocalQuaternionDiffMatrix().transpose()*angularVelocity.vector());
-       ASSERT_NEAR(rotQuatDiff.w(),rotQuatDiff2.w(),1e-6);
-       ASSERT_NEAR(rotQuatDiff.x(),rotQuatDiff2.x(),1e-6);
-       ASSERT_NEAR(rotQuatDiff.y(),rotQuatDiff2.y(),1e-6);
-       ASSERT_NEAR(rotQuatDiff.z(),rotQuatDiff2.z(),1e-6);
+       ASSERT_NEAR(rotQuatDiff.w(),rotQuatDiff2.w(),1e-3);
+       ASSERT_NEAR(rotQuatDiff.x(),rotQuatDiff2.x(),1e-3);
+       ASSERT_NEAR(rotQuatDiff.y(),rotQuatDiff2.y(),1e-3);
+       ASSERT_NEAR(rotQuatDiff.z(),rotQuatDiff2.z(),1e-3);
      }
   }
 }

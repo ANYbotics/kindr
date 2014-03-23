@@ -42,10 +42,6 @@ find_package(Eigen REQUIRED)
 include_directories(${EIGEN_INCLUDE_DIRS})
 include_directories(../include)
 
-
-#add_executable( rot_example EXCLUDE_FROM_ALL ./src/example.cpp)
-#ADD_CUSTOM_TARGET(demo_rotations rot_example DEPENDS rot_example) 
-
  
 if (BUILD_GTEST)
 ################################
@@ -92,6 +88,18 @@ set(ROTATION_SRCS
 	rotations/RotationEigenTest.cpp
 )
 add_gtest( runUnitTestsRotation ${ROTATION_SRCS})
+
+set(ROTATIONQUATERNION_SRCS
+	test_main.cpp
+	rotations/eigen/RotationQuaternionTest.cpp
+)
+add_gtest( runUnitTestsRotationQuaternion ${ROTATIONQUATERNION_SRCS})
+
+set(ROTATIONMATRIX_SRCS
+	test_main.cpp
+	rotations/eigen/RotationMatrixTest.cpp
+)
+add_gtest( runUnitTestsRotationMatrix ${ROTATIONMATRIX_SRCS})
 
 set(ROTATIONDIFF_SRCS
 	test_main.cpp
