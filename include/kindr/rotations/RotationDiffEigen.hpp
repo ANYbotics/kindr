@@ -65,7 +65,6 @@ class EulerAnglesXyzDiff;
 
 
 #include "kindr/rotations/eigen/LocalAngularVelocity.hpp"
-#include "kindr/rotations/eigen/AngleAxisDiff.hpp"
 #include "kindr/rotations/eigen/RotationVectorDiff.hpp"
 #include "kindr/rotations/eigen/RotationQuaternionDiff.hpp"
 #include "kindr/rotations/eigen/RotationMatrixDiff.hpp"

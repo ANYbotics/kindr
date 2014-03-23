@@ -105,7 +105,6 @@ set(ROTATIONDIFF_SRCS
 	test_main.cpp
 	rotations/RotationDiffEigenTest.cpp
 	rotations/eigen/LocalAngularVelocityTest.cpp
-	rotations/eigen/AngleAxisDiffTest.cpp
 	rotations/eigen/RotationVectorDiffTest.cpp
 	rotations/eigen/RotationQuaternionDiffTest.cpp
 	rotations/eigen/RotationMatrixDiffTest.cpp

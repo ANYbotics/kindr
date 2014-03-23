@@ -84,11 +84,6 @@ typedef ::testing::Types<
   std::pair<rot::RotationVectorPD, rot::RotationVectorDiffPD>,
   std::pair<rot::RotationVectorPF, rot::RotationVectorDiffPF>,
 
-  std::pair<rot::AngleAxisAD, rot::AngleAxisDiffAD>,
-  std::pair<rot::AngleAxisAF, rot::AngleAxisDiffAF>,
-  std::pair<rot::AngleAxisPD, rot::AngleAxisDiffPD>,
-  std::pair<rot::AngleAxisPF, rot::AngleAxisDiffPF>,
-
   std::pair<rot::RotationMatrixAD, rot::RotationMatrixDiffAD>,
   std::pair<rot::RotationMatrixAF, rot::RotationMatrixDiffAF>,
   std::pair<rot::RotationMatrixPD, rot::RotationMatrixDiffPD>,
