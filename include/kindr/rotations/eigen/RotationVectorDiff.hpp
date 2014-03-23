@@ -219,7 +219,7 @@ class RotationDiffConversionTraits<eigen_impl::RotationVectorDiff<PrimType_, Usa
 //    const Vector rv = rotationVector.toImplementation();
 //    const PrimType_ angle = rv.norm();
 //
-//    if (angle < common::NumTraits<Scalar>::dummy_precision()) {
+//    if (angle < common::internal::NumTraits<Scalar>::dummy_precision()) {
 //      return eigen_impl::RotationVectorDiff<PrimType_, Usage_>(angularVelocity.toImplementation());
 //    }
 //

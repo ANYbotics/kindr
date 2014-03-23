@@ -70,88 +70,58 @@ struct RotationVectorDiffTest: public ::testing::Test {
   Rotation rotation7 = Rotation(0.1, 0.1, 1.3);
   Rotation rotation8 = Rotation(0.8, 0.9, 1.2);
 
-  std::vector<Rotation> rotations;
+
   std::vector<LocalAngularVelocity> angularVelocities;
-  std::vector<double> dts;
   std::vector<std::tuple<Rotation, LocalAngularVelocity, double>> values;
   RotationVectorDiffTest() {
-    rotations.push_back(rotation1);
-    rotations.push_back(rotation2);
-    rotations.push_back(rotation3);
-    rotations.push_back(rotation4);
-    rotations.push_back(rotation5);
-    rotations.push_back(rotation6);
-    rotations.push_back(rotation7);
-    rotations.push_back(rotation8);
-
-    angularVelocities.push_back(angularVelocity1);
-    angularVelocities.push_back(angularVelocity2);
-    angularVelocities.push_back(angularVelocity3);
-    angularVelocities.push_back(angularVelocity4);
-    angularVelocities.push_back(angularVelocity5);
-    angularVelocities.push_back(angularVelocity6);
-
-    dts.push_back(1e-3);
-    dts.push_back(1e-4);
-    dts.push_back(1e-4);
-    dts.push_back(1e-3);
-    dts.push_back(1e-3);
-    dts.push_back(1e-3);
-
-    values.push_back(std::make_tuple(rotation1, angularVelocity1, 1e-3));
-    values.push_back(std::make_tuple(rotation2, angularVelocity1, 1e-3));
-    values.push_back(std::make_tuple(rotation3, angularVelocity1, 1e-3));
-    values.push_back(std::make_tuple(rotation4, angularVelocity1, 1e-3));
-    values.push_back(std::make_tuple(rotation5, angularVelocity1, 1e-3));
-    values.push_back(std::make_tuple(rotation6, angularVelocity1, 1e-3));
-    values.push_back(std::make_tuple(rotation7, angularVelocity1, 1e-3));
-    values.push_back(std::make_tuple(rotation8, angularVelocity1, 1e-3));
-
-    values.push_back(std::make_tuple(rotation1, angularVelocity2, 1e-3));
-    values.push_back(std::make_tuple(rotation2, angularVelocity2, 1e-3));
-    values.push_back(std::make_tuple(rotation3, angularVelocity2, 1e-3));
-    values.push_back(std::make_tuple(rotation4, angularVelocity2, 1e-3));
-    values.push_back(std::make_tuple(rotation5, angularVelocity2, 1e-3));
-    values.push_back(std::make_tuple(rotation6, angularVelocity2, 1e-3));
-    values.push_back(std::make_tuple(rotation7, angularVelocity2, 1e-3));
-    values.push_back(std::make_tuple(rotation8, angularVelocity2, 1e-3));
-
-    values.push_back(std::make_tuple(rotation1, angularVelocity3, 1e-3));
-    values.push_back(std::make_tuple(rotation2, angularVelocity3, 1e-3));
-    values.push_back(std::make_tuple(rotation3, angularVelocity3, 1e-3));
-    values.push_back(std::make_tuple(rotation4, angularVelocity3, 1e-3));
-    values.push_back(std::make_tuple(rotation5, angularVelocity3, 1e-3));
-    values.push_back(std::make_tuple(rotation6, angularVelocity3, 1e-3));
-    values.push_back(std::make_tuple(rotation7, angularVelocity3, 1e-3));
-    values.push_back(std::make_tuple(rotation8, angularVelocity3, 1e-3));
-
-
-    values.push_back(std::make_tuple(rotation1, angularVelocity4, 1e-3));
-    values.push_back(std::make_tuple(rotation2, angularVelocity4, 1e-3));
-    values.push_back(std::make_tuple(rotation3, angularVelocity4, 1e-3));
-    values.push_back(std::make_tuple(rotation4, angularVelocity4, 1e-3));
-    values.push_back(std::make_tuple(rotation5, angularVelocity4, 1e-3));
-    values.push_back(std::make_tuple(rotation6, angularVelocity4, 1e-3));
-    values.push_back(std::make_tuple(rotation7, angularVelocity4, 1e-3));
-    values.push_back(std::make_tuple(rotation8, angularVelocity4, 1e-3));
-
-    values.push_back(std::make_tuple(rotation1, angularVelocity5, 1e-3));
-    values.push_back(std::make_tuple(rotation2, angularVelocity5, 1e-3));
-    values.push_back(std::make_tuple(rotation3, angularVelocity5, 1e-3));
-    values.push_back(std::make_tuple(rotation4, angularVelocity5, 1e-3));
+    values.push_back(std::make_tuple(rotation1, angularVelocity1, 1e-5));
+    values.push_back(std::make_tuple(rotation2, angularVelocity1, 1e-5));
+    values.push_back(std::make_tuple(rotation3, angularVelocity1, 1e-5));
+    values.push_back(std::make_tuple(rotation4, angularVelocity1, 1e-5));
+    values.push_back(std::make_tuple(rotation5, angularVelocity1, 1e-5));
+    values.push_back(std::make_tuple(rotation6, angularVelocity1, 1e-5));
+    values.push_back(std::make_tuple(rotation7, angularVelocity1, 1e-5));
+    values.push_back(std::make_tuple(rotation8, angularVelocity1, 1e-5));
+    values.push_back(std::make_tuple(rotation1, angularVelocity2, 1e-5));
+    values.push_back(std::make_tuple(rotation2, angularVelocity2, 1e-5));
+    values.push_back(std::make_tuple(rotation3, angularVelocity2, 1e-5));
+    values.push_back(std::make_tuple(rotation4, angularVelocity2, 1e-5));
+    values.push_back(std::make_tuple(rotation5, angularVelocity2, 1e-5));
+    values.push_back(std::make_tuple(rotation6, angularVelocity2, 1e-5));
+    values.push_back(std::make_tuple(rotation7, angularVelocity2, 1e-5));
+    values.push_back(std::make_tuple(rotation8, angularVelocity2, 1e-5));
+    values.push_back(std::make_tuple(rotation1, angularVelocity3, 1e-5));
+    values.push_back(std::make_tuple(rotation2, angularVelocity3, 1e-5));
+    values.push_back(std::make_tuple(rotation3, angularVelocity3, 1e-5));
+    values.push_back(std::make_tuple(rotation4, angularVelocity3, 1e-5));
+    values.push_back(std::make_tuple(rotation5, angularVelocity3, 1e-5));
+    values.push_back(std::make_tuple(rotation6, angularVelocity3, 1e-5));
+    values.push_back(std::make_tuple(rotation7, angularVelocity3, 1e-5));
+    values.push_back(std::make_tuple(rotation8, angularVelocity3, 1e-5));
+    values.push_back(std::make_tuple(rotation1, angularVelocity4, 1e-5));
+    values.push_back(std::make_tuple(rotation2, angularVelocity4, 1e-5));
+    values.push_back(std::make_tuple(rotation3, angularVelocity4, 1e-5));
+    values.push_back(std::make_tuple(rotation4, angularVelocity4, 1e-5));
+    values.push_back(std::make_tuple(rotation5, angularVelocity4, 1e-5));
+    values.push_back(std::make_tuple(rotation6, angularVelocity4, 1e-5));
+    values.push_back(std::make_tuple(rotation7, angularVelocity4, 1e-5));
+    values.push_back(std::make_tuple(rotation8, angularVelocity4, 1e-5));
+    values.push_back(std::make_tuple(rotation1, angularVelocity5, 1e-5));
+    values.push_back(std::make_tuple(rotation2, angularVelocity5, 1e-5));
+    values.push_back(std::make_tuple(rotation3, angularVelocity5, 1e-5));
+    values.push_back(std::make_tuple(rotation4, angularVelocity5, 1e-5));
     values.push_back(std::make_tuple(rotation5, angularVelocity5, 1e-5));
-    values.push_back(std::make_tuple(rotation6, angularVelocity5, 1e-6));
+    values.push_back(std::make_tuple(rotation6, angularVelocity5, 1e-5));
     values.push_back(std::make_tuple(rotation7, angularVelocity5, 1e-5));
     values.push_back(std::make_tuple(rotation8, angularVelocity5, 1e-5));
-
-//    values.push_back(std::make_tuple(rotation1, angularVelocity6, 1e-3));
-//    values.push_back(std::make_tuple(rotation2, angularVelocity6, 1e-3));
-//    values.push_back(std::make_tuple(rotation3, angularVelocity6, 1e-3));
-//    values.push_back(std::make_tuple(rotation4, angularVelocity6, 1e-3));
-//    values.push_back(std::make_tuple(rotation5, angularVelocity6, 1e-3));
-//    values.push_back(std::make_tuple(rotation6, angularVelocity6, 1e-3));
-//    values.push_back(std::make_tuple(rotation7, angularVelocity6, 1e-3));
-//    values.push_back(std::make_tuple(rotation8, angularVelocity6, 1e-3));
+    values.push_back(std::make_tuple(rotation1, angularVelocity6, 1e-5));
+    values.push_back(std::make_tuple(rotation2, angularVelocity6, 1e-5));
+    values.push_back(std::make_tuple(rotation3, angularVelocity6, 1e-5));
+    values.push_back(std::make_tuple(rotation4, angularVelocity6, 1e-5));
+    values.push_back(std::make_tuple(rotation5, angularVelocity6, 1e-5));
+    values.push_back(std::make_tuple(rotation6, angularVelocity6, 1e-5));
+    values.push_back(std::make_tuple(rotation7, angularVelocity6, 1e-5));
+    values.push_back(std::make_tuple(rotation8, angularVelocity6, 1e-5));
 
   }
 };
