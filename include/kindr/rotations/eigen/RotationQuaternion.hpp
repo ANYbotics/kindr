@@ -425,7 +425,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
   /*! \brief Returns the local quaternion diff matrix HBar: LocalAngularVelocity = 2*HBar*qdiff, qdiff = 0.5*HBar^T*LocalAngularVelocity
    *  \returns the local quaternion diff matrix HBar
    */
-  Eigen::Matrix<PrimType_,3,4> getLocalQuaternionDiffMatrix() {
+  Eigen::Matrix<PrimType_,3,4> getLocalQuaternionDiffMatrix() const {
     Eigen::Matrix<PrimType_,3,4> HBar;
     if(Usage_ == rotations::RotationUsage::ACTIVE) // x, y, z * -1
     {

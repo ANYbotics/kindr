@@ -199,12 +199,7 @@ template<typename PrimType_, enum RotationUsage Usage_>
 class RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>, eigen_impl::LocalAngularVelocity<PrimType_, Usage_>, eigen_impl::RotationQuaternion<PrimType_, Usage_>> {
  public:
   inline static eigen_impl::RotationQuaternionDiff<PrimType_, Usage_> convert(const eigen_impl::RotationQuaternion<PrimType_, Usage_>& rquat, const eigen_impl::LocalAngularVelocity<PrimType_, Usage_>& angularVelocity) {
-    Eigen::Matrix<PrimType_,4,3> H_bar_transpose;
-    H_bar_transpose << -rquat.x(), -rquat.y(), -rquat.z(),
-                        rquat.w(), -rquat.z(),  rquat.y(),
-                        rquat.z(),  rquat.w(), -rquat.x(),
-                       -rquat.y(),  rquat.x(),  rquat.w();
-    return eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>(quaternions::eigen_impl::Quaternion<PrimType_>(0.5*H_bar_transpose*angularVelocity.toImplementation()));
+    return eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>(quaternions::eigen_impl::Quaternion<PrimType_>(0.5*rquat.getLocalQuaternionDiffMatrix().transpose()*angularVelocity.toImplementation()));
   }
 };
 

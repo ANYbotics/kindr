@@ -183,15 +183,15 @@ TYPED_TEST(RotationDiffSingleTest, testConversionToLocalAngularVelocity)
        RotationQuaternionDiff rotQuatDiff(rotQuat, angularVelocity);
 
        LocalAngularVelocity angularVelocity2(2.0*rotQuat.getLocalQuaternionDiffMatrix()*rotQuatDiff.vector());
-       ASSERT_NEAR(angularVelocity.x(),angularVelocity2.x(),1e-6) << "rquat: " << rotQuat;
-       ASSERT_NEAR(angularVelocity.y(),angularVelocity2.y(),1e-6);
-       ASSERT_NEAR(angularVelocity.z(),angularVelocity2.z(),1e-6);
+       ASSERT_NEAR(angularVelocity.x(),angularVelocity2.x(),1e-3) << "rquat: " << rotQuat;
+       ASSERT_NEAR(angularVelocity.y(),angularVelocity2.y(),1e-3);
+       ASSERT_NEAR(angularVelocity.z(),angularVelocity2.z(),1e-3);
 
        RotationQuaternionDiff rotQuatDiff2(0.5*rotQuat.getLocalQuaternionDiffMatrix().transpose()*angularVelocity.vector());
-       ASSERT_NEAR(rotQuatDiff.w(),rotQuatDiff2.w(),1e-6);
-       ASSERT_NEAR(rotQuatDiff.x(),rotQuatDiff2.x(),1e-6);
-       ASSERT_NEAR(rotQuatDiff.y(),rotQuatDiff2.y(),1e-6);
-       ASSERT_NEAR(rotQuatDiff.z(),rotQuatDiff2.z(),1e-6);
+       ASSERT_NEAR(rotQuatDiff.w(),rotQuatDiff2.w(),1e-3);
+       ASSERT_NEAR(rotQuatDiff.x(),rotQuatDiff2.x(),1e-3);
+       ASSERT_NEAR(rotQuatDiff.y(),rotQuatDiff2.y(),1e-3);
+       ASSERT_NEAR(rotQuatDiff.z(),rotQuatDiff2.z(),1e-3);
      }
   }
 }
