@@ -51,7 +51,7 @@ struct RotationDiffPairTest : public ::testing::Test {
   std::vector<LocalAngularVelocity> angularVelocities;
 
   RotationDiffPairTest() {
-    rotations.push_back(Rotation(AngleAxis()));   // identity rotation
+    rotations.push_back(Rotation());   // identity rotation
     rotations.push_back(Rotation(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 1.0, 0, 0)));  // small angle
     rotations.push_back(Rotation(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 1.0, 0)));  // small angle
     rotations.push_back(Rotation(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 0, 1.0)));  // small angle

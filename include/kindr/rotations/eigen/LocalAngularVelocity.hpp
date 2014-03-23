@@ -222,10 +222,10 @@ class RotationDiffConversionTraits<eigen_impl::LocalAngularVelocity<PrimType_, U
 //    return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(linear_algebra::getVectorFromSkewMatrix<PrimType_>(rotationMatrixDiff.toImplementation()*rotationMatrix.toImplementation().transpose()));
 
     if (Usage_ == RotationUsage::ACTIVE) {
-      eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(linear_algebra::getVectorFromSkewMatrix<PrimType_>(rotationMatrixDiff.toImplementation()*rotationMatrix.toImplementation().transpose()));
+      return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(linear_algebra::getVectorFromSkewMatrix<PrimType_>(rotationMatrixDiff.toImplementation()*rotationMatrix.toImplementation().transpose()));
     }
     if (Usage_ == RotationUsage::PASSIVE) {
-      eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(linear_algebra::getVectorFromSkewMatrix<PrimType_>(rotationMatrix.toImplementation().transpose()*rotationMatrixDiff.toImplementation()));
+      return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(linear_algebra::getVectorFromSkewMatrix<PrimType_>(rotationMatrix.toImplementation().transpose()*rotationMatrixDiff.toImplementation()));
     }
 
 
