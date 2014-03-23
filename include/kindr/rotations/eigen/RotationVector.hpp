@@ -365,31 +365,12 @@ template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Us
 class ConversionTraits<eigen_impl::RotationVector<DestPrimType_, Usage_>, eigen_impl::RotationMatrix<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::RotationVector<DestPrimType_, Usage_> convert(const eigen_impl::RotationMatrix<SourcePrimType_, Usage_>& rotationMatrix) {
-//    if (Usage_ == RotationUsage::ACTIVE) {
-//      return eigen_impl::RotationVector<DestPrimType_, Usage_>(eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(rotationMatrix.toImplementation().cast<DestPrimType_>()));
-//    } if (Usage_ == RotationUsage::PASSIVE) {
-//      return eigen_impl::RotationVector<DestPrimType_, Usage_>(eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(rotationMatrix.toImplementation().transpose().cast<DestPrimType_>()));
-//    }
-
-//        if (Usage_ == RotationUsage::ACTIVE) {
-//          return eigen_impl::RotationVector<DestPrimType_, Usage_>(eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(rotationMatrix));
-//        } if (Usage_ == RotationUsage::PASSIVE) {
-//          return eigen_impl::RotationVector<DestPrimType_, Usage_>(eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(rotationMatrix.inverted()));
-//        }
-//        return eigen_impl::RotationVector<DestPrimType_, Usage_>(eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(rotationMatrix));
-
     // ok
     return eigen_impl::RotationVector<DestPrimType_, Usage_>(eigen_impl::AngleAxis<DestPrimType_, Usage_>(rotationMatrix));
 
 
 
-//      if (Usage_ == RotationUsage::ACTIVE) {
-//        return eigen_impl::RotationVector<DestPrimType_, Usage_>(eigen_impl::AngleAxis<DestPrimType_, Usage_>(rotationMatrix));
-//      } if (Usage_ == RotationUsage::PASSIVE) {
-//        return eigen_impl::RotationVector<DestPrimType_, Usage_>(eigen_impl::AngleAxis<DestPrimType_, Usage_>(rotationMatrix));
-//      }
-
-//    typename eigen_impl::RotationMatrix<DestPrimType_, Usage_>::Implementation C = rotationMatrix.toImplementation().template cast<DestPrimType_>();
+//    typename eigen_impl::RotationMatrix<DestPrimType_, Usage_>::Implementation C = rotationMatrix.toImplementation().transpose().template cast<DestPrimType_>();
 //    typename eigen_impl::RotationVector<DestPrimType_, Usage_>::Vector p;
 //    // Sometimes, because of roundoff error, the value of tr ends up outside
 //    // the valid range of arccos. Truncate to the valid range.
@@ -411,7 +392,8 @@ class ConversionTraits<eigen_impl::RotationVector<DestPrimType_, Usage_>, eigen_
 //    p = scale * p;
 //
 //
-//    return eigen_impl::RotationVector<DestPrimType_, Usage_>(p);
+//      return eigen_impl::RotationVector<DestPrimType_, Usage_>(p);
+
 
   }
 };

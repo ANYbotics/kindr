@@ -179,15 +179,12 @@ class MapTraits<RotationBase<Rotation_, Rotation_::Usage>> {
   inline static typename internal::get_matrix3X<Rotation_>::template Matrix3X<1> get_logarithmic_map(const Rotation_& rotation) {
     typedef typename get_scalar<Rotation_>::Scalar Scalar;
 // ok
-    return eigen_impl::RotationVector<Scalar, Rotation_::Usage>(rotation).getUnique().toImplementation();
+    return eigen_impl::RotationVector<Scalar, Rotation_::Usage>(rotation).getUnique().toImplementation(); // unique?
 //    return eigen_impl::RotationVector<Scalar, Rotation_::Usage>(rotation).toImplementation();
 
-//    if (Rotation_::Usage == RotationUsage::ACTIVE) {
-//      return eigen_impl::RotationVector<Scalar, Rotation_::Usage>(rotation).getUnique().toImplementation();
-//    }
-//    if (Rotation_::Usage == RotationUsage::PASSIVE) {
-//      return -eigen_impl::RotationVector<Scalar, Rotation_::Usage>(rotation).getUnique().toImplementation();
-//    }
+
+
+
   }
 
 };
