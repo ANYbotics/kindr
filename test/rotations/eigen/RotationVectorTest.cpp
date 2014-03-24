@@ -547,27 +547,27 @@ TYPED_TEST(RotationVectorSingleTest, testMaps){
   RotationVector rot;
   Vector testVec;
 
-  testVec = this->rotRotationVectorIdentity.getLogarithmicMap();
+  testVec = this->rotRotationVectorIdentity.logarithmicMap();
   ASSERT_NEAR(testVec(0), 0.0,1e-6);
   ASSERT_NEAR(testVec(1), 0.0,1e-6);
   ASSERT_NEAR(testVec(2), 0.0,1e-6);
 
-  testVec = this->rotRotationVectorV3.getLogarithmicMap();
-  rot.setExponentialMap(testVec);
-  ASSERT_EQ(rot.isNear(this->rotRotationVectorV3,1e-6),true);
+  testVec = this->rotRotationVectorV3.logarithmicMap();
+  RotationVector rotExpMap = rot.exponentialMap(testVec);
+  ASSERT_EQ(rotExpMap.isNear(this->rotRotationVectorV3,1e-6),true);
 
-  testVec = this->rotRotationVectorV4.getLogarithmicMap();
-  rot.setExponentialMap(testVec);
-  ASSERT_EQ(rot.isNear(this->rotRotationVectorV4,1e-6),true);
+  testVec = this->rotRotationVectorV4.logarithmicMap();
+  rotExpMap = rot.exponentialMap(testVec);
+  ASSERT_EQ(rotExpMap.isNear(this->rotRotationVectorV4,1e-6),true);
 
   double norm = 0.1;
   testVec = this->vec/this->vec.norm()*norm;
-  rot.setExponentialMap(testVec);
-  ASSERT_NEAR(rot.getDisparityAngle(this->rotRotationVectorIdentity),norm,1e-6);
+  rotExpMap = rot.exponentialMap(testVec);
+  ASSERT_NEAR(rotExpMap.getDisparityAngle(this->rotRotationVectorIdentity),norm,1e-6);
 
   testVec.setZero();
-  rot.setExponentialMap(testVec);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorIdentity.toImplementation(), rot.toImplementation(), 1e-4, "maps");
+  rotExpMap = rot.exponentialMap(testVec);
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorIdentity.toImplementation(), rotExpMap.toImplementation(), 1e-4, "maps");
 
 }
 

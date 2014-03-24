@@ -90,7 +90,7 @@ The exponential map maps a vector in \f$\mathsf{R}^3\f$ describing the axis and 
 The corresponding logarithmic map is provided by the method \ref kindr::rotations::RotationBase::getLogarithmicMap() "getLogarithmicMap()".
 
 \subsubsection rotations_interfaces_rotation_boxoperations Box Plus and Box Minus Operations
-The box plus operation defined as \f$\mathcal{R}_2 = \mathcal{R}_1\boxplus\mathbf{v} = \mathcal{R}_1 \cdot \mathcal{R}(e^{\hat{\mathbf{v}}})\f$, where \f$\mathcal{R}\f$ is a rotation, \f$\mathbf{v}\f$ is a vector in \f$\mathsf{R}^3\f$ and \f$\hat{}\f$ maps a vector to the skew-symmetric matrix corresponding to the cross product, is provided by the method \ref kindr::rotations::RotationBase::boxPlus() "boxPlus()".
+The box plus operation defined as \f$\mathcal{R}_2 = \mathcal{R}_1\boxplus\mathbf{v} = \mathcal{R}(e^{\hat{\mathbf{v}}}) \cdot \mathcal{R}_1 \f$, where \f$\mathcal{R}\f$ is a rotation, \f$\mathbf{v}\f$ is a vector in \f$\mathsf{R}^3\f$ and \f$\hat{}\f$ maps a vector to the skew-symmetric matrix corresponding to the cross product, is provided by the method \ref kindr::rotations::RotationBase::boxPlus() "boxPlus()".
 
 The box minus operation defined as \f$\mathbf{v} = \mathcal{R}_1\boxminus\mathcal{R}_2 = \ln{(\mathcal{R}_1\cdot\mathcal{R}_2^{-1})}\check{}\f$ is provided by the method \ref kindr::rotations::RotationBase::boxMinus() "boxMinus()".
 

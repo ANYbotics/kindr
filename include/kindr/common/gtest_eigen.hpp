@@ -139,6 +139,25 @@ void assertFinite(const M1 & A, kindr::common::internal::source_file_pos const &
       }                               \
     }
 
+//! Matrix comparison with absolute and relative tolerance |M_MEAS - M_TRUE| <= |M_TRUE|*RTOL + ATOL
+#define KINDR_ASSERT_DOUBLE_MX_EQ_ABS_REL(M_TRUE, M_MEAS, ATOL, RTOL, MSG)       \
+    ASSERT_EQ((size_t)(M_TRUE).rows(), (size_t)(M_MEAS).rows())  << MSG << "\nMatrix " << #M_TRUE << ":\n" << M_TRUE << "\nand matrix " << #M_MEAS << "\n" << M_MEAS << "\nare not the same size"; \
+    ASSERT_EQ((size_t)(M_TRUE).cols(), (size_t)(M_MEAS).cols())  << MSG << "\nMatrix " << #M_TRUE << ":\n" << M_TRUE << "\nand matrix " << #M_MEAS << "\n" << M_MEAS << "\nare not the same size"; \
+    for(int r = 0; r < (M_TRUE).rows(); r++)                 \
+    {                                 \
+      for(int c = 0; c < (M_TRUE).cols(); c++)               \
+      {                               \
+        double percentError = 0.0;                  \
+        ASSERT_TRUE(fabs((M_MEAS)(r,c) - (M_TRUE)(r,c)) <= (fabs((M_TRUE)(r,c))*RTOL + ATOL)) \
+        << MSG << "\nComparing:\n"                \
+        << #M_TRUE << "(" << r << "," << c << ") = " << (M_TRUE)(r,c) << std::endl \
+        << #M_MEAS << "(" << r << "," << c << ") = " << (M_MEAS)(r,c) << std::endl \
+        << "Absolute error was " << fabs((M_MEAS)(r,c) - (M_TRUE)(r,c)) << " > " <<  ATOL << "\n" \
+        << "Relative error was " << fabs((M_MEAS)(r,c) - (M_TRUE)(r,c))/fabs((M_TRUE)(r,c)) << " > " << RTOL << "\n" \
+        << "\nMatrix " << #M_TRUE << ":\n" << M_TRUE << "\nand matrix " << #M_MEAS << "\n" << M_MEAS; \
+      }                               \
+    }
+
 #define KINDR_ASSERT_DOUBLE_MX_EQ_PERIODIC(A, B, PERIODLENGTH, PERCENT_TOLERANCE, MSG) \
     ASSERT_EQ((size_t)(A).rows(), (size_t)(B).rows())  << MSG << "\nMatrix " << #A << ":\n" << A << "\nand matrix " << #B << "\n" << B << "\nare not the same size"; \
     ASSERT_EQ((size_t)(A).cols(), (size_t)(B).cols())  << MSG << "\nMatrix " << #A << ":\n" << A << "\nand matrix " << #B << "\n" << B << "\nare not the same size"; \

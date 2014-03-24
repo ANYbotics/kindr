@@ -312,8 +312,8 @@ TYPED_TEST(EulerAnglesXyzSingleTest, testGetDisparityAngle){
   ASSERT_NEAR(this->rotEulerAnglesXyzV4.getDisparityAngle(this->rotEulerAnglesXyzV4),0.0,1e-6);
   ASSERT_NEAR(this->rotEulerAnglesXyzIdentity.getDisparityAngle(this->rotEulerAnglesXyzIdentity),0.0,1e-6);
   ASSERT_NEAR(this->rotEulerAnglesXyzV4.getDisparityAngle(this->rotEulerAnglesXyzV3),fabs(this->rotEulerAnglesXyzV3.getDisparityAngle(this->rotEulerAnglesXyzV4)),1e-6);
-  ASSERT_NEAR(this->rotEulerAnglesXyzV3.getDisparityAngle(this->rotEulerAnglesXyzIdentity),fabs(acos(RotationQuaternion(this->rotEulerAnglesXyzV3).w())*2),1e-6);
-  ASSERT_NEAR(this->rotEulerAnglesXyzV4.getDisparityAngle(this->rotEulerAnglesXyzV3),fabs(acos((RotationQuaternion(this->rotEulerAnglesXyzV3).inverted()*RotationQuaternion(this->rotEulerAnglesXyzV4)).w())*2),1e-6);
+  ASSERT_NEAR(this->rotEulerAnglesXyzV3.getDisparityAngle(this->rotEulerAnglesXyzIdentity),std::abs(acos(RotationQuaternion(this->rotEulerAnglesXyzV3).w())*2.0),1e-6);
+  ASSERT_NEAR(this->rotEulerAnglesXyzV4.getDisparityAngle(this->rotEulerAnglesXyzV3),std::abs(acos((RotationQuaternion(this->rotEulerAnglesXyzV3).inverted()*RotationQuaternion(this->rotEulerAnglesXyzV4)).w())*2.0),1e-6);
 }
 
 /* Test isNear
@@ -546,27 +546,27 @@ TYPED_TEST(EulerAnglesXyzSingleTest, testMaps){
   EulerAnglesXyz rot;
   Vector testVec;
 
-  testVec = this->rotEulerAnglesXyzIdentity.getLogarithmicMap();
+  testVec = this->rotEulerAnglesXyzIdentity.logarithmicMap();
   ASSERT_NEAR(testVec(0), 0.0,1e-6);
   ASSERT_NEAR(testVec(1), 0.0,1e-6);
   ASSERT_NEAR(testVec(2), 0.0,1e-6);
 
-  testVec = this->rotEulerAnglesXyzV3.getLogarithmicMap();
-  rot.setExponentialMap(testVec);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotEulerAnglesXyzV3.toImplementation(), rot.toImplementation(), 1e-4, "maps");
+  testVec = this->rotEulerAnglesXyzV3.logarithmicMap();
+  EulerAnglesXyz rotExpMap = rot.exponentialMap(testVec);
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotEulerAnglesXyzV3.toImplementation(), rotExpMap.toImplementation(), 1e-4, "maps");
 
-  testVec = this->rotEulerAnglesXyzV4.getLogarithmicMap();
-  rot.setExponentialMap(testVec);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotEulerAnglesXyzV4.toImplementation(), rot.toImplementation(), 1e-4, "maps");
+  testVec = this->rotEulerAnglesXyzV4.logarithmicMap();
+  rotExpMap =  rot.exponentialMap(testVec);
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotEulerAnglesXyzV4.toImplementation(), rotExpMap.toImplementation(), 1e-4, "maps");
 
   double norm = 0.1;
   testVec = this->vec/this->vec.norm()*norm;
-  rot.setExponentialMap(testVec);
-  ASSERT_NEAR(rot.getDisparityAngle(this->rotEulerAnglesXyzIdentity),norm,1e-6);
+  rotExpMap = rot.exponentialMap(testVec);
+  ASSERT_NEAR(rotExpMap.getDisparityAngle(this->rotEulerAnglesXyzIdentity),norm,1e-6);
 
   testVec.setZero();
-  rot.setExponentialMap(testVec);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotEulerAnglesXyzIdentity.toImplementation(), rot.toImplementation(), 1e-4, "maps");
+  rotExpMap = rot.exponentialMap(testVec);
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotEulerAnglesXyzIdentity.toImplementation(), rotExpMap.toImplementation(), 1e-4, "maps");
 
 }
 

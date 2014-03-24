@@ -183,7 +183,14 @@ template<typename PrimType_, enum RotationUsage Usage_>
 class RotationDiffConversionTraits<eigen_impl::RotationMatrixDiff<PrimType_, Usage_>, eigen_impl::LocalAngularVelocity<PrimType_, Usage_>, eigen_impl::RotationMatrix<PrimType_, Usage_>> {
  public:
   inline static eigen_impl::RotationMatrixDiff<PrimType_, Usage_> convert(const eigen_impl::RotationMatrix<PrimType_, Usage_>& rotationMatrix, const eigen_impl::LocalAngularVelocity<PrimType_, Usage_>& angularVelocity) {
-    return eigen_impl::RotationMatrixDiff<PrimType_, Usage_>(linear_algebra::getSkewMatrixFromVector(angularVelocity.toImplementation()).transpose()*rotationMatrix.toImplementation());
+    if (Usage_ == RotationUsage::ACTIVE) {
+      return eigen_impl::RotationMatrixDiff<PrimType_, Usage_>(linear_algebra::getSkewMatrixFromVector(angularVelocity.toImplementation())*rotationMatrix.toImplementation());
+    }
+    if (Usage_ == RotationUsage::PASSIVE) {
+
+      return eigen_impl::RotationMatrixDiff<PrimType_, Usage_>(rotationMatrix.toImplementation()*linear_algebra::getSkewMatrixFromVector(angularVelocity.toImplementation()));
+    }
+
   }
 };
 

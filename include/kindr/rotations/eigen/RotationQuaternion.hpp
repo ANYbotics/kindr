@@ -409,9 +409,9 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
     Eigen::Matrix<PrimType_,3,4> H;
     if(Usage_ == rotations::RotationUsage::ACTIVE) // x, y, z * -1
     {
-      H(0,0) =  x();      H(0,1) =  w();      H(0,2) =  z();      H(0,3) = -y();
-      H(1,0) =  y();      H(1,1) = -z();      H(1,2) =  w();      H(1,3) =  x();
-      H(2,0) =  z();      H(2,1) =  y();      H(2,2) = -x();      H(2,3) =  w();
+      H(0,0) =  -x();      H(0,1) =  w();      H(0,2) =  z();      H(0,3) = -y();
+      H(1,0) =  -y();      H(1,1) = -z();      H(1,2) =  w();      H(1,3) =  x();
+      H(2,0) =  -z();      H(2,1) =  y();      H(2,2) = -x();      H(2,3) =  w();
     }
     if(Usage_ == rotations::RotationUsage::PASSIVE)
     {
@@ -425,13 +425,13 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
   /*! \brief Returns the local quaternion diff matrix HBar: LocalAngularVelocity = 2*HBar*qdiff, qdiff = 0.5*HBar^T*LocalAngularVelocity
    *  \returns the local quaternion diff matrix HBar
    */
-  Eigen::Matrix<PrimType_,3,4> getLocalQuaternionDiffMatrix() {
+  Eigen::Matrix<PrimType_,3,4> getLocalQuaternionDiffMatrix() const {
     Eigen::Matrix<PrimType_,3,4> HBar;
     if(Usage_ == rotations::RotationUsage::ACTIVE) // x, y, z * -1
     {
-      HBar(0,0) =  x();      HBar(0,1) =  w();      HBar(0,2) = -z();      HBar(0,3) =  y();
-      HBar(1,0) =  y();      HBar(1,1) =  z();      HBar(1,2) =  w();      HBar(1,3) = -x();
-      HBar(2,0) =  z();      HBar(2,1) = -y();      HBar(2,2) =  x();      HBar(2,3) =  w();
+      HBar(0,0) =  -x();      HBar(0,1) =  w();      HBar(0,2) = -z();      HBar(0,3) =  y();
+      HBar(1,0) =  -y();      HBar(1,1) =  z();      HBar(1,2) =  w();      HBar(1,3) = -x();
+      HBar(2,0) =  -z();      HBar(2,1) = -y();      HBar(2,2) =  x();      HBar(2,3) =  w();
     }
     if(Usage_ == rotations::RotationUsage::PASSIVE)
     {
@@ -537,24 +537,51 @@ class ConversionTraits<eigen_impl::RotationQuaternion<DestPrimType_, Usage_>, ei
   }
 };
 
+
+template <typename Scalar_ = double>
+inline bool isLessThenEpsilons4thRoot(Scalar_ x){
+  static const Scalar_ epsilon4thRoot = pow(std::numeric_limits<Scalar_>::epsilon(), 1.0/4.0);
+  return x < epsilon4thRoot;
+}
+
 template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
 class ConversionTraits<eigen_impl::RotationQuaternion<DestPrimType_, Usage_>, eigen_impl::RotationVector<SourcePrimType_, Usage_>> {
  public:
   inline static eigen_impl::RotationQuaternion<DestPrimType_, Usage_> convert(const eigen_impl::RotationVector<SourcePrimType_, Usage_>& rotationVector) {
     typedef typename eigen_impl::RotationQuaternion<DestPrimType_, Usage_>::Scalar Scalar;
     typedef typename eigen_impl::RotationQuaternion<DestPrimType_, Usage_>::Imaginary Imaginary;
-    const Scalar v = rotationVector.toImplementation().norm();
-    Scalar real;
-    Imaginary imaginary;
-    if (v < common::internal::NumTraits<Scalar>::dummy_precision()) {
-      real = 1.0;
-      imaginary= 0.5*rotationVector.toImplementation().template cast<DestPrimType_>();
+//    const Scalar v = rotationVector.toImplementation().norm();
+//    Scalar real;
+//    Imaginary imaginary;
+//    if (v < common::internal::NumTraits<Scalar>::dummy_precision()) {
+//      real = 1.0;
+//      imaginary= 0.5*rotationVector.toImplementation().template cast<DestPrimType_>();
+//    }
+//    else {
+//      real = cos(v/2);
+//      imaginary = sin(v/2)/v*rotationVector.toImplementation().template cast<DestPrimType_>();
+//    }
+//    return eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(real, imaginary);
+
+
+    Scalar theta = (Scalar)rotationVector.toImplementation().norm();
+
+    // na is 1/theta sin(theta/2)
+    double na;
+    if(isLessThenEpsilons4thRoot(theta))
+    {
+        const Scalar one_over_48 = 1.0/48.0;
+        na = 0.5 + (theta * theta) * one_over_48;
     }
-    else {
-      real = cos(v/2);
-      imaginary = sin(v/2)/v*rotationVector.toImplementation().template cast<DestPrimType_>();
+    else
+    {
+        na = sin(theta*0.5) / theta;
     }
-    return eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(real, imaginary);
+    Imaginary axis = rotationVector.toImplementation().template cast<Scalar>()*na;
+    Scalar ct = cos(theta*0.5);
+    return eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(ct, axis[0],axis[1],axis[2]);
+//    return Eigen::Vector4d(axis[0],axis[1],axis[2],ct);
+
   }
 };
 

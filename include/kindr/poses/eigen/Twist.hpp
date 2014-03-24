@@ -117,10 +117,10 @@ typedef TwistLinearVelocityRotationQuaternionDiff<double> TwistLinearVelocityRot
 typedef TwistLinearVelocityRotationQuaternionDiff<float> TwistLinearVelocityRotationQuaternionDiffF;
 
 
-template<typename PrimType_>
-class TwistLinearVelocityLocalAngularVelocity: public Twist<PrimType_, kindr::phys_quant::eigen_impl::Velocity<PrimType_, 3>, rotations::eigen_impl::LocalAngularVelocity<PrimType_, rotations::RotationUsage::ACTIVE>> {
+template<typename PrimType_, enum rotations::RotationUsage Usage_>
+class TwistLinearVelocityLocalAngularVelocity: public Twist<PrimType_, kindr::phys_quant::eigen_impl::Velocity<PrimType_, 3>, rotations::eigen_impl::LocalAngularVelocity<PrimType_, Usage_>> {
  private:
-  typedef Twist<PrimType_, kindr::phys_quant::eigen_impl::Velocity<PrimType_, 3>, kindr::rotations::eigen_impl::LocalAngularVelocity<PrimType_, kindr::rotations::RotationUsage::ACTIVE>> Base;
+  typedef Twist<PrimType_, kindr::phys_quant::eigen_impl::Velocity<PrimType_, 3>, kindr::rotations::eigen_impl::LocalAngularVelocity<PrimType_, Usage_>> Base;
  public:
   typedef PrimType_ Scalar;
   typedef typename Base::PositionDiff PositionDiff;
@@ -143,8 +143,10 @@ class TwistLinearVelocityLocalAngularVelocity: public Twist<PrimType_, kindr::ph
 
 };
 
-typedef TwistLinearVelocityLocalAngularVelocity<double> TwistLinearVelocityLocalAngularVelocityD;
-typedef TwistLinearVelocityLocalAngularVelocity<float> TwistLinearVelocityLocalAngularVelocityF;
+typedef TwistLinearVelocityLocalAngularVelocity<double, rotations::RotationUsage::ACTIVE> TwistLinearVelocityLocalAngularVelocityAD;
+typedef TwistLinearVelocityLocalAngularVelocity<float, rotations::RotationUsage::ACTIVE> TwistLinearVelocityLocalAngularVelocityAF;
+typedef TwistLinearVelocityLocalAngularVelocity<double, rotations::RotationUsage::PASSIVE> TwistLinearVelocityLocalAngularVelocityPD;
+typedef TwistLinearVelocityLocalAngularVelocity<float, rotations::RotationUsage::PASSIVE> TwistLinearVelocityLocalAngularVelocityPF;
 
 } // namespace eigen_impl
 

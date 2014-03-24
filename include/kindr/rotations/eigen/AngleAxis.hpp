@@ -395,7 +395,19 @@ class ConversionTraits<eigen_impl::AngleAxis<DestPrimType_, Usage_>, eigen_impl:
  public:
   inline static eigen_impl::AngleAxis<DestPrimType_, Usage_> convert(const eigen_impl::RotationMatrix<SourcePrimType_, Usage_>& rotationMatrix) {
 //    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()));
-    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::eigen_internal::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()));
+//    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::eigen_internal::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()));
+
+//   if (Usage_ == RotationUsage::ACTIVE) {
+//     return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::eigen_internal::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.matrix()));
+//
+//   }
+//   if (Usage_ == RotationUsage::PASSIVE) {
+//     return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::eigen_internal::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()));
+//
+//   }
+//
+   return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::eigen_internal::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()));
+
   }
 };
 

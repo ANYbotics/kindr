@@ -219,7 +219,7 @@ class RotationDiffConversionTraits<eigen_impl::RotationVectorDiff<PrimType_, Usa
 //    const Vector rv = rotationVector.toImplementation();
 //    const PrimType_ angle = rv.norm();
 //
-//    if (angle < common::NumTraits<Scalar>::dummy_precision()) {
+//    if (angle < common::internal::NumTraits<Scalar>::dummy_precision()) {
 //      return eigen_impl::RotationVectorDiff<PrimType_, Usage_>(angularVelocity.toImplementation());
 //    }
 //
@@ -250,6 +250,12 @@ class RotationDiffConversionTraits<eigen_impl::RotationVectorDiff<PrimType_, Usa
       const PrimType_ dv3 = t6*w3*4.0+t6*v1*w2*2.0-t6*v2*w1*2.0;
 
       return eigen_impl::RotationVectorDiff<PrimType_, Usage_>(dv1, dv2, dv3);
+//      if (Usage_ == RotationUsage::ACTIVE) {
+//        return eigen_impl::RotationVectorDiff<PrimType_, Usage_>(dv1, dv2, dv3);
+//      }
+//      if (Usage_ == RotationUsage::PASSIVE) {
+//        return eigen_impl::RotationVectorDiff<PrimType_, Usage_>(dv1, dv2, dv3);
+//      }
     }
 
     const PrimType_ t6 = v*(1.0/2.0);
@@ -343,7 +349,12 @@ class RotationDiffConversionTraits<eigen_impl::RotationVectorDiff<PrimType_, Usa
     const PrimType_ dv2 = -t40*w1*(t59-t2*t3*t5*(t50+t51+t52+v*v1*v2)-t2*t5*t10*(t53+t54+t55+v*v1*v2*2.0)*(1.0/2.0)+t3*t5*t7*(t56+t57+t58-t5*v3+t5*v1*v2*(1.0/2.0)))-t40*w3*(t71+t2*t3*t5*(t62+t63+t64-v*v2*v3)+t2*t5*t10*(t65+t66+t67-v*v2*v3*2.0)*(1.0/2.0)-t3*t5*t7*(t68+t69+t70-t5*v1-t5*v2*v3*(1.0/2.0)))+t40*w2*(-t2*t5*t10*v*(-t5+t8+t9)+t3*t5*t7*v*(t61+t87)*(1.0/2.0)+t5*t7*t10*v*(t60+t85)+t2*t3*t4*t5*v);
     const PrimType_ dv3 = -t40*w2*(t71-t2*t3*t5*(t62+t63+t64+v*v2*v3)-t2*t5*t10*(t65+t66+t67+v*v2*v3*2.0)*(1.0/2.0)+t3*t5*t7*(t68+t69+t70-t5*v1+t5*v2*v3*(1.0/2.0)))-t40*w1*(t84+t2*t3*t5*(t72+t73+t74-t75)+t2*t5*t10*(t76+t77+t78-t79)*(1.0/2.0)-t3*t5*t7*(t80+t81-t82+t83-t5*v2))+t40*w3*(-t2*t5*t10*v*(t4-t5+t8)+t3*t5*t7*v*(t87+t88)*(1.0/2.0)+t5*t7*t10*v*(t85+t86)+t2*t3*t5*t9*v);
     return eigen_impl::RotationVectorDiff<PrimType_, Usage_>(dv1, dv2, dv3);
-
+//    if (Usage_ == RotationUsage::ACTIVE) {
+//      return eigen_impl::RotationVectorDiff<PrimType_, Usage_>(dv1, dv2, dv3);
+//    }
+//    if (Usage_ == RotationUsage::PASSIVE) {
+//      return eigen_impl::RotationVectorDiff<PrimType_, Usage_>(dv1, dv2, dv3);
+//    }
   }
 };
 

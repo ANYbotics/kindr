@@ -90,8 +90,10 @@ struct EulerAnglesZyxDiffTest: public ::testing::Test {
 
 
 typedef ::testing::Types<
-    rot::EulerAnglesZyxDiffAD,
-    rot::EulerAnglesZyxDiffAF
+//    rot::EulerAnglesZyxDiffAD,
+//    rot::EulerAnglesZyxDiffAF,
+    rot::EulerAnglesZyxDiffPD,
+    rot::EulerAnglesZyxDiffPF
 > EulerAnglesZyxDiffTypes;
 
 TYPED_TEST_CASE(EulerAnglesZyxDiffTest, EulerAnglesZyxDiffTypes);

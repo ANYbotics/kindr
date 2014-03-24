@@ -579,30 +579,30 @@ TYPED_TEST(AngleAxisSingleTest, testMaps){
   AngleAxis rotAngleAxis;
   Vector testVec;
 
-  testVec = this->rotAngleAxisIdentity.getLogarithmicMap();
+  testVec = this->rotAngleAxisIdentity.logarithmicMap();
   ASSERT_NEAR(testVec(0), 0.0,1e-6);
   ASSERT_NEAR(testVec(1), 0.0,1e-6);
   ASSERT_NEAR(testVec(2), 0.0,1e-6);
 
-  testVec = this->rotAngleAxis1.getLogarithmicMap();
-  rotAngleAxis.setExponentialMap(testVec);
-  ASSERT_EQ(rotAngleAxis.isNear(this->rotAngleAxis1,1e-6),true);
+  testVec = this->rotAngleAxis1.logarithmicMap();
+  AngleAxis rotAngleAxisExpMap = rotAngleAxis.exponentialMap(testVec);
+  ASSERT_EQ(rotAngleAxisExpMap.isNear(this->rotAngleAxis1,1e-6),true);
 
-  testVec = this->rotAngleAxis2.getLogarithmicMap();
-  rotAngleAxis.setExponentialMap(testVec);
-  ASSERT_EQ(rotAngleAxis.isNear(this->rotAngleAxis2,1e-6),true);
+  testVec = this->rotAngleAxis2.logarithmicMap();
+  rotAngleAxisExpMap =  rotAngleAxis.exponentialMap(testVec);
+  ASSERT_EQ(rotAngleAxisExpMap.isNear(this->rotAngleAxis2,1e-6),true);
 
   double norm = 0.1;
   testVec = this->vec/this->vec.norm()*norm;
-  rotAngleAxis.setExponentialMap(testVec);
-  ASSERT_NEAR(rotAngleAxis.getDisparityAngle(this->rotAngleAxisIdentity),norm,1e-6);
+  rotAngleAxisExpMap = rotAngleAxis.exponentialMap(testVec);
+  ASSERT_NEAR(rotAngleAxisExpMap.getDisparityAngle(this->rotAngleAxisIdentity),norm,1e-6);
 
   testVec.setZero();
-  rotAngleAxis.setExponentialMap(testVec);
-  ASSERT_NEAR(rotAngleAxis.angle(), this->rotAngleAxisIdentity.angle(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.axis().x(), this->rotAngleAxisIdentity.axis().x(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.axis().y(), this->rotAngleAxisIdentity.axis().y(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.axis().z(), this->rotAngleAxisIdentity.axis().z(),1e-6);
+  rotAngleAxisExpMap = rotAngleAxis.exponentialMap(testVec);
+  ASSERT_NEAR(rotAngleAxisExpMap.angle(), this->rotAngleAxisIdentity.angle(),1e-6);
+  ASSERT_NEAR(rotAngleAxisExpMap.axis().x(), this->rotAngleAxisIdentity.axis().x(),1e-6);
+  ASSERT_NEAR(rotAngleAxisExpMap.axis().y(), this->rotAngleAxisIdentity.axis().y(),1e-6);
+  ASSERT_NEAR(rotAngleAxisExpMap.axis().z(), this->rotAngleAxisIdentity.axis().z(),1e-6);
 }
 
 

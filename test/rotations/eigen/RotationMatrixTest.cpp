@@ -651,6 +651,68 @@ TYPED_TEST(RotationMatrixSingleTest, testVectorRotation){
 
 
 
+
+TYPED_TEST(RotationMatrixSingleTest, testExpMap){
+  typedef typename TestFixture::RotationMatrix RotationMatrix;
+  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
+  typedef typename TestFixture::Scalar Scalar;
+  typedef typename TestFixture::Vector Vector;
+  typedef typename TestFixture::Matrix3x3 Matrix;
+
+  RotationMatrix identity;
+
+  Vector vector(1.0, 0.0, 0.0);
+  RotationMatrix rotMeas = identity.exponentialMap(vector);
+
+
+  RotationMatrix rotTrue;
+  rotTrue.toImplementation() << 1.000000000000000e+00, 0, 0,
+                      0,     5.403023058681397e-01,    -8.414709848078965e-01,
+                      0,     8.414709848078965e-01,     5.403023058681398e-01;
+
+  KINDR_ASSERT_DOUBLE_MX_EQ(rotMeas.matrix(), rotTrue.matrix(), 1e-4, "testExpMap");
+
+
+  vector << 0.1, 0.2, 0.3;
+  rotTrue.toImplementation() << 9.357548032779188e-01,    -2.831649605650737e-01,     2.101917059507429e-01,
+     3.029327134026372e-01,     9.505806179060916e-01,    -6.803131640494003e-02,
+    -1.805400766943977e-01,     1.273345749176302e-01,     9.752903089530458e-01;
+  rotMeas = identity.exponentialMap(vector);
+  KINDR_ASSERT_DOUBLE_MX_EQ(rotMeas.toImplementation(), rotTrue.toImplementation(), 1e-4, "expMap");
+
+}
+
+TYPED_TEST(RotationMatrixSingleTest, testLogMap){
+  typedef typename TestFixture::RotationMatrix RotationMatrix;
+  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
+  typedef typename TestFixture::Scalar Scalar;
+  typedef typename TestFixture::Vector Vector;
+  typedef typename TestFixture::Matrix3x3 Matrix;
+
+  RotationMatrix rot;
+  rot.toImplementation() << 879.923176281257e-003,    372.025551942260e-003,   -295.520206661340e-003,
+                            -327.579672728226e-003,    925.564159446682e-003,    189.796060978687e-003,
+                             344.131896020075e-003,   -70.1995402393384e-003,    936.293363584199e-003; //psi=0.4, theta=0.3 phi=0.2
+
+  Vector vectorCorrect(  -1.358983490410654e-01,
+                         -3.343428285240700e-01,
+                         -3.656800136918290e-01);
+  Vector vector = rot.logarithmicMap();
+  KINDR_ASSERT_DOUBLE_MX_EQ(vector, vectorCorrect, 1e-4, "logMap1");
+
+
+  rot.toImplementation() << 8.799231762812570e-01,    -3.720255519422596e-01,     2.955202066613395e-01,
+                            4.357321314618704e-01,     8.798380333042382e-01,    -1.897960609786874e-01,
+                           -1.894009330885121e-01,     2.957736023606357e-01,     9.362933635841992e-01; //psi=-0.4, theta=-0.3 phi=-0.2
+
+  vectorCorrect <<  2.558835877170818e-01,2.555418313115193e-01, 4.256689608943892e-01;
+  vector = rot.logarithmicMap();
+  KINDR_ASSERT_DOUBLE_MX_EQ(vector, vectorCorrect, 1e-4, "logMap2");
+
+}
+
+
+
 /* Test Exponential and Logarithmic Map
  * Assumes getDisparityAngle() of Angle Axis is correct.
  */
@@ -661,27 +723,92 @@ TYPED_TEST(RotationMatrixSingleTest, testMaps){
   RotationMatrix rotRotationMatrix;
   Vector testVec;
 
-  testVec = this->rotRotationMatrixIdentity.getLogarithmicMap();
+  testVec = this->rotRotationMatrixIdentity.logarithmicMap();
   ASSERT_NEAR(testVec(0), 0.0,1e-6);
   ASSERT_NEAR(testVec(1), 0.0,1e-6);
   ASSERT_NEAR(testVec(2), 0.0,1e-6);
 
-  testVec = this->rotRotationMatrix1.getLogarithmicMap();
-  rotRotationMatrix.setExponentialMap(testVec);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrix1.matrix(), rotRotationMatrix.matrix(), 1e-4, "maps");
+  testVec = this->rotRotationMatrix1.logarithmicMap();
+  RotationMatrix rotRotationMatrixExpMap = rotRotationMatrix.exponentialMap(testVec);
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrix1.toImplementation(), rotRotationMatrixExpMap.toImplementation(), 1e-3, "logExpMapMat1");
 
-  testVec = this->rotRotationMatrix2.getLogarithmicMap();
-  rotRotationMatrix.setExponentialMap(testVec);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrix2.matrix(), rotRotationMatrix.matrix(), 1e-4, "maps");
+  testVec = this->rotRotationMatrix2.logarithmicMap();
+  rotRotationMatrixExpMap = rotRotationMatrix.exponentialMap(testVec);
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrix2.matrix(), rotRotationMatrixExpMap.matrix(), 1e-4, "logExpMapMat2");
 
   double norm = 0.1;
   testVec = this->vec/this->vec.norm()*norm;
-  rotRotationMatrix.setExponentialMap(testVec);
-  ASSERT_NEAR(rotRotationMatrix.getDisparityAngle(this->rotRotationMatrixIdentity),norm,1e-6);
+  rotRotationMatrixExpMap = rotRotationMatrix.exponentialMap(testVec);
+  ASSERT_NEAR(rotRotationMatrixExpMap.getDisparityAngle(this->rotRotationMatrixIdentity),norm,1e-6);
 
   testVec.setZero();
-  rotRotationMatrix.setExponentialMap(testVec);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixIdentity.matrix(), rotRotationMatrix.matrix(), 1e-4, "maps");
+  rotRotationMatrixExpMap = rotRotationMatrix.exponentialMap(testVec);
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixIdentity.matrix(), rotRotationMatrixExpMap.matrix(), 1e-4, "maps");
+
+}
+
+TYPED_TEST(RotationMatrixSingleTest, testBoxPlus){
+  typedef typename TestFixture::RotationMatrix RotationMatrix;
+  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
+  typedef typename TestFixture::Scalar Scalar;
+  typedef typename TestFixture::Vector Vector;
+  typedef typename TestFixture::Matrix3x3 Matrix;
+
+  // Test groundtruth data
+   RotationMatrix rotRotationMatrix3;
+
+   rotRotationMatrix3.toImplementation() << 1.0, 0.0, 0.0,
+                                     0.0, 0, 1.0,
+                                     0.0, -1.0, 0;
+
+   Vector vectorInput = 1e-5*Vector(1.0, 0.0, 0.0);
+   RotationMatrix rotRotationMatrix4 = rotRotationMatrix3.boxPlus(vectorInput);
+   RotationMatrix rotRotationMatrix4Correct;
+
+   rotRotationMatrix4Correct.toImplementation() <<     1.000000000000000e+00,   0,     0,
+                                                 0,     9.999999999833334e-06,     9.999999999500001e-01,
+                                                 0,    -9.999999999500001e-01,     9.999999999833334e-06;
+   KINDR_ASSERT_DOUBLE_MX_EQ(rotRotationMatrix4Correct.matrix(), rotRotationMatrix4.matrix(), 1e-4, "boxPlus");
+}
+
+
+TYPED_TEST(RotationMatrixSingleTest, testBoxMinus){
+  typedef typename TestFixture::RotationMatrix RotationMatrix;
+  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
+  typedef typename TestFixture::Scalar Scalar;
+  typedef typename TestFixture::Vector Vector;
+
+  RotationMatrix rotOne_v1;
+  rotOne_v1.toImplementation() << 1.0, 0.0, 0.0,
+                                  0.0, 0, 1.0,
+                                  0.0, -1.0, 0;
+
+  RotationMatrix rotTwo_v1;
+  rotTwo_v1.toImplementation() << 1.000000000000000e+00,   0,     0,
+                                  0,     9.999999999833334e-06,     9.999999999500001e-01,
+                                  0,    -9.999999999500001e-01,     9.999999999833334e-06;
+  Vector vectorTrue_v1(-9.999999999999996e-06, 0.0, 0.0);
+
+  Vector vectorMeas_v1 = rotOne_v1.boxMinus(rotTwo_v1);
+  KINDR_ASSERT_DOUBLE_MX_EQ_ABS_REL(vectorTrue_v1, vectorMeas_v1, 1e-5, 1e-5, "boxMinus");
+
+
+  //Direct cosine matrix from Euler angles zyx: z=0.1, y=0.2 x=0.3
+  rotOne_v1.toImplementation() <<       9.751703272018158e-01,     9.784339500725571e-02,    -1.986693307950612e-01,
+                                      -3.695701352462509e-02,     9.564250858492324e-01,     2.896294776255156e-01,
+                                       2.183506631463344e-01,    -2.750958473182437e-01,     9.362933635841992e-01;
+  //Direct cosine matrix from Euler angles zyx: z=0.15, y=0.23 x=0.37
+  rotTwo_v1.toImplementation() <<
+      9.627331709395648e-01,     1.455028877219050e-01,    -2.279775235351884e-01,
+     -5.781078120571753e-02,     9.341780226358523e-01,     3.520927940196359e-01,
+      2.642021104174517e-01,    -3.257918533185810e-01,     9.077758055611578e-01;
+
+  vectorTrue_v1 <<      5.931305743112836e-02,
+      4.439329307381447e-02,
+      3.627918600228441e-02;
+  vectorMeas_v1 = rotOne_v1.boxMinus(rotTwo_v1);
+  std::cout << "norms: " << vectorTrue_v1.norm() << ", " << vectorMeas_v1.norm() <<std::endl;
+  KINDR_ASSERT_DOUBLE_MX_EQ_ABS_REL(vectorTrue_v1, vectorMeas_v1, 1e-2, 1e-2, "boxMinus");
 
 }
 
@@ -695,15 +822,12 @@ TYPED_TEST(RotationMatrixSingleTest, testBoxOperators){
   typedef typename TestFixture::RotationQuaternion RotationQuaternion;
   typedef typename TestFixture::Scalar Scalar;
   typedef typename TestFixture::Vector Vector;
+
   RotationMatrix rot1;
   RotationMatrix rot2;
 
-//  RotationMatrix rotRotationMatrix1 = RotationMatrix(RotationQuaternion(0.0,0.36,0.48,0.8));
-//  RotationMatrix rotRotationMatrix2 = RotationMatrix(RotationQuaternion(4.0/sqrt(30.0),3.0/sqrt(30.0),1.0/sqrt(30.0),2.0/sqrt(30.0)));
-//  RotationMatrix rotRotationMatrix1 = this->rotRotationMatrix1.getUnique();
-//  RotationMatrix rotRotationMatrix2 = this->rotRotationMatrix2.getUnique();
-    RotationMatrix rotRotationMatrix1 = RotationMatrix(RotationQuaternion(0.0,0.36,0.48,0.8).getUnique());
-    RotationMatrix rotRotationMatrix2 = RotationMatrix(RotationQuaternion(4.0/sqrt(30.0),3.0/sqrt(30.0),1.0/sqrt(30.0),2.0/sqrt(30.0)).getUnique());
+  RotationMatrix rotRotationMatrix1 = RotationMatrix(RotationQuaternion(0.0,0.36,0.48,0.8).getUnique());
+  RotationMatrix rotRotationMatrix2 = RotationMatrix(RotationQuaternion(4.0/sqrt(30.0),3.0/sqrt(30.0),1.0/sqrt(30.0),2.0/sqrt(30.0)).getUnique());
 
   Vector testVec;
 
@@ -742,6 +866,8 @@ TYPED_TEST(RotationMatrixSingleTest, testBoxOperators){
   ASSERT_NEAR(rot1.getDisparityAngle(rot2),norm,1e-4); // Check distance to double
   rot2 = rotRotationMatrix1.boxPlus(-testVec);
   ASSERT_NEAR(rot1.getDisparityAngle(rot2),2*norm,1e-4); // Check distance to reverse
+
+
 }
 
 

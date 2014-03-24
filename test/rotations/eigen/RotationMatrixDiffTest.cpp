@@ -52,10 +52,10 @@ struct RotationMatrixDiffTest: public ::testing::Test {
 
   Matrix3 eigenMatrix3vZero = Matrix3::Zero();
   Matrix3 eigenMatrix3v1;
-
+  LocalAngularVelocity angularVelocity0 = LocalAngularVelocity(1.0, 0.0, 0.0);
   LocalAngularVelocity angularVelocity1 = LocalAngularVelocity(0.0, 0.0, 0.0);
-  LocalAngularVelocity angularVelocity2 = LocalAngularVelocity(0.4, 0.3, 0.8);
-  LocalAngularVelocity angularVelocity3 = LocalAngularVelocity(40, 52, 99);
+  LocalAngularVelocity angularVelocity2 = LocalAngularVelocity(0.4, 0.3, 0.8)*0.1;
+  LocalAngularVelocity angularVelocity3 = LocalAngularVelocity(40, 52, 99)*0.01;
   LocalAngularVelocity angularVelocity4 = LocalAngularVelocity(kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0, 0.0, 0.0);
   LocalAngularVelocity angularVelocity5 = LocalAngularVelocity(0.0, kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0, 0.0);
   LocalAngularVelocity angularVelocity6 = LocalAngularVelocity(0.0, 0.0, kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0);
@@ -96,7 +96,7 @@ struct RotationMatrixDiffTest: public ::testing::Test {
     rotations.push_back(rotation6);
     rotations.push_back(rotation7);
     rotations.push_back(rotation8);
-
+    angularVelocities.push_back(angularVelocity0);
     angularVelocities.push_back(angularVelocity1);
     angularVelocities.push_back(angularVelocity2);
     angularVelocities.push_back(angularVelocity3);
@@ -202,22 +202,22 @@ TYPED_TEST(RotationMatrixDiffTest, testFiniteDifference)
   typedef typename TestFixture::RotationDiff RotationDiff;
   typedef typename TestFixture::RotationDiff::Matrix3x3 Matrix3;
 
- const  double dt = 1e-8;
+ const  double dt = 1e-5;
   for (auto rotation : this->rotations) {
     for (auto angularVelocity : this->angularVelocities) {
       // Finite difference method for checking derivatives
       RotationDiff rotationDiff(rotation, angularVelocity);
       Rotation rotationNext = rotation.boxPlus(dt*angularVelocity.toImplementation());
-      Matrix3 dmat = (rotationNext.matrix()-rotation.matrix())/dt;
-      ASSERT_NEAR(rotationDiff.matrix()(0,0),dmat(0,0),1e-4) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff;
-      ASSERT_NEAR(rotationDiff.matrix()(0,1),dmat(0,1),1e-4) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff;
-      ASSERT_NEAR(rotationDiff.matrix()(0,2),dmat(0,2),1e-4) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff;
-      ASSERT_NEAR(rotationDiff.matrix()(1,0),dmat(1,0),1e-4) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff;
-      ASSERT_NEAR(rotationDiff.matrix()(1,1),dmat(1,1),1e-4) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff;
-      ASSERT_NEAR(rotationDiff.matrix()(1,2),dmat(1,2),1e-4) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff;
-      ASSERT_NEAR(rotationDiff.matrix()(2,0),dmat(2,0),1e-4) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff;
-      ASSERT_NEAR(rotationDiff.matrix()(2,1),dmat(2,1),1e-4) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff;
-      ASSERT_NEAR(rotationDiff.matrix()(2,2),dmat(2,2),1e-4) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff;
+      Matrix3 dmat = (rotationNext.toImplementation()-rotation.toImplementation())/dt;
+      ASSERT_NEAR(rotationDiff.toImplementation()(0,0),dmat(0,0),1e-2) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff << " \ndmat: \n" << dmat;
+      ASSERT_NEAR(rotationDiff.toImplementation()(0,1),dmat(0,1),1e-2) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff << " \ndmat: \n" << dmat;
+      ASSERT_NEAR(rotationDiff.toImplementation()(0,2),dmat(0,2),1e-2) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff << " \ndmat: \n" << dmat;
+      ASSERT_NEAR(rotationDiff.toImplementation()(1,0),dmat(1,0),1e-2) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff << " \ndmat: \n" << dmat;
+      ASSERT_NEAR(rotationDiff.toImplementation()(1,1),dmat(1,1),1e-2) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff << " \ndmat: \n" << dmat;
+      ASSERT_NEAR(rotationDiff.toImplementation()(1,2),dmat(1,2),1e-2) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff << " \ndmat: \n" << dmat;
+      ASSERT_NEAR(rotationDiff.toImplementation()(2,0),dmat(2,0),1e-2) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff << " \ndmat: \n" << dmat;
+      ASSERT_NEAR(rotationDiff.toImplementation()(2,1),dmat(2,1),1e-2) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff << " \ndmat: \n" << dmat;
+      ASSERT_NEAR(rotationDiff.toImplementation()(2,2),dmat(2,2),1e-2) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff << " \ndmat: \n" << dmat;
     }
   }
 }

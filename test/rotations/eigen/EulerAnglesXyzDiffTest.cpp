@@ -55,14 +55,14 @@ struct EulerAnglesXyzDiffTest: public ::testing::Test {
 
   LocalAngularVelocity angularVelocity1 = LocalAngularVelocity(0.0, 0.0, 0.0);
   LocalAngularVelocity angularVelocity2 = LocalAngularVelocity(0.4, 0.3, 0.8);
-  LocalAngularVelocity angularVelocity3 = LocalAngularVelocity(14, 33, 25);
+  LocalAngularVelocity angularVelocity3 = LocalAngularVelocity(0.14, 0.33, 0.25);
   LocalAngularVelocity angularVelocity4 = LocalAngularVelocity(kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0, 0.0, 0.0);
   LocalAngularVelocity angularVelocity5 = LocalAngularVelocity(0.0, kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0, 0.0);
   LocalAngularVelocity angularVelocity6 = LocalAngularVelocity(0.0, 0.0, kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0);
   Rotation rotation1 = Rotation(0.0, 0.0, 0.0);
-  Rotation rotation2 = Rotation(1.3, 0.0, 0.0);
-  Rotation rotation3 = Rotation(0.0, 1.3, 0.0);
-  Rotation rotation4 = Rotation(0.0, 0.0, 1.3);
+  Rotation rotation2 = Rotation(0.3, 0.0, 0.0);
+  Rotation rotation3 = Rotation(0.0, 0.3, 0.0);
+  Rotation rotation4 = Rotation(0.0, 0.0, 0.3);
   Rotation rotation5 = Rotation(kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0, 0.0, 0.0);
   Rotation rotation6 = Rotation(0.0, kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0, 0.0);
   Rotation rotation7 = Rotation(0.0, 0.0, kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0);
@@ -92,8 +92,10 @@ struct EulerAnglesXyzDiffTest: public ::testing::Test {
 
 
 typedef ::testing::Types<
-    rot::EulerAnglesXyzDiffAD,
-    rot::EulerAnglesXyzDiffAF
+//    rot::EulerAnglesXyzDiffAD,
+//    rot::EulerAnglesXyzDiffAF,
+    rot::EulerAnglesXyzDiffPD,
+    rot::EulerAnglesXyzDiffPF
 > EulerAnglesXyzDiffTypes;
 
 TYPED_TEST_CASE(EulerAnglesXyzDiffTest, EulerAnglesXyzDiffTypes);
@@ -187,16 +189,16 @@ TYPED_TEST(EulerAnglesXyzDiffTest, testFiniteDifference)
   typedef typename TestFixture::RotationDiff RotationDiff;
   typedef  typename TestFixture::Vector3 Vector3;
 
- const  double dt = 1e-8;
+ const  double dt = 1e-5;
   for (auto rotation : this->rotations) {
     for (auto angularVelocity : this->angularVelocities) {
       // Finite difference method for checking derivatives
       RotationDiff rotationDiff(rotation, angularVelocity);
       Rotation rotationNext = rotation.boxPlus(dt*angularVelocity.toImplementation());
       Vector3 dn = (rotationNext.toImplementation()-rotation.toImplementation())/dt;
-      ASSERT_NEAR(rotationDiff.x(),dn(0),1e-4) << " angular velocity: " << angularVelocity << " rotation: " << rotation << " rotationNext: " << rotationNext  << " diff: " << rotationDiff  << " approxdiff: " << dn.transpose();
-      ASSERT_NEAR(rotationDiff.y(),dn(1),1e-4)  << " angular velocity: " << angularVelocity  <<  "rotation: " << rotation << " rotationNext: " << rotationNext << " diff: " << rotationDiff << " approxdiff: " << dn.transpose();
-      ASSERT_NEAR(rotationDiff.z(),dn(2),1e-4) << " angular velocity: " << angularVelocity << " rotation: " << rotation << " rotationNext: " << rotationNext  << " diff: " << rotationDiff << " approxdiff: " << dn.transpose();
+      ASSERT_NEAR(rotationDiff.x(),dn(0),1e-3) << " angular velocity: " << angularVelocity << " rotation: " << rotation << " rotationNext: " << rotationNext  << " diff: " << rotationDiff  << " approxdiff: " << dn.transpose();
+      ASSERT_NEAR(rotationDiff.y(),dn(1),1e-3)  << " angular velocity: " << angularVelocity  <<  "rotation: " << rotation << " rotationNext: " << rotationNext << " diff: " << rotationDiff << " approxdiff: " << dn.transpose();
+      ASSERT_NEAR(rotationDiff.z(),dn(2),1e-3) << " angular velocity: " << angularVelocity << " rotation: " << rotation << " rotationNext: " << rotationNext  << " diff: " << rotationDiff << " approxdiff: " << dn.transpose();
 
     }
   }

@@ -877,32 +877,33 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionExponentialMap){
   RotationQuaternion rotQuat;
   Vector testVec;
 
-  testVec = this->rotQuatIdentity.getLogarithmicMap();
+  testVec = this->rotQuatIdentity.logarithmicMap();
   ASSERT_NEAR(testVec(0), 0.0,1e-6);
   ASSERT_NEAR(testVec(1), 0.0,1e-6);
   ASSERT_NEAR(testVec(2), 0.0,1e-6);
 
-  testVec = this->rotQuat1.getLogarithmicMap();
-  rotQuat.setExponentialMap(testVec);
-  ASSERT_EQ(rotQuat.isNear(this->rotQuat1,1e-6),true);
+  testVec = this->rotQuat1.logarithmicMap();
+  RotationQuaternion rotQuatToExpMap = rotQuat.exponentialMap(testVec);
+  ASSERT_EQ(rotQuatToExpMap.isNear(this->rotQuat1,1e-6),true);
 
-  testVec = this->rotQuat2.getLogarithmicMap();
-  rotQuat.setExponentialMap(testVec);
-  ASSERT_EQ(rotQuat.isNear(this->rotQuat2,1e-6),true);
+  testVec = this->rotQuat2.logarithmicMap();
+  rotQuatToExpMap = rotQuat.exponentialMap(testVec);
+  ASSERT_EQ(rotQuatToExpMap.isNear(this->rotQuat2,1e-6),true);
 
-  double norm = 0.1;// --------------------------------------------------------------------------------------------------- //
+  double norm = 0.1;
+  // --------------------------------------------------------------------------------------------------- //
   // -------- Testing for casting between different type of rotations and rotation Quaternions --------- //
   // --------------------------------------------------------------------------------------------------- //
   testVec = this->vec/this->vec.norm()*norm;
-  rotQuat.setExponentialMap(testVec);
-  ASSERT_NEAR(rotQuat.getDisparityAngle(this->rotQuatIdentity),norm,1e-6);
+  rotQuatToExpMap = rotQuat.exponentialMap(testVec);
+  ASSERT_NEAR(rotQuatToExpMap.getDisparityAngle(this->rotQuatIdentity),norm,1e-6);
 
   testVec.setZero();
-  rotQuat.setExponentialMap(testVec);
-  ASSERT_NEAR(rotQuat.w(), this->rotQuatIdentity.w(),1e-6);
-  ASSERT_NEAR(rotQuat.x(), this->rotQuatIdentity.x(),1e-6);
-  ASSERT_NEAR(rotQuat.y(), this->rotQuatIdentity.y(),1e-6);
-  ASSERT_NEAR(rotQuat.z(), this->rotQuatIdentity.z(),1e-6);
+  rotQuatToExpMap = rotQuat.exponentialMap(testVec);
+  ASSERT_NEAR(rotQuatToExpMap.w(), this->rotQuatIdentity.w(),1e-6);
+  ASSERT_NEAR(rotQuatToExpMap.x(), this->rotQuatIdentity.x(),1e-6);
+  ASSERT_NEAR(rotQuatToExpMap.y(), this->rotQuatIdentity.y(),1e-6);
+  ASSERT_NEAR(rotQuatToExpMap.z(), this->rotQuatIdentity.z(),1e-6);
 }
 
 // Test Rotation Quaternion boxplus and boxminus
