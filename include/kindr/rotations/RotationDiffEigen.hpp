@@ -45,9 +45,6 @@ template<typename PrimType_, enum RotationUsage Usage_>
 class RotationMatrixDiff;
 
 template<typename PrimType_, enum RotationUsage Usage_>
-class AngleAxisDiff;
-
-template<typename PrimType_, enum RotationUsage Usage_>
 class RotationVectorDiff;
 
 template<typename PrimType_, enum RotationUsage Usage_>

@@ -216,10 +216,10 @@ TYPED_TEST(RotationQuaternionDiffTest, testFiniteDifference)
       Rotation rotationNext = rotation.boxPlus(dt*angularVelocity.toImplementation());
       Scalar dreal = (rotationNext.real()-rotation.real())/dt;
       Vector3 dimag = (rotationNext.imaginary()-rotation.imaginary())/dt;
-      ASSERT_NEAR(rotationDiff.w(),dreal,1e-3) << "rotation: " << rotation << " angular velocity: " << angularVelocity << " diff: " << rotationDiff;
-      ASSERT_NEAR(rotationDiff.x(),dimag(0),1e-3) << "rotation: " << rotation << " angular velocity: " << angularVelocity  << " diff: " << rotationDiff;
-      ASSERT_NEAR(rotationDiff.y(),dimag(1),1e-3) << "rotation: " << rotation << " angular velocity: " << angularVelocity << " diff: " << rotationDiff;
-      ASSERT_NEAR(rotationDiff.z(),dimag(2),1e-3) << "rotation: " << rotation << " angular velocity: " << angularVelocity << " diff: " << rotationDiff;
+      ASSERT_NEAR(rotationDiff.w(),dreal,1e-3) << "rotation: " << rotation << " angular velocity: " << angularVelocity <<     " rdiff: " << dreal << " " << dimag(0) << " " << dimag(1) << " " << dimag(2) << "diff: " << rotationDiff;
+      ASSERT_NEAR(rotationDiff.x(),dimag(0),1e-3) << "rotation: " << rotation << " angular velocity: " << angularVelocity  << " rdiff: " << dreal << " " << dimag(0) << " " << dimag(1) << " " << dimag(2) << " diff: " << rotationDiff;
+      ASSERT_NEAR(rotationDiff.y(),dimag(1),1e-3) << "rotation: " << rotation << " angular velocity: " << angularVelocity <<  " rdiff: " << dreal << " " << dimag(0) << " " << dimag(1) << " " << dimag(2) << " diff: " << rotationDiff;
+      ASSERT_NEAR(rotationDiff.z(),dimag(2),1e-3) << "rotation: " << rotation << " angular velocity: " << angularVelocity <<  " rdiff: " << dreal << " " << dimag(0) << " " << dimag(1) << " " << dimag(2) << " diff: " << rotationDiff;
 
     }
   }

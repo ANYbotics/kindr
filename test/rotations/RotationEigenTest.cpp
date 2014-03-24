@@ -348,40 +348,40 @@ typedef ::testing::Types<
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>>,
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPF>>,
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>,
+//    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
+//    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>,
+//    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
+//    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>,
 
     // Rotation Vector <-> Euler Angles ZYX
     std::pair<RotationVectorTestType<rot::RotationVectorPF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPF>>,
     std::pair<RotationVectorTestType<rot::RotationVectorPF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>>,
     std::pair<RotationVectorTestType<rot::RotationVectorPD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPF>>,
     std::pair<RotationVectorTestType<rot::RotationVectorPD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>>,
-    std::pair<RotationVectorTestType<rot::RotationVectorAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
-    std::pair<RotationVectorTestType<rot::RotationVectorAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>,
-    std::pair<RotationVectorTestType<rot::RotationVectorAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
-    std::pair<RotationVectorTestType<rot::RotationVectorAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>,
+//    std::pair<RotationVectorTestType<rot::RotationVectorAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
+//    std::pair<RotationVectorTestType<rot::RotationVectorAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>,
+//    std::pair<RotationVectorTestType<rot::RotationVectorAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
+//    std::pair<RotationVectorTestType<rot::RotationVectorAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>,
 
     // Angle-Axis <-> Euler Angles ZYX
     std::pair<AngleAxisTestType<rot::AngleAxisPF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPF>>,
     std::pair<AngleAxisTestType<rot::AngleAxisPF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>>,
     std::pair<AngleAxisTestType<rot::AngleAxisPD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPF>>,
     std::pair<AngleAxisTestType<rot::AngleAxisPD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>>,
-    std::pair<AngleAxisTestType<rot::AngleAxisAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
-    std::pair<AngleAxisTestType<rot::AngleAxisAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>,
-    std::pair<AngleAxisTestType<rot::AngleAxisAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
-    std::pair<AngleAxisTestType<rot::AngleAxisAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>,
+//    std::pair<AngleAxisTestType<rot::AngleAxisAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
+//    std::pair<AngleAxisTestType<rot::AngleAxisAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>,
+//    std::pair<AngleAxisTestType<rot::AngleAxisAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
+//    std::pair<AngleAxisTestType<rot::AngleAxisAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>,
 
     // Rotation Matrix <-> Euler Angles ZYX
     std::pair<RotationMatrixTestType<rot::RotationMatrixPF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPF>>,
     std::pair<RotationMatrixTestType<rot::RotationMatrixPF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>>,
     std::pair<RotationMatrixTestType<rot::RotationMatrixPD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPF>>,
-    std::pair<RotationMatrixTestType<rot::RotationMatrixPD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>>,
-    std::pair<RotationMatrixTestType<rot::RotationMatrixAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
-    std::pair<RotationMatrixTestType<rot::RotationMatrixAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>,
-    std::pair<RotationMatrixTestType<rot::RotationMatrixAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
-    std::pair<RotationMatrixTestType<rot::RotationMatrixAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>
+    std::pair<RotationMatrixTestType<rot::RotationMatrixPD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>>
+//    std::pair<RotationMatrixTestType<rot::RotationMatrixAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
+//    std::pair<RotationMatrixTestType<rot::RotationMatrixAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>,
+//    std::pair<RotationMatrixTestType<rot::RotationMatrixAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
+//    std::pair<RotationMatrixTestType<rot::RotationMatrixAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>
 
 > TypeRotation2Pairs;
 
@@ -391,50 +391,50 @@ typedef ::testing::Types<
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPD>>,
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPF>>,
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPD>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
+//    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
+//    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
+//    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
+//    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
 
     // Rotation Vector <-> Euler Angles XYZ
     std::pair<RotationVectorTestType<rot::RotationVectorPF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPF>>,
     std::pair<RotationVectorTestType<rot::RotationVectorPF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPD>>,
     std::pair<RotationVectorTestType<rot::RotationVectorPD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPF>>,
     std::pair<RotationVectorTestType<rot::RotationVectorPD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPD>>,
-    std::pair<RotationVectorTestType<rot::RotationVectorAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
-    std::pair<RotationVectorTestType<rot::RotationVectorAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
-    std::pair<RotationVectorTestType<rot::RotationVectorAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
-    std::pair<RotationVectorTestType<rot::RotationVectorAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
+//    std::pair<RotationVectorTestType<rot::RotationVectorAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
+//    std::pair<RotationVectorTestType<rot::RotationVectorAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
+//    std::pair<RotationVectorTestType<rot::RotationVectorAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
+//    std::pair<RotationVectorTestType<rot::RotationVectorAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
 
     // Angle-Axis <-> Euler Angles XYZ
     std::pair<AngleAxisTestType<rot::AngleAxisPF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPF>>,
     std::pair<AngleAxisTestType<rot::AngleAxisPF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPD>>,
     std::pair<AngleAxisTestType<rot::AngleAxisPD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPF>>,
     std::pair<AngleAxisTestType<rot::AngleAxisPD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPD>>,
-    std::pair<AngleAxisTestType<rot::AngleAxisAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
-    std::pair<AngleAxisTestType<rot::AngleAxisAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
-    std::pair<AngleAxisTestType<rot::AngleAxisAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
-    std::pair<AngleAxisTestType<rot::AngleAxisAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
+//    std::pair<AngleAxisTestType<rot::AngleAxisAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
+//    std::pair<AngleAxisTestType<rot::AngleAxisAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
+//    std::pair<AngleAxisTestType<rot::AngleAxisAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
+//    std::pair<AngleAxisTestType<rot::AngleAxisAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
 
     // Rotation Matrix <-> Euler Angles XYZ
     std::pair<RotationMatrixTestType<rot::RotationMatrixPF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPF>>,
     std::pair<RotationMatrixTestType<rot::RotationMatrixPF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPD>>,
     std::pair<RotationMatrixTestType<rot::RotationMatrixPD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPF>>,
     std::pair<RotationMatrixTestType<rot::RotationMatrixPD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPD>>,
-    std::pair<RotationMatrixTestType<rot::RotationMatrixAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
-    std::pair<RotationMatrixTestType<rot::RotationMatrixAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
-    std::pair<RotationMatrixTestType<rot::RotationMatrixAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
-    std::pair<RotationMatrixTestType<rot::RotationMatrixAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
+//    std::pair<RotationMatrixTestType<rot::RotationMatrixAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
+//    std::pair<RotationMatrixTestType<rot::RotationMatrixAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
+//    std::pair<RotationMatrixTestType<rot::RotationMatrixAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
+//    std::pair<RotationMatrixTestType<rot::RotationMatrixAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
 
     // Euler Angles ZYX <-> Euler Angles XYZ
     std::pair<EulerAnglesZyxTestType<rot::EulerAnglesZyxPF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPF>>,
     std::pair<EulerAnglesZyxTestType<rot::EulerAnglesZyxPF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPD>>,
     std::pair<EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPF>>,
-    std::pair<EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPD>>,
-    std::pair<EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
-    std::pair<EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
-    std::pair<EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
-    std::pair<EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>
+    std::pair<EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzPD>>
+//    std::pair<EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
+//    std::pair<EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>,
+//    std::pair<EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAF>>,
+//    std::pair<EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>, EulerAnglesXyzTestType<rot::EulerAnglesXyzAD>>
 
 > TypeRotation3Pairs;
 
@@ -473,26 +473,26 @@ typedef ::testing::Types<
     // Rotation Quaternion <-> Euler Angles ZYX
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPF>>,
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>,
+//    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
+//    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>,
 
     // Rotation Vector <-> Euler Angles ZYX
     std::pair<RotationVectorTestType<rot::RotationVectorPF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPF>>,
     std::pair<RotationVectorTestType<rot::RotationVectorPD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>>,
-    std::pair<RotationVectorTestType<rot::RotationVectorAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
-    std::pair<RotationVectorTestType<rot::RotationVectorAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>,
+//    std::pair<RotationVectorTestType<rot::RotationVectorAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
+//    std::pair<RotationVectorTestType<rot::RotationVectorAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>,
 
     // Angle-Axis <-> Euler Angles ZYX
     std::pair<AngleAxisTestType<rot::AngleAxisPF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPF>>,
     std::pair<AngleAxisTestType<rot::AngleAxisPD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>>,
-    std::pair<AngleAxisTestType<rot::AngleAxisAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
-    std::pair<AngleAxisTestType<rot::AngleAxisAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>,
+//    std::pair<AngleAxisTestType<rot::AngleAxisAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
+//    std::pair<AngleAxisTestType<rot::AngleAxisAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>,
 
     // Rotation Matrix <-> Euler Angles ZYX
     std::pair<RotationMatrixTestType<rot::RotationMatrixPF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPF>>,
-    std::pair<RotationMatrixTestType<rot::RotationMatrixPD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>>,
-    std::pair<RotationMatrixTestType<rot::RotationMatrixAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
-    std::pair<RotationMatrixTestType<rot::RotationMatrixAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>
+    std::pair<RotationMatrixTestType<rot::RotationMatrixPD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPD>>
+//    std::pair<RotationMatrixTestType<rot::RotationMatrixAF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAF>>,
+//    std::pair<RotationMatrixTestType<rot::RotationMatrixAD>, EulerAnglesZyxTestType<rot::EulerAnglesZyxAD>>
 
 > TypeRotationPrimTypePairs;
 

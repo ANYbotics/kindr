@@ -234,24 +234,6 @@ class RotationDiffConversionTraits<eigen_impl::LocalAngularVelocity<PrimType_, U
 
 
 
-//! \f$B_\hat{w}_IB = B_n \dot{\theta} + \dot{B_n}*sin(\theta) + B_\hat{n}(1-cos(\theta))$\f
-template<typename PrimType_, enum RotationUsage Usage_>
-class RotationDiffConversionTraits<eigen_impl::LocalAngularVelocity<PrimType_, Usage_>, eigen_impl::AngleAxisDiff<PrimType_, Usage_>, eigen_impl::AngleAxis<PrimType_, Usage_>> {
- public:
-  inline static eigen_impl::LocalAngularVelocity<PrimType_, Usage_> convert(const eigen_impl::AngleAxis<PrimType_, Usage_>& angleAxis, const eigen_impl::AngleAxisDiff<PrimType_, Usage_>& angleAxisDiff) {
-    typedef typename eigen_impl::AngleAxis<PrimType_, Usage_>::Scalar Scalar;
-
-    if (angleAxis.angle() < common::internal::NumTraits<Scalar>::dummy_precision()) {
-      return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(angleAxisDiff.axis());
-      KINDR_ASSERT_TRUE(std::runtime_error,  false, "Conversion of AngleAxisDiff to LocalAngularVelocity is NOT YET TESTED FOR SMALL ANGLES!");
-    }
-
-//    if (angleAxis.angle() < common::NumTraits<Scalar>::dummy_precision()) {
-//      return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(angleAxis.axis()*angleAxisDiff.angle() + angleAxisDiff.axis()*angleAxis.angle());
-//    }
-    return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(angleAxis.axis()*angleAxisDiff.angle() + angleAxisDiff.axis()*sin(angleAxis.angle()) - linear_algebra::getSkewMatrixFromVector(angleAxis.axis())*angleAxisDiff.axis()*(1-cos(angleAxis.angle())));
-  }
-};
 
 template<typename PrimType_, enum RotationUsage Usage_>
 class RotationDiffConversionTraits<eigen_impl::LocalAngularVelocity<PrimType_, Usage_>, eigen_impl::RotationVectorDiff<PrimType_, Usage_>, eigen_impl::RotationVector<PrimType_, Usage_>> {
@@ -290,6 +272,12 @@ class RotationDiffConversionTraits<eigen_impl::LocalAngularVelocity<PrimType_, U
       const PrimType_ w2 = dv3*(t5+t6)+dv2*((v2*v2)*(1.0/4.0)+1.0)-dv1*(t2-t3);
       const PrimType_ w3 = dv3*((v3*v3)*(1.0/4.0)+1.0)-dv2*(t5-t6)+dv1*(t4+v1*v3*(1.0/4.0));
       return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(w1, w2, w3);
+//      if (Usage_ == RotationUsage::ACTIVE) {
+//        return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(-w1, -w2, -w3);
+//      }
+//      if (Usage_ == RotationUsage::PASSIVE) {
+//        return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(w1, w2, w3);
+//      }
     }
 
     const PrimType_ t2 = 1.0/(v*v*v);
@@ -309,6 +297,13 @@ class RotationDiffConversionTraits<eigen_impl::LocalAngularVelocity<PrimType_, U
     const PrimType_ w3 = dv2*t2*(v*(t10-v1+t3*v1)-t4*v2*v3)+dv1*t2*(v*(t11-t12+v2)-t4*v1*v3)+dv3*t2*(t8-t4*t13+t13*v);
 
     return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(w1, w2, w3);
+
+//    if (Usage_ == RotationUsage::ACTIVE) {
+//      return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(-w1, -w2, -w3);
+//    }
+//    if (Usage_ == RotationUsage::PASSIVE) {
+//      return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(w1, w2, w3);
+//    }
 
   }
 };

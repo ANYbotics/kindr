@@ -253,10 +253,12 @@ typedef EulerAnglesZyxDiff<float, RotationUsage::ACTIVE> EulerAnglesZyxDiffAF;
 namespace internal {
 
 
-template<typename PrimType_, enum RotationUsage Usage_>
-class RotationDiffConversionTraits<eigen_impl::EulerAnglesZyxDiff<PrimType_, Usage_>, eigen_impl::LocalAngularVelocity<PrimType_, Usage_>, eigen_impl::EulerAnglesZyx<PrimType_, Usage_>> {
+template<typename PrimType_>
+class RotationDiffConversionTraits<eigen_impl::EulerAnglesZyxDiff<PrimType_, RotationUsage::PASSIVE>, eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::PASSIVE>, eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE>> {
  public:
-  inline static eigen_impl::EulerAnglesZyxDiff<PrimType_, Usage_> convert(const eigen_impl::EulerAnglesZyx<PrimType_, Usage_>& eulerAngles, const eigen_impl::LocalAngularVelocity<PrimType_, Usage_>& angularVelocity) {
+
+
+  inline static eigen_impl::EulerAnglesZyxDiff<PrimType_, RotationUsage::PASSIVE> convert(const eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE>& eulerAngles, const eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::PASSIVE>& angularVelocity) {
     typedef typename Eigen::Matrix<PrimType_, 3, 3> Matrix3x3;
 
     const PrimType_ theta = eulerAngles.pitch();
@@ -266,18 +268,12 @@ class RotationDiffConversionTraits<eigen_impl::EulerAnglesZyxDiff<PrimType_, Usa
     const PrimType_ w3 = angularVelocity.z();
 
     const PrimType_ t2 = cos(theta);
-    PrimType_ t3;
-
-    if (t2 == PrimType_(0)) {
-      t3 = std::numeric_limits<PrimType_>::max();
-    } else {
-      t3 = 1.0/t2;
-    }
-
+    KINDR_ASSERT_TRUE(std::runtime_error, t2 != PrimType_(0), "Error: cos(y) is zero! This case is not yet implemented!");
+    const PrimType_ t3 = 1.0/t2;
     const PrimType_ t4 = cos(phi);
     const PrimType_ t5 = sin(phi);
     const PrimType_ t6 = sin(theta);
-    return eigen_impl::EulerAnglesZyxDiff<PrimType_, Usage_>(t3*t4*w3+t3*t5*w2, t4*w2-t5*w3, w1+t3*t4*t6*w3+t3*t5*t6*w2);
+    return eigen_impl::EulerAnglesZyxDiff<PrimType_, RotationUsage::PASSIVE>(t3*t4*w3+t3*t5*w2, t4*w2-t5*w3, w1+t3*t4*t6*w3+t3*t5*t6*w2);
 
   }
 };

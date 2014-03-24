@@ -58,8 +58,8 @@ struct RotationVectorDiffTest: public ::testing::Test {
   LocalAngularVelocity angularVelocity2 = LocalAngularVelocity(kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0, 0.0, 0.0);
   LocalAngularVelocity angularVelocity3 = LocalAngularVelocity(0.0, kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0, 0.0);
   LocalAngularVelocity angularVelocity4 = LocalAngularVelocity(0.0, 0.0, kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0);
-  LocalAngularVelocity angularVelocity5 = LocalAngularVelocity(0.1, 0.3, 0.2);
-  LocalAngularVelocity angularVelocity6 = LocalAngularVelocity(0.4, 0.3, 0.8);
+  LocalAngularVelocity angularVelocity5 = LocalAngularVelocity(0.1, 0.3, 0.2)*0.1;
+  LocalAngularVelocity angularVelocity6 = LocalAngularVelocity(0.4, 0.3, 0.8)*0.1;
 
   Rotation rotation1 = Rotation(0.0, 0.0, 0.0);
   Rotation rotation2 = Rotation(kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0, 0.0, 0.0);

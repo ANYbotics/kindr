@@ -89,13 +89,13 @@ typedef ::testing::Types<
   std::pair<rot::RotationMatrixPD, rot::RotationMatrixDiffPD>,
   std::pair<rot::RotationMatrixPF, rot::RotationMatrixDiffPF>,
 
-  std::pair<rot::EulerAnglesZyxAD, rot::EulerAnglesZyxDiffAD>,
-  std::pair<rot::EulerAnglesZyxAF, rot::EulerAnglesZyxDiffAF>,
+//  std::pair<rot::EulerAnglesZyxAD, rot::EulerAnglesZyxDiffAD>,
+//  std::pair<rot::EulerAnglesZyxAF, rot::EulerAnglesZyxDiffAF>,
   std::pair<rot::EulerAnglesZyxPD, rot::EulerAnglesZyxDiffPD>,
   std::pair<rot::EulerAnglesZyxPF, rot::EulerAnglesZyxDiffPF>,
 
-  std::pair<rot::EulerAnglesXyzAD, rot::EulerAnglesXyzDiffAD>,
-  std::pair<rot::EulerAnglesXyzAF, rot::EulerAnglesXyzDiffAF>,
+//  std::pair<rot::EulerAnglesXyzAD, rot::EulerAnglesXyzDiffAD>,
+//  std::pair<rot::EulerAnglesXyzAF, rot::EulerAnglesXyzDiffAF>,
   std::pair<rot::EulerAnglesXyzPD, rot::EulerAnglesXyzDiffPD>,
   std::pair<rot::EulerAnglesXyzPF, rot::EulerAnglesXyzDiffPF>
 > TypeRotationAndRotationDiffPairs;

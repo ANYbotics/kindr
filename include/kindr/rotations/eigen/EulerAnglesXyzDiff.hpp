@@ -255,27 +255,11 @@ namespace internal {
 
 
 
-template<typename PrimType_, enum RotationUsage Usage_>
-class RotationDiffConversionTraits<eigen_impl::EulerAnglesXyzDiff<PrimType_, Usage_>, eigen_impl::LocalAngularVelocity<PrimType_, Usage_>, eigen_impl::EulerAnglesXyz<PrimType_, Usage_>> {
+template<typename PrimType_>
+class RotationDiffConversionTraits<eigen_impl::EulerAnglesXyzDiff<PrimType_, RotationUsage::PASSIVE>, eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::PASSIVE>, eigen_impl::EulerAnglesXyz<PrimType_, RotationUsage::PASSIVE>> {
  public:
-  inline static eigen_impl::EulerAnglesXyzDiff<PrimType_, Usage_> convert(const eigen_impl::EulerAnglesXyz<PrimType_, Usage_>& eulerAngles, const eigen_impl::LocalAngularVelocity<PrimType_, Usage_>& angularVelocity) {
+  inline static eigen_impl::EulerAnglesXyzDiff<PrimType_, RotationUsage::PASSIVE> convert(const eigen_impl::EulerAnglesXyz<PrimType_, RotationUsage::PASSIVE>& eulerAngles, const eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::PASSIVE>& angularVelocity) {
     typedef typename Eigen::Matrix<PrimType_, 3, 3> Matrix3x3;
-
-    // works:
-//    const PrimType_ alpha = eulerAngles.roll();
-//    const PrimType_ beta = eulerAngles.pitch();
-//    const PrimType_ gamma = eulerAngles.yaw();
-//
-//    Matrix3x3 H = Matrix3x3::Zero();
-//
-//    if(cos(beta) == 0) {
-//      H << std::numeric_limits<PrimType_>::max(), std::numeric_limits<PrimType_>::max(), 0, sin(gamma), cos(gamma), 0, -cos(gamma)*tan(beta), sin(gamma)*tan(beta), 1;
-//    }
-//    else {
-//      H << cos(gamma)/cos(beta), -sin(gamma)/cos(beta), 0, sin(gamma), cos(gamma), 0, -cos(gamma)*tan(beta), sin(gamma)*tan(beta), 1;
-//    }
-//
-//    return eigen_impl::EulerAnglesXyzDiff<PrimType_, Usage_>(H*angularVelocity.toImplementation());
 
 
     const PrimType_ beta_Var = eulerAngles.pitch();
@@ -284,16 +268,12 @@ class RotationDiffConversionTraits<eigen_impl::EulerAnglesXyzDiff<PrimType_, Usa
     const PrimType_ w2 = angularVelocity.toImplementation()(1);
     const PrimType_ w3 = angularVelocity.toImplementation()(2);
     const PrimType_ t2 = cos(beta_Var);
-    PrimType_ t3;
-    if (t2 == PrimType_(0)) {
-      t3 = std::numeric_limits<PrimType_>::max();
-    } else {
-      t3 = 1.0/t2;
-    }
+    KINDR_ASSERT_TRUE(std::runtime_error, t2 != PrimType_(0), "Error: cos(y) is zero! This case is not yet implemented!");
+    const PrimType_ t3 = 1.0/t2;
     const PrimType_ t4 = cos(gamma_Var);
     const PrimType_ t5 = sin(gamma_Var);
     const PrimType_ t6 = sin(beta_Var);
-    return eigen_impl::EulerAnglesXyzDiff<PrimType_, Usage_>(t3*t4*w1-t3*t5*w2, t4*w2+t5*w1, w3-t3*t4*t6*w1+t3*t5*t6*w2);
+    return eigen_impl::EulerAnglesXyzDiff<PrimType_, RotationUsage::PASSIVE>(t3*t4*w1-t3*t5*w2, t4*w2+t5*w1, w3-t3*t4*t6*w1+t3*t5*t6*w2);
 
   }
 };
