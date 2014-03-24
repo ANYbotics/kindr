@@ -45,9 +45,6 @@ template<typename PrimType_, enum RotationUsage Usage_>
 class RotationMatrixDiff;
 
 template<typename PrimType_, enum RotationUsage Usage_>
-class RotationVectorDiff;
-
-template<typename PrimType_, enum RotationUsage Usage_>
 class EulerAnglesZyxDiff;
 
 template<typename PrimType_, enum RotationUsage Usage_>
@@ -62,7 +59,6 @@ class EulerAnglesXyzDiff;
 
 
 #include "kindr/rotations/eigen/LocalAngularVelocity.hpp"
-#include "kindr/rotations/eigen/RotationVectorDiff.hpp"
 #include "kindr/rotations/eigen/RotationQuaternionDiff.hpp"
 #include "kindr/rotations/eigen/RotationMatrixDiff.hpp"
 #include "kindr/rotations/eigen/EulerAnglesZyxDiff.hpp"

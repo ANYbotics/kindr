@@ -69,16 +69,17 @@ set(LINEARALGEBRA_SRCS
       test_main.cpp 
       linear_algebra/SkewMatrixFromVectorTest.cpp
 )
-#add_gtest(runUnitTestsLinearAlgebra ${LINEARALGEBRA_SRCS})
+add_gtest(runUnitTestsLinearAlgebra ${LINEARALGEBRA_SRCS})
 
 set(QUATERNIONS_SRCS
 	test_main.cpp
 	quaternions/QuaternionEigenTest.cpp
 )
-#add_gtest( runUnitTestsQuaternions ${QUATERNIONS_SRCS} )
+add_gtest( runUnitTestsQuaternions ${QUATERNIONS_SRCS} )
 
 set(ROTATION_SRCS
 	test_main.cpp
+	rotations/eigen/RotationMatrixTest.cpp
 	rotations/eigen/RotationQuaternionTest.cpp
 	rotations/eigen/RotationVectorTest.cpp
 	rotations/eigen/AngleAxisTest.cpp
@@ -87,25 +88,19 @@ set(ROTATION_SRCS
 	rotations/eigen/EulerAnglesXyzTest.cpp
 	rotations/RotationEigenTest.cpp
 )
-#add_gtest( runUnitTestsRotation ${ROTATION_SRCS})
+add_gtest( runUnitTestsRotation ${ROTATION_SRCS})
 
 set(ROTATIONQUATERNION_SRCS
 	test_main.cpp
 	rotations/eigen/RotationQuaternionTest.cpp
 )
-#add_gtest( runUnitTestsRotationQuaternion ${ROTATIONQUATERNION_SRCS})
+add_gtest( runUnitTestsRotationQuaternion ${ROTATIONQUATERNION_SRCS})
 
-set(ROTATIONMATRIX_SRCS
-	test_main.cpp
-	rotations/eigen/RotationMatrixTest.cpp
-)
-#add_gtest( runUnitTestsRotationMatrix ${ROTATIONMATRIX_SRCS})
 
 set(ROTATIONDIFF_SRCS
 	test_main.cpp
 	rotations/RotationDiffEigenTest.cpp
 	rotations/eigen/LocalAngularVelocityTest.cpp
-	rotations/eigen/RotationVectorDiffTest.cpp
 	rotations/eigen/RotationQuaternionDiffTest.cpp
 	rotations/eigen/RotationMatrixDiffTest.cpp
 	rotations/eigen/EulerAnglesZyxDiffTest.cpp
@@ -117,38 +112,38 @@ set(POSITIONS_SRCS
 	test_main.cpp
 	positions/PositionEigenTest.cpp
 )
-#add_gtest( runUnitTestsPositions  ${POSITIONS_SRCS})
+add_gtest( runUnitTestsPositions  ${POSITIONS_SRCS})
 
 set(POSITIONSDIFF_SRCS
 	test_main.cpp
 	positions/PositionDiffEigenTest.cpp
 )
-#add_gtest( runUnitTestsPositionsDiff  ${POSITIONSDIFF_SRCS})
+add_gtest( runUnitTestsPositionsDiff  ${POSITIONSDIFF_SRCS})
 
 
 set(POSES_SRCS
 	test_main.cpp
 	poses/PoseEigenTest.cpp
 )
-#add_gtest( runUnitTestsPose  ${POSES_SRCS})
+add_gtest( runUnitTestsPose  ${POSES_SRCS})
 
 set(POSESDIFF_SRCS
 	test_main.cpp
 	poses/PoseDiffEigenTest.cpp
 )
-#add_gtest( runUnitTestsPoseDiff  ${POSESDIFF_SRCS})
+add_gtest( runUnitTestsPoseDiff  ${POSESDIFF_SRCS})
 
 set(VECTOR_SRCS
 	test_main.cpp
 	vectors/VectorsTest.cpp
 )
-#add_gtest( runUnitTestsVector  ${VECTOR_SRCS})
+add_gtest( runUnitTestsVector  ${VECTOR_SRCS})
 
 set(FORCE_SRCS
 	test_main.cpp
 	phys_quant/ForceTest.cpp
 )
-#add_gtest( runUnitTestsForce  ${FORCE_SRCS})
+add_gtest( runUnitTestsForce  ${FORCE_SRCS})
 
 
 # Run all unit tests post-build.
