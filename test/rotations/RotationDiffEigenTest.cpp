@@ -79,11 +79,6 @@ typedef ::testing::Types<
   std::pair<rot::RotationQuaternionPD, rot::RotationQuaternionDiffPD>,
   std::pair<rot::RotationQuaternionPF, rot::RotationQuaternionDiffPF>,
 
-  std::pair<rot::RotationVectorAD, rot::RotationVectorDiffAD>,
-  std::pair<rot::RotationVectorAF, rot::RotationVectorDiffAF>,
-  std::pair<rot::RotationVectorPD, rot::RotationVectorDiffPD>,
-  std::pair<rot::RotationVectorPF, rot::RotationVectorDiffPF>,
-
   std::pair<rot::RotationMatrixAD, rot::RotationMatrixDiffAD>,
   std::pair<rot::RotationMatrixAF, rot::RotationMatrixDiffAF>,
   std::pair<rot::RotationMatrixPD, rot::RotationMatrixDiffPD>,

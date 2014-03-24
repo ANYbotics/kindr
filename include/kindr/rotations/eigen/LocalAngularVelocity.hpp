@@ -234,79 +234,79 @@ class RotationDiffConversionTraits<eigen_impl::LocalAngularVelocity<PrimType_, U
 
 
 
-
-template<typename PrimType_, enum RotationUsage Usage_>
-class RotationDiffConversionTraits<eigen_impl::LocalAngularVelocity<PrimType_, Usage_>, eigen_impl::RotationVectorDiff<PrimType_, Usage_>, eigen_impl::RotationVector<PrimType_, Usage_>> {
- public:
-  inline static eigen_impl::LocalAngularVelocity<PrimType_, Usage_> convert(const eigen_impl::RotationVector<PrimType_, Usage_>& rotationVector, const eigen_impl::RotationVectorDiff<PrimType_, Usage_>& rotationVectorDiff) {
-    typedef typename eigen_impl::RotationVector<PrimType_, Usage_>::Implementation Vector;
-    typedef PrimType_ Scalar;
-    typedef typename Eigen::Matrix<PrimType_, 3, 3> Matrix3x3;
-
-
-    // not tested:
-//    const Vector rv = rotationVector.toImplementation();
-//    const Vector rvDiff = rotationVectorDiff.toImplementation();
-//    const Matrix3x3 rv_hat = linear_algebra::getSkewMatrixFromVector(rv);
-//    const Scalar angle = rv.norm();
-//    const Vector angularVelocity = rvDiff-rv_hat*rvDiff*(1-cos(angle)/(angle*angle)) + rv_hat*rv_hat*rvDiff*((angle-sin(angle))/(angle*angle*angle));
-//    return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(angularVelocity);
-
-    const PrimType_ v = rotationVector.vector().norm();
-    const PrimType_ v1 = rotationVector.x();
-    const PrimType_ v2 = rotationVector.y();
-    const PrimType_ v3 = rotationVector.z();
-    const PrimType_ dv1 = rotationVectorDiff.x();
-    const PrimType_ dv2 = rotationVectorDiff.y();
-    const PrimType_ dv3 = rotationVectorDiff.z();
-
-
-    if (v < common::internal::NumTraits<Scalar>::dummy_precision()) {
-      // small angle
-      const PrimType_ t2 = v3*(1.0/2.0);
-      const PrimType_ t3 = v1*v2*(1.0/4.0);
-      const PrimType_ t4 = v2*(1.0/2.0);
-      const PrimType_ t5 = v1*(1.0/2.0);
-      const PrimType_ t6 = v2*v3*(1.0/4.0);
-      const PrimType_ w1 = dv2*(t2+t3)+dv1*((v1*v1)*(1.0/4.0)+1.0)-dv3*(t4-v1*v3*(1.0/4.0));
-      const PrimType_ w2 = dv3*(t5+t6)+dv2*((v2*v2)*(1.0/4.0)+1.0)-dv1*(t2-t3);
-      const PrimType_ w3 = dv3*((v3*v3)*(1.0/4.0)+1.0)-dv2*(t5-t6)+dv1*(t4+v1*v3*(1.0/4.0));
-      return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(w1, w2, w3);
-//      if (Usage_ == RotationUsage::ACTIVE) {
-//        return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(-w1, -w2, -w3);
-//      }
-//      if (Usage_ == RotationUsage::PASSIVE) {
-//        return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(w1, w2, w3);
-//      }
-    }
-
-    const PrimType_ t2 = 1.0/(v*v*v);
-    const PrimType_ t3 = cos(v);
-    const PrimType_ t4 = sin(v);
-    const PrimType_ t5 = v1*v1;
-    const PrimType_ t6 = v1*v2;
-    const PrimType_ t7 = v*v;
-    const PrimType_ t8 = t4*t7;
-    const PrimType_ t9 = v2*v2;
-    const PrimType_ t10 = v2*v3;
-    const PrimType_ t11 = v1*v3;
-    const PrimType_ t12 = t3*v2;
-    const PrimType_ t13 = v3*v3;
-    const PrimType_ w1 = dv3*t2*(v*(t11+t12-v2)-t4*v1*v3)+dv1*t2*(t8-t4*t5+t5*v)+dv2*t2*(v*(t6+v3-t3*v3)-t4*v1*v2);
-    const PrimType_ w2 = dv1*t2*(v*(t6-v3+t3*v3)-t4*v1*v2)+dv2*t2*(t8-t4*t9+t9*v)+dv3*t2*(v*(t10+v1-t3*v1)-t4*v2*v3);
-    const PrimType_ w3 = dv2*t2*(v*(t10-v1+t3*v1)-t4*v2*v3)+dv1*t2*(v*(t11-t12+v2)-t4*v1*v3)+dv3*t2*(t8-t4*t13+t13*v);
-
-    return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(w1, w2, w3);
-
-//    if (Usage_ == RotationUsage::ACTIVE) {
-//      return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(-w1, -w2, -w3);
-//    }
-//    if (Usage_ == RotationUsage::PASSIVE) {
+//
+//template<typename PrimType_, enum RotationUsage Usage_>
+//class RotationDiffConversionTraits<eigen_impl::LocalAngularVelocity<PrimType_, Usage_>, eigen_impl::RotationVectorDiff<PrimType_, Usage_>, eigen_impl::RotationVector<PrimType_, Usage_>> {
+// public:
+//  inline static eigen_impl::LocalAngularVelocity<PrimType_, Usage_> convert(const eigen_impl::RotationVector<PrimType_, Usage_>& rotationVector, const eigen_impl::RotationVectorDiff<PrimType_, Usage_>& rotationVectorDiff) {
+//    typedef typename eigen_impl::RotationVector<PrimType_, Usage_>::Implementation Vector;
+//    typedef PrimType_ Scalar;
+//    typedef typename Eigen::Matrix<PrimType_, 3, 3> Matrix3x3;
+//
+//
+//    // not tested:
+////    const Vector rv = rotationVector.toImplementation();
+////    const Vector rvDiff = rotationVectorDiff.toImplementation();
+////    const Matrix3x3 rv_hat = linear_algebra::getSkewMatrixFromVector(rv);
+////    const Scalar angle = rv.norm();
+////    const Vector angularVelocity = rvDiff-rv_hat*rvDiff*(1-cos(angle)/(angle*angle)) + rv_hat*rv_hat*rvDiff*((angle-sin(angle))/(angle*angle*angle));
+////    return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(angularVelocity);
+//
+//    const PrimType_ v = rotationVector.vector().norm();
+//    const PrimType_ v1 = rotationVector.x();
+//    const PrimType_ v2 = rotationVector.y();
+//    const PrimType_ v3 = rotationVector.z();
+//    const PrimType_ dv1 = rotationVectorDiff.x();
+//    const PrimType_ dv2 = rotationVectorDiff.y();
+//    const PrimType_ dv3 = rotationVectorDiff.z();
+//
+//
+//    if (v < common::internal::NumTraits<Scalar>::dummy_precision()) {
+//      // small angle
+//      const PrimType_ t2 = v3*(1.0/2.0);
+//      const PrimType_ t3 = v1*v2*(1.0/4.0);
+//      const PrimType_ t4 = v2*(1.0/2.0);
+//      const PrimType_ t5 = v1*(1.0/2.0);
+//      const PrimType_ t6 = v2*v3*(1.0/4.0);
+//      const PrimType_ w1 = dv2*(t2+t3)+dv1*((v1*v1)*(1.0/4.0)+1.0)-dv3*(t4-v1*v3*(1.0/4.0));
+//      const PrimType_ w2 = dv3*(t5+t6)+dv2*((v2*v2)*(1.0/4.0)+1.0)-dv1*(t2-t3);
+//      const PrimType_ w3 = dv3*((v3*v3)*(1.0/4.0)+1.0)-dv2*(t5-t6)+dv1*(t4+v1*v3*(1.0/4.0));
 //      return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(w1, w2, w3);
+////      if (Usage_ == RotationUsage::ACTIVE) {
+////        return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(-w1, -w2, -w3);
+////      }
+////      if (Usage_ == RotationUsage::PASSIVE) {
+////        return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(w1, w2, w3);
+////      }
 //    }
-
-  }
-};
+//
+//    const PrimType_ t2 = 1.0/(v*v*v);
+//    const PrimType_ t3 = cos(v);
+//    const PrimType_ t4 = sin(v);
+//    const PrimType_ t5 = v1*v1;
+//    const PrimType_ t6 = v1*v2;
+//    const PrimType_ t7 = v*v;
+//    const PrimType_ t8 = t4*t7;
+//    const PrimType_ t9 = v2*v2;
+//    const PrimType_ t10 = v2*v3;
+//    const PrimType_ t11 = v1*v3;
+//    const PrimType_ t12 = t3*v2;
+//    const PrimType_ t13 = v3*v3;
+//    const PrimType_ w1 = dv3*t2*(v*(t11+t12-v2)-t4*v1*v3)+dv1*t2*(t8-t4*t5+t5*v)+dv2*t2*(v*(t6+v3-t3*v3)-t4*v1*v2);
+//    const PrimType_ w2 = dv1*t2*(v*(t6-v3+t3*v3)-t4*v1*v2)+dv2*t2*(t8-t4*t9+t9*v)+dv3*t2*(v*(t10+v1-t3*v1)-t4*v2*v3);
+//    const PrimType_ w3 = dv2*t2*(v*(t10-v1+t3*v1)-t4*v2*v3)+dv1*t2*(v*(t11-t12+v2)-t4*v1*v3)+dv3*t2*(t8-t4*t13+t13*v);
+//
+//    return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(w1, w2, w3);
+//
+////    if (Usage_ == RotationUsage::ACTIVE) {
+////      return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(-w1, -w2, -w3);
+////    }
+////    if (Usage_ == RotationUsage::PASSIVE) {
+////      return eigen_impl::LocalAngularVelocity<PrimType_, Usage_>(w1, w2, w3);
+////    }
+//
+//  }
+//};
 
 
 template<typename PrimType_, enum RotationUsage Usage_>

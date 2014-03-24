@@ -247,13 +247,13 @@ class RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_,
 //  }
 //};
 
-template<typename PrimType_, enum RotationUsage Usage_>
-class RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>, eigen_impl::RotationVectorDiff<PrimType_, Usage_>, eigen_impl::RotationQuaternion<PrimType_, Usage_>> {
- public:
-  inline static eigen_impl::RotationQuaternionDiff<PrimType_, Usage_> convert(const eigen_impl::RotationQuaternion<PrimType_, Usage_>& rquat, const eigen_impl::RotationVectorDiff<PrimType_, Usage_>& rotationVectorDiff) {
-    return RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>, eigen_impl::RotationVectorDiff<PrimType_, Usage_>, eigen_impl::RotationVector<PrimType_, Usage_>>::convert(eigen_impl::RotationVector<PrimType_, Usage_>(rquat), rotationVectorDiff);
-  }
-};
+//template<typename PrimType_, enum RotationUsage Usage_>
+//class RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>, eigen_impl::RotationVectorDiff<PrimType_, Usage_>, eigen_impl::RotationQuaternion<PrimType_, Usage_>> {
+// public:
+//  inline static eigen_impl::RotationQuaternionDiff<PrimType_, Usage_> convert(const eigen_impl::RotationQuaternion<PrimType_, Usage_>& rquat, const eigen_impl::RotationVectorDiff<PrimType_, Usage_>& rotationVectorDiff) {
+//    return RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>, eigen_impl::RotationVectorDiff<PrimType_, Usage_>, eigen_impl::RotationVector<PrimType_, Usage_>>::convert(eigen_impl::RotationVector<PrimType_, Usage_>(rquat), rotationVectorDiff);
+//  }
+//};
 
 
 
