@@ -13,7 +13,7 @@ The class kindr::rotations::RotationDiffBase serves as an interface for the time
 
 \subsubsection rdiff_interfaces_otationdiff_type Type of a Time Derivative of a Rotation
 The type of a rotation is defined by 
-  - the \ref rdiff_interfaces_representations "kind of parameterization" (derivative of angle-axis, quaternion, etc.), 
+  - the \ref rdiff_interfaces_representations "kind of parameterization" (derivative of quaternion, rotation matrix, etc.), 
   - the primitive data type of the parameters (float/double, etc.) and
   - the usage type of the rotation (active/passive).
 
@@ -68,17 +68,6 @@ The three components, x, y and z, are stored and can be accessed by
 The class kindr::rotations::LocalAngularVelocityBase defines an interface for a local angular velocity,
 i.e. the angular velocity of a body is expressed in the local, body-fixed frame.
 
-\subsubsection rdiff_interfaces_angleaxisdiff Time Derivative of Angle-Axis
-The class kindr::rotations::AngleAxisDiffBase defines an interface for the time derivative of an angle-axis representation of a rotation:
-
-\f$\boxed{(\dot{\theta}, \dot{\mathbf{n}})}\f$
-
-where \f$\dot{\theta} \in \mathbb{R}\f$ is the time derivative of the rotation angle and \f$\dot{\mathbf{n}} \in \mathbb{R}^3\f$ is the time derivative of the rotation axis.
-
-\subsubsection rdiff_interfaces_rotationvectordiff Time Derivative of Rotation Vector
-The class kindr::rotations::RotationVectorDiffBase defines an interface for the time derivative of a rotation vector representation of a rotation:
-
-\f$\boxed{\dot{\mathbf{\phi}}\in\mathbb{R}^3}\f$
 
 \subsubsection rdiff_interfaces_rotationquaterniondiff Time Derivative of Rotation Quaternion
 The class kindr::rotations::RotationQuaternionDiffBase defines the interface for the time derivative of a Hamiltonian unit quaternion representation of a rotation:
