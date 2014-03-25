@@ -99,7 +99,7 @@ set(Kindr_INCLUDE_DIRS
 ${CMAKE_INSTALL_PREFIX}/include/Kindr/include
 )
 set(Kindr_FOUND TRUE)
-message(\"-- Kindr found (include: ${CMAKE_INSTALL_PREFIX}/include/Kindr/include)\")
+#message(\"-- Kindr found (include: ${CMAKE_INSTALL_PREFIX}/include/Kindr/include)\")
 "
 )
 
