@@ -9,6 +9,8 @@ Author(s): Michael Bloesch, Remo Diethelm, Peter Fankhauser, Paul Furgale, Chris
 
 Date     : 08-Aug-2013
 
+[![Build Status](http://129.132.38.183:8080/job/kindr/badge/icon)](http://129.132.38.183:8080/job/kindr/)
+
 DOCUMENTATION
 -----------------------------------------------------------------
 [Online](http://ethz-asl-lr.bitbucket.org/kindr)
