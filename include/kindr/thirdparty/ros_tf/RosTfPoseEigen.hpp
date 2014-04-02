@@ -26,10 +26,51 @@
  *
 */
 
-#ifndef KINDR_ROSTFEIGEN_HPP_
-#define KINDR_ROSTFEIGEN_HPP_
+#ifndef KINDR_ROSTFPOSEEIGEN_HPP_
+#define KINDR_ROSTFPOSEEIGEN_HPP_
 
-#include "kindr/thirdparty/ros_tf/RosTfPoseEigen.hpp"
+#include "kindr/poses/PoseEigen.hpp"
+#include "kindr/rotations/RotationEigen.hpp"
+#include "kindr/rotations/RotationBase.hpp"
+
+// ROS
+#include <ros/ros.h>
+#include <tf/LinearMath/Transform.h>
+
+namespace kindr {
+namespace poses {
+namespace eigen_impl {
+
+template<typename PrimType_, typename Position_, typename Rotation_>
+static void convertFromRosTf(const tf::Transform& tfTransform, HomogeneousTransformation<PrimType_, Position_, Rotation_>& pose)
+{
+  typedef HomogeneousTransformation<PrimType_, Position_, Rotation_> Pose;
+  typedef Position_ Position;
+  typedef Rotation_ Rotation;
+
+  rotations::eigen_impl::RotationMatrix<PrimType_, rotations::RotationUsage::PASSIVE> rotation;
+
+  const tf::Vector3& rowX = tfTransform.getBasis().getRow(0);
+  const tf::Vector3& rowY = tfTransform.getBasis().getRow(1);
+  const tf::Vector3& rowZ = tfTransform.getBasis().getRow(2);
+
+  rotation.setMatrix(rowX.x(), rowX.y(), rowX.z(),
+                     rowY.x(), rowY.y(), rowY.z(),
+                     rowZ.x(), rowZ.y(), rowZ.z());
+
+  Position position(tfTransform.getOrigin().getX(),
+                    tfTransform.getOrigin().getY(),
+                    tfTransform.getOrigin().getZ());
+
+  pose.getRotation() = Rotation(rotation);
+  pose.getPosition() = position;
+}
 
 
-#endif /* KINDR_ROSTFEIGEN_HPP_ */
+} // namespace eigen_impl
+} // namespace poses
+} // namespace kindr
+
+
+
+#endif /* KINDR_ROSTFPOSEEIGEN_HPP_ */

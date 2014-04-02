@@ -38,6 +38,7 @@ set(ROS_BUILD_TYPE Release)
 add_definitions(-std=c++0x)
 
 find_package(Eigen REQUIRED)
+find_package(ROS REQUIRED)
 
 include_directories(${EIGEN_INCLUDE_DIRS})
 include_directories(../include)
@@ -144,6 +145,12 @@ set(FORCE_SRCS
 	phys_quant/ForceTest.cpp
 )
 add_gtest( runUnitTestsForce  ${FORCE_SRCS})
+
+set(THIRDPARTY_ROSTF_SRCS
+	test_main.cpp
+	thirdparty/ros_tf/RosTfPoseEigenTest.cpp
+)
+add_gtest( runUnitTestsThirdpartyRosTf  ${THIRDPARTY_ROSTF_SRCS})
 
 
 # Run all unit tests post-build.
