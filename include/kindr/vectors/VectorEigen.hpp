@@ -236,6 +236,20 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
     return static_cast<const Implementation&>(*this);
   }
 
+  /*! \brief Cast to Eigen::Matrix<PrimType_, Dimension_, 1>.
+   *  \returns Eigen::Matrix<PrimType_, Dimension_, 1>
+   */
+  inline Implementation& vector() {
+    return static_cast<Implementation&>(*this);
+  }
+
+  /*! \brief Cast to Eigen::Matrix<PrimType_, Dimension_, 1>.
+   *  \returns Eigen::Matrix<PrimType_, Dimension_, 1>
+   */
+  inline const Implementation& vector() const {
+    return static_cast<const Implementation&>(*this);
+  }
+
   /*! \brief Addition of two vectors.
    * \param other   other vector
    * \returns sum
