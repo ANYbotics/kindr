@@ -146,12 +146,13 @@ set(FORCE_SRCS
 )
 add_gtest( runUnitTestsForce  ${FORCE_SRCS})
 
-set(THIRDPARTY_ROS_SRCS
-	test_main.cpp
-	thirdparty/ros/RosTfPoseEigenTest.cpp
-)
-add_gtest( runUnitTestsThirdpartyRos  ${THIRDPARTY_ROS_SRCS})
-
+IF (ROS_FOUND)
+    set(THIRDPARTY_ROS_SRCS
+    	test_main.cpp
+    	thirdparty/ros/RosTfPoseEigenTest.cpp
+    )
+    add_gtest( runUnitTestsThirdpartyRos  ${THIRDPARTY_ROS_SRCS})
+ENDIF (ROS_FOUND)
 
 # Run all unit tests post-build.
 add_custom_target(run_tests ALL
