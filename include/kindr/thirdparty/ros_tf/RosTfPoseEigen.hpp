@@ -48,12 +48,14 @@ static void convertFromRosTf(const tf::Transform& tfTransform, HomogeneousTransf
   typedef Position_ Position;
   typedef Rotation_ Rotation;
 
-  rotations::eigen_impl::RotationMatrix<PrimType_, rotations::RotationUsage::PASSIVE> rotation;
+  // This is the definition of TF.
+  typedef rotations::eigen_impl::RotationMatrix<double, rotations::RotationUsage::PASSIVE> RotationMatrixTfLike;
 
   const tf::Vector3& rowX = tfTransform.getBasis().getRow(0);
   const tf::Vector3& rowY = tfTransform.getBasis().getRow(1);
   const tf::Vector3& rowZ = tfTransform.getBasis().getRow(2);
 
+  RotationMatrixTfLike rotation;
   rotation.setMatrix(rowX.x(), rowX.y(), rowX.z(),
                      rowY.x(), rowY.y(), rowY.z(),
                      rowZ.x(), rowZ.y(), rowZ.z());
@@ -64,6 +66,27 @@ static void convertFromRosTf(const tf::Transform& tfTransform, HomogeneousTransf
 
   pose.getRotation() = Rotation(rotation);
   pose.getPosition() = position;
+}
+
+template<typename PrimType_, typename Position_, typename Rotation_>
+static void convertToRosTf(const HomogeneousTransformation<PrimType_, Position_, Rotation_>& pose, tf::Transform& tfTransform)
+{
+  typedef HomogeneousTransformation<PrimType_, Position_, Rotation_> Pose;
+  typedef Position_ Position;
+  typedef Rotation_ Rotation;
+
+  // This is the definition of TF.
+  typedef rotations::eigen_impl::RotationMatrix<double, rotations::RotationUsage::PASSIVE> RotationMatrixTfLike;
+
+  Eigen::Matrix3d rotationMatrix(RotationMatrixTfLike(pose.getRotation()).matrix());
+  tf::Matrix3x3 tfRotationMatrix(rotationMatrix(0,0), rotationMatrix(0,1), rotationMatrix(0,2),
+                                 rotationMatrix(1,0), rotationMatrix(1,1), rotationMatrix(1,2),
+                                 rotationMatrix(2,0), rotationMatrix(2,1), rotationMatrix(2,2));
+  tfTransform.setBasis(tfRotationMatrix);
+
+  tfTransform.setOrigin(tf::Vector3(pose.getPosition().x(),
+                                    pose.getPosition().y(),
+                                    pose.getPosition().z()));
 }
 
 
