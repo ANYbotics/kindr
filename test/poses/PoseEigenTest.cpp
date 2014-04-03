@@ -99,4 +99,12 @@ TYPED_TEST(HomogeneousTransformationTest, testSetIdentity)
   ASSERT_EQ(test.getRotation().z(), 0);
 }
 
+TYPED_TEST(HomogeneousTransformationTest, testGenericRotateVectorCompilable)
+{
+  pose::HomogeneousTransformationPosition3RotationQuaternionD test(pos::Position3D(1,2,3),rot::RotationQuaternionPD(rot::AngleAxisPD(0.5,1.0,0,0)));
+
+  pos::Velocity3D vel(-1,2,3);
+  test.getRotation().rotate(vel);
+}
+
 
