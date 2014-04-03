@@ -29,7 +29,7 @@
 #ifndef KINDR_ROSTFEIGEN_HPP_
 #define KINDR_ROSTFEIGEN_HPP_
 
-#include "kindr/thirdparty/ros_tf/RosTfPoseEigen.hpp"
+#include "kindr/thirdparty/ros/RosTfPoseEigen.hpp"
 
 
 #endif /* KINDR_ROSTFEIGEN_HPP_ */

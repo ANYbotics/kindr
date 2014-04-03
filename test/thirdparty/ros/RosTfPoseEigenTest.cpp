@@ -32,7 +32,7 @@
 
 #include <gtest/gtest.h>
 
-#include "kindr/thirdparty/ros_tf/RosTfPoseEigen.hpp"
+#include "kindr/thirdparty/ros/RosTfPoseEigen.hpp"
 #include "kindr/poses/PoseEigen.hpp"
 #include "kindr/rotations/RotationEigen.hpp"
 #include "kindr/rotations/RotationBase.hpp"
