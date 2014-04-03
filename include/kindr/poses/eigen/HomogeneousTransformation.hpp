@@ -92,7 +92,14 @@ class HomogeneousTransformation : public HomogeneousTransformationBase<Homogeneo
     return out;
   }
 
-
+  /*! \brief Sets the pose to identity
+   *  \returns reference
+   */
+  HomogeneousTransformation& setIdentity() {
+    Position::setZero();
+    Rotation::setIdentity();
+    return *this;
+  }
 };
 
 template<typename PrimType_>

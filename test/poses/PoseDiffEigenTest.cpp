@@ -76,4 +76,22 @@ TYPED_TEST(TwistTest, testInitial)
   std::cout << twist.getVector(rot) << std::endl;
 }
 
+TYPED_TEST(TwistTest, testSetZero)
+{
+  typedef typename TestFixture::PoseDiff PoseDiff;
+
+  PoseDiff twist(typename PoseDiff::PositionDiff(0.1, 0.2, 0.3), typename PoseDiff::RotationDiff(1, 2, 3, 4));
+
+  twist.setZero();
+
+  ASSERT_EQ(twist.getTranslationalVelocity().vector().x(), 0);
+  ASSERT_EQ(twist.getTranslationalVelocity().vector().y(), 0);
+  ASSERT_EQ(twist.getTranslationalVelocity().vector().z(), 0);
+
+  ASSERT_EQ(twist.getRotationalVelocity().w(), 0);
+  ASSERT_EQ(twist.getRotationalVelocity().x(), 0);
+  ASSERT_EQ(twist.getRotationalVelocity().y(), 0);
+  ASSERT_EQ(twist.getRotationalVelocity().z(), 0);
+}
+
 

@@ -92,7 +92,14 @@ class Twist : public TwistBase<Twist<PrimType_, PositionDiff_, RotationDiff_>>, 
     return out;
   }
 
-
+  /*! \brief Sets twist to zero
+   *  \returns reference
+   */
+  Twist& setZero() {
+    PositionDiff::setZero();
+    RotationDiff::setZero();
+    return *this;
+  }
 };
 
 template<typename PrimType_>

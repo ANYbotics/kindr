@@ -95,8 +95,10 @@ class PoseDiffBase {
     return static_cast<const Derived_&>(*this);
   }
 
-
-
+  /*! \brief Sets twist to zero
+   *  \returns reference
+   */
+  Derived_& setZero();
 };
 
 /*! \class TwistBase
