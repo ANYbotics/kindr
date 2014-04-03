@@ -132,7 +132,10 @@ class PoseBase {
     return internal::TransformationTraits<Derived_>::inverseTransform(this->derived(), position);
   }
 
-
+  /*! \brief Sets the pose to identity
+   *  \returns reference
+   */
+  Derived_& setIdentity();
 };
 
 /*! \class HomogeneousTransformationBase
