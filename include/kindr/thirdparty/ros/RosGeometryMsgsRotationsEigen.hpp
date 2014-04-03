@@ -26,11 +26,44 @@
  *
 */
 
-#ifndef KINDR_ROSTFEIGEN_HPP_
-#define KINDR_ROSTFEIGEN_HPP_
+#ifndef KINDR_ROSGEOMETRYMSGSEIGEN_HPP_
+#define KINDR_ROSGEOMETRYMSGSEIGEN_HPP_
 
-#include "kindr/thirdparty/ros/RosTfPoseEigen.hpp"
-#include "kindr/thirdparty/ros/RosGeometryMsgsPhysicalQuantitiesEigen.hpp"
-#include "kindr/thirdparty/ros/RosGeometryMsgsRotationsEigen.hpp"
+#include "kindr/rotations/RotationEigen.hpp"
+#include "kindr/rotations/RotationBase.hpp"
 
-#endif /* KINDR_ROSTFEIGEN_HPP_ */
+// ROS
+#include <ros/ros.h>
+#include <geometry_msgs/Quaternion.h>
+
+namespace kindr {
+namespace rotations {
+namespace eigen_impl {
+
+template<typename PrimType_>
+static void convertFromRosTf(const geometry_msgs::Quaternion& geometryQuaternionMsg,
+                             RotationQuaternion<PrimType_, rotations::RotationUsage::PASSIVE>& rotationQuaternion)
+{
+  rotationQuaternion.w() = static_cast<PrimType_>(geometryQuaternionMsg.w);
+  rotationQuaternion.x() = static_cast<PrimType_>(geometryQuaternionMsg.x);
+  rotationQuaternion.y() = static_cast<PrimType_>(geometryQuaternionMsg.y);
+  rotationQuaternion.z() = static_cast<PrimType_>(geometryQuaternionMsg.z);
+}
+
+template<typename PrimType_>
+static void convertToRosTf(const RotationQuaternion<PrimType_, rotations::RotationUsage::PASSIVE>& rotationQuaternion,
+                           geometry_msgs::Quaternion& geometryQuaternionMsg)
+{
+  geometryQuaternionMsg.w = static_cast<double>(rotationQuaternion.w());
+  geometryQuaternionMsg.x = static_cast<double>(rotationQuaternion.x());
+  geometryQuaternionMsg.y = static_cast<double>(rotationQuaternion.y());
+  geometryQuaternionMsg.z = static_cast<double>(rotationQuaternion.z());
+}
+
+} // namespace eigen_impl
+} // namespace rotations
+} // namespace kindr
+
+
+
+#endif /* KINDR_ROSGEOMETRYMSGSEIGEN_HPP_ */
