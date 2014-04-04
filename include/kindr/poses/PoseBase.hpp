@@ -121,18 +121,21 @@ class PoseBase {
   /*! \brief Transforms a position.
    *  \returns the transformed position
    */
-  typename internal::get_position<Derived_>::Position transform(typename internal::get_position<Derived_>::Position& position) const {
+  typename internal::get_position<Derived_>::Position transform(const typename internal::get_position<Derived_>::Position& position) const {
     return internal::TransformationTraits<Derived_>::transform(this->derived(), position);
   }
 
   /*! \brief Transforms a position in reverse
    *  \returns the transformed position
    */
-  typename internal::get_position<Derived_>::Position inverseTransform(typename internal::get_position<Derived_>::Position& position) const {
+  typename internal::get_position<Derived_>::Position inverseTransform(const typename internal::get_position<Derived_>::Position& position) const {
     return internal::TransformationTraits<Derived_>::inverseTransform(this->derived(), position);
   }
 
-
+  /*! \brief Sets the pose to identity
+   *  \returns reference
+   */
+  Derived_& setIdentity();
 };
 
 /*! \class HomogeneousTransformationBase

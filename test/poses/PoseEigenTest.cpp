@@ -83,4 +83,28 @@ TEST(PosesTest, testInitial)
   std::cout << "pose1: " << pose1 << std::endl;
 }
 
+TYPED_TEST(HomogeneousTransformationTest, testSetIdentity)
+{
+  pose::HomogeneousTransformationPosition3RotationQuaternionD test(pos::Position3D(1,2,3),rot::RotationQuaternionPD(rot::AngleAxisPD(0.5,1.0,0,0)));
+
+  test.setIdentity();
+
+  ASSERT_EQ(test.getPosition().vector().x(), 0);
+  ASSERT_EQ(test.getPosition().vector().y(), 0);
+  ASSERT_EQ(test.getPosition().vector().z(), 0);
+
+  ASSERT_EQ(test.getRotation().w(), 1);
+  ASSERT_EQ(test.getRotation().x(), 0);
+  ASSERT_EQ(test.getRotation().y(), 0);
+  ASSERT_EQ(test.getRotation().z(), 0);
+}
+
+TYPED_TEST(HomogeneousTransformationTest, testGenericRotateVectorCompilable)
+{
+  pose::HomogeneousTransformationPosition3RotationQuaternionD test(pos::Position3D(1,2,3),rot::RotationQuaternionPD(rot::AngleAxisPD(0.5,1.0,0,0)));
+
+  pos::Velocity3D vel(-1,2,3);
+  test.getRotation().rotate(vel);
+}
+
 
