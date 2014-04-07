@@ -31,7 +31,6 @@
 
 #include "kindr/poses/PoseEigen.hpp"
 #include "kindr/rotations/RotationEigen.hpp"
-#include "kindr/rotations/RotationBase.hpp"
 
 // ROS
 #include <ros/ros.h>
@@ -71,10 +70,6 @@ static void convertFromRosTf(const tf::Transform& tfTransform, HomogeneousTransf
 template<typename PrimType_, typename Position_, typename Rotation_>
 static void convertToRosTf(const HomogeneousTransformation<PrimType_, Position_, Rotation_>& pose, tf::Transform& tfTransform)
 {
-  typedef HomogeneousTransformation<PrimType_, Position_, Rotation_> Pose;
-  typedef Position_ Position;
-  typedef Rotation_ Rotation;
-
   // This is the definition of TF.
   typedef rotations::eigen_impl::RotationMatrix<double, rotations::RotationUsage::PASSIVE> RotationMatrixTfLike;
 

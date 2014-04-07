@@ -26,8 +26,8 @@
  *
 */
 
-#ifndef KINDR_ROSGEOMETRYMSGSEIGEN_HPP_
-#define KINDR_ROSGEOMETRYMSGSEIGEN_HPP_
+#ifndef KINDR_ROSGEOMETRYMSGPHYSICALQUANTITIESEIGEN_HPP_
+#define KINDR_ROSGEOMETRYMSGPHYSICALQUANTITIESEIGEN_HPP_
 
 #include "kindr/phys_quant/PhysicalQuantitiesEigen.hpp"
 
@@ -41,58 +41,62 @@ namespace kindr {
 namespace phys_quant {
 namespace eigen_impl {
 
-template<typename PrimType_>
+template<enum phys_quant::PhysicalType PhysicalType_, typename PrimType_>
 static void convertFromRosGeometryMsg(const geometry_msgs::Vector3& geometryVector3Msg,
-                                      VectorTypeless<PrimType_, 3>& typelessVector)
+                                      vectors::eigen_impl::Vector<PhysicalType_, PrimType_, 3>& vector)
 {
-  typelessVector.x() = static_cast<double>(geometryVector3Msg.x);
-  typelessVector.y() = static_cast<double>(geometryVector3Msg.y);
-  typelessVector.z() = static_cast<double>(geometryVector3Msg.z);
+  vector.x() = static_cast<PrimType_>(geometryVector3Msg.x);
+  vector.y() = static_cast<PrimType_>(geometryVector3Msg.y);
+  vector.z() = static_cast<PrimType_>(geometryVector3Msg.z);
 }
 
-template<typename PrimType_>
-static void convertToRosGeometryMsg(const VectorTypeless<PrimType_, 3>& typelessVector,
+template<enum phys_quant::PhysicalType PhysicalType_, typename PrimType_>
+static void convertToRosGeometryMsg(const vectors::eigen_impl::Vector<PhysicalType_, PrimType_, 3>& vector,
                                     geometry_msgs::Vector3& geometryVector3Msg)
 {
-  geometryVector3Msg.x = static_cast<double>(typelessVector.x());
-  geometryVector3Msg.y = static_cast<double>(typelessVector.y());
-  geometryVector3Msg.z = static_cast<double>(typelessVector.z());
+  geometryVector3Msg.x = static_cast<double>(vector.x());
+  geometryVector3Msg.y = static_cast<double>(vector.y());
+  geometryVector3Msg.z = static_cast<double>(vector.z());
 }
 
+template <typename PrimType_>
 static void convertFromRosGeometryMsg(const geometry_msgs::Point32& geometryPoint32Msg,
-                                      Position3F& position)
+                                      Position<PrimType_, 3>& position)
 {
-  position.x() = geometryPoint32Msg.x;
-  position.y() = geometryPoint32Msg.y;
-  position.z() = geometryPoint32Msg.z;
+  position.x() = static_cast<PrimType_>(geometryPoint32Msg.x);
+  position.y() = static_cast<PrimType_>(geometryPoint32Msg.y);
+  position.z() = static_cast<PrimType_>(geometryPoint32Msg.z);
 }
 
-static void convertToRosGeometryMsg(const Position3F& position,
+template <typename PrimType_>
+static void convertToRosGeometryMsg(const Position<PrimType_, 3>& position,
                                     geometry_msgs::Point32& geometryPoint32Msg)
 {
-  geometryPoint32Msg.x = position.x();
-  geometryPoint32Msg.y = position.y();
-  geometryPoint32Msg.z = position.z();
+  geometryPoint32Msg.x = static_cast<float>(position.x());
+  geometryPoint32Msg.y = static_cast<float>(position.y());
+  geometryPoint32Msg.z = static_cast<float>(position.z());
 }
 
-static void convertFromRosGeometryMsg(const geometry_msgs::Point& geometryPoint32Msg,
-                                      Position3D& position)
+template <typename PrimType_>
+static void convertFromRosGeometryMsg(const geometry_msgs::Point& geometryPointMsg,
+                                      Position<PrimType_, 3>& position)
 {
-  position.x() = geometryPoint32Msg.x;
-  position.y() = geometryPoint32Msg.y;
-  position.z() = geometryPoint32Msg.z;
+  position.x() = static_cast<PrimType_>(geometryPointMsg.x);
+  position.y() = static_cast<PrimType_>(geometryPointMsg.y);
+  position.z() = static_cast<PrimType_>(geometryPointMsg.z);
 }
 
-static void convertToRosGeometryMsg(const Position3D& position,
-                                    geometry_msgs::Point& geometryPoint32Msg)
+template <typename PrimType_>
+static void convertToRosGeometryMsg(const Position<PrimType_, 3>& position,
+                                    geometry_msgs::Point& geometryPointMsg)
 {
-  geometryPoint32Msg.x = position.x();
-  geometryPoint32Msg.y = position.y();
-  geometryPoint32Msg.z = position.z();
+  geometryPointMsg.x = static_cast<double>(position.x());
+  geometryPointMsg.y = static_cast<double>(position.y());
+  geometryPointMsg.z = static_cast<double>(position.z());
 }
 
 } // namespace phys_quant
 } // namespace eigen_impl
 } // namespace kindr
 
-#endif /* KINDR_ROSGEOMETRYMSGSEIGEN_HPP_ */
+#endif /* KINDR_ROSGEOMETRYMSGPHYSICALQUANTITIESEIGEN_HPP_ */

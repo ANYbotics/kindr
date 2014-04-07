@@ -150,6 +150,9 @@ IF (ROS_FOUND)
     set(THIRDPARTY_ROS_SRCS
     	test_main.cpp
     	thirdparty/ros/RosTfPoseEigenTest.cpp
+    	thirdparty/ros/RosGeometryMsgPoseEigenTest.cpp
+    	thirdparty/ros/RosGeometryMsgRotationEigenTest.cpp
+    	thirdparty/ros/RosGeometryMsgPhysicalQuantitiesEigenTest.cpp
     )
     add_gtest( runUnitTestsThirdpartyRos  ${THIRDPARTY_ROS_SRCS})
 ENDIF (ROS_FOUND)

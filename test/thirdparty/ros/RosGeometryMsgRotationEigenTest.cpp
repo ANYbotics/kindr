@@ -26,44 +26,50 @@
  *
 */
 
-#ifndef KINDR_ROSGEOMETRYMSGSEIGEN_HPP_
-#define KINDR_ROSGEOMETRYMSGSEIGEN_HPP_
+#include <iostream>
 
-#include "kindr/rotations/RotationEigen.hpp"
-#include "kindr/rotations/RotationBase.hpp"
+#include <Eigen/Core>
+
+#include <gtest/gtest.h>
+
+#include "kindr/thirdparty/ros/RosGeometryMsgRotationEigen.hpp"
+#include "kindr/poses/PoseEigen.hpp"
+#include "kindr/common/gtest_eigen.hpp"
 
 // ROS
 #include <ros/ros.h>
 #include <geometry_msgs/Quaternion.h>
 
-namespace kindr {
-namespace rotations {
-namespace eigen_impl {
+namespace rot = kindr::rotations::eigen_impl;
+namespace common = kindr::common::eigen;
 
-template<typename PrimType_>
-static void convertFromRosTf(const geometry_msgs::Quaternion& geometryQuaternionMsg,
-                             RotationQuaternion<PrimType_, rotations::RotationUsage::PASSIVE>& rotationQuaternion)
+TEST(RosGeometryMsgRotationQuaternionEigen, convertFromRosGeometryMsg)
 {
-  rotationQuaternion.w() = static_cast<PrimType_>(geometryQuaternionMsg.w);
-  rotationQuaternion.x() = static_cast<PrimType_>(geometryQuaternionMsg.x);
-  rotationQuaternion.y() = static_cast<PrimType_>(geometryQuaternionMsg.y);
-  rotationQuaternion.z() = static_cast<PrimType_>(geometryQuaternionMsg.z);
+  const rot::RotationQuaternionPD referenceQuaternion(0.113, 0.071, -0.924, 0.358);
+
+  geometry_msgs::Quaternion geometryQuaternionMsg;
+  geometryQuaternionMsg.x = referenceQuaternion.x();
+  geometryQuaternionMsg.y = referenceQuaternion.y();
+  geometryQuaternionMsg.z = referenceQuaternion.z();
+  geometryQuaternionMsg.w = referenceQuaternion.w();
+
+  rot::RotationQuaternionPD rotationQuaternion;
+  rot::convertFromRosGeometryMsg(geometryQuaternionMsg, rotationQuaternion);
+
+  EXPECT_TRUE(rotationQuaternion.isNear(referenceQuaternion, 1e-8));
 }
 
-template<typename PrimType_>
-static void convertToRosTf(const RotationQuaternion<PrimType_, rotations::RotationUsage::PASSIVE>& rotationQuaternion,
-                           geometry_msgs::Quaternion& geometryQuaternionMsg)
+TEST(RosGeometryMsgRotationQuaternionEigen, convertToRosGeometryMsg)
 {
-  geometryQuaternionMsg.w = static_cast<double>(rotationQuaternion.w());
-  geometryQuaternionMsg.x = static_cast<double>(rotationQuaternion.x());
-  geometryQuaternionMsg.y = static_cast<double>(rotationQuaternion.y());
-  geometryQuaternionMsg.z = static_cast<double>(rotationQuaternion.z());
+  const rot::RotationQuaternionPD referenceQuaternion(0.212, 0.0421, -0.958, 0.186);
+
+  rot::RotationQuaternionPD rotationQuaternion(referenceQuaternion);
+
+  geometry_msgs::Quaternion geometryQuaternionMsg;
+  rot::convertToRosGeometryMsg(rotationQuaternion, geometryQuaternionMsg);
+
+  EXPECT_NEAR(geometryQuaternionMsg.x, referenceQuaternion.x(), 1e-8);
+  EXPECT_NEAR(geometryQuaternionMsg.y, referenceQuaternion.y(), 1e-8);
+  EXPECT_NEAR(geometryQuaternionMsg.z, referenceQuaternion.z(), 1e-8);
+  EXPECT_NEAR(geometryQuaternionMsg.w, referenceQuaternion.w(), 1e-8);
 }
-
-} // namespace eigen_impl
-} // namespace rotations
-} // namespace kindr
-
-
-
-#endif /* KINDR_ROSGEOMETRYMSGSEIGEN_HPP_ */
