@@ -17,9 +17,9 @@ IF (ROS_FOUND)
       MESSAGE(STATUS "Found ROS")
    ENDIF (NOT ROS_FIND_QUIETLY)
 ELSE (ROS_FOUND)
-   # fatal error if ROS is required but not found
+   # warning if ROS is required but not found
    IF (ROS_FIND_REQUIRED)
-      MESSAGE(FATAL_ERROR "Could not find ROS")
+      MESSAGE(WARNING "Could not find ROS")
    ENDIF (ROS_FIND_REQUIRED)
 ENDIF (ROS_FOUND)
 
