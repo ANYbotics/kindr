@@ -169,9 +169,9 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
   /*!\brief Get a segment of the vector (copy)
    * \returns a segment of the vector (copy)
    */
-  template<int Start_, int DimensionOutput_>
-  Vector<PhysicalType_, PrimType_, DimensionOutput_> segment() const {
-    return Vector<PhysicalType_, PrimType_, DimensionOutput_>(this->toImplementation().segment<DimensionOutput_>(Start_));
+  template<int DimensionOutput_>
+  Vector<PhysicalType_, PrimType_, DimensionOutput_> segment(int start) const {
+    return Vector<PhysicalType_, PrimType_, DimensionOutput_>(this->toImplementation().segment<DimensionOutput_>(start));
   }
 
   /*!\brief Get x-coordinate of the vector (copy)
