@@ -60,6 +60,11 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
   /*! \brief The base type.
    */
   typedef VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> > Base;
+
+  /*! \brief The size if the vector has dynamic dimension (must be equal to Eigen::Dynamic).
+   */
+  static constexpr int DynamicDimension = -1;
+
  public:
   /*! \brief The implementation type.
    *
@@ -158,12 +163,26 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
     return Vector<PhysicalType_, PrimType_, DimensionOutput_>(this->toImplementation().head<DimensionOutput_>());
   }
 
+  /*!\brief Get the head of the vector (copy)
+   * \returns the head of the vector (copy)
+   */
+  Vector<PhysicalType_, PrimType_, DynamicDimension> head(int length) const {
+    return Vector<PhysicalType_, PrimType_, DynamicDimension>(this->toImplementation().head(length));
+  }
+
   /*!\brief Get the tail of the vector (copy)
    * \returns the tail of the vector (copy)
    */
   template<int DimensionOutput_>
   Vector<PhysicalType_, PrimType_, DimensionOutput_> tail() const {
     return Vector<PhysicalType_, PrimType_, DimensionOutput_>(this->toImplementation().tail<DimensionOutput_>());
+  }
+
+  /*!\brief Get the tail of the vector (copy)
+   * \returns the tail of the vector (copy)
+   */
+  Vector<PhysicalType_, PrimType_, DynamicDimension> tail(int length) const {
+    return Vector<PhysicalType_, PrimType_, DynamicDimension>(this->toImplementation().tail(length));
   }
 
   /*!\brief Get a segment of the vector (copy)

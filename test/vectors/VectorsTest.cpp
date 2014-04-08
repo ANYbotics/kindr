@@ -331,10 +331,14 @@ TYPED_TEST(VectorTest, testVector)
   ASSERT_EQ(headAndTailResult(0), headAndTailVector(0));
   ASSERT_EQ(headAndTailResult(1), headAndTailVector(1));
 
+  auto tailVectorTest(vector1FromEigen2.head(2));
+  auto headVectorTest(vector1FromEigen2.tail(2));
+  auto sumVectorTest = tailVectorTest + headVectorTest;
+
   // segment
   EigenVector vec12(this->vec1);
   auto segmentResult(vec12.block(1,0,3,1));
-  auto segmentVector(vector1FromEigen2.template segment<1>(3));
+  auto segmentVector(vector1FromEigen2.template segment<3>(1));
   ASSERT_EQ(segmentResult(0), segmentVector(0));
   ASSERT_EQ(segmentResult(1), segmentVector(1));
   ASSERT_EQ(segmentResult(2), segmentVector(2));
