@@ -155,7 +155,7 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
    */
   template<int DimensionOutput_>
   Vector<PhysicalType_, PrimType_, DimensionOutput_> head() const {
-    return Vector<PhysicalType_, PrimType_, DimensionOutput_>(this->toImplementation().head(DimensionOutput_));
+    return Vector<PhysicalType_, PrimType_, DimensionOutput_>(this->toImplementation().head<DimensionOutput_>());
   }
 
   /*!\brief Get the tail of the vector (copy)
@@ -163,7 +163,7 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
    */
   template<int DimensionOutput_>
   Vector<PhysicalType_, PrimType_, DimensionOutput_> tail() const {
-    return Vector<PhysicalType_, PrimType_, DimensionOutput_>(this->toImplementation().tail(DimensionOutput_));
+    return Vector<PhysicalType_, PrimType_, DimensionOutput_>(this->toImplementation().tail<DimensionOutput_>());
   }
 
   /*!\brief Get a segment of the vector (copy)
@@ -171,7 +171,7 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
    */
   template<int Start_, int DimensionOutput_>
   Vector<PhysicalType_, PrimType_, DimensionOutput_> segment() const {
-    return Vector<PhysicalType_, PrimType_, DimensionOutput_>(this->toImplementation().block(Start_,0,DimensionOutput_,1)); // todo: use templated block()
+    return Vector<PhysicalType_, PrimType_, DimensionOutput_>(this->toImplementation().segment<DimensionOutput_>(Start_));
   }
 
   /*!\brief Get x-coordinate of the vector (copy)
