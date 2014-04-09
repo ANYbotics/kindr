@@ -152,19 +152,19 @@ class VectorBase {
    * \returns the head of the vector (copy)
    */
   template<typename Output_, int DimensionOutput_>
-  Output_ head() const;
+  Output_ getHead() const;
 
   /*!\brief Get the tail of the vector (copy)
    * \returns the tail of the vector (copy)
    */
   template<typename Output_, int DimensionOutput_>
-  Output_ tail() const;
+  Output_ getTail() const;
 
   /*!\brief Get a segment of the vector (copy)
    * \returns a segment of the vector (copy)
    */
   template<typename Output_, int Start_, int DimensionOutput_>
-  Output_ segment() const;
+  Output_ getSegment() const;
 
   /*! \brief Addition of two vectors.
    * \param other   other vector

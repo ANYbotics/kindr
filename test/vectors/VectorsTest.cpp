@@ -86,8 +86,8 @@ struct VectorTest: public ::testing::Test {
 typedef ::testing::Types<
     vectors::Vector<kindr::phys_quant::PhysicalType::Typeless, double, 5>,
     vectors::Vector<kindr::phys_quant::PhysicalType::Typeless, float,  5>,
-    vectors::Vector<kindr::phys_quant::PhysicalType::Force, double, 5>,
-    vectors::Vector<kindr::phys_quant::PhysicalType::Force, float,  5>,
+    vectors::Vector<kindr::phys_quant::PhysicalType::Force,    double, 5>,
+    vectors::Vector<kindr::phys_quant::PhysicalType::Force,    float,  5>,
     vectors::Vector<kindr::phys_quant::PhysicalType::Position, double, 5>,
     vectors::Vector<kindr::phys_quant::PhysicalType::Position, float,  5>
 > Types5;
@@ -106,8 +106,8 @@ TYPED_TEST(VectorTest, testVector)
   // vector typedefs (dimension 3)
   typedef Eigen::Matrix<double, 3, 1> EigenVector3;
   typedef vectors::Vector<kindr::phys_quant::PhysicalType::Position, double, 3> Length3d;
-  typedef vectors::Vector<kindr::phys_quant::PhysicalType::Force, double, 3> Force3d;
-  typedef vectors::Vector<kindr::phys_quant::PhysicalType::Torque, double, 3> Torque3d;
+  typedef vectors::Vector<kindr::phys_quant::PhysicalType::Force,    double, 3> Force3d;
+  typedef vectors::Vector<kindr::phys_quant::PhysicalType::Torque,   double, 3> Torque3d;
 
   // default constructor
   ASSERT_EQ(this->vectorDefault(0), this->vecZero(0)) << "Default constructor needs to initialize component 1 to zero!";
@@ -324,21 +324,40 @@ TYPED_TEST(VectorTest, testVector)
   ASSERT_EQ(elementwiseDivisionVector(3), this->vec1(3)/this->vec2(3));
   ASSERT_EQ(elementwiseDivisionVector(4), this->vec1(4)/this->vec2(4));
 
-  // head & tail
+  // head & tail 1
   auto headAndTailResult(this->vec1.head(2) + this->vec1.tail(2));
   Vector vector1FromEigen2(this->vector1FromEigen);
-  auto headAndTailVector(vector1FromEigen2.template head<2>() + vector1FromEigen2.template tail<2>());
+  auto headAndTailVector(vector1FromEigen2.template getHead<2>() + vector1FromEigen2.template getTail<2>());
   ASSERT_EQ(headAndTailResult(0), headAndTailVector(0));
   ASSERT_EQ(headAndTailResult(1), headAndTailVector(1));
 
-  auto tailVectorTest(vector1FromEigen2.head(2));
-  auto headVectorTest(vector1FromEigen2.tail(2));
-  auto sumVectorTest = tailVectorTest + headVectorTest;
+  // head & tail 2
+  typedef vectors::Vector<kindr::phys_quant::PhysicalType::Position, double, 6> Length6d;
+  typedef vectors::Vector<kindr::phys_quant::PhysicalType::Position, double, 2> Length2d;
+  typedef vectors::Vector<kindr::phys_quant::PhysicalType::Position, double, -1> LengthDynd;
+  Eigen::Matrix<double, 6, 1> length6dEigen;
+  length6dEigen << 1,2,3,4,5,6;
+  Length6d length6d(length6dEigen);
+  Length2d headVectorTest(length6d.getHead<2>());
+  Length2d tailVectorTest(length6d.getTail<2>());
+  Length2d sumVectorTest = tailVectorTest + headVectorTest;
+  LengthDynd headVectorTestDyn(length6d.getHead(2));
+  LengthDynd tailVectorTestDyn(length6d.getTail(2));
+  LengthDynd sumVectorTestDyn = tailVectorTestDyn + headVectorTestDyn;
+  LengthDynd sumVectorTestDyn2 = tailVectorTest + headVectorTest;
+  length6d.setHead(tailVectorTest);
+  length6d.setTail(headVectorTest);
+  ASSERT_EQ(length6d(0), 5);
+  ASSERT_EQ(length6d(1), 6);
+  ASSERT_EQ(length6d(2), 3);
+  ASSERT_EQ(length6d(3), 4);
+  ASSERT_EQ(length6d(4), 1);
+  ASSERT_EQ(length6d(5), 2);
 
   // segment
   EigenVector vec12(this->vec1);
   auto segmentResult(vec12.block(1,0,3,1));
-  auto segmentVector(vector1FromEigen2.template segment<3>(1));
+  auto segmentVector(vector1FromEigen2.template getSegment<3>(1));
   ASSERT_EQ(segmentResult(0), segmentVector(0));
   ASSERT_EQ(segmentResult(1), segmentVector(1));
   ASSERT_EQ(segmentResult(2), segmentVector(2));
