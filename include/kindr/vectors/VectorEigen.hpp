@@ -80,17 +80,25 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
    */
   static constexpr int Dimension = Dimension_;
 
-  /*! \brief Default constructor initializes all coordinates of the vector with zero.
+  /*! \brief Default constructor for static sized vectors which initializes all components with zero.
    */
-  Vector()
+  template<int DimensionCopy_ = Dimension_>
+  Vector(typename std::enable_if<DimensionCopy_ != DynamicDimension>::type* = nullptr)
     : Implementation(Implementation::Zero()) {
   }
 
-  /*! \brief Constructor using other vector without physical type.
+  /*! \brief Default constructor for dynamic sized vectors.
+   */
+  template<int DimensionCopy_ = Dimension_>
+  Vector(typename std::enable_if<DimensionCopy_ == DynamicDimension>::type* = nullptr)
+    : Implementation() {
+  }
+
+  /*! \brief Constructor using other vector with generic type.
    *  \param other   Vector<OtherPhysicalType_, OtherPrimType_, Dimension_>
    */
-  template<typename OtherPrimType_>
-  explicit Vector(const Vector<phys_quant::PhysicalType::Typeless, OtherPrimType_, Dimension_>& other)
+  template<enum phys_quant::PhysicalType OtherPhysicalType_, typename OtherPrimType_>
+  explicit Vector(const Vector<OtherPhysicalType_, OtherPrimType_, Dimension_>& other)
     : Implementation(other.toImplementation().template cast<PrimType_>()) {
   }
 
@@ -303,6 +311,15 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
    */
   inline const Implementation& vector() const {
     return static_cast<const Implementation&>(*this);
+  }
+
+  /*! \brief Assignment operator.
+   * \param other   other vector
+   * \returns reference
+   */
+  Vector<PhysicalType_, PrimType_, Dimension_> & operator=(const Vector<PhysicalType_, PrimType_, Dimension_>& other) { // (The assignment of a static to a dynamic vector does not work because the amount of parameters must be one and SFINAE leads to two parameters. Workaround: cast the static vector into a dynamic one, then assign.)
+    this->toImplementation() = other.toImplementation();
+    return *this;
   }
 
   /*! \brief Addition of two vectors.
