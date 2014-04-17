@@ -369,4 +369,15 @@ TYPED_TEST(VectorTest, testVector)
   ASSERT_NEAR(result(0), - length(0), this->tol);
   ASSERT_NEAR(result(1), - length(1), this->tol);
   ASSERT_NEAR(result(2),   length(2), this->tol);
+
+  // explicit cast from one type to another must compile
+  typedef vectors::Vector<kindr::phys_quant::PhysicalType::Force, double, -1> ForceDynd;
+  Length3d(Force3d(1,2,3));
+  Force3d test;
+  test = Force3d(1,2,3);
+  ForceDynd test2;
+  ForceDynd test3;
+  test3 = ForceDynd(Force3d(1,2,3));
+  test2 = test3;
+  LengthDynd(ForceDynd(Force3d(1,2,3)));
 }
