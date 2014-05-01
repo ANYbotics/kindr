@@ -326,12 +326,15 @@ The following four typedefs are provided for convenience:
    mat << r11, r12, r13,
 	  r21 ,r22, r23,
 	  r31, r32, r33;
-   RotationMatrixPD rmat3(mat);   
+   RotationMatrixPD rmat3(mat);		// using the constructor   
+   RotationMatrixPD rmat4;			// using a setter
+   rmat4.setMatrix(mat);
+   
  \endcode
  
  \paragraph rotations_implementation_rotationmatrix_use Use a Rotation Matrix
  \code{.cpp}
-  Eigen::Matrix3d mat = rmat.matrix();									// get Eigen matrix	
+  Eigen::Matrix3d mat = rmat.matrix();									// get Eigen matrix (avoid using toImplementation())	
   Eigen::Vector3d vector_rotated = rmat.rotate(Eigen::Vector3d(1.0,2.0,3.0));				// rotate a vector
   Eigen::Vector3d vector_invrotated = rmat.inverseRotate(Eigen::Vector3d(1.0,2.0,3.0));			// reverse rotate a vector
   double determinant = rmat.determinant();								// get the determinant of the matrix
@@ -339,6 +342,9 @@ The following four typedefs are provided for convenience:
   if (rmat == RotationMatrixPD()) 						 			// compare 
       std::cout << "Rotation is identity\n"; 
 \endcode
+
+Note that the rotation matrix is stored internally differently than created by the constructor! 
+Therefore, you should access the matrix using the method \ref kindr::rotations::eigen_impl::RotationMatrixPD::matrix() "matrix()" instead of \ref kindr::rotations::eigen_impl::RotationMatrixPD::toImplementation() "toImplementation()". 
 
 \subsubsection rotations_implementation_eulerangles_zyx Euler Angles ZYX
 The class \ref kindr::rotations::eigen_impl::EulerAnglesZyx "EulerAnglesZyx" stores the coefficients in Eigen::Vector3.

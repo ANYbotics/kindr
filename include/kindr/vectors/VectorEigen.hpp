@@ -60,6 +60,11 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
   /*! \brief The base type.
    */
   typedef VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> > Base;
+
+  /*! \brief The size if the vector has dynamic dimension (must be equal to Eigen::Dynamic).
+   */
+  static constexpr int DynamicDimension = -1;
+
  public:
   /*! \brief The implementation type.
    *
@@ -75,18 +80,34 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
    */
   static constexpr int Dimension = Dimension_;
 
-  /*! \brief Default constructor initializes all coordinates of the vector with zero.
+  /*! \brief Default constructor for static sized vectors which initializes all components with zero.
    */
-  Vector()
+  template<int DimensionCopy_ = Dimension_>
+  Vector(typename std::enable_if<DimensionCopy_ != DynamicDimension>::type* = nullptr)
     : Implementation(Implementation::Zero()) {
   }
 
-  /*! \brief Constructor using other vector without physical type.
+  /*! \brief Default constructor for dynamic sized vectors.
+   */
+  template<int DimensionCopy_ = Dimension_>
+  Vector(typename std::enable_if<DimensionCopy_ == DynamicDimension>::type* = nullptr)
+    : Implementation() {
+  }
+
+  /*! \brief Constructor using other vector with generic type.
    *  \param other   Vector<OtherPhysicalType_, OtherPrimType_, Dimension_>
    */
   template<enum phys_quant::PhysicalType OtherPhysicalType_, typename OtherPrimType_>
   explicit Vector(const Vector<OtherPhysicalType_, OtherPrimType_, Dimension_>& other)
     : Implementation(other.toImplementation().template cast<PrimType_>()) {
+  }
+
+  /*! \brief Constructor of a dynamic vector using a static vector.
+   *  \param other   Vector<OtherPhysicalType_, OtherPrimType_, Dimension_>
+   */
+  template<int DimensionOther_, int DimensionCopy_ = Dimension_>
+  Vector(const Vector<PhysicalType_, PrimType_, DimensionOther_>& other, typename std::enable_if<DimensionCopy_ == DynamicDimension>::type* = nullptr)
+    : Implementation(other.toImplementation()) {
   }
 
   /*! \brief Constructor using Eigen::Matrix.
@@ -154,24 +175,66 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
    * \returns the head of the vector (copy)
    */
   template<int DimensionOutput_>
-  Vector<PhysicalType_, PrimType_, DimensionOutput_> head() const {
-    return Vector<PhysicalType_, PrimType_, DimensionOutput_>(this->toImplementation().head(DimensionOutput_));
+  Vector<PhysicalType_, PrimType_, DimensionOutput_> getHead() const {
+    return Vector<PhysicalType_, PrimType_, DimensionOutput_>(this->toImplementation().template head<DimensionOutput_>());
+  }
+
+  /*!\brief Get the head of the vector (copy)
+   * \returns the head of the vector (copy)
+   */
+  Vector<PhysicalType_, PrimType_, DynamicDimension> getHead(int length) const {
+    return Vector<PhysicalType_, PrimType_, DynamicDimension>(this->toImplementation().head(length));
   }
 
   /*!\brief Get the tail of the vector (copy)
    * \returns the tail of the vector (copy)
    */
   template<int DimensionOutput_>
-  Vector<PhysicalType_, PrimType_, DimensionOutput_> tail() const {
-    return Vector<PhysicalType_, PrimType_, DimensionOutput_>(this->toImplementation().tail(DimensionOutput_));
+  Vector<PhysicalType_, PrimType_, DimensionOutput_> getTail() const {
+    return Vector<PhysicalType_, PrimType_, DimensionOutput_>(this->toImplementation().template tail<DimensionOutput_>());
+  }
+
+  /*!\brief Get the tail of the vector (copy)
+   * \returns the tail of the vector (copy)
+   */
+  Vector<PhysicalType_, PrimType_, DynamicDimension> getTail(int length) const {
+    return Vector<PhysicalType_, PrimType_, DynamicDimension>(this->toImplementation().tail(length));
   }
 
   /*!\brief Get a segment of the vector (copy)
    * \returns a segment of the vector (copy)
    */
-  template<int Start_, int DimensionOutput_>
-  Vector<PhysicalType_, PrimType_, DimensionOutput_> segment() const {
-    return Vector<PhysicalType_, PrimType_, DimensionOutput_>(this->toImplementation().block(Start_,0,DimensionOutput_,1)); // todo: use templated block()
+  template<int DimensionOutput_>
+  Vector<PhysicalType_, PrimType_, DimensionOutput_> getSegment(int start) const {
+    return Vector<PhysicalType_, PrimType_, DimensionOutput_>(this->toImplementation().template segment<DimensionOutput_>(start));
+  }
+
+  /*!\brief Get a segment of the vector (copy)
+   * \returns a segment of the vector (copy)
+   */
+  Vector<PhysicalType_, PrimType_, DynamicDimension> getSegment(int start, int length) const {
+    return Vector<PhysicalType_, PrimType_, DynamicDimension>(this->toImplementation().segment(start, length));
+  }
+
+  /*!\brief Set the head of the vector
+   */
+  template<int DimensionInput_>
+  void setHead(const Vector<PhysicalType_, PrimType_, DimensionInput_> & input) {
+    this->toImplementation().template head<DimensionInput_>() = input.toImplementation();
+  }
+
+  /*!\brief Set the tail of the vector
+   */
+  template<int DimensionInput_>
+  void setTail(const Vector<PhysicalType_, PrimType_, DimensionInput_> & input) {
+    this->toImplementation().template tail<DimensionInput_>() = input.toImplementation();
+  }
+
+  /*!\brief Set a segment of the vector
+   */
+  template<int Start_, int DimensionInput_>
+  void setSegment(int start, const Vector<PhysicalType_, PrimType_, DimensionInput_> & input) {
+    this->toImplementation().template segment<DimensionInput_>(start) = input.toImplementation();
   }
 
   /*!\brief Get x-coordinate of the vector (copy)
@@ -248,6 +311,15 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
    */
   inline const Implementation& vector() const {
     return static_cast<const Implementation&>(*this);
+  }
+
+  /*! \brief Assignment operator.
+   * \param other   other vector
+   * \returns reference
+   */
+  Vector<PhysicalType_, PrimType_, Dimension_> & operator=(const Vector<PhysicalType_, PrimType_, Dimension_>& other) { // (The assignment of a static to a dynamic vector does not work because the amount of parameters must be one and SFINAE leads to two parameters. Workaround: cast the static vector into a dynamic one, then assign.)
+    this->toImplementation() = other.toImplementation();
+    return *this;
   }
 
   /*! \brief Addition of two vectors.
