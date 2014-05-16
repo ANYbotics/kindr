@@ -15,6 +15,8 @@ DOCUMENTATION
 -----------------------------------------------------------------
 [Online](http://ethz-asl-lr.bitbucket.org/kindr)
 
+Impatient individuals can directly download the [cheat sheet](http://ethz-asl-lr.bitbucket.org/kindr/cheatsheet_latest.pdf).
+
 See also section 'Building the documentation' below.
 
 REQUIREMENTS
