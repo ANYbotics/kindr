@@ -28,6 +28,7 @@
 #ifndef GTEST_EIGEN_HPP_
 #define GTEST_EIGEN_HPP_
 
+#include <type_traits>
 #include <gtest/gtest.h>
 #include "source_file_pos.hpp"
 #include "assert_macros_eigen.hpp"
@@ -129,7 +130,8 @@ void assertFinite(const M1 & A, kindr::common::internal::source_file_pos const &
     {                                 \
       for(int c = 0; c < (A).cols(); c++)               \
       {                               \
-        double percentError = 0.0;                  \
+        typedef typename std::remove_reference<decltype(A)>::type::Scalar Scalar; \
+        Scalar percentError = static_cast<Scalar>(0.0); \
         ASSERT_TRUE(kindr::common::eigen::compareRelative( (A)(r,c), (B)(r,c), PERCENT_TOLERANCE, &percentError)) \
         << MSG << "\nComparing:\n"                \
         << #A << "(" << r << "," << c << ") = " << (A)(r,c) << std::endl \
@@ -147,7 +149,8 @@ void assertFinite(const M1 & A, kindr::common::internal::source_file_pos const &
     {                                 \
       for(int c = 0; c < (M_TRUE).cols(); c++)               \
       {                               \
-        double percentError = 0.0;                  \
+        typedef typename std::remove_reference<decltype(M_TRUE)>::type::Scalar Scalar; \
+        Scalar percentError = static_cast<Scalar>(0.0); \
         ASSERT_TRUE(fabs((M_MEAS)(r,c) - (M_TRUE)(r,c)) <= (fabs((M_TRUE)(r,c))*RTOL + ATOL)) \
         << MSG << "\nComparing:\n"                \
         << #M_TRUE << "(" << r << "," << c << ") = " << (M_TRUE)(r,c) << std::endl \
@@ -165,7 +168,8 @@ void assertFinite(const M1 & A, kindr::common::internal::source_file_pos const &
     {                                 \
       for(int c = 0; c < (A).cols(); c++)               \
       {                               \
-        double percentError = 0.0;                  \
+        typedef typename std::remove_reference<decltype(A)>::type::Scalar Scalar; \
+        Scalar percentError = static_cast<Scalar>(0.0); \
         ASSERT_TRUE(kindr::common::eigen::compareRelativePeriodic( (A)(r,c), (B)(r,c), PERIODLENGTH, PERCENT_TOLERANCE, &percentError)) \
         << MSG << "\nComparing:\n"                \
         << #A << "(" << r << "," << c << ") = " << (A)(r,c) << std::endl \

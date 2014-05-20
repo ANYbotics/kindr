@@ -42,43 +42,47 @@ namespace eigen {
 
 
 
-
-inline bool compareRelative(double a, double b, double percentTolerance, double * percentError = NULL)
+template<typename SCALAR>
+inline bool compareRelative(SCALAR a, SCALAR b, double percentTolerance, SCALAR * percentError = NULL)
 {
   // \todo: does anyone have a better idea?
-  double fa = fabs(a);
-  double fb = fabs(b);
-  if( (fa < 1e-15 && fb < 1e-15) ||  // Both zero.
-      (fa == 0.0  && fb < 1e-6)  ||  // One exactly zero and the other small
-      (fb == 0.0  && fa < 1e-6) )    // ditto
+  SCALAR fa = std::abs(a);
+  SCALAR fb = std::abs(b);
+  SCALAR tolerance = static_cast<SCALAR>(1e-15);
+  SCALAR tolerance_zero = static_cast<SCALAR>(1e-6);
+  if( (fa < tolerance && fb < tolerance) ||  // Both zero.
+      (fa == static_cast<SCALAR>(0.0)  && fb < tolerance_zero)  ||  // One exactly zero and the other small
+      (fb == static_cast<SCALAR>(0.0)  && fa < tolerance_zero) )    // ditto
     return true;
 
-  double diff = fabs(a - b)/std::max(fa,fb);
-  if(diff > percentTolerance * 1e-2)
+  SCALAR diff = std::abs(a - b) / std::max(fa,fb);
+  if(diff > percentTolerance * static_cast<SCALAR>(1e-2))
   {
     if(percentError)
-      *percentError = diff * 100.0;
+      *percentError = diff * static_cast<SCALAR>(100.0);
     return false;
   }
   return true;
 }
 
 
-inline bool compareRelativePeriodic(double a, double b, double periodlength, double percentTolerance, double * percentError = NULL)
+template<typename SCALAR>
+inline bool compareRelativePeriodic(SCALAR a, SCALAR b, double periodlength, double percentTolerance, SCALAR * percentError = NULL)
 {
   // \todo: does anyone have a better idea?
-  double fa = floatingPointModulo(a, periodlength); // a now lies in [0,periodlength)
-  double fb = floatingPointModulo(b, periodlength); // b now lies in [0,periodlength)
-  if( ((periodlength - 1e-15 < fa || fa < 1e-15) && (periodlength - 1e-15 < fb || fb < 1e-15)) ||  // Both zero or near periodlength
-      (fa == 0.0  && fb < 1e-6)                                                                ||  // One exactly zero and the other small
-      (fb == 0.0  && fa < 1e-6) )                                                                  // ditto
+  SCALAR fa = floatingPointModulo(a, static_cast<SCALAR>(periodlength)); // a now lies in [0,periodlength)
+  SCALAR fb = floatingPointModulo(b, static_cast<SCALAR>(periodlength)); // b now lies in [0,periodlength)
+  SCALAR tolerance = static_cast<SCALAR>(1e-15);
+  if( ((periodlength - tolerance < fa || fa < tolerance) && (periodlength - tolerance < fb || fb < tolerance)) ||  // Both zero or near periodlength
+      (fa == static_cast<SCALAR>(0.0)  && fb < static_cast<SCALAR>(1e-6))                                                                ||  // One exactly zero and the other small
+      (fb == static_cast<SCALAR>(0.0) && fa < static_cast<SCALAR>(1e-6)) )                                                                  // ditto
     return true;
 
-  double diff = std::min(floatingPointModulo(a - b, periodlength), floatingPointModulo(b - a, periodlength))/periodlength;
-  if(diff > percentTolerance * 1e-2)
+  SCALAR diff = std::min(floatingPointModulo(a - b, static_cast<SCALAR>(periodlength)), floatingPointModulo(b - a, static_cast<SCALAR>(periodlength)))/static_cast<SCALAR>(periodlength);
+  if(diff > percentTolerance * static_cast<SCALAR>(1e-2))
   {
     if(percentError)
-      *percentError = diff * 100.0;
+      *percentError = diff * static_cast<SCALAR>(100.0);
     return false;
   }
   return true;
@@ -111,7 +115,8 @@ inline bool compareRelativePeriodic(double a, double b, double periodlength, dou
     {                                 \
       for(int c = 0; c < (A).cols(); c++)               \
       {                               \
-        double percentError = 0.0;                  \
+        typedef typename std::remove_reference<decltype(A)>::type::Scalar Scalar; \
+        Scalar percentError = static_cast<Scalar>(0.0); \
         if(!kindr::common::eigen::compareRelative( (A)(r,c), (B)(r,c), PERCENT_TOLERANCE, &percentError)) { \
           std::stringstream kindr_assert_stringstream;  \
           kindr_assert_stringstream << MSG << "\nComparing:\n"                \
@@ -124,7 +129,7 @@ inline bool compareRelativePeriodic(double a, double b, double periodlength, dou
       } \
     }
 #define KINDR_ASSERT_SCALAR_NEAR_DBG(exceptionType, A, B, PERCENT_TOLERANCE, MESSAGE) \
-    double percentError = 0.0; \
+    decltype(A) percentError = 0.0; \
     if(!kindr::common::eigen::compareRelative( (A), (B), PERCENT_TOLERANCE, &percentError)) \
     { \
       std::stringstream kindr_assert_stringstream;  \
