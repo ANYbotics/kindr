@@ -57,6 +57,7 @@ class AngleAxisSingleTest : public ::testing::Test{
   const AngleAxis rotAngleAxisIdentity = AngleAxis(0.0, 1.0, 0.0, 0.0);
   const Vector vec = Vector(0.3,-1.5,0.6);
   const Vector vecX = Vector(1.0,0.0,0.0);
+  const Vector vecXSmallError = Vector(1.0000001,0.0,0.0);
   const Vector vecY = Vector(0.0,1.0,0.0);
   const Vector vecZ = Vector(0.0,0.0,1.0);
 
@@ -194,6 +195,9 @@ TYPED_TEST(AngleAxisSingleTest, testConstructors){
 
 }
 
+
+
+
 TYPED_TEST(AngleAxisSingleTest, testGetters)
 {
   typedef typename TestFixture::AngleAxis AngleAxis;
@@ -231,6 +235,7 @@ TYPED_TEST(AngleAxisSingleTest, testSetters)
 {
   typedef typename TestFixture::AngleAxis AngleAxis;
   typedef typename TestFixture::Scalar Scalar;
+  typedef typename TestFixture::Vector Vector;
 
   AngleAxis rot(this->eigenVector4v1(0), this->eigenVector4v1(1), this->eigenVector4v1(2), this->eigenVector4v1(3));
   rot.setIdentity();
@@ -297,6 +302,21 @@ TYPED_TEST(AngleAxisSingleTest, testSetters)
   ASSERT_NEAR(rot.axis().x(), this->rotAngleAxisQuarterZ.axis().x(),1e-6);
   ASSERT_NEAR(rot.axis().y(), this->rotAngleAxisQuarterZ.axis().y(),1e-6);
   ASSERT_NEAR(rot.axis().z(), this->rotAngleAxisQuarterZ.axis().z(),1e-6);
+
+  rot.setFromVectors(this->vecX, this->vecX);
+  ASSERT_NEAR(rot.angle(), this->rotAngleAxisIdentity.angle(),1e-6);
+  ASSERT_NEAR(rot.axis().x(), this->rotAngleAxisIdentity.axis().x(),1e-6);
+  ASSERT_NEAR(rot.axis().y(), this->rotAngleAxisIdentity.axis().y(),1e-6);
+  ASSERT_NEAR(rot.axis().z(), this->rotAngleAxisIdentity.axis().z(),1e-6);
+
+  rot.setFromVectors(this->vecX, this->vecXSmallError);
+  ASSERT_NEAR(rot.angle(), this->rotAngleAxisIdentity.angle(),1e-6);
+  ASSERT_NEAR(rot.axis().x(), this->rotAngleAxisIdentity.axis().x(),1e-6);
+  ASSERT_NEAR(rot.axis().y(), this->rotAngleAxisIdentity.axis().y(),1e-6);
+  ASSERT_NEAR(rot.axis().z(), this->rotAngleAxisIdentity.axis().z(),1e-6);
+
+
+
 }
 
 

@@ -59,6 +59,7 @@ class RotationQuaternionSingleTest : public ::testing::Test{
   const Vector vecX = Vector(1.0,0.0,0.0);
   const Vector vecY = Vector(0.0,1.0,0.0);
   const Vector vecZ = Vector(0.0,0.0,1.0);
+  const Vector vecXSmallError = Vector(1.0000001,0.0,0.0);
   const RotationQuaternion rotQuatQuarterX = RotationQuaternion(1/sqrt(2.0),1/sqrt(2.0),0.0,0.0);
   const RotationQuaternion rotQuatQuarterY = RotationQuaternion(1/sqrt(2.0),0.0,1/sqrt(2.0),0.0);
   const RotationQuaternion rotQuatQuarterZ = RotationQuaternion(1/sqrt(2.0),0.0,0.0,1/sqrt(2.0));
@@ -422,6 +423,20 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionSetters){
   ASSERT_NEAR(rot.x(), this->rotQuatQuarterZ.x(),1e-6);
   ASSERT_NEAR(rot.y(), this->rotQuatQuarterZ.y(),1e-6);
   ASSERT_NEAR(rot.z(), this->rotQuatQuarterZ.z(),1e-6);
+
+  rot.setFromVectors(this->vecX, this->vecX);
+  ASSERT_NEAR(rot.w(), this->eigenQuatIdentity.w(),1e-6);
+  ASSERT_NEAR(rot.x(), this->eigenQuatIdentity.x(),1e-6);
+  ASSERT_NEAR(rot.y(), this->eigenQuatIdentity.y(),1e-6);
+  ASSERT_NEAR(rot.z(), this->eigenQuatIdentity.z(),1e-6);
+
+
+  rot.setFromVectors(this->vecX, this->vecXSmallError);
+  ASSERT_NEAR(rot.w(), this->eigenQuatIdentity.w(),1e-6);
+  ASSERT_NEAR(rot.x(), this->eigenQuatIdentity.x(),1e-6);
+  ASSERT_NEAR(rot.y(), this->eigenQuatIdentity.y(),1e-6);
+  ASSERT_NEAR(rot.z(), this->eigenQuatIdentity.z(),1e-6);
+
 }
 
 // Test Rotation Quaternion comparison (equality)

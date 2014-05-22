@@ -55,6 +55,7 @@ class EulerAnglesXyzSingleTest : public ::testing::Test{
   const Vector vecX = Vector(1.0,0.0,0.0);
   const Vector vecY = Vector(0.0,1.0,0.0);
   const Vector vecZ = Vector(0.0,0.0,1.0);
+  const Vector vecXSmallError = Vector(1.0000001,0.0,0.0);
 
 
   // Rotation from Eigen::Matrix
@@ -230,6 +231,20 @@ TYPED_TEST(EulerAnglesXyzSingleTest, testSetters)
   ASSERT_NEAR(rot.x(), this->rotEulerAnglesXyzQuarterZ.x(),1e-6);
   ASSERT_NEAR(rot.y(), this->rotEulerAnglesXyzQuarterZ.y(),1e-6);
   ASSERT_NEAR(rot.z(), this->rotEulerAnglesXyzQuarterZ.z(),1e-6);
+
+  rot.setFromVectors(this->vecX, this->vecX);
+  ASSERT_NEAR(rot.x(), this->rotEulerAnglesXyzIdentity.x(),1e-6);
+  ASSERT_NEAR(rot.y(), this->rotEulerAnglesXyzIdentity.y(),1e-6);
+  ASSERT_NEAR(rot.z(), this->rotEulerAnglesXyzIdentity.z(),1e-6);
+
+
+  rot.setFromVectors(this->vecX, this->vecXSmallError);
+  ASSERT_NEAR(rot.x(), this->rotEulerAnglesXyzIdentity.x(),1e-6);
+  ASSERT_NEAR(rot.y(), this->rotEulerAnglesXyzIdentity.y(),1e-6);
+  ASSERT_NEAR(rot.z(), this->rotEulerAnglesXyzIdentity.z(),1e-6);
+
+
+
 }
 
 /* Test Uniqueness
