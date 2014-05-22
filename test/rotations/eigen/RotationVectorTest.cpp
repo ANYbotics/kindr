@@ -55,7 +55,7 @@ class RotationVectorSingleTest : public ::testing::Test{
   const Vector vecX = Vector(1.0,0.0,0.0);
   const Vector vecY = Vector(0.0,1.0,0.0);
   const Vector vecZ = Vector(0.0,0.0,1.0);
-
+  const Vector vecXSmallError = Vector(1.0000001,0.0,0.0);
 
   // Rotation from Eigen::Matrix
   const RotationVector rotRotationVectorV1 = RotationVector(eigenVector3v1);
@@ -230,6 +230,16 @@ TYPED_TEST(RotationVectorSingleTest, testSetters)
   ASSERT_NEAR(rot.x(), this->rotRotationVectorQuarterZ.x(),1e-6);
   ASSERT_NEAR(rot.y(), this->rotRotationVectorQuarterZ.y(),1e-6);
   ASSERT_NEAR(rot.z(), this->rotRotationVectorQuarterZ.z(),1e-6);
+
+  rot.setFromVectors(this->vecX, this->vecX);
+  ASSERT_NEAR(rot.x(), this->rotRotationVectorIdentity.x(),1e-6);
+  ASSERT_NEAR(rot.y(), this->rotRotationVectorIdentity.y(),1e-6);
+  ASSERT_NEAR(rot.z(), this->rotRotationVectorIdentity.z(),1e-6);
+
+  rot.setFromVectors(this->vecX, this->vecXSmallError);
+  ASSERT_NEAR(rot.x(), this->rotRotationVectorIdentity.x(),1e-6);
+  ASSERT_NEAR(rot.y(), this->rotRotationVectorIdentity.y(),1e-6);
+  ASSERT_NEAR(rot.z(), this->rotRotationVectorIdentity.z(),1e-6);
 }
 
 /* Test Uniqueness

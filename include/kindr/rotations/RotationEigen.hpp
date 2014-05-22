@@ -241,20 +241,23 @@ class SetFromVectorsTraits<RotationBase<Rotation_, Usage_>> {
  public:
   template<typename PrimType_>
   inline static void setFromVectors(Rotation_& rot, const Eigen::Matrix<PrimType_, 3, 1>& v1, const Eigen::Matrix<PrimType_, 3, 1>& v2) {
-    const PrimType_ temp = v1.norm()*v2.norm();
-    KINDR_ASSERT_TRUE(std::runtime_error, temp != 0, "At least one vector has zero length.");
+    KINDR_ASSERT_TRUE(std::runtime_error,  v1.norm()*v2.norm() != static_cast<PrimType_>(0.0), "At least one vector has zero length.");
 
-    const PrimType_ angle = acos(v1.dot(v2)/temp);
-    const PrimType_ tol = 1e-3;
-
-    if(0 <= angle && angle < tol) {
-      rot.setIdentity();
-    } else if(M_PI - tol < angle && angle < M_PI + tol) {
-      rot = eigen_impl::AngleAxis<PrimType_, Usage_>(angle, 1, 0, 0);
-    } else {
-      const Eigen::Matrix<PrimType_, 3, 1> axis = (v1.cross(v2)).normalized();
-      rot = eigen_impl::AngleAxis<PrimType_, Usage_>(angle, axis);
-    }
+    Eigen::Quaternion<PrimType_> eigenQuat;
+    eigenQuat.setFromTwoVectors(v1, v2);
+    rot = kindr::rotations::eigen_impl::RotationQuaternion<PrimType_, Usage_>(eigenQuat);
+//
+//    const PrimType_ angle = acos(v1.dot(v2)/temp);
+//    const PrimType_ tol = 1e-3;
+//
+//    if(0 <= angle && angle < tol) {
+//      rot.setIdentity();
+//    } else if(M_PI - tol < angle && angle < M_PI + tol) {
+//      rot = eigen_impl::AngleAxis<PrimType_, Usage_>(angle, 1, 0, 0);
+//    } else {
+//      const Eigen::Matrix<PrimType_, 3, 1> axis = (v1.cross(v2)).normalized();
+//      rot = eigen_impl::AngleAxis<PrimType_, Usage_>(angle, axis);
+//    }
   }
 };
 

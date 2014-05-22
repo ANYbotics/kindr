@@ -71,6 +71,7 @@ class RotationMatrixSingleTest : public ::testing::Test{
   const Vector vecX = Vector(1.0,0.0,0.0);
   const Vector vecY = Vector(0.0,1.0,0.0);
   const Vector vecZ = Vector(0.0,0.0,1.0);
+  const Vector vecXSmallError = Vector(1.0000001,0.0,0.0);
 
   RotationMatrix rotRotationMatrix1;
   RotationMatrix rotRotationMatrix2;
@@ -401,6 +402,13 @@ TYPED_TEST(RotationMatrixSingleTest, testSetters)
 
   rot.setFromVectors(this->vecX, this->vecY);
   KINDR_ASSERT_DOUBLE_MX_EQ(rot.matrix(), this->rotRotationMatrixQuarterZ.matrix(), 1e-4, "setFromVectors");
+
+  rot.setFromVectors(this->vecX, this->vecX);
+  KINDR_ASSERT_DOUBLE_MX_EQ(rot.matrix(), this->rotRotationMatrixIdentity.matrix(), 1e-4, "setFromVectors");
+
+  rot.setFromVectors(this->vecX, this->vecXSmallError);
+  KINDR_ASSERT_DOUBLE_MX_EQ(rot.matrix(), this->rotRotationMatrixIdentity.matrix(), 1e-4, "setFromVectors");
+
 }
 
 
