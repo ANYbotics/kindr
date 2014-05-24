@@ -34,6 +34,8 @@
 //#include "kindr/positions/PositionEigen.hpp"
 #include "kindr/linear_algebra/LinearAlgebra.hpp"
 
+#include "kindr/vectors/VectorBase.hpp"
+
 namespace kindr {
 namespace rotations {
 //! Implementation of rotations based on the C++ Eigen library
@@ -220,14 +222,26 @@ class RotationTraits<RotationBase<Rotation_, Usage_>> {
     }
   }
 
+//  template<typename Vector_>
+//  inline static Vector_ rotate(const RotationBase<Rotation_, Usage_>& rotation, const Vector_& vector){
+//    if(Usage_ == RotationUsage::ACTIVE){
+//      return Vector_(rotation.derived().toImplementation()*vector.toImplementation());
+//    } else {
+//      return Vector_(rotation.derived().inverted().toImplementation()*vector.toImplementation());
+//    }
+//  }
+
+
   template<typename Vector_>
   inline static Vector_ rotate(const RotationBase<Rotation_, Usage_>& rotation, const Vector_& vector){
-    if(Usage_ == RotationUsage::ACTIVE){
-      return Vector_(rotation.derived().toImplementation()*vector.toImplementation());
-    } else {
-      return Vector_(rotation.derived().inverted().toImplementation()*vector.toImplementation());
-    }
+    return static_cast<Vector_>(rotation.derived().rotate(vector.toImplementation()));
+//    if(Usage_ == RotationUsage::ACTIVE){
+//
+//    } else {
+//      return static_cast<Vector_>(eigen_impl::RotationMatrix<typename Rotation_::Scalar, Usage_>(rotation.derived().inverted()).toImplementation()*vector.toImplementation());
+//    }
   }
+
 };
 
 

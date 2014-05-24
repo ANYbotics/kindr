@@ -120,6 +120,19 @@ class LocalAngularVelocity : public LocalAngularVelocityBase<LocalAngularVelocit
     return Base::toImplementation();
   }
 
+  inline Implementation& vector() {
+    return Base::toImplementation();
+  }
+
+
+  inline Implementation& toImplementation() {
+    return Base::toImplementation();
+  }
+
+  inline const Implementation& toImplementation() const {
+    return Base::toImplementation();
+  }
+
   /*! \brief Cast to the base type.
    *  \returns the base (recommended only for advanced users)
    */

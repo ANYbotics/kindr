@@ -31,7 +31,7 @@
 
 #include "kindr/common/common.hpp"
 #include "kindr/quaternions/QuaternionBase.hpp"
-
+#include "kindr/vectors/VectorBase.hpp"
 
 
 namespace kindr {
@@ -328,6 +328,7 @@ class RotationBase {
   typename internal::get_matrix3X<Derived_>::template Matrix3X<Cols> rotate(const typename internal::get_matrix3X<Derived_>::template Matrix3X<Cols>& matrix) const {
     return internal::RotationTraits<RotationBase<Derived_,Usage_>>::rotate(this->derived(), matrix);
   }
+
 
   /*! \brief Rotates a vector or matrix in reverse.
    *  \returns the reverse rotated vector or matrix
