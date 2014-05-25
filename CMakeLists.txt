@@ -108,3 +108,19 @@ install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE
 install(DIRECTORY include DESTINATION ${CMAKE_INSTALL_PREFIX}/include/Kindr)
 install(FILES cmake/FindKindr.cmake DESTINATION ${CMAKE_ROOT}/Modules)
 
+# Install catkin package.xml
+install(FILES package.xml DESTINATION share/kindr)
+
+# Create cmake configure scripts so other packages can find kindr
+set(kindr_include_dirs ${CMAKE_INSTALL_PREFIX}/include/Kindr/include)
+
+configure_file(kindrConfig.cmake.in
+   "${PROJECT_BINARY_DIR}/kindrConfig.cmake" @ONLY)
+configure_file(kindrConfigVersion.cmake.in
+   "${PROJECT_BINARY_DIR}/kindrConfigVersion.cmake" @ONLY)
+
+install(FILES
+   "${PROJECT_BINARY_DIR}/kindrConfig.cmake"
+   "${PROJECT_BINARY_DIR}/kindrConfigVersion.cmake"
+   DESTINATION share/kindr/cmake COMPONENT dev)
+
