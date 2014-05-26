@@ -40,14 +40,18 @@ namespace kindr {
 namespace common {
 namespace eigen {
 
-
+// Importing these from namespace std allows us to inject other overloads 
+// from e.g. Ceres in the same namespace.
+using std::abs;
+using std::max;
+using std::min;
 
 template<typename SCALAR>
 inline bool compareRelative(SCALAR a, SCALAR b, double percentTolerance, SCALAR * percentError = NULL)
 {
   // \todo: does anyone have a better idea?
-  SCALAR fa = std::abs(a);
-  SCALAR fb = std::abs(b);
+  SCALAR fa = abs(a);
+  SCALAR fb = abs(b);
   SCALAR tolerance = static_cast<SCALAR>(1e-15);
   SCALAR tolerance_zero = static_cast<SCALAR>(1e-6);
   if( (fa < tolerance && fb < tolerance) ||  // Both zero.
@@ -55,7 +59,7 @@ inline bool compareRelative(SCALAR a, SCALAR b, double percentTolerance, SCALAR 
       (fb == static_cast<SCALAR>(0.0)  && fa < tolerance_zero) )    // ditto
     return true;
 
-  SCALAR diff = std::abs(a - b) / std::max(fa,fb);
+  SCALAR diff = abs(a - b) / max(fa,fb);
   if(diff > percentTolerance * static_cast<SCALAR>(1e-2))
   {
     if(percentError)
@@ -78,7 +82,7 @@ inline bool compareRelativePeriodic(SCALAR a, SCALAR b, double periodlength, dou
       (fb == static_cast<SCALAR>(0.0) && fa < static_cast<SCALAR>(1e-6)) )                                                                  // ditto
     return true;
 
-  SCALAR diff = std::min(floatingPointModulo(a - b, static_cast<SCALAR>(periodlength)), floatingPointModulo(b - a, static_cast<SCALAR>(periodlength)))/static_cast<SCALAR>(periodlength);
+  SCALAR diff = min(floatingPointModulo(a - b, static_cast<SCALAR>(periodlength)), floatingPointModulo(b - a, static_cast<SCALAR>(periodlength)))/static_cast<SCALAR>(periodlength);
   if(diff > percentTolerance * static_cast<SCALAR>(1e-2))
   {
     if(percentError)
@@ -129,7 +133,7 @@ inline bool compareRelativePeriodic(SCALAR a, SCALAR b, double periodlength, dou
       } \
     }
 #define KINDR_ASSERT_SCALAR_NEAR_DBG(exceptionType, A, B, PERCENT_TOLERANCE, MESSAGE) \
-    decltype(A) percentError = 0.0; \
+    decltype(A) percentError = static_cast<decltype(A)>(0.0); \
     if(!kindr::common::eigen::compareRelative( (A), (B), PERCENT_TOLERANCE, &percentError)) \
     { \
       std::stringstream kindr_assert_stringstream;  \
