@@ -3,7 +3,7 @@
   <name>kindr</name>
   <version>0.0.1</version>
   <description>
-    kindr - kinematics and dynamics for robotics
+    Kindr - kinematics and dynamics for robotics
   </description>
 
   <maintainer email="gehrinch@mavt.ethz.ch">Christian Gehring</maintainer>
