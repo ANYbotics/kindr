@@ -106,25 +106,40 @@ TYPED_TEST(HomogeneousTransformationTest, testGenericRotateVectorCompilable)
   test.getRotation().rotate(vel);
 }
 
-TYPED_TEST(HomogeneousTransformationTest, testInvert)
+#define COUT_P(x) std::cout << #x << std::endl << x << std::endl;
+
+
+TYPED_TEST(HomogeneousTransformationTest, testInverted)
 {
   typedef typename TestFixture::Pose Pose;
   typedef typename Pose::Position Position;
   typedef typename Pose::Rotation Rotation;
-  Pose T_A_B( Position(1,2,3), Rotation(rot::AngleAxisPD(0.5,1.0,0.1,0.2)));
-  
-  Pose T_B_A = T_A_B.inverted();
-  
-  Pose Identity = T_A_B * T_B_A;
-  ASSERT_EQ(Identity.getPosition().vector().x(), 0);
-  ASSERT_EQ(Identity.getPosition().vector().y(), 0);
-  ASSERT_EQ(Identity.getPosition().vector().z(), 0);
+  typedef typename Pose::Scalar Scalar;
+  typedef typename Eigen::Matrix<Scalar, 4, 4> Matrix4d;
+  Pose T_A_B( Position(11,22,33), Rotation(rot::AngleAxisPD(0.5,1.0,0.1,0.2)));
+  Matrix4d mT_A_B = T_A_B.getTransformationMatrix();
+  Matrix4d invmT_B_A = mT_A_B.inverse();
 
-  ASSERT_EQ(Identity.getRotation().w(), 1);
-  ASSERT_EQ(Identity.getRotation().x(), 0);
-  ASSERT_EQ(Identity.getRotation().y(), 0);
-  ASSERT_EQ(Identity.getRotation().z(), 0);
+  Pose T_B_A = T_A_B.inverted();
+  Matrix4d mT_B_A = T_B_A.getTransformationMatrix();
+  
+  COUT_P(T_A_B);
+  COUT_P(mT_A_B);
+  COUT_P(mT_A_B.inverse());
+  COUT_P(T_B_A);
+  COUT_P(mT_B_A);
+
+  for(int r = 0; r < 4; ++r) {
+    for(int c = 0; c < 4; ++c) {
+      ASSERT_NEAR( invmT_B_A(r,c), mT_B_A(r,c), 1e-2) << 
+          "Comparing matrix inverse:\n" << invmT_B_A << 
+          "\nwith Transformation inverse:\n" << mT_B_A <<
+          "\nComparison failed at (" << r << "," << c << ")" << std::endl;
+    }
+  }
+
 }
+
 
 
 

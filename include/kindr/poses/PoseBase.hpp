@@ -66,29 +66,26 @@ class get_position {
 } // namespace internal
 
 
-
-/*! \class PoseBase
- * \brief Base class that defines the interface of a pose of a rigid body.
+/*! \class TransformationBase
+ * \brief Base class that defines the interface of a homogeneous transformation
  *
- *  This class defines the interface of a pose of a rigid body.
- *  A pose of a rigid body describes the position and orientation of the rigid body in space.
- *  The position and orientation are described by position coordinates and a rotation, respectively.
- * \tparam Derived_ the derived class that should implement the pose.
+ * \tparam Derived_ the derived class that should implement the homogeneous transformation
  * \ingroup poses
  */
+
 template<typename Derived_>
-class PoseBase {
+class TransformationBase {
  public:
   /*! \brief Default constructor.
    *
    *  Creates a pose with all position coordinates set to zero and an identity orientation.
    */
-  PoseBase() = default;
+  TransformationBase() = default;
 
   /*! \brief Constructor from derived pose.
    *  This constructor has been deleted because the abstract class does not contain any data.
    */
-  PoseBase(const Derived_&) = delete; // on purpose!!
+  TransformationBase(const Derived_&) = delete; // on purpose!!
 
   /*! \brief Gets the derived pose.
    *
@@ -118,51 +115,81 @@ class PoseBase {
   }
 
 
+  /*! \brief Gets the derived pose.
+   *
+   *  (only for advanced users)
+   *  \returns the derived pose
+   */
+  Derived_& derived() {
+    return static_cast<Derived_&>(*this);
+  }
+
+
   /*! \brief Transforms a position.
    *  \returns the transformed position
    */
   typename internal::get_position<Derived_>::Position transform(const typename internal::get_position<Derived_>::Position& position) const {
-    return internal::TransformationTraits<Derived_>::transform(this->derived(), position);
+    return derived().getRotation().rotate(position) + derived().getPosition();
   }
 
   /*! \brief Transforms a position in reverse
    *  \returns the transformed position
    */
   typename internal::get_position<Derived_>::Position inverseTransform(const typename internal::get_position<Derived_>::Position& position) const {
-    return internal::TransformationTraits<Derived_>::inverseTransform(this->derived(), position);
+    return derived().getRotation().inverseRotate((position-derived().getPosition()));
   }
 
   /*! \brief Sets the pose to identity
    *  \returns reference
    */
-  Derived_& setIdentity();
+  Derived_& setIdentity(){ 
+    derived().getPosition().setZero();
+    derived().getRotation().setIdentity();
+    return derived();
+  }
 
   /*! \brief Returns the inverse of the pose
    *  \returns inverse of the pose
    */
-  PoseBase inverted() const;
+  Derived_ inverted() const {
+    return Derived_( -derived().getRotation().inverseRotate(derived().getPosition()), derived().getRotation().inverted() );
+  }
 
   /*! \brief Inverts the pose
    *  \returns reference
    */
-  PoseBase& invert();
+  Derived_& invert() {
+    derived().getPosition() = -derived().getRotation().inverseRotate(derived().getPosition());
+    derived().getRotation().invert();
+  }
 
-};
+  /*! \brief Returns the pose in a unique form
+   *  This function is used to compare different poses.
+   *  \returns copy of the pose which is unique
+   */
+  Derived_ getUnique() const;
 
-/*! \class HomogeneousTransformationBase
- * \brief Base class that defines the interface of a homogeneous transformation
- *
- * \tparam Derived_ the derived class that should implement the homogeneous transformation
- * \ingroup poses
- */
-template<typename Derived_>
-class HomogeneousTransformationBase : public PoseBase<Derived_> {
- public:
+  /*! \brief  Modifies the pose such that it is in its unique form
+   *  \returns reference
+   */
+  Derived_& setUnique();
 
-//  template<typename OtherDerived_>
-//  HomogeneousTransformationBase& operator =(const HomogeneousTransformationBase<OtherDerived_>& other) {
-//    return *this;
-//  }
+  /*! \brief Concatenates two transformations.
+   *  \returns the concatenation of two transformations
+   */
+  template<typename OtherDerived_>
+  Derived_ operator *(const TransformationBase<OtherDerived_>& other) const {
+    return Derived_(derived().getPosition() + derived().getRotation().rotate(other.derived().getPosition()), derived().getRotation() * other.derived().getRotation());
+  }
+
+  /*! \brief Compares two rotations.
+   *  \returns true if the rotations are exactly equal
+   */
+  template<typename OtherDerived_>
+  bool operator ==(const TransformationBase<OtherDerived_>& other) const {
+    return (derived().getRotation() == other.derived().getRotation()) && (derived().getPosition() == other.derived().getPosition());
+  }
+
 
 };
 

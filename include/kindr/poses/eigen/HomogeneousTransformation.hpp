@@ -43,36 +43,40 @@ namespace eigen_impl {
 
 
 template<typename PrimType_, typename Position_, typename Rotation_>
-class HomogeneousTransformation : public HomogeneousTransformationBase<HomogeneousTransformation<PrimType_, Position_, Rotation_>>, private Position_, private Rotation_ {
+class HomogeneousTransformation : public TransformationBase<HomogeneousTransformation<PrimType_, Position_, Rotation_>> {
  public:
 
   typedef PrimType_ Scalar;
   typedef Position_ Position;
   typedef Rotation_ Rotation;
   typedef Eigen::Matrix<PrimType_, 4, 4> TransformationMatrix;
-
+  
+private:
+  Position position_;
+  Rotation rotation_;
+public:
 
   HomogeneousTransformation() = default;
 
   HomogeneousTransformation(const Position& position, const Rotation& rotation) :
-    Position(position),Rotation(rotation) {
+    position_(position), rotation_(rotation) {
   }
 
 
   inline Position_ & getPosition() {
-    return static_cast<Position_ &>(*this);
+    return position_;
   }
 
   inline const Position_ & getPosition() const {
-    return static_cast<const Position_ &>(*this);
+    return position_;
   }
 
   inline Rotation_ & getRotation() {
-    return static_cast<Rotation_ &>(*this);
+    return rotation_;
   }
 
   inline const Rotation_ & getRotation() const {
-    return static_cast<const Rotation_ &>(*this);
+    return rotation_;
   }
 
 
@@ -92,29 +96,8 @@ class HomogeneousTransformation : public HomogeneousTransformationBase<Homogeneo
     return out;
   }
 
-  /*! \brief Sets the pose to identity
-   *  \returns reference
-   */
-  HomogeneousTransformation& setIdentity() {
-    Position::setZero();
-    Rotation::setIdentity();
-    return *this;
-  }
 
-  /*! \brief Returns the inverse of the rotation
-   *  \returns inverse of the rotation
-   */
-  HomogeneousTransformation inverted() const {
-    return HomogeneousTransformation( -getRotation().rotate(getPosition()), getRotation().inverted() );
-  }
 
-  /*! \brief Inverts the rotation.
-   *  \returns reference
-   */
-  HomogeneousTransformation& invert() { 
-    getPosition() = -getRotation().rotate(getPosition());
-    getRotation().invert();
-  }
 
 
 };
@@ -136,8 +119,9 @@ class HomogeneousTransformationPosition3RotationQuaternion: public HomogeneousTr
 
 };
 
-typedef HomogeneousTransformationPosition3RotationQuaternion<double> HomogeneousTransformationPosition3RotationQuaternionD;
-typedef HomogeneousTransformationPosition3RotationQuaternion<float> HomogeneousTransformationPosition3RotationQuaternionF;
+typedef HomogeneousTransformation<double, phys_quant::eigen_impl::Position<double, 3>, rotations::eigen_impl::RotationQuaternion<double, rotations::RotationUsage::PASSIVE>> HomogeneousTransformationPosition3RotationQuaternionD;
+
+typedef HomogeneousTransformation<float, phys_quant::eigen_impl::Position<float, 3>, rotations::eigen_impl::RotationQuaternion<float, rotations::RotationUsage::PASSIVE>> HomogeneousTransformationPosition3RotationQuaternionF;
 
 
 } // namespace eigen_impl
@@ -157,12 +141,7 @@ class TransformationTraits<eigen_impl::HomogeneousTransformation<PrimType_, Posi
   typedef typename eigen_impl::HomogeneousTransformation<PrimType_, Position_, Rotation_> Pose;
   typedef typename get_position<Pose>::Position Position;
  public:
-  inline static Position transform(const Pose & pose, const Position & position){
-    return pose.getRotation().rotate(position) + pose.getPosition();
-  }
-  inline static Position inverseTransform(const Pose & pose, const Position & position){
-    return pose.getRotation().inverseRotate((position-pose.getPosition()));
-  }
+
 };
 
 
