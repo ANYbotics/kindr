@@ -136,6 +136,17 @@ class PoseBase {
    *  \returns reference
    */
   Derived_& setIdentity();
+
+  /*! \brief Returns the inverse of the pose
+   *  \returns inverse of the pose
+   */
+  PoseBase inverted() const;
+
+  /*! \brief Inverts the pose
+   *  \returns reference
+   */
+  PoseBase& invert();
+
 };
 
 /*! \class HomogeneousTransformationBase

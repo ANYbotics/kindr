@@ -100,6 +100,23 @@ class HomogeneousTransformation : public HomogeneousTransformationBase<Homogeneo
     Rotation::setIdentity();
     return *this;
   }
+
+  /*! \brief Returns the inverse of the rotation
+   *  \returns inverse of the rotation
+   */
+  HomogeneousTransformation inverted() const {
+    return HomogeneousTransformation( -getRotation().rotate(getPosition()), getRotation().inverted() );
+  }
+
+  /*! \brief Inverts the rotation.
+   *  \returns reference
+   */
+  HomogeneousTransformation& invert() { 
+    getPosition() = -getRotation().rotate(getPosition());
+    getRotation().invert();
+  }
+
+
 };
 
 template<typename PrimType_>

@@ -1,5 +1,4 @@
 /*
-  /*
  * Copyright (c) 2013, Christian Gehring, Hannes Sommer, Paul Furgale, Remo Diethelm
  * All rights reserved.
  *
@@ -106,5 +105,26 @@ TYPED_TEST(HomogeneousTransformationTest, testGenericRotateVectorCompilable)
   pos::Velocity3D vel(-1,2,3);
   test.getRotation().rotate(vel);
 }
+
+TYPED_TEST(HomogeneousTransformationTest, testInvert)
+{
+  typedef typename TestFixture::Pose Pose;
+  typedef typename Pose::Position Position;
+  typedef typename Pose::Rotation Rotation;
+  Pose T_A_B( Position(1,2,3), Rotation(rot::AngleAxisPD(0.5,1.0,0.1,0.2)));
+  
+  Pose T_B_A = T_A_B.inverted();
+  
+  Pose Identity = T_A_B * T_B_A;
+  ASSERT_EQ(Identity.getPosition().vector().x(), 0);
+  ASSERT_EQ(Identity.getPosition().vector().y(), 0);
+  ASSERT_EQ(Identity.getPosition().vector().z(), 0);
+
+  ASSERT_EQ(Identity.getRotation().w(), 1);
+  ASSERT_EQ(Identity.getRotation().x(), 0);
+  ASSERT_EQ(Identity.getRotation().y(), 0);
+  ASSERT_EQ(Identity.getRotation().z(), 0);
+}
+
 
 
