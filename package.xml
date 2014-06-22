@@ -6,10 +6,10 @@
     Kindr - kinematics and dynamics for robotics
   </description>
 
-  <maintainer email="gehrinch@mavt.ethz.ch">Christian Gehring</maintainer>
+  <maintainer email="gehrinch@ethz.ch">Christian Gehring</maintainer>
   <license>BSD</license>
   <url type="repository">https://github.com/ethz-asl/kindr</url>
-  <author email="gehrinch@mavt.ethz.ch">Christian Gehring</author>
+  <author email="gehrinch@ethz.ch">Christian Gehring</author>
 
   <!-- The *_depend tags are used to specify dependencies -->
   <buildtool_depend>cmake</buildtool_depend>
