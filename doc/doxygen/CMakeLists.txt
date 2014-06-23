@@ -46,7 +46,7 @@ IF(DOXYGEN)
   
   CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/doxygen.config.in ${DOCSOURCE_DIR}/doxygen.config IMMEDIATE)
   
-  ADD_CUSTOM_TARGET(doc ${DOXYGEN} --silent ${DOCSOURCE_DIR}/doxygen.config)
+  ADD_CUSTOM_TARGET(doc ${DOXYGEN} ${DOCSOURCE_DIR}/doxygen.config)
 ENDIF(DOXYGEN)
 
 #-------------------------#
