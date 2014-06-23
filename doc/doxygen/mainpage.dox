@@ -77,7 +77,7 @@ unzip gtest-1.7.0.zip
 ln -s gtest-1.7.0 gtest
 mkdir build
 cd build
-cmake ..
+cmake .. -DBUILD_TEST=True
 make
 \endcode
 
