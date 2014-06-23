@@ -161,6 +161,7 @@ class TransformationBase {
   Derived_& invert() {
     derived().getPosition() = -derived().getRotation().inverseRotate(derived().getPosition());
     derived().getRotation().invert();
+    return *this;
   }
 
   /*! \brief Returns the pose in a unique form
