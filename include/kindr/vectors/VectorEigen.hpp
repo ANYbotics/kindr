@@ -437,6 +437,13 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
     return this->toImplementation().norm();
   }
 
+  /*! \brief Squared norm of the vector.
+   *  \returns norm.
+   */
+  Scalar squaredNorm() const {
+    return this->toImplementation().squaredNorm();
+  }
+
   /*! \brief Normalizes the vector.
    *  \returns reference.
    */
@@ -470,6 +477,16 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
   cross(const Vector<PhysicalTypeOther_, PrimType_, Dimension_>& other, typename std::enable_if<DimensionCopy_ == 3>::type* = nullptr) const {
     return typename internal::MultiplicationReturnTypeTrait<Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeOther_, PrimType_, Dimension_>>::ReturnType(this->toImplementation().cross(other.toImplementation()));
   }
+
+  /*! \brief Projects this vector on other vector.
+   *  \param other   other vector
+   *  \returns dot product.
+   */
+  template<enum phys_quant::PhysicalType PhysicalTypeOther_>
+  Vector<PhysicalType_, PrimType_, Dimension_> projectOn(const Vector<PhysicalTypeOther_, PrimType_, Dimension_>& other) const {
+    return other * (this->dot(other)/other.squaredNorm());
+  }
+
 
   /*! \brief Elementwise product with other vector.
    *  \param other   other vector
