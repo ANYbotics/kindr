@@ -478,9 +478,15 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
     return typename internal::MultiplicationReturnTypeTrait<Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeOther_, PrimType_, Dimension_>>::ReturnType(this->toImplementation().cross(other.toImplementation()));
   }
 
-  /*! \brief Projects this vector on other vector.
+  /*! \brief Projects this vector (a) on the other vector (b).
+   *  The result  is
+   *    proj = b/|b| * |a| * cos(angle) = b/|b| * |a| * a.b / |a| / |b|,
+   *  which is computed by
+   *           a.b
+   *  proj = ------- * a
+   *          |a|*|a|
    *  \param other   other vector
-   *  \returns dot product.
+   *  \returns projected vector.
    */
   template<enum phys_quant::PhysicalType PhysicalTypeOther_>
   Vector<PhysicalType_, PrimType_, Dimension_> projectOn(const Vector<PhysicalTypeOther_, PrimType_, Dimension_>& other) const {
