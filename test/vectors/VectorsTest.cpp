@@ -55,13 +55,17 @@ struct VectorTest: public ::testing::Test {
   typedef typename Vector::Implementation EigenVector;
 
   Scalar tol, sum, max, min, mean;
-  EigenVector vecZero, vec1, vec2, vecAdd, vecSubtract;
+  EigenVector vecZero, vec1, vec2, vec3, vecAdd, vecSubtract;
 
   Vector vectorDefault;
   Vector vectorFromMultipleValues;
   Vector vector1FromEigen;
   Vector vector2FromEigen;
+  Vector vector3FromEigen;
   Vector vectorFromVector;
+  Vector vec3ProjectedOnVec1;
+
+  Scalar vec1SquaredNorm;
 
   VectorTest() : tol(1e-6),
                  sum(150),
@@ -72,12 +76,16 @@ struct VectorTest: public ::testing::Test {
     vecZero = EigenVector::Zero();
     vec1 << 10,20,30,40,50;
     vec2 << 1,2,3,4,5;
+    vec3 << 5,4,3,2,1;
     vecAdd << 11,22,33,44,55;
     vecSubtract << 9,18,27,36,45;
     vectorFromMultipleValues << vec1(0),vec1(1),vec1(2),vec1(3),vec1(4);
     vector1FromEigen = Vector(vec1);
     vector2FromEigen = Vector(vec2);
+    vector3FromEigen = Vector(vec3);
     vectorFromVector = vector1FromEigen;
+    vec1SquaredNorm = Scalar(5500.0);
+    vec3ProjectedOnVec1 << Scalar(0.636363636363636), Scalar(1.272727272727272), Scalar(1.909090909090909), Scalar(2.545454545454545), Scalar(3.181818181818182);
   }
 };
 
@@ -380,4 +388,21 @@ TYPED_TEST(VectorTest, testVector)
   test3 = ForceDynd(Force3d(1,2,3));
   test2 = test3;
   LengthDynd(ForceDynd(Force3d(1,2,3)));
+}
+
+TYPED_TEST(VectorTest, squaredNorm)
+{
+  ASSERT_EQ(this->vec1SquaredNorm, this->vector1FromEigen.squaredNorm());
+}
+
+TYPED_TEST(VectorTest, projectOn)
+{
+  typedef typename TestFixture::Vector Vector;
+  Vector result = this->vector3FromEigen.projectOn(this->vector1FromEigen);
+
+  ASSERT_NEAR(this->vec3ProjectedOnVec1(0),result(0), 1e-6);
+  ASSERT_NEAR(this->vec3ProjectedOnVec1(1),result(1), 1e-6);
+  ASSERT_NEAR(this->vec3ProjectedOnVec1(2),result(2), 1e-6);
+  ASSERT_NEAR(this->vec3ProjectedOnVec1(3),result(3), 1e-6);
+  ASSERT_NEAR(this->vec3ProjectedOnVec1(4),result(4), 1e-6);
 }
