@@ -36,6 +36,29 @@
 
 namespace kindr {
 namespace common {
+
+namespace test {
+
+//TODO we should have a better place for test tools - especially libeigen independent ones
+template <typename T>
+double calcRotationQuatDisparityAngleToIdentity(const T & quat){
+  // We need the shortest angle to 1 or -1, as the both represent rotation identity.
+  // If the real part is nonnegative we can measure to 1 otherwise we should measure to -1.
+  // The second case will have the same distance to -1 as the the negated quaternion to 1.
+  // This means we can just look at the absolute value of the real part (the value we calculate the distance based on).
+  const double wAbs = fabs(quat.w());
+  // by a simple geometric intuition we get the distance to -1 in the unit quaternions (along a great circle) as acos(wAbs).
+  // As the distance in rotations is always twice as big we finally get:
+  return acos(wAbs)*2;
+}
+
+template <typename T>
+double calcRotationQuatDisparityAngle(const T & q1, const T & q2){
+  return calcRotationQuatDisparityAngleToIdentity(q1.inverted() * q2);
+}
+
+}
+
 namespace eigen {
 
 
