@@ -66,6 +66,8 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
   static constexpr int DynamicDimension = -1;
 
  public:
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
   /*! \brief The implementation type.
    *
    *  The implementation type is always an Eigen object.
