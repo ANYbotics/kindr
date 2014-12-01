@@ -8,26 +8,24 @@
 
 #include <cmath>
 #include <gtest/gtest.h>
-#include <kindr/core/SE3.hpp>
-#include <kindr/core/T3.hpp>
-#include <kindr/core/SO3.hpp>
+#include <kindr/core/oo/All.hpp>
 
 using namespace kindr::core;
+using namespace kindr::core::oo;
+
 const Vector3d zero = Vector3d::Zero();
 const Vector3d x = Vector3d::UnitX();
 const Vector3d y = Vector3d::UnitY();
 const Vector3d z = Vector3d::UnitZ();
 const Matrix4d MatId4x4 = Matrix4d::Identity();
-
 const double halfPi = M_PI / 2.0;
-
 
 TEST(SE3Test, testCompileAndShowcase) {
   // construct
-  SE3Matrix4D se3Id = SE3Matrix4D::exp(zero);
-  SE3Matrix4D se3Id2(MatId4x4);
+  SE3Mat4D se3Id = SE3Mat4D::exp(zero);
+  SE3Mat4D se3Id2(MatId4x4);
 
-  Translation3D transX(x);
+  T3VecD transX(x);
   AngleAxisD angleAxisHalfPiX({halfPi, x});
   AngleAxisD angleAxisOneX = AngleAxisD::exp(x);
 
@@ -49,6 +47,7 @@ TEST(SE3Test, testCompileAndShowcase) {
   EXPECT_NEAR((matHalfPiX - R1.getMatrix()).norm(), 0, 1e-9);
   EXPECT_NEAR((matHalfPiX - R2.getMatrix()).norm(), 0, 1e-9);
   EXPECT_NEAR((matHalfPiX - R3.getMatrix()).norm(), 0, 1e-9);
+  EXPECT_NEAR((matHalfPiX - (R3 = angleAxisHalfPiX).getMatrix()).norm(), 0, 1e-9);
 
   // apply se3Id:
   EXPECT_EQ(x, se3Id.apply(x));
@@ -60,17 +59,20 @@ TEST(SE3Test, testCompileAndShowcase) {
 
   // compose
   EXPECT_EQ(MatId4x4, (se3Id * se3Id).getMatrix4());
-  EXPECT_EQ(SO3AfterT3<AngleAxisD>(angleAxisHalfPiX, transX), angleAxisHalfPiX * transX); // an experimental support for composition across different SE3 types
-  EXPECT_NEAR((x + z - (angleAxisHalfPiX * transX).apply(y)).norm(), 0, 1e-9);
+//  angleAxisHalfPiX * transX;
+  //EXPECT_EQ(se3::SO3AfterT3<AngleAxisD>(angleAxisHalfPiX, transX), angleAxisHalfPiX * transX); // an experimental support for composition across different SE3 types
+//  EXPECT_NEAR((x + z - (angleAxisHalfPiX * transX).apply(y)).norm(), 0, 1e-9);
 }
 
 // ***************** High level stuff : involving the concept of frames
 
 // ** factory concept: simple, but not type safe
 namespace factories {
+  using so3::AngleAxis;
+
 // TODO find a better naming scheme
   template <typename Scalar>
-  static AngleAxis<Scalar> rotateVectorAroundAxis( Scalar angle, Vector3<Scalar> axis ) {
+  static AngleAxis<Scalar> rotateVectorAroundAxis( Scalar angle, const Vector3<Scalar> & axis ) {
     return AngleAxis<Scalar>({angle, axis});
   }
   template <typename SO3ParamType>

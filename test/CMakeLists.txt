@@ -74,6 +74,7 @@ add_gtest(runUnitTestsLinearAlgebra ${LINEARALGEBRA_SRCS})
 
 set(CORE_SRCS
 	test_main.cpp
+	core/FunctionalTest.cpp
 	core/SE3Test.cpp
 )
 add_gtest(runUnitTestsCore ${CORE_SRCS})
@@ -86,7 +87,6 @@ add_gtest( runUnitTestsQuaternions ${QUATERNIONS_SRCS} )
 
 set(ROTATION_SRCS
 	test_main.cpp
-	core/SE3Test.cpp
 	rotations/eigen/RotationMatrixTest.cpp
 	rotations/eigen/RotationQuaternionTest.cpp
 	rotations/eigen/RotationVectorTest.cpp
