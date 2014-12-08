@@ -64,8 +64,8 @@ class SE3 {
 
   // Homogeneous coordinates interface //TODO better name or overload solution!
   Vector4<Scalar> applyToHom(const Vector4<Scalar> & homCoords) const { return Parameterization::apply(storage_, homCoords); }
-  template <int Colums>
-  Matrix4N<Scalar, Colums> applyToHomColumnwise(const Matrix4N<Scalar, Colums> & columHomCoords) const { return Parameterization::apply(storage_, columHomCoords); }
+  template <int Cols>
+  Matrix4N<Scalar, Cols> applyToHomColumnwise(const Matrix4N<Scalar, Cols> & colmnwiseHomCoords) const { return Parameterization::apply(storage_, colmnwiseHomCoords); }
 
 
   // upcasts to derived Derived
