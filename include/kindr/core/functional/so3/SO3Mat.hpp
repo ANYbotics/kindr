@@ -18,7 +18,7 @@ struct SO3Mat {
     return M*v;
   }
 
-  static Storage invert(const Storage & M){
+  static Storage inverse(const Storage & M){
     return M.transpose();
   }
 

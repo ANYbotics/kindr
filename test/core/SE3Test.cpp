@@ -59,9 +59,9 @@ TEST(SE3Test, testCompileAndShowcase) {
 
   // compose
   EXPECT_EQ(MatId4x4, (se3Id * se3Id).getMatrix4());
-//  angleAxisHalfPiX * transX;
-  //EXPECT_EQ(se3::SO3AfterT3<AngleAxisD>(angleAxisHalfPiX, transX), angleAxisHalfPiX * transX); // an experimental support for composition across different SE3 types
-//  EXPECT_NEAR((x + z - (angleAxisHalfPiX * transX).apply(y)).norm(), 0, 1e-9);
+  angleAxisHalfPiX * transX;
+  EXPECT_EQ(se3::SO3AfterT3<AngleAxisD>(angleAxisHalfPiX, transX), angleAxisHalfPiX * transX); // an experimental support for composition across different SE3 types
+  EXPECT_NEAR((x + z - (angleAxisHalfPiX * transX).apply(y)).norm(), 0, 1e-9);
 }
 
 // ***************** High level stuff : involving the concept of frames
@@ -81,11 +81,11 @@ namespace factories {
   }
   template <typename Scalar>
   static AngleAxis<Scalar> rotateFrameAroundAxis( Scalar angle, Vector3<Scalar> axis ) {
-    return AngleAxis<Scalar>({angle, axis}).invert();
+    return AngleAxis<Scalar>({angle, axis}).inverse();
   }
   template <typename SO3ParamType>
   static typename AngleAxis<typename SO3ParamType::Scalar>::Storage asRotateFrameAroundAxis( const SO3<SO3ParamType> & so3 ) {
-    return so3.template cast< AngleAxis<typename SO3ParamType::Scalar> >().invert().getStorage();
+    return so3.template cast< AngleAxis<typename SO3ParamType::Scalar> >().inverse().getStorage();
   }
 }
 
@@ -93,7 +93,7 @@ TEST(SE3Test, modelLevelExperiments_factoryBased) {
   SO3MatD mRotateVector(factories::rotateVectorAroundAxis( 1.0, x ));
   SO3MatD mRotateFrame(factories::rotateFrameAroundAxis( 1.0, x ));
 
-  EXPECT_NEAR((mRotateVector.invert().getMatrix() - mRotateFrame.getMatrix()).norm(), 0, 1e-9);
+  EXPECT_NEAR((mRotateVector.inverse().getMatrix() - mRotateFrame.getMatrix()).norm(), 0, 1e-9);
 
   EXPECT_EQ(x , factories::asRotateVectorAroundAxis( mRotateVector ).axis);
   EXPECT_EQ(x , factories::asRotateFrameAroundAxis( mRotateFrame ).axis);
@@ -128,8 +128,8 @@ class ActiveSE3 {
 
   Vector apply(const Vector & v) const { return Vector(se3_.apply(v)); }
 
-  ActiveSE3 invert() const {
-    return ActiveSE3(se3_.invert());
+  ActiveSE3 inverse() const {
+    return ActiveSE3(se3_.inverse());
   }
 
   template <typename OtherParam>
@@ -159,8 +159,8 @@ class Transformation {
 
   ToVector apply(const FromVector & v) { return ToVector(se3_.apply(v)); }
 
-  Transformation<FromFrame, ToFrame, Param> invert(){
-    return Transformation<FromFrame, ToFrame, Param>(se3_.invert());
+  Transformation<FromFrame, ToFrame, Param> inverse(){
+    return Transformation<FromFrame, ToFrame, Param>(se3_.inverse());
   }
   template <typename OtherFromFrame, typename OtherParam>
   Transformation<ToFrame, OtherFromFrame, Param> operator * (const Transformation<FromFrame, OtherFromFrame, OtherParam> & other){
@@ -171,7 +171,7 @@ class Transformation {
     return reinterpret_cast<ActiveSE3<ToFrame, Param> &>(*this);
   }
   ActiveSE3<FromFrame, Param> asActiveInFromFrame() {
-    return ActiveSE3<FromFrame, Param>(se3_.invert());
+    return ActiveSE3<FromFrame, Param>(se3_.inverse());
   }
  private:
   template <typename OToFrame, typename OFromFrame, typename OParam> friend class Transformation;

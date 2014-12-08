@@ -13,7 +13,7 @@ namespace functional {
 
 template<typename From, typename To>
 struct Conversions {
-  static void convertInto(const From & from, To & into){
+  static void convertInto(const From & /*from*/, To & /*into*/){
     static_assert(sizeof(From) < 0, "Conversion not supported");
   }
 };

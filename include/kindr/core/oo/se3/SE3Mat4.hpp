@@ -17,6 +17,7 @@ class SE3Mat4: public SE3<SE3Mat4<Scalar_>> { // TODO find better name
   typedef typename Base::Storage Storage;
 
   using Base::Base;
+  using Base::operator =;
 
   const Storage & getMatrix4() const {
     return this->getStorage();

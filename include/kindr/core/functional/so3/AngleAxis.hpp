@@ -24,7 +24,7 @@ struct AngleAxis {
     return Eigen::AngleAxis<Scalar>(angleAxis.angle, angleAxis.axis)*v;
   }
 
-  static Storage invert(const Storage & angleAxis){
+  static Storage inverse(const Storage & angleAxis){
     return {angleAxis.angle, -angleAxis.axis};
   }
 

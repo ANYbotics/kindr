@@ -30,6 +30,12 @@ template <typename Scalar, int Columns>
 using Matrix4N = Eigen::Matrix<Scalar, 4, Columns>;
 
 template <typename Scalar>
+using Vector6 = Eigen::Matrix<Scalar, 6, 1>;
+typedef Vector6<float> Vector6f;
+typedef Vector6<double> Vector6d;
+
+
+template <typename Scalar>
 using Matrix3 = Eigen::Matrix<Scalar, 3, 3>;
 using Eigen::Matrix3f;
 using Eigen::Matrix3d;

@@ -23,41 +23,41 @@ class SO3AfterT3: public SE3<SO3AfterT3<SO3ParamType_, T3ParamType_>> {
   typedef typename Base::Storage Storage;
 
   using Base::Base; // inherit constructors
-  SO3AfterT3(const SO3ParamType & so3, const T3<Scalar> & t3) : Base(Storage({so3, t3})) {}
+  SO3AfterT3(const SO3ParamType & so3, const T3ParamType & t3) : Base(Storage({so3.getStorage(), t3.getStorage()})) {}
 
   SO3ParamType & getSo3() { return this->getStorage().so3; }
   const SO3ParamType & getSo3() const { return this->getStorage().so3; }
-  T3<Scalar> & getT3() { return this->getStorage().t3; }
-  const T3<Scalar> & getT3() const { return this->getStorage().t3; }
+  T3ParamType & getT3() { return this->getStorage().t3; }
+  const T3ParamType & getT3() const { return this->getStorage().t3; }
 };
 
 template <typename SO3ParamType_, typename T3ParamType_ = DefaultT3<SO3ParamType_> >
-class T3AfterSO3: public SO3AfterT3<SO3ParamType_, T3ParamType_> {
+class T3AfterSO3: public SE3<T3AfterSO3<SO3ParamType_, T3ParamType_>> {
  public:
   typedef SO3ParamType_ SO3ParamType;
   typedef T3ParamType_ T3ParamType;
-  typedef SE3<SO3AfterT3<SO3ParamType_, T3ParamType_> > Base;
+  typedef SE3<T3AfterSO3<SO3ParamType_, T3ParamType_>> Base;
   typedef typename Base::Scalar Scalar;
   typedef typename Base::Storage Storage;
 
   using Base::Base; // inherit constructors
-  T3AfterSO3(const SO3ParamType & so3, const T3<Scalar> & t3) : Base(Storage({so3, t3})) {}
+  T3AfterSO3(const SO3ParamType & so3, const T3ParamType & t3) : Base(Storage({so3, t3})) {}
 
   SO3ParamType & getSo3() { return this->getStorage().so3; }
   const SO3ParamType & getSo3() const { return this->getStorage().so3; }
-  T3<Scalar> & getT3() { return this->getStorage().t3; }
-  const T3<Scalar> & getT3() const { return this->getStorage().t3; }
+  T3ParamType & getT3() { return this->getStorage().t3; }
+  const T3ParamType & getT3() const { return this->getStorage().t3; }
 };
 } // namespace se3
 
 template<typename SO3ParamType_, typename T3ParamType_>
 struct GetParam< se3::SO3AfterT3<SO3ParamType_, T3ParamType_> > {
-  typedef functional::se3::SO3AfterT3<typename SO3ParamType_::Storage, typename T3ParamType_::Storage> type;
+  typedef functional::se3::SO3AfterT3<typename SO3ParamType_::Parameterization, typename T3ParamType_::Parameterization> type;
 };
 
 template<typename SO3ParamType_, typename T3ParamType_>
 struct GetParam< se3::T3AfterSO3<SO3ParamType_, T3ParamType_> > {
-  typedef functional::se3::SO3AfterT3<typename SO3ParamType_::Storage, typename T3ParamType_::Storage> type;
+  typedef functional::se3::T3AfterSO3<typename SO3ParamType_::Parameterization, typename T3ParamType_::Parameterization> type;
 };
 
 

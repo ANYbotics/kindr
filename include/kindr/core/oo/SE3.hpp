@@ -1,10 +1,3 @@
-/*
- * SE3.hpp
- *
- *  Created on: Nov 13, 2014
- *      Author: hannes
- */
-
 #ifndef SE3_HPP_
 #define SE3_HPP_
 
@@ -54,7 +47,7 @@ class SE3 {
   template <int Colums>
   Matrix3N<Scalar, Colums> applyColumnwise(const Matrix3N<Scalar, Colums> & columVectors) const { return Parameterization::apply(storage_, columVectors); }
 
-  Derived invert() { return Parameterization::invert(storage_); }
+  Derived inverse() const { return Parameterization::inverse(storage_); }
 
   inline Derived operator * (const Derived & other) const { return Parameterization::compose(getStorage(), other.getStorage()); }
 
@@ -77,7 +70,7 @@ class SE3 {
   Storage& getStorage() { return storage_; }
   const Storage& getStorage() const { return storage_; }
 
-  // delegating operators:
+  // applying operators:
   Vector3<Scalar> operator ()(const Vector3<Scalar> & vec) const { return apply(vec); }
   Vector3<Scalar> operator * (const Vector3<Scalar> & vec) const { return apply(vec); }
 

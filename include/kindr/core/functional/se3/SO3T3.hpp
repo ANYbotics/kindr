@@ -20,10 +20,10 @@ struct SO3T3Pair {
   typedef T3ParamType_ T3ParamType;
   typedef typename SO3ParamType::Scalar Scalar;
 
-  typedef Vector3<Scalar> LieAlgebraVector;
+  typedef Vector6<Scalar> LieAlgebraVector;
   struct Storage {
-    SO3ParamType so3;
-    T3ParamType t3;
+    typename SO3ParamType::Storage so3;
+    typename T3ParamType::Storage t3;
     bool operator == (const Storage& other) const {
       return t3 == other.t3 && so3 == other.so3;
     }
@@ -43,7 +43,7 @@ struct SO3AfterT3 : public SO3T3Pair<SO3ParamType_, T3ParamType_> {
   typedef typename Base::Storage Storage;
 
   static Vector3<Scalar> apply(const Storage & t, const Vector3<Scalar> & vec) {
-    return t.so3.apply(t.t3.apply(vec));
+    return SO3ParamType_::apply(t.so3, T3ParamType_::apply(t.t3, vec));
   }
 };
 
