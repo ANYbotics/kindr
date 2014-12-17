@@ -259,8 +259,6 @@ class RotationDiffConversionTraits<eigen_impl::EulerAnglesZyxDiff<PrimType_, Rot
 
 
   inline static eigen_impl::EulerAnglesZyxDiff<PrimType_, RotationUsage::PASSIVE> convert(const eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE>& eulerAngles, const eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::PASSIVE>& angularVelocity) {
-    typedef typename Eigen::Matrix<PrimType_, 3, 3> Matrix3x3;
-
     const PrimType_ theta = eulerAngles.pitch();
     const PrimType_ phi = eulerAngles.roll();
     const PrimType_ w1 = angularVelocity.x();

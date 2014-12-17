@@ -259,9 +259,6 @@ template<typename PrimType_>
 class RotationDiffConversionTraits<eigen_impl::EulerAnglesXyzDiff<PrimType_, RotationUsage::PASSIVE>, eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::PASSIVE>, eigen_impl::EulerAnglesXyz<PrimType_, RotationUsage::PASSIVE>> {
  public:
   inline static eigen_impl::EulerAnglesXyzDiff<PrimType_, RotationUsage::PASSIVE> convert(const eigen_impl::EulerAnglesXyz<PrimType_, RotationUsage::PASSIVE>& eulerAngles, const eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::PASSIVE>& angularVelocity) {
-    typedef typename Eigen::Matrix<PrimType_, 3, 3> Matrix3x3;
-
-
     const PrimType_ beta_Var = eulerAngles.pitch();
     const PrimType_ gamma_Var = eulerAngles.yaw();
     const PrimType_ w1 = angularVelocity.toImplementation()(0);
