@@ -95,16 +95,35 @@ file(WRITE cmake/FindKindr.cmake
 # and can be used through cmake to find the corresponding header files. A copy of this
 # file was created in ${CMAKE_ROOT}/Modules (depending on the CMAKE_ROOT variable).
 
-set(Kindr_INCLUDE_DIRS
+set(kindr_INCLUDE_DIRS
 ${CMAKE_INSTALL_PREFIX}/include/Kindr/include
 )
-set(Kindr_FOUND TRUE)
-#message(\"-- Kindr found (include: ${CMAKE_INSTALL_PREFIX}/include/Kindr/include)\")
+set(kindr_FOUND TRUE)
+message(\"-- Kindr found (include: ${CMAKE_INSTALL_PREFIX}/include/Kindr/include)\")
+# This causes catkin_simple to link against these libraries
+set(kindr_FOUND_CATKIN_PROJECT true)
+
 "
 )
 
 # Setting for make install
 install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_INSTALL_PREFIX}/include/Kindr)")
 install(DIRECTORY include DESTINATION ${CMAKE_INSTALL_PREFIX}/include/Kindr)
-install(FILES cmake/FindKindr.cmake DESTINATION ${CMAKE_ROOT}/Modules)
+#install(FILES cmake/FindKindr.cmake DESTINATION ${CMAKE_ROOT}/Modules)
+
+# Install catkin package.xml
+install(FILES package.xml DESTINATION share/kindr)
+
+# # Create cmake configure scripts so other packages can find kindr
+# set(kindr_include_dirs ${CMAKE_INSTALL_PREFIX}/include/Kindr/include)
+
+# configure_file(kindrConfig.cmake.in
+#    "${PROJECT_BINARY_DIR}/kindrConfig.cmake" @ONLY)
+# configure_file(kindrConfigVersion.cmake.in
+#    "${PROJECT_BINARY_DIR}/kindrConfigVersion.cmake" @ONLY)
+
+# install(FILES
+#    "${PROJECT_BINARY_DIR}/kindrConfig.cmake"
+#    "${PROJECT_BINARY_DIR}/kindrConfigVersion.cmake"
+#    DESTINATION share/kindr/cmake COMPONENT dev)
 
