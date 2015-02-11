@@ -104,7 +104,63 @@ set(Kindr_FOUND TRUE)
 )
 
 # Setting for make install
-install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_INSTALL_PREFIX}/include/Kindr)")
-install(DIRECTORY include DESTINATION ${CMAKE_INSTALL_PREFIX}/include/Kindr)
-install(FILES cmake/FindKindr.cmake DESTINATION ${CMAKE_ROOT}/Modules)
+#install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_INSTALL_PREFIX}/include/Kindr)")
+#install(DIRECTORY include DESTINATION ${CMAKE_INSTALL_PREFIX}/include/Kindr OPTIONAL)
+#install(FILES cmake/FindKindr.cmake DESTINATION ${CMAKE_ROOT}/Modules)
 
+# Install catkin package.xml
+install(FILES package.xml DESTINATION share/kindr)
+
+
+#=============================================
+# to allow find_package() on kindr
+#=============================================
+# 
+# the following case be used in an external project requiring kindr:
+#  ...
+#  find_package(kindr) 
+#  include_directories(${kindr_INCLUDE_DIRS}) 
+#  ...
+
+# NOTE: the following will support find_package for 1) local build (make) and 2) for installed files (make install)
+
+# 1- local build #
+
+# Register the local build in case one doesn't use "make install"
+export(PACKAGE kindr)
+
+# Create variable for the local build tree
+get_property(kindr_include_dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+# Configure config file for local build tree
+configure_file(kindrConfig.cmake.in
+  "${PROJECT_BINARY_DIR}/kindrConfig.cmake" @ONLY)
+
+# 2- installation build #
+
+# Change the include location for the case of an install location
+set(kindr_include_dirs ${CMAKE_INSTALL_PREFIX}/include)
+
+# We put the generated file for installation in a different repository (i.e., ./CMakeFiles/)
+configure_file(kindrConfig.cmake.in
+  "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/kindrConfig.cmake" @ONLY)
+
+# The same versioning file can be used for both cases
+configure_file(kindrConfigVersion.cmake.in
+  "${PROJECT_BINARY_DIR}/kindrConfigVersion.cmake" @ONLY)
+
+install(FILES
+  "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/kindrConfig.cmake"
+  DESTINATION share/kindr/cmake COMPONENT dev)
+
+
+
+#=============================================
+# Add uninstall target
+#=============================================
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+    IMMEDIATE @ONLY)
+
+add_custom_target(uninstall
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
