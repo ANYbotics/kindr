@@ -31,6 +31,12 @@ project(kindr)
 #set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}" ${CMAKE_MODULE_PATH})
+
+find_package(Eigen3 REQUIRED)
+
+include_directories(include)
+include_directories(${EIGEN3_INCLUDE_DIR})
 
 # Noisily default to Release build
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
@@ -59,6 +65,9 @@ endif()
 
 # Add CMake module path
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+
+
+install(DIRECTORY include/kindr DESTINATION include)
 
 # Add common
 #add_subdirectory(common)
@@ -90,18 +99,18 @@ add_subdirectory(doc/doxygen)
 ADD_CUSTOM_TARGET(demo DEPENDS demo_rotations)
 
 # Generate FindKindr.cmake file
-file(WRITE cmake/FindKindr.cmake
-"# This file was automatically generated during the installation of the Kindr library
-# and can be used through cmake to find the corresponding header files. A copy of this
-# file was created in ${CMAKE_ROOT}/Modules (depending on the CMAKE_ROOT variable).
+#  file(WRITE cmake/FindKindr.cmake
+#  "# This file was automatically generated during the installation of the Kindr library
+  # and can be used through cmake to find the corresponding header files. A copy of this
+  # file was created in ${CMAKE_ROOT}/Modules (depending on the CMAKE_ROOT variable).
 
-set(Kindr_INCLUDE_DIRS
-${CMAKE_INSTALL_PREFIX}/include/Kindr/include
-)
-set(Kindr_FOUND TRUE)
-#message(\"-- Kindr found (include: ${CMAKE_INSTALL_PREFIX}/include/Kindr/include)\")
-"
-)
+#  set(Kindr_INCLUDE_DIRS
+#  ${CMAKE_INSTALL_PREFIX}/include/Kindr/include
+#  )
+#  set(Kindr_FOUND TRUE)
+  #message(\"-- Kindr found (include: ${CMAKE_INSTALL_PREFIX}/include/Kindr/include)\")
+#  "
+#)
 
 # Setting for make install
 #install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_INSTALL_PREFIX}/include/Kindr)")
@@ -131,6 +140,7 @@ export(PACKAGE kindr)
 
 # Create variable for the local build tree
 get_property(kindr_include_dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+
 # Configure config file for local build tree
 configure_file(kindrConfig.cmake.in
   "${PROJECT_BINARY_DIR}/kindrConfig.cmake" @ONLY)
@@ -140,13 +150,10 @@ configure_file(kindrConfig.cmake.in
 # Change the include location for the case of an install location
 set(kindr_include_dirs ${CMAKE_INSTALL_PREFIX}/include)
 
+
 # We put the generated file for installation in a different repository (i.e., ./CMakeFiles/)
 configure_file(kindrConfig.cmake.in
   "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/kindrConfig.cmake" @ONLY)
-
-# The same versioning file can be used for both cases
-configure_file(kindrConfigVersion.cmake.in
-  "${PROJECT_BINARY_DIR}/kindrConfigVersion.cmake" @ONLY)
 
 install(FILES
   "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/kindrConfig.cmake"
