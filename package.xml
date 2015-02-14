@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package>
+	<name>kindr</name>
+	<version>0.0.0</version>
+	<description>
+	 	Kinematics and Dynamics for Robotics
+	</description>
+	<license>BSD</license>
+	<url type="repository">https://github.com/ethz-asl/kindr</url>
+	<maintainer email="gehrinch@ethz.ch">Christian Gehring</maintainer>
+	<author>Michael Bloesch</author>
+	<author>Péter Fankhauser</author>
+	<author>Paul Furgale</author>
+	<author>Christian Gehring</author>
+	<author>Hannes Sommer</author>
+	<!-- The *_depend tags are used to specify dependencies -->
+	<buildtool_depend>cmake</buildtool_depend>
+	<build_depend>eigen</build_depend>
+	<run_depend>eigen</run_depend>
+	<run_depend>catkin</run_depend>
+	<export>
+		<!-- Specify that this is not really a ROS package-->
+		<build_type>cmake</build_type>
+	</export>
+</package>

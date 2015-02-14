@@ -1,5 +1,6 @@
 Kindr - Kinematics and Dynamics for Robotics
------------------------------------------------------------------
+============================================
+
 Autonomous Systems Lab
 ETH Zurich
 
@@ -11,62 +12,112 @@ Date     : 08-Aug-2013
 
 [![Build Status](http://129.132.38.183:8080/job/kindr/badge/icon)](http://129.132.38.183:8080/job/kindr/)
 
-DOCUMENTATION
------------------------------------------------------------------
+## Documentation
+
 [Online](http://ethz-asl-lr.bitbucket.org/kindr)
 
 Impatient individuals can directly download the [cheat sheet](http://ethz-asl-lr.bitbucket.org/kindr/cheatsheet_latest.pdf).
 
 See also section 'Building the documentation' below.
 
-REQUIREMENTS
------------------------------------------------------------------
-Linux
------------------------------
+## Requirements
+
+### Linux
 GCC 4.7 is required at the minimum.
 
-INSTALLATION
------------------------------------------------------------------
-Building the library:
------------------------------
-Build the library with CMake:
+## Installation
+
+### Building with cmake
+
+Install the library with [CMake](www.cmake.org):
+
 ```bash
-kindr$ mkdir build
-kindr$ cd build
-kindr$ cmake ..
-kindr$ make
-kindr$ sudo make install
+mkdir build
+cd build
+cmake ..
+sudo make install
 ```
 
-Building the documentation:
------------------------------
-Doxygen needs to be installed to create the documentation.
+Uninstall the library with:
 
-Build the documentation with doxygen:
 ```bash
-kindr$ mkdir build
-kindr$ cd build
-kindr$ cmake ..
-kindr$ make doc
+cd build
+sudo sudo make uninstall
+```
+
+Kindr can be included in your cmake project.
+Add the following to your *CmakeLists.txt*:
+
+```
+find_package(kindr) 
+include_directories(${kindr_INCLUDE_DIRS}) 
+```
+
+### Building with catkin
+
+Build kindr with [catkin](wiki.ros.org/catkin):
+
+```bash
+cd ~/catkin_ws/src
+git clone git@github.com:ethz-asl/kindr.git
+catkin_make_isolated -C ~/catkin_ws
+
+```
+
+or with [catkin command line tools](http://catkin-tools.readthedocs.org):
+
+```bash
+cd ~/catkin_ws/src
+git clone git@github.com:ethz-asl/kindr.git
+catkin build -w ~/catkin_ws kindr
+```
+
+Kindr can be included in your catkin project with:
+Add the following to your *CMakeLists.txt*:
+
+```
+find_package(catkin COMPONENTS kindr) 
+include_directories(${catkin_INCLUDE_DIRS}) 
+```
+
+And to your *package.xml*:
+
+```xml
+<package>
+	<build_depend>kindr</build_depend>
+</package>
+```
+
+
+
+### Building the documentation
+
+Build the documentation with [Doxygen](www.doxygen.org):
+```bash
+mkdir build
+cd build
+cmake ..
+make doc
 ```
 
 The doxygen documentation can be found here:
 
-kindr$ doc/doxygen/doc/html/index.html
+```
+doc/doxygen/doc/html/index.html
+```
 
+### Building unit tests with gtest
 
-Building google tests
------------------------------
-GTests are built as soon as the folder gtest exists in the root folder.
+[GTests](https://code.google.com/p/googletest/) are only built if the folder *gtest* exists in the root folder.
 
 Download and use GTest:
 
 ```bash
-kindr$ wget http://googletest.googlecode.com/files/gtest-1.7.0.zip
-kindr$ unzip gtest-1.7.0.zip
-kindr$ ln -s gtest-1.7.0 gtest
-kindr$ mkdir build
-kindr$ cd build
-kindr$ cmake -DBUILD_TEST=true ..
-kindr$ make
+wget http://googletest.googlecode.com/files/gtest-1.7.0.zip
+unzip gtest-1.7.0.zip
+ln -s gtest-1.7.0 gtest
+mkdir build
+cd build
+cmake  .. -DBUILD_TEST=true
+make
 ```

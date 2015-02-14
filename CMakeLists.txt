@@ -28,9 +28,13 @@ cmake_minimum_required (VERSION 2.8)
 
 project(kindr)
 
-#set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
-#set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}" ${CMAKE_MODULE_PATH})
+
+find_package(Eigen3 REQUIRED)
+
+include_directories(include)
+include_directories(${EIGEN3_INCLUDE_DIR})
 
 # Noisily default to Release build
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
@@ -60,51 +64,68 @@ endif()
 # Add CMake module path
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
-# Add common
-#add_subdirectory(common)
 
-# Add linear algebra 
-#add_subdirectory(linear_algebra)
+install(DIRECTORY include/kindr DESTINATION include)
 
-# Add quaternions
-#add_subdirectory(quaternions)
-
-# Add rotations
-#add_subdirectory(rotations)
-
-# Add positions
-#add_subdirectory(positions)
-
-# Add poses
-#add_subdirectory(poses)
-
-# Add test
+# Add unit tests
 if(BUILD_GTEST)
 	add_subdirectory(test)
 endif()
 
-
 # Add Doxygen documentation
 add_subdirectory(doc/doxygen)
 
-ADD_CUSTOM_TARGET(demo DEPENDS demo_rotations)
+# Install catkin package.xml
+install(FILES package.xml DESTINATION share/kindr)
 
-# Generate FindKindr.cmake file
-file(WRITE cmake/FindKindr.cmake
-"# This file was automatically generated during the installation of the Kindr library
-# and can be used through cmake to find the corresponding header files. A copy of this
-# file was created in ${CMAKE_ROOT}/Modules (depending on the CMAKE_ROOT variable).
 
-set(Kindr_INCLUDE_DIRS
-${CMAKE_INSTALL_PREFIX}/include/Kindr/include
-)
-set(Kindr_FOUND TRUE)
-#message(\"-- Kindr found (include: ${CMAKE_INSTALL_PREFIX}/include/Kindr/include)\")
-"
-)
+#=============================================
+# to allow find_package() on kindr
+#=============================================
+# 
+# the following case be used in an external project requiring kindr:
+#  ...
+#  find_package(kindr) 
+#  include_directories(${kindr_INCLUDE_DIRS}) 
+#  ...
 
-# Setting for make install
-install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_INSTALL_PREFIX}/include/Kindr)")
-install(DIRECTORY include DESTINATION ${CMAKE_INSTALL_PREFIX}/include/Kindr)
-install(FILES cmake/FindKindr.cmake DESTINATION ${CMAKE_ROOT}/Modules)
+# NOTE: the following will support find_package for 1) local build (make) and 2) for installed files (make install)
 
+# 1- local build #
+
+# Register the local build in case one doesn't use "make install"
+export(PACKAGE kindr)
+
+# Create variable for the local build tree
+get_property(kindr_include_dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+
+# Configure config file for local build tree
+configure_file(kindrConfig.cmake.in
+  "${PROJECT_BINARY_DIR}/kindrConfig.cmake" @ONLY)
+
+# 2- installation build #
+
+# Change the include location for the case of an install location
+set(kindr_include_dirs ${CMAKE_INSTALL_PREFIX}/include)
+
+
+# We put the generated file for installation in a different repository (i.e., ./CMakeFiles/)
+configure_file(kindrConfig.cmake.in
+  "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/kindrConfig.cmake" @ONLY)
+
+install(FILES
+  "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/kindrConfig.cmake"
+  DESTINATION share/kindr/cmake COMPONENT dev)
+
+
+
+#=============================================
+# Add uninstall target
+#=============================================
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+    IMMEDIATE @ONLY)
+
+add_custom_target(uninstall
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
