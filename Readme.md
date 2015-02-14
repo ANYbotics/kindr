@@ -27,7 +27,7 @@ GCC 4.7 is required at the minimum.
 
 ## Installation
 
-### Building with CMake
+### Building with cmake
 
 Install the library with [CMake](www.cmake.org):
 
@@ -45,12 +45,50 @@ cd build
 sudo sudo make uninstall
 ```
 
-Kindr can be included in your cmake project with:
+Kindr can be included in your cmake project.
+Add the following to your *CmakeLists.txt*:
 
 ```
 find_package(kindr) 
 include_directories(${kindr_INCLUDE_DIRS}) 
 ```
+
+### Building with catkin
+
+Build kindr with [catkin](wiki.ros.org/catkin):
+
+```bash
+cd ~/catkin_ws/src
+git clone git@github.com:ethz-asl/kindr.git
+catkin_make_isolated -C ~/catkin_ws
+
+```
+
+or with [catkin command line tools](http://catkin-tools.readthedocs.org):
+
+```bash
+cd ~/catkin_ws/src
+git clone git@github.com:ethz-asl/kindr.git
+catkin build -w ~/catkin_ws kindr
+```
+
+Kindr can be included in your catkin project with:
+Add the following to your *CmakeLists.txt*:
+
+```
+find_package(catkin COMPONENTS kindr) 
+include_directories(${catkin_INCLUDE_DIRS}) 
+```
+
+And to your *package.xml*:
+
+```xml
+<package>
+	<build_depend>kindr</build_depend>
+</package>
+```
+
+
 
 ### Building the documentation
 
