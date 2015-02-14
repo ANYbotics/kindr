@@ -73,7 +73,7 @@ catkin build -w ~/catkin_ws kindr
 ```
 
 Kindr can be included in your catkin project with:
-Add the following to your *CmakeLists.txt*:
+Add the following to your *CMakeLists.txt*:
 
 ```
 find_package(catkin COMPONENTS kindr) 
