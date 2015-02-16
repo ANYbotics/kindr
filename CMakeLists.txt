@@ -76,7 +76,7 @@ endif()
 add_subdirectory(doc/doxygen)
 
 # Install catkin package.xml
-install(FILES package.xml DESTINATION share/kindr)
+#install(FILES package.xml DESTINATION share/kindr)
 
 
 #=============================================
