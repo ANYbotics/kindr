@@ -1,3 +1,10 @@
+kindr (0.1-497) unstable; urgency=low
+
+  * Switched from C++0x to C++11 compiler flags
+  * Removed precise distribution due to a lack of C++11 support
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Tue, 17 Feb 2015 07:53:00 +0100
+
 kindr (0.1-496) unstable; urgency=low
 
   * ReMake build system port

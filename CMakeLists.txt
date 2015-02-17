@@ -18,7 +18,7 @@ remake_project(
   README README.md
   PREFIX kindr-
   INSTALL /usr
-  EXTRA_CXX_FLAGS "-std=c++0x"
+  EXTRA_CXX_FLAGS "-std=c++11"
 )
 
 remake_doc(
@@ -38,13 +38,6 @@ remake_pack_deb(
   DESCRIPTION "documentation"
 )
 
-remake_distribute_deb(
-  DISTRIBUTION precise
-  SECTION libs
-  UPLOAD ppa:kralf/asl
-  DEPENDS libeigen3-dev libgtest-dev remake doxygen pkg-config
-  PASS CMAKE_BUILD_TYPE KINDR_GIT_REVISION
-)
 remake_distribute_deb(
   DISTRIBUTION trusty
   SECTION libs
