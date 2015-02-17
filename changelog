@@ -1,0 +1,3053 @@
+kindr (0.1-496) unstable; urgency=low
+
+  * ReMake build system port
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Tue, 17 Feb 2015 07:42:00 +0100
+
+kindr (0.1-495) unstable; urgency=low
+
+  * removed install in cmakelists
+
+ -- Dominic Jud <dominic.jud@mavt.ethz.ch>  Mon, 16 Feb 2015 15:09:55 +0100
+
+kindr (0.1-494) unstable; urgency=low
+
+  * Fixed typo in Readme.md
+
+ -- gehrinch <gehrinch@ethz.ch>  Sat, 14 Feb 2015 14:56:13 +0100
+
+kindr (0.1-493) unstable; urgency=low
+
+  * Added catkin to Readme.md
+
+ -- gehrinch <gehrinch@ethz.ch>  Sat, 14 Feb 2015 14:54:53 +0100
+
+kindr (0.1-492) unstable; urgency=low
+
+  * Cleaned Readme.md, CMakeLists.txt and package.xml
+
+ -- gehrinch <gehrinch@ethz.ch>  Sat, 14 Feb 2015 14:43:19 +0100
+
+kindr (0.1-491) unstable; urgency=low
+
+  * Commented create file FindKindr.cmake
+
+ -- gehrinch <gehrinch@ethz.ch>  Thu, 12 Feb 2015 08:42:26 +0100
+
+kindr (0.1-490) unstable; urgency=low
+
+  * Added package.xml
+
+ -- gehrinch <gehrinch@ethz.ch>  Wed, 11 Feb 2015 22:08:55 +0100
+
+kindr (0.1-489) unstable; urgency=low
+
+  * Removed unused typedefs.
+
+ -- gehrinch <gehrinch@ethz.ch>  Wed, 17 Dec 2014 15:07:15 +0100
+
+kindr (0.1-488) unstable; urgency=low
+
+  * Added EIGEN_MAKE_ALIGNED_OPERATOR_NEW to vector
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 28 Jul 2014 10:27:37 +0200
+
+kindr (0.1-487) unstable; urgency=low
+
+  * fixed and centralized the quaternion disparity angle computation
+
+ -- HannesSommer <hannes.sommer@mavt.ethz.ch>  Thu, 20 Mar 2014 19:30:37 +0100
+
+kindr (0.1-486) unstable; urgency=low
+
+  * Improved docu about projectOn
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 01 Jul 2014 20:39:14 +0200
+
+kindr (0.1-485) unstable; urgency=low
+
+  * Added squaredNorm and projectOn to vectors
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 01 Jul 2014 20:32:12 +0200
+
+kindr (0.1-484) unstable; urgency=low
+
+  * Removed argument --silent from doxygen command
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 23 Jun 2014 11:14:05 +0200
+
+kindr (0.1-483) unstable; urgency=low
+
+  * Fixed the unit test docs
+
+ -- Paul Furgale <paul.furgale@gmail.com>  Sun, 22 Jun 2014 17:45:41 +0200
+
+kindr (0.1-482) unstable; urgency=low
+
+  * Merge pull request #11 from ethz-asl/feature/ros_tf
+  * Feature/ros tf
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 19 Jun 2014 15:24:31 +0200
+
+kindr (0.1-481) unstable; urgency=low
+
+  * allow using ceres jet as scalar
+
+ -- Simon Lynen <simon.lynen@mavt.ethz.ch>  Mon, 26 May 2014 20:43:52 +0200
+
+kindr (0.1-480) unstable; urgency=low
+
+  * Added toImplementation to localAngularVelocity
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Sat, 24 May 2014 18:51:04 +0200
+
+kindr (0.1-479) unstable; urgency=low
+
+  * Fixed method  rotate of Rotation  for types derived from 
+    VectorBase
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 23 May 2014 17:10:51 +0200
+
+kindr (0.1-478) unstable; urgency=low
+
+  * Merge pull request #16 from ethz-asl/fix/Rotation.setFromVectors
+  * fixed setFromVectors -> uses now method Eigen::Quatertnion::setFromTwoVe...
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 22 May 2014 15:41:55 +0200
+
+kindr (0.1-477) unstable; urgency=low
+
+  * Fixed test EulerAnglesXyz
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 22 May 2014 15:34:39 +0200
+
+kindr (0.1-476) unstable; urgency=low
+
+  * fixed setFromVectors -> uses now method Eigen::Quatertnion::setFromTwoVectors
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 22 May 2014 14:39:07 +0200
+
+kindr (0.1-475) unstable; urgency=low
+
+  * Use Scalar type of matrix for assertions s.t. this works with Ceres
+    Jet
+
+ -- Simon Lynen <simon.lynen@mavt.ethz.ch>  Mon, 19 May 2014 23:49:39 +0200
+
+kindr (0.1-474) unstable; urgency=low
+
+  * Update Readme.md
+
+ -- Paul Furgale <paul.furgale@mavt.ethz.ch>  Fri, 16 May 2014 09:32:55 +0200
+
+kindr (0.1-473) unstable; urgency=low
+
+  * Merge branch 'origin/master'
+
+ -- Peter Fankhauser <pfankhauser@ethz.ch>  Thu, 01 May 2014 10:39:23 +0200
+
+kindr (0.1-472) unstable; urgency=low
+
+  * Merge pull request #14 from ethz-asl/develop
+  * vector constructors can now take other vectors of any type. dynamic
+    sized constructor now working
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 17 Apr 2014 15:40:05 +0200
+
+kindr (0.1-471) unstable; urgency=low
+
+  * vector constructors can now take other vectors of any type. dynamic
+    sized constructor now working
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Thu, 17 Apr 2014 14:23:58 +0200
+
+kindr (0.1-470) unstable; urgency=low
+
+  * Improved doc of RotationMatrix
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 16 Apr 2014 17:51:27 +0200
+
+kindr (0.1-469) unstable; urgency=low
+
+  * Merge pull request #13 from ethz-asl/develop
+  * Extended vector class
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 16 Apr 2014 09:15:54 +0200
+
+kindr (0.1-468) unstable; urgency=low
+
+  * added get/set-head/tail/segment to Vector class for dynamic and static
+    sized vectors
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 09 Apr 2014 10:10:57 +0200
+
+kindr (0.1-467) unstable; urgency=low
+
+  * added testing versions of dynamic head and tail functions
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 08 Apr 2014 17:38:52 +0200
+
+kindr (0.1-466) unstable; urgency=low
+
+  * Vector::segment() can now use variable starting index
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 08 Apr 2014 17:15:18 +0200
+
+kindr (0.1-465) unstable; urgency=low
+
+  * using fixed size Eigen head(), tail() and segment()
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 08 Apr 2014 17:12:57 +0200
+
+kindr (0.1-464) unstable; urgency=low
+
+  * Merge branch 'origin/master'
+
+ -- Peter Fankhauser <pfankhauser@ethz.ch>  Mon, 07 Apr 2014 16:25:25 +0200
+
+kindr (0.1-463) unstable; urgency=low
+
+  * Merge branch 'origin/develop'
+
+ -- Peter Fankhauser <pfankhauser@ethz.ch>  Mon, 07 Apr 2014 16:23:39 +0200
+
+kindr (0.1-462) unstable; urgency=low
+
+  * Warning if ROS not found.
+
+ -- Peter Fankhauser <pfankhauser@ethz.ch>  Mon, 07 Apr 2014 16:11:10 +0200
+
+kindr (0.1-461) unstable; urgency=low
+
+  * More conversions, generalizations and bugfixes.
+
+ -- Peter Fankhauser <pfankhauser@ethz.ch>  Mon, 07 Apr 2014 16:03:56 +0200
+
+kindr (0.1-460) unstable; urgency=low
+
+  * Merge pull request #10 from ethz-asl/develop
+  * Develop
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 04 Apr 2014 13:35:00 +0200
+
+kindr (0.1-459) unstable; urgency=low
+
+  * Adding conversions to ROS geomtry point, vector, and quaternion messages.
+
+ -- Peter Fankhauser <pfankhauser@ethz.ch>  Thu, 03 Apr 2014 16:34:05 +0200
+
+kindr (0.1-458) unstable; urgency=low
+
+  * Only building ROS tests if ROS is found on system
+
+ -- Peter Fankhauser <pfankhauser@ethz.ch>  Thu, 03 Apr 2014 15:16:38 +0200
+
+kindr (0.1-457) unstable; urgency=low
+
+  * Renaming files
+
+ -- Peter Fankhauser <pfankhauser@ethz.ch>  Thu, 03 Apr 2014 14:50:02 +0200
+
+kindr (0.1-456) unstable; urgency=low
+
+  * added small test
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Thu, 03 Apr 2014 14:33:34 +0200
+
+kindr (0.1-455) unstable; urgency=low
+
+  * Added convertToRosTf and testers
+
+ -- Peter Fankhauser <pfankhauser@ethz.ch>  Thu, 03 Apr 2014 13:59:48 +0200
+
+kindr (0.1-454) unstable; urgency=low
+
+  * Added findROS
+
+ -- Peter Fankhauser <pfankhauser@ethz.ch>  Thu, 03 Apr 2014 13:59:36 +0200
+
+kindr (0.1-453) unstable; urgency=low
+
+  * Merge branch 'origin/develop'
+
+ -- Peter Fankhauser <pfankhauser@ethz.ch>  Thu, 03 Apr 2014 13:09:13 +0200
+
+kindr (0.1-452) unstable; urgency=low
+
+  * added Pose::setIdentity() and PoseDiff::setZero() with tests
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Thu, 03 Apr 2014 11:36:40 +0200
+
+kindr (0.1-451) unstable; urgency=low
+
+  * Merge branch 'origin/develop'
+
+ -- Peter Fankhauser <pfankhauser@ethz.ch>  Thu, 03 Apr 2014 10:32:03 +0200
+
+kindr (0.1-450) unstable; urgency=low
+
+  * added const to parameter of Pose::transform(...)
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Thu, 03 Apr 2014 10:25:30 +0200
+
+kindr (0.1-449) unstable; urgency=low
+
+  * Renamed file
+
+ -- Peter Fankhauser <pfankhauser@ethz.ch>  Wed, 02 Apr 2014 18:50:00 +0200
+
+kindr (0.1-448) unstable; urgency=low
+
+  * First version for ROS TF to Kindr conversion
+
+ -- Peter Fankhauser <pfankhauser@ethz.ch>  Wed, 02 Apr 2014 18:49:12 +0200
+
+kindr (0.1-447) unstable; urgency=low
+
+  * added vector() to Vector class
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 02 Apr 2014 15:29:11 +0200
+
+kindr (0.1-446) unstable; urgency=low
+
+  * Added headers for ros_tf
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 01 Apr 2014 14:33:58 +0200
+
+kindr (0.1-445) unstable; urgency=low
+
+  * Update Readme.md
+
+ -- Simon Lynen <simon.lynen@mavt.ethz.ch>  Sun, 30 Mar 2014 19:00:24 +0200
+
+kindr (0.1-444) unstable; urgency=low
+
+  * Added interpolation to cheatsheet
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 26 Mar 2014 17:33:41 +0100
+
+kindr (0.1-443) unstable; urgency=low
+
+  * Removed "message" in FindKindr.cmake
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 25 Mar 2014 12:37:51 +0100
+
+kindr (0.1-442) unstable; urgency=low
+
+  * Merge pull request #8 from ethz-asl/develop
+  * Develop
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 24 Mar 2014 18:19:35 +0100
+
+kindr (0.1-441) unstable; urgency=low
+
+  * Fixed unit tests
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 24 Mar 2014 18:10:31 +0100
+
+kindr (0.1-440) unstable; urgency=low
+
+  * Removed RotationVectorDiff
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 24 Mar 2014 17:56:02 +0100
+
+kindr (0.1-439) unstable; urgency=low
+
+  * Merge pull request #7 from ethz-asl/develop
+  * Develop
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 24 Mar 2014 11:16:49 +0100
+
+kindr (0.1-438) unstable; urgency=low
+
+  * Fixed quaterniondiff matrix
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 24 Mar 2014 11:11:22 +0100
+
+kindr (0.1-437) unstable; urgency=low
+
+  * Cleaned RotationVectorDiff test
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Sun, 23 Mar 2014 19:58:24 +0100
+
+kindr (0.1-436) unstable; urgency=low
+
+  * Removed AngleAxisDiff
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Sun, 23 Mar 2014 19:37:18 +0100
+
+kindr (0.1-435) unstable; urgency=low
+
+  * Merge branch 'fix/boxPlus' into develop
+  * Conflicts:
+  	include/kindr/rotations/RotationEigen.hpp
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Sun, 23 Mar 2014 19:32:20 +0100
+
+kindr (0.1-434) unstable; urgency=low
+
+  * Fixed conversion between local angular velocity and rotation matrix
+    diff
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Sun, 23 Mar 2014 19:22:47 +0100
+
+kindr (0.1-433) unstable; urgency=low
+
+  * Fixed conversion between quaterniondiff and local angular velocity
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Sun, 23 Mar 2014 19:09:39 +0100
+
+kindr (0.1-432) unstable; urgency=low
+
+  * Fixed RotationMatrix and RotationMatrixDiff
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Sun, 23 Mar 2014 18:34:38 +0100
+
+kindr (0.1-431) unstable; urgency=low
+
+  * last fix
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 21 Mar 2014 22:01:36 +0100
+
+kindr (0.1-430) unstable; urgency=low
+
+  * Fixed rotation matrix diff finiteDifference
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 21 Mar 2014 20:26:12 +0100
+
+kindr (0.1-429) unstable; urgency=low
+
+  * Fixed boxPlus operator
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 21 Mar 2014 15:15:25 +0100
+
+kindr (0.1-428) unstable; urgency=low
+
+  * Fixed box_plus trait
+    return Left_(MapTraits<RotationBase<Left_,Usage_>>::set_exponential_map(vector)*rotation.derived());
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 21 Mar 2014 09:35:30 +0100
+
+kindr (0.1-427) unstable; urgency=low
+
+  * Added boxPlus test for rotation matrix
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 20 Mar 2014 23:01:26 +0100
+
+kindr (0.1-426) unstable; urgency=low
+
+  * generate error for boxPlus
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 20 Mar 2014 20:56:14 +0100
+
+kindr (0.1-425) unstable; urgency=low
+
+  * added const to variable in trait
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Thu, 20 Mar 2014 17:58:03 +0100
+
+kindr (0.1-424) unstable; urgency=low
+
+  * test for AngleAxisDiff modified, passive is now working
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Thu, 20 Mar 2014 16:16:52 +0100
+
+kindr (0.1-423) unstable; urgency=low
+
+  * Introduced active and passive twist
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 20 Mar 2014 14:23:12 +0100
+
+kindr (0.1-422) unstable; urgency=low
+
+  * Fixed box plus equation in documentation
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 20 Mar 2014 13:30:53 +0100
+
+kindr (0.1-421) unstable; urgency=low
+
+  * Added log/exp map, box plus/minus and integration
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 20 Mar 2014 13:21:19 +0100
+
+kindr (0.1-420) unstable; urgency=low
+
+  * Merge branch 'feature/automatically_run_tests' into develop
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 19 Mar 2014 21:54:49 +0100
+
+kindr (0.1-419) unstable; urgency=low
+
+  * Fixed unit test LocalAngularVelocity.testMultiplication
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 19 Mar 2014 21:50:25 +0100
+
+kindr (0.1-418) unstable; urgency=low
+
+  * Reduced test tol for RotationMatrix.getLogarithmicMap
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 19 Mar 2014 21:11:14 +0100
+
+kindr (0.1-417) unstable; urgency=low
+
+  * Update Readme.md
+
+ -- Simon Lynen <simon.lynen@mavt.ethz.ch>  Wed, 19 Mar 2014 18:27:00 +0100
+
+kindr (0.1-416) unstable; urgency=low
+
+  * Update Readme.md
+
+ -- Simon Lynen <simon.lynen@mavt.ethz.ch>  Wed, 19 Mar 2014 18:26:45 +0100
+
+kindr (0.1-415) unstable; urgency=low
+
+  * Fixed disparity angle test for EulerAngleXyz
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 19 Mar 2014 17:53:37 +0100
+
+kindr (0.1-414) unstable; urgency=low
+
+  * rm status
+
+ -- Simon Lynen <simon.lynen@mavt.ethz.ch>  Wed, 19 Mar 2014 17:29:22 +0100
+
+kindr (0.1-413) unstable; urgency=low
+
+  * robustified python script and added summary in the end
+
+ -- Simon Lynen <simon.lynen@mavt.ethz.ch>  Wed, 19 Mar 2014 17:27:35 +0100
+
+kindr (0.1-412) unstable; urgency=low
+
+  * clear old test results files
+
+ -- Simon Lynen <simon.lynen@mavt.ethz.ch>  Wed, 19 Mar 2014 17:11:43 +0100
+
+kindr (0.1-411) unstable; urgency=low
+
+  * Cleanup of superfluous comments.
+
+ -- Simon Lynen <simon.lynen@mavt.ethz.ch>  Wed, 19 Mar 2014 17:01:19 +0100
+
+kindr (0.1-410) unstable; urgency=low
+
+  * touch
+
+ -- Simon Lynen <simon.lynen@mavt.ethz.ch>  Wed, 19 Mar 2014 16:55:29 +0100
+
+kindr (0.1-409) unstable; urgency=low
+
+  * Added python script to run unit tests and cleaned up the gtest generation
+    using a macro
+
+ -- Simon Lynen <simon.lynen@mavt.ethz.ch>  Wed, 19 Mar 2014 16:52:48 +0100
+
+kindr (0.1-408) unstable; urgency=low
+
+  * Merge pull request #2 from ethz-asl/fix/build_type_build_tests
+  * Defaulting build to release if not specified and not building tests
+    if not specified
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 19 Mar 2014 16:46:30 +0100
+
+kindr (0.1-407) unstable; urgency=low
+
+  * Merge branch 'develop' of github.com:ethz-asl/kindr into develop
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 19 Mar 2014 16:25:41 +0100
+
+kindr (0.1-406) unstable; urgency=low
+
+  * added unit tests for Quaternion::vector() and Quaternion::Quaternion(Vector4)
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 19 Mar 2014 16:21:31 +0100
+
+kindr (0.1-405) unstable; urgency=low
+
+  * removed option to get quaternion matrix for passive non-unit-quaternions, enum
+    class UsageType moved from common.hpp to RotationBase.hpp
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 19 Mar 2014 16:15:18 +0100
+
+kindr (0.1-404) unstable; urgency=low
+
+  * Changed URL to git repo in documentation
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 19 Mar 2014 16:05:37 +0100
+
+kindr (0.1-403) unstable; urgency=low
+
+  * touch
+
+ -- Simon Lynen <simon.lynen@mavt.ethz.ch>  Wed, 19 Mar 2014 14:07:32 +0100
+
+kindr (0.1-402) unstable; urgency=low
+
+  * Defaulting build to release if not specified and not building tests
+    if not specified
+
+ -- Simon Lynen <simon.lynen@mavt.ethz.ch>  Wed, 19 Mar 2014 13:53:06 +0100
+
+kindr (0.1-401) unstable; urgency=low
+
+  * fixed missing include in RotationEigen.hpp
+
+ -- bloesch <bloeschm@ethz.ch>  Tue, 18 Mar 2014 17:04:29 +0100
+
+kindr (0.1-400) unstable; urgency=low
+
+  * small parameter change for operator* for LocalAngularVelocity
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 18 Mar 2014 16:41:15 +0100
+
+kindr (0.1-399) unstable; urgency=low
+
+  * added const to +,-,* for LocalAngularVelocity
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 18 Mar 2014 16:38:24 +0100
+
+kindr (0.1-398) unstable; urgency=low
+
+  * LocalAngularVelocity is now derived from AngularVelocity
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 18 Mar 2014 15:40:57 +0100
+
+kindr (0.1-397) unstable; urgency=low
+
+  * merge
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 18 Mar 2014 13:20:08 +0100
+
+kindr (0.1-396) unstable; urgency=low
+
+  * added functions for Quaternion Matrix and Quaternion Diff Matrix with
+    doc and tests
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 18 Mar 2014 13:16:18 +0100
+
+kindr (0.1-395) unstable; urgency=low
+
+  * Corrected and extended quaternion multiplication in cheatsheet
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 18 Mar 2014 10:07:05 +0100
+
+kindr (0.1-394) unstable; urgency=low
+
+  * Fixed UnitQuaternion::vector()
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 17 Mar 2014 17:46:44 +0100
+
+kindr (0.1-393) unstable; urgency=low
+
+  * added UnitX,Y,Z() to Vector class, added tests, added const to
+    norm()
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 12 Mar 2014 09:21:09 +0100
+
+kindr (0.1-392) unstable; urgency=low
+
+  * added copyright info on top of phys_quant files
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 11 Mar 2014 16:36:46 +0100
+
+kindr (0.1-391) unstable; urgency=low
+
+  * added vectors to doc, changed namespace vector to vectors
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 11 Mar 2014 15:14:14 +0100
+
+kindr (0.1-390) unstable; urgency=low
+
+  * position and positiondiff replaced by vectors of type position and velocity,
+    phys_quant structure edited, traits are now all internal
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 11 Mar 2014 13:39:22 +0100
+
+kindr (0.1-389) unstable; urgency=low
+
+  * Improved doc
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 10 Mar 2014 21:18:14 +0100
+
+kindr (0.1-388) unstable; urgency=low
+
+  * added negation operator to vectors
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 10 Mar 2014 14:21:25 +0100
+
+kindr (0.1-387) unstable; urgency=low
+
+  * added comment on one vector multiplication/division trait
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 10 Mar 2014 13:41:42 +0100
+
+kindr (0.1-386) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_kindr
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 10 Mar 2014 13:36:32 +0100
+
+kindr (0.1-385) unstable; urgency=low
+
+  * vector can now be explicitely constructed by other physical type, multiplication/division
+    type is specified for most triples
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 10 Mar 2014 13:36:17 +0100
+
+kindr (0.1-384) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_kindr
+
+ -- bloesch <bloeschm@ethz.ch>  Mon, 10 Mar 2014 13:24:55 +0100
+
+kindr (0.1-383) unstable; urgency=low
+
+  * added build guard for testing
+
+ -- bloesch <bloeschm@ethz.ch>  Mon, 10 Mar 2014 13:24:38 +0100
+
+kindr (0.1-382) unstable; urgency=low
+
+  * fixed VectorTest.cpp
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 10 Mar 2014 11:05:10 +0100
+
+kindr (0.1-381) unstable; urgency=low
+
+  * merge
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 10 Mar 2014 10:40:25 +0100
+
+kindr (0.1-380) unstable; urgency=low
+
+  * vectors can now be rotated, rotate(Position3) has been commented out
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 10 Mar 2014 10:33:08 +0100
+
+kindr (0.1-379) unstable; urgency=low
+
+  * added multiple unit tests for vectors
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 10 Mar 2014 09:55:17 +0100
+
+kindr (0.1-378) unstable; urgency=low
+
+  * Changed PhysicalType::None to Undefined because of Defines in other
+    libraries (simulation and control, X11).
+
+ -- Peter Fankhauser <pfankhauser@ethz.ch>  Sat, 08 Mar 2014 16:43:37 +0100
+
+kindr (0.1-377) unstable; urgency=low
+
+  * Fixed wrong include guards
+
+ -- Peter Fankhauser <pfankhauser@ethz.ch>  Fri, 07 Mar 2014 19:57:38 +0100
+
+kindr (0.1-376) unstable; urgency=low
+
+  * added multiple functions to Position and PositionDiff (*, /, *=, /=),
+    also these classes are now tested seperately
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 05 Mar 2014 10:18:29 +0100
+
+kindr (0.1-375) unstable; urgency=low
+
+  * Vector is now public parent of Position3 and LinearVelocity
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 04 Mar 2014 18:02:05 +0100
+
+kindr (0.1-374) unstable; urgency=low
+
+  * Removed FindKindr.cmake
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 04 Mar 2014 14:44:57 +0100
+
+kindr (0.1-373) unstable; urgency=low
+
+  * added static Zero() function to Vector class
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 04 Mar 2014 11:07:04 +0100
+
+kindr (0.1-372) unstable; urgency=low
+
+  * fixed doc typo
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 03 Mar 2014 17:57:42 +0100
+
+kindr (0.1-371) unstable; urgency=low
+
+  * dot product now available with different units
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 03 Mar 2014 17:56:19 +0100
+
+kindr (0.1-370) unstable; urgency=low
+
+  * return type of vector multiplication can now be specified via
+    trait
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 03 Mar 2014 17:53:49 +0100
+
+kindr (0.1-369) unstable; urgency=low
+
+  * Merged physicalQuantities into master
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 03 Mar 2014 16:33:59 +0100
+
+kindr (0.1-368) unstable; urgency=low
+
+  * introduced new namespace for conversion functions
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 03 Mar 2014 16:07:35 +0100
+
+kindr (0.1-367) unstable; urgency=low
+
+  * added PhysicalType.hpp and FindKindr.cmake
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 03 Mar 2014 10:38:31 +0100
+
+kindr (0.1-366) unstable; urgency=low
+
+  * fixed small interface error
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 03 Mar 2014 10:34:51 +0100
+
+kindr (0.1-365) unstable; urgency=low
+
+  * new typedefs
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Thu, 27 Feb 2014 17:04:12 +0100
+
+kindr (0.1-364) unstable; urgency=low
+
+  * added PhysicalType template instead of new derived classes
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Thu, 27 Feb 2014 16:47:10 +0100
+
+kindr (0.1-363) unstable; urgency=low
+
+  * fixed description error
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 26 Feb 2014 17:27:54 +0100
+
+kindr (0.1-362) unstable; urgency=low
+
+  * added head, tail and segment to Vector class
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 26 Feb 2014 17:15:06 +0100
+
+kindr (0.1-361) unstable; urgency=low
+
+  * added sum and mean to Vector class
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 26 Feb 2014 15:56:07 +0100
+
+kindr (0.1-360) unstable; urgency=low
+
+  * added comparison functions
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 26 Feb 2014 14:11:27 +0100
+
+kindr (0.1-359) unstable; urgency=low
+
+  * deleted Vector3 class, special functions (x, y, z, cross) now enabled
+    via SFINAE
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 26 Feb 2014 13:42:23 +0100
+
+kindr (0.1-358) unstable; urgency=low
+
+  * added some functions to Vector class 2
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 26 Feb 2014 10:59:56 +0100
+
+kindr (0.1-357) unstable; urgency=low
+
+  * added some functions to Vector class
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 26 Feb 2014 09:58:07 +0100
+
+kindr (0.1-356) unstable; urgency=low
+
+  * added Force class
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 25 Feb 2014 17:35:35 +0100
+
+kindr (0.1-355) unstable; urgency=low
+
+  * renamed include guard in common.hpp to meet standards
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 25 Feb 2014 16:36:32 +0100
+
+kindr (0.1-354) unstable; urgency=low
+
+  * added Vector Class
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 25 Feb 2014 16:28:26 +0100
+
+kindr (0.1-353) unstable; urgency=low
+
+  * corrected small interface error in PositionBase.hpp
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Fri, 21 Feb 2014 11:49:55 +0100
+
+kindr (0.1-352) unstable; urgency=low
+
+  * Added warning for rotationdiff to mainpage
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 19 Feb 2014 10:33:00 +0100
+
+kindr (0.1-351) unstable; urgency=low
+
+  * Changed old namespace rm to kindr
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 18 Feb 2014 21:23:59 +0100
+
+kindr (0.1-350) unstable; urgency=low
+
+  * Added install and creation of findKindr.cmake
+
+ -- bloesch <bloeschm@ethz.ch>  Tue, 18 Feb 2014 15:53:53 +0100
+
+kindr (0.1-349) unstable; urgency=low
+
+  * Removed short name for twist
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 10 Feb 2014 16:27:39 +0100
+
+kindr (0.1-348) unstable; urgency=low
+
+  * found and fixed small bug
+
+ -- bloesch <bloeschm@ethz.ch>  Wed, 22 Jan 2014 19:24:42 +0100
+
+kindr (0.1-347) unstable; urgency=low
+
+  * Added fix() to the docu
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 09 Jan 2014 14:30:05 +0100
+
+kindr (0.1-346) unstable; urgency=low
+
+  * Added setFromVectors to doc
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 09 Jan 2014 14:17:02 +0100
+
+kindr (0.1-345) unstable; urgency=low
+
+  * added fix() function, tests working
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Thu, 09 Jan 2014 13:36:09 +0100
+
+kindr (0.1-344) unstable; urgency=low
+
+  * corrected setFromVectors() function, working tests
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Thu, 09 Jan 2014 10:53:10 +0100
+
+kindr (0.1-343) unstable; urgency=low
+
+  * changed function to setFromVectors(..), not compiling with reference
+    parameter
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 08 Jan 2014 17:34:04 +0100
+
+kindr (0.1-342) unstable; urgency=low
+
+  * added calculateAngleBetweenVectors(v1,v2) function with tests, works
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 08 Jan 2014 14:12:00 +0100
+
+kindr (0.1-341) unstable; urgency=low
+
+  * added tests for EulerAnglesXyz, all tests working
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 08 Jan 2014 10:21:10 +0100
+
+kindr (0.1-340) unstable; urgency=low
+
+  * adapted getUnique EulerAnglesXyz, tests which were commented out in
+    last commit now also work
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 08 Jan 2014 09:33:59 +0100
+
+kindr (0.1-339) unstable; urgency=low
+
+  * added KINDR_ASSERT_DOUBLE_MX_EQ_PERIODIC makro and compareRelativePeriodic function,
+    all tests working
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 08 Jan 2014 08:48:43 +0100
+
+kindr (0.1-338) unstable; urgency=low
+
+  * most tests working
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 07 Jan 2014 17:40:02 +0100
+
+kindr (0.1-337) unstable; urgency=low
+
+  * constructors now set variables before function scope
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 07 Jan 2014 09:35:44 +0100
+
+kindr (0.1-336) unstable; urgency=low
+
+  * passive rotations are now stored same as active rotations (except for
+    the rotation matrix)
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 07 Jan 2014 09:24:42 +0100
+
+kindr (0.1-335) unstable; urgency=low
+
+  * Testing EulerAngles ZYX
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 06 Jan 2014 09:34:45 +0100
+
+kindr (0.1-334) unstable; urgency=low
+
+  * Fixed Euler Angles ZYX conversions
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Sun, 05 Jan 2014 00:30:42 +0100
+
+kindr (0.1-333) unstable; urgency=low
+
+  * changed logarithmic map such that it is unique, adapted tests
+
+ -- Michael <michael@ubuntu.ubuntu-domain>  Fri, 03 Jan 2014 20:05:04 +0100
+
+kindr (0.1-332) unstable; urgency=low
+
+  * Fixed small issue in testing of boxplus for rotation matrix
+
+ -- Michael <michael@ubuntu.ubuntu-domain>  Fri, 03 Jan 2014 19:34:28 +0100
+
+kindr (0.1-331) unstable; urgency=low
+
+  * Added EulerAnglesZyx testing
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 03 Jan 2014 17:47:02 +0100
+
+kindr (0.1-330) unstable; urgency=low
+
+  * Added concatenation to mixed rotation testing and fixed rotation matrix
+    mult
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 03 Jan 2014 13:16:28 +0100
+
+kindr (0.1-329) unstable; urgency=low
+
+  * Renamed traits
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 03 Jan 2014 12:02:37 +0100
+
+kindr (0.1-328) unstable; urgency=low
+
+  * Solved rotation matrix except from box operations
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 03 Jan 2014 11:46:58 +0100
+
+kindr (0.1-327) unstable; urgency=low
+
+  * Fixed concatenation between rotation vector and rotation matrix
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 03 Jan 2014 00:34:44 +0100
+
+kindr (0.1-326) unstable; urgency=low
+
+  * Fixed some type casts, still not bugfree
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 02 Jan 2014 18:18:49 +0100
+
+kindr (0.1-325) unstable; urgency=low
+
+  * Added getActive and getPassive to RotationVectorTest
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 02 Jan 2014 16:59:16 +0100
+
+kindr (0.1-324) unstable; urgency=low
+
+  * Tested rotation vector
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 02 Jan 2014 16:48:40 +0100
+
+kindr (0.1-323) unstable; urgency=low
+
+  * Rotation Matrix is correct apart from maps and box operations
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 02 Jan 2014 14:53:36 +0100
+
+kindr (0.1-322) unstable; urgency=low
+
+  * All tests of angle axis are successful
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 30 Dec 2013 11:45:46 +0100
+
+kindr (0.1-321) unstable; urgency=low
+
+  * Fixed conversions rotation quaternion - angle axis
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 30 Dec 2013 09:54:23 +0100
+
+kindr (0.1-320) unstable; urgency=low
+
+  * Stopped Testing rotate vector for angle axis
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Sat, 28 Dec 2013 16:07:22 +0100
+
+kindr (0.1-319) unstable; urgency=low
+
+  * Fixed angle axis unique and other issues
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Sat, 28 Dec 2013 15:12:28 +0100
+
+kindr (0.1-318) unstable; urgency=low
+
+  * Started testing angleaxis
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Sat, 28 Dec 2013 13:47:46 +0100
+
+kindr (0.1-317) unstable; urgency=low
+
+  * outsourced rotation vector test
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 27 Dec 2013 23:17:12 +0100
+
+kindr (0.1-316) unstable; urgency=low
+
+  * outsourced RotationQuaternionTest
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 27 Dec 2013 23:11:41 +0100
+
+kindr (0.1-315) unstable; urgency=low
+
+  * Removed unused code
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 27 Dec 2013 23:07:33 +0100
+
+kindr (0.1-314) unstable; urgency=low
+
+  * Fixed casting between primtypes
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 27 Dec 2013 22:58:58 +0100
+
+kindr (0.1-313) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_kindr
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 27 Dec 2013 22:44:34 +0100
+
+kindr (0.1-312) unstable; urgency=low
+
+  * Fixed assignement operator for rotation vector
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 27 Dec 2013 22:43:22 +0100
+
+kindr (0.1-311) unstable; urgency=low
+
+  * tested invert() for rotation vectors
+
+ -- Michael <michael@ubuntu.ubuntu-domain>  Fri, 27 Dec 2013 21:28:03 +0100
+
+kindr (0.1-310) unstable; urgency=low
+
+  * tested conversion between rotation quaterion and rotation vectors ->
+    errors, see TODO in test code and issue on bitbucket
+
+ -- Michael <michael@ubuntu.ubuntu-domain>  Fri, 27 Dec 2013 21:20:17 +0100
+
+kindr (0.1-309) unstable; urgency=low
+
+  * Tested constructors and getters of RotationVector
+
+ -- Michael <michael@ubuntu.ubuntu-domain>  Fri, 27 Dec 2013 20:47:33 +0100
+
+kindr (0.1-308) unstable; urgency=low
+
+  * enhanced boxplus/boxminus testing
+
+ -- Michael <michael@ubuntu.ubuntu-domain>  Fri, 27 Dec 2013 20:26:51 +0100
+
+kindr (0.1-307) unstable; urgency=low
+
+  * fixed bug in boxplus
+
+ -- Michael <michael@ubuntu.ubuntu-domain>  Fri, 27 Dec 2013 20:13:02 +0100
+
+kindr (0.1-306) unstable; urgency=low
+
+  * Added twist
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 27 Dec 2013 19:16:41 +0100
+
+kindr (0.1-305) unstable; urgency=low
+
+  * Moved homogeneous transformation to new file
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 27 Dec 2013 18:00:32 +0100
+
+kindr (0.1-304) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_kindr
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 27 Dec 2013 14:12:07 +0100
+
+kindr (0.1-303) unstable; urgency=low
+
+  * Improved documentation
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 27 Dec 2013 14:11:41 +0100
+
+kindr (0.1-302) unstable; urgency=low
+
+  * Added small numbers to rotationdiff
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 26 Dec 2013 18:50:20 +0100
+
+kindr (0.1-301) unstable; urgency=low
+
+  * Readme.md edited online with Bitbucket
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 26 Dec 2013 18:00:30 +0100
+
+kindr (0.1-300) unstable; urgency=low
+
+  * Readme.md edited online with Bitbucket
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 26 Dec 2013 17:58:16 +0100
+
+kindr (0.1-299) unstable; urgency=low
+
+  * Readme.md edited online with Bitbucket
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 26 Dec 2013 17:57:16 +0100
+
+kindr (0.1-298) unstable; urgency=low
+
+  * Readme.md edited online with Bitbucket
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 26 Dec 2013 17:56:17 +0100
+
+kindr (0.1-297) unstable; urgency=low
+
+  * Readme.md edited online with Bitbucket
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 26 Dec 2013 17:54:49 +0100
+
+kindr (0.1-296) unstable; urgency=low
+
+  * Fixed Readme.md
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 26 Dec 2013 17:51:28 +0100
+
+kindr (0.1-295) unstable; urgency=low
+
+  * Implementing handling of small angles for conversion between angular
+    velocity and angle-axis-diff
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 26 Dec 2013 17:43:12 +0100
+
+kindr (0.1-294) unstable; urgency=low
+
+  * Added common::NumTraits
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 26 Dec 2013 15:57:49 +0100
+
+kindr (0.1-293) unstable; urgency=low
+
+  * Added assert to fix conversion between angleAxisDiff and angularvelocity
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 26 Dec 2013 15:35:19 +0100
+
+kindr (0.1-292) unstable; urgency=low
+
+  * Added LocalAngularVelocityTest
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 26 Dec 2013 11:19:56 +0100
+
+kindr (0.1-291) unstable; urgency=low
+
+  * RotationDiff conversion for active and passive
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 26 Dec 2013 10:48:26 +0100
+
+kindr (0.1-290) unstable; urgency=low
+
+  * Fixed conversion from euler angles to rotation vector
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 26 Dec 2013 10:09:39 +0100
+
+kindr (0.1-289) unstable; urgency=low
+
+  * Fixed conversion from rotation vector to rotation quaternion
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 26 Dec 2013 10:09:15 +0100
+
+kindr (0.1-288) unstable; urgency=low
+
+  * Added EulerAnglesDiffTest
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 26 Dec 2013 09:44:16 +0100
+
+kindr (0.1-287) unstable; urgency=low
+
+  * Added RotationMatrixDiffTest
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 25 Dec 2013 21:20:45 +0100
+
+kindr (0.1-286) unstable; urgency=low
+
+  * Fixed bug in conversion of rotation vector to rotation matrix for small
+    angles
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 25 Dec 2013 21:20:03 +0100
+
+kindr (0.1-285) unstable; urgency=low
+
+  * Added test RotationQuaternionDiffTest
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 25 Dec 2013 17:06:18 +0100
+
+kindr (0.1-284) unstable; urgency=low
+
+  * Added RotationVectorDiffTest.cpp
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 25 Dec 2013 14:36:51 +0100
+
+kindr (0.1-283) unstable; urgency=low
+
+  * Fixed bug in setZero() in Quaternion
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 25 Dec 2013 14:36:15 +0100
+
+kindr (0.1-282) unstable; urgency=low
+
+  * Added AngleAxisDiffTest and RotationVectorDiffTest
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 25 Dec 2013 12:05:27 +0100
+
+kindr (0.1-281) unstable; urgency=low
+
+  * Separated unit test of rotations and rotationsdiff
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 24 Dec 2013 16:19:55 +0100
+
+kindr (0.1-280) unstable; urgency=low
+
+  * Added conversion from rotation vector diff to local angular velocity
+    for small angles
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 24 Dec 2013 16:19:30 +0100
+
+kindr (0.1-279) unstable; urgency=low
+
+  * Added conversion from roationvectorDiff to localangularvelocity for
+    small angles
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 24 Dec 2013 16:18:23 +0100
+
+kindr (0.1-278) unstable; urgency=low
+
+  * Changed base of AngleAxisDiff
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 24 Dec 2013 16:17:21 +0100
+
+kindr (0.1-277) unstable; urgency=low
+
+  * Added missing keyword template in vector() angle axis
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 24 Dec 2013 16:16:33 +0100
+
+kindr (0.1-276) unstable; urgency=low
+
+  * Fixed bug in concatenation
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 24 Dec 2013 16:15:44 +0100
+
+kindr (0.1-275) unstable; urgency=low
+
+  * Added vector() to AngleAxis
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 24 Dec 2013 10:37:38 +0100
+
+kindr (0.1-274) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_kindr
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 24 Dec 2013 10:31:38 +0100
+
+kindr (0.1-273) unstable; urgency=low
+
+  * added conversion from rotation quaternion to rotation vector
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 24 Dec 2013 10:28:10 +0100
+
+kindr (0.1-272) unstable; urgency=low
+
+  * Started first finite difference test
+
+ -- bloesch <bloeschm@ethz.ch>  Mon, 23 Dec 2013 17:36:40 +0100
+
+kindr (0.1-271) unstable; urgency=low
+
+  * Fixed Conversion from rotation vector to angle axis using a tol for
+    small angles
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 23 Dec 2013 16:46:04 +0100
+
+kindr (0.1-270) unstable; urgency=low
+
+  * Fixed conversion from rotation vector to angle axis
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 23 Dec 2013 16:44:34 +0100
+
+kindr (0.1-269) unstable; urgency=low
+
+  * continued on exp/log and boxoperators, detected issue in rotationVector
+    to AngleAxis conversion
+
+ -- bloesch <bloeschm@ethz.ch>  Mon, 23 Dec 2013 16:30:43 +0100
+
+kindr (0.1-268) unstable; urgency=low
+
+  * Added skeleton for  boxplus and boxminus operations
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 23 Dec 2013 15:51:31 +0100
+
+kindr (0.1-267) unstable; urgency=low
+
+  * tested exp/log, corrected convert for RotationVector
+
+ -- bloesch <bloeschm@ethz.ch>  Mon, 23 Dec 2013 15:46:19 +0100
+
+kindr (0.1-266) unstable; urgency=low
+
+  * Adpated getDisparityAngle to return positive values, started exp/log
+    testing
+
+ -- bloesch <bloeschm@ethz.ch>  Mon, 23 Dec 2013 12:15:25 +0100
+
+kindr (0.1-265) unstable; urgency=low
+
+  * finished testing for () and =, corrected issue for (), started with
+    getDisparityAngle
+
+ -- bloesch <bloeschm@ethz.ch>  Mon, 23 Dec 2013 11:50:25 +0100
+
+kindr (0.1-264) unstable; urgency=low
+
+  * Moved rotation quaternion container from parent to member var
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 23 Dec 2013 11:39:00 +0100
+
+kindr (0.1-263) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_kindr
+
+ -- bloesch <bloeschm@ethz.ch>  Mon, 23 Dec 2013 11:32:32 +0100
+
+kindr (0.1-262) unstable; urgency=low
+
+  * renamed isEqual to isNear, tested is Near, tested Setters (removed erroneous
+    const), tested toImplementation, tested toStored stuff
+
+ -- bloesch <bloeschm@ethz.ch>  Mon, 23 Dec 2013 11:32:21 +0100
+
+kindr (0.1-261) unstable; urgency=low
+
+  * Changed color in cheatsheet
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 23 Dec 2013 11:00:32 +0100
+
+kindr (0.1-260) unstable; urgency=low
+
+  * Improved rotation picture
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 23 Dec 2013 10:56:24 +0100
+
+kindr (0.1-259) unstable; urgency=low
+
+  * updated cheatsheet_latest.pdf
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 23 Dec 2013 10:33:43 +0100
+
+kindr (0.1-258) unstable; urgency=low
+
+  * exp and log
+
+ -- bloesch <bloeschm@ethz.ch>  Mon, 23 Dec 2013 10:14:38 +0100
+
+kindr (0.1-257) unstable; urgency=low
+
+  * Added missing test_main.cpp
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Sun, 22 Dec 2013 18:31:48 +0100
+
+kindr (0.1-256) unstable; urgency=low
+
+  * Cleaned directory
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Sun, 22 Dec 2013 18:30:26 +0100
+
+kindr (0.1-255) unstable; urgency=low
+
+  * Changed folder structure
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Sun, 22 Dec 2013 18:19:59 +0100
+
+kindr (0.1-254) unstable; urgency=low
+
+  * Added rotation description to cheatsheet
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Sun, 22 Dec 2013 17:40:47 +0100
+
+kindr (0.1-253) unstable; urgency=low
+
+  * Added isEqual to doc
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 20 Dec 2013 18:11:35 +0100
+
+kindr (0.1-252) unstable; urgency=low
+
+  * Checked quaterniondiff and angular velocity on cheatsheet
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 20 Dec 2013 16:39:38 +0100
+
+kindr (0.1-251) unstable; urgency=low
+
+  * Corrected and tested get real and imaginary
+
+ -- bloesch <bloeschm@ethz.ch>  Fri, 20 Dec 2013 18:11:44 +0100
+
+kindr (0.1-250) unstable; urgency=low
+
+  * Added get_scalar trait and fixed getDisparityAngle and renamed compare
+    to isEqual
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 20 Dec 2013 14:51:30 +0100
+
+kindr (0.1-249) unstable; urgency=low
+
+  * fixed range of angle-axis in cheatsheet
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 20 Dec 2013 14:01:47 +0100
+
+kindr (0.1-248) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_kindr
+
+ -- bloesch <bloeschm@ethz.ch>  Fri, 20 Dec 2013 13:58:35 +0100
+
+kindr (0.1-247) unstable; urgency=low
+
+  * Fixed issue in constructor based on real and imaginary parts
+
+ -- bloesch <bloeschm@ethz.ch>  Fri, 20 Dec 2013 13:58:31 +0100
+
+kindr (0.1-246) unstable; urgency=low
+
+  * Added time derivative of angle axis
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 20 Dec 2013 13:54:47 +0100
+
+kindr (0.1-245) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_kindr
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Fri, 20 Dec 2013 13:20:24 +0100
+
+kindr (0.1-244) unstable; urgency=low
+
+  * added similar and getDisparityAngle functions
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Fri, 20 Dec 2013 13:19:51 +0100
+
+kindr (0.1-243) unstable; urgency=low
+
+  * Added two test to rotationQuaternion: effect of getActive/getPassive on
+    rotate, effect of concatenation on rotate
+
+ -- bloesch <bloeschm@ethz.ch>  Fri, 20 Dec 2013 13:19:49 +0100
+
+kindr (0.1-242) unstable; urgency=low
+
+  * Fixed bug in rotation vector
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 20 Dec 2013 10:02:28 +0100
+
+kindr (0.1-241) unstable; urgency=low
+
+  * Fixed typo PrimeType to PrimType in RotationEigenTest.cpp
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 20 Dec 2013 09:15:48 +0100
+
+kindr (0.1-240) unstable; urgency=low
+
+  * fixed small typo
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 20 Dec 2013 08:48:07 +0100
+
+kindr (0.1-239) unstable; urgency=low
+
+  * cleaned RotationEigenTest
+
+ -- bloesch <bloeschm@ethz.ch>  Thu, 19 Dec 2013 18:34:57 +0100
+
+kindr (0.1-238) unstable; urgency=low
+
+  * Fixed problem in constructor of angle axis
+
+ -- bloesch <bloeschm@ethz.ch>  Thu, 19 Dec 2013 18:34:08 +0100
+
+kindr (0.1-237) unstable; urgency=low
+
+  * Adapted doxygen doc
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 19 Dec 2013 18:15:51 +0100
+
+kindr (0.1-236) unstable; urgency=low
+
+  * Improved cheatsheet
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 19 Dec 2013 17:24:11 +0100
+
+kindr (0.1-235) unstable; urgency=low
+
+  * Hand-merged changes, only one error in rotation unit testing
+
+ -- bloesch <bloeschm@ethz.ch>  Thu, 19 Dec 2013 18:15:42 +0100
+
+kindr (0.1-234) unstable; urgency=low
+
+  * Renamed PDiff to PositionDiff
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 19 Dec 2013 16:23:34 +0100
+
+kindr (0.1-233) unstable; urgency=low
+
+  * Added conversion from angular velocity to rotation matrid diff
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 19 Dec 2013 16:17:27 +0100
+
+kindr (0.1-232) unstable; urgency=low
+
+  * Renamed RDiff to RotationDiff
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 19 Dec 2013 13:55:24 +0100
+
+kindr (0.1-231) unstable; urgency=low
+
+  * Rename RDiff
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 19 Dec 2013 13:53:49 +0100
+
+kindr (0.1-230) unstable; urgency=low
+
+  * Exploded RotationEigen.hpp and cleaned common
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 19 Dec 2013 13:50:50 +0100
+
+kindr (0.1-229) unstable; urgency=low
+
+  * Added single rotation files
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 19 Dec 2013 10:57:31 +0100
+
+kindr (0.1-228) unstable; urgency=low
+
+  * Added doc to RDiffEigen and moved RotationEigenFunctions
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 19 Dec 2013 10:49:01 +0100
+
+kindr (0.1-227) unstable; urgency=low
+
+  * Exploded RDiffEigen.hpp
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 19 Dec 2013 10:22:04 +0100
+
+kindr (0.1-226) unstable; urgency=low
+
+  * Added conversion between rotationVector and angularVelocity
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 19 Dec 2013 09:47:59 +0100
+
+kindr (0.1-225) unstable; urgency=low
+
+  * Fixed EulerAngles
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 18 Dec 2013 18:20:44 +0100
+
+kindr (0.1-224) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_kindr
+
+ -- bloesch <bloeschm@ethz.ch>  Wed, 18 Dec 2013 18:19:46 +0100
+
+kindr (0.1-223) unstable; urgency=low
+
+  * Fixed compiler error in test
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 18 Dec 2013 11:42:26 +0100
+
+kindr (0.1-222) unstable; urgency=low
+
+  * Cheatsheet: conversion betweeen angular velocity to derivatives of Euler
+    angles XYZ and ZYX are correct
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 18 Dec 2013 11:36:45 +0100
+
+kindr (0.1-221) unstable; urgency=low
+
+  * Fixed rotate() testing, changed toStoredImplementation to toImplementation
+    for getActive() and getPassive(), might still be necessary at some other
+    places
+
+ -- bloesch <bloeschm@ethz.ch>  Wed, 18 Dec 2013 08:19:45 +0100
+
+kindr (0.1-220) unstable; urgency=low
+
+  * correct toImplementation() for rotationQuaternion, changed from toStoredImplementation
+    to toImplementation for rotationQuaternion mutliplication and rotationQuaternion
+    rotate(), probably also necessary for other types
+
+ -- bloesch <bloeschm@ethz.ch>  Tue, 17 Dec 2013 22:39:56 +0100
+
+kindr (0.1-219) unstable; urgency=low
+
+  * Fixed issue with inversion/conjugation and toUnitQuaternionCast
+
+ -- bloesch <bloeschm@ethz.ch>  Tue, 17 Dec 2013 18:44:12 +0100
+
+kindr (0.1-218) unstable; urgency=low
+
+  * Continued on RDiff
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 17 Dec 2013 14:37:14 +0100
+
+kindr (0.1-217) unstable; urgency=low
+
+  * Added RotationVectorDiff
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 17 Dec 2013 10:16:36 +0100
+
+kindr (0.1-216) unstable; urgency=low
+
+  * corrected also = and () functions for RotationQuaternion <- (Unit)Quaternion,
+    added toImplementation (-> Eigen Object with intuitive data) and toStoredImplementation
+    (static_cast, raw data)
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 17 Dec 2013 09:17:29 +0100
+
+kindr (0.1-215) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_kindr
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 17 Dec 2013 08:37:48 +0100
+
+kindr (0.1-214) unstable; urgency=low
+
+  * corrected transformation between UnitQuaternion <-> RotationQuaternion <->
+    Eigen::Quaternion
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 17 Dec 2013 08:37:35 +0100
+
+kindr (0.1-213) unstable; urgency=low
+
+  * Addapted getters and fixed constructor
+
+ -- bloesch <bloeschm@ethz.ch>  Mon, 16 Dec 2013 18:33:51 +0100
+
+kindr (0.1-212) unstable; urgency=low
+
+  * added further set/get function to rotationvector class
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 16 Dec 2013 14:30:33 +0100
+
+kindr (0.1-211) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_kindr
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 16 Dec 2013 14:24:15 +0100
+
+kindr (0.1-210) unstable; urgency=low
+
+  * corrected behaviour of active and passive objects, added set/get functions
+    to rotationvector class
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 16 Dec 2013 14:24:02 +0100
+
+kindr (0.1-209) unstable; urgency=low
+
+  * Added AngleAxisDiff
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 16 Dec 2013 11:25:28 +0100
+
+kindr (0.1-208) unstable; urgency=low
+
+  * Improved docu (conversion between rotations)
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 16 Dec 2013 10:03:28 +0100
+
+kindr (0.1-207) unstable; urgency=low
+
+  * corrected small typo
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Fri, 13 Dec 2013 09:13:21 +0100
+
+kindr (0.1-206) unstable; urgency=low
+
+  * replaced PrimType_ by Scalar where a parameter or return type is a Scalar,
+    replaced const Scalar& by Scalar for speed
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Fri, 13 Dec 2013 09:10:32 +0100
+
+kindr (0.1-205) unstable; urgency=low
+
+  * Added parenthesis operator
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 12 Dec 2013 17:49:53 +0100
+
+kindr (0.1-204) unstable; urgency=low
+
+  * Added function getVectorFromSkewMatrix
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 11 Dec 2013 22:16:34 +0100
+
+kindr (0.1-203) unstable; urgency=low
+
+  * Improved documentation
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 11 Dec 2013 21:23:13 +0100
+
+kindr (0.1-202) unstable; urgency=low
+
+  * Improved doc
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 11 Dec 2013 19:56:16 +0100
+
+kindr (0.1-201) unstable; urgency=low
+
+  * Renamed namespace eigen_implementation to eigen_impl
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 11 Dec 2013 19:29:37 +0100
+
+kindr (0.1-200) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_kindr
+
+ -- bloesch <bloeschm@ethz.ch>  Wed, 11 Dec 2013 18:03:06 +0100
+
+kindr (0.1-199) unstable; urgency=low
+
+  * Completed testing of rotation quaternions, fixed samll issues in = assignment
+    of Rotation Quaternions
+
+ -- bloesch <bloeschm@ethz.ch>  Wed, 11 Dec 2013 18:02:58 +0100
+
+kindr (0.1-198) unstable; urgency=low
+
+  * Finished RotationQuaternion
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 11 Dec 2013 17:53:27 +0100
+
+kindr (0.1-197) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_kindr
+
+ -- bloesch <bloeschm@ethz.ch>  Wed, 11 Dec 2013 16:10:48 +0100
+
+kindr (0.1-196) unstable; urgency=low
+
+  * continued on rotation quaternion testing, working on bug with =
+    assigment
+
+ -- bloesch <bloeschm@ethz.ch>  Wed, 11 Dec 2013 16:10:43 +0100
+
+kindr (0.1-195) unstable; urgency=low
+
+  * Renamed lib to kindr
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 11 Dec 2013 12:50:28 +0100
+
+kindr (0.1-194) unstable; urgency=low
+
+  * Changed base from inheritance to member for EulerAngles
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 11 Dec 2013 11:28:02 +0100
+
+kindr (0.1-193) unstable; urgency=low
+
+  * Fixed some docu and continued working on rotation vector
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 10 Dec 2013 20:49:58 +0100
+
+kindr (0.1-192) unstable; urgency=low
+
+  * fixed small bug when for getActive and getPassive for RotationQuaternions
+
+ -- bloesch <bloeschm@ethz.ch>  Tue, 10 Dec 2013 18:15:53 +0100
+
+kindr (0.1-191) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_kinder
+
+ -- bloesch <bloeschm@ethz.ch>  Tue, 10 Dec 2013 17:05:34 +0100
+
+kindr (0.1-190) unstable; urgency=low
+
+  * fixed getUnique() of AngleAxis again, special case of angle ==
+    pi
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 10 Dec 2013 17:04:24 +0100
+
+kindr (0.1-189) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_kinder
+
+ -- bloesch <bloeschm@ethz.ch>  Tue, 10 Dec 2013 16:51:16 +0100
+
+kindr (0.1-188) unstable; urgency=low
+
+  * fixed getUnique() of AngleAxis
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 10 Dec 2013 16:43:11 +0100
+
+kindr (0.1-187) unstable; urgency=low
+
+  * fixed getUnique() of RotationQuaternion
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 10 Dec 2013 16:29:40 +0100
+
+kindr (0.1-186) unstable; urgency=low
+
+  * added getReal(), getImaginary(), w(), x(), y(), z() to RotationQuaternion
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 10 Dec 2013 16:22:29 +0100
+
+kindr (0.1-185) unstable; urgency=low
+
+  * added RotationMatrixDiff
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 10 Dec 2013 14:56:59 +0100
+
+kindr (0.1-184) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_kinder
+
+ -- bloesch <bloeschm@ethz.ch>  Tue, 10 Dec 2013 14:44:51 +0100
+
+kindr (0.1-183) unstable; urgency=low
+
+  * Continued on Unit testing for rotation quaternions
+
+ -- bloesch <bloeschm@ethz.ch>  Tue, 10 Dec 2013 14:44:31 +0100
+
+kindr (0.1-182) unstable; urgency=low
+
+  * Fixed conversion from rotation vector to euler angles and improved
+    docu
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 10 Dec 2013 14:34:33 +0100
+
+kindr (0.1-181) unstable; urgency=low
+
+  * Renamed common::mod to floatingPointModulo to avoid future bugs
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 10 Dec 2013 09:25:23 +0100
+
+kindr (0.1-180) unstable; urgency=low
+
+  * Improved docu and renamed common::Mod to common::mod
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 10 Dec 2013 09:12:59 +0100
+
+kindr (0.1-179) unstable; urgency=low
+
+  * RotationVector not yet fully implemented
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 09 Dec 2013 20:57:19 +0100
+
+kindr (0.1-178) unstable; urgency=low
+
+  * Startet testing of Rotation Module by testing rotation quaternions (nor
+    yet finished)
+
+ -- bloesch <bloeschm@ethz.ch>  Mon, 09 Dec 2013 16:44:40 +0100
+
+kindr (0.1-177) unstable; urgency=low
+
+  * Made quaternion private in rotation quaternion
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 05 Dec 2013 11:01:03 +0100
+
+kindr (0.1-176) unstable; urgency=low
+
+  * Added RotationUsage to RDiff
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 04 Dec 2013 17:05:43 +0100
+
+kindr (0.1-175) unstable; urgency=low
+
+  * Changed dynamic calculations to static calc in getTransformationMatrix in
+    Hom. Trans.
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 04 Dec 2013 15:40:13 +0100
+
+kindr (0.1-174) unstable; urgency=low
+
+  * Adapted docu
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 03 Dec 2013 19:51:29 +0100
+
+kindr (0.1-173) unstable; urgency=low
+
+  * Moved angular and linear velocities
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 03 Dec 2013 18:51:02 +0100
+
+kindr (0.1-172) unstable; urgency=low
+
+  * Adapted doc for angular vel
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 03 Dec 2013 16:43:33 +0100
+
+kindr (0.1-171) unstable; urgency=low
+
+  * Added angular velocities
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 03 Dec 2013 16:22:32 +0100
+
+kindr (0.1-170) unstable; urgency=low
+
+  * Added linear velocities
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 03 Dec 2013 13:58:04 +0100
+
+kindr (0.1-169) unstable; urgency=low
+
+  * Added more docu
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 02 Dec 2013 21:39:14 +0100
+
+kindr (0.1-168) unstable; urgency=low
+
+  * Added docu for positions
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 02 Dec 2013 10:31:06 +0100
+
+kindr (0.1-167) unstable; urgency=low
+
+  * Removed definition of operator = in rotations in RotationBase.hpp
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 02 Dec 2013 09:22:55 +0100
+
+kindr (0.1-166) unstable; urgency=low
+
+  * Added doc
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Sun, 01 Dec 2013 17:13:27 +0100
+
+kindr (0.1-165) unstable; urgency=low
+
+  * Changed code style
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Sun, 01 Dec 2013 16:19:19 +0100
+
+kindr (0.1-164) unstable; urgency=low
+
+  * Changed code style
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Sun, 01 Dec 2013 16:02:44 +0100
+
+kindr (0.1-163) unstable; urgency=low
+
+  * Changed code style
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Sat, 30 Nov 2013 23:25:31 +0100
+
+kindr (0.1-162) unstable; urgency=low
+
+  * changed coding style of rotations
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Sat, 30 Nov 2013 23:07:22 +0100
+
+kindr (0.1-161) unstable; urgency=low
+
+  * Adapted header defines and inlcudes according to CPP code style
+    guide
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Sat, 30 Nov 2013 22:12:32 +0100
+
+kindr (0.1-160) unstable; urgency=low
+
+  * Finished Quaternion and UnitQuaternion testing
+
+ -- bloesch <bloeschm@ethz.ch>  Sun, 01 Dec 2013 16:00:01 +0100
+
+kindr (0.1-159) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_kinder
+
+ -- bloesch <bloeschm@ethz.ch>  Sun, 01 Dec 2013 15:02:56 +0100
+
+kindr (0.1-158) unstable; urgency=low
+
+  * Adapted error thresholod to new percentage tolerance
+
+ -- bloesch <bloeschm@ethz.ch>  Sun, 01 Dec 2013 15:02:44 +0100
+
+kindr (0.1-157) unstable; urgency=low
+
+  * Found problem with numerical precision for toUnitQuaternion method
+
+ -- bloesch <bloeschm@ethz.ch>  Sun, 01 Dec 2013 12:21:47 +0100
+
+kindr (0.1-156) unstable; urgency=low
+
+  * Added homogeneous transformation
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 29 Nov 2013 16:53:31 +0100
+
+kindr (0.1-155) unstable; urgency=low
+
+  * Made =operator consistent between Quaternion and UnitQuaternion (no
+    primtype casting), wrote according unit test
+
+ -- bloesch <bloeschm@ethz.ch>  Fri, 29 Nov 2013 13:35:13 +0100
+
+kindr (0.1-154) unstable; urgency=low
+
+  * Fixed error in inverseRotate in RotationBase (inverse() does not exist
+    anymore)
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 29 Nov 2013 10:55:43 +0100
+
+kindr (0.1-153) unstable; urgency=low
+
+  * Implemented transform in HomogenousTransformation
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 29 Nov 2013 10:31:21 +0100
+
+kindr (0.1-152) unstable; urgency=low
+
+  * Added const to rotate and inverseRotate in Rotations
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 29 Nov 2013 10:31:02 +0100
+
+kindr (0.1-151) unstable; urgency=low
+
+  * continued on unit testing
+
+ -- bloesch <bloeschm@ethz.ch>  Thu, 28 Nov 2013 17:13:51 +0100
+
+kindr (0.1-150) unstable; urgency=low
+
+  * continued on unit testing, fixed the ()-operator for UnitQuaternion
+
+ -- bloesch <bloeschm@ethz.ch>  Thu, 28 Nov 2013 16:01:20 +0100
+
+kindr (0.1-149) unstable; urgency=low
+
+  * Added unit test for Position3
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 28 Nov 2013 13:33:24 +0100
+
+kindr (0.1-148) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_kinder
+
+ -- bloesch <bloeschm@ethz.ch>  Wed, 27 Nov 2013 18:51:04 +0100
+
+kindr (0.1-147) unstable; urgency=low
+
+  * Started unit testing for quaternion multiplication and conjugation
+
+ -- bloesch <bloeschm@ethz.ch>  Wed, 27 Nov 2013 18:50:58 +0100
+
+kindr (0.1-146) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_kinder
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 27 Nov 2013 17:51:50 +0100
+
+kindr (0.1-145) unstable; urgency=low
+
+  * Quaternion, UnitQuaternion: added constructor from real/imag, getReal(),
+    getImaginary()
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 27 Nov 2013 17:51:18 +0100
+
+kindr (0.1-144) unstable; urgency=low
+
+  * Added empty pose
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 27 Nov 2013 17:32:12 +0100
+
+kindr (0.1-143) unstable; urgency=low
+
+  * Added positions
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 27 Nov 2013 16:57:28 +0100
+
+kindr (0.1-142) unstable; urgency=low
+
+  * Completed doc for rotations
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 26 Nov 2013 10:55:14 +0100
+
+kindr (0.1-141) unstable; urgency=low
+
+  * Adapted Readme
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 26 Nov 2013 09:22:39 +0100
+
+kindr (0.1-140) unstable; urgency=low
+
+  * Renamed rm
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 26 Nov 2013 09:19:41 +0100
+
+kindr (0.1-139) unstable; urgency=low
+
+  * Renamed all folders rm to kinder
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 26 Nov 2013 09:11:15 +0100
+
+kindr (0.1-138) unstable; urgency=low
+
+  * Moved doc
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 26 Nov 2013 09:05:25 +0100
+
+kindr (0.1-137) unstable; urgency=low
+
+  * Moved folders
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 26 Nov 2013 08:47:00 +0100
+
+kindr (0.1-136) unstable; urgency=low
+
+  * more docu
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 26 Nov 2013 08:36:39 +0100
+
+kindr (0.1-135) unstable; urgency=low
+
+  * Added docu
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 25 Nov 2013 22:32:00 +0100
+
+kindr (0.1-134) unstable; urgency=low
+
+  * Added EulerAngles pics to docu
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 25 Nov 2013 13:32:35 +0100
+
+kindr (0.1-133) unstable; urgency=low
+
+  * Renamed chi to angle in AngleAxisBase
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 25 Nov 2013 10:50:13 +0100
+
+kindr (0.1-132) unstable; urgency=low
+
+  * more docu
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 25 Nov 2013 10:45:11 +0100
+
+kindr (0.1-131) unstable; urgency=low
+
+  * Corrected a wrong comment in RotationEigen.hpp, added a simple list
+    with the functionality overview
+
+ -- bloesch <bloeschm@ethz.ch>  Sun, 24 Nov 2013 15:35:01 +0100
+
+kindr (0.1-130) unstable; urgency=low
+
+  * Compiled latest cheatsheet
+
+ -- bloesch <bloeschm@ethz.ch>  Fri, 22 Nov 2013 18:06:18 +0100
+
+kindr (0.1-129) unstable; urgency=low
+
+  * experimeted with gTests, compiles
+
+ -- bloesch <bloeschm@ethz.ch>  Fri, 22 Nov 2013 18:03:26 +0100
+
+kindr (0.1-128) unstable; urgency=low
+
+  * Cleaned unit tests
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 22 Nov 2013 14:51:41 +0100
+
+kindr (0.1-127) unstable; urgency=low
+
+  * Added unique and identity to rotation base
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 22 Nov 2013 13:26:28 +0100
+
+kindr (0.1-126) unstable; urgency=low
+
+  * more docu
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 22 Nov 2013 10:47:50 +0100
+
+kindr (0.1-125) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_robotmath
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Fri, 22 Nov 2013 10:46:43 +0100
+
+kindr (0.1-124) unstable; urgency=low
+
+  * added doc to RotationEigen.hpp
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Fri, 22 Nov 2013 10:45:39 +0100
+
+kindr (0.1-123) unstable; urgency=low
+
+  * Fixed copyright
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 22 Nov 2013 10:17:08 +0100
+
+kindr (0.1-122) unstable; urgency=low
+
+  * Added copyright to source files
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Fri, 22 Nov 2013 10:09:52 +0100
+
+kindr (0.1-121) unstable; urgency=low
+
+  * Added more docu
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 21 Nov 2013 21:14:59 +0100
+
+kindr (0.1-120) unstable; urgency=low
+
+  * Added more documentation
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 21 Nov 2013 18:29:00 +0100
+
+kindr (0.1-119) unstable; urgency=low
+
+  * added class docs in RotationEigen.hpp, changed Eigen parent of Quaternion
+    back to private
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Thu, 21 Nov 2013 18:20:33 +0100
+
+kindr (0.1-118) unstable; urgency=low
+
+  * added doc to RotationBase.hpp
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Thu, 21 Nov 2013 17:59:42 +0100
+
+kindr (0.1-117) unstable; urgency=low
+
+  * Added doc
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 21 Nov 2013 17:18:59 +0100
+
+kindr (0.1-116) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_robotmath
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Thu, 21 Nov 2013 17:03:12 +0100
+
+kindr (0.1-115) unstable; urgency=low
+
+  * added getActive() and getPassive()
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Thu, 21 Nov 2013 17:03:00 +0100
+
+kindr (0.1-114) unstable; urgency=low
+
+  * Documented quaternions
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 21 Nov 2013 16:46:01 +0100
+
+kindr (0.1-113) unstable; urgency=low
+
+  * Adapted range of angles for euler angles and angle-axis
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 21 Nov 2013 12:47:58 +0100
+
+kindr (0.1-112) unstable; urgency=low
+
+  * cleaned up namespaces in common
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 21 Nov 2013 12:42:21 +0100
+
+kindr (0.1-111) unstable; urgency=low
+
+  * added setUnique() functions
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Thu, 21 Nov 2013 12:38:09 +0100
+
+kindr (0.1-110) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_robotmath
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Thu, 21 Nov 2013 12:30:47 +0100
+
+kindr (0.1-109) unstable; urgency=low
+
+  * added invert(ed) and rotation representation specific functions
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Thu, 21 Nov 2013 12:30:38 +0100
+
+kindr (0.1-108) unstable; urgency=low
+
+  * Changed names of groups for rotations and quaternions
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 21 Nov 2013 11:23:29 +0100
+
+kindr (0.1-107) unstable; urgency=low
+
+  * added invert(ed), conjugate(d) and normalize(d) functions to
+    (unit)quaternions
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Thu, 21 Nov 2013 11:16:44 +0100
+
+kindr (0.1-106) unstable; urgency=low
+
+  * Improved doxygen doc
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 21 Nov 2013 11:10:52 +0100
+
+kindr (0.1-105) unstable; urgency=low
+
+  * no operator= segfault anymore
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Thu, 21 Nov 2013 10:11:09 +0100
+
+kindr (0.1-104) unstable; urgency=low
+
+  * Added cheatsheet_latest.pdf
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 21 Nov 2013 10:08:01 +0100
+
+kindr (0.1-103) unstable; urgency=low
+
+  * Added gtest to readme
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 20 Nov 2013 22:44:18 +0100
+
+kindr (0.1-102) unstable; urgency=low
+
+  * Added install help to readme
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 20 Nov 2013 22:35:31 +0100
+
+kindr (0.1-101) unstable; urgency=low
+
+  * Removed doc from ALL and added folder checking for gtest
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 20 Nov 2013 22:30:50 +0100
+
+kindr (0.1-100) unstable; urgency=low
+
+  * Cleaned ASSERT MACROS
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 20 Nov 2013 21:49:15 +0100
+
+kindr (0.1-99) unstable; urgency=low
+
+  * improved quaternion multiplication
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 20 Nov 2013 18:20:41 +0100
+
+kindr (0.1-98) unstable; urgency=low
+
+  * Changed quaternion multiplicator
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 20 Nov 2013 18:17:28 +0100
+
+kindr (0.1-97) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_robotmath
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 20 Nov 2013 18:02:27 +0100
+
+kindr (0.1-96) unstable; urgency=low
+
+  * added Transformations, rotation=rotation gives segfault sometimes
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 20 Nov 2013 18:02:14 +0100
+
+kindr (0.1-95) unstable; urgency=low
+
+  * Commented composition
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 20 Nov 2013 17:44:00 +0100
+
+kindr (0.1-94) unstable; urgency=low
+
+  * Adapted cheatsheet
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 20 Nov 2013 17:41:30 +0100
+
+kindr (0.1-93) unstable; urgency=low
+
+  * before adding Eigen::Quaternion<> as a member to Quaternion<>
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 20 Nov 2013 09:36:48 +0100
+
+kindr (0.1-92) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_robotmath
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 19 Nov 2013 12:56:08 +0100
+
+kindr (0.1-91) unstable; urgency=low
+
+  * added EulerAngles range wrapper in getUnique()
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 19 Nov 2013 12:53:54 +0100
+
+kindr (0.1-90) unstable; urgency=low
+
+  * Added more doc
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 18 Nov 2013 22:40:24 +0100
+
+kindr (0.1-89) unstable; urgency=low
+
+  * Added documentation to quaternions
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 18 Nov 2013 21:16:17 +0100
+
+kindr (0.1-88) unstable; urgency=low
+
+  * operator== now uses getUnique()
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 18 Nov 2013 17:34:06 +0100
+
+kindr (0.1-87) unstable; urgency=low
+
+  * fixed multiplication, objects will be temporarily copied into quaternions
+    for multiplication, result is of type lvalue
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 18 Nov 2013 16:45:59 +0100
+
+kindr (0.1-86) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_robotmath
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 18 Nov 2013 15:39:19 +0100
+
+kindr (0.1-85) unstable; urgency=low
+
+  * added PRINT()
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 18 Nov 2013 15:39:09 +0100
+
+kindr (0.1-84) unstable; urgency=low
+
+  * Added doxygen doc
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Mon, 18 Nov 2013 11:12:02 +0100
+
+kindr (0.1-83) unstable; urgency=low
+
+  * changed mult function
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 18 Nov 2013 13:31:41 +0100
+
+kindr (0.1-82) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_robotmath
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 18 Nov 2013 09:57:42 +0100
+
+kindr (0.1-81) unstable; urgency=low
+
+  * deleted unnecessary functions
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 18 Nov 2013 09:57:31 +0100
+
+kindr (0.1-80) unstable; urgency=low
+
+  * added unfished example for rotations
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 14 Nov 2013 22:02:08 +0100
+
+kindr (0.1-79) unstable; urgency=low
+
+  * updated doxygen file
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 14 Nov 2013 22:01:34 +0100
+
+kindr (0.1-78) unstable; urgency=low
+
+  * Added typed tests for quaternions and unit quaternions
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Thu, 14 Nov 2013 16:19:03 +0100
+
+kindr (0.1-77) unstable; urgency=low
+
+  * added wrapper getUnique(), RPY and YPR implementations are still
+    empty
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 13 Nov 2013 18:26:35 +0100
+
+kindr (0.1-76) unstable; urgency=low
+
+  * added setIdentity() functions to rotation representations
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 13 Nov 2013 18:07:20 +0100
+
+kindr (0.1-75) unstable; urgency=low
+
+  * added operator (), fixed bugs
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 13 Nov 2013 17:38:43 +0100
+
+kindr (0.1-74) unstable; urgency=low
+
+  * conversion of quaternions is now only possible to equal or higher types
+    in the inheritance tree
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 12 Nov 2013 16:46:41 +0100
+
+kindr (0.1-73) unstable; urgency=low
+
+  * added combined * and == tests for quat, unitquat and rotquat
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 12 Nov 2013 16:20:37 +0100
+
+kindr (0.1-72) unstable; urgency=low
+
+  * operator* and operator== for quaternions and unitquaternions working
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 12 Nov 2013 16:12:22 +0100
+
+kindr (0.1-71) unstable; urgency=low
+
+  * added accessors and modifiers for all rotation representations
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 12 Nov 2013 13:44:26 +0100
+
+kindr (0.1-70) unstable; urgency=low
+
+  * inverserotate() working with matrices
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 12 Nov 2013 12:53:58 +0100
+
+kindr (0.1-69) unstable; urgency=low
+
+  * rotate() working with matrices
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 12 Nov 2013 12:38:29 +0100
+
+kindr (0.1-68) unstable; urgency=low
+
+  * ask hannes
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 12 Nov 2013 10:49:38 +0100
+
+kindr (0.1-67) unstable; urgency=low
+
+  * Fixed add_subdirectory of gtest
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 12 Nov 2013 10:11:00 +0100
+
+kindr (0.1-66) unstable; urgency=low
+
+  * Added quaternions test
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 12 Nov 2013 01:11:06 +0100
+
+kindr (0.1-65) unstable; urgency=low
+
+  * Added quaternion test
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Tue, 12 Nov 2013 00:46:29 +0100
+
+kindr (0.1-64) unstable; urgency=low
+
+  * Removed REQUIRED from doxygen package
+
+ -- gehrinch <gehrinch@ethz.ch>  Mon, 11 Nov 2013 18:57:33 +0100
+
+kindr (0.1-63) unstable; urgency=low
+
+  * Fixed doxygen.config.in
+
+ -- gehrinch <gehrinch@ethz.ch>  Mon, 11 Nov 2013 18:56:30 +0100
+
+kindr (0.1-62) unstable; urgency=low
+
+  * updated doxygenfile
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 11 Nov 2013 18:03:36 +0100
+
+kindr (0.1-61) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_robotmath
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 11 Nov 2013 17:48:49 +0100
+
+kindr (0.1-60) unstable; urgency=low
+
+  * long error
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 11 Nov 2013 17:48:27 +0100
+
+kindr (0.1-59) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_robotmath
+
+ -- gehrinch <gehrinch@ethz.ch>  Mon, 11 Nov 2013 17:44:58 +0100
+
+kindr (0.1-58) unstable; urgency=low
+
+  * Added rm_doc
+
+ -- gehrinch <gehrinch@ethz.ch>  Mon, 11 Nov 2013 17:44:40 +0100
+
+kindr (0.1-57) unstable; urgency=low
+
+  * moved quaternion files
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 11 Nov 2013 12:44:51 +0100
+
+kindr (0.1-56) unstable; urgency=low
+
+  * rotation fixed, rotate matrix in progress
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 11 Nov 2013 12:37:56 +0100
+
+kindr (0.1-55) unstable; urgency=low
+
+  * operator* and operator== are now members of Rotation class, no ambiguous
+    errors due to using statements in child classes, operator* seems to not
+    work properly
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Fri, 08 Nov 2013 11:14:36 +0100
+
+kindr (0.1-54) unstable; urgency=low
+
+  * bugfixes, new tests, operator* still not working for Eigen children
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Thu, 07 Nov 2013 17:52:26 +0100
+
+kindr (0.1-53) unstable; urgency=low
+
+  * added functions inverse, conjugate, constructor(double a b
+    c)
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Thu, 07 Nov 2013 15:15:17 +0100
+
+kindr (0.1-52) unstable; urgency=low
+
+  * working functions: operator==, operator=, constructor, compiles
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Thu, 07 Nov 2013 13:50:38 +0100
+
+kindr (0.1-51) unstable; urgency=low
+
+  * compilable version, test output is unreadable
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 06 Nov 2013 15:48:44 +0100
+
+kindr (0.1-50) unstable; urgency=low
+
+  * fixed some bugs
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Wed, 06 Nov 2013 13:13:11 +0100
+
+kindr (0.1-49) unstable; urgency=low
+
+  * corrected multiplication functions, test not compiling
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 04 Nov 2013 17:34:40 +0100
+
+kindr (0.1-48) unstable; urgency=low
+
+  * added EulerAnglesRPY and EulerAnglesYPR classes
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 29 Oct 2013 16:39:56 +0100
+
+kindr (0.1-47) unstable; urgency=low
+
+  * AngleAxis, UnitQuaternion and RotationMatrix have been implemented, compiling
+    but not every function working
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 29 Oct 2013 13:42:51 +0100
+
+kindr (0.1-46) unstable; urgency=low
+
+  .gitignore edited, git ignores now gtest
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 29 Oct 2013 13:41:07 +0100
+
+kindr (0.1-45) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_robotmath
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 28 Oct 2013 17:23:53 +0100
+
+kindr (0.1-44) unstable; urgency=low
+
+  * basic framework from Hannes
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 28 Oct 2013 17:23:39 +0100
+
+kindr (0.1-43) unstable; urgency=low
+
+  * Added rpy.png
+
+ -- gehrinch <gehrinch@ethz.ch>  Fri, 25 Oct 2013 09:08:22 +0200
+
+kindr (0.1-42) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_robotmath
+
+ -- gehrinch <gehrinch@ethz.ch>  Fri, 25 Oct 2013 09:05:41 +0200
+
+kindr (0.1-41) unstable; urgency=low
+
+  * Added coordinate_system_ypr-crop.pdf
+
+ -- gehrinch <gehrinch@ethz.ch>  Fri, 25 Oct 2013 09:05:16 +0200
+
+kindr (0.1-40) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_robotmath
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Thu, 24 Oct 2013 13:08:39 +0200
+
+kindr (0.1-39) unstable; urgency=low
+
+  * changed IB <-> BI
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Thu, 24 Oct 2013 13:08:17 +0200
+
+kindr (0.1-38) unstable; urgency=low
+
+  * Fixed nq error in generalized coordinates
+
+ -- gehrinch <gehrinch@ethz.ch>  Thu, 24 Oct 2013 10:18:47 +0200
+
+kindr (0.1-37) unstable; urgency=low
+
+  * Added dynamics
+
+ -- gehrinch <gehrinch@ethz.ch>  Thu, 24 Oct 2013 10:10:49 +0200
+
+kindr (0.1-36) unstable; urgency=low
+
+  * Removed test with bounded range from RotationsTest.hpp
+
+ -- gehrinch <gehrinch@ethz.ch>  Tue, 22 Oct 2013 19:42:25 +0200
+
+kindr (0.1-35) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_robotmath
+
+ -- gehrinch <gehrinch@ethz.ch>  Tue, 22 Oct 2013 19:40:26 +0200
+
+kindr (0.1-34) unstable; urgency=low
+
+  * Corrected eigen code in cheatsheet
+
+ -- gehrinch <gehrinch@ethz.ch>  Tue, 22 Oct 2013 19:39:49 +0200
+
+kindr (0.1-33) unstable; urgency=low
+
+  * changed arguments to reference
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 22 Oct 2013 17:34:47 +0200
+
+kindr (0.1-32) unstable; urgency=low
+
+  * changed arguments to reference
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 22 Oct 2013 17:31:52 +0200
+
+kindr (0.1-31) unstable; urgency=low
+
+  * added Common.hpp, wrapping angle function. Rotations.hpp has been tested
+    alsofor singularities
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 22 Oct 2013 13:12:09 +0200
+
+kindr (0.1-30) unstable; urgency=low
+
+  * included range correction directly in getAxisAngleFrom...
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Tue, 22 Oct 2013 10:03:17 +0200
+
+kindr (0.1-29) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_robotmath
+
+ -- gehrinch <gehrinch@ethz.ch>  Mon, 21 Oct 2013 22:17:28 +0200
+
+kindr (0.1-28) unstable; urgency=low
+
+  * Corrected rotation of vector with quaternion in tex
+
+ -- gehrinch <gehrinch@ethz.ch>  Mon, 21 Oct 2013 22:16:41 +0200
+
+kindr (0.1-27) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_robotmath
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 21 Oct 2013 18:18:45 +0200
+
+kindr (0.1-26) unstable; urgency=low
+
+  * changed nomenclature, transformation matrix instead of rotation matrix,
+    fully tested
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Mon, 21 Oct 2013 18:18:15 +0200
+
+kindr (0.1-25) unstable; urgency=low
+
+  * changed rotation matrix to A
+
+ -- gehrinch <gehrinch@ethz.ch>  Mon, 21 Oct 2013 18:13:27 +0200
+
+kindr (0.1-24) unstable; urgency=low
+
+  * Added quaternion derivative
+
+ -- gehrinch <gehrinch@ethz.ch>  Sat, 19 Oct 2013 01:18:26 +0200
+
+kindr (0.1-23) unstable; urgency=low
+
+  * added velocities
+
+ -- gehrinch <gehrinch@ethz.ch>  Sat, 19 Oct 2013 00:07:56 +0200
+
+kindr (0.1-22) unstable; urgency=low
+
+  * added transformation of vector with quaternion
+
+ -- gehrinch <gehrinch@ethz.ch>  Fri, 18 Oct 2013 22:25:01 +0200
+
+kindr (0.1-21) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_robotmath
+
+ -- gehrinch <gehrinch@ethz.ch>  Fri, 18 Oct 2013 17:56:16 +0200
+
+kindr (0.1-20) unstable; urgency=low
+
+  * Finished coordinate_systems_rpy.tex
+
+ -- gehrinch <gehrinch@ethz.ch>  Fri, 18 Oct 2013 17:55:51 +0200
+
+kindr (0.1-19) unstable; urgency=low
+
+  * Corrected rotation matrix in coordinate_systems_rpy.tex
+
+ -- gehrinch <gehrinch@ethz.ch>  Fri, 18 Oct 2013 17:23:39 +0200
+
+kindr (0.1-18) unstable; urgency=low
+
+  * Added coordinate_system_rpy.tex
+
+ -- gehrinch <gehrinch@ethz.ch>  Fri, 18 Oct 2013 16:07:24 +0200
+
+kindr (0.1-17) unstable; urgency=low
+
+  * Table complete
+
+ -- gehrinch <gehrinch@ethz.ch>  Fri, 18 Oct 2013 15:23:34 +0200
+
+kindr (0.1-16) unstable; urgency=low
+
+  * Version 1.0
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Fri, 18 Oct 2013 14:50:22 +0200
+
+kindr (0.1-15) unstable; urgency=low
+
+  * Added rotation matrix R_IB
+
+ -- gehrinch <gehrinch@ethz.ch>  Fri, 18 Oct 2013 10:14:00 +0200
+
+kindr (0.1-14) unstable; urgency=low
+
+  * Renamed coordinate frames
+
+ -- gehrinch <gehrinch@ethz.ch>  Fri, 18 Oct 2013 10:06:08 +0200
+
+kindr (0.1-13) unstable; urgency=low
+
+  * Merge branch 'master' of bitbucket.org:ethz-asl-lr/c_robotmath
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Fri, 18 Oct 2013 09:56:00 +0200
+
+kindr (0.1-12) unstable; urgency=low
+
+  * local coordinate system C changed to B, variable A to R
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Fri, 18 Oct 2013 09:55:35 +0200
+
+kindr (0.1-11) unstable; urgency=low
+
+  * Added tikz-3dplot.sty
+
+ -- gehrinch <gehrinch@ethz.ch>  Thu, 17 Oct 2013 19:15:30 +0200
+
+kindr (0.1-10) unstable; urgency=low
+
+  * Added coordinate_system_ypr.tex
+
+ -- gehrinch <gehrinch@ethz.ch>  Thu, 17 Oct 2013 17:59:16 +0200
+
+kindr (0.1-9) unstable; urgency=low
+
+  * first version, untested
+
+ -- Remo Diethelm <remod@student.ethz.ch>  Thu, 17 Oct 2013 17:06:40 +0200
+
+kindr (0.1-8) unstable; urgency=low
+
+  * worked on quaternionstest
+
+ -- gehrinch <gehrinch@ethz.ch>  Wed, 16 Oct 2013 16:48:27 +0200
+
+kindr (0.1-7) unstable; urgency=low
+
+  * gtest testRotateVector in rotations is correct
+
+ -- gehrinch <gehrinch@ethz.ch>  Wed, 16 Oct 2013 10:47:40 +0200
+
+kindr (0.1-6) unstable; urgency=low
+
+  * added gtest of rotations
+
+ -- gehrinch <gehrinch@ethz.ch>  Tue, 15 Oct 2013 21:30:14 +0200
+
+kindr (0.1-5) unstable; urgency=low
+
+  * Added cmake
+
+ -- gehrinch <gehrinch@ethz.ch>  Mon, 14 Oct 2013 14:17:11 +0200
+
+kindr (0.1-4) unstable; urgency=low
+
+  * changed gtest to symlink
+
+ -- gehrinch <gehrinch@ethz.ch>  Tue, 08 Oct 2013 20:42:50 +0200
+
+kindr (0.1-3) unstable; urgency=low
+
+  * Added rotations and linear_algebra with gtest
+
+ -- gehrinch <gehrinch@ethz.ch>  Tue, 08 Oct 2013 20:26:09 +0200
+
+kindr (0.1-2) unstable; urgency=low
+
+  * Added cheatsheet
+
+ -- gehrinch <gehrinch@ethz.ch>  Tue, 08 Oct 2013 19:41:24 +0200
+
+kindr (0.1-1) unstable; urgency=low
+
+  * Initial commit
+
+ -- gehrinch <gehrinch@ethz.ch>  Tue, 08 Oct 2013 17:05:46 +0200
