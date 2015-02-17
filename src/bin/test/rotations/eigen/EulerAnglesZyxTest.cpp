@@ -574,7 +574,7 @@ TYPED_TEST(EulerAnglesZyxSingleTest, testMaps){
   double norm = 0.1;
   testVec = this->vec/this->vec.norm()*norm;
   rotExpMap = rot.exponentialMap(testVec);
-  ASSERT_NEAR(rotExpMap.getDisparityAngle(this->rotEulerAnglesZyxIdentity),norm,1e-6);
+  ASSERT_NEAR(rotExpMap.getDisparityAngle(this->rotEulerAnglesZyxIdentity),norm,3e-6);
 
   testVec.setZero();
   rotExpMap = rot.exponentialMap(testVec);

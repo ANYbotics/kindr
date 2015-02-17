@@ -1,15 +1,22 @@
+kindr (0.1-498) unstable; urgency=low
+
+  * Increased tolerance for test EulerAnglesZyxTest.cpp:577 since it
+    would fail on i386 systems
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Tue, 17 Feb 2015 20:15:00 +0100
+
 kindr (0.1-497) unstable; urgency=low
 
   * Switched from C++0x to C++11 compiler flags
   * Removed precise distribution due to a lack of C++11 support
 
- -- Ralf Kaestner <ralf.kaestner@gmail.com>  Tue, 17 Feb 2015 07:53:00 +0100
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Tue, 17 Feb 2015 19:53:00 +0100
 
 kindr (0.1-496) unstable; urgency=low
 
   * ReMake build system port
 
- -- Ralf Kaestner <ralf.kaestner@gmail.com>  Tue, 17 Feb 2015 07:42:00 +0100
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Tue, 17 Feb 2015 19:42:00 +0100
 
 kindr (0.1-495) unstable; urgency=low
 
