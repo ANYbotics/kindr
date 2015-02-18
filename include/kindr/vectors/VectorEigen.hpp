@@ -234,7 +234,7 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
 
   /*!\brief Set a segment of the vector
    */
-  template<int Start_, int DimensionInput_>
+  template<int DimensionInput_>
   void setSegment(int start, const Vector<PhysicalType_, PrimType_, DimensionInput_> & input) {
     this->toImplementation().template segment<DimensionInput_>(start) = input.toImplementation();
   }
