@@ -1,22 +1,40 @@
+kindr (0.1-501) unstable; urgency=low
+
+  * Updated changelog
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Thu, 19 Feb 2015 05:44:00 +0100
+
+kindr (0.1-500) unstable; urgency=low
+
+  * Merge branch 'master' of github.com:ethz-asl/kindr into remake
+
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Thu, 19 Feb 2015 05:42:21 +0100
+
+kindr (0.1-499) unstable; urgency=low
+
+  * Fixed unused template parameter for vector::setSegment
+
+ -- Christian Gehring <gehrinch@ethz.ch>  Wed, 18 Feb 2015 16:04:18 +0100
+
 kindr (0.1-498) unstable; urgency=low
 
-  * Increased tolerance for test EulerAnglesZyxTest.cpp:577 since it
-    would fail on i386 systems
+  * Increased tolerance for test EulerAnglesZyxTest.cpp:577 since it would
+    fail on i386 systems
 
- -- Ralf Kaestner <ralf.kaestner@gmail.com>  Tue, 17 Feb 2015 20:15:00 +0100
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Tue, 17 Feb 2015 20:15:32 +0100
 
 kindr (0.1-497) unstable; urgency=low
 
   * Switched from C++0x to C++11 compiler flags
   * Removed precise distribution due to a lack of C++11 support
 
- -- Ralf Kaestner <ralf.kaestner@gmail.com>  Tue, 17 Feb 2015 19:53:00 +0100
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Tue, 17 Feb 2015 19:55:19 +0100
 
 kindr (0.1-496) unstable; urgency=low
 
   * ReMake build system port
 
- -- Ralf Kaestner <ralf.kaestner@gmail.com>  Tue, 17 Feb 2015 19:42:00 +0100
+ -- Ralf Kaestner <ralf.kaestner@gmail.com>  Tue, 17 Feb 2015 19:42:51 +0100
 
 kindr (0.1-495) unstable; urgency=low
 
