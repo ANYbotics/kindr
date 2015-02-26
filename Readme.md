@@ -27,6 +27,34 @@ GCC 4.7 is required at the minimum.
 
 ## Installation
 
+### Installing from packages (recommended for Ubuntu LTS users)
+
+The maintainers of this project provide binary packages for the latest Ubuntu
+LTS releases and commonly used system architectures. To install these packages,
+you may follow these instructions:
+
+* Add the project PPA to your APT sources by issuing 
+
+  ```
+  sudo add-apt-repository ppa:ethz-asl/common
+  ```
+
+  on the command line
+
+* To re-synchronize your package index files, run
+
+  ```
+  sudo apt-get update
+  ```
+
+* Install all project packages and their dependencies through
+
+  ```
+  sudo apt-get install kindr*
+  ```
+
+  or selected packages using your favorite package management tool
+
 ### Building with cmake
 
 Install the library with [CMake](www.cmake.org):
