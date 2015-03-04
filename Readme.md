@@ -50,7 +50,7 @@ you may follow these instructions:
 * Install all project packages and their dependencies through
 
   ```
-  sudo apt-get install kindr*
+  sudo apt-get install kindr-*
   ```
 
   or selected packages using your favorite package management tool
