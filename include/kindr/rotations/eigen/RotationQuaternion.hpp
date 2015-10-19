@@ -101,7 +101,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    */
   RotationQuaternion(Scalar w, Scalar x, Scalar y, Scalar z)
     : rotationQuaternion_(w,x,y,z) {
-    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, rotationQuaternion_.norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
+    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, rotationQuaternion_.norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-2), "Input quaternion has not unit length.");
   }
 
   /*! \brief Constructor using real and imaginary part.
@@ -111,7 +111,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    */
   RotationQuaternion(Scalar real, const Imaginary& imag)
     : rotationQuaternion_(real,imag(0),imag(1),imag(2)) {
-    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, rotationQuaternion_.norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
+    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, rotationQuaternion_.norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-2), "Input quaternion has not unit length.");
   }
 
   /*! \brief Constructor using Eigen::Matrix<PrimType_,4,1>.
@@ -120,7 +120,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    */
   RotationQuaternion(const Vector4 & vec)
     : rotationQuaternion_(vec(0),vec(1),vec(2),vec(3)) {
-    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, rotationQuaternion_.norm(), static_cast<Scalar>(1), 1e-4, "Input quaternion has not unit length.");
+    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, rotationQuaternion_.norm(), static_cast<Scalar>(1), 1e-2, "Input quaternion has not unit length.");
   }
 
   /*! \brief Constructor using Eigen::Quaternion<PrimType_>.
@@ -129,7 +129,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    */
   explicit RotationQuaternion(const Implementation& other)
     : rotationQuaternion_(other.w(), other.x(), other.y(), other.z()) {
-    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, rotationQuaternion_.norm(), static_cast<Scalar>(1), 1e-4, "Input quaternion has not unit length.");
+    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, rotationQuaternion_.norm(), static_cast<Scalar>(1), 1e-2, "Input quaternion has not unit length.");
   }
 
   /*! \brief Constructor using quaternions::UnitQuaternion.
@@ -138,7 +138,7 @@ class RotationQuaternion : public RotationQuaternionBase<RotationQuaternion<Prim
    */
   explicit RotationQuaternion(const Base& other)
     : rotationQuaternion_(other.w(), other.x(), other.y(), other.z()) {
-    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, rotationQuaternion_.norm(), static_cast<Scalar>(1), 1e-4, "Input quaternion has not unit length.");
+    KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, rotationQuaternion_.norm(), static_cast<Scalar>(1), 1e-2, "Input quaternion has not unit length.");
   }
 
   /*! \brief Constructor using another rotation.
