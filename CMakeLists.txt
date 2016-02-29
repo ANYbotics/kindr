@@ -29,7 +29,7 @@ cmake_minimum_required (VERSION 2.8)
 project(kindr)
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}" ${CMAKE_MODULE_PATH})
+#set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}" ${CMAKE_MODULE_PATH})
 
 find_package(Eigen3 REQUIRED)
 
@@ -62,7 +62,7 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/gtest/" AND BUILD_TEST)
 endif()
 
 # Add CMake module path
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+#set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
 
 install(DIRECTORY include/kindr DESTINATION include)
@@ -106,7 +106,7 @@ configure_file(kindrConfig.cmake.in
 # 2- installation build #
 
 # Change the include location for the case of an install location
-set(kindr_include_dirs ${CMAKE_INSTALL_PREFIX}/include)
+set(kindr_include_dirs ${CMAKE_INSTALL_PREFIX}/include ${EIGEN3_INCLUDE_DIR})
 
 
 # We put the generated file for installation in a different repository (i.e., ./CMakeFiles/)
