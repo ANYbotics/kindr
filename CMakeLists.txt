@@ -106,7 +106,7 @@ configure_file(kindrConfig.cmake.in
 # 2- installation build #
 
 # Change the include location for the case of an install location
-set(kindr_include_dirs ${CMAKE_INSTALL_PREFIX}/include)
+set(kindr_include_dirs ${CMAKE_INSTALL_PREFIX}/include ${EIGEN3_INCLUDE_DIR})
 
 
 # We put the generated file for installation in a different repository (i.e., ./CMakeFiles/)
