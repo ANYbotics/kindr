@@ -15,7 +15,7 @@
 	<author>Hannes Sommer</author>
 	<!-- The *_depend tags are used to specify dependencies -->
 	<buildtool_depend>cmake</buildtool_depend>
-	<build_export_depend>Eigen3</build_export_depend>
+	<build_export_depend>eigen</build_export_depend>
 	<exec_depend>catkin</exec_depend>
 	<export>
 		<!-- Specify that this is not really a ROS package-->
