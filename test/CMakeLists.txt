@@ -72,6 +72,13 @@ set(LINEARALGEBRA_SRCS
 )
 add_gtest(runUnitTestsLinearAlgebra ${LINEARALGEBRA_SRCS})
 
+set(CORE_SRCS
+	test_main.cpp
+	core/FunctionalTest.cpp
+	core/SE3Test.cpp
+)
+add_gtest(runUnitTestsCore ${CORE_SRCS})
+
 set(QUATERNIONS_SRCS
 	test_main.cpp
 	quaternions/QuaternionEigenTest.cpp
