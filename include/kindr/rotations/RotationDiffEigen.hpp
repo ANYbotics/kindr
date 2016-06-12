@@ -30,6 +30,7 @@
 #define KINDR_ROTATIONS_RDIFFEIGEN_HPP_
 
 #include "kindr/rotations/RotationBase.hpp"
+#include "kindr/linear_algebra/LinearAlgebra.hpp"
 
 namespace kindr {
 namespace rotations {
@@ -50,6 +51,21 @@ class EulerAnglesZyxDiff;
 template<typename PrimType_, enum RotationUsage Usage_>
 class EulerAnglesXyzDiff;
 
+
+/*!
+ * \brief Gets the 3x3 Jacobian of the exponential map.
+ * \param   vector 3x1-matrix
+ * \return  matrix  (3x3-matrix)
+ */
+template<typename PrimType_>
+inline static Eigen::Matrix<PrimType_, 3, 3> getJacobianOfExponentialMap(const Eigen::Matrix<PrimType_, 3, 1>& vector) {
+  const PrimType_ norm = vector.norm();
+  const Eigen::Matrix<PrimType_, 3, 3> skewMatrix = linear_algebra::getSkewMatrixFromVector(vector);
+  if (norm < 1.0e-4) {
+    return Eigen::Matrix<PrimType_, 3, 3>::Identity() + 0.5*skewMatrix;
+  }
+  return Eigen::Matrix<PrimType_, 3, 3>::Identity() + (PrimType_(1.0) - cos(norm))/(norm*norm)*skewMatrix + (norm - sin(norm))/(norm*norm*norm)*(skewMatrix*skewMatrix);
+}
 
 } // namespace eigen_impl
 } // namespace rotations
