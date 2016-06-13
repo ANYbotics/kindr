@@ -34,7 +34,7 @@
 
 #include "kindr/thirdparty/ros/RosTfPoseEigen.hpp"
 #include "kindr/poses/PoseEigen.hpp"
-#include "kindr/rotations/RotationEigen.hpp"
+#include "kindr/rotations/Rotation.hpp"
 #include "kindr/rotations/RotationBase.hpp"
 #include "kindr/common/gtest_eigen.hpp"
 

@@ -30,7 +30,7 @@
 #define KINDR_ROSTFPOSEEIGEN_HPP_
 
 #include "kindr/poses/PoseEigen.hpp"
-#include "kindr/rotations/RotationEigen.hpp"
+#include "kindr/rotations/Rotation.hpp"
 
 // ROS
 #include <ros/ros.h>

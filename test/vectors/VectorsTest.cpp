@@ -34,7 +34,7 @@
 #include <gtest/gtest.h>
 
 #include "kindr/vectors/VectorEigen.hpp"
-#include "kindr/rotations/RotationEigen.hpp"
+#include "kindr/rotations/Rotation.hpp"
 #include "kindr/common/gtest_eigen.hpp"
 
 

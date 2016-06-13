@@ -35,7 +35,7 @@
 #include "kindr/common/assert_macros.hpp"
 #include "kindr/common/assert_macros_eigen.hpp"
 #include "kindr/rotations/RotationDiffBase.hpp"
-#include "kindr/rotations/RotationEigen.hpp"
+#include "kindr/rotations/Rotation.hpp"
 #include "kindr/quaternions/QuaternionEigen.hpp"
 #include "kindr/phys_quant/eigen/AngularVelocity.hpp"
 #include "kindr/linear_algebra/LinearAlgebra.hpp"

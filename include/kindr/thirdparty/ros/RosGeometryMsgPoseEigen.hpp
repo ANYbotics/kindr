@@ -30,7 +30,7 @@
 #define KINDR_ROSGEOMETRYMSGPOSEEIGEN_HPP_
 
 #include "kindr/poses/PoseEigen.hpp"
-#include "kindr/rotations/RotationEigen.hpp"
+#include "kindr/rotations/Rotation.hpp"
 #include "kindr/thirdparty/ros/RosGeometryMsgPhysicalQuantitiesEigen.hpp"
 #include "kindr/thirdparty/ros/RosGeometryMsgRotationEigen.hpp"
 

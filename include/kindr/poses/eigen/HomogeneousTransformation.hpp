@@ -32,7 +32,7 @@
 #include "kindr/common/common.hpp"
 #include "kindr/common/assert_macros_eigen.hpp"
 #include "kindr/phys_quant/PhysicalQuantitiesEigen.hpp"
-#include "kindr/rotations/RotationEigen.hpp"
+#include "kindr/rotations/Rotation.hpp"
 #include "kindr/poses/PoseBase.hpp"
 
 

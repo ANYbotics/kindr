@@ -26,9 +26,9 @@
  *
 */
 
+#include "kindr/rotations/Rotation.hpp"
 #include "kindr/common/gtest_eigen.hpp"
 #include "kindr/quaternions/QuaternionEigen.hpp"
-#include "kindr/rotations/RotationEigen.hpp"
 
 namespace rot = kindr;
 namespace quat = kindr::quaternions::eigen_impl;

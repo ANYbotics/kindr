@@ -29,7 +29,7 @@
 #ifndef KINDR_ROSGEOMETRYMSGROTATIONEIGEN_HPP_
 #define KINDR_ROSGEOMETRYMSGROTATIONEIGEN_HPP_
 
-#include "kindr/rotations/RotationEigen.hpp"
+#include "kindr/rotations/Rotation.hpp"
 
 // ROS
 #include <ros/ros.h>

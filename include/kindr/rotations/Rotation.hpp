@@ -214,11 +214,11 @@ class SetFromVectorsTraits<RotationBase<Rotation_>> {
 } // namespace kindr
 
 
-#include "kindr/rotations/eigen/AngleAxis.hpp"
-#include "kindr/rotations/eigen/RotationVector.hpp"
-#include "kindr/rotations/eigen/RotationQuaternion.hpp"
-#include "kindr/rotations/eigen/RotationMatrix.hpp"
-#include "kindr/rotations/eigen/EulerAnglesZyx.hpp"
-#include "kindr/rotations/eigen/EulerAnglesXyz.hpp"
+#include "kindr/rotations/AngleAxis.hpp"
+#include "kindr/rotations/RotationVector.hpp"
+#include "kindr/rotations/RotationQuaternion.hpp"
+#include "kindr/rotations/RotationMatrix.hpp"
+#include "kindr/rotations/EulerAnglesZyx.hpp"
+#include "kindr/rotations/EulerAnglesXyz.hpp"
 
 
