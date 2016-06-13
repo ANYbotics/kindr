@@ -36,7 +36,6 @@
 #include "kindr/common/assert_macros_eigen.hpp"
 #include "kindr/quaternions/QuaternionEigen.hpp"
 #include "kindr/rotations/RotationBase.hpp"
-#include "kindr/rotations/eigen/RotationEigenFunctions.hpp"
 
 namespace kindr {
 
@@ -510,7 +509,7 @@ template<typename DestPrimType_, typename SourcePrimType_>
 class ConversionTraits<RotationQuaternion<DestPrimType_>, AngleAxis<SourcePrimType_>> {
  public:
   inline static RotationQuaternion<DestPrimType_> convert(const AngleAxis<SourcePrimType_>& aa) {
-    return RotationQuaternion<DestPrimType_>(internal::getQuaternionFromAngleAxis<SourcePrimType_, DestPrimType_>(aa.toImplementation()));
+    return RotationQuaternion<DestPrimType_>(Eigen::Quaternion<DestPrimType_>(aa.toImplementation().template cast<DestPrimType_>()));
   }
 };
 
@@ -574,7 +573,7 @@ template<typename DestPrimType_, typename SourcePrimType_>
 class ConversionTraits<RotationQuaternion<DestPrimType_>, RotationMatrix<SourcePrimType_>> {
  public:
   inline static RotationQuaternion<DestPrimType_> convert(const RotationMatrix<SourcePrimType_>& rotationMatrix) {
-    return RotationQuaternion<DestPrimType_>(internal::getQuaternionFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()));
+    return RotationQuaternion<DestPrimType_>(Eigen::Quaternion<DestPrimType_>(rotationMatrix.toImplementation().template cast<DestPrimType_>()));
   }
 };
 
@@ -582,7 +581,10 @@ template<typename DestPrimType_, typename SourcePrimType_>
 class ConversionTraits<RotationQuaternion<DestPrimType_>, EulerAnglesXyz<SourcePrimType_>> {
  public:
   inline static RotationQuaternion<DestPrimType_> convert(const EulerAnglesXyz<SourcePrimType_>& xyz) {
-    return RotationQuaternion<DestPrimType_>(internal::getQuaternionFromRpy<SourcePrimType_, DestPrimType_>(xyz.toImplementation()));
+    return RotationQuaternion<DestPrimType_>(Eigen::Quaternion<DestPrimType_>(
+      Eigen::AngleAxis<DestPrimType_>((DestPrimType_)xyz.toImplementation()(0), Eigen::Matrix<DestPrimType_, 3, 1>::UnitX()) *
+      Eigen::AngleAxis<DestPrimType_>((DestPrimType_)xyz.toImplementation()(1), Eigen::Matrix<DestPrimType_, 3, 1>::UnitY()) *
+      Eigen::AngleAxis<DestPrimType_>((DestPrimType_)xyz.toImplementation()(2), Eigen::Matrix<DestPrimType_, 3, 1>::UnitZ())));
   }
 };
 
@@ -590,7 +592,10 @@ template<typename DestPrimType_, typename SourcePrimType_>
 class ConversionTraits<RotationQuaternion<DestPrimType_>, EulerAnglesZyx<SourcePrimType_>> {
  public:
   inline static RotationQuaternion<DestPrimType_> convert(const EulerAnglesZyx<SourcePrimType_>& zyx) {
-    return RotationQuaternion<DestPrimType_>(internal::getQuaternionFromYpr<SourcePrimType_, DestPrimType_>(zyx.toImplementation()));
+    return RotationQuaternion<DestPrimType_>(Eigen::Quaternion<DestPrimType_>(
+      Eigen::AngleAxis<DestPrimType_>((DestPrimType_)zyx.toImplementation()(0), Eigen::Matrix<DestPrimType_, 3, 1>::UnitZ()) *
+      Eigen::AngleAxis<DestPrimType_>((DestPrimType_)zyx.toImplementation()(1), Eigen::Matrix<DestPrimType_, 3, 1>::UnitY()) *
+      Eigen::AngleAxis<DestPrimType_>((DestPrimType_)zyx.toImplementation()(2), Eigen::Matrix<DestPrimType_, 3, 1>::UnitX())));
   }
 };
 

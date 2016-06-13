@@ -35,7 +35,6 @@
 #include "kindr/common/common.hpp"
 #include "kindr/common/assert_macros_eigen.hpp"
 #include "kindr/rotations/RotationBase.hpp"
-#include "kindr/rotations/eigen/RotationEigenFunctions.hpp"
 
 namespace kindr {
 
@@ -137,7 +136,7 @@ class EulerAnglesXyz : public RotationBase<EulerAnglesXyz<PrimType_>> {
    *  \returns the inverse of the rotation
    */
   EulerAnglesXyz inverted() const {
-    return EulerAnglesXyz(internal::getInverseRpy<PrimType_, PrimType_>(this->toImplementation()));
+    return EulerAnglesXyz(RotationQuaternion<PrimType_>(*this).inverted());
   }
 
   /*! \brief Inverts the rotation.
@@ -413,7 +412,7 @@ template<typename DestPrimType_, typename SourcePrimType_>
 class ConversionTraits<EulerAnglesXyz<DestPrimType_>, RotationQuaternion<SourcePrimType_>> {
  public:
   inline static EulerAnglesXyz<DestPrimType_> convert(const RotationQuaternion<SourcePrimType_>& q) {
-    return EulerAnglesXyz<DestPrimType_>(internal::getRpyFromQuaternion<SourcePrimType_, DestPrimType_>(q.toImplementation()));
+    return EulerAnglesXyz<DestPrimType_>((q.toImplementation().toRotationMatrix().eulerAngles(0, 1, 2)).template cast<DestPrimType_>());
   }
 };
 
@@ -421,7 +420,7 @@ template<typename DestPrimType_, typename SourcePrimType_>
 class ConversionTraits<EulerAnglesXyz<DestPrimType_>, RotationMatrix<SourcePrimType_>> {
  public:
   inline static EulerAnglesXyz<DestPrimType_> convert(const RotationMatrix<SourcePrimType_>& R) {
-    return EulerAnglesXyz<DestPrimType_>(internal::getRpyFromRotationMatrix<SourcePrimType_, DestPrimType_>(R.toImplementation()));
+    return EulerAnglesXyz<DestPrimType_>((R.toImplementation().eulerAngles(0, 1, 2)).template cast<DestPrimType_>());
   }
 };
 
@@ -437,7 +436,7 @@ template<typename DestPrimType_, typename SourcePrimType_>
 class ConversionTraits<EulerAnglesXyz<DestPrimType_>, EulerAnglesZyx<SourcePrimType_>> {
  public:
   inline static EulerAnglesXyz<DestPrimType_> convert(const EulerAnglesZyx<SourcePrimType_>& zyx) {
-    return EulerAnglesXyz<DestPrimType_>(internal::getRpyFromYpr<SourcePrimType_, DestPrimType_>(zyx.toImplementation()));
+    return EulerAnglesXyz<DestPrimType_>(RotationQuaternion<DestPrimType_>(zyx));
   }
 };
 

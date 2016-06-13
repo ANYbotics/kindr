@@ -35,7 +35,6 @@
 #include "kindr/common/common.hpp"
 #include "kindr/common/assert_macros_eigen.hpp"
 #include "kindr/rotations/RotationBase.hpp"
-#include "kindr/rotations/eigen/RotationEigenFunctions.hpp"
 
 namespace kindr {
 

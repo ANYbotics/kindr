@@ -35,7 +35,6 @@
 #include "kindr/common/common.hpp"
 #include "kindr/common/assert_macros_eigen.hpp"
 #include "kindr/rotations/RotationBase.hpp"
-#include "kindr/rotations/eigen/RotationEigenFunctions.hpp"
 
 namespace kindr {
 
@@ -369,7 +368,8 @@ template<typename DestPrimType_, typename SourcePrimType_>
 class ConversionTraits<AngleAxis<DestPrimType_>, RotationQuaternion<SourcePrimType_>> {
  public:
   inline static AngleAxis<DestPrimType_> convert(const RotationQuaternion<SourcePrimType_>& q) {
-    return AngleAxis<DestPrimType_>(internal::getAngleAxisFromQuaternion<SourcePrimType_, DestPrimType_>(q.toImplementation()));
+    // bad prescion !
+    return AngleAxis<DestPrimType_>(Eigen::AngleAxis<DestPrimType_>(q.toImplementation().template cast<DestPrimType_>()));
   }
 };
 
@@ -389,7 +389,8 @@ class ConversionTraits<AngleAxis<DestPrimType_>, RotationMatrix<SourcePrimType_>
 //
 //   }
 //
-   return AngleAxis<DestPrimType_>(internal::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()));
+    // Bad precision!
+   return AngleAxis<DestPrimType_>(Eigen::AngleAxis<DestPrimType_>(rotationMatrix.toImplementation().template cast<DestPrimType_>()));
 
   }
 };
@@ -398,7 +399,11 @@ template<typename DestPrimType_, typename SourcePrimType_>
 class ConversionTraits<AngleAxis<DestPrimType_>, EulerAnglesXyz<SourcePrimType_>> {
  public:
   inline static AngleAxis<DestPrimType_> convert(const EulerAnglesXyz<SourcePrimType_>& xyz) {
-    return AngleAxis<DestPrimType_>(internal::getAngleAxisFromRpy<SourcePrimType_, DestPrimType_>(xyz.toImplementation()));
+    // bad precision!
+    return AngleAxis<DestPrimType_>(Eigen::AngleAxis<DestPrimType_>(
+        Eigen::AngleAxis<DestPrimType_>((DestPrimType_)xyz.toImplementation()(0), Eigen::Matrix<DestPrimType_, 3, 1>::UnitX()) *
+        Eigen::AngleAxis<DestPrimType_>((DestPrimType_)xyz.toImplementation()(1), Eigen::Matrix<DestPrimType_, 3, 1>::UnitY()) *
+        Eigen::AngleAxis<DestPrimType_>((DestPrimType_)xyz.toImplementation()(2), Eigen::Matrix<DestPrimType_, 3, 1>::UnitZ())));
   }
 };
 
@@ -406,7 +411,11 @@ template<typename DestPrimType_, typename SourcePrimType_>
 class ConversionTraits<AngleAxis<DestPrimType_>, EulerAnglesZyx<SourcePrimType_>> {
  public:
   inline static AngleAxis<DestPrimType_> convert(const EulerAnglesZyx<SourcePrimType_>& zyx) {
-    return AngleAxis<DestPrimType_>(internal::getAngleAxisFromYpr<SourcePrimType_, DestPrimType_>(zyx.toImplementation()));
+    // Bad precision!
+    return AngleAxis<DestPrimType_>(Eigen::AngleAxis<DestPrimType_>(
+      Eigen::AngleAxis<DestPrimType_>((DestPrimType_)zyx.toImplementation()(0), Eigen::Matrix<DestPrimType_, 3, 1>::UnitZ()) *
+      Eigen::AngleAxis<DestPrimType_>((DestPrimType_)zyx.toImplementation()(1), Eigen::Matrix<DestPrimType_, 3, 1>::UnitY()) *
+      Eigen::AngleAxis<DestPrimType_>((DestPrimType_)zyx.toImplementation()(2), Eigen::Matrix<DestPrimType_, 3, 1>::UnitX())));
   }
 };
 

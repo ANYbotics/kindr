@@ -35,7 +35,6 @@
 #include "kindr/common/common.hpp"
 #include "kindr/common/assert_macros_eigen.hpp"
 #include "kindr/rotations/RotationBase.hpp"
-#include "kindr/rotations/eigen/RotationEigenFunctions.hpp"
 
 namespace kindr {
 
@@ -307,7 +306,7 @@ class ConversionTraits<RotationMatrix<DestPrimType_>, AngleAxis<SourcePrimType_>
  public:
   inline static RotationMatrix<DestPrimType_> convert(const AngleAxis<SourcePrimType_>& aa) {
     RotationMatrix<DestPrimType_> matrix;
-    matrix.toImplementation() = internal::getRotationMatrixFromAngleAxis<SourcePrimType_, DestPrimType_>(aa.toImplementation());
+    matrix.toImplementation() = (aa.toImplementation().template cast<DestPrimType_>()).toRotationMatrix();
     return matrix;
   }
 };
@@ -378,7 +377,7 @@ class ConversionTraits<RotationMatrix<DestPrimType_>, RotationQuaternion<SourceP
  public:
   inline static RotationMatrix<DestPrimType_> convert(const RotationQuaternion<SourcePrimType_>& q) {
     RotationMatrix<DestPrimType_> matrix;
-    matrix.toImplementation() = internal::getRotationMatrixFromQuaternion<SourcePrimType_, DestPrimType_>(q.toImplementation());
+    matrix.toImplementation() = (q.toImplementation().template cast<DestPrimType_>()).toRotationMatrix();
     return matrix;
   }
 };
@@ -398,7 +397,32 @@ class ConversionTraits<RotationMatrix<DestPrimType_>, EulerAnglesXyz<SourcePrimT
  public:
   inline static RotationMatrix<DestPrimType_> convert(const EulerAnglesXyz<SourcePrimType_>& xyz) {
     RotationMatrix<DestPrimType_> matrix;
-    matrix.toImplementation() = internal::getRotationMatrixFromRpy<SourcePrimType_, DestPrimType_>(xyz.toImplementation());
+
+    Eigen::Matrix<DestPrimType_,3,3> R_BI;
+
+    const DestPrimType_ sr = sin(xyz.toImplementation()(0));
+    const DestPrimType_ cr = cos(xyz.toImplementation()(0));
+    const DestPrimType_ sp = sin(xyz.toImplementation()(1));
+    const DestPrimType_ cp = cos(xyz.toImplementation()(1));
+    const DestPrimType_ sy = sin(xyz.toImplementation()(2));
+    const DestPrimType_ cy = cos(xyz.toImplementation()(2));
+
+    const DestPrimType_ srsy = sr*sy;
+    const DestPrimType_ srcy = sr*cy;
+    const DestPrimType_ crsy = cr*sy;
+    const DestPrimType_ crcy = cr*cy;
+
+    R_BI(0,0) = cp*cy;
+    R_BI(0,1) = -cp*sy;
+    R_BI(0,2) = sp;
+    R_BI(1,0) = crsy+srcy*sp;
+    R_BI(1,1) = crcy-srsy*sp;
+    R_BI(1,2) = -sr*cp;
+    R_BI(2,0) = srsy-crcy*sp;
+    R_BI(2,1) = srcy+crsy*sp;
+    R_BI(2,2) = cr*cp;
+
+    matrix.toImplementation() = R_BI;
     return matrix;
   }
 };
@@ -408,7 +432,32 @@ class ConversionTraits<RotationMatrix<DestPrimType_>, EulerAnglesZyx<SourcePrimT
  public:
   inline static RotationMatrix<DestPrimType_> convert(const EulerAnglesZyx<SourcePrimType_>& zyx) {
     RotationMatrix<DestPrimType_> matrix;
-    matrix.toImplementation() = internal::getRotationMatrixFromYpr<SourcePrimType_, DestPrimType_>(zyx.toImplementation());
+    Eigen::Matrix<DestPrimType_,3,3> R_BI;
+
+    const DestPrimType_ sy = sin(zyx.toImplementation()(0));
+    const DestPrimType_ cy = cos(zyx.toImplementation()(0));
+    const DestPrimType_ sp = sin(zyx.toImplementation()(1));
+    const DestPrimType_ cp = cos(zyx.toImplementation()(1));
+    const DestPrimType_ sr = sin(zyx.toImplementation()(2));
+    const DestPrimType_ cr = cos(zyx.toImplementation()(2));
+
+    const DestPrimType_ sysr = sy*sr;
+    const DestPrimType_ sycr = sy*cr;
+    const DestPrimType_ cysr = cy*sr;
+    const DestPrimType_ cycr = cy*cr;
+
+    R_BI(0,0) = cy*cp;
+    R_BI(0,1) = cysr*sp-sycr;
+    R_BI(0,2) = sysr+cycr*sp;
+    R_BI(1,0) = cp*sy;
+    R_BI(1,1) = sysr*sp+cycr;
+    R_BI(1,2) = sycr*sp-cysr;
+    R_BI(2,0) = -sp;
+    R_BI(2,1) = cp*sr;
+    R_BI(2,2) = cp*cr;
+
+    matrix.toImplementation() = R_BI;
+
     return matrix;
   }
 };
