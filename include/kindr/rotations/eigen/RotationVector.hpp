@@ -26,8 +26,7 @@
  *
 */
 
-#ifndef KINDR_ROTATIONS_EIGEN_ROTATIONVECTOR_HPP_
-#define KINDR_ROTATIONS_EIGEN_ROTATIONVECTOR_HPP_
+#pragma once
 
 #include <cmath>
 
@@ -39,8 +38,6 @@
 #include "kindr/rotations/eigen/RotationEigenFunctions.hpp"
 
 namespace kindr {
-namespace rotations {
-namespace eigen_impl {
 
 
 /*! \class RotationVector
@@ -52,17 +49,17 @@ namespace eigen_impl {
  *  \see AngleAxis for an angle-axis representation with four parameters.
  *
  *  The following four typedefs are provided for convenience:
- *   - \ref eigen_impl::RotationVectorAD "RotationVectorAD" for active rotation and primitive type double
- *   - \ref eigen_impl::RotationVectorAF "RotationVectorAF" for active rotation and primitive type float
- *   - \ref eigen_impl::RotationVectorPD "RotationVectorPD" for passive rotation and primitive type double
- *   - \ref eigen_impl::RotationVectorPF "RotationVectorPF" for passive rotation and primitive type float
+ *   - \ref RotationVectorAD "RotationVectorAD" for active rotation and primitive type double
+ *   - \ref RotationVectorAF "RotationVectorAF" for active rotation and primitive type float
+ *   - \ref RotationVectorPD "RotationVectorPD" for passive rotation and primitive type double
+ *   - \ref RotationVectorPF "RotationVectorPF" for passive rotation and primitive type float
  *
  *  \tparam PrimType_ the primitive type of the data (double or float)
  *  \tparam Usage_ the rotation usage which is either active or passive
  *  \ingroup rotations
  */
-template<typename PrimType_, enum RotationUsage Usage_>
-class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage_>, Usage_> {
+template<typename PrimType_>
+class RotationVector : public RotationBase<RotationVector<PrimType_>> {
  private:
   /*! \brief The base type.
    */
@@ -115,7 +112,7 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    *  \param other   other rotation
    */
   template<typename OtherDerived_>
-  inline explicit RotationVector(const RotationBase<OtherDerived_, Usage_>& other)
+  inline explicit RotationVector(const RotationBase<OtherDerived_>& other)
     : vector_(internal::ConversionTraits<RotationVector, OtherDerived_>::convert(other.derived()).toImplementation()) {
   }
 
@@ -124,7 +121,7 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    *  \returns reference
    */
   template<typename OtherDerived_>
-  RotationVector& operator =(const RotationBase<OtherDerived_, Usage_>& other) {
+  RotationVector& operator =(const RotationBase<OtherDerived_>& other) {
     this->toImplementation() = internal::ConversionTraits<RotationVector, OtherDerived_>::convert(other.derived()).toImplementation();
     return *this;
   }
@@ -134,7 +131,7 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    *  \returns reference
    */
   template<typename OtherDerived_>
-  RotationVector& operator ()(const RotationBase<OtherDerived_, Usage_>& other) {
+  RotationVector& operator ()(const RotationBase<OtherDerived_>& other) {
     this->toImplementation() = internal::ConversionTraits<RotationVector, OtherDerived_>::convert(other.derived()).toImplementation();
     return *this;
   }
@@ -243,7 +240,7 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    */
   RotationVector getUnique() const {
     // todo: test, passive and active
-    AngleAxis<PrimType_, Usage_> angleAxis(*this);
+    AngleAxis<PrimType_> angleAxis(*this);
     RotationVector rotationVector(angleAxis.getUnique());
 //    RotationVector rotVector(toImplementation());
 //
@@ -267,7 +264,7 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
    *  This is explicitly specified, because Eigen provides also an operator*.
    *  \returns the concatenation of two rotations
    */
-  using RotationVectorBase<RotationVector<PrimType_, Usage_>, Usage_>::operator*;
+  using RotationBase<RotationVector<PrimType_>>::operator*;
 
   /*! \brief Used for printing the object with std::cout.
    *  \returns std::stream object
@@ -279,28 +276,26 @@ class RotationVector : public RotationVectorBase<RotationVector<PrimType_, Usage
 };
 
 //! \brief Active rotation vector with double primitive type
-typedef RotationVector<double, RotationUsage::ACTIVE>  RotationVectorAD;
+typedef RotationVector<double>  RotationVectorD;
 //! \brief Active rotation vector with float primitive type
-typedef RotationVector<float,  RotationUsage::ACTIVE>  RotationVectorAF;
+typedef RotationVector<float>  RotationVectorF;
 //! \brief Passive rotation vector with double primitive type
-typedef RotationVector<double, RotationUsage::PASSIVE> RotationVectorPD;
+typedef RotationVector<double> RotationVectorPD;
 //! \brief Passive rotation vector with float primitive type
-typedef RotationVector<float,  RotationUsage::PASSIVE> RotationVectorPF;
+typedef RotationVector<float> RotationVectorPF;
 
-
-} // namespace eigen_impl
 
 
 namespace internal {
 
-template<typename PrimType_, enum RotationUsage Usage_>
-class get_scalar<eigen_impl::RotationVector<PrimType_, Usage_>> {
+template<typename PrimType_>
+class get_scalar<RotationVector<PrimType_>> {
  public:
   typedef PrimType_ Scalar;
 };
 
-template<typename PrimType_, enum RotationUsage Usage_>
-class get_matrix3X<eigen_impl::RotationVector<PrimType_, Usage_>>{
+template<typename PrimType_>
+class get_matrix3X<RotationVector<PrimType_>>{
  public:
   typedef int  IndexType;
 
@@ -308,77 +303,66 @@ class get_matrix3X<eigen_impl::RotationVector<PrimType_, Usage_>>{
   using Matrix3X = Eigen::Matrix<PrimType_, 3, Cols>;
 };
 
-template<typename PrimType_>
-class get_other_usage<eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE>> {
- public:
-  typedef eigen_impl::RotationVector<PrimType_, RotationUsage::PASSIVE> OtherUsage;
-};
-
-template<typename PrimType_>
-class get_other_usage<eigen_impl::RotationVector<PrimType_, RotationUsage::PASSIVE>> {
- public:
-  typedef eigen_impl::RotationVector<PrimType_, RotationUsage::ACTIVE> OtherUsage;
-};
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * Conversion Traits
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
-class ConversionTraits<eigen_impl::RotationVector<DestPrimType_, Usage_>, eigen_impl::RotationVector<SourcePrimType_, Usage_>> {
+template<typename DestPrimType_, typename SourcePrimType_>
+class ConversionTraits<RotationVector<DestPrimType_>, RotationVector<SourcePrimType_>> {
  public:
-  inline static eigen_impl::RotationVector<DestPrimType_, Usage_> convert(const eigen_impl::RotationVector<SourcePrimType_, Usage_>& rotationVector) {
-    return eigen_impl::RotationVector<DestPrimType_, Usage_>(rotationVector.toImplementation().template cast<DestPrimType_>());
+  inline static RotationVector<DestPrimType_> convert(const RotationVector<SourcePrimType_>& rotationVector) {
+    return RotationVector<DestPrimType_>(rotationVector.toImplementation().template cast<DestPrimType_>());
   }
 };
 
-template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
-class ConversionTraits<eigen_impl::RotationVector<DestPrimType_, Usage_>, eigen_impl::AngleAxis<SourcePrimType_, Usage_>> {
+template<typename DestPrimType_, typename SourcePrimType_>
+class ConversionTraits<RotationVector<DestPrimType_>, AngleAxis<SourcePrimType_>> {
  public:
-  inline static eigen_impl::RotationVector<DestPrimType_, Usage_> convert(const eigen_impl::AngleAxis<SourcePrimType_, Usage_>& angleAxis) {
-    const eigen_impl::AngleAxis<DestPrimType_, Usage_> angleAxisDest(angleAxis);
-    return eigen_impl::RotationVector<DestPrimType_, Usage_>(angleAxisDest.angle()*angleAxisDest.axis());
+  inline static RotationVector<DestPrimType_> convert(const AngleAxis<SourcePrimType_>& angleAxis) {
+    const AngleAxis<DestPrimType_> angleAxisDest(angleAxis);
+    return RotationVector<DestPrimType_>(angleAxisDest.angle()*angleAxisDest.axis());
   }
 };
 
 
-template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
-class ConversionTraits<eigen_impl::RotationVector<DestPrimType_, Usage_>, eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>> {
+template<typename DestPrimType_, typename SourcePrimType_>
+class ConversionTraits<RotationVector<DestPrimType_>, RotationQuaternion<SourcePrimType_>> {
  public:
-  inline static eigen_impl::RotationVector<DestPrimType_, Usage_> convert(const eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>& q) {
+  inline static RotationVector<DestPrimType_> convert(const RotationQuaternion<SourcePrimType_>& q) {
     if (1.0-q.real()*q.real() < common::internal::NumTraits<SourcePrimType_>::dummy_precision()) {
-      return eigen_impl::RotationVector<DestPrimType_, Usage_>(2.0*q.imaginary().template cast<DestPrimType_>());
+      return RotationVector<DestPrimType_>(2.0*q.imaginary().template cast<DestPrimType_>());
     }
-    return eigen_impl::RotationVector<DestPrimType_, Usage_>((2.0*acos(q.real())/sqrt(1.0-q.real()*q.real())*q.imaginary()).template cast<DestPrimType_>());
+    return RotationVector<DestPrimType_>((2.0*acos(q.real())/sqrt(1.0-q.real()*q.real())*q.imaginary()).template cast<DestPrimType_>());
   }
 };
 
 // Generic conversion
-template<typename DestPrimType_, typename SourceImplementation_, enum RotationUsage Usage_>
-class ConversionTraits<eigen_impl::RotationVector<DestPrimType_, Usage_>, SourceImplementation_> {
+template<typename DestPrimType_, typename SourceImplementation_>
+class ConversionTraits<RotationVector<DestPrimType_>, SourceImplementation_> {
  public:
-  inline static eigen_impl::RotationVector<DestPrimType_, Usage_> convert(const SourceImplementation_& rotation) {
-    return eigen_impl::RotationVector<DestPrimType_, Usage_>(eigen_impl::AngleAxis<DestPrimType_, Usage_>(rotation));
+  inline static RotationVector<DestPrimType_> convert(const SourceImplementation_& rotation) {
+    return RotationVector<DestPrimType_>(AngleAxis<DestPrimType_>(rotation));
   }
 };
 
-template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
-class ConversionTraits<eigen_impl::RotationVector<DestPrimType_, Usage_>, eigen_impl::RotationMatrix<SourcePrimType_, Usage_>> {
+template<typename DestPrimType_, typename SourcePrimType_>
+class ConversionTraits<RotationVector<DestPrimType_>, RotationMatrix<SourcePrimType_>> {
  public:
-  inline static eigen_impl::RotationVector<DestPrimType_, Usage_> convert(const eigen_impl::RotationMatrix<SourcePrimType_, Usage_>& rotationMatrix) {
+  inline static RotationVector<DestPrimType_> convert(const RotationMatrix<SourcePrimType_>& rotationMatrix) {
     // ok
-    return eigen_impl::RotationVector<DestPrimType_, Usage_>(eigen_impl::AngleAxis<DestPrimType_, Usage_>(rotationMatrix));
+    return RotationVector<DestPrimType_>(AngleAxis<DestPrimType_>(rotationMatrix));
 
 
 
-//    typename eigen_impl::RotationMatrix<DestPrimType_, Usage_>::Implementation C = rotationMatrix.toImplementation().transpose().template cast<DestPrimType_>();
-//    typename eigen_impl::RotationVector<DestPrimType_, Usage_>::Vector p;
+//    typename RotationMatrix<DestPrimType_>::Implementation C = rotationMatrix.toImplementation().transpose().template cast<DestPrimType_>();
+//    typename RotationVector<DestPrimType_>::Vector p;
 //    // Sometimes, because of roundoff error, the value of tr ends up outside
 //    // the valid range of arccos. Truncate to the valid range.
 //    double tr = std::max(-1.0, std::min( (C(0,0) + C(1,1) + C(2,2) - 1.0) * 0.5, 1.0));
 //    double a = acos( tr ) ;
 //
 //    if(fabs(a) < 1e-14){
-//        return eigen_impl::RotationVector<DestPrimType_, Usage_>();
+//        return RotationVector<DestPrimType_>();
 //    }
 //
 //    p[0] = (C(2,1) - C(1,2));
@@ -386,13 +370,13 @@ class ConversionTraits<eigen_impl::RotationVector<DestPrimType_, Usage_>, eigen_
 //    p[2] = (C(1,0) - C(0,1));
 //    double n2 = p.norm();
 //    if(fabs(n2) < 1e-14)
-//      return eigen_impl::RotationVector<DestPrimType_, Usage_>();
+//      return RotationVector<DestPrimType_>();
 //
 //    double scale = -a/n2;
 //    p = scale * p;
 //
 //
-//      return eigen_impl::RotationVector<DestPrimType_, Usage_>(p);
+//      return RotationVector<DestPrimType_>(p);
 
 
   }
@@ -409,17 +393,15 @@ class ConversionTraits<eigen_impl::RotationVector<DestPrimType_, Usage_>, eigen_
 ///* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // * Comparison Traits
 // * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-//template<typename PrimType_, enum RotationUsage Usage_>
-//class ComparisonTraits<eigen_impl::RotationVector<PrimType_, Usage_>> {
+//template<typename PrimType_>
+//class ComparisonTraits<RotationVector<PrimType_>> {
 // public:
-//  inline static bool isEqual(const eigen_impl::RotationVector<PrimType_, Usage_>& a, const eigen_impl::RotationVector<PrimType_, Usage_>& b){
+//  inline static bool isEqual(const RotationVector<PrimType_>& a, const RotationVector<PrimType_>& b){
 //    return a.toImplementation() ==  b.toImplementation();
 //  }
 //};
 
 } // namespace internal
-} // namespace rotations
 } // namespace kindr
 
 
-#endif /* KINDR_ROTATIONS_EIGEN_ROTATIONVECTOR_HPP_ */

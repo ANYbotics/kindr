@@ -30,7 +30,7 @@
 #include "kindr/quaternions/QuaternionEigen.hpp"
 #include "kindr/rotations/RotationEigen.hpp"
 
-namespace rot = kindr::rotations::eigen_impl;
+namespace rot = kindr;
 namespace quat = kindr::quaternions::eigen_impl;
 
 using namespace kindr::common::test;
@@ -42,7 +42,7 @@ class AngleAxisSingleTest : public ::testing::Test{
   typedef typename Rotation_::Scalar Scalar;
   typedef Eigen::Matrix<Scalar,4,1> Vector4;
   typedef Eigen::Matrix<Scalar,3,1> Vector;
-  typedef typename rot::RotationQuaternion<Scalar, Rotation_::Usage> RotationQuaternion;
+  typedef typename rot::RotationQuaternion<Scalar> RotationQuaternion;
   Vector4 eigenVector4Identity;
   Vector4 eigenVector4v1;
   Eigen::AngleAxis<Scalar> eigenAngleAxis;
@@ -115,15 +115,8 @@ struct AngleAxisPassiveTest : public RotationQuaternionAngleAxisPairTest<Impleme
 
 typedef ::testing::Types<
     rot::AngleAxisPD,
-    rot::AngleAxisPF,
-    rot::AngleAxisAD,
-    rot::AngleAxisAF
+    rot::AngleAxisPF
 > AngleAxisTypes;
-
-typedef ::testing::Types<
-    std::pair<rot::RotationQuaternionAD, rot::AngleAxisAD>,
-    std::pair<rot::RotationQuaternionAF, rot::AngleAxisAF>
-> AngleAxisActiveTypes;
 
 typedef ::testing::Types<
     std::pair<rot::RotationQuaternionPD, rot::AngleAxisPD>,
@@ -136,16 +129,11 @@ typedef ::testing::Types<
     std::pair<rot::RotationQuaternionPF, rot::AngleAxisPF>,
     std::pair<rot::RotationQuaternionPF, rot::AngleAxisPD>,
     std::pair<rot::RotationQuaternionPD, rot::AngleAxisPF>,
-    std::pair<rot::RotationQuaternionPD, rot::AngleAxisPD>,
-    std::pair<rot::RotationQuaternionAF, rot::AngleAxisAF>,
-    std::pair<rot::RotationQuaternionAF, rot::AngleAxisAD>,
-    std::pair<rot::RotationQuaternionAD, rot::AngleAxisAF>,
-    std::pair<rot::RotationQuaternionAD, rot::AngleAxisAD>
+    std::pair<rot::RotationQuaternionPD, rot::AngleAxisPD>
 > TypeQuaternionAngleAxisPairs;
 
 TYPED_TEST_CASE(AngleAxisSingleTest, AngleAxisTypes);
 TYPED_TEST_CASE(RotationQuaternionAngleAxisPairTest, TypeQuaternionAngleAxisPairs);
-TYPED_TEST_CASE(AngleAxisActiveTest, AngleAxisActiveTypes);
 TYPED_TEST_CASE(AngleAxisPassiveTest, AngleAxisPassiveTypes);
 
 
@@ -397,49 +385,31 @@ TYPED_TEST(AngleAxisSingleTest, testConcatenation){
 
   // Check concatenation of 3 different quarters
   rotAngleAxis = this->rotAngleAxisQuarterX.inverted()*this->rotAngleAxisQuarterY*this->rotAngleAxisQuarterX;
-  if(AngleAxis::Usage == kindr::rotations::RotationUsage::ACTIVE){
-    rotAngleAxis.invert();
-  }
   ASSERT_NEAR(rotAngleAxis.getUnique().angle(), this->rotAngleAxisQuarterZ.getUnique().angle(),1e-6);
   ASSERT_NEAR(rotAngleAxis.getUnique().axis().x(), this->rotAngleAxisQuarterZ.getUnique().axis().x(),1e-6);
   ASSERT_NEAR(rotAngleAxis.getUnique().axis().y(), this->rotAngleAxisQuarterZ.getUnique().axis().y(),1e-6);
   ASSERT_NEAR(rotAngleAxis.getUnique().axis().z(), this->rotAngleAxisQuarterZ.getUnique().axis().z(),1e-6);
   rotAngleAxis = this->rotAngleAxisQuarterX.inverted()*this->rotAngleAxisQuarterZ*this->rotAngleAxisQuarterX;
-  if(AngleAxis::Usage == kindr::rotations::RotationUsage::ACTIVE){
-    rotAngleAxis.invert();
-  }
   ASSERT_NEAR(rotAngleAxis.getUnique().angle(), this->rotAngleAxisQuarterY.inverted().getUnique().angle(),1e-6);
   ASSERT_NEAR(rotAngleAxis.getUnique().axis().x(), this->rotAngleAxisQuarterY.inverted().getUnique().axis().x(),1e-6);
   ASSERT_NEAR(rotAngleAxis.getUnique().axis().y(), this->rotAngleAxisQuarterY.inverted().getUnique().axis().y(),1e-6);
   ASSERT_NEAR(rotAngleAxis.getUnique().axis().z(), this->rotAngleAxisQuarterY.inverted().getUnique().axis().z(),1e-6);
   rotAngleAxis = this->rotAngleAxisQuarterY.inverted()*this->rotAngleAxisQuarterX*this->rotAngleAxisQuarterY;
-  if(AngleAxis::Usage == kindr::rotations::RotationUsage::ACTIVE){
-    rotAngleAxis.invert();
-  }
   ASSERT_NEAR(rotAngleAxis.getUnique().angle(), this->rotAngleAxisQuarterZ.inverted().getUnique().angle(),1e-6);
   ASSERT_NEAR(rotAngleAxis.getUnique().axis().x(), this->rotAngleAxisQuarterZ.inverted().getUnique().axis().x(),1e-6);
   ASSERT_NEAR(rotAngleAxis.getUnique().axis().y(), this->rotAngleAxisQuarterZ.inverted().getUnique().axis().y(),1e-6);
   ASSERT_NEAR(rotAngleAxis.getUnique().axis().z(), this->rotAngleAxisQuarterZ.inverted().getUnique().axis().z(),1e-6);
   rotAngleAxis = this->rotAngleAxisQuarterY.inverted()*this->rotAngleAxisQuarterZ*this->rotAngleAxisQuarterY;
-  if(AngleAxis::Usage == kindr::rotations::RotationUsage::ACTIVE){
-    rotAngleAxis.invert();
-  }
   ASSERT_NEAR(rotAngleAxis.getUnique().angle(), this->rotAngleAxisQuarterX.getUnique().angle(),1e-6);
   ASSERT_NEAR(rotAngleAxis.getUnique().axis().x(), this->rotAngleAxisQuarterX.getUnique().axis().x(),1e-6);
   ASSERT_NEAR(rotAngleAxis.getUnique().axis().y(), this->rotAngleAxisQuarterX.getUnique().axis().y(),1e-6);
   ASSERT_NEAR(rotAngleAxis.getUnique().axis().z(), this->rotAngleAxisQuarterX.getUnique().axis().z(),1e-6);
   rotAngleAxis = this->rotAngleAxisQuarterZ.inverted()*this->rotAngleAxisQuarterX*this->rotAngleAxisQuarterZ;
-  if(AngleAxis::Usage == kindr::rotations::RotationUsage::ACTIVE){
-    rotAngleAxis.invert();
-  }
   ASSERT_NEAR(rotAngleAxis.getUnique().angle(), this->rotAngleAxisQuarterY.getUnique().angle(),1e-6);
   ASSERT_NEAR(rotAngleAxis.getUnique().axis().x(), this->rotAngleAxisQuarterY.getUnique().axis().x(),1e-6);
   ASSERT_NEAR(rotAngleAxis.getUnique().axis().y(), this->rotAngleAxisQuarterY.getUnique().axis().y(),1e-6);
   ASSERT_NEAR(rotAngleAxis.getUnique().axis().z(), this->rotAngleAxisQuarterY.getUnique().axis().z(),1e-6);
   rotAngleAxis = this->rotAngleAxisQuarterZ.inverted()*this->rotAngleAxisQuarterY*this->rotAngleAxisQuarterZ;
-  if(AngleAxis::Usage == kindr::rotations::RotationUsage::ACTIVE){
-    rotAngleAxis.invert();
-  }
   ASSERT_NEAR(rotAngleAxis.getUnique().angle(), this->rotAngleAxisQuarterX.inverted().getUnique().angle(),1e-6);
   ASSERT_NEAR(rotAngleAxis.getUnique().axis().x(), this->rotAngleAxisQuarterX.inverted().getUnique().axis().x(),1e-6);
   ASSERT_NEAR(rotAngleAxis.getUnique().axis().y(), this->rotAngleAxisQuarterX.inverted().getUnique().axis().y(),1e-6);
@@ -477,7 +447,7 @@ TYPED_TEST(AngleAxisSingleTest, testVectorRotation){
   Vector testVec1;
   Vector testVec2;
 
-  int signSwitch = 2*(AngleAxis::Usage == kindr::rotations::RotationUsage::ACTIVE)-1;
+  int signSwitch = -1;
 
   // Check rotation of base vectors around main axis
   testVec = this->rotAngleAxisQuarterX.rotate(this->vecX);
@@ -890,68 +860,3 @@ TYPED_TEST(RotationQuaternionAngleAxisPairTest, testAngleAxisInversion){
   ASSERT_NEAR(angleAxis3.axis().y(),angleAxis5.axis().y(),1e-6);
   ASSERT_NEAR(angleAxis3.axis().z(),angleAxis5.axis().z(),1e-6);
 }
-
-/* Test getPassive()
- *  Assumes getPassive() of RotationQuaternion is correct.
- *  Assumes conversion between AngleAxis and RotationQuaternion is correct.
- *  Assumes isNear() of RotationQuaternion is correct.
- */
-TYPED_TEST(AngleAxisActiveTest, testGetPassive){
-  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
-  typedef typename TestFixture::AngleAxis AngleAxis;
-  typedef typename TestFixture::RotationQuaternionScalar RotationQuaternionScalar;
-  typedef typename TestFixture::AngleAxisScalar AngleAxisScalar;
-
-  rot::AngleAxis<AngleAxisScalar, kindr::rotations::RotationUsage::PASSIVE> rotAngleAxisPassive;
-  rot::RotationQuaternion<RotationQuaternionScalar, kindr::rotations::RotationUsage::PASSIVE> rotQuatPassive;
-
-  rotAngleAxisPassive = this->rotAngleAxisIdentity.getPassive();
-  rotQuatPassive = this->rotQuatIdentity.getPassive();
-  ASSERT_EQ(true, rotQuatPassive.isNear(rotAngleAxisPassive,1e-6));
-
-  rotAngleAxisPassive = this->rotAngleAxisQuarterX.getPassive();
-  rotQuatPassive = this->rotQuatQuarterX.getPassive();
-  ASSERT_EQ(true, rotQuatPassive.isNear(rotAngleAxisPassive,1e-6));
-
-  rotAngleAxisPassive = this->rotAngleAxisQuarterY.getPassive();
-  rotQuatPassive = this->rotQuatQuarterY.getPassive();
-  ASSERT_EQ(true, rotQuatPassive.isNear(rotAngleAxisPassive,1e-6));
-
-  rotAngleAxisPassive = this->rotAngleAxisQuarterZ.getPassive();
-  rotQuatPassive = this->rotQuatQuarterZ.getPassive();
-  ASSERT_EQ(true, rotQuatPassive.isNear(rotAngleAxisPassive,1e-6));
-
-}
-/* Test getActive()
- *  Assumes getActive() of RotationQuaternion is correct.
- *  Assumes conversion between AngleAxis and RotationQuaternion is correct.
- *  Assumes isNear() of RotationQuaternion is correct.
- */
-TYPED_TEST(AngleAxisPassiveTest, testGetActive){
-  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
-  typedef typename TestFixture::AngleAxis AngleAxis;
-  typedef typename TestFixture::RotationQuaternionScalar RotationQuaternionScalar;
-  typedef typename TestFixture::AngleAxisScalar AngleAxisScalar;
-
-  rot::AngleAxis<AngleAxisScalar, kindr::rotations::RotationUsage::ACTIVE> rotAngleAxisActive;
-  rot::RotationQuaternion<RotationQuaternionScalar, kindr::rotations::RotationUsage::ACTIVE> rotQuatActive;
-
-  rotAngleAxisActive = this->rotAngleAxisIdentity.getActive();
-  rotQuatActive = this->rotQuatIdentity.getActive();
-  ASSERT_EQ(true, rotQuatActive.isNear(rotAngleAxisActive,1e-6));
-
-  rotAngleAxisActive = this->rotAngleAxisQuarterX.getActive();
-  rotQuatActive = this->rotQuatQuarterX.getActive();
-  ASSERT_EQ(true, rotQuatActive.isNear(rotAngleAxisActive,1e-6));
-
-  rotAngleAxisActive = this->rotAngleAxisQuarterY.getActive();
-  rotQuatActive = this->rotQuatQuarterY.getActive();
-  ASSERT_EQ(true, rotQuatActive.isNear(rotAngleAxisActive,1e-6));
-
-  rotAngleAxisActive = this->rotAngleAxisQuarterZ.getActive();
-  rotQuatActive = this->rotQuatQuarterZ.getActive();
-  ASSERT_EQ(true, rotQuatActive.isNear(rotAngleAxisActive,1e-6));
-
-}
-
-

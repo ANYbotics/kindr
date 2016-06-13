@@ -33,7 +33,7 @@
 #include "kindr/common/assert_macros_eigen.hpp"
 
 
-namespace rot = kindr::rotations::eigen_impl;
+namespace rot = kindr;
 namespace quat = kindr::quaternions::eigen_impl;
 
 
@@ -237,7 +237,7 @@ struct RotationMatrixTestType {
   }
 
   RotationMatrixTestType() {
-    if (Rotation_::Usage == kindr::rotations::RotationUsage::PASSIVE) {
+//    if (Rotation_::Usage == kindr::rotations::RotationUsage::PASSIVE) {
       rotQuarterX = Rotation( 1.0,  0.0,  0.0,
                               0.0,  0.0,  1.0,
                               0.0, -1.0,  0.0); // psi=0, theta=0, phi=pi/2
@@ -250,20 +250,20 @@ struct RotationMatrixTestType {
                               -1.0,  0.0,  0.0,
                                0.0,  0.0,  1.0); // psi=pi/2, theta=0, phi=0
 
-    }
-    else {
-      rotQuarterX = Rotation( 1.0,  0.0,  0.0,
-                              0.0,  0.0,  -1.0,
-                              0.0, 1.0,  0.0); // psi=0, theta=0, phi=pi/2
-
-      rotQuarterY = Rotation( 0.0,  0.0,  1.0,
-                            0.0,  1.0,  0.0,
-                           -1.0,  0.0,  0.0); // psi=0, theta=pi/2, phi=0
-
-      rotQuarterZ = Rotation( 0.0,  -1.0,  0.0,
-                              1.0,  0.0,  0.0,
-                              0.0,  0.0,  1.0); // psi=pi/2, theta=0, phi=0
-     }
+//    }
+//    else {
+//      rotQuarterX = Rotation( 1.0,  0.0,  0.0,
+//                              0.0,  0.0,  -1.0,
+//                              0.0, 1.0,  0.0); // psi=0, theta=0, phi=pi/2
+//
+//      rotQuarterY = Rotation( 0.0,  0.0,  1.0,
+//                            0.0,  1.0,  0.0,
+//                           -1.0,  0.0,  0.0); // psi=0, theta=pi/2, phi=0
+//
+//      rotQuarterZ = Rotation( 0.0,  -1.0,  0.0,
+//                              1.0,  0.0,  0.0,
+//                              0.0,  0.0,  1.0); // psi=pi/2, theta=0, phi=0
+//     }
 
     rotIdentity = Rotation( 1.0,  0.0,  0.0,
                             0.0,  1.0,  0.0,
@@ -283,30 +283,20 @@ typedef ::testing::Types<
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPF>, RotationVectorTestType<rot::RotationVectorPD>>,
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPD>, RotationVectorTestType<rot::RotationVectorPF>>,
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPD>, RotationVectorTestType<rot::RotationVectorPD>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAF>, RotationVectorTestType<rot::RotationVectorAF>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAF>, RotationVectorTestType<rot::RotationVectorAD>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAD>, RotationVectorTestType<rot::RotationVectorAF>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAD>, RotationVectorTestType<rot::RotationVectorAD>>,
+
 
     // Rotation Quaternion <-> Rotation Matrix
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPF>, RotationMatrixTestType<rot::RotationMatrixPF>>,
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPF>, RotationMatrixTestType<rot::RotationMatrixPD>>,
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPD>, RotationMatrixTestType<rot::RotationMatrixPF>>,
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPD>, RotationMatrixTestType<rot::RotationMatrixPD>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAF>, RotationMatrixTestType<rot::RotationMatrixAF>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAF>, RotationMatrixTestType<rot::RotationMatrixAD>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAD>, RotationMatrixTestType<rot::RotationMatrixAF>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAD>, RotationMatrixTestType<rot::RotationMatrixAD>>,
+
 
     // Rotation Quaternion <-> Angle-Axis
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPF>, AngleAxisTestType<rot::AngleAxisPF>>,
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPF>, AngleAxisTestType<rot::AngleAxisPD>>,
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPD>, AngleAxisTestType<rot::AngleAxisPF>>,
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPD>, AngleAxisTestType<rot::AngleAxisPD>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAF>, AngleAxisTestType<rot::AngleAxisAF>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAF>, AngleAxisTestType<rot::AngleAxisAD>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAD>, AngleAxisTestType<rot::AngleAxisAF>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAD>, AngleAxisTestType<rot::AngleAxisAD>>,
 
 
 
@@ -315,30 +305,18 @@ typedef ::testing::Types<
     std::pair<RotationVectorTestType<rot::RotationVectorPF>, RotationMatrixTestType<rot::RotationMatrixPD>>,
     std::pair<RotationVectorTestType<rot::RotationVectorPD>, RotationMatrixTestType<rot::RotationMatrixPF>>,
     std::pair<RotationVectorTestType<rot::RotationVectorPD>, RotationMatrixTestType<rot::RotationMatrixPD>>,
-    std::pair<RotationVectorTestType<rot::RotationVectorAF>, RotationMatrixTestType<rot::RotationMatrixAF>>,
-    std::pair<RotationVectorTestType<rot::RotationVectorAF>, RotationMatrixTestType<rot::RotationMatrixAD>>,
-    std::pair<RotationVectorTestType<rot::RotationVectorAD>, RotationMatrixTestType<rot::RotationMatrixAF>>,
-    std::pair<RotationVectorTestType<rot::RotationVectorAD>, RotationMatrixTestType<rot::RotationMatrixAD>>,
 
     // Rotation Vector <-> Angle-Axis
     std::pair<RotationVectorTestType<rot::RotationVectorPF>, AngleAxisTestType<rot::AngleAxisPF>>,
     std::pair<RotationVectorTestType<rot::RotationVectorPF>, AngleAxisTestType<rot::AngleAxisPD>>,
     std::pair<RotationVectorTestType<rot::RotationVectorPD>, AngleAxisTestType<rot::AngleAxisPF>>,
     std::pair<RotationVectorTestType<rot::RotationVectorPD>, AngleAxisTestType<rot::AngleAxisPD>>,
-    std::pair<RotationVectorTestType<rot::RotationVectorAF>, AngleAxisTestType<rot::AngleAxisAF>>,
-    std::pair<RotationVectorTestType<rot::RotationVectorAF>, AngleAxisTestType<rot::AngleAxisAD>>,
-    std::pair<RotationVectorTestType<rot::RotationVectorAD>, AngleAxisTestType<rot::AngleAxisAF>>,
-    std::pair<RotationVectorTestType<rot::RotationVectorAD>, AngleAxisTestType<rot::AngleAxisAD>>,
 
     // Rotation Matrix <-> Angle-Axis
     std::pair<RotationMatrixTestType<rot::RotationMatrixPF>, AngleAxisTestType<rot::AngleAxisPF>>,
     std::pair<RotationMatrixTestType<rot::RotationMatrixPF>, AngleAxisTestType<rot::AngleAxisPD>>,
     std::pair<RotationMatrixTestType<rot::RotationMatrixPD>, AngleAxisTestType<rot::AngleAxisPF>>,
-    std::pair<RotationMatrixTestType<rot::RotationMatrixPD>, AngleAxisTestType<rot::AngleAxisPD>>,
-    std::pair<RotationMatrixTestType<rot::RotationMatrixAF>, AngleAxisTestType<rot::AngleAxisAF>>,
-    std::pair<RotationMatrixTestType<rot::RotationMatrixAF>, AngleAxisTestType<rot::AngleAxisAD>>,
-    std::pair<RotationMatrixTestType<rot::RotationMatrixAD>, AngleAxisTestType<rot::AngleAxisAF>>,
-    std::pair<RotationMatrixTestType<rot::RotationMatrixAD>, AngleAxisTestType<rot::AngleAxisAD>>
+    std::pair<RotationMatrixTestType<rot::RotationMatrixPD>, AngleAxisTestType<rot::AngleAxisPD>>
 
 > TypeRotationPairs;
 
@@ -441,34 +419,27 @@ typedef ::testing::Types<
 typedef ::testing::Types<
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPF>, RotationVectorTestType<rot::RotationVectorPF>>,
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPD>, RotationVectorTestType<rot::RotationVectorPD>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAF>, RotationVectorTestType<rot::RotationVectorAF>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAD>, RotationVectorTestType<rot::RotationVectorAD>>,
+
 
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPF>, RotationMatrixTestType<rot::RotationMatrixPF>>,
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPD>, RotationMatrixTestType<rot::RotationMatrixPD>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAF>, RotationMatrixTestType<rot::RotationMatrixAF>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAD>, RotationMatrixTestType<rot::RotationMatrixAD>>,
+
 
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPF>, AngleAxisTestType<rot::AngleAxisPF>>,
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPD>, AngleAxisTestType<rot::AngleAxisPD>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAF>, AngleAxisTestType<rot::AngleAxisAF>>,
-    std::pair<RotationQuaternionTestType<rot::RotationQuaternionAD>, AngleAxisTestType<rot::AngleAxisAD>>,
+
 
     std::pair<RotationVectorTestType<rot::RotationVectorPF>, RotationMatrixTestType<rot::RotationMatrixPF>>,
     std::pair<RotationVectorTestType<rot::RotationVectorPD>, RotationMatrixTestType<rot::RotationMatrixPD>>,
-    std::pair<RotationVectorTestType<rot::RotationVectorAF>, RotationMatrixTestType<rot::RotationMatrixAF>>,
-    std::pair<RotationVectorTestType<rot::RotationVectorAD>, RotationMatrixTestType<rot::RotationMatrixAD>>,
+
 
     std::pair<RotationVectorTestType<rot::RotationVectorPF>, AngleAxisTestType<rot::AngleAxisPF>>,
     std::pair<RotationVectorTestType<rot::RotationVectorPD>, AngleAxisTestType<rot::AngleAxisPD>>,
-    std::pair<RotationVectorTestType<rot::RotationVectorAF>, AngleAxisTestType<rot::AngleAxisAF>>,
-    std::pair<RotationVectorTestType<rot::RotationVectorAD>, AngleAxisTestType<rot::AngleAxisAD>>,
 
 
     std::pair<RotationMatrixTestType<rot::RotationMatrixPF>, AngleAxisTestType<rot::AngleAxisPF>>,
     std::pair<RotationMatrixTestType<rot::RotationMatrixPD>, AngleAxisTestType<rot::AngleAxisPD>>,
-    std::pair<RotationMatrixTestType<rot::RotationMatrixAF>, AngleAxisTestType<rot::AngleAxisAF>>,
-    std::pair<RotationMatrixTestType<rot::RotationMatrixAD>, AngleAxisTestType<rot::AngleAxisAD>>,
+
 
     // Rotation Quaternion <-> Euler Angles ZYX
     std::pair<RotationQuaternionTestType<rot::RotationQuaternionPF>, EulerAnglesZyxTestType<rot::EulerAnglesZyxPF>>,
@@ -548,39 +519,21 @@ TYPED_TEST(ConcatenationTest, testAToB) {
 
   // check concatenation of 3 different quarters
   this->rotB.rot = this->rotB.rotQuarterX.inverted()*this->rotA.rotQuarterY*this->rotB.rotQuarterX;
-  if(this->rotB.rot.Usage == kindr::rotations::RotationUsage::ACTIVE){
-    this->rotB.rot.invert();
-  }
   this->rotB.assertNear(this->rotB.rotQuarterZ, this->rotB.rot.getUnique(), this->tol, "concatenation 1");
 
   this->rotB.rot = this->rotB.rotQuarterX.inverted()*this->rotA.rotQuarterZ*this->rotB.rotQuarterX;
-  if(this->rotB.rot.Usage == kindr::rotations::RotationUsage::ACTIVE){
-    this->rotB.rot.invert();
-  }
   this->rotB.assertNear(this->rotB.rotQuarterY.inverted(), this->rotB.rot.getUnique(), this->tol, "concatenation 2");
 
   this->rotB.rot = this->rotB.rotQuarterY.inverted()*this->rotA.rotQuarterX*this->rotB.rotQuarterY;
-  if(this->rotB.rot.Usage == kindr::rotations::RotationUsage::ACTIVE){
-    this->rotB.rot.invert();
-  }
   this->rotB.assertNear(this->rotB.rotQuarterZ.inverted(), this->rotB.rot.getUnique(), this->tol, "concatenation 3");
 
   this->rotB.rot = this->rotB.rotQuarterY.inverted()*this->rotA.rotQuarterZ*this->rotB.rotQuarterY;
-  if(this->rotB.rot.Usage == kindr::rotations::RotationUsage::ACTIVE){
-    this->rotB.rot.invert();
-  }
   this->rotB.assertNear(this->rotB.rotQuarterX, this->rotB.rot.getUnique(), this->tol, "concatenation 4");
 
   this->rotB.rot = this->rotB.rotQuarterZ.inverted()*this->rotA.rotQuarterX*this->rotB.rotQuarterZ;
-  if(this->rotB.rot.Usage == kindr::rotations::RotationUsage::ACTIVE){
-    this->rotB.rot.invert();
-  }
   this->rotB.assertNear(this->rotB.rotQuarterY, this->rotB.rot.getUnique(), this->tol, "concatenation 5");
 
   this->rotB.rot = this->rotB.rotQuarterZ.inverted()*this->rotA.rotQuarterY*this->rotB.rotQuarterZ;
-  if(this->rotB.rot.Usage == kindr::rotations::RotationUsage::ACTIVE){
-    this->rotB.rot.invert();
-  }
   this->rotB.assertNear(this->rotB.rotQuarterX.inverted(), this->rotB.rot.getUnique(), this->tol, "concatenation 6");
 }
 
@@ -608,88 +561,23 @@ TYPED_TEST(ConcatenationTest, testBToA) {
 
   // Check concatenation of 3 different quarters
   this->rotA.rot = this->rotA.rotQuarterX.inverted()*this->rotB.rotQuarterY*this->rotA.rotQuarterX;
-  if(this->rotA.rot.Usage == kindr::rotations::RotationUsage::ACTIVE){
-    this->rotA.rot.invert();
-  }
   this->rotA.assertNear(this->rotA.rotQuarterZ, this->rotA.rot.getUnique(), this->tol, "concatenation 1");
 
   this->rotA.rot = this->rotA.rotQuarterX.inverted()*this->rotB.rotQuarterZ*this->rotA.rotQuarterX;
-  if(this->rotA.rot.Usage == kindr::rotations::RotationUsage::ACTIVE){
-    this->rotA.rot.invert();
-  }
   this->rotA.assertNear(this->rotA.rotQuarterY.inverted(), this->rotA.rot.getUnique(), this->tol, "concatenation 2");
 
   this->rotA.rot = this->rotA.rotQuarterY.inverted()*this->rotB.rotQuarterX*this->rotA.rotQuarterY;
-  if(this->rotA.rot.Usage == kindr::rotations::RotationUsage::ACTIVE){
-    this->rotA.rot.invert();
-  }
   this->rotA.assertNear(this->rotA.rotQuarterZ.inverted(), this->rotA.rot.getUnique(), this->tol, "concatenation 3");
 
   this->rotA.rot = this->rotA.rotQuarterY.inverted()*this->rotB.rotQuarterZ*this->rotA.rotQuarterY;
-  if(this->rotA.rot.Usage == kindr::rotations::RotationUsage::ACTIVE){
-    this->rotA.rot.invert();
-  }
   this->rotA.assertNear(this->rotA.rotQuarterX, this->rotA.rot.getUnique(), this->tol, "concatenation 4");
 
   this->rotA.rot = this->rotA.rotQuarterZ.inverted()*this->rotB.rotQuarterX*this->rotA.rotQuarterZ;
-  if(this->rotA.rot.Usage == kindr::rotations::RotationUsage::ACTIVE){
-    this->rotA.rot.invert();
-  }
   this->rotA.assertNear(this->rotA.rotQuarterY, this->rotA.rot.getUnique(), this->tol, "concatenation 5");
 
   this->rotA.rot = this->rotA.rotQuarterZ.inverted()*this->rotB.rotQuarterY*this->rotA.rotQuarterZ;
-  if(this->rotA.rot.Usage == kindr::rotations::RotationUsage::ACTIVE){
-    this->rotA.rot.invert();
-  }
   this->rotA.assertNear(this->rotA.rotQuarterX.inverted(), this->rotA.rot.getUnique(), this->tol, "concatenation 6");
 
 
 }
-
-
-//// Additional Functions Test
-//
-//
-//template <typename PrimType_>
-//class AdditionalFunctionsTest : public ::testing::Test{
-// public:
-//  // Scalar
-//  typedef PrimType_ Scalar;
-//
-//  // Vector
-//  typedef Eigen::Matrix<Scalar,3,1> Vector;
-//
-//
-//  // Testing Vectors
-//  const Vector vec = Vector(0.3,-1.5,0.6);
-//  const Vector vecX = Vector(1.0,0.0,0.0);
-//  const Vector vecY = Vector(0.0,1.0,0.0);
-//  const Vector vecZ = Vector(0.0,0.0,1.0);
-//};
-//
-//
-//typedef ::testing::Types<
-//    double,
-//    float
-//> AdditionalFunctionsTypes;
-//
-//
-//TYPED_TEST_CASE(AdditionalFunctionsTest, AdditionalFunctionsTypes);
-//
-//// Testing constructors and getters for Rotation Vector
-//TYPED_TEST(AdditionalFunctionsTest, testCalculateAngleBetweenVectors){
-//  typedef typename TestFixture::Vector Vector;
-//  typedef typename TestFixture::Scalar Scalar;
-//
-//  ASSERT_NEAR(kindr::rotations::AdditionalFunctions<Vector>::calculateAngleBetweenVectors(this->vec, this->vec), 0.0, 1e-3);
-//  ASSERT_NEAR(kindr::rotations::AdditionalFunctions<Vector>::calculateAngleBetweenVectors(this->vec, -this->vec), M_PI, 1e-3);
-//
-//  ASSERT_NEAR(kindr::rotations::AdditionalFunctions<Vector>::calculateAngleBetweenVectors(this->vecX, this->vecY), M_PI/2, 1e-3);
-//  ASSERT_NEAR(kindr::rotations::AdditionalFunctions<Vector>::calculateAngleBetweenVectors(this->vecY, this->vecX), M_PI/2, 1e-3);
-//  ASSERT_NEAR(kindr::rotations::AdditionalFunctions<Vector>::calculateAngleBetweenVectors(this->vecX, this->vecZ), M_PI/2, 1e-3);
-//  ASSERT_NEAR(kindr::rotations::AdditionalFunctions<Vector>::calculateAngleBetweenVectors(this->vecZ, this->vecX), M_PI/2, 1e-3);
-//  ASSERT_NEAR(kindr::rotations::AdditionalFunctions<Vector>::calculateAngleBetweenVectors(this->vecY, this->vecZ), M_PI/2, 1e-3);
-//  ASSERT_NEAR(kindr::rotations::AdditionalFunctions<Vector>::calculateAngleBetweenVectors(this->vecZ, this->vecY), M_PI/2, 1e-3);
-//}
-
 

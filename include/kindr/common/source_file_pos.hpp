@@ -58,6 +58,7 @@ class source_file_pos
     s << file << ":" << line << ": " << function << "()";
     return s.str();
   }
+
 };
 
 } // namespace internal
@@ -66,7 +67,7 @@ class source_file_pos
 
 inline std::ostream & operator<<(std::ostream & out, const kindr::common::internal::source_file_pos & sfp)
 {
-  out << sfp.file << ":" << sfp.line << ": " << sfp.function << "()";
+  out << sfp.file << ":" << std::to_string(sfp.line) << ": " << sfp.function << "()";
   return out;
 }
 

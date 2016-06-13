@@ -89,7 +89,7 @@ set(ROTATION_SRCS
 	rotations/eigen/EulerAnglesXyzTest.cpp
 	rotations/RotationEigenTest.cpp
 )
-add_gtest( runUnitTestsRotation ${ROTATION_SRCS})
+#add_gtest( runUnitTestsRotation ${ROTATION_SRCS})
 
 set(ROTATIONQUATERNION_SRCS
 	test_main.cpp
@@ -107,44 +107,44 @@ set(ROTATIONDIFF_SRCS
 	rotations/eigen/EulerAnglesZyxDiffTest.cpp
 	rotations/eigen/EulerAnglesXyzDiffTest.cpp
 )
-add_gtest( runUnitTestsRotationDiff ${ROTATIONDIFF_SRCS})
+#add_gtest( runUnitTestsRotationDiff ${ROTATIONDIFF_SRCS})
 
 set(POSITIONS_SRCS
 	test_main.cpp
 	positions/PositionEigenTest.cpp
 )
-add_gtest( runUnitTestsPositions  ${POSITIONS_SRCS})
+#add_gtest( runUnitTestsPositions  ${POSITIONS_SRCS})
 
 set(POSITIONSDIFF_SRCS
 	test_main.cpp
 	positions/PositionDiffEigenTest.cpp
 )
-add_gtest( runUnitTestsPositionsDiff  ${POSITIONSDIFF_SRCS})
+#add_gtest( runUnitTestsPositionsDiff  ${POSITIONSDIFF_SRCS})
 
 
 set(POSES_SRCS
 	test_main.cpp
 	poses/PoseEigenTest.cpp
 )
-add_gtest( runUnitTestsPose  ${POSES_SRCS})
+#add_gtest( runUnitTestsPose  ${POSES_SRCS})
 
 set(POSESDIFF_SRCS
 	test_main.cpp
 	poses/PoseDiffEigenTest.cpp
 )
-add_gtest( runUnitTestsPoseDiff  ${POSESDIFF_SRCS})
+#add_gtest( runUnitTestsPoseDiff  ${POSESDIFF_SRCS})
 
 set(VECTOR_SRCS
 	test_main.cpp
 	vectors/VectorsTest.cpp
 )
-add_gtest( runUnitTestsVector  ${VECTOR_SRCS})
+#add_gtest( runUnitTestsVector  ${VECTOR_SRCS})
 
 set(FORCE_SRCS
 	test_main.cpp
 	phys_quant/ForceTest.cpp
 )
-add_gtest( runUnitTestsForce  ${FORCE_SRCS})
+#add_gtest( runUnitTestsForce  ${FORCE_SRCS})
 
 IF (ROS_FOUND)
     set(THIRDPARTY_ROS_SRCS
@@ -154,7 +154,7 @@ IF (ROS_FOUND)
     	thirdparty/ros/RosGeometryMsgRotationEigenTest.cpp
     	thirdparty/ros/RosGeometryMsgPhysicalQuantitiesEigenTest.cpp
     )
-    add_gtest( runUnitTestsThirdpartyRos  ${THIRDPARTY_ROS_SRCS})
+   # add_gtest( runUnitTestsThirdpartyRos  ${THIRDPARTY_ROS_SRCS})
 ENDIF (ROS_FOUND)
 
 # Run all unit tests post-build.

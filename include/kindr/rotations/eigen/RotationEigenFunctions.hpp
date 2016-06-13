@@ -25,8 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
 */
-#ifndef KINDR_ROTATIONS_ROTATION_EIGEN_FUNCTIONS_HPP_
-#define KINDR_ROTATIONS_ROTATION_EIGEN_FUNCTIONS_HPP_
+#pragma once
 
 
 #include <cmath>
@@ -37,9 +36,8 @@
 #include "kindr/common/common.hpp"
 
 namespace kindr {
-namespace rotations {
-namespace eigen_impl {
-namespace eigen_internal {
+namespace internal {
+
 
 
 // 1) Output: AngleAxis
@@ -771,10 +769,5 @@ Vector3d omega2kardan(const Vector3d &K_w_IK, const Vector3d &abc) // quaternion
 
 
 
-
-} // namespace eigen_internal
-} // namespace eigen_impl
-} // namespace rotations
-} // namespace rm
-
-#endif /* KINDR_ROTATIONS_ROTATION_EIGEN_FUNCTIONS_HPP_ */
+} // namespace internal
+} // namespace kindr

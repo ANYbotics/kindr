@@ -58,7 +58,7 @@ namespace common {
       // I have no idea what broke this on Windows but it doesn't work with the << operator.
       kindr_assert_stringstream << exceptionType <<  sfp.toString() << " " << message;
 #else
-      kindr_assert_stringstream << exceptionType <<  sfp << " " << message;
+      kindr_assert_stringstream << exceptionType <<  sfp.toString() << std::string{" "} << message;
 #endif
       throw(KINDR_EXCEPTION_T(kindr_assert_stringstream.str()));
     }

@@ -28,104 +28,44 @@ cmake_minimum_required (VERSION 2.8)
 
 project(kindr)
 
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}" ${CMAKE_MODULE_PATH})
+add_definitions(-std=c++11)
 
 find_package(Eigen3 REQUIRED)
+find_package(catkin REQUIRED)
+
+catkin_package(
+    INCLUDE_DIRS include ${EIGEN3_INCLUDE_DIR}
+    DEPENDS eigen    
+)
 
 include_directories(include)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
-# Noisily default to Release build
-if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-  message(STATUS "Setting build type to 'Release' as none was specified.")
-  set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
-  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
-    "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+
+add_library(kindr_impl 
+    src/kindr_impl.cpp
+)
+
+
+#############
+## Testing ##
+#############
+
+if(CATKIN_ENABLE_TESTING)
+  catkin_add_gtest(test_${PROJECT_NAME}
+    test/test_main.cpp
+	test/rotations/eigen/RotationMatrixTest.cpp
+	test/rotations/eigen/RotationQuaternionTest.cpp
+	test/rotations/eigen/RotationVectorTest.cpp
+	test/rotations/eigen/AngleAxisTest.cpp
+	test/rotations/eigen/EulerAnglesZyxTest.cpp
+	test/rotations/eigen/EulerAnglesXyzTest.cpp
+	test/rotations/RotationEigenTest.cpp
+  )
+  if(TARGET test_${PROJECT_NAME})
+    target_link_libraries(test_${PROJECT_NAME}
+      ${catkin_LIBRARIES}
+    )
+  endif()
 endif()
 
-add_definitions(-std=c++11)
-
-# Don't build tests if not specified.
-if(NOT BUILD_TEST)
-  message(STATUS "Setting build-tests to false as not specified.")
-  set(BUILD_TEST false CACHE BOOL "Choose whether to build tests." FORCE)
-  set_property(CACHE BUILD_TEST PROPERTY STRINGS
-    "True" "False")
-endif()
-
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/gtest/" AND BUILD_TEST)
-	message(STATUS "Building GTests!")
-	option(BUILD_GTEST "build gtest" ON)
-	add_subdirectory(gtest gtest)
-	enable_testing()
-endif()
-
-# Add CMake module path
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
-
-
-install(DIRECTORY include/kindr DESTINATION include)
-
-# Add unit tests
-if(BUILD_GTEST)
-	add_subdirectory(test)
-endif()
-
-# Add Doxygen documentation
-add_subdirectory(doc/doxygen)
-
-# Install catkin package.xml
-#install(FILES package.xml DESTINATION share/kindr)
-
-
-#=============================================
-# to allow find_package() on kindr
-#=============================================
-# 
-# the following case be used in an external project requiring kindr:
-#  ...
-#  find_package(kindr) 
-#  include_directories(${kindr_INCLUDE_DIRS}) 
-#  ...
-
-# NOTE: the following will support find_package for 1) local build (make) and 2) for installed files (make install)
-
-# 1- local build #
-
-# Register the local build in case one doesn't use "make install"
-export(PACKAGE kindr)
-
-# Create variable for the local build tree
-get_property(kindr_include_dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
-
-# Configure config file for local build tree
-configure_file(kindrConfig.cmake.in
-  "${PROJECT_BINARY_DIR}/kindrConfig.cmake" @ONLY)
-
-# 2- installation build #
-
-# Change the include location for the case of an install location
-set(kindr_include_dirs ${CMAKE_INSTALL_PREFIX}/include ${EIGEN3_INCLUDE_DIR})
-
-
-# We put the generated file for installation in a different repository (i.e., ./CMakeFiles/)
-configure_file(kindrConfig.cmake.in
-  "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/kindrConfig.cmake" @ONLY)
-
-install(FILES
-  "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/kindrConfig.cmake"
-  DESTINATION share/kindr/cmake COMPONENT dev)
-
-
-
-#=============================================
-# Add uninstall target
-#=============================================
-configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
-    IMMEDIATE @ONLY)
-
-add_custom_target(uninstall
-    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)

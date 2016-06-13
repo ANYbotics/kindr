@@ -30,7 +30,7 @@
 #include "kindr/quaternions/QuaternionEigen.hpp"
 #include "kindr/rotations/RotationEigen.hpp"
 
-namespace rot = kindr::rotations::eigen_impl;
+namespace rot = kindr;
 namespace quat = kindr::quaternions::eigen_impl;
 
 using namespace kindr::common::test;
@@ -45,7 +45,7 @@ class EulerAnglesZyxSingleTest : public ::testing::Test{
   typedef Eigen::Matrix<Scalar,3,1> Vector;
 
   // Rotation Quaternion
-  typedef typename rot::RotationQuaternion<Scalar, Rotation_::Usage> RotationQuaternion;
+  typedef typename rot::RotationQuaternion<Scalar> RotationQuaternion;
 
   // Eigen::Matrix
   const Vector eigenVector3Identity = Vector(0.0,0.0,0.0);
@@ -115,15 +115,8 @@ struct EulerAnglesZyxPassiveTest : public EulerAnglesZyxRotationQuaternionPairTe
 
 typedef ::testing::Types<
     rot::EulerAnglesZyxPD,
-    rot::EulerAnglesZyxPF,
-    rot::EulerAnglesZyxAD,
-    rot::EulerAnglesZyxAF
+    rot::EulerAnglesZyxPF
 > EulerAnglesZyxTypes;
-
-typedef ::testing::Types<
-    std::pair<rot::RotationQuaternionAD, rot::EulerAnglesZyxAD>,
-    std::pair<rot::RotationQuaternionAF, rot::EulerAnglesZyxAF>
-> EulerAnglesZyxActiveTypes;
 
 typedef ::testing::Types<
     std::pair<rot::RotationQuaternionPD, rot::EulerAnglesZyxPD>,
@@ -136,16 +129,11 @@ typedef ::testing::Types<
     std::pair<rot::RotationQuaternionPF, rot::EulerAnglesZyxPF>,
     std::pair<rot::RotationQuaternionPF, rot::EulerAnglesZyxPD>,
     std::pair<rot::RotationQuaternionPD, rot::EulerAnglesZyxPF>,
-    std::pair<rot::RotationQuaternionPD, rot::EulerAnglesZyxPD>,
-    std::pair<rot::RotationQuaternionAF, rot::EulerAnglesZyxAF>,
-    std::pair<rot::RotationQuaternionAF, rot::EulerAnglesZyxAD>,
-    std::pair<rot::RotationQuaternionAD, rot::EulerAnglesZyxAF>,
-    std::pair<rot::RotationQuaternionAD, rot::EulerAnglesZyxAD>
+    std::pair<rot::RotationQuaternionPD, rot::EulerAnglesZyxPD>
 > TypeQuaternionEulerAnglesZyxPairs;
 
 TYPED_TEST_CASE(EulerAnglesZyxSingleTest, EulerAnglesZyxTypes);
 TYPED_TEST_CASE(EulerAnglesZyxRotationQuaternionPairTest, TypeQuaternionEulerAnglesZyxPairs);
-TYPED_TEST_CASE(EulerAnglesZyxActiveTest, EulerAnglesZyxActiveTypes);
 TYPED_TEST_CASE(EulerAnglesZyxPassiveTest, EulerAnglesZyxPassiveTypes);
 
 
@@ -370,39 +358,21 @@ TYPED_TEST(EulerAnglesZyxSingleTest, testConcatenation){
 
   // Check concatenation of 3 different quarters
   rotEulerAnglesZyx = this->rotEulerAnglesZyxQuarterX.inverted()*this->rotEulerAnglesZyxQuarterY*this->rotEulerAnglesZyxQuarterX;
-  if(EulerAnglesZyx::Usage == kindr::rotations::RotationUsage::ACTIVE){
-    rotEulerAnglesZyx.invert();
-  }
   ASSERT_EQ(rotEulerAnglesZyx.isNear(this->rotEulerAnglesZyxQuarterZ,1e-6),true);
 
   rotEulerAnglesZyx = this->rotEulerAnglesZyxQuarterX.inverted()*this->rotEulerAnglesZyxQuarterZ*this->rotEulerAnglesZyxQuarterX;
-  if(EulerAnglesZyx::Usage == kindr::rotations::RotationUsage::ACTIVE){
-    rotEulerAnglesZyx.invert();
-  }
   ASSERT_EQ(rotEulerAnglesZyx.isNear(this->rotEulerAnglesZyxQuarterY.inverted(),1e-6),true);
 
   rotEulerAnglesZyx = this->rotEulerAnglesZyxQuarterY.inverted()*this->rotEulerAnglesZyxQuarterX*this->rotEulerAnglesZyxQuarterY;
-  if(EulerAnglesZyx::Usage == kindr::rotations::RotationUsage::ACTIVE){
-    rotEulerAnglesZyx.invert();
-  }
   ASSERT_EQ(rotEulerAnglesZyx.isNear(this->rotEulerAnglesZyxQuarterZ.inverted(),1e-6),true);
 
   rotEulerAnglesZyx = this->rotEulerAnglesZyxQuarterY.inverted()*this->rotEulerAnglesZyxQuarterZ*this->rotEulerAnglesZyxQuarterY;
-  if(EulerAnglesZyx::Usage == kindr::rotations::RotationUsage::ACTIVE){
-    rotEulerAnglesZyx.invert();
-  }
   ASSERT_EQ(rotEulerAnglesZyx.isNear(this->rotEulerAnglesZyxQuarterX,1e-6),true);
 
   rotEulerAnglesZyx = this->rotEulerAnglesZyxQuarterZ.inverted()*this->rotEulerAnglesZyxQuarterX*this->rotEulerAnglesZyxQuarterZ;
-  if(EulerAnglesZyx::Usage == kindr::rotations::RotationUsage::ACTIVE){
-    rotEulerAnglesZyx.invert();
-  }
   ASSERT_EQ(rotEulerAnglesZyx.isNear(this->rotEulerAnglesZyxQuarterY,1e-6),true);
 
   rotEulerAnglesZyx = this->rotEulerAnglesZyxQuarterZ.inverted()*this->rotEulerAnglesZyxQuarterY*this->rotEulerAnglesZyxQuarterZ;
-  if(EulerAnglesZyx::Usage == kindr::rotations::RotationUsage::ACTIVE){
-    rotEulerAnglesZyx.invert();
-  }
   ASSERT_EQ(rotEulerAnglesZyx.isNear(this->rotEulerAnglesZyxQuarterX.inverted(),1e-6),true);
 }
 
@@ -434,7 +404,7 @@ TYPED_TEST(EulerAnglesZyxSingleTest, testVectorRotation){
   Vector testVec1;
   Vector testVec2;
 
-  int signSwitch = 2*(EulerAnglesZyx::Usage == kindr::rotations::RotationUsage::ACTIVE)-1;
+  int signSwitch = -1;
 
   // Check rotation of base vectors around main axis
   testVec = this->rotEulerAnglesZyxQuarterX.rotate(this->vecX);
@@ -704,68 +674,3 @@ TYPED_TEST(EulerAnglesZyxRotationQuaternionPairTest, testInversion){
   ASSERT_NEAR(rot1.z(),rot2.z(),1e-6);
 }
 
-
-/* Test getPassive()
- *  Assumes getPassive() of RotationQuaternion is correct.
- *  Assumes conversion between EulerAnglesZyx and RotationQuaternion is correct.
- *  Assumes isNear() of RotationQuaternion is correct.
- */
-TYPED_TEST(EulerAnglesZyxActiveTest, testGetPassive){
-  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
-  typedef typename TestFixture::EulerAnglesZyx EulerAnglesZyx;
-  typedef typename TestFixture::RotationQuaternionScalar RotationQuaternionScalar;
-  typedef typename TestFixture::EulerAnglesZyxScalar EulerAnglesZyxScalar;
-
-  rot::EulerAnglesZyx<EulerAnglesZyxScalar, kindr::rotations::RotationUsage::PASSIVE> rotEulerAnglesZyxPassive;
-  rot::RotationQuaternion<RotationQuaternionScalar, kindr::rotations::RotationUsage::PASSIVE> rotQuatPassive;
-
-  rotEulerAnglesZyxPassive = this->rotEulerAnglesZyxIdentity.getPassive();
-  rotQuatPassive = this->rotQuatIdentity.getPassive();
-  ASSERT_EQ(true, rotQuatPassive.isNear(rotEulerAnglesZyxPassive,1e-6));
-
-  rotEulerAnglesZyxPassive = this->rotEulerAnglesZyxQuarterX.getPassive();
-  rotQuatPassive = this->rotQuatQuarterX.getPassive();
-  ASSERT_EQ(true, rotQuatPassive.isNear(rotEulerAnglesZyxPassive,1e-6));
-
-  rotEulerAnglesZyxPassive = this->rotEulerAnglesZyxQuarterY.getPassive();
-  rotQuatPassive = this->rotQuatQuarterY.getPassive();
-  ASSERT_EQ(true, rotQuatPassive.isNear(rotEulerAnglesZyxPassive,1e-6));
-
-  rotEulerAnglesZyxPassive = this->rotEulerAnglesZyxQuarterZ.getPassive();
-  rotQuatPassive = this->rotQuatQuarterZ.getPassive();
-  ASSERT_EQ(true, rotQuatPassive.isNear(rotEulerAnglesZyxPassive,1e-6));
-
-}
-
-
-/* Test getActive()
- *  Assumes getActive() of RotationQuaternion is correct.
- *  Assumes conversion between EulerAnglesZyx and RotationQuaternion is correct.
- *  Assumes isNear() of RotationQuaternion is correct.
- */
-TYPED_TEST(EulerAnglesZyxPassiveTest, testGetActive){
-  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
-  typedef typename TestFixture::EulerAnglesZyx EulerAnglesZyx;
-  typedef typename TestFixture::RotationQuaternionScalar RotationQuaternionScalar;
-  typedef typename TestFixture::EulerAnglesZyxScalar EulerAnglesZyxScalar;
-
-  rot::EulerAnglesZyx<EulerAnglesZyxScalar, kindr::rotations::RotationUsage::ACTIVE> rotEulerAnglesZyxActive;
-  rot::RotationQuaternion<RotationQuaternionScalar, kindr::rotations::RotationUsage::ACTIVE> rotQuatActive;
-
-  rotEulerAnglesZyxActive = this->rotEulerAnglesZyxIdentity.getActive();
-  rotQuatActive = this->rotQuatIdentity.getActive();
-  ASSERT_EQ(true, rotQuatActive.isNear(rotEulerAnglesZyxActive,1e-6)) << "angle: " << rotQuatActive.getDisparityAngle(rotEulerAnglesZyxActive);
-
-  rotEulerAnglesZyxActive = this->rotEulerAnglesZyxQuarterX.getActive();
-  rotQuatActive = this->rotQuatQuarterX.getActive();
-  ASSERT_EQ(true, rotQuatActive.isNear(rotEulerAnglesZyxActive,1e-6)) << "angle: " << rotQuatActive.getDisparityAngle(rotEulerAnglesZyxActive);
-
-  rotEulerAnglesZyxActive = this->rotEulerAnglesZyxQuarterY.getActive();
-  rotQuatActive = this->rotQuatQuarterY.getActive();
-  ASSERT_EQ(true, rotQuatActive.isNear(rotEulerAnglesZyxActive,1e-6)) << "angle: " << rotQuatActive.getDisparityAngle(rotEulerAnglesZyxActive);
-
-  rotEulerAnglesZyxActive = this->rotEulerAnglesZyxQuarterZ.getActive();
-  rotQuatActive = this->rotQuatQuarterZ.getActive();
-  ASSERT_EQ(true, rotQuatActive.isNear(rotEulerAnglesZyxActive,1e-6)) << "angle: " << rotQuatActive.getDisparityAngle(rotEulerAnglesZyxActive);
-
-}

@@ -26,8 +26,7 @@
  *
 */
 
-#ifndef KINDR_ROTATIONS_EIGEN_ANGLEAXIS_HPP_
-#define KINDR_ROTATIONS_EIGEN_ANGLEAXIS_HPP_
+#pragma once
 
 #include <cmath>
 
@@ -39,25 +38,24 @@
 #include "kindr/rotations/eigen/RotationEigenFunctions.hpp"
 
 namespace kindr {
-namespace rotations {
-namespace eigen_impl {
+
 
 /*! \class AngleAxis
  * \brief Implementation of an angle axis rotation based on Eigen::AngleAxis
  *
  *  The following two typedefs are provided for convenience:
- *   - \ref eigen_impl::AngleAxisAD "AngleAxisAD" for active rotation and primitive type double
- *   - \ref eigen_impl::AngleAxisAF "AngleAxisAF" for active rotation and primitive type float
- *   - \ref eigen_impl::AngleAxisPD "AngleAxisPD" for passive rotation and primitive type double
- *   - \ref eigen_impl::AngleAxisPF "AngleAxisPF" for passive rotation and primitive type float
+ *   - \ref AngleAxisAD "AngleAxisAD" for active rotation and primitive type double
+ *   - \ref AngleAxisAF "AngleAxisAF" for active rotation and primitive type float
+ *   - \ref AngleAxisPD "AngleAxisPD" for passive rotation and primitive type double
+ *   - \ref AngleAxisPF "AngleAxisPF" for passive rotation and primitive type float
  *
  *  \tparam PrimType_ the primitive type of the data (double or float)
  *  \tparam Usage_ the rotation usage which is either active or passive
  *
  *  \ingroup rotations
  */
-template<typename PrimType_, enum RotationUsage Usage_>
-class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_> {
+template<typename PrimType_>
+class AngleAxis : public RotationBase<AngleAxis<PrimType_>> {
  private:
   /*! \brief The base type.
    */
@@ -135,7 +133,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_> {
    *  \param other   other rotation
    */
   template<typename OtherDerived_>
-  inline explicit AngleAxis(const RotationBase<OtherDerived_, Usage_>& other)
+  inline explicit AngleAxis(const RotationBase<OtherDerived_>& other)
     : angleAxis_(internal::ConversionTraits<AngleAxis, OtherDerived_>::convert(other.derived()).toImplementation()) {
   }
 
@@ -144,7 +142,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_> {
    *  \returns reference
    */
   template<typename OtherDerived_>
-  AngleAxis& operator =(const RotationBase<OtherDerived_, Usage_>& other) {
+  AngleAxis& operator =(const RotationBase<OtherDerived_>& other) {
     this->toImplementation() = internal::ConversionTraits<AngleAxis, OtherDerived_>::convert(other.derived()).toImplementation();
     return *this;
   }
@@ -154,7 +152,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_> {
    *  \returns reference
    */
   template<typename OtherDerived_>
-  AngleAxis& operator ()(const RotationBase<OtherDerived_, Usage_>& other) {
+  AngleAxis& operator ()(const RotationBase<OtherDerived_>& other) {
     this->toImplementation() = internal::ConversionTraits<AngleAxis, OtherDerived_>::convert(other.derived()).toImplementation();
     return *this;
   }
@@ -301,7 +299,7 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_> {
    *  This is explicitly specified, because Eigen provides also an operator*.
    *  \returns the concenation of two rotations
    */
-  using AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_>::operator*;
+  using RotationBase<AngleAxis<PrimType_>>::operator*;
 
   /*! \brief Used for printing the object with std::cout.
    *  \returns std::stream object
@@ -313,29 +311,26 @@ class AngleAxis : public AngleAxisBase<AngleAxis<PrimType_, Usage_>, Usage_> {
 };
 
 //! \brief Active angle axis rotation with double primitive type
-typedef AngleAxis<double, RotationUsage::ACTIVE>  AngleAxisAD;
+typedef AngleAxis<double>  AngleAxisPD;
 //! \brief Active angle axis rotation with float primitive type
-typedef AngleAxis<float,  RotationUsage::ACTIVE>  AngleAxisAF;
+typedef AngleAxis<float>  AngleAxisPF;
 //! \brief Passive angle axis rotation with double primitive type
-typedef AngleAxis<double, RotationUsage::PASSIVE> AngleAxisPD;
+typedef AngleAxis<double> AngleAxisD;
 //! \brief Passive angle axis rotation with float primitive type
-typedef AngleAxis<float,  RotationUsage::PASSIVE> AngleAxisPF;
+typedef AngleAxis<float> AngleAxisF;
 
-
-
-} // namespace eigen_impl
 
 
 namespace internal {
 
-template<typename PrimType_, enum RotationUsage Usage_>
-class get_scalar<eigen_impl::AngleAxis<PrimType_, Usage_>> {
+template<typename PrimType_>
+class get_scalar<AngleAxis<PrimType_>> {
  public:
   typedef PrimType_ Scalar;
 };
 
-template<typename PrimType_, enum RotationUsage Usage_>
-class get_matrix3X<eigen_impl::AngleAxis<PrimType_, Usage_>>{
+template<typename PrimType_>
+class get_matrix3X<AngleAxis<PrimType_>>{
  public:
   typedef int  IndexType;
 
@@ -344,86 +339,74 @@ class get_matrix3X<eigen_impl::AngleAxis<PrimType_, Usage_>>{
 };
 
 
-template<typename PrimType_>
-class get_other_usage<eigen_impl::AngleAxis<PrimType_, RotationUsage::ACTIVE>> {
- public:
-  typedef eigen_impl::AngleAxis<PrimType_, RotationUsage::PASSIVE> OtherUsage;
-};
-
-template<typename PrimType_>
-class get_other_usage<eigen_impl::AngleAxis<PrimType_, RotationUsage::PASSIVE>> {
- public:
-  typedef eigen_impl::AngleAxis<PrimType_, RotationUsage::ACTIVE> OtherUsage;
-};
-
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * Conversion Traits
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
-class ConversionTraits<eigen_impl::AngleAxis<DestPrimType_, Usage_>, eigen_impl::AngleAxis<SourcePrimType_, Usage_>> {
+template<typename DestPrimType_, typename SourcePrimType_>
+class ConversionTraits<AngleAxis<DestPrimType_>, AngleAxis<SourcePrimType_>> {
  public:
-  inline static eigen_impl::AngleAxis<DestPrimType_, Usage_> convert(const eigen_impl::AngleAxis<SourcePrimType_, Usage_>& a) {
-    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(a.toImplementation().template cast<DestPrimType_>());
+  inline static AngleAxis<DestPrimType_> convert(const AngleAxis<SourcePrimType_>& a) {
+    return AngleAxis<DestPrimType_>(a.toImplementation().template cast<DestPrimType_>());
   }
 };
 
-template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
-class ConversionTraits<eigen_impl::AngleAxis<DestPrimType_, Usage_>, eigen_impl::RotationVector<SourcePrimType_, Usage_>> {
+template<typename DestPrimType_, typename SourcePrimType_>
+class ConversionTraits<AngleAxis<DestPrimType_>, RotationVector<SourcePrimType_>> {
  public:
-  inline static eigen_impl::AngleAxis<DestPrimType_, Usage_> convert(const eigen_impl::RotationVector<SourcePrimType_, Usage_>& rotationVector) {
-    typedef typename eigen_impl::RotationVector<SourcePrimType_, Usage_>::Scalar Scalar;
+  inline static AngleAxis<DestPrimType_> convert(const RotationVector<SourcePrimType_>& rotationVector) {
+    typedef typename RotationVector<SourcePrimType_>::Scalar Scalar;
 
-    const eigen_impl::RotationVector<DestPrimType_, Usage_> rv(rotationVector);
+    const RotationVector<DestPrimType_> rv(rotationVector);
 
     if (rv.toImplementation().norm() < common::internal::NumTraits<Scalar>::dummy_precision()) {
-      return eigen_impl::AngleAxis<DestPrimType_, Usage_>();
+      return AngleAxis<DestPrimType_>();
     }
-    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(rv.toImplementation().norm(), rv.toImplementation().normalized());
+    return AngleAxis<DestPrimType_>(rv.toImplementation().norm(), rv.toImplementation().normalized());
   }
 };
 
-template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
-class ConversionTraits<eigen_impl::AngleAxis<DestPrimType_, Usage_>, eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>> {
+template<typename DestPrimType_, typename SourcePrimType_>
+class ConversionTraits<AngleAxis<DestPrimType_>, RotationQuaternion<SourcePrimType_>> {
  public:
-  inline static eigen_impl::AngleAxis<DestPrimType_, Usage_> convert(const eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>& q) {
-    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::eigen_internal::getAngleAxisFromQuaternion<SourcePrimType_, DestPrimType_>(q.toImplementation()));
+  inline static AngleAxis<DestPrimType_> convert(const RotationQuaternion<SourcePrimType_>& q) {
+    return AngleAxis<DestPrimType_>(internal::getAngleAxisFromQuaternion<SourcePrimType_, DestPrimType_>(q.toImplementation()));
   }
 };
 
-template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
-class ConversionTraits<eigen_impl::AngleAxis<DestPrimType_, Usage_>, eigen_impl::RotationMatrix<SourcePrimType_, Usage_>> {
+template<typename DestPrimType_, typename SourcePrimType_>
+class ConversionTraits<AngleAxis<DestPrimType_>, RotationMatrix<SourcePrimType_>> {
  public:
-  inline static eigen_impl::AngleAxis<DestPrimType_, Usage_> convert(const eigen_impl::RotationMatrix<SourcePrimType_, Usage_>& rotationMatrix) {
-//    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()));
-//    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::eigen_internal::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()));
+  inline static AngleAxis<DestPrimType_> convert(const RotationMatrix<SourcePrimType_>& rotationMatrix) {
+//    return AngleAxis<DestPrimType_>(getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()));
+//    return AngleAxis<DestPrimType_>(internal::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()));
 
 //   if (Usage_ == RotationUsage::ACTIVE) {
-//     return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::eigen_internal::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.matrix()));
+//     return AngleAxis<DestPrimType_>(internal::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.matrix()));
 //
 //   }
 //   if (Usage_ == RotationUsage::PASSIVE) {
-//     return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::eigen_internal::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()));
+//     return AngleAxis<DestPrimType_>(internal::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()));
 //
 //   }
 //
-   return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::eigen_internal::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()));
+   return AngleAxis<DestPrimType_>(internal::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()));
 
   }
 };
 
-template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
-class ConversionTraits<eigen_impl::AngleAxis<DestPrimType_, Usage_>, eigen_impl::EulerAnglesXyz<SourcePrimType_, Usage_>> {
+template<typename DestPrimType_, typename SourcePrimType_>
+class ConversionTraits<AngleAxis<DestPrimType_>, EulerAnglesXyz<SourcePrimType_>> {
  public:
-  inline static eigen_impl::AngleAxis<DestPrimType_, Usage_> convert(const eigen_impl::EulerAnglesXyz<SourcePrimType_, Usage_>& xyz) {
-    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::eigen_internal::getAngleAxisFromRpy<SourcePrimType_, DestPrimType_>(xyz.toImplementation()));
+  inline static AngleAxis<DestPrimType_> convert(const EulerAnglesXyz<SourcePrimType_>& xyz) {
+    return AngleAxis<DestPrimType_>(internal::getAngleAxisFromRpy<SourcePrimType_, DestPrimType_>(xyz.toImplementation()));
   }
 };
 
-template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
-class ConversionTraits<eigen_impl::AngleAxis<DestPrimType_, Usage_>, eigen_impl::EulerAnglesZyx<SourcePrimType_, Usage_>> {
+template<typename DestPrimType_, typename SourcePrimType_>
+class ConversionTraits<AngleAxis<DestPrimType_>, EulerAnglesZyx<SourcePrimType_>> {
  public:
-  inline static eigen_impl::AngleAxis<DestPrimType_, Usage_> convert(const eigen_impl::EulerAnglesZyx<SourcePrimType_, Usage_>& zyx) {
-    return eigen_impl::AngleAxis<DestPrimType_, Usage_>(eigen_impl::eigen_internal::getAngleAxisFromYpr<SourcePrimType_, DestPrimType_>(zyx.toImplementation()));
+  inline static AngleAxis<DestPrimType_> convert(const EulerAnglesZyx<SourcePrimType_>& zyx) {
+    return AngleAxis<DestPrimType_>(internal::getAngleAxisFromYpr<SourcePrimType_, DestPrimType_>(zyx.toImplementation()));
   }
 };
 
@@ -440,10 +423,10 @@ class ConversionTraits<eigen_impl::AngleAxis<DestPrimType_, Usage_>, eigen_impl:
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * Comparison Traits
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-template<typename PrimType_, enum RotationUsage Usage_>
-class ComparisonTraits<eigen_impl::AngleAxis<PrimType_, Usage_>, eigen_impl::AngleAxis<PrimType_, Usage_>> {
+template<typename PrimType_>
+class ComparisonTraits<AngleAxis<PrimType_>, AngleAxis<PrimType_>> {
  public:
-  inline static bool isEqual(const eigen_impl::AngleAxis<PrimType_, Usage_>& a, const eigen_impl::AngleAxis<PrimType_, Usage_>& b){
+  inline static bool isEqual(const AngleAxis<PrimType_>& a, const AngleAxis<PrimType_>& b){
     const double tolPercent = 0.01;
     return common::eigen::compareRelative(a.angle(), b.angle(), tolPercent) &&
         common::eigen::compareRelative(a.axis().x(), b.axis().x(), tolPercent) &&
@@ -455,17 +438,14 @@ class ComparisonTraits<eigen_impl::AngleAxis<PrimType_, Usage_>, eigen_impl::Ang
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * Fixing Traits
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-template<typename PrimType_, enum RotationUsage Usage_>
-class FixingTraits<eigen_impl::AngleAxis<PrimType_, Usage_>> {
+template<typename PrimType_>
+class FixingTraits<AngleAxis<PrimType_>> {
  public:
-  inline static void fix(eigen_impl::AngleAxis<PrimType_, Usage_>& aa) {
+  inline static void fix(AngleAxis<PrimType_>& aa) {
     aa.setAxis(aa.axis().normalized());
   }
 };
 
 } // namespace internal
-} // namespace rotations
 } // namespace kindr
 
-
-#endif /* KINDR_ROTATIONS_EIGEN_ANGLEAXIS_HPP_ */

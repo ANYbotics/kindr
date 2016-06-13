@@ -30,7 +30,7 @@
 #include "kindr/quaternions/QuaternionEigen.hpp"
 #include "kindr/rotations/RotationEigen.hpp"
 
-namespace rot = kindr::rotations::eigen_impl;
+namespace rot = kindr;
 namespace quat = kindr::quaternions::eigen_impl;
 
 using namespace kindr::common::test;
@@ -92,9 +92,7 @@ struct RotationQuaternionPairTest : public ::testing::Test{
 
 typedef ::testing::Types<
     rot::RotationQuaternionPD,
-    rot::RotationQuaternionPF,
-    rot::RotationQuaternionAD,
-    rot::RotationQuaternionAF
+    rot::RotationQuaternionPF
 > RotationQuaternionTypes;
 
 typedef ::testing::Types<
@@ -102,20 +100,14 @@ typedef ::testing::Types<
     rot::RotationQuaternionPF
 > RotationQuaternionPassiveTypes;
 
-typedef ::testing::Types<
-    rot::RotationQuaternionAD,
-    rot::RotationQuaternionAF
-> RotationQuaternionActiveTypes;
 
 typedef ::testing::Types<
-    std::pair<rot::RotationQuaternionPF, rot::RotationQuaternionPD>,
-    std::pair<rot::RotationQuaternionAF, rot::RotationQuaternionAD>
+    std::pair<rot::RotationQuaternionPF, rot::RotationQuaternionPD>
 > TypeQuaternionPairs;
 
 
 TYPED_TEST_CASE(RotationQuaternionSingleTest, RotationQuaternionTypes);
 TYPED_TEST_CASE(RotationQuaternionSinglePassiveTest, RotationQuaternionPassiveTypes);
-TYPED_TEST_CASE(RotationQuaternionSingleActiveTest, RotationQuaternionActiveTypes);
 TYPED_TEST_CASE(RotationQuaternionPairTest, TypeQuaternionPairs);
 
 
@@ -565,49 +557,31 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionConcatenation){
 
   // Check concatenation of 3 different quarters
   rotQuat = this->rotQuatQuarterX.inverted()*this->rotQuatQuarterY*this->rotQuatQuarterX;
-  if(RotationQuaternion::Usage == kindr::rotations::RotationUsage::ACTIVE){
-    rotQuat.invert();
-  }
   ASSERT_NEAR(rotQuat.getUnique().w(), this->rotQuatQuarterZ.getUnique().w(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().x(), this->rotQuatQuarterZ.getUnique().x(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().y(), this->rotQuatQuarterZ.getUnique().y(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().z(), this->rotQuatQuarterZ.getUnique().z(),1e-6);
   rotQuat = this->rotQuatQuarterX.inverted()*this->rotQuatQuarterZ*this->rotQuatQuarterX;
-  if(RotationQuaternion::Usage == kindr::rotations::RotationUsage::ACTIVE){
-    rotQuat.invert();
-  }
   ASSERT_NEAR(rotQuat.getUnique().w(), this->rotQuatQuarterY.inverted().getUnique().w(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().x(), this->rotQuatQuarterY.inverted().getUnique().x(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().y(), this->rotQuatQuarterY.inverted().getUnique().y(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().z(), this->rotQuatQuarterY.inverted().getUnique().z(),1e-6);
   rotQuat = this->rotQuatQuarterY.inverted()*this->rotQuatQuarterX*this->rotQuatQuarterY;
-  if(RotationQuaternion::Usage == kindr::rotations::RotationUsage::ACTIVE){
-    rotQuat.invert();
-  }
   ASSERT_NEAR(rotQuat.getUnique().w(), this->rotQuatQuarterZ.inverted().getUnique().w(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().x(), this->rotQuatQuarterZ.inverted().getUnique().x(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().y(), this->rotQuatQuarterZ.inverted().getUnique().y(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().z(), this->rotQuatQuarterZ.inverted().getUnique().z(),1e-6);
   rotQuat = this->rotQuatQuarterY.inverted()*this->rotQuatQuarterZ*this->rotQuatQuarterY;
-  if(RotationQuaternion::Usage == kindr::rotations::RotationUsage::ACTIVE){
-    rotQuat.invert();
-  }
   ASSERT_NEAR(rotQuat.getUnique().w(), this->rotQuatQuarterX.getUnique().w(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().x(), this->rotQuatQuarterX.getUnique().x(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().y(), this->rotQuatQuarterX.getUnique().y(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().z(), this->rotQuatQuarterX.getUnique().z(),1e-6);
   rotQuat = this->rotQuatQuarterZ.inverted()*this->rotQuatQuarterX*this->rotQuatQuarterZ;
-  if(RotationQuaternion::Usage == kindr::rotations::RotationUsage::ACTIVE){
-    rotQuat.invert();
-  }
   ASSERT_NEAR(rotQuat.getUnique().w(), this->rotQuatQuarterY.getUnique().w(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().x(), this->rotQuatQuarterY.getUnique().x(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().y(), this->rotQuatQuarterY.getUnique().y(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().z(), this->rotQuatQuarterY.getUnique().z(),1e-6);
   rotQuat = this->rotQuatQuarterZ.inverted()*this->rotQuatQuarterY*this->rotQuatQuarterZ;
-  if(RotationQuaternion::Usage == kindr::rotations::RotationUsage::ACTIVE){
-    rotQuat.invert();
-  }
   ASSERT_NEAR(rotQuat.getUnique().w(), this->rotQuatQuarterX.inverted().getUnique().w(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().x(), this->rotQuatQuarterX.inverted().getUnique().x(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().y(), this->rotQuatQuarterX.inverted().getUnique().y(),1e-6);
@@ -668,7 +642,7 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionVectorRotation){
   Vector testVec1;
   Vector testVec2;
 
-  int signSwitch = 2*(RotationQuaternion::Usage == kindr::rotations::RotationUsage::ACTIVE)-1;
+  int signSwitch = -1;
 
   // Check rotation of base vectors around main axis
   testVec = this->rotQuatQuarterX.rotate(this->vecX);
@@ -774,58 +748,6 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionVectorRotation){
   // Check combination between concatenation and rotate
   testVec1 = this->rotQuat2.rotate(this->rotQuat1.rotate(this->vec));
   testVec2 = (this->rotQuat2*this->rotQuat1).rotate(this->vec);
-  ASSERT_NEAR(testVec1(0), testVec2(0),1e-6);
-  ASSERT_NEAR(testVec1(1), testVec2(1),1e-6);
-  ASSERT_NEAR(testVec1(2), testVec2(2),1e-6);
-}
-
-// Test Rotation Quaternion getActive
-TYPED_TEST(RotationQuaternionSinglePassiveTest, testRotationQuaternionGetActive){
-  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
-  typedef typename TestFixture::Scalar Scalar;
-  typedef typename TestFixture::Vector Vector;
-  RotationQuaternion rotQuat;
-  Vector testVec1;
-  Vector testVec2;
-
-  // Get passive and active usage
-  rotQuat = this->rotQuat1;
-  typename rot::RotationQuaternion<Scalar, kindr::rotations::RotationUsage::ACTIVE> rotQuatActive;
-  rotQuatActive = rotQuat.getActive();
-  ASSERT_NEAR(rotQuatActive.w(), this->rotQuat1.w(),1e-6);
-  ASSERT_NEAR(rotQuatActive.x(), -this->rotQuat1.x(),1e-6);
-  ASSERT_NEAR(rotQuatActive.y(), -this->rotQuat1.y(),1e-6);
-  ASSERT_NEAR(rotQuatActive.z(), -this->rotQuat1.z(),1e-6);
-
-  // Check effect on vector
-  testVec1 = rotQuat.rotate(this->vec);
-  testVec2 = rotQuatActive.inverted().rotate(this->vec);
-  ASSERT_NEAR(testVec1(0), testVec2(0),1e-6);
-  ASSERT_NEAR(testVec1(1), testVec2(1),1e-6);
-  ASSERT_NEAR(testVec1(2), testVec2(2),1e-6);
-}
-
-// Test Rotation Quaternion getPassive
-TYPED_TEST(RotationQuaternionSingleActiveTest, testRotationQuaternionGetPassive){
-  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
-  typedef typename TestFixture::Scalar Scalar;
-  typedef typename TestFixture::Vector Vector;
-  RotationQuaternion rotQuat;
-  Vector testVec1;
-  Vector testVec2;
-
-  // Get passive and active usage
-  rotQuat = this->rotQuat1;
-  typename rot::RotationQuaternion<Scalar, kindr::rotations::RotationUsage::PASSIVE> rotQuatPassive;
-  rotQuatPassive = rotQuat.getPassive();
-  ASSERT_NEAR(rotQuatPassive.w(), this->rotQuat1.w(),1e-6);
-  ASSERT_NEAR(rotQuatPassive.x(), -this->rotQuat1.x(),1e-6);
-  ASSERT_NEAR(rotQuatPassive.y(), -this->rotQuat1.y(),1e-6);
-  ASSERT_NEAR(rotQuatPassive.z(), -this->rotQuat1.z(),1e-6);
-
-  // Check effect on vector
-  testVec1 = rotQuat.rotate(this->vec);
-  testVec2 = rotQuatPassive.inverted().rotate(this->vec);
   ASSERT_NEAR(testVec1(0), testVec2(0),1e-6);
   ASSERT_NEAR(testVec1(1), testVec2(1),1e-6);
   ASSERT_NEAR(testVec1(2), testVec2(2),1e-6);

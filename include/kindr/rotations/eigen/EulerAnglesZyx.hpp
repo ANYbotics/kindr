@@ -26,8 +26,7 @@
  *
 */
 
-#ifndef KINDR_ROTATIONS_EIGEN_EULERANGLESZYX_HPP_
-#define KINDR_ROTATIONS_EIGEN_EULERANGLESZYX_HPP_
+#pragma once
 
 #include <cmath>
 
@@ -40,18 +39,15 @@
 
 
 namespace kindr {
-namespace rotations {
-namespace eigen_impl {
-
 
 /*! \class EulerAnglesZyx
  *  \brief Implementation of Euler angles (Z-Y'-X'' / yaw-pitch-roll) rotation based on Eigen::Matrix<Scalar, 3, 1>
  *
  *  The following typedefs are provided for convenience:
- *   - \ref eigen_impl::EulerAnglesZyxAD "EulerAnglesZyxAD" for active rotation and double primitive type
- *   - \ref eigen_impl::EulerAnglesZyxAF "EulerAnglesZyxAF" for active rotation and float primitive type
- *   - \ref eigen_impl::EulerAnglesZyxPD "EulerAnglesZyxPD" for passive rotation and double primitive type
- *   - \ref eigen_impl::EulerAnglesZyxPF "EulerAnglesZyxPF" for passive rotation and float primitive type
+ *   - \ref EulerAnglesZyxAD "EulerAnglesZyxAD" for active rotation and double primitive type
+ *   - \ref EulerAnglesZyxAF "EulerAnglesZyxAF" for active rotation and float primitive type
+ *   - \ref EulerAnglesZyxPD "EulerAnglesZyxPD" for passive rotation and double primitive type
+ *   - \ref EulerAnglesZyxPF "EulerAnglesZyxPF" for passive rotation and float primitive type
  *   - EulerAnglesYprAD = EulerAnglesZyxAD
  *   - EulerAnglesYprAF = EulerAnglesZyxAF
  *   - EulerAnglesYprPD = EulerAnglesZyxPD
@@ -61,8 +57,8 @@ namespace eigen_impl {
  *  \tparam Usage_ the rotation usage which is either active or passive
  *  \ingroup rotations
  */
-template<typename PrimType_, enum RotationUsage Usage_>
-class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage_>, Usage_> {
+template<typename PrimType_>
+class EulerAnglesZyx : public RotationBase<EulerAnglesZyx<PrimType_>> {
  private:
   /*! \brief The base type.
    */
@@ -111,7 +107,7 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
    *  \param other   other rotation
    */
   template<typename OtherDerived_>
-  inline explicit EulerAnglesZyx(const RotationBase<OtherDerived_, Usage_>& other)
+  inline explicit EulerAnglesZyx(const RotationBase<OtherDerived_>& other)
     : zyx_(internal::ConversionTraits<EulerAnglesZyx, OtherDerived_>::convert(other.derived()).toImplementation()) {
   }
 
@@ -120,7 +116,7 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
    *  \returns referece
    */
   template<typename OtherDerived_>
-  EulerAnglesZyx& operator =(const RotationBase<OtherDerived_, Usage_>& other) {
+  EulerAnglesZyx& operator =(const RotationBase<OtherDerived_>& other) {
     this->toImplementation() = internal::ConversionTraits<EulerAnglesZyx, OtherDerived_>::convert(other.derived()).toImplementation();
     return *this;
   }
@@ -131,7 +127,7 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
    *  \returns reference
    */
   template<typename OtherDerived_>
-  EulerAnglesZyx& operator ()(const RotationBase<OtherDerived_, Usage_>& other) {
+  EulerAnglesZyx& operator ()(const RotationBase<OtherDerived_>& other) {
     this->toImplementation() = internal::ConversionTraits<EulerAnglesZyx, OtherDerived_>::convert(other.derived()).toImplementation();
     return *this;
   }
@@ -140,7 +136,7 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
    *  \returns the inverse of the rotation
    */
   EulerAnglesZyx inverted() const {
-    return EulerAnglesZyx(eigen_internal::getInverseYpr<PrimType_, PrimType_>(this->toImplementation()));
+    return EulerAnglesZyx(internal::getInverseYpr<PrimType_, PrimType_>(this->toImplementation()));
   }
 
   /*! \brief Inverts the rotation.
@@ -336,13 +332,13 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
    *  This is explicitly specified, because Eigen::Matrix provides also an operator*.
    *  \returns the concenation of two rotations
    */
-  using EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage_>, Usage_>::operator*;
+  using RotationBase<EulerAnglesZyx<PrimType_>>::operator*;
 
   /*! \brief Equivalence operator.
    *  This is explicitly specified, because Eigen::Matrix provides also an operator==.
    *  \returns true if two rotations are similar.
    */
-  using EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage_>, Usage_>::operator==;
+  using RotationBase<EulerAnglesZyx<PrimType_>>::operator==;
 
   /*! \brief Used for printing the object with std::cout.
    *  \returns std::stream object
@@ -354,40 +350,39 @@ class EulerAnglesZyx : public EulerAnglesZyxBase<EulerAnglesZyx<PrimType_, Usage
 };
 
 //! \brief Active Euler angles rotation (Z,Y',X'' / yaw,pitch,roll) with double primitive type
-typedef EulerAnglesZyx<double, RotationUsage::ACTIVE>  EulerAnglesZyxAD;
+typedef EulerAnglesZyx<double>  EulerAnglesZyxD;
 //! \brief Active Euler angles rotation (Z,Y',X'' / yaw,pitch,roll) with float primitive type
-typedef EulerAnglesZyx<float,  RotationUsage::ACTIVE>  EulerAnglesZyxAF;
+typedef EulerAnglesZyx<float>  EulerAnglesZyxF;
 //! \brief Passive Euler angles rotation (Z,Y',X'' / yaw,pitch,roll) with double primitive type
-typedef EulerAnglesZyx<double, RotationUsage::PASSIVE> EulerAnglesZyxPD;
+typedef EulerAnglesZyx<double> EulerAnglesZyxPD;
 //! \brief Passive Euler angles rotation (Z,Y',X'' / yaw,pitch,roll) with float primitive type
-typedef EulerAnglesZyx<float,  RotationUsage::PASSIVE> EulerAnglesZyxPF;
+typedef EulerAnglesZyx<float> EulerAnglesZyxPF;
 
 //! \brief Equivalent Euler angles rotation (Z,Y',X'' / yaw,pitch,roll) class
-template <typename PrimType_, enum RotationUsage Usage_>
-using EulerAnglesYpr = EulerAnglesZyx<PrimType_, Usage_>;
+template <typename PrimType_>
+using EulerAnglesYpr = EulerAnglesZyx<PrimType_>;
 
 //! \brief Active Euler angles rotation (Z,Y',X'' / yaw,pitch,roll) with double primitive type
-typedef EulerAnglesYpr<double, RotationUsage::ACTIVE>  EulerAnglesYprAD;
+typedef EulerAnglesYpr<double>  EulerAnglesYprD;
 //! \brief Active Euler angles rotation (Z,Y',X'' / yaw,pitch,roll) with float primitive type
-typedef EulerAnglesYpr<float,  RotationUsage::ACTIVE>  EulerAnglesYprAF;
+typedef EulerAnglesYpr<float>  EulerAnglesYprF;
 //! \brief Passive Euler angles rotation (Z,Y',X'' / yaw,pitch,roll) with double primitive type
-typedef EulerAnglesYpr<double, RotationUsage::PASSIVE> EulerAnglesYprPD;
+typedef EulerAnglesYpr<double> EulerAnglesYprPD;
 //! \brief Passive Euler angles rotation (Z,Y',X'' / yaw,pitch,roll) with float primitive type
-typedef EulerAnglesYpr<float,  RotationUsage::PASSIVE> EulerAnglesYprPF;
+typedef EulerAnglesYpr<float> EulerAnglesYprPF;
 
-} // namespace eigen_impl
 
 
 namespace internal {
 
-template<typename PrimType_, enum RotationUsage Usage_>
-class get_scalar<eigen_impl::EulerAnglesZyx<PrimType_, Usage_>> {
+template<typename PrimType_>
+class get_scalar<EulerAnglesZyx<PrimType_>> {
  public:
   typedef PrimType_ Scalar;
 };
 
-template<typename PrimType_, enum RotationUsage Usage_>
-class get_matrix3X<eigen_impl::EulerAnglesZyx<PrimType_, Usage_>>{
+template<typename PrimType_>
+class get_matrix3X<EulerAnglesZyx<PrimType_>>{
  public:
   typedef int  IndexType;
 
@@ -395,67 +390,56 @@ class get_matrix3X<eigen_impl::EulerAnglesZyx<PrimType_, Usage_>>{
   using Matrix3X = Eigen::Matrix<PrimType_, 3, Cols>;
 };
 
-template<typename PrimType_>
-class get_other_usage<eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE>> {
- public:
-  typedef eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE> OtherUsage;
-};
-
-template<typename PrimType_>
-class get_other_usage<eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE>> {
- public:
-  typedef eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE> OtherUsage;
-};
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * Conversion Traits
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
-class ConversionTraits<eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_>, eigen_impl::AngleAxis<SourcePrimType_, Usage_>> {
+template<typename DestPrimType_, typename SourcePrimType_>
+class ConversionTraits<EulerAnglesZyx<DestPrimType_>, AngleAxis<SourcePrimType_>> {
  public:
-  inline static eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_> convert(const eigen_impl::AngleAxis<SourcePrimType_, Usage_>& aa) {
-//    return eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_>(eigen_impl::getYprFromAngleAxis<SourcePrimType_, DestPrimType_>(aa.toImplementation()));
-    return eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_>(eigen_impl::RotationQuaternion<DestPrimType_, Usage_>(aa));
+  inline static EulerAnglesZyx<DestPrimType_> convert(const AngleAxis<SourcePrimType_>& aa) {
+//    return EulerAnglesZyx<DestPrimType_>(getYprFromAngleAxis<SourcePrimType_, DestPrimType_>(aa.toImplementation()));
+    return EulerAnglesZyx<DestPrimType_>(RotationQuaternion<DestPrimType_>(aa));
   }
 };
 
-template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
-class ConversionTraits<eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_>, eigen_impl::RotationVector<SourcePrimType_, Usage_>> {
+template<typename DestPrimType_, typename SourcePrimType_>
+class ConversionTraits<EulerAnglesZyx<DestPrimType_>, RotationVector<SourcePrimType_>> {
  public:
-  inline static eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_> convert(const eigen_impl::RotationVector<SourcePrimType_, Usage_>& rotationVector) {
-    return eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_>(eigen_impl::AngleAxis<SourcePrimType_, Usage_>(rotationVector));
+  inline static EulerAnglesZyx<DestPrimType_> convert(const RotationVector<SourcePrimType_>& rotationVector) {
+    return EulerAnglesZyx<DestPrimType_>(AngleAxis<SourcePrimType_>(rotationVector));
   }
 };
 
-template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
-class ConversionTraits<eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_>, eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>> {
+template<typename DestPrimType_, typename SourcePrimType_>
+class ConversionTraits<EulerAnglesZyx<DestPrimType_>, RotationQuaternion<SourcePrimType_>> {
  public:
-  inline static eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_> convert(const eigen_impl::RotationQuaternion<SourcePrimType_, Usage_>& q) {
-    return eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_>(eigen_impl::eigen_internal::getYprFromQuaternion<SourcePrimType_, DestPrimType_>(q.toImplementation()));
+  inline static EulerAnglesZyx<DestPrimType_> convert(const RotationQuaternion<SourcePrimType_>& q) {
+    return EulerAnglesZyx<DestPrimType_>(internal::getYprFromQuaternion<SourcePrimType_, DestPrimType_>(q.toImplementation()));
   }
 };
 
-template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
-class ConversionTraits<eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_>, eigen_impl::RotationMatrix<SourcePrimType_, Usage_>> {
+template<typename DestPrimType_, typename SourcePrimType_>
+class ConversionTraits<EulerAnglesZyx<DestPrimType_>, RotationMatrix<SourcePrimType_>> {
  public:
-  inline static eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_> convert(const eigen_impl::RotationMatrix<SourcePrimType_, Usage_>& R) {
-    return eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_>(eigen_impl::eigen_internal::getYprFromRotationMatrix<SourcePrimType_, DestPrimType_>(R.toImplementation().transpose()));
+  inline static EulerAnglesZyx<DestPrimType_> convert(const RotationMatrix<SourcePrimType_>& R) {
+    return EulerAnglesZyx<DestPrimType_>(internal::getYprFromRotationMatrix<SourcePrimType_, DestPrimType_>(R.toImplementation().transpose()));
   }
 };
 
-template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
-class ConversionTraits<eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_>, eigen_impl::EulerAnglesXyz<SourcePrimType_, Usage_>> {
+template<typename DestPrimType_, typename SourcePrimType_>
+class ConversionTraits<EulerAnglesZyx<DestPrimType_>, EulerAnglesXyz<SourcePrimType_>> {
  public:
-  inline static eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_> convert(const eigen_impl::EulerAnglesXyz<SourcePrimType_, Usage_>& xyz) {
-    return eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_>(eigen_impl::eigen_internal::getYprFromRpy<SourcePrimType_, DestPrimType_>(xyz.toImplementation()));
+  inline static EulerAnglesZyx<DestPrimType_> convert(const EulerAnglesXyz<SourcePrimType_>& xyz) {
+    return EulerAnglesZyx<DestPrimType_>(internal::getYprFromRpy<SourcePrimType_, DestPrimType_>(xyz.toImplementation()));
   }
 };
 
-template<typename DestPrimType_, typename SourcePrimType_, enum RotationUsage Usage_>
-class ConversionTraits<eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_>, eigen_impl::EulerAnglesZyx<SourcePrimType_, Usage_>> {
+template<typename DestPrimType_, typename SourcePrimType_>
+class ConversionTraits<EulerAnglesZyx<DestPrimType_>, EulerAnglesZyx<SourcePrimType_>> {
  public:
-  inline static eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_> convert(const eigen_impl::EulerAnglesZyx<SourcePrimType_, Usage_>& zyx) {
-    return eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_>(zyx.toImplementation().template cast<DestPrimType_>());
+  inline static EulerAnglesZyx<DestPrimType_> convert(const EulerAnglesZyx<SourcePrimType_>& zyx) {
+    return EulerAnglesZyx<DestPrimType_>(zyx.toImplementation().template cast<DestPrimType_>());
   }
 };
 
@@ -463,32 +447,32 @@ class ConversionTraits<eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_>, eigen_
  * Multiplication Traits
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 //template<typename PrimType_>
-//class MultiplicationTraits<RotationBase<eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE>, RotationUsage::ACTIVE>, RotationBase<eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE>, RotationUsage::ACTIVE>> {
+//class MultiplicationTraits<RotationBase<EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE>, RotationUsage::ACTIVE>, RotationBase<EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE>, RotationUsage::ACTIVE>> {
 // public:
-//  inline static eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE> mult(const eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE>& a, const eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE>& b) {
-//    return eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE>(eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>(
-//                                                                 eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>(a).toImplementation()*
-//                                                                 eigen_impl::RotationQuaternion<PrimType_, RotationUsage::ACTIVE>(b).toImplementation()));
+//  inline static EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE> mult(const EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE>& a, const EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE>& b) {
+//    return EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE>(RotationQuaternion<PrimType_, RotationUsage::ACTIVE>(
+//                                                                 RotationQuaternion<PrimType_, RotationUsage::ACTIVE>(a).toImplementation()*
+//                                                                 RotationQuaternion<PrimType_, RotationUsage::ACTIVE>(b).toImplementation()));
 //  }
 //};
 //
 //template<typename PrimType_>
-//class MultiplicationTraits<RotationBase<eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE>, RotationUsage::PASSIVE>, RotationBase<eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE>, RotationUsage::PASSIVE>> {
+//class MultiplicationTraits<RotationBase<EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE>, RotationUsage::PASSIVE>, RotationBase<EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE>, RotationUsage::PASSIVE>> {
 // public:
-//  inline static eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE> mult(const eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE>& a, const eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE>& b) {
-//    return eigen_impl::EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE>(eigen_impl::RotationQuaternion<PrimType_, RotationUsage::PASSIVE>(
-//                                                                 eigen_impl::RotationQuaternion<PrimType_, RotationUsage::PASSIVE>(a).toImplementation()*
-//                                                                 eigen_impl::RotationQuaternion<PrimType_, RotationUsage::PASSIVE>(b).toImplementation()));
+//  inline static EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE> mult(const EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE>& a, const EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE>& b) {
+//    return EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE>(RotationQuaternion<PrimType_, RotationUsage::PASSIVE>(
+//                                                                 RotationQuaternion<PrimType_, RotationUsage::PASSIVE>(a).toImplementation()*
+//                                                                 RotationQuaternion<PrimType_, RotationUsage::PASSIVE>(b).toImplementation()));
 //  }
 //};
 
-//template<typename PrimType_, enum RotationUsage Usage_>
-//class MultiplicationTraits<RotationBase<eigen_impl::EulerAnglesZyx<PrimType_, Usage_>, Usage_>, RotationBase<eigen_impl::EulerAnglesZyx<PrimType_, Usage_>, Usage_>> {
+//template<typename PrimType_>
+//class MultiplicationTraits<RotationBase<EulerAnglesZyx<PrimType_>>, RotationBase<EulerAnglesZyx<PrimType_>>> {
 // public:
-//  inline static eigen_impl::EulerAnglesZyx<PrimType_, Usage_> mult(const eigen_impl::EulerAnglesZyx<PrimType_, Usage_>& a, const eigen_impl::EulerAnglesZyx<PrimType_, Usage_>& b) {
-//    return eigen_impl::EulerAnglesZyx<PrimType_, Usage_>(eigen_impl::RotationQuaternion<PrimType_, Usage_>(
-//                                                                 eigen_impl::RotationQuaternion<PrimType_, Usage_>(a).toImplementation()*
-//                                                                 eigen_impl::RotationQuaternion<PrimType_, Usage_>(b).toImplementation()));
+//  inline static EulerAnglesZyx<PrimType_> mult(const EulerAnglesZyx<PrimType_>& a, const EulerAnglesZyx<PrimType_>& b) {
+//    return EulerAnglesZyx<PrimType_>(RotationQuaternion<PrimType_>(
+//                                                                 RotationQuaternion<PrimType_>(a).toImplementation()*
+//                                                                 RotationQuaternion<PrimType_>(b).toImplementation()));
 //  }
 //};
 
@@ -505,8 +489,6 @@ class ConversionTraits<eigen_impl::EulerAnglesZyx<DestPrimType_, Usage_>, eigen_
 
 
 } // namespace internal
-} // namespace rotations
 } // namespace kindr
 
 
-#endif /* KINDR_ROTATIONS_EIGEN_EULERANGLESZYX_HPP_ */

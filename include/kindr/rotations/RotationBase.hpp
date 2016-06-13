@@ -26,8 +26,7 @@
  *
 */
 
-#ifndef KINDR_ROTATIONS_ROTATION_BASE_HPP_
-#define KINDR_ROTATIONS_ROTATION_BASE_HPP_
+#pragma once
 
 #include "kindr/common/common.hpp"
 #include "kindr/quaternions/QuaternionBase.hpp"
@@ -38,15 +37,7 @@ namespace kindr {
 //! Generic rotation interface
 /*! \ingroup rotations
  */
-namespace rotations {
 
-/*! \brief This enum class determines the usage type for each rotation
- *  \class RotationUsage
- */
-enum class RotationUsage {
-  ACTIVE,
-  PASSIVE
-};
 
 //! Internal stuff (only for developers)
 namespace internal {
@@ -79,17 +70,6 @@ class get_matrix3X {
 //  template <IndexType Cols> Matrix3X {
 //    typedef MATRIX type;
 //  }
-};
-
-/*! \brief Usage conversion traits for converting active and passive rotations into each other
- *  \class UsageConversionTraits
- *  (only for advanced users)
- */
-template<typename Derived_, enum RotationUsage Usage_>
-class UsageConversionTraits {
- public:
-//  inline static typename get_other_usage<Derived_>::OtherUsage getActive(const RotationBase<Derived_,RotationUsage::PASSIVE>& in);
-//  inline static typename get_other_usage<Derived_>::OtherUsage getPassive(const RotationBase<Derived_,RotationUsage::ACTIVE>& in);
 };
 
 
@@ -193,13 +173,9 @@ class FixingTraits {
  *  \tparam Derived_ the derived class that should implement the rotation
  *  \tparam Usage_ the rotation usage which is either active or passive
  */
-template<typename Derived_, enum RotationUsage Usage_>
+template<typename Derived_>
 class RotationBase {
  public:
-  /*! \brief Rotation usage.
-   *  The rotation usage is either active (rotation of an object) or passive (transformation of its coordinates)
-   */
-  static constexpr enum RotationUsage Usage = Usage_;
 
   /*! \brief Standard constructor.
    *  Creates an empty generic rotation object
@@ -269,33 +245,19 @@ class RotationBase {
    */
   Derived_& setUnique();
 
-  /*! \brief Gets passive from active rotation.
-   *  \returns the passive rotation
-   */
-  inline typename internal::get_other_usage<Derived_>::OtherUsage getPassive() const {
-    return internal::UsageConversionTraits<Derived_,Usage_>::getPassive(*this);
-  }
-
-  /*! \brief Gets active from passive rotation.
-   *  \returns the active rotation
-   */
-  inline typename internal::get_other_usage<Derived_>::OtherUsage getActive() const {
-    return internal::UsageConversionTraits<Derived_,Usage_>::getActive(*this);
-  }
-
   /*! \brief Concatenates two rotations.
    *  \returns the concatenation of two rotations
    */
   template<typename OtherDerived_>
-  Derived_ operator *(const RotationBase<OtherDerived_,Usage_>& other) const {
-    return internal::MultiplicationTraits<RotationBase<Derived_,Usage_>,RotationBase<OtherDerived_,Usage_>>::mult(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
+  Derived_ operator *(const RotationBase<OtherDerived_>& other) const {
+    return internal::MultiplicationTraits<RotationBase<Derived_>,RotationBase<OtherDerived_>>::mult(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
   }
 
   /*! \brief Compares two rotations.
    *  \returns true if the rotations are exactly equal
    */
   template<typename OtherDerived_>
-  bool operator ==(const RotationBase<OtherDerived_,Usage_>& other) const { // todo: may be optimized
+  bool operator ==(const RotationBase<OtherDerived_>& other) const { // todo: may be optimized
     return internal::ComparisonTraits<Derived_,OtherDerived_>::isEqual(this->derived().getUnique(), other.derived().getUnique()); // the type conversion must already take place here to ensure the specialised isequal function is called more often
   }
 
@@ -308,15 +270,15 @@ class RotationBase {
    *  \returns disparity angle
    */
   template<typename OtherDerived_>
-  typename internal::get_scalar<Derived_>::Scalar getDisparityAngle(const RotationBase<OtherDerived_,Usage_>& other) const {
-    return internal::ComparisonTraits<RotationBase<Derived_, Usage_>, RotationBase<OtherDerived_, Usage_>>::get_disparity_angle(this->derived(), other.derived());
+  typename internal::get_scalar<Derived_>::Scalar getDisparityAngle(const RotationBase<OtherDerived_>& other) const {
+    return internal::ComparisonTraits<RotationBase<Derived_>, RotationBase<OtherDerived_>>::get_disparity_angle(this->derived(), other.derived());
   }
 
   /*! \brief Compares two rotations with a tolerance.
    *  \returns true if the rotations are equal within the tolerance
    */
   template<typename OtherDerived_>
-  bool isNear(const RotationBase<OtherDerived_,Usage_>& other, typename internal::get_scalar<Derived_>::Scalar tol) const {
+  bool isNear(const RotationBase<OtherDerived_>& other, typename internal::get_scalar<Derived_>::Scalar tol) const {
     const typename internal::get_scalar<Derived_>::Scalar angle = this->getDisparityAngle(other);
     return (angle <= tol);
   }
@@ -326,7 +288,7 @@ class RotationBase {
    */
   template <typename internal::get_matrix3X<Derived_>::IndexType Cols>
   typename internal::get_matrix3X<Derived_>::template Matrix3X<Cols> rotate(const typename internal::get_matrix3X<Derived_>::template Matrix3X<Cols>& matrix) const {
-    return internal::RotationTraits<RotationBase<Derived_,Usage_>>::rotate(this->derived(), matrix);
+    return internal::RotationTraits<RotationBase<Derived_>>::rotate(this->derived(), matrix);
   }
 
 
@@ -335,7 +297,7 @@ class RotationBase {
    */
   template <typename internal::get_matrix3X<Derived_>::IndexType Cols>
   typename internal::get_matrix3X<Derived_>::template Matrix3X<Cols> inverseRotate(const typename internal::get_matrix3X<Derived_>::template Matrix3X<Cols>& matrix) const {
-    return internal::RotationTraits<RotationBase<Derived_,Usage_>>::rotate(this->derived().inverted(), matrix); // todo: may be optimized
+    return internal::RotationTraits<RotationBase<Derived_>>::rotate(this->derived().inverted(), matrix); // todo: may be optimized
   }
 
   /*! \brief Rotates a vector.
@@ -343,7 +305,7 @@ class RotationBase {
    */
   template <typename Vector_>
   Vector_ rotate(const Vector_& vector) const {
-    return internal::RotationTraits<RotationBase<Derived_,Usage_>>::rotate(this->derived(), vector);
+    return internal::RotationTraits<RotationBase<Derived_>>::rotate(this->derived(), vector);
   }
 
   /*! \brief Rotates a vector in reverse.
@@ -351,7 +313,7 @@ class RotationBase {
    */
   template <typename Vector_>
   Vector_ inverseRotate(const Vector_& vector) const {
-    return internal::RotationTraits<RotationBase<Derived_,Usage_>>::rotate(this->derived().inverted(), vector);
+    return internal::RotationTraits<RotationBase<Derived_>>::rotate(this->derived().inverted(), vector);
   }
 
   /*! \brief Sets the rotation using an exponential map @todo avoid altering the rotation
@@ -359,52 +321,37 @@ class RotationBase {
    * \return  reference to modified rotation
    */
   Derived_ exponentialMap(const typename internal::get_matrix3X<Derived_>::template Matrix3X<1>& vector)  {
-   return internal::MapTraits<RotationBase<Derived_,Usage_>>::set_exponential_map(vector);
+   return internal::MapTraits<RotationBase<Derived_>>::set_exponential_map(vector);
   }
 
   /*! \brief Gets the logarithmic map from the rotation
    * \returns vector  Eigen::Matrix<Scalar 3, 1>
    */
   typename internal::get_matrix3X<Derived_>::template Matrix3X<1> logarithmicMap() const {
-    return internal::MapTraits<RotationBase<Derived_,Usage_>>::get_logarithmic_map(this->derived());
+    return internal::MapTraits<RotationBase<Derived_>>::get_logarithmic_map(this->derived());
   }
 
   /*! \brief Applies the box minus operation
    * \returns vector  Eigen::Matrix<Scalar 3, 1>
    */
   template<typename OtherDerived_>
-  typename internal::get_matrix3X<Derived_>::template Matrix3X<1> boxMinus(const RotationBase<OtherDerived_,Usage_>& other) const {
-    return internal::BoxOperationTraits<RotationBase<Derived_,Usage_>, RotationBase<OtherDerived_,Usage_>>::box_minus(this->derived(), other.derived());
+  typename internal::get_matrix3X<Derived_>::template Matrix3X<1> boxMinus(const RotationBase<OtherDerived_>& other) const {
+    return internal::BoxOperationTraits<RotationBase<Derived_>, RotationBase<OtherDerived_>>::box_minus(this->derived(), other.derived());
   }
   /*! \brief Applies the box plus operation
    * \returns rotation
    */
   Derived_ boxPlus(const typename internal::get_matrix3X<Derived_>::template Matrix3X<1>& vector) const {
-    return internal::BoxOperationTraits<RotationBase<Derived_,Usage_>, RotationBase<Derived_,Usage_>>::box_plus(this->derived(), vector);
+    return internal::BoxOperationTraits<RotationBase<Derived_>, RotationBase<Derived_>>::box_plus(this->derived(), vector);
   }
 
 
-
-//  /*! \brief Rotates a position.
-//   *  \returns the rotated position
-//   */
-//  template <typename Position_>
-//  Position_ rotate(const Position_& position) const {
-//    return Position_(internal::RotationTraits<RotationBase<Derived_,Usage_>>::rotate(this->derived(), internal::get_position3<Position_>::get_matrix3(position)));
-//  }
-//  /*! \brief Rotates a position in reverse.
-//   *  \returns the reverse rotated position
-//   */
-//  template <typename Position_>
-//  Position_ inverseRotate(const Position_& position) const {
-//    return Position_(internal::RotationTraits<RotationBase<Derived_,Usage_>>::rotate(this->derived().inverted(), internal::get_position3<Position_>::get_matrix3(position)));
-//  }
 
   /*! \brief Sets the rotation from two vectors such that v2 = R(v1).
    */
   template <typename Vector_>
   void setFromVectors(const Vector_& v1, const Vector_& v2) {
-    internal::SetFromVectorsTraits<RotationBase<Derived_,Usage_>>::setFromVectors(this->derived(), v1, v2);
+    internal::SetFromVectorsTraits<RotationBase<Derived_>>::setFromVectors(this->derived(), v1, v2);
   }
 
   /*! \brief Fixes the rotation to get rid of numerical errors (e.g. normalize quaternion).
@@ -416,130 +363,4 @@ class RotationBase {
 
 
 
-/*! \brief Representation of a generic angle axis rotation
- *  \ingroup rotations
- *  \class AngleAxisBase
- *  This class defines the generic interface for an angle axis rotation.
- *  \tparam Implementation_ the derived class that should implement the rotation
- *  \tparam Usage_ the rotation usage which is either active or passive
- */
-template<typename Implementation_, enum RotationUsage Usage_>
-class AngleAxisBase : public RotationBase<Implementation_, Usage_> {
-
-};
-
-/*! \brief Representation of a generic rotation vector
- *  \ingroup rotations
- *  \class RotationVectorBase
- *
- *  This class defines the generic interface for a rotation vector, which has three paramters.
- *  \see AngleAxisBase for a representation with four parameters.
- *  \tparam Implementation_ the derived class that should implement the rotation
- *  \tparam Usage_ the rotation usage which is either active or passive
- */
-template<typename Implementation_, enum RotationUsage Usage_>
-class RotationVectorBase : public RotationBase<Implementation_, Usage_> {
-
-};
-
-/*! \brief Representation of a generic quaternion rotation
- *  \ingroup rotations
- *  \class RotationQuaternionBase
- *  This class defines the generic interface for a quaternion rotation.
- *  \tparam Implementation_ the derived class that should implement the rotation
- *  \tparam Usage_ the rotation usage which is either active or passive
- */
-template<typename Implementation_, enum RotationUsage Usage_>
-class RotationQuaternionBase : public RotationBase<Implementation_, Usage_> {
-
-};
-
-/*! \brief Representation of a generic matrix rotation
- *  \ingroup rotations
- *  \class RotationMatrixBase
- *  This class defines the generic interface for a matrix rotation.
- *  \tparam Implementation_ the derived class that should implement the rotation
- *  \tparam Usage_ the rotation usage which is either active or passive
- */
-template<typename Implementation_, enum RotationUsage Usage_>
-class RotationMatrixBase : public RotationBase<Implementation_, Usage_> {
-
-};
-
-/*! \class EulerAnglesBase
- *  \brief Representation of a generic Euler angles rotation
- *
- *  This class defines the generic interface for a Euler angles rotation.
- *  The implementation of a representation of a rotation based on Euler angles
- *  needs to define three angles and the axis-convention that can be
- *  x-y-z, y-z-x, z-x-y, x-z-y, z-y-x, y-x-z or
- *  z-x-z, x-y-x, y-z-y, z-y-z, x-z-x, y-x-y.
- *
- *  \tparam Implementation_ the derived class that should implement the rotation
- *  \tparam Usage_ the rotation usage which is either active or passive
- *  \ingroup rotations
- */
-template<typename Implementation_, enum RotationUsage Usage_>
-class EulerAnglesBase : public RotationBase<Implementation_, Usage_> {
-
-};
-
-/*! \class EulerAnglesXyzBase
- *  \brief Representation of a generic Euler angles x'-y''-z' rotation
- *
- *  This class defines the generic interface for a Euler angles (X,Y',Z'' / roll,pitch,yaw) rotation.
- *
- *  \tparam Implementation the derived class that should implement the rotation
- *  \tparam Usage_ the rotation usage which is either active or passive
- *  \ingroup rotations
- */
-template<typename Implementation_, enum RotationUsage Usage_>
-class EulerAnglesXyzBase : public EulerAnglesBase<Implementation_, Usage_> {
-
-};
-
-/*! \class EulerAnglesZyxBase
- *  \brief Representation of a generic Euler angles z-y'-x'' rotation
- *
- *  This class defines the generic interface for a Euler angles (Z-Y'-X'' / yaw-pitch-roll) rotation.
- *
- *  \tparam Implementation the derived class that should implement the rotation
- *  \tparam Usage_ the rotation usage which is either active or passive
- *  \ingroup rotations
- */
-template<typename Implementation_, enum RotationUsage Usage_>
-class EulerAnglesZyxBase : public EulerAnglesBase<Implementation_, Usage_> {
-
-};
-
-
-namespace internal {
-
-
-template<typename Derived_>
-class UsageConversionTraits<Derived_,RotationUsage::PASSIVE> {
- public:
-  inline static typename get_other_usage<Derived_>::OtherUsage getActive(const RotationBase<Derived_,RotationUsage::PASSIVE>& in) {
-    return typename get_other_usage<Derived_>::OtherUsage(in.derived().inverted().toImplementation());
-  }
-
-  // getPassive() does not exist (on purpose)
-};
-
-template<typename Derived_>
-class UsageConversionTraits<Derived_,RotationUsage::ACTIVE> {
- public:
-  inline static typename get_other_usage<Derived_>::OtherUsage getPassive(const RotationBase<Derived_,RotationUsage::ACTIVE>& in) {
-    return typename get_other_usage<Derived_>::OtherUsage(in.derived().inverted().toImplementation());
-  }
-
-  // getActive() does not exist (on purpose)
-};
-
-
-
-} // namespace internal
-} // namespace rotations
 } // namespace kindr
-
-#endif /* KINDR_ROTATIONS_ROTATION_BASE_HPP_ */

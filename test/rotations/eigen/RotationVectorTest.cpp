@@ -30,7 +30,7 @@
 #include "kindr/quaternions/QuaternionEigen.hpp"
 #include "kindr/rotations/RotationEigen.hpp"
 
-namespace rot = kindr::rotations::eigen_impl;
+namespace rot = kindr;
 namespace quat = kindr::quaternions::eigen_impl;
 
 using namespace kindr::common::test;
@@ -45,7 +45,7 @@ class RotationVectorSingleTest : public ::testing::Test{
   typedef Eigen::Matrix<Scalar,3,1> Vector;
 
   // Rotation Quaternion
-  typedef typename rot::RotationQuaternion<Scalar, Rotation_::Usage> RotationQuaternion;
+  typedef typename rot::RotationQuaternion<Scalar> RotationQuaternion;
 
   // Eigen::Matrix
   const Vector eigenVector3Identity = Vector(0.0,0.0,0.0);
@@ -115,15 +115,9 @@ struct RotationVectorPassiveTest : public RotationVectorRotationQuaternionPairTe
 
 typedef ::testing::Types<
     rot::RotationVectorPD,
-    rot::RotationVectorPF,
-    rot::RotationVectorAD,
-    rot::RotationVectorAF
+    rot::RotationVectorPF
 > RotationVectorTypes;
 
-typedef ::testing::Types<
-    std::pair<rot::RotationQuaternionAD, rot::RotationVectorAD>,
-    std::pair<rot::RotationQuaternionAF, rot::RotationVectorAF>
-> RotationVectorActiveTypes;
 
 typedef ::testing::Types<
     std::pair<rot::RotationQuaternionPD, rot::RotationVectorPD>,
@@ -136,16 +130,11 @@ typedef ::testing::Types<
     std::pair<rot::RotationQuaternionPF, rot::RotationVectorPF>,
     std::pair<rot::RotationQuaternionPF, rot::RotationVectorPD>,
     std::pair<rot::RotationQuaternionPD, rot::RotationVectorPF>,
-    std::pair<rot::RotationQuaternionPD, rot::RotationVectorPD>,
-    std::pair<rot::RotationQuaternionAF, rot::RotationVectorAF>,
-    std::pair<rot::RotationQuaternionAF, rot::RotationVectorAD>,
-    std::pair<rot::RotationQuaternionAD, rot::RotationVectorAF>,
-    std::pair<rot::RotationQuaternionAD, rot::RotationVectorAD>
+    std::pair<rot::RotationQuaternionPD, rot::RotationVectorPD>
 > TypeQuaternionRotationVectorPairs;
 
 TYPED_TEST_CASE(RotationVectorSingleTest, RotationVectorTypes);
 TYPED_TEST_CASE(RotationVectorRotationQuaternionPairTest, TypeQuaternionRotationVectorPairs);
-TYPED_TEST_CASE(RotationVectorActiveTest, RotationVectorActiveTypes);
 TYPED_TEST_CASE(RotationVectorPassiveTest, RotationVectorPassiveTypes);
 
 
@@ -371,39 +360,21 @@ TYPED_TEST(RotationVectorSingleTest, testConcatenation){
 
   // Check concatenation of 3 different quarters
   rotRotationVector = this->rotRotationVectorQuarterX.inverted()*this->rotRotationVectorQuarterY*this->rotRotationVectorQuarterX;
-  if(RotationVector::Usage == kindr::rotations::RotationUsage::ACTIVE){
-    rotRotationVector.invert();
-  }
   KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorQuarterZ.toImplementation(), rotRotationVector.toImplementation(), 1e-4, "concatenation");
 
   rotRotationVector = this->rotRotationVectorQuarterX.inverted()*this->rotRotationVectorQuarterZ*this->rotRotationVectorQuarterX;
-  if(RotationVector::Usage == kindr::rotations::RotationUsage::ACTIVE){
-    rotRotationVector.invert();
-  }
   KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorQuarterY.inverted().toImplementation(), rotRotationVector.toImplementation(), 1e-4, "concatenation");
 
-   rotRotationVector = this->rotRotationVectorQuarterY.inverted()*this->rotRotationVectorQuarterX*this->rotRotationVectorQuarterY;
-  if(RotationVector::Usage == kindr::rotations::RotationUsage::ACTIVE){
-    rotRotationVector.invert();
-  }
+  rotRotationVector = this->rotRotationVectorQuarterY.inverted()*this->rotRotationVectorQuarterX*this->rotRotationVectorQuarterY;
   KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorQuarterZ.inverted().toImplementation(), rotRotationVector.toImplementation(), 1e-4, "concatenation");
 
   rotRotationVector = this->rotRotationVectorQuarterY.inverted()*this->rotRotationVectorQuarterZ*this->rotRotationVectorQuarterY;
-  if(RotationVector::Usage == kindr::rotations::RotationUsage::ACTIVE){
-    rotRotationVector.invert();
-  }
   KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorQuarterX.toImplementation(), rotRotationVector.toImplementation(), 1e-4, "concatenation");
 
   rotRotationVector = this->rotRotationVectorQuarterZ.inverted()*this->rotRotationVectorQuarterX*this->rotRotationVectorQuarterZ;
-  if(RotationVector::Usage == kindr::rotations::RotationUsage::ACTIVE){
-    rotRotationVector.invert();
-  }
   KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorQuarterY.toImplementation(), rotRotationVector.toImplementation(), 1e-4, "concatenation");
 
   rotRotationVector = this->rotRotationVectorQuarterZ.inverted()*this->rotRotationVectorQuarterY*this->rotRotationVectorQuarterZ;
-  if(RotationVector::Usage == kindr::rotations::RotationUsage::ACTIVE){
-    rotRotationVector.invert();
-  }
   KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorQuarterX.inverted().toImplementation(), rotRotationVector.toImplementation(), 1e-4, "concatenation");
 
 }
@@ -436,7 +407,7 @@ TYPED_TEST(RotationVectorSingleTest, testVectorRotation){
   Vector testVec1;
   Vector testVec2;
 
-  int signSwitch = 2*(RotationVector::Usage == kindr::rotations::RotationUsage::ACTIVE)-1;
+  int signSwitch = -1;
 
   // Check rotation of base vectors around main axis
   testVec = this->rotRotationVectorQuarterX.rotate(this->vecX);
@@ -710,67 +681,3 @@ TYPED_TEST(RotationVectorRotationQuaternionPairTest, testInversion){
 }
 
 
-/* Test getPassive()
- *  Assumes getPassive() of RotationQuaternion is correct.
- *  Assumes conversion between RotationVector and RotationQuaternion is correct.
- *  Assumes isNear() of RotationQuaternion is correct.
- */
-TYPED_TEST(RotationVectorActiveTest, testGetPassive){
-  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
-  typedef typename TestFixture::RotationVector RotationVector;
-  typedef typename TestFixture::RotationQuaternionScalar RotationQuaternionScalar;
-  typedef typename TestFixture::RotationVectorScalar RotationVectorScalar;
-
-  rot::RotationVector<RotationVectorScalar, kindr::rotations::RotationUsage::PASSIVE> rotRotationVectorPassive;
-  rot::RotationQuaternion<RotationQuaternionScalar, kindr::rotations::RotationUsage::PASSIVE> rotQuatPassive;
-
-  rotRotationVectorPassive = this->rotRotationVectorIdentity.getPassive();
-  rotQuatPassive = this->rotQuatIdentity.getPassive();
-  ASSERT_EQ(true, rotQuatPassive.isNear(rotRotationVectorPassive,1e-6));
-
-  rotRotationVectorPassive = this->rotRotationVectorQuarterX.getPassive();
-  rotQuatPassive = this->rotQuatQuarterX.getPassive();
-  ASSERT_EQ(true, rotQuatPassive.isNear(rotRotationVectorPassive,1e-6));
-
-  rotRotationVectorPassive = this->rotRotationVectorQuarterY.getPassive();
-  rotQuatPassive = this->rotQuatQuarterY.getPassive();
-  ASSERT_EQ(true, rotQuatPassive.isNear(rotRotationVectorPassive,1e-6));
-
-  rotRotationVectorPassive = this->rotRotationVectorQuarterZ.getPassive();
-  rotQuatPassive = this->rotQuatQuarterZ.getPassive();
-  ASSERT_EQ(true, rotQuatPassive.isNear(rotRotationVectorPassive,1e-6));
-
-}
-
-
-/* Test getActive()
- *  Assumes getActive() of RotationQuaternion is correct.
- *  Assumes conversion between RotationVector and RotationQuaternion is correct.
- *  Assumes isNear() of RotationQuaternion is correct.
- */
-TYPED_TEST(RotationVectorPassiveTest, testGetActive){
-  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
-  typedef typename TestFixture::RotationVector RotationVector;
-  typedef typename TestFixture::RotationQuaternionScalar RotationQuaternionScalar;
-  typedef typename TestFixture::RotationVectorScalar RotationVectorScalar;
-
-  rot::RotationVector<RotationVectorScalar, kindr::rotations::RotationUsage::ACTIVE> rotRotationVectorActive;
-  rot::RotationQuaternion<RotationQuaternionScalar, kindr::rotations::RotationUsage::ACTIVE> rotQuatActive;
-
-  rotRotationVectorActive = this->rotRotationVectorIdentity.getActive();
-  rotQuatActive = this->rotQuatIdentity.getActive();
-  ASSERT_EQ(true, rotQuatActive.isNear(rotRotationVectorActive,1e-6)) << "angle: " << rotQuatActive.getDisparityAngle(rotRotationVectorActive);
-
-  rotRotationVectorActive = this->rotRotationVectorQuarterX.getActive();
-  rotQuatActive = this->rotQuatQuarterX.getActive();
-  ASSERT_EQ(true, rotQuatActive.isNear(rotRotationVectorActive,1e-6)) << "angle: " << rotQuatActive.getDisparityAngle(rotRotationVectorActive);
-
-  rotRotationVectorActive = this->rotRotationVectorQuarterY.getActive();
-  rotQuatActive = this->rotQuatQuarterY.getActive();
-  ASSERT_EQ(true, rotQuatActive.isNear(rotRotationVectorActive,1e-6)) << "angle: " << rotQuatActive.getDisparityAngle(rotRotationVectorActive);
-
-  rotRotationVectorActive = this->rotRotationVectorQuarterZ.getActive();
-  rotQuatActive = this->rotQuatQuarterZ.getActive();
-  ASSERT_EQ(true, rotQuatActive.isNear(rotRotationVectorActive,1e-6)) << "angle: " << rotQuatActive.getDisparityAngle(rotRotationVectorActive);
-
-}
