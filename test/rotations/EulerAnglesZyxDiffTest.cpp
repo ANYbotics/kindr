@@ -192,7 +192,9 @@ TYPED_TEST(EulerAnglesZyxDiffTest, testFiniteDifference)
       // Finite difference method for checking derivatives
 
       Rotation rotationNext = rotation.boxPlus(dt*angularVelocity.toImplementation());
-      Vector3 dn = (rotationNext.getUnique().toImplementation()-rotation.getUnique().toImplementation())/dt;
+      rotationNext.setUnique();
+      rotation.setUnique();
+      Vector3 dn = (rotationNext.toImplementation()-rotation.toImplementation())/dt;
 
       ASSERT_NEAR(rotationDiff.z(),dn(0),1e-3) << " angular velocity: " << angularVelocity << " rotation: " << rotation << " rotationNext: " << rotationNext  << " diff: " << rotationDiff  << " approxdiff: " << dn.transpose();
       ASSERT_NEAR(rotationDiff.y(),dn(1),1e-3)  << " angular velocity: " << angularVelocity  <<  "rotation: " << rotation << " rotationNext: " << rotationNext << " diff: " << rotationDiff << " approxdiff: " << dn.transpose();
@@ -215,6 +217,8 @@ TYPED_TEST(EulerAnglesZyxDiffTest, testFiniteDifferenceInverse)
       // Finite difference method for checking derivatives
       RotationDiff rotationDiff(rotation, angularVelocity);
       Rotation rotationNext = rotation.boxPlus(dt*angularVelocity.toImplementation());
+      rotationNext.setUnique();
+      rotation.setUnique();
       Vector3 dn = (rotationNext.toImplementation()-rotation.toImplementation())/dt;
 
       ASSERT_NEAR(rotationDiff.z(),dn(0),1e-3) << " angular velocity: " << angularVelocity << " rotation: " << rotation << " rotationNext: " << rotationNext  << " diff: " << rotationDiff  << " approxdiff: " << dn.transpose();
