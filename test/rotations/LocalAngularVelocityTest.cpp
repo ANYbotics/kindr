@@ -31,10 +31,10 @@
 
 #include <gtest/gtest.h>
 
-#include "kindr/rotations/RotationDiffEigen.hpp"
+#include "kindr/rotations/RotationDiff.hpp"
 #include "kindr/common/gtest_eigen.hpp"
 
-namespace rot = kindr::rotations::eigen_impl;
+namespace rot = kindr;
 
 template <typename Implementation>
 struct LocalAngularVelocityTest: public ::testing::Test {
@@ -60,8 +60,6 @@ struct LocalAngularVelocityTest: public ::testing::Test {
 
 
 typedef ::testing::Types<
-    rot::LocalAngularVelocityAD,
-    rot::LocalAngularVelocityAF,
     rot::LocalAngularVelocityPD,
     rot::LocalAngularVelocityPF
 > LocalAngularVelocityTypes;

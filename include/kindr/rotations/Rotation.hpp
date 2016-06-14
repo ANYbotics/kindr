@@ -30,9 +30,7 @@
 
 #include "kindr/common/assert_macros.hpp"
 #include "kindr/rotations/RotationBase.hpp"
-//#include "kindr/positions/PositionEigen.hpp"
 #include "kindr/linear_algebra/LinearAlgebra.hpp"
-
 #include "kindr/vectors/VectorBase.hpp"
 
 namespace kindr {
@@ -89,6 +87,7 @@ class MultiplicationTraits<RotationBase<Left_>, RotationBase<Right_> > {
 template<typename LeftAndRight_>
 class MultiplicationTraits<RotationBase<LeftAndRight_>, RotationBase<LeftAndRight_> > {
  public:
+  //! Default multiplication of rotations converts the representations of the rotations to rotation quaternions and multiplies them
   inline static LeftAndRight_ mult(const RotationBase<LeftAndRight_>& lhs, const RotationBase<LeftAndRight_>& rhs) {
       return LeftAndRight_(RotationQuaternion<typename LeftAndRight_::Scalar>(
                           (RotationQuaternion<typename LeftAndRight_::Scalar>(lhs.derived())).toImplementation() *
@@ -98,6 +97,26 @@ class MultiplicationTraits<RotationBase<LeftAndRight_>, RotationBase<LeftAndRigh
   }
 };
 
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Rotation Traits
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+template<typename Rotation_>
+class RotationTraits<RotationBase<Rotation_>> {
+ public:
+  //! Default rotation operator converts the representation of the rotation to a rotation matrix and multiplies it with the matrix
+  template<typename get_matrix3X<Rotation_>::IndexType Cols>
+  inline static typename get_matrix3X<Rotation_>::template Matrix3X<Cols> rotate(const RotationBase<Rotation_>& rotation, const typename internal::get_matrix3X<Rotation_>::template Matrix3X<Cols>& m){
+      return RotationMatrix<typename Rotation_::Scalar>(rotation.derived()).toImplementation()*m;
+  }
+  //! Default rotation operator converts the representation of the rotation to a rotation matrix and multiplies it with the matrix
+  template<typename Vector_>
+  inline static Vector_ rotate(const RotationBase<Rotation_>& rotation, const Vector_& vector){
+    return static_cast<Vector_>(rotation.derived().rotate(vector.toImplementation()));
+  }
+
+};
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * Comparison Traits
@@ -155,26 +174,6 @@ class BoxOperationTraits<RotationBase<Left_>, RotationBase<Right_>> {
   inline static  Left_ box_plus(const RotationBase<Left_>& rotation, const typename internal::get_matrix3X<Left_>::template Matrix3X<1>& vector) {
     return Left_(MapTraits<RotationBase<Left_>>::set_exponential_map(vector)*rotation.derived());
   }
-};
-
-
-/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
- * Rotation Traits
- * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-
-template<typename Rotation_>
-class RotationTraits<RotationBase<Rotation_>> {
- public:
-  template<typename get_matrix3X<Rotation_>::IndexType Cols>
-  inline static typename get_matrix3X<Rotation_>::template Matrix3X<Cols> rotate(const RotationBase<Rotation_>& rotation, const typename internal::get_matrix3X<Rotation_>::template Matrix3X<Cols>& m){
-      return RotationMatrix<typename Rotation_::Scalar>(rotation.derived()).toImplementation()*m;
-  }
-
-  template<typename Vector_>
-  inline static Vector_ rotate(const RotationBase<Rotation_>& rotation, const Vector_& vector){
-    return static_cast<Vector_>(rotation.derived().rotate(vector.toImplementation()));
-  }
-
 };
 
 

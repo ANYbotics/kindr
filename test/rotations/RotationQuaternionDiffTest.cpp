@@ -34,19 +34,19 @@
 
 #include <gtest/gtest.h>
 
-#include "kindr/rotations/RotationDiffEigen.hpp"
+#include "kindr/rotations/RotationDiff.hpp"
 #include "kindr/common/gtest_eigen.hpp"
 #include "kindr/common/common.hpp"
 
-namespace rot = kindr::rotations::eigen_impl;
+namespace rot = kindr;
 namespace quat = kindr::quaternions::eigen_impl;
 
 template <typename Implementation>
 struct RotationQuaternionDiffTest: public ::testing::Test {
   typedef Implementation RotationDiff;
   typedef typename Implementation::Scalar Scalar;
-  typedef rot::RotationQuaternion<Scalar, RotationDiff::Usage> Rotation;
-  typedef rot::LocalAngularVelocity<Scalar, RotationDiff::Usage> LocalAngularVelocity;
+  typedef rot::RotationQuaternion<Scalar> Rotation;
+  typedef rot::LocalAngularVelocity<Scalar> LocalAngularVelocity;
   typedef Eigen::Matrix<Scalar, 3, 1> Vector3;
   typedef Eigen::Matrix<Scalar, 4, 1> Vector4;
   typedef quat::Quaternion<Scalar> Quaternion;
@@ -93,8 +93,6 @@ struct RotationQuaternionDiffTest: public ::testing::Test {
 
 
 typedef ::testing::Types<
-    rot::RotationQuaternionDiffAD,
-    rot::RotationQuaternionDiffAF,
     rot::RotationQuaternionDiffPD,
     rot::RotationQuaternionDiffPF
 > RotationQuaternionDiffTypes;

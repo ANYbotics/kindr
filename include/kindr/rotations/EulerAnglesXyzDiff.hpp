@@ -219,9 +219,9 @@ class EulerAnglesXyzDiff : public RotationDiffBase<EulerAnglesXyzDiff<PrimType_>
    }
 
 
-   using RotationDiffBase<EulerAnglesXyzDiff<PrimType_>>::operator+; // otherwise ambiguous EulerAnglesDiffBase and Eigen
+   using RotationDiffBase<EulerAnglesXyzDiff<PrimType_>>::operator+; // otherwise ambiguous RotationDiffBase and Eigen
 
-   using RotationDiffBase<EulerAnglesXyzDiff<PrimType_>>::operator-; // otherwise ambiguous EulerAnglesDiffBase and Eigen
+   using RotationDiffBase<EulerAnglesXyzDiff<PrimType_>>::operator-; // otherwise ambiguous RotationDiffBase and Eigen
 
 
    /*! \brief Used for printing the object with std::cout.

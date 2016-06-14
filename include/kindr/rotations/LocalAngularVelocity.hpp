@@ -231,10 +231,10 @@ class RotationDiffConversionTraits<LocalAngularVelocity<PrimType_>, RotationMatr
 //    return LocalAngularVelocity<PrimType_>(linear_algebra::getVectorFromSkewMatrix<PrimType_>(rotationMatrixDiff.toImplementation()*rotationMatrix.toImplementation().transpose()));
 
 //    if (Usage_ == RotationUsage::ACTIVE) {
-//      return LocalAngularVelocity<PrimType_>(linear_algebra::getVectorFromSkewMatrix<PrimType_>(rotationMatrixDiff.toImplementation()*rotationMatrix.toImplementation().transpose()));
+      return LocalAngularVelocity<PrimType_>(linear_algebra::getVectorFromSkewMatrix<PrimType_>(rotationMatrixDiff.toImplementation()*rotationMatrix.toImplementation().transpose()));
 //    }
 //    if (Usage_ == RotationUsage::PASSIVE) {
-      return LocalAngularVelocity<PrimType_>(linear_algebra::getVectorFromSkewMatrix<PrimType_>(rotationMatrix.toImplementation().transpose()*rotationMatrixDiff.toImplementation()));
+//      return LocalAngularVelocity<PrimType_>(linear_algebra::getVectorFromSkewMatrix<PrimType_>(rotationMatrix.toImplementation().transpose()*rotationMatrixDiff.toImplementation()));
 //    }
 
 

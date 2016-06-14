@@ -33,11 +33,11 @@
 #include <gtest/gtest.h>
 
 
-#include "kindr/rotations/RotationDiffEigen.hpp"
+#include "kindr/rotations/RotationDiff.hpp"
 #include "kindr/common/gtest_eigen.hpp"
 #include "kindr/common/common.hpp"
 
-namespace rot = kindr::rotations::eigen_impl;
+namespace rot = kindr;
 
 template <typename ImplementationPair>
 struct RotationDiffPairTest : public ::testing::Test {
@@ -45,8 +45,8 @@ struct RotationDiffPairTest : public ::testing::Test {
   typedef typename Rotation::Scalar RotationScalar;
   typedef typename ImplementationPair::second_type RotationDiff;
   typedef typename RotationDiff::Scalar RotationDiffScalar;
-  typedef rot::LocalAngularVelocity<RotationDiffScalar, RotationDiff::Usage> LocalAngularVelocity;
-  typedef typename rot::AngleAxis<RotationScalar, Rotation::Usage> AngleAxis;
+  typedef rot::LocalAngularVelocity<RotationDiffScalar> LocalAngularVelocity;
+  typedef typename rot::AngleAxis<RotationScalar> AngleAxis;
   std::vector<Rotation> rotations;
   std::vector<LocalAngularVelocity> angularVelocities;
 
@@ -74,23 +74,12 @@ struct RotationDiffPairTest : public ::testing::Test {
 
 
 typedef ::testing::Types<
-  std::pair<rot::RotationQuaternionAD, rot::RotationQuaternionDiffAD>,
-  std::pair<rot::RotationQuaternionAF, rot::RotationQuaternionDiffAF>,
   std::pair<rot::RotationQuaternionPD, rot::RotationQuaternionDiffPD>,
   std::pair<rot::RotationQuaternionPF, rot::RotationQuaternionDiffPF>,
-
-  std::pair<rot::RotationMatrixAD, rot::RotationMatrixDiffAD>,
-  std::pair<rot::RotationMatrixAF, rot::RotationMatrixDiffAF>,
   std::pair<rot::RotationMatrixPD, rot::RotationMatrixDiffPD>,
   std::pair<rot::RotationMatrixPF, rot::RotationMatrixDiffPF>,
-
-//  std::pair<rot::EulerAnglesZyxAD, rot::EulerAnglesZyxDiffAD>,
-//  std::pair<rot::EulerAnglesZyxAF, rot::EulerAnglesZyxDiffAF>,
   std::pair<rot::EulerAnglesZyxPD, rot::EulerAnglesZyxDiffPD>,
   std::pair<rot::EulerAnglesZyxPF, rot::EulerAnglesZyxDiffPF>,
-
-//  std::pair<rot::EulerAnglesXyzAD, rot::EulerAnglesXyzDiffAD>,
-//  std::pair<rot::EulerAnglesXyzAF, rot::EulerAnglesXyzDiffAF>,
   std::pair<rot::EulerAnglesXyzPD, rot::EulerAnglesXyzDiffPD>,
   std::pair<rot::EulerAnglesXyzPF, rot::EulerAnglesXyzDiffPF>
 > TypeRotationAndRotationDiffPairs;
@@ -126,9 +115,9 @@ struct RotationDiffSingleTest : public ::testing::Test {
   typedef typename RotationQuaternion::Scalar RotationScalar;
   typedef typename ImplementationPair::second_type RotationQuaternionDiff;
   typedef typename RotationQuaternionDiff::Scalar RotationDiffScalar;
-  typedef rot::LocalAngularVelocity<RotationDiffScalar, RotationQuaternionDiff::Usage> LocalAngularVelocity;
+  typedef rot::LocalAngularVelocity<RotationDiffScalar> LocalAngularVelocity;
 //  typedef rot::GlobalAngularVelocity<RotationDiffScalar, RotationDiff::Usage> GlobalAngularVelocity;
-  typedef typename rot::AngleAxis<RotationScalar, RotationQuaternion::Usage> AngleAxis;
+  typedef typename rot::AngleAxis<RotationScalar> AngleAxis;
   std::vector<RotationQuaternion> rotationQuaternions;
   std::vector<LocalAngularVelocity> angularVelocities;
 
@@ -155,8 +144,6 @@ struct RotationDiffSingleTest : public ::testing::Test {
 };
 
 typedef ::testing::Types<
-  std::pair<rot::RotationQuaternionAD, rot::RotationQuaternionDiffAD>,
-  std::pair<rot::RotationQuaternionAF, rot::RotationQuaternionDiffAF>,
   std::pair<rot::RotationQuaternionPD, rot::RotationQuaternionDiffPD>,
   std::pair<rot::RotationQuaternionPF, rot::RotationQuaternionDiffPF>
 > QuaternionTypes;

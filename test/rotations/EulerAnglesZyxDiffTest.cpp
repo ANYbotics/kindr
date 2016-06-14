@@ -34,19 +34,19 @@
 
 #include <gtest/gtest.h>
 
-#include "kindr/rotations/RotationDiffEigen.hpp"
+#include "kindr/rotations/RotationDiff.hpp"
 #include "kindr/common/gtest_eigen.hpp"
 #include "kindr/common/common.hpp"
 
-namespace rot = kindr::rotations::eigen_impl;
+namespace rot = kindr;
 
 
 template <typename Implementation>
 struct EulerAnglesZyxDiffTest: public ::testing::Test {
   typedef Implementation RotationDiff;
   typedef typename Implementation::Scalar Scalar;
-  typedef rot::EulerAnglesZyx<Scalar, RotationDiff::Usage> Rotation;
-  typedef rot::LocalAngularVelocity<Scalar, RotationDiff::Usage> LocalAngularVelocity;
+  typedef rot::EulerAnglesZyx<Scalar> Rotation;
+  typedef rot::LocalAngularVelocity<Scalar> LocalAngularVelocity;
   typedef Eigen::Matrix<Scalar, 3, 1> Vector3;
 
 
@@ -90,8 +90,6 @@ struct EulerAnglesZyxDiffTest: public ::testing::Test {
 
 
 typedef ::testing::Types<
-//    rot::EulerAnglesZyxDiffAD,
-//    rot::EulerAnglesZyxDiffAF,
     rot::EulerAnglesZyxDiffPD,
     rot::EulerAnglesZyxDiffPF
 > EulerAnglesZyxDiffTypes;

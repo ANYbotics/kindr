@@ -34,19 +34,19 @@
 
 #include <gtest/gtest.h>
 
-#include "kindr/rotations/RotationDiffEigen.hpp"
+#include "kindr/rotations/RotationDiff.hpp"
 #include "kindr/common/gtest_eigen.hpp"
 #include "kindr/common/common.hpp"
 
-namespace rot = kindr::rotations::eigen_impl;
+namespace rot = kindr;
 
 
 template <typename Implementation>
 struct RotationMatrixDiffTest: public ::testing::Test {
   typedef Implementation RotationDiff;
   typedef typename Implementation::Scalar Scalar;
-  typedef rot::RotationMatrix<Scalar, RotationDiff::Usage> Rotation;
-  typedef rot::LocalAngularVelocity<Scalar, RotationDiff::Usage> LocalAngularVelocity;
+  typedef rot::RotationMatrix<Scalar> Rotation;
+  typedef rot::LocalAngularVelocity<Scalar> LocalAngularVelocity;
   typedef Eigen::Matrix<Scalar, 3, 3> Matrix3;
 
 
@@ -108,8 +108,6 @@ struct RotationMatrixDiffTest: public ::testing::Test {
 
 
 typedef ::testing::Types<
-    rot::RotationMatrixDiffAD,
-    rot::RotationMatrixDiffAF,
     rot::RotationMatrixDiffPD,
     rot::RotationMatrixDiffPF
 > RotationMatrixDiffTypes;

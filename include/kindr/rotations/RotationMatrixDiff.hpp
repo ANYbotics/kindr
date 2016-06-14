@@ -180,11 +180,11 @@ class RotationDiffConversionTraits<RotationMatrixDiff<PrimType_>, LocalAngularVe
  public:
   inline static RotationMatrixDiff<PrimType_> convert(const RotationMatrix<PrimType_>& rotationMatrix, const LocalAngularVelocity<PrimType_>& angularVelocity) {
 //    if (Usage_ == RotationUsage::ACTIVE) {
-//      return RotationMatrixDiff<PrimType_>(linear_algebra::getSkewMatrixFromVector(angularVelocity.toImplementation())*rotationMatrix.toImplementation());
+      return RotationMatrixDiff<PrimType_>(linear_algebra::getSkewMatrixFromVector(angularVelocity.toImplementation())*rotationMatrix.toImplementation());
 //    }
 //    if (Usage_ == RotationUsage::PASSIVE) {
 
-      return RotationMatrixDiff<PrimType_>(rotationMatrix.toImplementation()*linear_algebra::getSkewMatrixFromVector(angularVelocity.toImplementation()));
+//      return RotationMatrixDiff<PrimType_>(rotationMatrix.toImplementation()*linear_algebra::getSkewMatrixFromVector(angularVelocity.toImplementation()));
 //    }
 
   }
