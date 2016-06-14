@@ -55,12 +55,12 @@ if(CATKIN_ENABLE_TESTING)
   catkin_add_gtest(test_${PROJECT_NAME}
     test/test_main.cpp
 	test/rotations/RotationMatrixTest.cpp
-	test/rotations/RotationQuaternionTest.cpp
-	test/rotations/RotationVectorTest.cpp
-	test/rotations/AngleAxisTest.cpp
-	test/rotations/EulerAnglesZyxTest.cpp
-	test/rotations/EulerAnglesXyzTest.cpp
-	test/rotations/RotationTest.cpp
+#	test/rotations/RotationQuaternionTest.cpp
+#	test/rotations/RotationVectorTest.cpp
+#	test/rotations/AngleAxisTest.cpp
+#	test/rotations/EulerAnglesZyxTest.cpp
+#	test/rotations/EulerAnglesXyzTest.cpp
+#	test/rotations/RotationTest.cpp
   )
   if(TARGET test_${PROJECT_NAME})
     target_link_libraries(test_${PROJECT_NAME}
