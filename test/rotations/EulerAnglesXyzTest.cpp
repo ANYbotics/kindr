@@ -360,22 +360,22 @@ TYPED_TEST(EulerAnglesXyzSingleTest, testConcatenation){
 
   // Check concatenation of 3 different quarters
   rotEulerAnglesXyz = this->rotEulerAnglesXyzQuarterX.inverted()*this->rotEulerAnglesXyzQuarterY*this->rotEulerAnglesXyzQuarterX;
-  ASSERT_EQ(rotEulerAnglesXyz.isNear(this->rotEulerAnglesXyzQuarterZ,1e-6),true);
-
-  rotEulerAnglesXyz = this->rotEulerAnglesXyzQuarterX.inverted()*this->rotEulerAnglesXyzQuarterZ*this->rotEulerAnglesXyzQuarterX;
-  ASSERT_EQ(rotEulerAnglesXyz.isNear(this->rotEulerAnglesXyzQuarterY.inverted(),1e-6),true);
-
-  rotEulerAnglesXyz = this->rotEulerAnglesXyzQuarterY.inverted()*this->rotEulerAnglesXyzQuarterX*this->rotEulerAnglesXyzQuarterY;
   ASSERT_EQ(rotEulerAnglesXyz.isNear(this->rotEulerAnglesXyzQuarterZ.inverted(),1e-6),true);
 
-  rotEulerAnglesXyz = this->rotEulerAnglesXyzQuarterY.inverted()*this->rotEulerAnglesXyzQuarterZ*this->rotEulerAnglesXyzQuarterY;
-  ASSERT_EQ(rotEulerAnglesXyz.isNear(this->rotEulerAnglesXyzQuarterX,1e-6),true);
-
-  rotEulerAnglesXyz = this->rotEulerAnglesXyzQuarterZ.inverted()*this->rotEulerAnglesXyzQuarterX*this->rotEulerAnglesXyzQuarterZ;
+  rotEulerAnglesXyz = this->rotEulerAnglesXyzQuarterX.inverted()*this->rotEulerAnglesXyzQuarterZ*this->rotEulerAnglesXyzQuarterX;
   ASSERT_EQ(rotEulerAnglesXyz.isNear(this->rotEulerAnglesXyzQuarterY,1e-6),true);
 
-  rotEulerAnglesXyz = this->rotEulerAnglesXyzQuarterZ.inverted()*this->rotEulerAnglesXyzQuarterY*this->rotEulerAnglesXyzQuarterZ;
+  rotEulerAnglesXyz = this->rotEulerAnglesXyzQuarterY.inverted()*this->rotEulerAnglesXyzQuarterX*this->rotEulerAnglesXyzQuarterY;
+  ASSERT_EQ(rotEulerAnglesXyz.isNear(this->rotEulerAnglesXyzQuarterZ,1e-6),true);
+
+  rotEulerAnglesXyz = this->rotEulerAnglesXyzQuarterY.inverted()*this->rotEulerAnglesXyzQuarterZ*this->rotEulerAnglesXyzQuarterY;
   ASSERT_EQ(rotEulerAnglesXyz.isNear(this->rotEulerAnglesXyzQuarterX.inverted(),1e-6),true);
+
+  rotEulerAnglesXyz = this->rotEulerAnglesXyzQuarterZ.inverted()*this->rotEulerAnglesXyzQuarterX*this->rotEulerAnglesXyzQuarterZ;
+  ASSERT_EQ(rotEulerAnglesXyz.isNear(this->rotEulerAnglesXyzQuarterY.inverted(),1e-6),true);
+
+  rotEulerAnglesXyz = this->rotEulerAnglesXyzQuarterZ.inverted()*this->rotEulerAnglesXyzQuarterY*this->rotEulerAnglesXyzQuarterZ;
+  ASSERT_EQ(rotEulerAnglesXyz.isNear(this->rotEulerAnglesXyzQuarterX,1e-6),true);
 }
 
 
@@ -406,7 +406,7 @@ TYPED_TEST(EulerAnglesXyzSingleTest, testVectorRotation){
   Vector testVec1;
   Vector testVec2;
 
-  int signSwitch = -1;
+  int signSwitch = 1;
 
   // Check rotation of base vectors around main axis
   testVec = this->rotEulerAnglesXyzQuarterX.rotate(this->vecX);
