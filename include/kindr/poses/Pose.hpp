@@ -26,11 +26,7 @@
  *
 */
 
-#ifndef KINDR_POSES_POSESEIGEN_HPP_
-#define KINDR_POSES_POSESEIGEN_HPP_
+#pragma once
 
-#include "kindr/poses/eigen/HomogeneousTransformation.hpp"
+#include "kindr/poses/HomogeneousTransformation.hpp"
 
-
-
-#endif /* KINDR_POSES_POSESEIGEN_HPP_ */

@@ -26,29 +26,27 @@
  *
 */
 
-#ifndef KINDR_ROTATIONS_RDIFFEIGEN_HPP_
-#define KINDR_ROTATIONS_RDIFFEIGEN_HPP_
+#pragma once
 
 #include "kindr/rotations/RotationBase.hpp"
 #include "kindr/linear_algebra/LinearAlgebra.hpp"
 
 namespace kindr {
-namespace rotations {
-namespace eigen_impl {
 
-template<typename PrimType_, enum RotationUsage Usage_>
+
+template<typename PrimType_>
 class LocalAngularVelocity;
 
-template<typename PrimType_, enum RotationUsage Usage_>
+template<typename PrimType_>
 class RotationQuaternionDiff;
 
-template<typename PrimType_, enum RotationUsage Usage_>
+template<typename PrimType_>
 class RotationMatrixDiff;
 
-template<typename PrimType_, enum RotationUsage Usage_>
+template<typename PrimType_>
 class EulerAnglesZyxDiff;
 
-template<typename PrimType_, enum RotationUsage Usage_>
+template<typename PrimType_>
 class EulerAnglesXyzDiff;
 
 
@@ -67,22 +65,14 @@ inline static Eigen::Matrix<PrimType_, 3, 3> getJacobianOfExponentialMap(const E
   return Eigen::Matrix<PrimType_, 3, 3>::Identity() + (PrimType_(1.0) - cos(norm))/(norm*norm)*skewMatrix + (norm - sin(norm))/(norm*norm*norm)*(skewMatrix*skewMatrix);
 }
 
-} // namespace eigen_impl
-} // namespace rotations
+
 } // namespace kindr
 
 
+#include "kindr/rotations/LocalAngularVelocity.hpp"
+#include "kindr/rotations/RotationQuaternionDiff.hpp"
+#include "kindr/rotations/RotationMatrixDiff.hpp"
+#include "kindr/rotations/EulerAnglesZyxDiff.hpp"
+#include "kindr/rotations/EulerAnglesXyzDiff.hpp"
 
 
-#include "kindr/rotations/eigen/LocalAngularVelocity.hpp"
-#include "kindr/rotations/eigen/RotationQuaternionDiff.hpp"
-#include "kindr/rotations/eigen/RotationMatrixDiff.hpp"
-#include "kindr/rotations/eigen/EulerAnglesZyxDiff.hpp"
-#include "kindr/rotations/eigen/EulerAnglesXyzDiff.hpp"
-
-
-
-
-
-
-#endif /* KINDR_ROTATIONS_RDIFFEIGEN_HPP_ */

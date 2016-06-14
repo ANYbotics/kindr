@@ -6,16 +6,19 @@
  */
 
 
-
-
 #include "kindr/rotations/Rotation.hpp"
-
+#include "kindr/rotations/RotationDiff.hpp"
 
 int main(int argc, char **argv) {
-  kindr::RotationMatrixD rotaitonMatrix;
-  kindr::RotationVectorD rotationVector;
-  kindr::RotationQuaternionD rotationQuaternion;
+  kindr::RotationMatrixD rotMatrix;
+  kindr::RotationVectorD rotVector;
+  kindr::RotationQuaternionD rotQuaternion;
   kindr::AngleAxisD angleAxis;
   kindr::EulerAnglesZyxD eulerAnglesZyx;
   kindr::EulerAnglesXyzD eulerAnglesXyz;
+
+  kindr::RotationMatrixDiffD rotMatrixDiff;
+  kindr::RotationQuaternionDiffD rotQuaternionDiff;
+  kindr::EulerAnglesZyxDiffD eulerAnglesZyxDiff;
+  kindr::EulerAnglesXyzDiffD eulerAnglesXyzDiff;
 }

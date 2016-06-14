@@ -26,8 +26,7 @@
  *
 */
 
-#ifndef KINDR_POSES_EIGEN_TWIST_HPP_
-#define KINDR_POSES_EIGEN_TWIST_HPP_
+#pragma once
 
 
 #include "kindr/common/common.hpp"
@@ -37,9 +36,6 @@
 #include "kindr/poses/PoseDiffBase.hpp"
 
 namespace kindr {
-namespace poses {
-//! Implementation of poses based on the C++ Eigen library
-namespace eigen_impl {
 
 
 template<typename PrimType_, typename PositionDiff_, typename RotationDiff_>
@@ -76,11 +72,11 @@ class Twist : public TwistBase<Twist<PrimType_, PositionDiff_, RotationDiff_>>, 
   }
 
   template<typename Rotation_>
-  inline Vector6 getVector(const rotations::RotationBase<Rotation_, rotations::RotationUsage::ACTIVE>& rotation) const {
+  inline Vector6 getVector(const RotationBase<Rotation_>& rotation) const {
     Vector6 vector = Vector6::Zero();
 
     vector.template block<3,1>(0,0) = getTranslationalVelocity().toImplementation();
-    vector.template block<3,1>(3,0) =  rotations::eigen_impl::LocalAngularVelocity<Scalar, kindr::rotations::RotationUsage::ACTIVE>(rotation.derived(), getRotationalVelocity()).toImplementation();
+    vector.template block<3,1>(3,0) =  LocalAngularVelocity<Scalar>(rotation.derived(), getRotationalVelocity()).toImplementation();
     return vector;
   }
 
@@ -103,9 +99,9 @@ class Twist : public TwistBase<Twist<PrimType_, PositionDiff_, RotationDiff_>>, 
 };
 
 template<typename PrimType_>
-class TwistLinearVelocityRotationQuaternionDiff: public Twist<PrimType_, kindr::phys_quant::eigen_impl::Velocity<PrimType_, 3>, rotations::eigen_impl::RotationQuaternionDiff<PrimType_, rotations::RotationUsage::ACTIVE>> {
+class TwistLinearVelocityRotationQuaternionDiff: public Twist<PrimType_, kindr::phys_quant::eigen_impl::Velocity<PrimType_, 3>, RotationQuaternionDiff<PrimType_> {
  private:
-  typedef Twist<PrimType_, kindr::phys_quant::eigen_impl::Velocity<PrimType_, 3>, kindr::rotations::eigen_impl::RotationQuaternionDiff<PrimType_, kindr::rotations::RotationUsage::ACTIVE>> Base;
+  typedef Twist<PrimType_, kindr::phys_quant::eigen_impl::Velocity<PrimType_, 3>, RotationQuaternionDiff<PrimType_>> Base;
  public:
   typedef PrimType_ Scalar;
   typedef typename Base::PositionDiff PositionDiff;
@@ -124,10 +120,10 @@ typedef TwistLinearVelocityRotationQuaternionDiff<double> TwistLinearVelocityRot
 typedef TwistLinearVelocityRotationQuaternionDiff<float> TwistLinearVelocityRotationQuaternionDiffF;
 
 
-template<typename PrimType_, enum rotations::RotationUsage Usage_>
-class TwistLinearVelocityLocalAngularVelocity: public Twist<PrimType_, kindr::phys_quant::eigen_impl::Velocity<PrimType_, 3>, rotations::eigen_impl::LocalAngularVelocity<PrimType_, Usage_>> {
+template<typename PrimType_>
+class TwistLinearVelocityLocalAngularVelocity: public Twist<PrimType_, kindr::phys_quant::eigen_impl::Velocity<PrimType_, 3>, LocalAngularVelocity<PrimType_>> {
  private:
-  typedef Twist<PrimType_, kindr::phys_quant::eigen_impl::Velocity<PrimType_, 3>, kindr::rotations::eigen_impl::LocalAngularVelocity<PrimType_, Usage_>> Base;
+  typedef Twist<PrimType_, kindr::phys_quant::eigen_impl::Velocity<PrimType_, 3>, LocalAngularVelocity<PrimType_, Usage_>> Base;
  public:
   typedef PrimType_ Scalar;
   typedef typename Base::PositionDiff PositionDiff;
@@ -150,20 +146,10 @@ class TwistLinearVelocityLocalAngularVelocity: public Twist<PrimType_, kindr::ph
 
 };
 
-typedef TwistLinearVelocityLocalAngularVelocity<double, rotations::RotationUsage::ACTIVE> TwistLinearVelocityLocalAngularVelocityAD;
-typedef TwistLinearVelocityLocalAngularVelocity<float, rotations::RotationUsage::ACTIVE> TwistLinearVelocityLocalAngularVelocityAF;
-typedef TwistLinearVelocityLocalAngularVelocity<double, rotations::RotationUsage::PASSIVE> TwistLinearVelocityLocalAngularVelocityPD;
-typedef TwistLinearVelocityLocalAngularVelocity<float, rotations::RotationUsage::PASSIVE> TwistLinearVelocityLocalAngularVelocityPF;
-
-} // namespace eigen_impl
-
-namespace internal {
+typedef TwistLinearVelocityLocalAngularVelocity<double> TwistLinearVelocityLocalAngularVelocityD;
+typedef TwistLinearVelocityLocalAngularVelocity<float> TwistLinearVelocityLocalAngularVelocityF;
+typedef TwistLinearVelocityLocalAngularVelocity<double> TwistLinearVelocityLocalAngularVelocityPD;
+typedef TwistLinearVelocityLocalAngularVelocity<float> TwistLinearVelocityLocalAngularVelocityPF;
 
 
-
-
-} // namespace internal
-} // namespace poses
 } // namespace kindr
-
-#endif /* KINDR_POSES_EIGEN_TWIST_HPP_ */

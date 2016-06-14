@@ -26,8 +26,7 @@
  *
 */
 
-#ifndef KINDR_POSES_EIGEN_HOMOGENEOUSTRANSFORMATION_HPP_
-#define KINDR_POSES_EIGEN_HOMOGENEOUSTRANSFORMATION_HPP_
+#pragma once
 
 #include "kindr/common/common.hpp"
 #include "kindr/common/assert_macros_eigen.hpp"
@@ -37,9 +36,6 @@
 
 
 namespace kindr {
-namespace poses {
-//! Implementation of poses based on the C++ Eigen library
-namespace eigen_impl {
 
 
 template<typename PrimType_, typename Position_, typename Rotation_>
@@ -78,7 +74,7 @@ class HomogeneousTransformation : public HomogeneousTransformationBase<Homogeneo
 
   inline TransformationMatrix getTransformationMatrix() const {
     TransformationMatrix mat = TransformationMatrix::Zero();
-    mat.template topLeftCorner<3,3>() =  rotations::eigen_impl::RotationMatrix<Scalar, kindr::rotations::RotationUsage::PASSIVE>(getRotation()).toImplementation();
+    mat.template topLeftCorner<3,3>() =  RotationMatrix<Scalar, kindr::RotationUsage::PASSIVE>(getRotation()).toImplementation();
     mat.template topRightCorner<3,1>() = getPosition().toImplementation();
     mat(3,3) = Scalar(1);
     return mat;
@@ -103,9 +99,9 @@ class HomogeneousTransformation : public HomogeneousTransformationBase<Homogeneo
 };
 
 template<typename PrimType_>
-class HomogeneousTransformationPosition3RotationQuaternion: public HomogeneousTransformation<PrimType_, phys_quant::eigen_impl::Position<PrimType_, 3>, rotations::eigen_impl::RotationQuaternion<PrimType_, rotations::RotationUsage::PASSIVE>> {
+class HomogeneousTransformationPosition3RotationQuaternion: public HomogeneousTransformation<PrimType_, phys_quant::Position<PrimType_, 3>, RotationQuaternion<PrimType_, RotationUsage::PASSIVE>> {
  private:
-  typedef HomogeneousTransformation<PrimType_, phys_quant::eigen_impl::Position<PrimType_, 3>, kindr::rotations::eigen_impl::RotationQuaternion<PrimType_, kindr::rotations::RotationUsage::PASSIVE>> Base;
+  typedef HomogeneousTransformation<PrimType_, phys_quant::Position<PrimType_, 3>, kindr::RotationQuaternion<PrimType_>> Base;
  public:
   typedef PrimType_ Scalar;
   typedef typename Base::Position Position;
@@ -123,21 +119,21 @@ typedef HomogeneousTransformationPosition3RotationQuaternion<double> Homogeneous
 typedef HomogeneousTransformationPosition3RotationQuaternion<float> HomogeneousTransformationPosition3RotationQuaternionF;
 
 
-} // namespace eigen_impl
+
 namespace internal {
 
 
 template<typename PrimType_, typename Position_, typename Rotation_>
-class get_position<eigen_impl::HomogeneousTransformation<PrimType_, Position_, Rotation_>> {
+class get_position<HomogeneousTransformation<PrimType_, Position_, Rotation_>> {
  public:
   //! Position
   typedef Position_ Position;
 };
 
 template<typename PrimType_, typename Position_, typename Rotation_>
-class TransformationTraits<eigen_impl::HomogeneousTransformation<PrimType_, Position_, Rotation_>> {
+class TransformationTraits<HomogeneousTransformation<PrimType_, Position_, Rotation_>> {
  private:
-  typedef typename eigen_impl::HomogeneousTransformation<PrimType_, Position_, Rotation_> Pose;
+  typedef typename HomogeneousTransformation<PrimType_, Position_, Rotation_> Pose;
   typedef typename get_position<Pose>::Position Position;
  public:
   inline static Position transform(const Pose & pose, const Position & position){
@@ -151,8 +147,5 @@ class TransformationTraits<eigen_impl::HomogeneousTransformation<PrimType_, Posi
 
 
 } // namespace internal
-} // namespace poses
 } // namespace kindr
 
-
-#endif /* KINDR_POSES_EIGEN_HOMOGENEOUSTRANSFORMATION_HPP_ */

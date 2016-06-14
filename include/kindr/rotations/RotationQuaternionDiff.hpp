@@ -25,8 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
 */
-#ifndef KINDR_ROTATIONS_EIGEN_ROTATIONQUATERNIONDIFF_HPP_
-#define KINDR_ROTATIONS_EIGEN_ROTATIONQUATERNIONDIFF_HPP_
+#pragma once
 
 #include <Eigen/Core>
 
@@ -39,8 +38,6 @@
 #include "kindr/linear_algebra/LinearAlgebra.hpp"
 
 namespace kindr {
-namespace rotations {
-namespace eigen_impl {
 
 /*! \class RotationQuaternionDiff
  * \brief Time derivative of a rotation quaternion.
@@ -50,8 +47,8 @@ namespace eigen_impl {
  * \tparam PrimType_  Primitive data type of the coordinates.
  * \ingroup rotations
  */
-template<typename PrimType_, enum RotationUsage Usage_>
-class RotationQuaternionDiff : public RotationQuaternionDiffBase<RotationQuaternionDiff<PrimType_, Usage_>,Usage_>, private quaternions::eigen_impl::Quaternion<PrimType_> {
+template<typename PrimType_>
+class RotationQuaternionDiff : public RotationDiffBase<RotationQuaternionDiff<PrimType_>>, private quaternions::eigen_impl::Quaternion<PrimType_> {
  private:
   /*! \brief The base type.
    */
@@ -109,7 +106,7 @@ class RotationQuaternionDiff : public RotationQuaternionDiffBase<RotationQuatern
    * \param other     other time derivative
    */
   template<typename RotationDerived_, typename OtherDerived_>
-  inline explicit RotationQuaternionDiff(const RotationBase<RotationDerived_, Usage_>& rotation, const RotationDiffBase<OtherDerived_, Usage_>& other)
+  inline explicit RotationQuaternionDiff(const RotationBase<RotationDerived_>& rotation, const RotationDiffBase<OtherDerived_>& other)
     : Base(internal::RotationDiffConversionTraits<RotationQuaternionDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived()).toQuaternion()){
   }
 
@@ -118,7 +115,7 @@ class RotationQuaternionDiff : public RotationQuaternionDiffBase<RotationQuatern
    *  \returns reference
    */
   template<typename OtherDerived_, typename RotationDerived_>
-  OtherDerived_ cast(const RotationBase<RotationDerived_, Usage_>& rotation) const {
+  OtherDerived_ cast(const RotationBase<RotationDerived_>& rotation) const {
     return internal::RotationDiffConversionTraits<OtherDerived_, RotationQuaternionDiff, RotationDerived_>::convert(rotation.derived(), *this);
   }
 
@@ -182,33 +179,33 @@ class RotationQuaternionDiff : public RotationQuaternionDiffBase<RotationQuatern
 
 
 //! \brief Time derivative of a rotation quaternion with primitive type double
-typedef RotationQuaternionDiff<double, RotationUsage::PASSIVE> RotationQuaternionDiffPD;
+typedef RotationQuaternionDiff<double> RotationQuaternionDiffPD;
 //! \brief Time derivative of a rotation quaternion with primitive type float
-typedef RotationQuaternionDiff<float, RotationUsage::PASSIVE> RotationQuaternionDiffPF;
+typedef RotationQuaternionDiff<float> RotationQuaternionDiffPF;
 //! \brief Time derivative of a rotation quaternion with primitive type double
-typedef RotationQuaternionDiff<double, RotationUsage::ACTIVE> RotationQuaternionDiffAD;
+typedef RotationQuaternionDiff<double> RotationQuaternionDiffD;
 //! \brief Time derivative of a rotation quaternion with primitive type float
-typedef RotationQuaternionDiff<float, RotationUsage::ACTIVE> RotationQuaternionDiffAF;
+typedef RotationQuaternionDiff<float> RotationQuaternionDiffF;
 
-} // namespace eigen_impl
+
 
 namespace internal {
 
 
-template<typename PrimType_, enum RotationUsage Usage_>
-class RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>, eigen_impl::LocalAngularVelocity<PrimType_, Usage_>, eigen_impl::RotationQuaternion<PrimType_, Usage_>> {
+template<typename PrimType_>
+class RotationDiffConversionTraits<RotationQuaternionDiff<PrimType_>, LocalAngularVelocity<PrimType_>, RotationQuaternion<PrimType_>> {
  public:
-  inline static eigen_impl::RotationQuaternionDiff<PrimType_, Usage_> convert(const eigen_impl::RotationQuaternion<PrimType_, Usage_>& rquat, const eigen_impl::LocalAngularVelocity<PrimType_, Usage_>& angularVelocity) {
-    return eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>(quaternions::eigen_impl::Quaternion<PrimType_>(0.5*rquat.getLocalQuaternionDiffMatrix().transpose()*angularVelocity.toImplementation()));
+  inline static RotationQuaternionDiff<PrimType_> convert(const RotationQuaternion<PrimType_>& rquat, const LocalAngularVelocity<PrimType_>& angularVelocity) {
+    return RotationQuaternionDiff<PrimType_>(quaternions::eigen_impl::Quaternion<PrimType_>(0.5*rquat.getLocalQuaternionDiffMatrix().transpose()*angularVelocity.toImplementation()));
   }
 };
 
 
-//template<typename PrimType_, enum RotationUsage Usage_>
-//class RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>, eigen_impl::RotationVectorDiff<PrimType_, Usage_>, eigen_impl::RotationVector<PrimType_, Usage_>> {
+//template<typename PrimType_>
+//class RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_>, eigen_impl::RotationVectorDiff<PrimType_>, eigen_impl::RotationVector<PrimType_>> {
 // public:
-//  inline static eigen_impl::RotationQuaternionDiff<PrimType_, Usage_> convert(const eigen_impl::RotationVector<PrimType_, Usage_>& rotationVector, const eigen_impl::RotationVectorDiff<PrimType_, Usage_>& rotationVectorDiff) {
-//    typedef typename eigen_impl::RotationVector<PrimType_, Usage_>::Scalar Scalar;
+//  inline static eigen_impl::RotationQuaternionDiff<PrimType_> convert(const eigen_impl::RotationVector<PrimType_>& rotationVector, const eigen_impl::RotationVectorDiff<PrimType_>& rotationVectorDiff) {
+//    typedef typename eigen_impl::RotationVector<PrimType_>::Scalar Scalar;
 //    const PrimType_ v = rotationVector.vector().norm();
 //    const PrimType_ v1 = rotationVector.x();
 //    const PrimType_ v2 = rotationVector.y();
@@ -223,7 +220,7 @@ class RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_,
 //              2.0, 2.0, 0.0,
 //              0.0, 0.0, 2.0;
 //      G_v0 *=0.25;
-//      return eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>(G_v0*rotationVectorDiff.toImplementation());
+//      return eigen_impl::RotationQuaternionDiff<PrimType_>(G_v0*rotationVectorDiff.toImplementation());
 //    }
 //
 //
@@ -243,22 +240,20 @@ class RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_,
 //    const PrimType_ z = dv3*(t10-t5*t8*(v3*v3)*(1.0/2.0))-dv1*t5*t8*v1*v3*(1.0/2.0)-dv2*t5*t8*v2*v3*(1.0/2.0);
 //
 //
-//    return eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>(w, x, y, z);
+//    return eigen_impl::RotationQuaternionDiff<PrimType_>(w, x, y, z);
 //  }
 //};
 
-//template<typename PrimType_, enum RotationUsage Usage_>
-//class RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>, eigen_impl::RotationVectorDiff<PrimType_, Usage_>, eigen_impl::RotationQuaternion<PrimType_, Usage_>> {
+//template<typename PrimType_>
+//class RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_>, eigen_impl::RotationVectorDiff<PrimType_>, eigen_impl::RotationQuaternion<PrimType_>> {
 // public:
-//  inline static eigen_impl::RotationQuaternionDiff<PrimType_, Usage_> convert(const eigen_impl::RotationQuaternion<PrimType_, Usage_>& rquat, const eigen_impl::RotationVectorDiff<PrimType_, Usage_>& rotationVectorDiff) {
-//    return RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_, Usage_>, eigen_impl::RotationVectorDiff<PrimType_, Usage_>, eigen_impl::RotationVector<PrimType_, Usage_>>::convert(eigen_impl::RotationVector<PrimType_, Usage_>(rquat), rotationVectorDiff);
+//  inline static eigen_impl::RotationQuaternionDiff<PrimType_> convert(const eigen_impl::RotationQuaternion<PrimType_>& rquat, const eigen_impl::RotationVectorDiff<PrimType_>& rotationVectorDiff) {
+//    return RotationDiffConversionTraits<eigen_impl::RotationQuaternionDiff<PrimType_>, eigen_impl::RotationVectorDiff<PrimType_>, eigen_impl::RotationVector<PrimType_>>::convert(eigen_impl::RotationVector<PrimType_>(rquat), rotationVectorDiff);
 //  }
 //};
 
 
 
 } // namespace internal
-} // namespace rotations
 } // namespace kindr
 
-#endif /* KINDR_ROTATIONS_EIGEN_ROTATIONQUATERNIONDIFF_HPP_ */

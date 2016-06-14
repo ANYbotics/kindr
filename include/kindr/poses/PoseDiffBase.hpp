@@ -26,25 +26,9 @@
  *
 */
 
-
-#ifndef KINDR_POSES_POSEDIFFBASE_HPP_
-#define KINDR_POSES_POSEDIFFBASE_HPP_
-
-
-//#include "kindr/rotations/RotationDiffBase.hpp"
-//#include "kindr/positions/PositionDiffBase.hpp"
-
+#pragma once
 
 namespace kindr {
-namespace poses {
-
-namespace internal {
-
-
-
-} // namespace internal
-
-
 
 /*! \class PoseDiffBase
  * \brief Base class that defines the interface of the time derivative of a pose of a rigid body.
@@ -115,8 +99,4 @@ class TwistBase : public PoseDiffBase<Derived_> {
 };
 
 
-} // namespace poses
 } // namespace kindr
-
-
-#endif /* KINDR_POSES_POSEDIFFBASE_HPP_ */

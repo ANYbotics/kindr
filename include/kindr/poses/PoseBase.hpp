@@ -25,8 +25,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
 */
-#ifndef KINDR_POSES_POSESBASE_HPP_
-#define KINDR_POSES_POSESBASE_HPP_
+
+#pragma once
 
 
 #include "kindr/common/common.hpp"
@@ -36,8 +36,7 @@ namespace kindr {
 //! Generic pose interface
 /*! \ingroup poses
  */
-namespace poses {
-//! Internal stuff (only for developers)
+
 namespace internal {
 
 /*! \class TransformationTraits
@@ -156,12 +155,6 @@ class HomogeneousTransformationBase : public PoseBase<Derived_> {
 };
 
 
-} // namespace internal
 
-namespace internal {
-
-} // namespace poses
 } // namespace kindr
 
-
-#endif /* KINDR_POSES_POSESBASE_HPP_ */

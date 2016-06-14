@@ -25,8 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
 */
-#ifndef KINDR_ROTATIONS_EIGEN_EULERANGLESXYZ_DIFF_HPP_
-#define KINDR_ROTATIONS_EIGEN_EULERANGLESXYZ_DIFF_HPP_
+#pragma once
 
 #include <Eigen/Core>
 
@@ -38,8 +37,6 @@
 #include "kindr/linear_algebra/LinearAlgebra.hpp"
 
 namespace kindr {
-namespace rotations {
-namespace eigen_impl {
 
 /*! \class EulerAnglesXyzDiff
  * \brief Implementation of time derivatives of Euler angles (X,Y',Z'' / roll,pitch,yaw) based on Eigen::Matrix<Scalar, 3, 1>
@@ -50,8 +47,8 @@ namespace eigen_impl {
  * \tparam PrimType_ the primitive type of the data (double or float)
  * \ingroup rotations
  */
-template<typename PrimType_, enum RotationUsage Usage_ >
-class EulerAnglesXyzDiff : public EulerAnglesDiffXyzBase<EulerAnglesXyzDiff<PrimType_,Usage_>,Usage_> {
+template<typename PrimType_>
+class EulerAnglesXyzDiff : public RotationDiffBase<EulerAnglesXyzDiff<PrimType_>> {
  private:
   /*! \brief The base type.
    */
@@ -99,7 +96,7 @@ class EulerAnglesXyzDiff : public EulerAnglesDiffXyzBase<EulerAnglesXyzDiff<Prim
    * \param other     other time derivative
    */
   template<typename RotationDerived_, typename OtherDerived_>
-  inline explicit EulerAnglesXyzDiff(const RotationBase<RotationDerived_, Usage_>& rotation, const RotationDiffBase<OtherDerived_, Usage_>& other)
+  inline explicit EulerAnglesXyzDiff(const RotationBase<RotationDerived_>& rotation, const RotationDiffBase<OtherDerived_>& other)
     : xyzDiff_(internal::RotationDiffConversionTraits<EulerAnglesXyzDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived()).toImplementation()){
   }
 
@@ -108,7 +105,7 @@ class EulerAnglesXyzDiff : public EulerAnglesDiffXyzBase<EulerAnglesXyzDiff<Prim
    *  \returns reference
    */
   template<typename OtherDerived_, typename RotationDerived_>
-  OtherDerived_ cast(const RotationBase<RotationDerived_, Usage_>& rotation) const {
+  OtherDerived_ cast(const RotationBase<RotationDerived_>& rotation) const {
     return internal::RotationDiffConversionTraits<OtherDerived_, EulerAnglesXyzDiff, RotationDerived_>::convert(rotation.derived(), *this);
   }
 
@@ -222,10 +219,9 @@ class EulerAnglesXyzDiff : public EulerAnglesDiffXyzBase<EulerAnglesXyzDiff<Prim
    }
 
 
-   using EulerAnglesDiffBase<EulerAnglesXyzDiff<PrimType_,Usage_>,Usage_>::operator+; // otherwise ambiguous EulerAnglesDiffBase and Eigen
+   using RotationDiffBase<EulerAnglesXyzDiff<PrimType_>>::operator+; // otherwise ambiguous EulerAnglesDiffBase and Eigen
 
-
-   using EulerAnglesDiffBase<EulerAnglesXyzDiff<PrimType_,Usage_>,Usage_>::operator-; // otherwise ambiguous EulerAnglesDiffBase and Eigen
+   using RotationDiffBase<EulerAnglesXyzDiff<PrimType_>>::operator-; // otherwise ambiguous EulerAnglesDiffBase and Eigen
 
 
    /*! \brief Used for printing the object with std::cout.
@@ -240,25 +236,24 @@ class EulerAnglesXyzDiff : public EulerAnglesDiffXyzBase<EulerAnglesXyzDiff<Prim
 };
 
 //! \brief Time derivative of Euler angles with x-y-z convention and primitive type double
-typedef EulerAnglesXyzDiff<double, RotationUsage::PASSIVE> EulerAnglesXyzDiffPD;
+typedef EulerAnglesXyzDiff<double> EulerAnglesXyzDiffPD;
 //! \brief Time derivative of Euler angles with x-y-z convention and primitive type float
-typedef EulerAnglesXyzDiff<float, RotationUsage::PASSIVE> EulerAnglesXyzDiffPF;
+typedef EulerAnglesXyzDiff<float> EulerAnglesXyzDiffPF;
 //! \brief Time derivative of Euler angles with x-y-z convention and primitive type double
-typedef EulerAnglesXyzDiff<double, RotationUsage::ACTIVE> EulerAnglesXyzDiffAD;
+typedef EulerAnglesXyzDiff<double> EulerAnglesXyzDiffD;
 //! \brief Time derivative of Euler angles with x-y-z convention and primitive type float
-typedef EulerAnglesXyzDiff<float, RotationUsage::ACTIVE> EulerAnglesXyzDiffAF;
+typedef EulerAnglesXyzDiff<float> EulerAnglesXyzDiffF;
 
 
-} // namespace eigen_impl
 
 namespace internal {
 
 
 
 template<typename PrimType_>
-class RotationDiffConversionTraits<eigen_impl::EulerAnglesXyzDiff<PrimType_, RotationUsage::PASSIVE>, eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::PASSIVE>, eigen_impl::EulerAnglesXyz<PrimType_, RotationUsage::PASSIVE>> {
+class RotationDiffConversionTraits<EulerAnglesXyzDiff<PrimType_>, LocalAngularVelocity<PrimType_>, EulerAnglesXyz<PrimType_>> {
  public:
-  inline static eigen_impl::EulerAnglesXyzDiff<PrimType_, RotationUsage::PASSIVE> convert(const eigen_impl::EulerAnglesXyz<PrimType_, RotationUsage::PASSIVE>& eulerAngles, const eigen_impl::LocalAngularVelocity<PrimType_, RotationUsage::PASSIVE>& angularVelocity) {
+  inline static EulerAnglesXyzDiff<PrimType_> convert(const EulerAnglesXyz<PrimType_>& eulerAngles, const LocalAngularVelocity<PrimType_>& angularVelocity) {
     const PrimType_ beta_Var = eulerAngles.pitch();
     const PrimType_ gamma_Var = eulerAngles.yaw();
     const PrimType_ w1 = angularVelocity.toImplementation()(0);
@@ -270,17 +265,13 @@ class RotationDiffConversionTraits<eigen_impl::EulerAnglesXyzDiff<PrimType_, Rot
     const PrimType_ t4 = cos(gamma_Var);
     const PrimType_ t5 = sin(gamma_Var);
     const PrimType_ t6 = sin(beta_Var);
-    return eigen_impl::EulerAnglesXyzDiff<PrimType_, RotationUsage::PASSIVE>(t3*t4*w1-t3*t5*w2, t4*w2+t5*w1, w3-t3*t4*t6*w1+t3*t5*t6*w2);
+    return EulerAnglesXyzDiff<PrimType_>(t3*t4*w1-t3*t5*w2, t4*w2+t5*w1, w3-t3*t4*t6*w1+t3*t5*t6*w2);
 
   }
 };
 
 
 } // namespace internal
-} // namespace rotations
 } // namespace kindr
 
 
-
-
-#endif /* KINDR_ROTATIONS_EIGEN_EULERANGLESXYZ_DIFF_HPP_ */
