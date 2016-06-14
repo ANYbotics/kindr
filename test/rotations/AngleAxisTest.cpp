@@ -385,35 +385,35 @@ TYPED_TEST(AngleAxisSingleTest, testConcatenation){
 
   // Check concatenation of 3 different quarters
   rotAngleAxis = this->rotAngleAxisQuarterX.inverted()*this->rotAngleAxisQuarterY*this->rotAngleAxisQuarterX;
-  ASSERT_NEAR(rotAngleAxis.getUnique().angle(), this->rotAngleAxisQuarterZ.getUnique().angle(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.getUnique().axis().x(), this->rotAngleAxisQuarterZ.getUnique().axis().x(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.getUnique().axis().y(), this->rotAngleAxisQuarterZ.getUnique().axis().y(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.getUnique().axis().z(), this->rotAngleAxisQuarterZ.getUnique().axis().z(),1e-6);
-  rotAngleAxis = this->rotAngleAxisQuarterX.inverted()*this->rotAngleAxisQuarterZ*this->rotAngleAxisQuarterX;
-  ASSERT_NEAR(rotAngleAxis.getUnique().angle(), this->rotAngleAxisQuarterY.inverted().getUnique().angle(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.getUnique().axis().x(), this->rotAngleAxisQuarterY.inverted().getUnique().axis().x(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.getUnique().axis().y(), this->rotAngleAxisQuarterY.inverted().getUnique().axis().y(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.getUnique().axis().z(), this->rotAngleAxisQuarterY.inverted().getUnique().axis().z(),1e-6);
-  rotAngleAxis = this->rotAngleAxisQuarterY.inverted()*this->rotAngleAxisQuarterX*this->rotAngleAxisQuarterY;
   ASSERT_NEAR(rotAngleAxis.getUnique().angle(), this->rotAngleAxisQuarterZ.inverted().getUnique().angle(),1e-6);
   ASSERT_NEAR(rotAngleAxis.getUnique().axis().x(), this->rotAngleAxisQuarterZ.inverted().getUnique().axis().x(),1e-6);
   ASSERT_NEAR(rotAngleAxis.getUnique().axis().y(), this->rotAngleAxisQuarterZ.inverted().getUnique().axis().y(),1e-6);
   ASSERT_NEAR(rotAngleAxis.getUnique().axis().z(), this->rotAngleAxisQuarterZ.inverted().getUnique().axis().z(),1e-6);
-  rotAngleAxis = this->rotAngleAxisQuarterY.inverted()*this->rotAngleAxisQuarterZ*this->rotAngleAxisQuarterY;
-  ASSERT_NEAR(rotAngleAxis.getUnique().angle(), this->rotAngleAxisQuarterX.getUnique().angle(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.getUnique().axis().x(), this->rotAngleAxisQuarterX.getUnique().axis().x(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.getUnique().axis().y(), this->rotAngleAxisQuarterX.getUnique().axis().y(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.getUnique().axis().z(), this->rotAngleAxisQuarterX.getUnique().axis().z(),1e-6);
-  rotAngleAxis = this->rotAngleAxisQuarterZ.inverted()*this->rotAngleAxisQuarterX*this->rotAngleAxisQuarterZ;
+  rotAngleAxis = this->rotAngleAxisQuarterX.inverted()*this->rotAngleAxisQuarterZ*this->rotAngleAxisQuarterX;
   ASSERT_NEAR(rotAngleAxis.getUnique().angle(), this->rotAngleAxisQuarterY.getUnique().angle(),1e-6);
   ASSERT_NEAR(rotAngleAxis.getUnique().axis().x(), this->rotAngleAxisQuarterY.getUnique().axis().x(),1e-6);
   ASSERT_NEAR(rotAngleAxis.getUnique().axis().y(), this->rotAngleAxisQuarterY.getUnique().axis().y(),1e-6);
   ASSERT_NEAR(rotAngleAxis.getUnique().axis().z(), this->rotAngleAxisQuarterY.getUnique().axis().z(),1e-6);
-  rotAngleAxis = this->rotAngleAxisQuarterZ.inverted()*this->rotAngleAxisQuarterY*this->rotAngleAxisQuarterZ;
+  rotAngleAxis = this->rotAngleAxisQuarterY.inverted()*this->rotAngleAxisQuarterX*this->rotAngleAxisQuarterY;
+  ASSERT_NEAR(rotAngleAxis.getUnique().angle(), this->rotAngleAxisQuarterZ.getUnique().angle(),1e-6);
+  ASSERT_NEAR(rotAngleAxis.getUnique().axis().x(), this->rotAngleAxisQuarterZ.getUnique().axis().x(),1e-6);
+  ASSERT_NEAR(rotAngleAxis.getUnique().axis().y(), this->rotAngleAxisQuarterZ.getUnique().axis().y(),1e-6);
+  ASSERT_NEAR(rotAngleAxis.getUnique().axis().z(), this->rotAngleAxisQuarterZ.getUnique().axis().z(),1e-6);
+  rotAngleAxis = this->rotAngleAxisQuarterY.inverted()*this->rotAngleAxisQuarterZ*this->rotAngleAxisQuarterY;
   ASSERT_NEAR(rotAngleAxis.getUnique().angle(), this->rotAngleAxisQuarterX.inverted().getUnique().angle(),1e-6);
   ASSERT_NEAR(rotAngleAxis.getUnique().axis().x(), this->rotAngleAxisQuarterX.inverted().getUnique().axis().x(),1e-6);
   ASSERT_NEAR(rotAngleAxis.getUnique().axis().y(), this->rotAngleAxisQuarterX.inverted().getUnique().axis().y(),1e-6);
   ASSERT_NEAR(rotAngleAxis.getUnique().axis().z(), this->rotAngleAxisQuarterX.inverted().getUnique().axis().z(),1e-6);
+  rotAngleAxis = this->rotAngleAxisQuarterZ.inverted()*this->rotAngleAxisQuarterX*this->rotAngleAxisQuarterZ;
+  ASSERT_NEAR(rotAngleAxis.getUnique().angle(), this->rotAngleAxisQuarterY.inverted().getUnique().angle(),1e-6);
+  ASSERT_NEAR(rotAngleAxis.getUnique().axis().x(), this->rotAngleAxisQuarterY.inverted().getUnique().axis().x(),1e-6);
+  ASSERT_NEAR(rotAngleAxis.getUnique().axis().y(), this->rotAngleAxisQuarterY.inverted().getUnique().axis().y(),1e-6);
+  ASSERT_NEAR(rotAngleAxis.getUnique().axis().z(), this->rotAngleAxisQuarterY.inverted().getUnique().axis().z(),1e-6);
+  rotAngleAxis = this->rotAngleAxisQuarterZ.inverted()*this->rotAngleAxisQuarterY*this->rotAngleAxisQuarterZ;
+  ASSERT_NEAR(rotAngleAxis.getUnique().angle(), this->rotAngleAxisQuarterX.getUnique().angle(),1e-6);
+  ASSERT_NEAR(rotAngleAxis.getUnique().axis().x(), this->rotAngleAxisQuarterX.getUnique().axis().x(),1e-6);
+  ASSERT_NEAR(rotAngleAxis.getUnique().axis().y(), this->rotAngleAxisQuarterX.getUnique().axis().y(),1e-6);
+  ASSERT_NEAR(rotAngleAxis.getUnique().axis().z(), this->rotAngleAxisQuarterX.getUnique().axis().z(),1e-6);
 }
 
 
@@ -447,7 +447,7 @@ TYPED_TEST(AngleAxisSingleTest, testVectorRotation){
   Vector testVec1;
   Vector testVec2;
 
-  int signSwitch = -1;
+  int signSwitch = 1;
 
   // Check rotation of base vectors around main axis
   testVec = this->rotAngleAxisQuarterX.rotate(this->vecX);

@@ -557,35 +557,35 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionConcatenation){
 
   // Check concatenation of 3 different quarters
   rotQuat = this->rotQuatQuarterX.inverted()*this->rotQuatQuarterY*this->rotQuatQuarterX;
-  ASSERT_NEAR(rotQuat.getUnique().w(), this->rotQuatQuarterZ.getUnique().w(),1e-6);
-  ASSERT_NEAR(rotQuat.getUnique().x(), this->rotQuatQuarterZ.getUnique().x(),1e-6);
-  ASSERT_NEAR(rotQuat.getUnique().y(), this->rotQuatQuarterZ.getUnique().y(),1e-6);
-  ASSERT_NEAR(rotQuat.getUnique().z(), this->rotQuatQuarterZ.getUnique().z(),1e-6);
-  rotQuat = this->rotQuatQuarterX.inverted()*this->rotQuatQuarterZ*this->rotQuatQuarterX;
-  ASSERT_NEAR(rotQuat.getUnique().w(), this->rotQuatQuarterY.inverted().getUnique().w(),1e-6);
-  ASSERT_NEAR(rotQuat.getUnique().x(), this->rotQuatQuarterY.inverted().getUnique().x(),1e-6);
-  ASSERT_NEAR(rotQuat.getUnique().y(), this->rotQuatQuarterY.inverted().getUnique().y(),1e-6);
-  ASSERT_NEAR(rotQuat.getUnique().z(), this->rotQuatQuarterY.inverted().getUnique().z(),1e-6);
-  rotQuat = this->rotQuatQuarterY.inverted()*this->rotQuatQuarterX*this->rotQuatQuarterY;
   ASSERT_NEAR(rotQuat.getUnique().w(), this->rotQuatQuarterZ.inverted().getUnique().w(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().x(), this->rotQuatQuarterZ.inverted().getUnique().x(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().y(), this->rotQuatQuarterZ.inverted().getUnique().y(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().z(), this->rotQuatQuarterZ.inverted().getUnique().z(),1e-6);
-  rotQuat = this->rotQuatQuarterY.inverted()*this->rotQuatQuarterZ*this->rotQuatQuarterY;
-  ASSERT_NEAR(rotQuat.getUnique().w(), this->rotQuatQuarterX.getUnique().w(),1e-6);
-  ASSERT_NEAR(rotQuat.getUnique().x(), this->rotQuatQuarterX.getUnique().x(),1e-6);
-  ASSERT_NEAR(rotQuat.getUnique().y(), this->rotQuatQuarterX.getUnique().y(),1e-6);
-  ASSERT_NEAR(rotQuat.getUnique().z(), this->rotQuatQuarterX.getUnique().z(),1e-6);
-  rotQuat = this->rotQuatQuarterZ.inverted()*this->rotQuatQuarterX*this->rotQuatQuarterZ;
+  rotQuat = this->rotQuatQuarterX.inverted()*this->rotQuatQuarterZ*this->rotQuatQuarterX;
   ASSERT_NEAR(rotQuat.getUnique().w(), this->rotQuatQuarterY.getUnique().w(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().x(), this->rotQuatQuarterY.getUnique().x(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().y(), this->rotQuatQuarterY.getUnique().y(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().z(), this->rotQuatQuarterY.getUnique().z(),1e-6);
-  rotQuat = this->rotQuatQuarterZ.inverted()*this->rotQuatQuarterY*this->rotQuatQuarterZ;
+  rotQuat = this->rotQuatQuarterY.inverted()*this->rotQuatQuarterX*this->rotQuatQuarterY;
+  ASSERT_NEAR(rotQuat.getUnique().w(), this->rotQuatQuarterZ.getUnique().w(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().x(), this->rotQuatQuarterZ.getUnique().x(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().y(), this->rotQuatQuarterZ.getUnique().y(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().z(), this->rotQuatQuarterZ.getUnique().z(),1e-6);
+  rotQuat = this->rotQuatQuarterY.inverted()*this->rotQuatQuarterZ*this->rotQuatQuarterY;
   ASSERT_NEAR(rotQuat.getUnique().w(), this->rotQuatQuarterX.inverted().getUnique().w(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().x(), this->rotQuatQuarterX.inverted().getUnique().x(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().y(), this->rotQuatQuarterX.inverted().getUnique().y(),1e-6);
   ASSERT_NEAR(rotQuat.getUnique().z(), this->rotQuatQuarterX.inverted().getUnique().z(),1e-6);
+  rotQuat = this->rotQuatQuarterZ.inverted()*this->rotQuatQuarterX*this->rotQuatQuarterZ;
+  ASSERT_NEAR(rotQuat.getUnique().w(), this->rotQuatQuarterY.inverted().getUnique().w(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().x(), this->rotQuatQuarterY.inverted().getUnique().x(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().y(), this->rotQuatQuarterY.inverted().getUnique().y(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().z(), this->rotQuatQuarterY.inverted().getUnique().z(),1e-6);
+  rotQuat = this->rotQuatQuarterZ.inverted()*this->rotQuatQuarterY*this->rotQuatQuarterZ;
+  ASSERT_NEAR(rotQuat.getUnique().w(), this->rotQuatQuarterX.getUnique().w(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().x(), this->rotQuatQuarterX.getUnique().x(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().y(), this->rotQuatQuarterX.getUnique().y(),1e-6);
+  ASSERT_NEAR(rotQuat.getUnique().z(), this->rotQuatQuarterX.getUnique().z(),1e-6);
 }
 
 // Testing of special matrices
@@ -642,7 +642,7 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionVectorRotation){
   Vector testVec1;
   Vector testVec2;
 
-  int signSwitch = -1;
+  int signSwitch = 1;
 
   // Check rotation of base vectors around main axis
   testVec = this->rotQuatQuarterX.rotate(this->vecX);
