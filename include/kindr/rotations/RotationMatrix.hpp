@@ -393,34 +393,39 @@ template<typename DestPrimType_, typename SourcePrimType_>
 class ConversionTraits<RotationMatrix<DestPrimType_>, EulerAnglesXyz<SourcePrimType_>> {
  public:
   inline static RotationMatrix<DestPrimType_> convert(const EulerAnglesXyz<SourcePrimType_>& xyz) {
-    RotationMatrix<DestPrimType_> matrix;
+//    RotationMatrix<DestPrimType_> matrix;
+//
+//    Eigen::Matrix<DestPrimType_,3,3> R_BI;
+//
+//    const DestPrimType_ sr = sin(xyz.toImplementation()(0));
+//    const DestPrimType_ cr = cos(xyz.toImplementation()(0));
+//    const DestPrimType_ sp = sin(xyz.toImplementation()(1));
+//    const DestPrimType_ cp = cos(xyz.toImplementation()(1));
+//    const DestPrimType_ sy = sin(xyz.toImplementation()(2));
+//    const DestPrimType_ cy = cos(xyz.toImplementation()(2));
+//
+//    const DestPrimType_ srsy = sr*sy;
+//    const DestPrimType_ srcy = sr*cy;
+//    const DestPrimType_ crsy = cr*sy;
+//    const DestPrimType_ crcy = cr*cy;
+//
+//    R_BI(0,0) = cp*cy;
+//    R_BI(0,1) = -cp*sy;
+//    R_BI(0,2) = sp;
+//    R_BI(1,0) = crsy+srcy*sp;
+//    R_BI(1,1) = crcy-srsy*sp;
+//    R_BI(1,2) = -sr*cp;
+//    R_BI(2,0) = srsy-crcy*sp;
+//    R_BI(2,1) = srcy+crsy*sp;
+//    R_BI(2,2) = cr*cp;
+//
+//    matrix.toImplementation() = R_BI;
+//    return matrix;
+//
 
-    Eigen::Matrix<DestPrimType_,3,3> R_BI;
-
-    const DestPrimType_ sr = sin(xyz.toImplementation()(0));
-    const DestPrimType_ cr = cos(xyz.toImplementation()(0));
-    const DestPrimType_ sp = sin(xyz.toImplementation()(1));
-    const DestPrimType_ cp = cos(xyz.toImplementation()(1));
-    const DestPrimType_ sy = sin(xyz.toImplementation()(2));
-    const DestPrimType_ cy = cos(xyz.toImplementation()(2));
-
-    const DestPrimType_ srsy = sr*sy;
-    const DestPrimType_ srcy = sr*cy;
-    const DestPrimType_ crsy = cr*sy;
-    const DestPrimType_ crcy = cr*cy;
-
-    R_BI(0,0) = cp*cy;
-    R_BI(0,1) = -cp*sy;
-    R_BI(0,2) = sp;
-    R_BI(1,0) = crsy+srcy*sp;
-    R_BI(1,1) = crcy-srsy*sp;
-    R_BI(1,2) = -sr*cp;
-    R_BI(2,0) = srsy-crcy*sp;
-    R_BI(2,1) = srcy+crsy*sp;
-    R_BI(2,2) = cr*cp;
-
-    matrix.toImplementation() = R_BI;
-    return matrix;
+        RotationMatrix<DestPrimType_> matrix;
+        matrix.toImplementation() = RotationQuaternion<DestPrimType_>(xyz).toImplementation().toRotationMatrix();
+        return matrix;
   }
 };
 
@@ -428,34 +433,58 @@ template<typename DestPrimType_, typename SourcePrimType_>
 class ConversionTraits<RotationMatrix<DestPrimType_>, EulerAnglesZyx<SourcePrimType_>> {
  public:
   inline static RotationMatrix<DestPrimType_> convert(const EulerAnglesZyx<SourcePrimType_>& zyx) {
-    RotationMatrix<DestPrimType_> matrix;
-    Eigen::Matrix<DestPrimType_,3,3> R_BI;
+//    RotationMatrix<DestPrimType_> matrix;
+//    Eigen::Matrix<DestPrimType_,3,3> R_BI;
+//
+//    const DestPrimType_ sy = sin(zyx.toImplementation()(0));
+//    const DestPrimType_ cy = cos(zyx.toImplementation()(0));
+//    const DestPrimType_ sp = sin(zyx.toImplementation()(1));
+//    const DestPrimType_ cp = cos(zyx.toImplementation()(1));
+//    const DestPrimType_ sr = sin(zyx.toImplementation()(2));
+//    const DestPrimType_ cr = cos(zyx.toImplementation()(2));
+//
+//    const DestPrimType_ sysr = sy*sr;
+//    const DestPrimType_ sycr = sy*cr;
+//    const DestPrimType_ cysr = cy*sr;
+//    const DestPrimType_ cycr = cy*cr;
+//
+//    R_BI(0,0) = cy*cp;
+//    R_BI(0,1) = cysr*sp-sycr;
+//    R_BI(0,2) = sysr+cycr*sp;
+//    R_BI(1,0) = cp*sy;
+//    R_BI(1,1) = sysr*sp+cycr;
+//    R_BI(1,2) = sycr*sp-cysr;
+//    R_BI(2,0) = -sp;
+//    R_BI(2,1) = cp*sr;
+//    R_BI(2,2) = cp*cr;
+//
+//    matrix.toImplementation() = R_BI;
+//
+//
+//    RotationMatrix<DestPrimType_> matrix;
+//    matrix.toImplementation() = RotationQuaternion<DestPrimType_>(zyx).toImplementation().toRotationMatrix();
+//    return matrix;
 
-    const DestPrimType_ sy = sin(zyx.toImplementation()(0));
-    const DestPrimType_ cy = cos(zyx.toImplementation()(0));
-    const DestPrimType_ sp = sin(zyx.toImplementation()(1));
-    const DestPrimType_ cp = cos(zyx.toImplementation()(1));
-    const DestPrimType_ sr = sin(zyx.toImplementation()(2));
-    const DestPrimType_ cr = cos(zyx.toImplementation()(2));
-
-    const DestPrimType_ sysr = sy*sr;
-    const DestPrimType_ sycr = sy*cr;
-    const DestPrimType_ cysr = cy*sr;
-    const DestPrimType_ cycr = cy*cr;
-
-    R_BI(0,0) = cy*cp;
-    R_BI(0,1) = cysr*sp-sycr;
-    R_BI(0,2) = sysr+cycr*sp;
-    R_BI(1,0) = cp*sy;
-    R_BI(1,1) = sysr*sp+cycr;
-    R_BI(1,2) = sycr*sp-cysr;
-    R_BI(2,0) = -sp;
-    R_BI(2,1) = cp*sr;
-    R_BI(2,2) = cp*cr;
-
-    matrix.toImplementation() = R_BI;
-
-    return matrix;
+    Eigen::Matrix<DestPrimType_,3,3> matrix;
+    const DestPrimType_ phi = zyx.x();
+    const DestPrimType_ theta = zyx.y();
+    const DestPrimType_ psi = zyx.z();
+    const DestPrimType_ t2 = cos(theta);
+    const DestPrimType_ t3 = sin(psi);
+    const DestPrimType_ t4 = cos(psi);
+    const DestPrimType_ t5 = sin(theta);
+    const DestPrimType_ t6 = cos(phi);
+    const DestPrimType_ t7 = sin(phi);
+    matrix(0,0) = t2*t4;
+    matrix(0,1) = -t2*t3;
+    matrix(0,2) = t5;
+    matrix(1,0) = t3*t6+t4*t5*t7;
+    matrix(1,1) = t4*t6-t3*t5*t7;
+    matrix(1,2) = -t2*t7;
+    matrix(2,0) = t3*t7-t4*t5*t6;
+    matrix(2,1) = t4*t7+t3*t5*t6;
+    matrix(2,2) = t2*t6;
+    return RotationMatrix<DestPrimType_>(matrix);
   }
 };
 

@@ -257,6 +257,7 @@ class RotationDiffConversionTraits<EulerAnglesZyxDiff<PrimType_>, LocalAngularVe
 
 
   inline static EulerAnglesZyxDiff<PrimType_> convert(const EulerAnglesZyx<PrimType_>& eulerAngles, const LocalAngularVelocity<PrimType_>& angularVelocity) {
+/*
     const PrimType_ theta = eulerAngles.pitch();
     const PrimType_ phi = eulerAngles.roll();
     const PrimType_ w1 = angularVelocity.x();
@@ -270,6 +271,46 @@ class RotationDiffConversionTraits<EulerAnglesZyxDiff<PrimType_>, LocalAngularVe
     const PrimType_ t5 = sin(phi);
     const PrimType_ t6 = sin(theta);
     return EulerAnglesZyxDiff<PrimType_>(t3*t4*w3+t3*t5*w2, t4*w2-t5*w3, w1+t3*t4*t6*w3+t3*t5*t6*w2);
+*/
+    Eigen::Matrix<PrimType_, 3, 3> jacobianInv = Eigen::Matrix<PrimType_, 3, 3>::Zero();
+    using std::sin;
+    using std::cos;
+    const PrimType_ x = eulerAngles.x();
+    const PrimType_ y = eulerAngles.y();
+    const PrimType_ z = eulerAngles.z();
+    const PrimType_ t2 = sin(x);
+    const PrimType_ t3 = cos(x);
+    const PrimType_ t4 = t2*t2;
+    const PrimType_ t5 = t3*t3;
+    const PrimType_ t6 = cos(y);
+    const PrimType_ t7 = t5*t6;
+    const PrimType_ t8 = t4+t7;
+    const PrimType_ t9 = 1.0/t8;
+    const PrimType_ t10 = sin(y);
+    jacobianInv(0,1) = -t2*t9;
+    jacobianInv(0,2) = t3*t9;
+    jacobianInv(1,1) = t3*t6*t9;
+    jacobianInv(1,2) = t2*t9;
+    jacobianInv(2,0) = 1.0;
+    jacobianInv(2,1) = t2*t3*t9*t10;
+    jacobianInv(2,2) = -t5*t9*t10;
+    Eigen::Matrix<PrimType_, 3, 1> anglesDiff= jacobianInv*angularVelocity.toImplementation();
+    return EulerAnglesZyxDiff<PrimType_>(anglesDiff);
+
+//    Eigen::Matrix<PrimType_, 3, 3> jacobian = Eigen::Matrix<PrimType_, 3, 3>::Zero();
+//    using std::sin;
+//    using std::cos;
+//    const PrimType_ phi = eulerAngles.x();
+//    const PrimType_ theta = eulerAngles.y();
+//    const PrimType_ psi = eulerAngles.z();
+//    const PrimType_ t2 = cos(theta);
+//    const PrimType_ t3 = 1.0/t2;
+//    const PrimType_ t4 = cos(phi);
+//    const PrimType_ t5 = sin(phi);
+//    const PrimType_ t6 = sin(theta);
+//    jacobian(0, 0) = -t3*t4*angularVelocity.z()+t3*t5*angularVelocity.y();
+//    jacobian(1, 0) = -t4*angularVelocity.y()-t5*angularVelocity.z();
+//    jacobian(2, 0) = -angularVelocity.x()+t3*t4*t6*angularVelocity.z()-t3*t5*t6*angularVelocity.y();
 
   }
 };

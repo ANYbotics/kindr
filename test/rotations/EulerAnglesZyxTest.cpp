@@ -674,3 +674,20 @@ TYPED_TEST(EulerAnglesZyxRotationQuaternionPairTest, testInversion){
   ASSERT_NEAR(rot1.z(),rot2.z(),1e-6);
 }
 
+TYPED_TEST(EulerAnglesZyxSingleTest, testRotationOrder)
+{
+  typedef typename TestFixture::EulerAnglesZyx EulerAnglesZyx;
+  typedef typename TestFixture::Scalar Scalar;
+  typedef typename TestFixture::Vector Vector;
+
+  EulerAnglesZyx rot1(this->eigenVector3v1);
+  EulerAnglesZyx rot2 = EulerAnglesZyx(0,0,this->eigenVector3v1(2))
+                        *EulerAnglesZyx(0,this->eigenVector3v1(1),0)
+                        *EulerAnglesZyx(this->eigenVector3v1(0),0,0);
+
+  ASSERT_NEAR(rot1.x(), rot2.x(),1e-6);
+  ASSERT_NEAR(rot1.y(), rot2.y(),1e-6);
+  ASSERT_NEAR(rot1.z(), rot2.z(),1e-6);
+
+}
+

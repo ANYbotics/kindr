@@ -184,13 +184,39 @@ TYPED_TEST(EulerAnglesZyxDiffTest, testFiniteDifference)
   typedef typename TestFixture::RotationDiff RotationDiff;
   typedef  typename TestFixture::Vector3 Vector3;
 
-  const  double dt = 1e-3;
+  const  double dt = 1.0e-8;
+  for (auto rotation : this->rotations) {
+    for (auto angularVelocity2 : this->angularVelocities) {
+      RotationDiff rotationDiff(angularVelocity2.toImplementation());
+      rot::LocalAngularVelocity<Scalar> angularVelocity(rotation, rotationDiff);
+      // Finite difference method for checking derivatives
+
+      Rotation rotationNext = rotation.boxPlus(dt*angularVelocity.toImplementation());
+      Vector3 dn = (rotationNext.getUnique().toImplementation()-rotation.getUnique().toImplementation())/dt;
+
+      ASSERT_NEAR(rotationDiff.z(),dn(0),1e-3) << " angular velocity: " << angularVelocity << " rotation: " << rotation << " rotationNext: " << rotationNext  << " diff: " << rotationDiff  << " approxdiff: " << dn.transpose();
+      ASSERT_NEAR(rotationDiff.y(),dn(1),1e-3)  << " angular velocity: " << angularVelocity  <<  "rotation: " << rotation << " rotationNext: " << rotationNext << " diff: " << rotationDiff << " approxdiff: " << dn.transpose();
+      ASSERT_NEAR(rotationDiff.x(),dn(2),1e-3) << " angular velocity: " << angularVelocity << " rotation: " << rotation << " rotationNext: " << rotationNext  << " diff: " << rotationDiff << " approxdiff: " << dn.transpose();
+
+    }
+  }
+}
+
+TYPED_TEST(EulerAnglesZyxDiffTest, testFiniteDifferenceInverse)
+{
+  typedef typename TestFixture::Scalar Scalar;
+  typedef typename TestFixture::Rotation Rotation;
+  typedef typename TestFixture::RotationDiff RotationDiff;
+  typedef  typename TestFixture::Vector3 Vector3;
+
+  const  double dt = 1.0e-8;
   for (auto rotation : this->rotations) {
     for (auto angularVelocity : this->angularVelocities) {
       // Finite difference method for checking derivatives
       RotationDiff rotationDiff(rotation, angularVelocity);
       Rotation rotationNext = rotation.boxPlus(dt*angularVelocity.toImplementation());
       Vector3 dn = (rotationNext.toImplementation()-rotation.toImplementation())/dt;
+
       ASSERT_NEAR(rotationDiff.z(),dn(0),1e-3) << " angular velocity: " << angularVelocity << " rotation: " << rotation << " rotationNext: " << rotationNext  << " diff: " << rotationDiff  << " approxdiff: " << dn.transpose();
       ASSERT_NEAR(rotationDiff.y(),dn(1),1e-3)  << " angular velocity: " << angularVelocity  <<  "rotation: " << rotation << " rotationNext: " << rotationNext << " diff: " << rotationDiff << " approxdiff: " << dn.transpose();
       ASSERT_NEAR(rotationDiff.x(),dn(2),1e-3) << " angular velocity: " << angularVelocity << " rotation: " << rotation << " rotationNext: " << rotationNext  << " diff: " << rotationDiff << " approxdiff: " << dn.transpose();

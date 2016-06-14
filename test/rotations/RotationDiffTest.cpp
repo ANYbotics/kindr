@@ -96,9 +96,9 @@ TYPED_TEST(RotationDiffPairTest, testConversionToLocalAngularVelocity)
        RotationDiff rotDiff(rotation, angularVelocity);
        LocalAngularVelocity angularVelocity2(rotation, rotDiff);
 //       LocalAngularVelocity angularVelocity3 = rotDiff.template cast<LocalAngularVelocity>(rotation);
-       ASSERT_NEAR(angularVelocity.x(),angularVelocity2.x(),1e-6) << "rotation: " << rotation << " angularVelocity: " << angularVelocity  << " angularVelocity2: " << angularVelocity2 << " rotDiff: " << rotDiff;
-       ASSERT_NEAR(angularVelocity.y(),angularVelocity2.y(),1e-6) << "rotation: " << rotation << " angularVelocity: " << angularVelocity  << " angularVelocity2: " << angularVelocity2 << " rotDiff: " << rotDiff;
-       ASSERT_NEAR(angularVelocity.z(),angularVelocity2.z(),1e-6) << "rotation: " << rotation << " angularVelocity: " << angularVelocity  << " angularVelocity2: " << angularVelocity2 << " rotDiff: " << rotDiff;
+       ASSERT_NEAR(angularVelocity.x(),angularVelocity2.x(),1e-3) << "rotation: " << rotation << " angularVelocity: " << angularVelocity  << " angularVelocity2: " << angularVelocity2 << " rotDiff: " << rotDiff;
+       ASSERT_NEAR(angularVelocity.y(),angularVelocity2.y(),1e-3) << "rotation: " << rotation << " angularVelocity: " << angularVelocity  << " angularVelocity2: " << angularVelocity2 << " rotDiff: " << rotDiff;
+       ASSERT_NEAR(angularVelocity.z(),angularVelocity2.z(),1e-3) << "rotation: " << rotation << " angularVelocity: " << angularVelocity  << " angularVelocity2: " << angularVelocity2 << " rotDiff: " << rotDiff;
      }
   }
 }

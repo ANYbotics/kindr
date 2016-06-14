@@ -407,15 +407,27 @@ template<typename DestPrimType_, typename SourcePrimType_>
 class ConversionTraits<EulerAnglesXyz<DestPrimType_>, RotationQuaternion<SourcePrimType_>> {
  public:
   inline static EulerAnglesXyz<DestPrimType_> convert(const RotationQuaternion<SourcePrimType_>& q) {
-    return EulerAnglesXyz<DestPrimType_>((q.toImplementation().toRotationMatrix().eulerAngles(0, 1, 2)).template cast<DestPrimType_>());
+     Eigen::Matrix<DestPrimType_, 3, 1>  vec = q.toImplementation().toRotationMatrix().eulerAngles(2, 1, 0).template cast<DestPrimType_>();
+        return EulerAnglesXyz<DestPrimType_>(vec(2), vec(1), vec(0));
+
+//    return EulerAnglesXyz<DestPrimType_>((q.toImplementation().toRotationMatrix().eulerAngles(2, 1, 0)).template cast<DestPrimType_>());
   }
 };
+
+//template<typename DestPrimType_, typename SourcePrimType_>
+//class ConversionTraits<EulerAnglesXyz<DestPrimType_>, RotationMatrix<SourcePrimType_>> {
+// public:
+//  inline static EulerAnglesXyz<DestPrimType_> convert(const RotationMatrix<SourcePrimType_>& R) {
+//    Eigen::Matrix<DestPrimType_, 3, 1>  vec = R.toImplementation().eulerAngles(2, 1, 0).template cast<DestPrimType_>();
+//    return EulerAnglesXyz<DestPrimType_>(vec(2), vec(1), vec(0));
+//  }
+//};
 
 template<typename DestPrimType_, typename SourcePrimType_>
 class ConversionTraits<EulerAnglesXyz<DestPrimType_>, RotationMatrix<SourcePrimType_>> {
  public:
   inline static EulerAnglesXyz<DestPrimType_> convert(const RotationMatrix<SourcePrimType_>& R) {
-    return EulerAnglesXyz<DestPrimType_>((R.toImplementation().eulerAngles(0, 1, 2)).template cast<DestPrimType_>());
+    return EulerAnglesXyz<DestPrimType_>(RotationQuaternion<DestPrimType_>(R));
   }
 };
 

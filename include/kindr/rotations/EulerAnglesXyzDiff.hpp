@@ -254,18 +254,49 @@ template<typename PrimType_>
 class RotationDiffConversionTraits<EulerAnglesXyzDiff<PrimType_>, LocalAngularVelocity<PrimType_>, EulerAnglesXyz<PrimType_>> {
  public:
   inline static EulerAnglesXyzDiff<PrimType_> convert(const EulerAnglesXyz<PrimType_>& eulerAngles, const LocalAngularVelocity<PrimType_>& angularVelocity) {
-    const PrimType_ beta_Var = eulerAngles.pitch();
-    const PrimType_ gamma_Var = eulerAngles.yaw();
+//    const PrimType_ beta_Var = eulerAngles.pitch();
+//    const PrimType_ gamma_Var = eulerAngles.yaw();
+//    const PrimType_ w1 = angularVelocity.toImplementation()(0);
+//    const PrimType_ w2 = angularVelocity.toImplementation()(1);
+//    const PrimType_ w3 = angularVelocity.toImplementation()(2);
+//    const PrimType_ t2 = cos(beta_Var);
+//    KINDR_ASSERT_TRUE(std::runtime_error, t2 != PrimType_(0), "Error: cos(y) is zero! This case is not yet implemented!");
+//    const PrimType_ t3 = 1.0/t2;
+//    const PrimType_ t4 = cos(gamma_Var);
+//    const PrimType_ t5 = sin(gamma_Var);
+//    const PrimType_ t6 = sin(beta_Var);
+//    return EulerAnglesXyzDiff<PrimType_>(t3*t4*w1-t3*t5*w2, t4*w2+t5*w1, w3-t3*t4*t6*w1+t3*t5*t6*w2);
+
+    //const PrimType_ alpha = eulerAngles.roll();
+//    const PrimType_ beta = eulerAngles.pitch();
+//    const PrimType_ gamma = eulerAngles.yaw();
+//    const PrimType_ w1 = angularVelocity.toImplementation()(0);
+//    const PrimType_ w2 = angularVelocity.toImplementation()(1);
+//    const PrimType_ w3 = angularVelocity.toImplementation()(2);
+//    const PrimType_ t2 = cos(beta);
+//    const PrimType_ t3 = 1.0/t2;
+//    KINDR_ASSERT_TRUE(std::runtime_error, t3 != PrimType_(0), "Error: cos(y) is zero! This case is not yet implemented!");
+//    const PrimType_ t4 = cos(gamma);
+//    const PrimType_ t5 = sin(gamma);
+//    const PrimType_ t6 = sin(beta);
+//
+//    return EulerAnglesXyzDiff<PrimType_>(-t3*t4*w1-t3*t5*w2, -t4*w2+t5*w1, -w3-t3*t4*t6*w1-t3*t5*t6*w2);
+
+
+    const PrimType_ alpha = eulerAngles.roll();
+    const PrimType_ beta = eulerAngles.pitch();
+    const PrimType_ gamma = eulerAngles.yaw();
     const PrimType_ w1 = angularVelocity.toImplementation()(0);
     const PrimType_ w2 = angularVelocity.toImplementation()(1);
     const PrimType_ w3 = angularVelocity.toImplementation()(2);
-    const PrimType_ t2 = cos(beta_Var);
-    KINDR_ASSERT_TRUE(std::runtime_error, t2 != PrimType_(0), "Error: cos(y) is zero! This case is not yet implemented!");
+    const PrimType_ t2 = cos(beta);
     const PrimType_ t3 = 1.0/t2;
-    const PrimType_ t4 = cos(gamma_Var);
-    const PrimType_ t5 = sin(gamma_Var);
-    const PrimType_ t6 = sin(beta_Var);
-    return EulerAnglesXyzDiff<PrimType_>(t3*t4*w1-t3*t5*w2, t4*w2+t5*w1, w3-t3*t4*t6*w1+t3*t5*t6*w2);
+    KINDR_ASSERT_TRUE(std::runtime_error, t2 != PrimType_(0), "Error: cos(y) is zero! This case is not yet implemented!");
+    const PrimType_ t4 = sin(beta);
+    const PrimType_ t5 = cos(alpha);
+    const PrimType_ t6 = sin(alpha);
+    return EulerAnglesXyzDiff<PrimType_>(w1+t3*t4*t5*w3+t3*t4*t6*w2, t5*w2-t6*w3, t3*t5*w3+t3*t6*w2);
+
 
   }
 };
