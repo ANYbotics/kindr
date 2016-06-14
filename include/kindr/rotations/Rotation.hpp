@@ -28,9 +28,9 @@
 
 #pragma once
 
+#include "kindr/math/LinearAlgebra.hpp"
 #include "kindr/common/assert_macros.hpp"
 #include "kindr/rotations/RotationBase.hpp"
-#include "kindr/linear_algebra/LinearAlgebra.hpp"
 #include "kindr/vectors/VectorBase.hpp"
 
 namespace kindr {

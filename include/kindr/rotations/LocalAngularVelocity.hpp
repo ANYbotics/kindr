@@ -30,14 +30,14 @@
 
 #include <Eigen/Core>
 
+#include "kindr/math/LinearAlgebra.hpp"
 #include "kindr/common/common.hpp"
 #include "kindr/common/assert_macros.hpp"
 #include "kindr/common/assert_macros_eigen.hpp"
 #include "kindr/rotations/RotationDiffBase.hpp"
 #include "kindr/rotations/Rotation.hpp"
-#include "kindr/quaternions/QuaternionEigen.hpp"
+#include "kindr/quaternions/Quaternion.hpp"
 #include "kindr/phys_quant/PhysicalQuantities.hpp"
-#include "kindr/linear_algebra/LinearAlgebra.hpp"
 
 namespace kindr {
 
@@ -225,13 +225,13 @@ template<typename PrimType_>
 class RotationDiffConversionTraits<LocalAngularVelocity<PrimType_>, RotationMatrixDiff<PrimType_>, RotationMatrix<PrimType_>> {
  public:
   inline static LocalAngularVelocity<PrimType_> convert(const RotationMatrix<PrimType_>& rotationMatrix, const RotationMatrixDiff<PrimType_>& rotationMatrixDiff) {
-//    return LocalAngularVelocity<PrimType_>(linear_algebra::getVectorFromSkewMatrix<PrimType_>(rotationMatrixDiff.toImplementation()*rotationMatrix.toImplementation().transpose()));
+//    return LocalAngularVelocity<PrimType_>(getVectorFromSkewMatrix<PrimType_>(rotationMatrixDiff.toImplementation()*rotationMatrix.toImplementation().transpose()));
 
 //    if (Usage_ == RotationUsage::ACTIVE) {
-      return LocalAngularVelocity<PrimType_>(linear_algebra::getVectorFromSkewMatrix<PrimType_>(rotationMatrixDiff.toImplementation()*rotationMatrix.toImplementation().transpose()));
+      return LocalAngularVelocity<PrimType_>(getVectorFromSkewMatrix<PrimType_>(rotationMatrixDiff.toImplementation()*rotationMatrix.toImplementation().transpose()));
 //    }
 //    if (Usage_ == RotationUsage::PASSIVE) {
-//      return LocalAngularVelocity<PrimType_>(linear_algebra::getVectorFromSkewMatrix<PrimType_>(rotationMatrix.toImplementation().transpose()*rotationMatrixDiff.toImplementation()));
+//      return LocalAngularVelocity<PrimType_>(getVectorFromSkewMatrix<PrimType_>(rotationMatrix.toImplementation().transpose()*rotationMatrixDiff.toImplementation()));
 //    }
 
 
@@ -253,7 +253,7 @@ class RotationDiffConversionTraits<LocalAngularVelocity<PrimType_>, RotationMatr
 //    // not tested:
 ////    const Vector rv = rotationVector.toImplementation();
 ////    const Vector rvDiff = rotationVectorDiff.toImplementation();
-////    const Matrix3x3 rv_hat = linear_algebra::getSkewMatrixFromVector(rv);
+////    const Matrix3x3 rv_hat = getSkewMatrixFromVector(rv);
 ////    const Scalar angle = rv.norm();
 ////    const Vector angularVelocity = rvDiff-rv_hat*rvDiff*(1-cos(angle)/(angle*angle)) + rv_hat*rv_hat*rvDiff*((angle-sin(angle))/(angle*angle*angle));
 ////    return LocalAngularVelocity<PrimType_>(angularVelocity);

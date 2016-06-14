@@ -30,12 +30,12 @@
 
 #include <Eigen/Core>
 
+#include "kindr/math/LinearAlgebra.hpp"
 #include "kindr/common/common.hpp"
 #include "kindr/common/assert_macros.hpp"
 #include "kindr/common/assert_macros_eigen.hpp"
 #include "kindr/rotations/RotationDiffBase.hpp"
 #include "kindr/rotations/Rotation.hpp"
-#include "kindr/linear_algebra/LinearAlgebra.hpp"
 
 namespace kindr {
 
@@ -180,11 +180,11 @@ class RotationDiffConversionTraits<RotationMatrixDiff<PrimType_>, LocalAngularVe
  public:
   inline static RotationMatrixDiff<PrimType_> convert(const RotationMatrix<PrimType_>& rotationMatrix, const LocalAngularVelocity<PrimType_>& angularVelocity) {
 //    if (Usage_ == RotationUsage::ACTIVE) {
-      return RotationMatrixDiff<PrimType_>(linear_algebra::getSkewMatrixFromVector(angularVelocity.toImplementation())*rotationMatrix.toImplementation());
+      return RotationMatrixDiff<PrimType_>(getSkewMatrixFromVector(angularVelocity.toImplementation())*rotationMatrix.toImplementation());
 //    }
 //    if (Usage_ == RotationUsage::PASSIVE) {
 
-//      return RotationMatrixDiff<PrimType_>(rotationMatrix.toImplementation()*linear_algebra::getSkewMatrixFromVector(angularVelocity.toImplementation()));
+//      return RotationMatrixDiff<PrimType_>(rotationMatrix.toImplementation()*getSkewMatrixFromVector(angularVelocity.toImplementation()));
 //    }
 
   }
@@ -196,7 +196,7 @@ class RotationDiffConversionTraits<RotationMatrixDiff<PrimType_>, LocalAngularVe
 //class RotationDiffConversionTraits<RotationMatrixDiff<PrimType_, RotationUsage::PASSIVE>, LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>, RotationMatrix<PrimType_, RotationUsage::PASSIVE>> {
 // public:
 //  inline static RotationMatrixDiff<PrimType_, RotationUsage::PASSIVE> convert(const RotationMatrix<PrimType_, RotationUsage::PASSIVE>& rotationMatrix, const LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>& angularVelocity) {
-//    return RotationMatrixDiff<PrimType_, RotationUsage::PASSIVE>(rotationMatrix.toImplementation()*linear_algebra::getSkewMatrixFromVector(angularVelocity.toImplementation()));
+//    return RotationMatrixDiff<PrimType_, RotationUsage::PASSIVE>(rotationMatrix.toImplementation()*getSkewMatrixFromVector(angularVelocity.toImplementation()));
 //  }
 //};
 

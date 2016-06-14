@@ -27,7 +27,7 @@
 */
 
 #include "kindr/common/gtest_eigen.hpp"
-#include "kindr/quaternions/QuaternionEigen.hpp"
+#include "kindr/quaternions/Quaternion.hpp"
 #include <string>
 
 #include "kindr/rotations/Rotation.hpp"

@@ -33,7 +33,7 @@
 
 #include <kindr/common/assert_macros_eigen.hpp>
 #include <kindr/common/gtest_eigen.hpp>
-#include <kindr/quaternions/QuaternionEigen.hpp>
+#include <kindr/quaternions/Quaternion.hpp>
 
 namespace quat = kindr;
 

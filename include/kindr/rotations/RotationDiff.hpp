@@ -28,8 +28,8 @@
 
 #pragma once
 
+#include "kindr/math/LinearAlgebra.hpp"
 #include "kindr/rotations/RotationBase.hpp"
-#include "kindr/linear_algebra/LinearAlgebra.hpp"
 
 namespace kindr {
 
@@ -58,7 +58,7 @@ class EulerAnglesXyzDiff;
 template<typename PrimType_>
 inline static Eigen::Matrix<PrimType_, 3, 3> getJacobianOfExponentialMap(const Eigen::Matrix<PrimType_, 3, 1>& vector) {
   const PrimType_ norm = vector.norm();
-  const Eigen::Matrix<PrimType_, 3, 3> skewMatrix = linear_algebra::getSkewMatrixFromVector(vector);
+  const Eigen::Matrix<PrimType_, 3, 3> skewMatrix = getSkewMatrixFromVector(vector);
   if (norm < 1.0e-4) {
     return Eigen::Matrix<PrimType_, 3, 3>::Identity() + 0.5*skewMatrix;
   }

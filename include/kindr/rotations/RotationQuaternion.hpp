@@ -34,7 +34,7 @@
 
 #include "kindr/common/common.hpp"
 #include "kindr/common/assert_macros_eigen.hpp"
-#include "kindr/quaternions/QuaternionEigen.hpp"
+#include "kindr/quaternions/Quaternion.hpp"
 #include "kindr/rotations/RotationBase.hpp"
 
 namespace kindr {

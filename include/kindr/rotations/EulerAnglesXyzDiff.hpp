@@ -29,12 +29,12 @@
 
 #include <Eigen/Core>
 
+#include "kindr/math/LinearAlgebra.hpp"
 #include "kindr/common/common.hpp"
 #include "kindr/common/assert_macros.hpp"
 #include "kindr/common/assert_macros_eigen.hpp"
 #include "kindr/rotations/RotationDiffBase.hpp"
 #include "kindr/rotations/Rotation.hpp"
-#include "kindr/linear_algebra/LinearAlgebra.hpp"
 
 namespace kindr {
 

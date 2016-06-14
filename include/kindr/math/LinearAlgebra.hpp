@@ -25,14 +25,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
 */
-#ifndef KINDR_LINEARALGEBRA_LINEARALGEBRA_HPP_
-#define KINDR_LINEARALGEBRA_LINEARALGEBRA_HPP_
+#pragma once
 
 #include <Eigen/SVD>
 
 namespace kindr {
-//! Linear algebra methods
-namespace linear_algebra {
+
 
 /*!
  * \brief Gets a skew-symmetric matrix from a (column) vector
@@ -78,7 +76,4 @@ bool static pseudoInverse(const _Matrix_Type_ &a, _Matrix_Type_ &result, double 
   return true;
 }
 
-} // end namespace linear_algebra
 } // end namespace kindr
-
-#endif /* KINDR_LINEARALGEBRA_LINEARALGEBRA_HPP_ */
