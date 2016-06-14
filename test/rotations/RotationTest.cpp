@@ -238,33 +238,17 @@ struct RotationMatrixTestType {
   }
 
   RotationMatrixTestType() {
-//    if (Rotation_::Usage == kindr::rotations::RotationUsage::PASSIVE) {
-      rotQuarterX = Rotation( 1.0,  0.0,  0.0,
-                              0.0,  0.0,  1.0,
-                              0.0, -1.0,  0.0); // psi=0, theta=0, phi=pi/2
+    rotQuarterX = Rotation( 1.0,  0.0,  0.0,
+                            0.0,  0.0,  -1.0,
+                            0.0, 1.0,  0.0); // psi=0, theta=0, phi=pi/2
 
-      rotQuarterY = Rotation( 0.0,  0.0,  -1.0,
-                            0.0,  1.0,  0.0,
-                            1.0,  0.0,  0.0); // psi=0, theta=pi/2, phi=0
+    rotQuarterY = Rotation( 0.0,  0.0,  1.0,
+                          0.0,  1.0,  0.0,
+                         -1.0,  0.0,  0.0); // psi=0, theta=pi/2, phi=0
 
-      rotQuarterZ = Rotation( 0.0,  1.0,  0.0,
-                              -1.0,  0.0,  0.0,
-                               0.0,  0.0,  1.0); // psi=pi/2, theta=0, phi=0
-
-//    }
-//    else {
-//      rotQuarterX = Rotation( 1.0,  0.0,  0.0,
-//                              0.0,  0.0,  -1.0,
-//                              0.0, 1.0,  0.0); // psi=0, theta=0, phi=pi/2
-//
-//      rotQuarterY = Rotation( 0.0,  0.0,  1.0,
-//                            0.0,  1.0,  0.0,
-//                           -1.0,  0.0,  0.0); // psi=0, theta=pi/2, phi=0
-//
-//      rotQuarterZ = Rotation( 0.0,  -1.0,  0.0,
-//                              1.0,  0.0,  0.0,
-//                              0.0,  0.0,  1.0); // psi=pi/2, theta=0, phi=0
-//     }
+    rotQuarterZ = Rotation( 0.0,  -1.0,  0.0,
+                            1.0,  0.0,  0.0,
+                              0.0,  0.0,  1.0); // psi=pi/2, theta=0, phi=0
 
     rotIdentity = Rotation( 1.0,  0.0,  0.0,
                             0.0,  1.0,  0.0,
@@ -520,22 +504,22 @@ TYPED_TEST(ConcatenationTest, testAToB) {
 
   // check concatenation of 3 different quarters
   this->rotB.rot = this->rotB.rotQuarterX.inverted()*this->rotA.rotQuarterY*this->rotB.rotQuarterX;
-  this->rotB.assertNear(this->rotB.rotQuarterZ, this->rotB.rot.getUnique(), this->tol, "concatenation 1");
+  this->rotB.assertNear(this->rotB.rotQuarterZ.inverted(), this->rotB.rot.getUnique(), this->tol, "concatenation 1");
 
   this->rotB.rot = this->rotB.rotQuarterX.inverted()*this->rotA.rotQuarterZ*this->rotB.rotQuarterX;
-  this->rotB.assertNear(this->rotB.rotQuarterY.inverted(), this->rotB.rot.getUnique(), this->tol, "concatenation 2");
+  this->rotB.assertNear(this->rotB.rotQuarterY, this->rotB.rot.getUnique(), this->tol, "concatenation 2");
 
   this->rotB.rot = this->rotB.rotQuarterY.inverted()*this->rotA.rotQuarterX*this->rotB.rotQuarterY;
-  this->rotB.assertNear(this->rotB.rotQuarterZ.inverted(), this->rotB.rot.getUnique(), this->tol, "concatenation 3");
+  this->rotB.assertNear(this->rotB.rotQuarterZ, this->rotB.rot.getUnique(), this->tol, "concatenation 3");
 
   this->rotB.rot = this->rotB.rotQuarterY.inverted()*this->rotA.rotQuarterZ*this->rotB.rotQuarterY;
-  this->rotB.assertNear(this->rotB.rotQuarterX, this->rotB.rot.getUnique(), this->tol, "concatenation 4");
+  this->rotB.assertNear(this->rotB.rotQuarterX.inverted(), this->rotB.rot.getUnique(), this->tol, "concatenation 4");
 
   this->rotB.rot = this->rotB.rotQuarterZ.inverted()*this->rotA.rotQuarterX*this->rotB.rotQuarterZ;
-  this->rotB.assertNear(this->rotB.rotQuarterY, this->rotB.rot.getUnique(), this->tol, "concatenation 5");
+  this->rotB.assertNear(this->rotB.rotQuarterY.inverted(), this->rotB.rot.getUnique(), this->tol, "concatenation 5");
 
   this->rotB.rot = this->rotB.rotQuarterZ.inverted()*this->rotA.rotQuarterY*this->rotB.rotQuarterZ;
-  this->rotB.assertNear(this->rotB.rotQuarterX.inverted(), this->rotB.rot.getUnique(), this->tol, "concatenation 6");
+  this->rotB.assertNear(this->rotB.rotQuarterX, this->rotB.rot.getUnique(), this->tol, "concatenation 6");
 }
 
 
@@ -562,22 +546,22 @@ TYPED_TEST(ConcatenationTest, testBToA) {
 
   // Check concatenation of 3 different quarters
   this->rotA.rot = this->rotA.rotQuarterX.inverted()*this->rotB.rotQuarterY*this->rotA.rotQuarterX;
-  this->rotA.assertNear(this->rotA.rotQuarterZ, this->rotA.rot.getUnique(), this->tol, "concatenation 1");
+  this->rotA.assertNear(this->rotA.rotQuarterZ.inverted(), this->rotA.rot.getUnique(), this->tol, "concatenation 1");
 
   this->rotA.rot = this->rotA.rotQuarterX.inverted()*this->rotB.rotQuarterZ*this->rotA.rotQuarterX;
-  this->rotA.assertNear(this->rotA.rotQuarterY.inverted(), this->rotA.rot.getUnique(), this->tol, "concatenation 2");
+  this->rotA.assertNear(this->rotA.rotQuarterY, this->rotA.rot.getUnique(), this->tol, "concatenation 2");
 
   this->rotA.rot = this->rotA.rotQuarterY.inverted()*this->rotB.rotQuarterX*this->rotA.rotQuarterY;
-  this->rotA.assertNear(this->rotA.rotQuarterZ.inverted(), this->rotA.rot.getUnique(), this->tol, "concatenation 3");
+  this->rotA.assertNear(this->rotA.rotQuarterZ, this->rotA.rot.getUnique(), this->tol, "concatenation 3");
 
   this->rotA.rot = this->rotA.rotQuarterY.inverted()*this->rotB.rotQuarterZ*this->rotA.rotQuarterY;
-  this->rotA.assertNear(this->rotA.rotQuarterX, this->rotA.rot.getUnique(), this->tol, "concatenation 4");
+  this->rotA.assertNear(this->rotA.rotQuarterX.inverted(), this->rotA.rot.getUnique(), this->tol, "concatenation 4");
 
   this->rotA.rot = this->rotA.rotQuarterZ.inverted()*this->rotB.rotQuarterX*this->rotA.rotQuarterZ;
-  this->rotA.assertNear(this->rotA.rotQuarterY, this->rotA.rot.getUnique(), this->tol, "concatenation 5");
+  this->rotA.assertNear(this->rotA.rotQuarterY.inverted(), this->rotA.rot.getUnique(), this->tol, "concatenation 5");
 
   this->rotA.rot = this->rotA.rotQuarterZ.inverted()*this->rotB.rotQuarterY*this->rotA.rotQuarterZ;
-  this->rotA.assertNear(this->rotA.rotQuarterX.inverted(), this->rotA.rot.getUnique(), this->tol, "concatenation 6");
+  this->rotA.assertNear(this->rotA.rotQuarterX, this->rotA.rot.getUnique(), this->tol, "concatenation 6");
 
 
 }

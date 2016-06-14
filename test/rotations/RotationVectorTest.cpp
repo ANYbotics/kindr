@@ -354,28 +354,28 @@ TYPED_TEST(RotationVectorSingleTest, testConcatenation){
   rotRotationVector = this->rotRotationVectorQuarterY*this->rotRotationVectorQuarterY*this->rotRotationVectorQuarterY*this->rotRotationVectorQuarterY;
   KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorIdentity.toImplementation(), rotRotationVector.toImplementation(), 1e-4, "concatenation");
 
-
   rotRotationVector = this->rotRotationVectorQuarterZ*this->rotRotationVectorQuarterZ*this->rotRotationVectorQuarterZ*this->rotRotationVectorQuarterZ;
   KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorIdentity.toImplementation(), rotRotationVector.toImplementation(), 1e-4, "concatenation");
 
+
   // Check concatenation of 3 different quarters
   rotRotationVector = this->rotRotationVectorQuarterX.inverted()*this->rotRotationVectorQuarterY*this->rotRotationVectorQuarterX;
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorQuarterZ.toImplementation(), rotRotationVector.toImplementation(), 1e-4, "concatenation");
-
-  rotRotationVector = this->rotRotationVectorQuarterX.inverted()*this->rotRotationVectorQuarterZ*this->rotRotationVectorQuarterX;
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorQuarterY.inverted().toImplementation(), rotRotationVector.toImplementation(), 1e-4, "concatenation");
-
-  rotRotationVector = this->rotRotationVectorQuarterY.inverted()*this->rotRotationVectorQuarterX*this->rotRotationVectorQuarterY;
   KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorQuarterZ.inverted().toImplementation(), rotRotationVector.toImplementation(), 1e-4, "concatenation");
 
-  rotRotationVector = this->rotRotationVectorQuarterY.inverted()*this->rotRotationVectorQuarterZ*this->rotRotationVectorQuarterY;
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorQuarterX.toImplementation(), rotRotationVector.toImplementation(), 1e-4, "concatenation");
-
-  rotRotationVector = this->rotRotationVectorQuarterZ.inverted()*this->rotRotationVectorQuarterX*this->rotRotationVectorQuarterZ;
+  rotRotationVector = this->rotRotationVectorQuarterX.inverted()*this->rotRotationVectorQuarterZ*this->rotRotationVectorQuarterX;
   KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorQuarterY.toImplementation(), rotRotationVector.toImplementation(), 1e-4, "concatenation");
 
-  rotRotationVector = this->rotRotationVectorQuarterZ.inverted()*this->rotRotationVectorQuarterY*this->rotRotationVectorQuarterZ;
+  rotRotationVector = this->rotRotationVectorQuarterY.inverted()*this->rotRotationVectorQuarterX*this->rotRotationVectorQuarterY;
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorQuarterZ.toImplementation(), rotRotationVector.toImplementation(), 1e-4, "concatenation");
+
+  rotRotationVector = this->rotRotationVectorQuarterY.inverted()*this->rotRotationVectorQuarterZ*this->rotRotationVectorQuarterY;
   KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorQuarterX.inverted().toImplementation(), rotRotationVector.toImplementation(), 1e-4, "concatenation");
+
+  rotRotationVector = this->rotRotationVectorQuarterZ.inverted()*this->rotRotationVectorQuarterX*this->rotRotationVectorQuarterZ;
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorQuarterY.inverted().toImplementation(), rotRotationVector.toImplementation(), 1e-4, "concatenation");
+
+  rotRotationVector = this->rotRotationVectorQuarterZ.inverted()*this->rotRotationVectorQuarterY*this->rotRotationVectorQuarterZ;
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorQuarterX.toImplementation(), rotRotationVector.toImplementation(), 1e-4, "concatenation");
 
 }
 
@@ -407,7 +407,7 @@ TYPED_TEST(RotationVectorSingleTest, testVectorRotation){
   Vector testVec1;
   Vector testVec2;
 
-  int signSwitch = -1;
+  int signSwitch = 1;
 
   // Check rotation of base vectors around main axis
   testVec = this->rotRotationVectorQuarterX.rotate(this->vecX);
