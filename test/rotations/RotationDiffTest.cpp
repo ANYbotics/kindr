@@ -154,6 +154,8 @@ TYPED_TEST(RotationDiffSingleTest, testConversionToLocalAngularVelocity)
 {
   typedef typename TestFixture::RotationQuaternionDiff RotationQuaternionDiff;
   typedef typename TestFixture::LocalAngularVelocity LocalAngularVelocity;
+  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
+  typedef typename RotationQuaternion::Scalar Scalar;
 
   for (auto rotQuat : this->rotationQuaternions) {
      for (auto angularVelocity : this->angularVelocities) {
@@ -169,6 +171,47 @@ TYPED_TEST(RotationDiffSingleTest, testConversionToLocalAngularVelocity)
        ASSERT_NEAR(rotQuatDiff.x(),rotQuatDiff2.x(),1e-3);
        ASSERT_NEAR(rotQuatDiff.y(),rotQuatDiff2.y(),1e-3);
        ASSERT_NEAR(rotQuatDiff.z(),rotQuatDiff2.z(),1e-3);
+
+       // Finite Difference
+       const Scalar dt = rot::common::internal::NumTraits<Scalar>::dummy_precision();
+       RotationQuaternion rotQuatPert = rotQuat.boxPlus(angularVelocity.toImplementation()*dt);
+       RotationQuaternionDiff rotQuatDiff3((rotQuatPert.w()-rotQuat.w())/dt,
+                                           (rotQuatPert.x()-rotQuat.x())/dt,
+                                           (rotQuatPert.y()-rotQuat.y())/dt,
+                                           (rotQuatPert.z()-rotQuat.z())/dt);
+
+       ASSERT_NEAR(rotQuatDiff.w(),rotQuatDiff3.w(),1e-2);
+       ASSERT_NEAR(rotQuatDiff.x(),rotQuatDiff3.x(),1e-2);
+       ASSERT_NEAR(rotQuatDiff.y(),rotQuatDiff3.y(),1e-2);
+       ASSERT_NEAR(rotQuatDiff.z(),rotQuatDiff3.z(),1e-2);
+
+     }
+  }
+}
+
+TYPED_TEST(RotationDiffSingleTest, testConversionToGlobalAngularVelocity)
+{
+  typedef typename TestFixture::RotationQuaternionDiff RotationQuaternionDiff;
+  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
+  typedef typename RotationQuaternion::Scalar Scalar;
+
+  for (auto rotQuat : this->rotationQuaternions) { // qBI
+     for (auto angularVelocity : this->angularVelocities) { // IwIB
+       RotationQuaternionDiff rotQuatDiff(0.5*rotQuat.getGlobalQuaternionDiffMatrix().transpose()*angularVelocity.vector());
+
+       // Finite Difference
+       const Scalar dt = rot::common::internal::NumTraits<Scalar>::dummy_precision();
+       RotationQuaternion rotQuatPert = rotQuat.inverted().boxPlus(-angularVelocity.toImplementation()*dt).inverted(); // (qBI^-1 * exp(-IwIB*dt))^-1
+       RotationQuaternionDiff rotQuatDiff3((rotQuatPert.w()-rotQuat.w())/dt,
+                                           (rotQuatPert.x()-rotQuat.x())/dt,
+                                           (rotQuatPert.y()-rotQuat.y())/dt,
+                                           (rotQuatPert.z()-rotQuat.z())/dt);
+
+       ASSERT_NEAR(rotQuatDiff.w(),rotQuatDiff3.w(),1e-2);
+       ASSERT_NEAR(rotQuatDiff.x(),rotQuatDiff3.x(),1e-2);
+       ASSERT_NEAR(rotQuatDiff.y(),rotQuatDiff3.y(),1e-2);
+       ASSERT_NEAR(rotQuatDiff.z(),rotQuatDiff3.z(),1e-2);
+
      }
   }
 }
