@@ -43,17 +43,12 @@ namespace kindr {
  *  \brief Implementation of Euler angles (X-Y'-Z'' / roll-pitch-yaw) rotation based on Eigen::Matrix<Scalar,3,1>
  *
  *  The following typedefs are provided for convenience:
- *   - \ref EulerAnglesXyzAD "EulerAnglesXyzAD" for active rotation and double primitive type
- *   - \ref EulerAnglesXyzAF "EulerAnglesXyzAF" for active rotation and float primitive type
- *   - \ref EulerAnglesXyzPD "EulerAnglesXyzPD" for passive rotation and double primitive type
- *   - \ref EulerAnglesXyzPF "EulerAnglesXyzPF" for passive rotation and float primitive type
- *   - EulerAnglesRpyAD = EulerAnglesXyzAD
- *   - EulerAnglesRpyAF = EulerAnglesXyzAF
- *   - EulerAnglesRpyPD = EulerAnglesXyzPD
- *   - EulerAnglesRpyPF = EulerAnglesXyzPF
+ *   - \ref EulerAnglesXyzD "EulerAnglesXyzAD" for double primitive type
+ *   - \ref EulerAnglesXyzF "EulerAnglesXyzAF" for float primitive type
+ *   - EulerAnglesRpyD = EulerAnglesXyzD
+ *   - EulerAnglesRpyF = EulerAnglesXyzF
  *
  *  \tparam PrimType_ the primitive type of the data (double or float)
- *  \tparam Usage_ the rotation usage which is either active or passive
  *
  *  \ingroup rotations
  */

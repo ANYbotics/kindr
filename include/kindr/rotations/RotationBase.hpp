@@ -158,12 +158,7 @@ class FixingTraits {
   }
 };
 
-
-
-
-
 } // namespace internal
-
 
 
 /*! \brief Representation of a generic rotation
@@ -171,7 +166,6 @@ class FixingTraits {
  *  \class RotationBase
  *  This class defines the generic interface for a rotation.
  *  \tparam Derived_ the derived class that should implement the rotation
- *  \tparam Usage_ the rotation usage which is either active or passive
  */
 template<typename Derived_>
 class RotationBase {
@@ -344,7 +338,6 @@ class RotationBase {
   Derived_ boxPlus(const typename internal::get_matrix3X<Derived_>::template Matrix3X<1>& vector) const {
     return internal::BoxOperationTraits<RotationBase<Derived_>, RotationBase<Derived_>>::box_plus(this->derived(), vector);
   }
-
 
 
   /*! \brief Sets the rotation from two vectors such that v2 = R(v1).

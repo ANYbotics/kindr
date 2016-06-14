@@ -44,13 +44,10 @@ namespace kindr {
  *  \brief Implementation of quaternion rotation based on Eigen::Quaternion
  *
  *  The following four typedefs are provided for convenience:
- *   - \ref RotationQuaternionAD "RotationQuaternionAD" for active rotation and primitive type double
- *   - \ref RotationQuaternionAF "RotationQuaternionAF" for active rotation and primitive type float
- *   - \ref RotationQuaternionPD "RotationQuaternionPD" for passive rotation and primitive type double
- *   - \ref RotationQuaternionPF "RotationQuaternionPF" for passive rotation and primitive type float
+ *   - \ref RotationQuaternionD "RotationQuaternionD" for primitive type double
+ *   - \ref RotationQuaternionF "RotationQuaternionF" for primitive type float
  *
  *  \tparam PrimType_ the primitive type of the data (double or float)
- *  \tparam Usage_ the rotation usage which is either active or passive
  *
  *  \ingroup rotations
  */
@@ -202,10 +199,6 @@ class RotationQuaternion : public RotationBase<RotationQuaternion<PrimType_>> {
   inline const Implementation& toImplementation() const {
     return toUnitQuaternion().toImplementation();
   }
-
-//  Implementation toImplementation() const {
-//    return Implementation(this->w(),this->x(),this->y(),this->z());
-//  }
 
   Base& toUnitQuaternion() {
      return static_cast<Base&>(rotationQuaternion_);

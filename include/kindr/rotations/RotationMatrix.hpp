@@ -43,13 +43,10 @@ namespace kindr {
  *  \brief Implementation of matrix rotation based on Eigen::Matrix<Scalar, 3, 3>
  *
  *  The following four typedefs are provided for convenience:
- *   - \ref RotationMatrixAD "RotationMatrixAD" for active rotation and double primitive type
- *   - \ref RotationMatrixAF "RotationMatrixAF" for active rotation and float primitive type
- *   - \ref RotationMatrixPD "RotationMatrixPD" for passive rotation and double primitive type
- *   - \ref RotationMatrixPF "RotationMatrixPF" for passive rotation and float primitive type
+ *   - \ref RotationMatrixAD "RotationMatrixD" for double primitive type
+ *   - \ref RotationMatrixAF "RotationMatrixF" for float primitive type
  *
  *  \tparam PrimType_ the primitive type of the data (double or float)
- *  \tparam Usage_ the rotation usage which is either active or passive
  *
  *  \ingroup rotations
  */

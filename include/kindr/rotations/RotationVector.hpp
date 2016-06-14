@@ -48,13 +48,10 @@ namespace kindr {
  *  \see AngleAxis for an angle-axis representation with four parameters.
  *
  *  The following four typedefs are provided for convenience:
- *   - \ref RotationVectorAD "RotationVectorAD" for active rotation and primitive type double
- *   - \ref RotationVectorAF "RotationVectorAF" for active rotation and primitive type float
- *   - \ref RotationVectorPD "RotationVectorPD" for passive rotation and primitive type double
- *   - \ref RotationVectorPF "RotationVectorPF" for passive rotation and primitive type float
+ *   - \ref RotationVectorD "RotationVectorAD" for primitive type double
+ *   - \ref RotationVectorF "RotationVectorAF" for primitive type float
  *
  *  \tparam PrimType_ the primitive type of the data (double or float)
- *  \tparam Usage_ the rotation usage which is either active or passive
  *  \ingroup rotations
  */
 template<typename PrimType_>
@@ -238,16 +235,8 @@ class RotationVector : public RotationBase<RotationVector<PrimType_>> {
    *  \returns copy of the rotation vector which is unique
    */
   RotationVector getUnique() const {
-    // todo: test, passive and active
     AngleAxis<PrimType_> angleAxis(*this);
     RotationVector rotationVector(angleAxis.getUnique());
-//    RotationVector rotVector(toImplementation());
-//
-//    const Scalar norm = rotVector.toImplementation().norm();
-//    if (norm != Scalar(0)) {
-//      const Scalar normWrapped = kindr::common::floatingPointModulo(norm+M_PI,2*M_PI)-M_PI;
-//      rotVector.toImplementation()*normWrapped/norm;
-//    }
     return rotationVector;
   }
 
@@ -348,35 +337,7 @@ template<typename DestPrimType_, typename SourcePrimType_>
 class ConversionTraits<RotationVector<DestPrimType_>, RotationMatrix<SourcePrimType_>> {
  public:
   inline static RotationVector<DestPrimType_> convert(const RotationMatrix<SourcePrimType_>& rotationMatrix) {
-    // ok
     return RotationVector<DestPrimType_>(AngleAxis<DestPrimType_>(rotationMatrix));
-
-
-
-//    typename RotationMatrix<DestPrimType_>::Implementation C = rotationMatrix.toImplementation().transpose().template cast<DestPrimType_>();
-//    typename RotationVector<DestPrimType_>::Vector p;
-//    // Sometimes, because of roundoff error, the value of tr ends up outside
-//    // the valid range of arccos. Truncate to the valid range.
-//    double tr = std::max(-1.0, std::min( (C(0,0) + C(1,1) + C(2,2) - 1.0) * 0.5, 1.0));
-//    double a = acos( tr ) ;
-//
-//    if(fabs(a) < 1e-14){
-//        return RotationVector<DestPrimType_>();
-//    }
-//
-//    p[0] = (C(2,1) - C(1,2));
-//    p[1] = (C(0,2) - C(2,0));
-//    p[2] = (C(1,0) - C(0,1));
-//    double n2 = p.norm();
-//    if(fabs(n2) < 1e-14)
-//      return RotationVector<DestPrimType_>();
-//
-//    double scale = -a/n2;
-//    p = scale * p;
-//
-//
-//      return RotationVector<DestPrimType_>(p);
-
 
   }
 };
@@ -389,16 +350,6 @@ class ConversionTraits<RotationVector<DestPrimType_>, RotationMatrix<SourcePrimT
  * Rotation Traits
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-///* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// * Comparison Traits
-// * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-//template<typename PrimType_>
-//class ComparisonTraits<RotationVector<PrimType_>> {
-// public:
-//  inline static bool isEqual(const RotationVector<PrimType_>& a, const RotationVector<PrimType_>& b){
-//    return a.toImplementation() ==  b.toImplementation();
-//  }
-//};
 
 } // namespace internal
 } // namespace kindr

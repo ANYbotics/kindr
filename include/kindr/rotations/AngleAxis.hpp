@@ -43,13 +43,10 @@ namespace kindr {
  * \brief Implementation of an angle axis rotation based on Eigen::AngleAxis
  *
  *  The following two typedefs are provided for convenience:
- *   - \ref AngleAxisAD "AngleAxisAD" for active rotation and primitive type double
- *   - \ref AngleAxisAF "AngleAxisAF" for active rotation and primitive type float
- *   - \ref AngleAxisPD "AngleAxisPD" for passive rotation and primitive type double
- *   - \ref AngleAxisPF "AngleAxisPF" for passive rotation and primitive type float
+ *   - \ref AngleAxisD "AngleAxisPD" for primitive type double
+ *   - \ref AngleAxisF "AngleAxisPF" for primitive type float
  *
  *  \tparam PrimType_ the primitive type of the data (double or float)
- *  \tparam Usage_ the rotation usage which is either active or passive
  *
  *  \ingroup rotations
  */
