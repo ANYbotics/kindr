@@ -85,18 +85,5 @@ class PoseDiffBase {
   Derived_& setZero();
 };
 
-/*! \class TwistBase
- * \brief Base class that defines the interface of a twist
- *
- * \tparam Derived_ the derived class that should implement the twist
- * \ingroup poses
- */
-template<typename Derived_>
-class TwistBase : public PoseDiffBase<Derived_> {
- public:
-
-
-};
-
 
 } // namespace kindr

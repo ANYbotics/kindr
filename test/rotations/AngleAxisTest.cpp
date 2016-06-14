@@ -31,7 +31,7 @@
 #include "kindr/quaternions/QuaternionEigen.hpp"
 
 namespace rot = kindr;
-namespace quat = kindr::quaternions::eigen_impl;
+namespace quat = kindr;
 
 using namespace kindr::common::test;
 

@@ -26,10 +26,9 @@
  *
 */
 
-#ifndef KINDR_ROSGEOMETRYMSGPHYSICALQUANTITIESEIGEN_HPP_
-#define KINDR_ROSGEOMETRYMSGPHYSICALQUANTITIESEIGEN_HPP_
+#pragma once
 
-#include "kindr/phys_quant/PhysicalQuantitiesEigen.hpp"
+#include "kindr/phys_quant/PhysicalQuantities.hpp"
 
 // ROS
 #include <ros/ros.h>
@@ -38,20 +37,18 @@
 #include <geometry_msgs/Point32.h>
 
 namespace kindr {
-namespace phys_quant {
-namespace eigen_impl {
 
-template<enum phys_quant::PhysicalType PhysicalType_, typename PrimType_>
+template<enum PhysicalType PhysicalType_, typename PrimType_>
 static void convertFromRosGeometryMsg(const geometry_msgs::Vector3& geometryVector3Msg,
-                                      vectors::eigen_impl::Vector<PhysicalType_, PrimType_, 3>& vector)
+                                      Vector<PhysicalType_, PrimType_, 3>& vector)
 {
   vector.x() = static_cast<PrimType_>(geometryVector3Msg.x);
   vector.y() = static_cast<PrimType_>(geometryVector3Msg.y);
   vector.z() = static_cast<PrimType_>(geometryVector3Msg.z);
 }
 
-template<enum phys_quant::PhysicalType PhysicalType_, typename PrimType_>
-static void convertToRosGeometryMsg(const vectors::eigen_impl::Vector<PhysicalType_, PrimType_, 3>& vector,
+template<enum PhysicalType PhysicalType_, typename PrimType_>
+static void convertToRosGeometryMsg(const Vector<PhysicalType_, PrimType_, 3>& vector,
                                     geometry_msgs::Vector3& geometryVector3Msg)
 {
   geometryVector3Msg.x = static_cast<double>(vector.x());
@@ -95,8 +92,4 @@ static void convertToRosGeometryMsg(const Position<PrimType_, 3>& position,
   geometryPointMsg.z = static_cast<double>(position.z());
 }
 
-} // namespace phys_quant
-} // namespace eigen_impl
 } // namespace kindr
-
-#endif /* KINDR_ROSGEOMETRYMSGPHYSICALQUANTITIESEIGEN_HPP_ */

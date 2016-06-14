@@ -30,7 +30,7 @@
 
 #include "kindr/common/common.hpp"
 #include "kindr/common/assert_macros_eigen.hpp"
-#include "kindr/phys_quant/PhysicalQuantitiesEigen.hpp"
+#include "kindr/phys_quant/PhysicalQuantities.hpp"
 #include "kindr/rotations/Rotation.hpp"
 #include "kindr/poses/PoseBase.hpp"
 
@@ -74,7 +74,7 @@ class HomogeneousTransformation : public HomogeneousTransformationBase<Homogeneo
 
   inline TransformationMatrix getTransformationMatrix() const {
     TransformationMatrix mat = TransformationMatrix::Zero();
-    mat.template topLeftCorner<3,3>() =  RotationMatrix<Scalar, kindr::RotationUsage::PASSIVE>(getRotation()).toImplementation();
+    mat.template topLeftCorner<3,3>() =  RotationMatrix<Scalar>(getRotation()).toImplementation();
     mat.template topRightCorner<3,1>() = getPosition().toImplementation();
     mat(3,3) = Scalar(1);
     return mat;
@@ -99,17 +99,17 @@ class HomogeneousTransformation : public HomogeneousTransformationBase<Homogeneo
 };
 
 template<typename PrimType_>
-class HomogeneousTransformationPosition3RotationQuaternion: public HomogeneousTransformation<PrimType_, phys_quant::Position<PrimType_, 3>, RotationQuaternion<PrimType_, RotationUsage::PASSIVE>> {
+class HomogeneousTransformationPosition3RotationQuaternion: public HomogeneousTransformation<PrimType_, Position<PrimType_, 3>, RotationQuaternion<PrimType_>> {
  private:
-  typedef HomogeneousTransformation<PrimType_, phys_quant::Position<PrimType_, 3>, kindr::RotationQuaternion<PrimType_>> Base;
+  typedef HomogeneousTransformation<PrimType_, Position<PrimType_, 3>, kindr::RotationQuaternion<PrimType_>> Base;
  public:
   typedef PrimType_ Scalar;
-  typedef typename Base::Position Position;
+  typedef typename Base::Position Translation;
   typedef typename Base::Rotation Rotation;
 
   HomogeneousTransformationPosition3RotationQuaternion() = default;
 
-  HomogeneousTransformationPosition3RotationQuaternion(const Position& position, const Rotation& rotation):
+  HomogeneousTransformationPosition3RotationQuaternion(const Translation& position, const Rotation& rotation):
     Base(position, rotation) {
   }
 
@@ -133,13 +133,13 @@ class get_position<HomogeneousTransformation<PrimType_, Position_, Rotation_>> {
 template<typename PrimType_, typename Position_, typename Rotation_>
 class TransformationTraits<HomogeneousTransformation<PrimType_, Position_, Rotation_>> {
  private:
-  typedef typename HomogeneousTransformation<PrimType_, Position_, Rotation_> Pose;
-  typedef typename get_position<Pose>::Position Position;
+  typedef HomogeneousTransformation<PrimType_, Position_, Rotation_> Pose;
+  typedef typename get_position<Pose>::Position Translation;
  public:
-  inline static Position transform(const Pose & pose, const Position & position){
+  inline static Translation transform(const Pose & pose, const Translation & position){
     return pose.getRotation().rotate(position) + pose.getPosition();
   }
-  inline static Position inverseTransform(const Pose & pose, const Position & position){
+  inline static Translation inverseTransform(const Pose & pose, const Translation & position){
     return pose.getRotation().inverseRotate((position-pose.getPosition()));
   }
 };

@@ -28,11 +28,7 @@
 #ifndef KINDR_PHYS_QUANT_PHYSICALTYPE_HPP_
 #define KINDR_PHYS_QUANT_PHYSICALTYPE_HPP_
 
-
-
 namespace kindr {
-//! Physical quantities
-namespace phys_quant {
 
 /*! \class PhysicalType
  * \brief Physical type of a vector.
@@ -65,7 +61,6 @@ enum class PhysicalType {
 };
 
 
-} // namespace phys_quant
 } // namespace kindr
 
 

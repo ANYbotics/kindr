@@ -26,10 +26,9 @@
  *
 */
 
-#ifndef KINDR_ROSTFPOSEEIGEN_HPP_
-#define KINDR_ROSTFPOSEEIGEN_HPP_
+#pragma once
 
-#include "kindr/poses/PoseEigen.hpp"
+#include "kindr/poses/Pose.hpp"
 #include "kindr/rotations/Rotation.hpp"
 
 // ROS
@@ -37,8 +36,6 @@
 #include <tf/LinearMath/Transform.h>
 
 namespace kindr {
-namespace poses {
-namespace eigen_impl {
 
 template<typename PrimType_, typename Position_, typename Rotation_>
 static void convertFromRosTf(const tf::Transform& tfTransform, HomogeneousTransformation<PrimType_, Position_, Rotation_>& pose)
@@ -48,7 +45,7 @@ static void convertFromRosTf(const tf::Transform& tfTransform, HomogeneousTransf
   typedef Rotation_ Rotation;
 
   // This is the definition of TF.
-  typedef rotations::eigen_impl::RotationMatrix<double, rotations::RotationUsage::PASSIVE> RotationMatrixTfLike;
+  typedef RotationMatrix<PrimType_> RotationMatrixTfLike;
 
   const tf::Vector3& rowX = tfTransform.getBasis().getRow(0);
   const tf::Vector3& rowY = tfTransform.getBasis().getRow(1);
@@ -71,7 +68,7 @@ template<typename PrimType_, typename Position_, typename Rotation_>
 static void convertToRosTf(const HomogeneousTransformation<PrimType_, Position_, Rotation_>& pose, tf::Transform& tfTransform)
 {
   // This is the definition of TF.
-  typedef rotations::eigen_impl::RotationMatrix<double, rotations::RotationUsage::PASSIVE> RotationMatrixTfLike;
+  typedef RotationMatrix<PrimType_> RotationMatrixTfLike;
 
   Eigen::Matrix3d rotationMatrix(RotationMatrixTfLike(pose.getRotation()).matrix());
   tf::Matrix3x3 tfRotationMatrix(rotationMatrix(0,0), rotationMatrix(0,1), rotationMatrix(0,2),
@@ -85,10 +82,4 @@ static void convertToRosTf(const HomogeneousTransformation<PrimType_, Position_,
 }
 
 
-} // namespace eigen_impl
-} // namespace poses
 } // namespace kindr
-
-
-
-#endif /* KINDR_ROSTFPOSEEIGEN_HPP_ */

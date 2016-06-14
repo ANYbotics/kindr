@@ -33,14 +33,14 @@
 #include <gtest/gtest.h>
 
 #include "kindr/thirdparty/ros/RosGeometryMsgPhysicalQuantitiesEigen.hpp"
-#include "kindr/phys_quant/PhysicalQuantitiesEigen.hpp"
+#include "kindr/phys_quant/PhysicalQuantities.hpp"
 #include "kindr/common/gtest_eigen.hpp"
 
 // ROS
 #include <ros/ros.h>
 #include <geometry_msgs/Pose.h>
 
-namespace pos = kindr::phys_quant::eigen_impl;
+namespace pos = kindr;
 namespace common = kindr::common::eigen;
 
 TEST(RosGeometryMsgVectorEigen, convertFromRosGeometryMsg)

@@ -38,6 +38,18 @@
 
 namespace kindr {
 
+namespace internal {
+/*! \class get_scalar
+ *  \brief Gets the primitive of the vector.
+ */
+template<typename Quantitiy_>
+class get_scalar {
+ public:
+//  typedef PrimType Scalar;
+};
+
+}
+
 //! Common methods
 namespace common {
 

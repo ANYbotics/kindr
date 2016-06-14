@@ -52,7 +52,7 @@ add_library(kindr_impl
 #############
 
 if(CATKIN_ENABLE_TESTING)
-  catkin_add_gtest(test_${PROJECT_NAME}
+  catkin_add_gtest(test_${PROJECT_NAME}_rotations
     test/test_main.cpp
 	#test/rotations/RotationMatrixTest.cpp
 	#test/rotations/RotationQuaternionTest.cpp
@@ -69,10 +69,62 @@ if(CATKIN_ENABLE_TESTING)
 	test/rotations/EulerAnglesXyzDiffTest.cpp
 	test/rotations/RotationDiffTest.cpp
   )
-  if(TARGET test_${PROJECT_NAME})
-    target_link_libraries(test_${PROJECT_NAME}
-      ${catkin_LIBRARIES}
-    )
+  if(TARGET test_${PROJECT_NAME}_rotations)
+    target_link_libraries(test_${PROJECT_NAME}_rotations ${catkin_LIBRARIES})
+  endif()
+  
+  catkin_add_gtest(test_${PROJECT_NAME}_quaternions
+    test/test_main.cpp
+	test/quaternions/QuaternionEigenTest.cpp
+  )
+  if(TARGET test_${PROJECT_NAME}_quaternions)
+    target_link_libraries(test_${PROJECT_NAME}_quaternions ${catkin_LIBRARIES})
+  endif()
+  
+  catkin_add_gtest(test_${PROJECT_NAME}_math
+    test/test_main.cpp
+	test/linear_algebra/SkewMatrixFromVectorTest.cpp
+  )
+  if(TARGET test_${PROJECT_NAME}_math)
+    target_link_libraries(test_${PROJECT_NAME}_math ${catkin_LIBRARIES})
+  endif()
+  
+  catkin_add_gtest(test_${PROJECT_NAME}_poses
+    test/test_main.cpp
+	test/poses/PositionTest.cpp
+	test/poses/PositionDiffTest.cpp
+    test/poses/PoseTest.cpp
+	test/poses/PoseDiffTest.cpp
+  )
+  if(TARGET test_${PROJECT_NAME}_poses)
+    target_link_libraries(test_${PROJECT_NAME}_poses ${catkin_LIBRARIES})
+  endif()
+	
+  catkin_add_gtest(test_${PROJECT_NAME}_vectors
+    test/test_main.cpp
+	test/vectors/VectorsTest.cpp
+  )
+  if(TARGET test_${PROJECT_NAME}_vectors)
+    target_link_libraries(test_${PROJECT_NAME}_vectors ${catkin_LIBRARIES})
+  endif()
+	
+  catkin_add_gtest(test_${PROJECT_NAME}_phys_quant
+    test/test_main.cpp
+	test/phys_quant/ForceTest.cpp
+  )
+  if(TARGET test_${PROJECT_NAME}_phys_quant)
+    target_link_libraries(test_${PROJECT_NAME}_phys_quant ${catkin_LIBRARIES})
+  endif()
+
+  catkin_add_gtest(test_${PROJECT_NAME}_ros
+	test/test_main.cpp
+	test/thirdparty/ros/RosTfPoseEigenTest.cpp
+	test/thirdparty/ros/RosGeometryMsgPoseEigenTest.cpp
+	test/thirdparty/ros/RosGeometryMsgRotationEigenTest.cpp
+	test/thirdparty/ros/RosGeometryMsgPhysicalQuantitiesEigenTest.cpp
+  )
+  if(TARGET test_${PROJECT_NAME}_ros)
+    target_link_libraries(test_${PROJECT_NAME}_ros ${catkin_LIBRARIES})
   endif()
 endif()
 

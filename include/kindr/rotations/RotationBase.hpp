@@ -42,21 +42,6 @@ namespace kindr {
 //! Internal stuff (only for developers)
 namespace internal {
 
-/*! \brief This class determines the alternative usage type for each rotation
- *  \class get_other_usage
- *  (only for advanced users)
- */
-template<typename Rotation_>
-class get_other_usage {
- public:
-//  typedef eigen_impl::AngleAxis<PrimType, RotationUsage::PASSIVE> OtherUsage;
-};
-
-template<typename Rotation_>
-class get_scalar {
- public:
-//  typedef typename Rotation_::Scalar Scalar;
-};
 
 
 /*! \brief This class determines the correct matrix type for each rotation which is used for matrix rotations

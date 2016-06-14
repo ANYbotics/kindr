@@ -26,28 +26,14 @@
  *
 */
 
-#ifndef KINDR_VECTORS_VECTORBASE_HPP_
-#define KINDR_VECTORS_VECTORBASE_HPP_
-
+#pragma once
 
 #include "kindr/common/common.hpp"
 
 namespace kindr {
-//! Generic vector interface
-/*! \ingroup vectors
- */
-namespace vectors {
 //! Internal stuff (only for developers)
 namespace internal {
 
-/*! \class get_scalar
- *  \brief Gets the primitive of the vector.
- */
-template<typename Vector_>
-class get_scalar {
- public:
-//  typedef PrimType Scalar;
-};
 
 /*! \class get_dimension
  *  \brief Gets the dimension of the vector.
@@ -309,8 +295,5 @@ class VectorBase {
 };
 
 
-} // namespace vectors
 } // namespace kindr
 
-
-#endif /* KINDR_VECTORS_VECTORBASE_HPP_ */

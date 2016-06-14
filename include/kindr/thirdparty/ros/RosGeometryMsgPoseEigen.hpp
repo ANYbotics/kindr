@@ -26,10 +26,9 @@
  *
 */
 
-#ifndef KINDR_ROSGEOMETRYMSGPOSEEIGEN_HPP_
-#define KINDR_ROSGEOMETRYMSGPOSEEIGEN_HPP_
+#pragma once
 
-#include "kindr/poses/PoseEigen.hpp"
+#include "kindr/poses/Pose.hpp"
 #include "kindr/rotations/Rotation.hpp"
 #include "kindr/thirdparty/ros/RosGeometryMsgPhysicalQuantitiesEigen.hpp"
 #include "kindr/thirdparty/ros/RosGeometryMsgRotationEigen.hpp"
@@ -40,20 +39,18 @@
 #include <geometry_msgs/Transform.h>
 
 namespace kindr {
-namespace poses {
-namespace eigen_impl {
 
 template<typename PrimType_, typename Position_, typename Rotation_>
 static void convertFromRosGeometryMsg(const geometry_msgs::Pose& geometryPoseMsg,
                                       HomogeneousTransformation<PrimType_, Position_, Rotation_>& pose)
 {
-  kindr::phys_quant::eigen_impl::convertFromRosGeometryMsg(geometryPoseMsg.position, pose.getPosition());
+  kindr::convertFromRosGeometryMsg(geometryPoseMsg.position, pose.getPosition());
 
   // This is the definition of ROS Geometry pose.
-  typedef rotations::eigen_impl::RotationQuaternion<double, rotations::RotationUsage::PASSIVE> RotationQuaternionGeometryPoseLike;
+  typedef RotationQuaternion<double> RotationQuaternionGeometryPoseLike;
 
   RotationQuaternionGeometryPoseLike rotation;
-  kindr::rotations::eigen_impl::convertFromRosGeometryMsg(geometryPoseMsg.orientation, rotation);
+  kindr::convertFromRosGeometryMsg(geometryPoseMsg.orientation, rotation);
   pose.getRotation() = rotation;
 }
 
@@ -61,26 +58,26 @@ template<typename PrimType_, typename Position_, typename Rotation_>
 static void convertToRosGeometryMsg(const HomogeneousTransformation<PrimType_, Position_, Rotation_>& pose,
                                     geometry_msgs::Pose& geometryPoseMsg)
 {
-  kindr::phys_quant::eigen_impl::convertToRosGeometryMsg(pose.getPosition(), geometryPoseMsg.position);
+  kindr::convertToRosGeometryMsg(pose.getPosition(), geometryPoseMsg.position);
 
   // This is the definition of ROS Geometry pose.
-  typedef rotations::eigen_impl::RotationQuaternion<double, rotations::RotationUsage::PASSIVE> RotationQuaternionGeometryPoseLike;
+  typedef RotationQuaternion<double> RotationQuaternionGeometryPoseLike;
 
   RotationQuaternionGeometryPoseLike rotation(pose.getRotation());
-  kindr::rotations::eigen_impl::convertToRosGeometryMsg(rotation, geometryPoseMsg.orientation);
+  kindr::convertToRosGeometryMsg(rotation, geometryPoseMsg.orientation);
 }
 
 template<typename PrimType_, typename Position_, typename Rotation_>
 static void convertFromRosGeometryMsg(const geometry_msgs::Transform& geometryTransformMsg,
                                       HomogeneousTransformation<PrimType_, Position_, Rotation_>& transformation)
 {
-  kindr::phys_quant::eigen_impl::convertFromRosGeometryMsg(geometryTransformMsg.translation, transformation.getPosition());
+  kindr::convertFromRosGeometryMsg(geometryTransformMsg.translation, transformation.getPosition());
 
   // This is the definition of ROS Geometry transform.
-  typedef rotations::eigen_impl::RotationQuaternion<double, rotations::RotationUsage::PASSIVE> RotationQuaternionGeometryTransformLike;
+  typedef RotationQuaternion<double> RotationQuaternionGeometryTransformLike;
 
   RotationQuaternionGeometryTransformLike rotation;
-  kindr::rotations::eigen_impl::convertFromRosGeometryMsg(geometryTransformMsg.rotation, rotation);
+  kindr::convertFromRosGeometryMsg(geometryTransformMsg.rotation, rotation);
   transformation.getRotation() = rotation;
 }
 
@@ -88,17 +85,14 @@ template<typename PrimType_, typename Position_, typename Rotation_>
 static void convertToRosGeometryMsg(const HomogeneousTransformation<PrimType_, Position_, Rotation_>& transformation,
                                     geometry_msgs::Transform& geometryTransformMsg)
 {
-  kindr::phys_quant::eigen_impl::convertToRosGeometryMsg(transformation.getPosition(), geometryTransformMsg.translation);
+  kindr::convertToRosGeometryMsg(transformation.getPosition(), geometryTransformMsg.translation);
 
   // This is the definition of ROS Geometry transform.
-  typedef rotations::eigen_impl::RotationQuaternion<double, rotations::RotationUsage::PASSIVE> RotationQuaternionGeometryTransformLike;
+  typedef RotationQuaternion<double> RotationQuaternionGeometryTransformLike;
 
   RotationQuaternionGeometryTransformLike rotation(transformation.getRotation());
-  kindr::rotations::eigen_impl::convertToRosGeometryMsg(rotation, geometryTransformMsg.rotation);
+  kindr::convertToRosGeometryMsg(rotation, geometryTransformMsg.rotation);
 }
 
-} // namespace eigen_impl
-} // namespace poses
-} // namespace kindr
 
-#endif /* KINDR_ROSGEOMETRYMSGPOSEEIGEN_HPP_ */
+} // namespace kindr

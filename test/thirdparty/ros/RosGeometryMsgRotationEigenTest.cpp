@@ -33,15 +33,15 @@
 #include <gtest/gtest.h>
 
 #include "kindr/thirdparty/ros/RosGeometryMsgRotationEigen.hpp"
-#include "kindr/poses/PoseEigen.hpp"
+#include "kindr/poses/Pose.hpp"
 #include "kindr/common/gtest_eigen.hpp"
 
 // ROS
 #include <ros/ros.h>
 #include <geometry_msgs/Quaternion.h>
 
-namespace rot = kindr::rotations::eigen_impl;
-namespace common = kindr::common::eigen;
+namespace rot = kindr;
+namespace common = kindr;
 
 TEST(RosGeometryMsgRotationQuaternionEigen, convertFromRosGeometryMsg)
 {

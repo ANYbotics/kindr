@@ -33,14 +33,14 @@
 
 #include <gtest/gtest.h>
 
-#include "kindr/poses/PoseEigen.hpp"
+#include "kindr/poses/Pose.hpp"
 #include "kindr/poses/PoseBase.hpp"
-#include "kindr/phys_quant/PhysicalQuantitiesEigen.hpp"
+#include "kindr/phys_quant/PhysicalQuantities.hpp"
 
 
-namespace pose = kindr::poses::eigen_impl;
-namespace pos = kindr::phys_quant::eigen_impl;
-namespace rot = kindr::rotations::eigen_impl;
+namespace pose = kindr;
+namespace pos = kindr;
+namespace rot = kindr;
 
 
 typedef ::testing::Types<

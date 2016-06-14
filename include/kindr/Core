@@ -30,5 +30,7 @@
 
 #include <kindr/rotations/Rotation.hpp>
 #include <kindr/rotations/RotationDiff.hpp>
-#include <kindr/poses/PoseEigen.hpp>
-#include <kindr/phys_quant/PhysicalQuantitiesEigen.hpp>
+#include <kindr/poses/Pose.hpp>
+#include <kindr/poses/PoseDiff.hpp>
+#include <kindr/poses/Twist.hpp>
+#include <kindr/phys_quant/PhysicalQuantities.hpp>

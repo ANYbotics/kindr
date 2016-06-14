@@ -26,10 +26,6 @@
  *
 */
 
-#ifndef KINDR_POSES_EIGEN_POSEDIFFEIGEN_HPP_
-#define KINDR_POSES_EIGEN_POSEDIFFEIGEN_HPP_
+#pragma once
 
-#include "kindr/poses/eigen/Twist.hpp"
-
-
-#endif /* KINDR_POSES_EIGEN_POSEDIFFEIGEN_HPP_ */
+#include "kindr/poses/Twist.hpp"

@@ -33,13 +33,13 @@
 
 #include <gtest/gtest.h>
 
-#include "kindr/poses/PoseDiffEigen.hpp"
+#include "kindr/poses/PoseDiff.hpp"
 #include "kindr/poses/PoseDiffBase.hpp"
-#include "kindr/phys_quant/PhysicalQuantitiesEigen.hpp"
+#include "kindr/phys_quant/PhysicalQuantities.hpp"
 
-namespace pose = kindr::poses::eigen_impl;
-namespace pos = kindr::phys_quant::eigen_impl;
-namespace rot = kindr::rotations::eigen_impl;
+namespace pose = kindr;
+namespace pos = kindr;
+namespace rot = kindr;
 
 
 typedef ::testing::Types<
@@ -64,10 +64,10 @@ TYPED_TEST(TwistTest, testInitial)
 {
   typedef typename TestFixture::PoseDiff PoseDiff;
   typedef typename TestFixture::PoseDiff::Scalar Scalar;
-  typedef rot::RotationQuaternion<Scalar, kindr::rotations::RotationUsage::ACTIVE> Rotation;
+  typedef rot::RotationQuaternion<Scalar> Rotation;
 
   typename PoseDiff::PositionDiff linearVelocity(0.1, 0.2, 0.3);
-  rot::LocalAngularVelocityAD angularVelocity;
+  rot::LocalAngularVelocityD angularVelocity;
   typename PoseDiff::RotationDiff rquatDiff(1, 2, 3, 4);
   PoseDiff twist(linearVelocity, rquatDiff);
   std::cout << twist << std::endl;

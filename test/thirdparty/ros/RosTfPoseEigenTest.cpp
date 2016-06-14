@@ -33,18 +33,17 @@
 #include <gtest/gtest.h>
 
 #include "kindr/thirdparty/ros/RosTfPoseEigen.hpp"
-#include "kindr/poses/PoseEigen.hpp"
+#include "kindr/poses/Pose.hpp"
 #include "kindr/rotations/Rotation.hpp"
-#include "kindr/rotations/RotationBase.hpp"
 #include "kindr/common/gtest_eigen.hpp"
 
 // ROS
 #include <ros/ros.h>
 #include <tf/LinearMath/Transform.h>
 
-namespace pose = kindr::poses::eigen_impl;
-namespace pos = kindr::phys_quant::eigen_impl;
-namespace rot = kindr::rotations::eigen_impl;
+namespace pose = kindr;
+namespace pos = kindr;
+namespace rot = kindr;
 namespace common = kindr::common::eigen;
 
 TEST(RosTfPoseEigen, convertFromRosTf)

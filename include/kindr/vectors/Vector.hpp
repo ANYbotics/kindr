@@ -26,8 +26,7 @@
  *
 */
 
-#ifndef KINDR_VECTORS_VECTOR_HPP_
-#define KINDR_VECTORS_VECTOR_HPP_
+#pragma once
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
@@ -38,11 +37,6 @@
 #include "kindr/phys_quant/PhysicalType.hpp"
 
 namespace kindr {
-namespace vectors {
-//! Implementation of vector based on the C++ Eigen library
-namespace eigen_impl {
-
-
 
 /*! \class Vector
  * \brief Vector in n-dimensional-space.
@@ -54,7 +48,7 @@ namespace eigen_impl {
  * \tparam Dimension_       Dimension of the vector.
  * \ingroup vectors
  */
-template<enum phys_quant::PhysicalType PhysicalType_, typename PrimType_, int Dimension_>
+template<enum PhysicalType PhysicalType_, typename PrimType_, int Dimension_>
 class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >, private Eigen::Matrix<PrimType_, Dimension_, 1> {
  private:
   /*! \brief The base type.
@@ -99,7 +93,7 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
   /*! \brief Constructor using other vector with generic type.
    *  \param other   Vector<OtherPhysicalType_, OtherPrimType_, Dimension_>
    */
-  template<enum phys_quant::PhysicalType OtherPhysicalType_, typename OtherPrimType_>
+  template<enum PhysicalType OtherPhysicalType_, typename OtherPrimType_>
   explicit Vector(const Vector<OtherPhysicalType_, OtherPrimType_, Dimension_>& other)
     : Implementation(other.toImplementation().template cast<PrimType_>()) {
   }
@@ -465,7 +459,7 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
    *  \param other   other vector
    *  \returns dot product.
    */
-  template<enum phys_quant::PhysicalType PhysicalTypeOther_>
+  template<enum PhysicalType PhysicalTypeOther_>
   Scalar dot(const Vector<PhysicalTypeOther_, PrimType_, Dimension_>& other) const {
     return this->toImplementation().dot(other.toImplementation());
   }
@@ -474,7 +468,7 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
    *  \param other   other vector
    *  \returns cross product.
    */
-  template<enum phys_quant::PhysicalType PhysicalTypeOther_, int DimensionCopy_ = Dimension_>
+  template<enum PhysicalType PhysicalTypeOther_, int DimensionCopy_ = Dimension_>
   typename internal::MultiplicationReturnTypeTrait<Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeOther_, PrimType_, Dimension_>>::ReturnType
   cross(const Vector<PhysicalTypeOther_, PrimType_, Dimension_>& other, typename std::enable_if<DimensionCopy_ == 3>::type* = nullptr) const {
     return typename internal::MultiplicationReturnTypeTrait<Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeOther_, PrimType_, Dimension_>>::ReturnType(this->toImplementation().cross(other.toImplementation()));
@@ -490,7 +484,7 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
    *  \param other   other vector
    *  \returns projected vector.
    */
-  template<enum phys_quant::PhysicalType PhysicalTypeOther_>
+  template<enum PhysicalType PhysicalTypeOther_>
   Vector<PhysicalType_, PrimType_, Dimension_> projectOn(const Vector<PhysicalTypeOther_, PrimType_, Dimension_>& other) const {
     return other * (this->dot(other)/other.squaredNorm());
   }
@@ -500,7 +494,7 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
    *  \param other   other vector
    *  \returns elementwise product.
    */
-  template<enum phys_quant::PhysicalType PhysicalTypeOther_>
+  template<enum PhysicalType PhysicalTypeOther_>
   typename internal::MultiplicationReturnTypeTrait<Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeOther_, PrimType_, Dimension_>>::ReturnType
   elementwiseMultiplication(const Vector<PhysicalTypeOther_, PrimType_, Dimension_>& other) const {
     return typename internal::MultiplicationReturnTypeTrait<Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeOther_, PrimType_, Dimension_>>::ReturnType(this->toImplementation().cwiseProduct(other.toImplementation()));
@@ -510,7 +504,7 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
    *  \param other   other vector
    *  \returns elementwise quotient.
    */
-  template<enum phys_quant::PhysicalType PhysicalTypeOther_>
+  template<enum PhysicalType PhysicalTypeOther_>
   typename internal::DivisionReturnTypeTrait<Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeOther_, PrimType_, Dimension_>>::ReturnType
   elementwiseDivision(const Vector<PhysicalTypeOther_, PrimType_, Dimension_>& other) const {
     return typename internal::DivisionReturnTypeTrait<Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeOther_, PrimType_, Dimension_>>::ReturnType(this->toImplementation().cwiseQuotient(other.toImplementation()));
@@ -565,103 +559,95 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
  * \param factor   factor
  * \returns product
  */
-template<enum phys_quant::PhysicalType PhysicalType_, typename PrimTypeFactor_, typename PrimType_, int Dimension_>
+template<enum PhysicalType PhysicalType_, typename PrimTypeFactor_, typename PrimType_, int Dimension_>
 Vector<PhysicalType_, PrimType_, Dimension_> operator*(PrimTypeFactor_ factor, const Vector<PhysicalType_, PrimType_, Dimension_>& vector) {
   return vector*(PrimType_)factor;
 }
-
-
-} // namespace eigen_impl
-
 
 
 namespace internal {
 
 /*! \brief Gets the primitive type of the vector
  */
-template<enum phys_quant::PhysicalType PhysicalType_, typename PrimType_, int Dimension_>
-class get_scalar<eigen_impl::Vector<PhysicalType_, PrimType_, Dimension_>> {
+template<enum PhysicalType PhysicalType_, typename PrimType_, int Dimension_>
+class get_scalar<Vector<PhysicalType_, PrimType_, Dimension_>> {
  public:
   typedef PrimType_ Scalar;
 };
 
 /*! \brief Gets the dimension of the vector
  */
-template<enum phys_quant::PhysicalType PhysicalType_, typename PrimType_, int Dimension_>
-class get_dimension<eigen_impl::Vector<PhysicalType_, PrimType_, Dimension_>> {
+template<enum PhysicalType PhysicalType_, typename PrimType_, int Dimension_>
+class get_dimension<Vector<PhysicalType_, PrimType_, Dimension_>> {
  public:
   static constexpr int Dimension = Dimension_;
 };
 
 /*! \brief Gets the return type of a multiplication
  */
-template<enum phys_quant::PhysicalType PhysicalType1_, enum phys_quant::PhysicalType PhysicalType2_, typename PrimType_, int Dimension_>
-class MultiplicationReturnTypeTrait<eigen_impl::Vector<PhysicalType1_, PrimType_, Dimension_>, eigen_impl::Vector<PhysicalType2_, PrimType_, Dimension_>>
+template<enum PhysicalType PhysicalType1_, enum PhysicalType PhysicalType2_, typename PrimType_, int Dimension_>
+class MultiplicationReturnTypeTrait<Vector<PhysicalType1_, PrimType_, Dimension_>, Vector<PhysicalType2_, PrimType_, Dimension_>>
 {
  public:
-  typedef eigen_impl::Vector<phys_quant::PhysicalType::Typeless, PrimType_, Dimension_> ReturnType;
+  typedef Vector<PhysicalType::Typeless, PrimType_, Dimension_> ReturnType;
 };
 
 /*! \brief Gets the return type of a multiplication
  */
-template<enum phys_quant::PhysicalType PhysicalType1_, enum phys_quant::PhysicalType PhysicalType2_, typename PrimType_, int Dimension_>
-class DivisionReturnTypeTrait<eigen_impl::Vector<PhysicalType1_, PrimType_, Dimension_>, eigen_impl::Vector<PhysicalType2_, PrimType_, Dimension_>>
+template<enum PhysicalType PhysicalType1_, enum PhysicalType PhysicalType2_, typename PrimType_, int Dimension_>
+class DivisionReturnTypeTrait<Vector<PhysicalType1_, PrimType_, Dimension_>, Vector<PhysicalType2_, PrimType_, Dimension_>>
 {
  public:
-  typedef eigen_impl::Vector<phys_quant::PhysicalType::Typeless, PrimType_, Dimension_> ReturnType;
+  typedef Vector<PhysicalType::Typeless, PrimType_, Dimension_> ReturnType;
 };
 
 /*! \brief Specializes multiplication and division traits for the triple (factor1 != factor2)
  */
 #define KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(FACTOR1, FACTOR2, PRODUCT) \
     template<typename PrimType_, int Dimension_> \
-    class MultiplicationReturnTypeTrait<eigen_impl::Vector<phys_quant::PhysicalType::FACTOR1, PrimType_, Dimension_>, eigen_impl::Vector<phys_quant::PhysicalType::FACTOR2, PrimType_, Dimension_>> \
+    class MultiplicationReturnTypeTrait<Vector<PhysicalType::FACTOR1, PrimType_, Dimension_>, Vector<PhysicalType::FACTOR2, PrimType_, Dimension_>> \
     { \
      public: \
-      typedef eigen_impl::Vector<phys_quant::PhysicalType::PRODUCT, PrimType_, Dimension_> ReturnType; \
+      typedef Vector<PhysicalType::PRODUCT, PrimType_, Dimension_> ReturnType; \
     }; \
     template<typename PrimType_, int Dimension_> \
-    class MultiplicationReturnTypeTrait<eigen_impl::Vector<phys_quant::PhysicalType::FACTOR2, PrimType_, Dimension_>, eigen_impl::Vector<phys_quant::PhysicalType::FACTOR1, PrimType_, Dimension_>> \
+    class MultiplicationReturnTypeTrait<Vector<PhysicalType::FACTOR2, PrimType_, Dimension_>, Vector<PhysicalType::FACTOR1, PrimType_, Dimension_>> \
     { \
      public: \
-      typedef eigen_impl::Vector<phys_quant::PhysicalType::PRODUCT, PrimType_, Dimension_> ReturnType; \
+      typedef Vector<PhysicalType::PRODUCT, PrimType_, Dimension_> ReturnType; \
     }; \
     template<typename PrimType_, int Dimension_> \
-    class DivisionReturnTypeTrait<eigen_impl::Vector<phys_quant::PhysicalType::PRODUCT, PrimType_, Dimension_>, eigen_impl::Vector<phys_quant::PhysicalType::FACTOR1, PrimType_, Dimension_>> \
+    class DivisionReturnTypeTrait<Vector<PhysicalType::PRODUCT, PrimType_, Dimension_>, Vector<PhysicalType::FACTOR1, PrimType_, Dimension_>> \
     { \
      public: \
-      typedef eigen_impl::Vector<phys_quant::PhysicalType::FACTOR2, PrimType_, Dimension_> ReturnType; \
+      typedef Vector<PhysicalType::FACTOR2, PrimType_, Dimension_> ReturnType; \
     }; \
     template<typename PrimType_, int Dimension_> \
-    class DivisionReturnTypeTrait<eigen_impl::Vector<phys_quant::PhysicalType::PRODUCT, PrimType_, Dimension_>, eigen_impl::Vector<phys_quant::PhysicalType::FACTOR2, PrimType_, Dimension_>> \
+    class DivisionReturnTypeTrait<Vector<PhysicalType::PRODUCT, PrimType_, Dimension_>, Vector<PhysicalType::FACTOR2, PrimType_, Dimension_>> \
     { \
      public: \
-      typedef eigen_impl::Vector<phys_quant::PhysicalType::FACTOR1, PrimType_, Dimension_> ReturnType; \
+      typedef Vector<PhysicalType::FACTOR1, PrimType_, Dimension_> ReturnType; \
     };
 
 /*! \brief Specializes multiplication and division traits for the triple (factor1 == factor2)
  */
 #define KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_B(FACTOR1AND2, PRODUCT) \
     template<typename PrimType_, int Dimension_> \
-    class MultiplicationReturnTypeTrait<eigen_impl::Vector<phys_quant::PhysicalType::FACTOR1AND2, PrimType_, Dimension_>, eigen_impl::Vector<phys_quant::PhysicalType::FACTOR1AND2, PrimType_, Dimension_>> \
+    class MultiplicationReturnTypeTrait<Vector<PhysicalType::FACTOR1AND2, PrimType_, Dimension_>, Vector<PhysicalType::FACTOR1AND2, PrimType_, Dimension_>> \
     { \
      public: \
-      typedef eigen_impl::Vector<phys_quant::PhysicalType::PRODUCT, PrimType_, Dimension_> ReturnType; \
+      typedef Vector<PhysicalType::PRODUCT, PrimType_, Dimension_> ReturnType; \
     }; \
     template<typename PrimType_, int Dimension_> \
-    class DivisionReturnTypeTrait<eigen_impl::Vector<phys_quant::PhysicalType::PRODUCT, PrimType_, Dimension_>, eigen_impl::Vector<phys_quant::PhysicalType::FACTOR1AND2, PrimType_, Dimension_>> \
+    class DivisionReturnTypeTrait<Vector<PhysicalType::PRODUCT, PrimType_, Dimension_>, Vector<PhysicalType::FACTOR1AND2, PrimType_, Dimension_>> \
     { \
      public: \
-      typedef eigen_impl::Vector<phys_quant::PhysicalType::FACTOR1AND2, PrimType_, Dimension_> ReturnType; \
+      typedef Vector<PhysicalType::FACTOR1AND2, PrimType_, Dimension_> ReturnType; \
     };
 
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_B(Typeless, Typeless)
 
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Time, Time)
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Mass, Mass)
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Inertia, Inertia)
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Power, Power)
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Energy, Energy)
 
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Jerk, Jerk)
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Typeless, Acceleration, Acceleration)
@@ -684,8 +670,6 @@ KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Position, AngularVelocity, Velocity)
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Position, Force, Torque)
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Position, Momentum, AngularMomentum)
 
-KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Time, Power, Energy)
-
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Time, Jerk, Acceleration)
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Time, Acceleration, Velocity)
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Time, Velocity, Position)
@@ -704,13 +688,8 @@ KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(Inertia, AngularVelocity, AngularMomen
 
 
 } // namespace internal
-
-
-} // namespace vectors
 } // namespace kindr
 
 
 
 
-
-#endif /* KINDR_VECTORS_VECTOR_HPP_ */

@@ -33,12 +33,10 @@
 
 #include <gtest/gtest.h>
 
-#include "kindr/phys_quant/PhysicalQuantitiesEigen.hpp"
+#include "kindr/phys_quant/PhysicalQuantities.hpp"
 #include "kindr/common/gtest_eigen.hpp"
 
-
-
-namespace pos = kindr::phys_quant::eigen_impl;
+namespace pos = kindr;
 
 template <typename LinearVelocityImplementation>
 struct LinearVelocityTest: public ::testing::Test {

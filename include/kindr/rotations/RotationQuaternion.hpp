@@ -56,7 +56,7 @@ class RotationQuaternion : public RotationBase<RotationQuaternion<PrimType_>> {
  private:
   /*! \brief The base type.
    */
-  typedef quaternions::eigen_impl::UnitQuaternion<PrimType_> Base;
+  typedef UnitQuaternion<PrimType_> Base;
 
   /*! \brief The data container
    */
@@ -124,9 +124,9 @@ class RotationQuaternion : public RotationBase<RotationQuaternion<PrimType_>> {
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, rotationQuaternion_.norm(), static_cast<Scalar>(1), 1e-2, "Input quaternion has not unit length.");
   }
 
-  /*! \brief Constructor using quaternions::UnitQuaternion.
+  /*! \brief Constructor using UnitQuaternion.
    *  In debug mode, an assertion is thrown if the quaternion has not unit length.
-   *  \param other   quaternions::UnitQuaternion
+   *  \param other   UnitQuaternion
    */
   explicit RotationQuaternion(const Base& other)
     : rotationQuaternion_(other.w(), other.x(), other.y(), other.z()) {
@@ -213,7 +213,7 @@ class RotationQuaternion : public RotationBase<RotationQuaternion<PrimType_>> {
    *  \returns reference
    */
   template<typename PrimTypeIn_>
-  RotationQuaternion& operator =(const quaternions::eigen_impl::UnitQuaternion<PrimTypeIn_>& quat) {
+  RotationQuaternion& operator =(const UnitQuaternion<PrimTypeIn_>& quat) {
     this->toImplementation() = Implementation(quat.w(),quat.x(),quat.y(),quat.z());
     return *this;
   }
@@ -243,7 +243,7 @@ class RotationQuaternion : public RotationBase<RotationQuaternion<PrimType_>> {
    *  \returns reference
    */
   template<typename PrimTypeIn_>
-  RotationQuaternion& operator ()(const quaternions::eigen_impl::UnitQuaternion<PrimTypeIn_>& quat) {
+  RotationQuaternion& operator ()(const UnitQuaternion<PrimTypeIn_>& quat) {
     this->toImplementation() = Implementation(quat.w(),quat.x(),quat.y(),quat.z());
     return *this;
   }
@@ -254,7 +254,7 @@ class RotationQuaternion : public RotationBase<RotationQuaternion<PrimType_>> {
    *  \returns reference
    */
   template<typename PrimTypeIn_>
-  RotationQuaternion& operator ()(const quaternions::eigen_impl::Quaternion<PrimTypeIn_>& quat) {
+  RotationQuaternion& operator ()(const Quaternion<PrimTypeIn_>& quat) {
     this->toImplementation() = Implementation(quat.w(),quat.x(),quat.y(),quat.z());
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1), static_cast<Scalar>(1e-4), "Input quaternion has not unit length.");
     return *this;

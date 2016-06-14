@@ -33,19 +33,12 @@
 
 #include <gtest/gtest.h>
 
-#include "kindr/vectors/VectorEigen.hpp"
+#include "kindr/vectors/Vector.hpp"
 #include "kindr/rotations/Rotation.hpp"
 #include "kindr/common/gtest_eigen.hpp"
 
-
-
-namespace vectors = kindr::vectors::eigen_impl;
-namespace rotations = kindr::rotations::eigen_impl;
-
-
-
-
-
+namespace vectors = kindr;
+namespace rotations = kindr;
 
 
 template <typename VectorImplementation>
@@ -92,12 +85,12 @@ struct VectorTest: public ::testing::Test {
 
 
 typedef ::testing::Types<
-    vectors::Vector<kindr::phys_quant::PhysicalType::Typeless, double, 5>,
-    vectors::Vector<kindr::phys_quant::PhysicalType::Typeless, float,  5>,
-    vectors::Vector<kindr::phys_quant::PhysicalType::Force,    double, 5>,
-    vectors::Vector<kindr::phys_quant::PhysicalType::Force,    float,  5>,
-    vectors::Vector<kindr::phys_quant::PhysicalType::Position, double, 5>,
-    vectors::Vector<kindr::phys_quant::PhysicalType::Position, float,  5>
+    vectors::Vector<kindr::PhysicalType::Typeless, double, 5>,
+    vectors::Vector<kindr::PhysicalType::Typeless, float,  5>,
+    vectors::Vector<kindr::PhysicalType::Force,    double, 5>,
+    vectors::Vector<kindr::PhysicalType::Force,    float,  5>,
+    vectors::Vector<kindr::PhysicalType::Position, double, 5>,
+    vectors::Vector<kindr::PhysicalType::Position, float,  5>
 > Types5;
 
 
@@ -107,15 +100,15 @@ TYPED_TEST(VectorTest, testVector)
 {
   // vector typedefs
   typedef typename TestFixture::Vector Vector;
-  typedef vectors::Vector<kindr::phys_quant::PhysicalType::Typeless, typename TestFixture::Scalar, 5> OtherVector;
+  typedef vectors::Vector<kindr::PhysicalType::Typeless, typename TestFixture::Scalar, 5> OtherVector;
   OtherVector vector2FromEigenOtherType(this->vec2);
   typedef typename TestFixture::EigenVector EigenVector;
 
   // vector typedefs (dimension 3)
   typedef Eigen::Matrix<double, 3, 1> EigenVector3;
-  typedef vectors::Vector<kindr::phys_quant::PhysicalType::Position, double, 3> Length3d;
-  typedef vectors::Vector<kindr::phys_quant::PhysicalType::Force,    double, 3> Force3d;
-  typedef vectors::Vector<kindr::phys_quant::PhysicalType::Torque,   double, 3> Torque3d;
+  typedef vectors::Vector<kindr::PhysicalType::Position, double, 3> Length3d;
+  typedef vectors::Vector<kindr::PhysicalType::Force,    double, 3> Force3d;
+  typedef vectors::Vector<kindr::PhysicalType::Torque,   double, 3> Torque3d;
 
   // default constructor
   ASSERT_EQ(this->vectorDefault(0), this->vecZero(0)) << "Default constructor needs to initialize component 1 to zero!";
@@ -340,9 +333,9 @@ TYPED_TEST(VectorTest, testVector)
   ASSERT_EQ(headAndTailResult(1), headAndTailVector(1));
 
   // head & tail 2
-  typedef vectors::Vector<kindr::phys_quant::PhysicalType::Position, double, 6> Length6d;
-  typedef vectors::Vector<kindr::phys_quant::PhysicalType::Position, double, 2> Length2d;
-  typedef vectors::Vector<kindr::phys_quant::PhysicalType::Position, double, -1> LengthDynd;
+  typedef vectors::Vector<kindr::PhysicalType::Position, double, 6> Length6d;
+  typedef vectors::Vector<kindr::PhysicalType::Position, double, 2> Length2d;
+  typedef vectors::Vector<kindr::PhysicalType::Position, double, -1> LengthDynd;
   Eigen::Matrix<double, 6, 1> length6dEigen;
   length6dEigen << 1,2,3,4,5,6;
   Length6d length6d(length6dEigen);
@@ -379,7 +372,7 @@ TYPED_TEST(VectorTest, testVector)
   ASSERT_NEAR(result(2),   length(2), this->tol);
 
   // explicit cast from one type to another must compile
-  typedef vectors::Vector<kindr::phys_quant::PhysicalType::Force, double, -1> ForceDynd;
+  typedef vectors::Vector<kindr::PhysicalType::Force, double, -1> ForceDynd;
   Length3d(Force3d(1,2,3));
   Force3d test;
   test = Force3d(1,2,3);

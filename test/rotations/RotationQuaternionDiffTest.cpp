@@ -39,7 +39,7 @@
 #include "kindr/common/common.hpp"
 
 namespace rot = kindr;
-namespace quat = kindr::quaternions::eigen_impl;
+namespace quat = kindr;
 
 template <typename Implementation>
 struct RotationQuaternionDiffTest: public ::testing::Test {

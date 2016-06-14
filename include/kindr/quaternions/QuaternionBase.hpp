@@ -25,18 +25,14 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
 */
-#ifndef KINDR_QUATERNIONS_QUATERNIONBASE_HPP_
-#define KINDR_QUATERNIONS_QUATERNIONBASE_HPP_
+#pragma once
 
 #include "kindr/common/common.hpp"
 
 namespace kindr {
-//! Generic quaternion interface
-/*! \ingroup quaternions
- */
-namespace quaternions {
+
 //! Internal stuff (only for developers)
-namespace internal {
+namespace quat_internal {
 
 //! Conversion trait to implement conversions between different types
 template<typename Dest_, typename Source_>
@@ -135,12 +131,12 @@ class QuaternionBase {
    */
   template<typename OtherDerived_>
   Derived_ operator *(const QuaternionBase<OtherDerived_>& other) const {
-    return Derived_(internal::MultiplicationTraits<Derived_, OtherDerived_>::mult(this->derived(), other.derived()));
+    return Derived_(quat_internal::MultiplicationTraits<Derived_, OtherDerived_>::mult(this->derived(), other.derived()));
   }
 
 //  template<typename OtherDerived_>
 //  Derived_ operator *(const QuaternionBase<OtherDerived_>& other) const {
-//    return internal::MultiplicationTraits<Derived_, OtherDerived_>::mult(this->derived(), static_cast<Derived_>(other));
+//    return quat_internal::MultiplicationTraits<Derived_, OtherDerived_>::mult(this->derived(), static_cast<Derived_>(other));
 //  }
 
   /*! \brief compares the quaternion with another quaternion
@@ -149,7 +145,7 @@ class QuaternionBase {
    */
   template<typename OtherDerived_>
   bool operator ==(const QuaternionBase<OtherDerived_>& other) const {
-    return internal::ComparisonTraits<Derived_>::isEqual(this->derived(), static_cast<Derived_>(other)); // cast to Quaternion
+    return quat_internal::ComparisonTraits<Derived_>::isEqual(this->derived(), static_cast<Derived_>(other)); // cast to Quaternion
   }
 
   /*! \brief prints the coefficients of the quaternion
@@ -203,7 +199,7 @@ class UnitQuaternionBase : public QuaternionBase<Derived_> {
    */
   template<typename OtherDerived_>
   Derived_ operator *(const UnitQuaternionBase<OtherDerived_>& other) const {
-    return Derived_(internal::MultiplicationTraits<Derived_, OtherDerived_>::mult(this->derived(), other.derived()));
+    return Derived_(quat_internal::MultiplicationTraits<Derived_, OtherDerived_>::mult(this->derived(), other.derived()));
   }
 
   /*! \brief multiplies the unit quaternion with a quaternion
@@ -212,14 +208,9 @@ class UnitQuaternionBase : public QuaternionBase<Derived_> {
    */
   template<typename OtherDerived_>
   OtherDerived_ operator *(const QuaternionBase<OtherDerived_>& other) const {
-    return OtherDerived_(internal::MultiplicationTraits<Derived_, OtherDerived_>::mult(this->derived(), other.derived()));
+    return OtherDerived_(quat_internal::MultiplicationTraits<Derived_, OtherDerived_>::mult(this->derived(), other.derived()));
   }
 };
 
 
-
-
-} // namespace quaternions
 } // namespace rm
-
-#endif /* KINDR_QUATERNIONS_QUATERNIONBASE_HPP_ */

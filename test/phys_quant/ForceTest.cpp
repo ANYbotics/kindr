@@ -33,17 +33,10 @@
 
 #include <gtest/gtest.h>
 
-#include "kindr/vectors/VectorEigen.hpp"
-#include "kindr/phys_quant/PhysicalQuantitiesEigen.hpp"
-#include "kindr/phys_quant/eigen/Force.hpp"
-#include "kindr/phys_quant/eigen/Torque.hpp"
+#include "kindr/phys_quant/PhysicalQuantities.hpp"
 #include "kindr/common/gtest_eigen.hpp"
 
-
-
-namespace vectors = kindr::phys_quant::eigen_impl;
-
-
+namespace vectors = kindr;
 
 template <typename ForceImplementation>
 struct ForceTorqueTest: public ::testing::Test {

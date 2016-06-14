@@ -36,13 +36,10 @@
 #include "kindr/rotations/RotationDiffBase.hpp"
 #include "kindr/rotations/Rotation.hpp"
 #include "kindr/quaternions/QuaternionEigen.hpp"
-#include "kindr/phys_quant/eigen/AngularVelocity.hpp"
+#include "kindr/phys_quant/PhysicalQuantities.hpp"
 #include "kindr/linear_algebra/LinearAlgebra.hpp"
 
-
-
 namespace kindr {
-
 
 /*! \class LocalAngularVelocity
  * \brief Angular velocity in 3D-space expressed in local coordinates (frame fixed to the body).
@@ -57,11 +54,11 @@ namespace kindr {
  * \ingroup rotations
  */
 template<typename PrimType_>
-class LocalAngularVelocity : public RotationDiffBase<LocalAngularVelocity<PrimType_>>, public phys_quant::eigen_impl::AngularVelocity<PrimType_, 3> {
+class LocalAngularVelocity : public RotationDiffBase<LocalAngularVelocity<PrimType_>>, public AngularVelocity<PrimType_, 3> {
  private:
   /*! \brief The base type.
    */
-  typedef phys_quant::eigen_impl::AngularVelocity<PrimType_, 3> Base;
+  typedef AngularVelocity<PrimType_, 3> Base;
  public:
   /*! \brief The implementation type.
    *
@@ -89,7 +86,7 @@ class LocalAngularVelocity : public RotationDiffBase<LocalAngularVelocity<PrimTy
   }
 
   /*! \brief Constructor using vector class.
-   *  \param other   phys_quant::eigen_impl::AngularVelocity<PrimType_, 3>
+   *  \param other   AngularVelocity<PrimType_, 3>
    */
   explicit LocalAngularVelocity(const Base& other)
     : Base(other) {

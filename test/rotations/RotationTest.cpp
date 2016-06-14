@@ -35,7 +35,7 @@
 
 
 namespace rot = kindr;
-namespace quat = kindr::quaternions::eigen_impl;
+namespace quat = kindr;
 
 
 

@@ -35,7 +35,7 @@
 #include <kindr/common/gtest_eigen.hpp>
 #include <kindr/quaternions/QuaternionEigen.hpp>
 
-namespace quat = kindr::quaternions::eigen_impl;
+namespace quat = kindr;
 
 typedef ::testing::Types<
 		quat::QuaternionD,
