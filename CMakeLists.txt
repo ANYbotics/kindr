@@ -25,105 +25,107 @@
 
 # Project configuration
 cmake_minimum_required (VERSION 2.8)
+
 project(kindr)
 
-add_definitions(-std=c++11)
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}" ${CMAKE_MODULE_PATH})
 
 find_package(Eigen3 REQUIRED)
-find_package(catkin REQUIRED)
-
-catkin_package(
-    INCLUDE_DIRS include ${EIGEN3_INCLUDE_DIR}
-    DEPENDS eigen    
-)
 
 include_directories(include)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
-#################
-## Documenting ##
-#################
+# Noisily default to Release build
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  message(STATUS "Setting build type to 'Release' as none was specified.")
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
+    "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+endif()
+
+add_definitions(-std=c++11)
+
+# Don't build tests if not specified.
+if(NOT BUILD_TEST)
+  message(STATUS "Setting build-tests to false as not specified.")
+  set(BUILD_TEST false CACHE BOOL "Choose whether to build tests." FORCE)
+  set_property(CACHE BUILD_TEST PROPERTY STRINGS
+    "True" "False")
+endif()
+
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/gtest/" AND BUILD_TEST)
+	message(STATUS "Building GTests!")
+	option(BUILD_GTEST "build gtest" ON)
+	add_subdirectory(gtest gtest)
+	enable_testing()
+endif()
+
+# Add CMake module path
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+
+
+install(DIRECTORY include/kindr DESTINATION include)
+
+# Add unit tests
+if(BUILD_GTEST)
+	add_subdirectory(test)
+endif()
+
 # Add Doxygen documentation
 add_subdirectory(doc/doxygen)
 
-#############
-## Testing ##
-#############
+# Install catkin package.xml
+#install(FILES package.xml DESTINATION share/kindr)
 
-if(CATKIN_ENABLE_TESTING)
-  catkin_add_gtest(test_${PROJECT_NAME}_rotations
-    test/test_main.cpp
-	#test/rotations/RotationMatrixTest.cpp
-	#test/rotations/RotationQuaternionTest.cpp
-	#test/rotations/RotationVectorTest.cpp
-	#test/rotations/AngleAxisTest.cpp
-    test/rotations/EulerAnglesZyxTest.cpp
-	test/rotations/EulerAnglesXyzTest.cpp
-	test/rotations/RotationTest.cpp
-	
-#    test/rotations/LocalAngularVelocityTest.cpp
-#	test/rotations/RotationQuaternionDiffTest.cpp
-#	test/rotations/RotationMatrixDiffTest.cpp
-test/rotations/EulerAnglesZyxDiffTest.cpp
-test/rotations/EulerAnglesXyzDiffTest.cpp
-#   test/rotations/RotationDiffTest.cpp
-  )
-  if(TARGET test_${PROJECT_NAME}_rotations)
-    target_link_libraries(test_${PROJECT_NAME}_rotations ${catkin_LIBRARIES})
-  endif()
-#  
-#  catkin_add_gtest(test_${PROJECT_NAME}_quaternions
-#    test/test_main.cpp
-#	test/quaternions/QuaternionEigenTest.cpp
-#  )
-#  if(TARGET test_${PROJECT_NAME}_quaternions)
-#    target_link_libraries(test_${PROJECT_NAME}_quaternions ${catkin_LIBRARIES})
-#  endif()
-#  
-#  catkin_add_gtest(test_${PROJECT_NAME}_math
-#    test/test_main.cpp
-#	test/linear_algebra/SkewMatrixFromVectorTest.cpp
-#  )
-#  if(TARGET test_${PROJECT_NAME}_math)
-#    target_link_libraries(test_${PROJECT_NAME}_math ${catkin_LIBRARIES})
-#  endif()
-#  
-#  catkin_add_gtest(test_${PROJECT_NAME}_poses
-#    test/test_main.cpp
-#	test/poses/PositionTest.cpp
-#	test/poses/PositionDiffTest.cpp
-#    test/poses/PoseTest.cpp
-#	test/poses/PoseDiffTest.cpp
-#  )
-#  if(TARGET test_${PROJECT_NAME}_poses)
-#    target_link_libraries(test_${PROJECT_NAME}_poses ${catkin_LIBRARIES})
-#  endif()
-#	
-#  catkin_add_gtest(test_${PROJECT_NAME}_vectors
-#    test/test_main.cpp
-#	test/vectors/VectorsTest.cpp
-#  )
-#  if(TARGET test_${PROJECT_NAME}_vectors)
-#    target_link_libraries(test_${PROJECT_NAME}_vectors ${catkin_LIBRARIES})
-#  endif()
-#	
-#  catkin_add_gtest(test_${PROJECT_NAME}_phys_quant
-#    test/test_main.cpp
-#	test/phys_quant/ForceTest.cpp
-#  )
-#  if(TARGET test_${PROJECT_NAME}_phys_quant)
-#    target_link_libraries(test_${PROJECT_NAME}_phys_quant ${catkin_LIBRARIES})
-#  endif()
-#
-#  catkin_add_gtest(test_${PROJECT_NAME}_ros
-#	test/test_main.cpp
-#	test/thirdparty/ros/RosTfPoseEigenTest.cpp
-#	test/thirdparty/ros/RosGeometryMsgPoseEigenTest.cpp
-#	test/thirdparty/ros/RosGeometryMsgRotationEigenTest.cpp
-#	test/thirdparty/ros/RosGeometryMsgPhysicalQuantitiesEigenTest.cpp
-#  )
-#  if(TARGET test_${PROJECT_NAME}_ros)
-#    target_link_libraries(test_${PROJECT_NAME}_ros ${catkin_LIBRARIES})
-#  endif()
-endif()
 
+#=============================================
+# to allow find_package() on kindr
+#=============================================
+# 
+# the following case be used in an external project requiring kindr:
+#  ...
+#  find_package(kindr) 
+#  include_directories(${kindr_INCLUDE_DIRS}) 
+#  ...
+
+# NOTE: the following will support find_package for 1) local build (make) and 2) for installed files (make install)
+
+# 1- local build #
+
+# Register the local build in case one doesn't use "make install"
+export(PACKAGE kindr)
+
+# Create variable for the local build tree
+get_property(kindr_include_dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+
+# Configure config file for local build tree
+configure_file(kindrConfig.cmake.in
+  "${PROJECT_BINARY_DIR}/kindrConfig.cmake" @ONLY)
+
+# 2- installation build #
+
+# Change the include location for the case of an install location
+set(kindr_include_dirs ${CMAKE_INSTALL_PREFIX}/include ${EIGEN3_INCLUDE_DIR})
+
+
+# We put the generated file for installation in a different repository (i.e., ./CMakeFiles/)
+configure_file(kindrConfig.cmake.in
+  "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/kindrConfig.cmake" @ONLY)
+
+install(FILES
+  "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/kindrConfig.cmake"
+  DESTINATION share/kindr/cmake COMPONENT dev)
+
+
+
+#=============================================
+# Add uninstall target
+#=============================================
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+    IMMEDIATE @ONLY)
+
+add_custom_target(uninstall
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)

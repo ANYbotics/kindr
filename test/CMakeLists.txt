@@ -87,7 +87,8 @@ set(ROTATION_SRCS
 	rotations/RotationMatrixTest.cpp
 	rotations/EulerAnglesZyxTest.cpp
 	rotations/EulerAnglesXyzTest.cpp
-	rotations/RotationEigenTest.cpp
+	rotations/RotationTest.cpp
+
 )
 add_gtest( runUnitTestsRotation ${ROTATION_SRCS})
 

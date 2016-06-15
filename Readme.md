@@ -146,6 +146,6 @@ unzip gtest-1.7.0.zip
 ln -s gtest-1.7.0 gtest
 mkdir build
 cd build
-cmake  .. -DBUILD_GTEST=true
+cmake  .. -DBUILD_TEST=true
 make
 ```
