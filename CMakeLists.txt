@@ -25,7 +25,6 @@
 
 # Project configuration
 cmake_minimum_required (VERSION 2.8)
-
 project(kindr)
 
 add_definitions(-std=c++11)
@@ -41,6 +40,11 @@ catkin_package(
 include_directories(include)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
+#################
+## Documenting ##
+#################
+# Add Doxygen documentation
+add_subdirectory(doc/doxygen)
 
 #############
 ## Testing ##
@@ -50,7 +54,7 @@ if(CATKIN_ENABLE_TESTING)
   catkin_add_gtest(test_${PROJECT_NAME}_rotations
     test/test_main.cpp
 	#test/rotations/RotationMatrixTest.cpp
-	test/rotations/RotationQuaternionTest.cpp
+	#test/rotations/RotationQuaternionTest.cpp
 	#test/rotations/RotationVectorTest.cpp
 	#test/rotations/AngleAxisTest.cpp
 	test/rotations/EulerAnglesZyxTest.cpp

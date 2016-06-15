@@ -1,7 +1,7 @@
 /*!
 \mainpage Overview
 
-\section kindr Kindr - Kinematics and Dynamics for Robotics
+\section kindr Kindr 1.0.0 - Kinematics and Dynamics for Robotics
 This library provides interfaces and implementations of kinematic and dynamic quantities for robotics.
 
 \section source_code Source Code
