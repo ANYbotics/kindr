@@ -26,17 +26,14 @@
  *
 */
 
-
-
-#include <iostream>
-
-#include <Eigen/Core>
-
-#include <gtest/gtest.h>
-
 #include "kindr/rotations/RotationDiff.hpp"
 #include "kindr/common/gtest_eigen.hpp"
 #include "kindr/common/common.hpp"
+
+#include <Eigen/Core>
+#include <gtest/gtest.h>
+#include <iostream>
+
 
 namespace rot = kindr;
 

@@ -415,8 +415,6 @@ class ConversionTraits<EulerAnglesZyx<DestPrimType_>, RotationVector<SourcePrimT
   }
 };
 
-
-
 template<typename DestPrimType_, typename SourcePrimType_>
 class ConversionTraits<EulerAnglesZyx<DestPrimType_>, RotationQuaternion<SourcePrimType_>> {
  public:
@@ -425,22 +423,6 @@ class ConversionTraits<EulerAnglesZyx<DestPrimType_>, RotationQuaternion<SourceP
     return EulerAnglesZyx<DestPrimType_>(vec(2), vec(1), vec(0));
   }
 };
-
-//template<typename DestPrimType_, typename SourcePrimType_>
-//class ConversionTraits<EulerAnglesZyx<DestPrimType_>, RotationMatrix<SourcePrimType_>> {
-// public:
-//  inline static EulerAnglesZyx<DestPrimType_> convert(const RotationMatrix<SourcePrimType_>& R) {
-//
-//    const Eigen::Matrix<DestPrimType_,3,3> R_BI = R.toImplementation().template cast<DestPrimType_>();
-//    const DestPrimType_ r23 = R_BI(1,2);
-//    const DestPrimType_ r33 = R_BI(2,2);
-//    const DestPrimType_ r13 = R_BI(0,2);
-//    const DestPrimType_ r12 = R_BI(0,1);
-//    const DestPrimType_ r11 = R_BI(0,0);
-//    return EulerAnglesZyx<DestPrimType_>(Eigen::Matrix<DestPrimType_,3,1>(atan2(r12,r11), -asin(r13), atan2(r23,r33)));
-//    //  return  EulerAnglesZyx<DestPrimType_>((R_BI.eulerAngles(2, 1, 0)).template cast<DestPrimType_>()); // original
-//  }
-//};
 
 template<typename DestPrimType_, typename SourcePrimType_>
 class ConversionTraits<EulerAnglesZyx<DestPrimType_>, EulerAnglesXyz<SourcePrimType_>> {
@@ -461,37 +443,6 @@ class ConversionTraits<EulerAnglesZyx<DestPrimType_>, EulerAnglesZyx<SourcePrimT
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * Multiplication Traits
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-//template<typename PrimType_>
-//class MultiplicationTraits<RotationBase<EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE>, RotationUsage::ACTIVE>, RotationBase<EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE>, RotationUsage::ACTIVE>> {
-// public:
-//  inline static EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE> mult(const EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE>& a, const EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE>& b) {
-//    return EulerAnglesZyx<PrimType_, RotationUsage::ACTIVE>(RotationQuaternion<PrimType_, RotationUsage::ACTIVE>(
-//                                                                 RotationQuaternion<PrimType_, RotationUsage::ACTIVE>(a).toImplementation()*
-//                                                                 RotationQuaternion<PrimType_, RotationUsage::ACTIVE>(b).toImplementation()));
-//  }
-//};
-//
-//template<typename PrimType_>
-//class MultiplicationTraits<RotationBase<EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE>, RotationUsage::PASSIVE>, RotationBase<EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE>, RotationUsage::PASSIVE>> {
-// public:
-//  inline static EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE> mult(const EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE>& a, const EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE>& b) {
-//    return EulerAnglesZyx<PrimType_, RotationUsage::PASSIVE>(RotationQuaternion<PrimType_, RotationUsage::PASSIVE>(
-//                                                                 RotationQuaternion<PrimType_, RotationUsage::PASSIVE>(a).toImplementation()*
-//                                                                 RotationQuaternion<PrimType_, RotationUsage::PASSIVE>(b).toImplementation()));
-//  }
-//};
-
-//template<typename PrimType_>
-//class MultiplicationTraits<RotationBase<EulerAnglesZyx<PrimType_>>, RotationBase<EulerAnglesZyx<PrimType_>>> {
-// public:
-//  inline static EulerAnglesZyx<PrimType_> mult(const EulerAnglesZyx<PrimType_>& a, const EulerAnglesZyx<PrimType_>& b) {
-//    return EulerAnglesZyx<PrimType_>(RotationQuaternion<PrimType_>(
-//                                                                 RotationQuaternion<PrimType_>(a).toImplementation()*
-//                                                                 RotationQuaternion<PrimType_>(b).toImplementation()));
-//  }
-//};
-
-
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * Rotation Traits
