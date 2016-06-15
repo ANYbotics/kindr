@@ -250,7 +250,7 @@ class AngleAxis : public RotationBase<AngleAxis<PrimType_>> {
    *  \returns copy of the angle axis rotation which is unique
    */
   AngleAxis getUnique() const {
-    AngleAxis aa(kindr::common::floatingPointModulo(angle()+M_PI,2*M_PI)-M_PI, axis()); // first wraps angle into [-pi,pi)
+    AngleAxis aa(kindr::floatingPointModulo(angle()+M_PI,2*M_PI)-M_PI, axis()); // first wraps angle into [-pi,pi)
     if(aa.angle() > 0)  {
       return aa;
     } else if(aa.angle() < 0) {
@@ -354,7 +354,7 @@ class ConversionTraits<AngleAxis<DestPrimType_>, RotationVector<SourcePrimType_>
 
     const RotationVector<DestPrimType_> rv(rotationVector);
 
-    if (rv.toImplementation().norm() < common::internal::NumTraits<Scalar>::dummy_precision()) {
+    if (rv.toImplementation().norm() < internal::NumTraits<Scalar>::dummy_precision()) {
       return AngleAxis<DestPrimType_>();
     }
     return AngleAxis<DestPrimType_>(rv.toImplementation().norm(), rv.toImplementation().normalized());
@@ -434,10 +434,10 @@ class ComparisonTraits<AngleAxis<PrimType_>, AngleAxis<PrimType_>> {
  public:
   inline static bool isEqual(const AngleAxis<PrimType_>& a, const AngleAxis<PrimType_>& b){
     const double tolPercent = 0.01;
-    return common::eigen::compareRelative(a.angle(), b.angle(), tolPercent) &&
-        common::eigen::compareRelative(a.axis().x(), b.axis().x(), tolPercent) &&
-        common::eigen::compareRelative(a.axis().y(), b.axis().y(), tolPercent) &&
-        common::eigen::compareRelative(a.axis().z(), b.axis().z(), tolPercent);
+    return compareRelative(a.angle(), b.angle(), tolPercent) &&
+        compareRelative(a.axis().x(), b.axis().x(), tolPercent) &&
+        compareRelative(a.axis().y(), b.axis().y(), tolPercent) &&
+        compareRelative(a.axis().z(), b.axis().z(), tolPercent);
   }
 };
 

@@ -33,7 +33,7 @@
 namespace rot = kindr;
 namespace quat = kindr;
 
-using namespace kindr::common::test;
+using namespace kindr;
 
 template <typename RotationQuaternionImplementation>
 class RotationQuaternionSingleTest : public ::testing::Test{

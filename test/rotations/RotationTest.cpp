@@ -155,7 +155,7 @@ struct AngleAxisTestType {
   Rotation rot;
 
   void assertNear(const Rotation_& rotA, const Rotation_& rotB, double tol=1e-6, const std::string& msg = "") {
-    ASSERT_EQ(true, kindr::common::eigen::compareRelativePeriodic(rotA.angle(), rotB.angle(), 2*M_PI, 1e-1)) << msg;
+    ASSERT_EQ(true, kindr::compareRelativePeriodic(rotA.angle(), rotB.angle(), 2*M_PI, 1e-1)) << msg;
     ASSERT_NEAR(rotA.axis().x(), rotB.axis().x(), tol) << msg;
     ASSERT_NEAR(rotA.axis().y(), rotB.axis().y(), tol) << msg;
     ASSERT_NEAR(rotA.axis().z(), rotB.axis().z(), tol) << msg;
@@ -185,12 +185,12 @@ struct EulerAnglesZyxTestType {
 //    ASSERT_NEAR(rotA.pitch(), rotB.pitch(), tolX)<< "rotA: " << rotAIn << " rotAUnique: " << rotAIn.getUnique() << "\nrotB: " << rotBIn << " rotBUnique: " << rotBIn.getUnique() << "\n" << msg;
 //    ASSERT_NEAR(rotA.yaw(), rotB.yaw(), tolX)  << "rotA: " << rotAIn << " rotAUnique: " << rotAIn.getUnique() << "\nrotB: " << rotBIn << " rotBUnique: " << rotBIn.getUnique() << "\n" << msg;
 
-//    ASSERT_EQ(true, (kindr::common::eigen::compareRelativePeriodic(rotA.roll(), rotB.roll(), 2.0*M_PI, 1e-1) &&
-//                     kindr::common::eigen::compareRelativePeriodic(rotA.pitch(), rotB.pitch(), 2.0*M_PI, 1e-1) &&
-//                     kindr::common::eigen::compareRelativePeriodic(rotA.yaw(), rotB.yaw(), 2.0*M_PI, 1e-1)) ||
-//                    (kindr::common::eigen::compareRelativePeriodic(rotA.getUnique().roll(), rotB.getUnique().roll(), 2.0*M_PI, 1e-1) &&
-//                     kindr::common::eigen::compareRelativePeriodic(rotA.getUnique().pitch(), rotB.getUnique().pitch(), 2.0*M_PI, 1e-1) &&
-//                     kindr::common::eigen::compareRelativePeriodic(rotA.getUnique().yaw(), rotB.getUnique().yaw(), 2.0*M_PI, 1e-1))
+//    ASSERT_EQ(true, (kindr::compareRelativePeriodic(rotA.roll(), rotB.roll(), 2.0*M_PI, 1e-1) &&
+//                     kindr::compareRelativePeriodic(rotA.pitch(), rotB.pitch(), 2.0*M_PI, 1e-1) &&
+//                     kindr::compareRelativePeriodic(rotA.yaw(), rotB.yaw(), 2.0*M_PI, 1e-1)) ||
+//                    (kindr::compareRelativePeriodic(rotA.getUnique().roll(), rotB.getUnique().roll(), 2.0*M_PI, 1e-1) &&
+//                     kindr::compareRelativePeriodic(rotA.getUnique().pitch(), rotB.getUnique().pitch(), 2.0*M_PI, 1e-1) &&
+//                     kindr::compareRelativePeriodic(rotA.getUnique().yaw(), rotB.getUnique().yaw(), 2.0*M_PI, 1e-1))
 //    ) << std::endl << msg << " rotA: " << rotA << " rotB: " << rotB;
 
     kindr::RotationQuaternion<Scalar> quatA(rotA);
@@ -214,12 +214,12 @@ struct EulerAnglesXyzTestType {
 
   void assertNear(const Rotation_& rotA, const Rotation_& rotB, double tol=1e-6, const std::string& msg = "") {
 
-    ASSERT_EQ(true, (kindr::common::eigen::compareRelativePeriodic(rotA.roll(), rotB.roll(), 2*M_PI, 1e-1) &&
-                     kindr::common::eigen::compareRelativePeriodic(rotA.pitch(), rotB.pitch(), 2*M_PI, 1e-1) &&
-                     kindr::common::eigen::compareRelativePeriodic(rotA.yaw(), rotB.yaw(), 2*M_PI, 1e-1)) ||
-                    (kindr::common::eigen::compareRelativePeriodic(rotA.getUnique().roll(), rotB.getUnique().roll(), 2*M_PI, 1e-1) &&
-                     kindr::common::eigen::compareRelativePeriodic(rotA.getUnique().pitch(), rotB.getUnique().pitch(), 2*M_PI, 1e-1) &&
-                     kindr::common::eigen::compareRelativePeriodic(rotA.getUnique().yaw(), rotB.getUnique().yaw(), 2*M_PI, 1e-1))
+    ASSERT_EQ(true, (kindr::compareRelativePeriodic(rotA.roll(), rotB.roll(), 2*M_PI, 1e-1) &&
+                     kindr::compareRelativePeriodic(rotA.pitch(), rotB.pitch(), 2*M_PI, 1e-1) &&
+                     kindr::compareRelativePeriodic(rotA.yaw(), rotB.yaw(), 2*M_PI, 1e-1)) ||
+                    (kindr::compareRelativePeriodic(rotA.getUnique().roll(), rotB.getUnique().roll(), 2*M_PI, 1e-1) &&
+                     kindr::compareRelativePeriodic(rotA.getUnique().pitch(), rotB.getUnique().pitch(), 2*M_PI, 1e-1) &&
+                     kindr::compareRelativePeriodic(rotA.getUnique().yaw(), rotB.getUnique().yaw(), 2*M_PI, 1e-1))
     ) << std::endl << msg;
 
   }

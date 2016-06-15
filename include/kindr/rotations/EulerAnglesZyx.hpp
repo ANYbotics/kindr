@@ -256,9 +256,9 @@ class EulerAnglesZyx : public RotationBase<EulerAnglesZyx<PrimType_>> {
    */
   EulerAnglesZyx getUnique() const {
     //return EulerAnglesZyx<Scalar>(RotationQuaternion<Scalar>(*this).getUnique());
-    Base zyx(kindr::common::floatingPointModulo(z()+M_PI,2*M_PI)-M_PI,
-             kindr::common::floatingPointModulo(y()+M_PI,2*M_PI)-M_PI,
-             kindr::common::floatingPointModulo(x()+M_PI,2*M_PI)-M_PI); // wrap all angles into [-pi,pi)
+    Base zyx(kindr::floatingPointModulo(z()+M_PI,2*M_PI)-M_PI,
+             kindr::floatingPointModulo(y()+M_PI,2*M_PI)-M_PI,
+             kindr::floatingPointModulo(x()+M_PI,2*M_PI)-M_PI); // wrap all angles into [-pi,pi)
 
     const double tol = 1e-3;
     Scalar& z = zyx(0);

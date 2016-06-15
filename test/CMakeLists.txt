@@ -26,19 +26,9 @@
 # Project configuration
 cmake_minimum_required (VERSION 2.8)
 
-# Set the build type.  Options are:
-#  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
-#  Debug          : w/ debug symbols, w/o optimization
-#  Release        : w/o debug symbols, w/ optimization
-#  RelWithDebInfo : w/ debug symbols, w/ optimization
-#  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
-#set(ROS_BUILD_TYPE Debug)
-set(ROS_BUILD_TYPE Release)
-
 add_definitions(-std=c++11)
 
 find_package(Eigen REQUIRED)
-find_package(ROS REQUIRED)
 
 include_directories(${EIGEN_INCLUDE_DIRS})
 include_directories(../include)
@@ -141,17 +131,6 @@ set(FORCE_SRCS
 	phys_quant/ForceTest.cpp
 )
 add_gtest( runUnitTestsForce  ${FORCE_SRCS})
-
-IF (ROS_FOUND)
-    set(THIRDPARTY_ROS_SRCS
-    	test_main.cpp
-    	thirdparty/ros/RosTfPoseEigenTest.cpp
-    	thirdparty/ros/RosGeometryMsgPoseEigenTest.cpp
-    	thirdparty/ros/RosGeometryMsgRotationEigenTest.cpp
-    	thirdparty/ros/RosGeometryMsgPhysicalQuantitiesEigenTest.cpp
-    )
-    add_gtest( runUnitTestsThirdpartyRos  ${THIRDPARTY_ROS_SRCS})
-ENDIF (ROS_FOUND)
 
 # Run all unit tests post-build.
 add_custom_target(run_tests ALL

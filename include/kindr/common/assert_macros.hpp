@@ -47,11 +47,10 @@
 
 
 namespace kindr {
-namespace common {
   namespace internal {
 
     template<typename KINDR_EXCEPTION_T>
-    inline void kindr_throw_exception(std::string const & exceptionType, kindr::common::internal::source_file_pos sfp, std::string const & message)
+    inline void kindr_throw_exception(std::string const & exceptionType, kindr::internal::source_file_pos sfp, std::string const & message)
     {
       std::stringstream kindr_assert_stringstream;
 #ifdef _WIN32
@@ -67,14 +66,14 @@ namespace common {
     inline void kindr_throw_exception(std::string const & exceptionType, std::string const & function, std::string const & file,
                    int line, std::string const & message)
     {
-      kindr_throw_exception<KINDR_EXCEPTION_T>(exceptionType, kindr::common::internal::source_file_pos(function,file,line),message);
+      kindr_throw_exception<KINDR_EXCEPTION_T>(exceptionType, kindr::internal::source_file_pos(function,file,line),message);
     }
 
 
   } // namespace internal
 
   template<typename KINDR_EXCEPTION_T>
-  inline void kindr_assert_throw(bool assert_condition, std::string message, kindr::common::internal::source_file_pos sfp) {
+  inline void kindr_assert_throw(bool assert_condition, std::string message, kindr::internal::source_file_pos sfp) {
     if(!assert_condition)
       {
     internal::kindr_throw_exception<KINDR_EXCEPTION_T>("", sfp,message);
@@ -82,8 +81,8 @@ namespace common {
   }
 
 
-} // namespace common
-} // namespace rm
+
+} // namespace kindr
 
 
 
@@ -91,14 +90,14 @@ namespace common {
 #define KINDR_THROW(exceptionType, message) {                \
     std::stringstream kindr_assert_stringstream;             \
     kindr_assert_stringstream << message;                  \
-    kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__, kindr_assert_stringstream.str()); \
+    kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__, kindr_assert_stringstream.str()); \
   }
 
 
 #define KINDR_THROW_SFP(exceptionType, SourceFilePos, message){      \
     std::stringstream kindr_assert_stringstream;             \
     kindr_assert_stringstream << message;                  \
-    kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", SourceFilePos, kindr_assert_stringstream.str()); \
+    kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", SourceFilePos, kindr_assert_stringstream.str()); \
   }
 
 #define KINDR_ASSERT_TRUE(exceptionType, condition, message)       \
@@ -106,7 +105,7 @@ namespace common {
     {                                 \
       std::stringstream kindr_assert_stringstream;             \
       kindr_assert_stringstream << "assert(" << #condition << ") failed: " << message; \
-      kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__, kindr_assert_stringstream.str()); \
+      kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__, kindr_assert_stringstream.str()); \
     }
 
 #define KINDR_ASSERT_FALSE(exceptionType, condition, message)        \
@@ -114,7 +113,7 @@ namespace common {
     {                                 \
       std::stringstream kindr_assert_stringstream;             \
       kindr_assert_stringstream << "assert( not " << #condition << ") failed: " << message; \
-      kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__, kindr_assert_stringstream.str()); \
+      kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__, kindr_assert_stringstream.str()); \
     }
 
 
@@ -124,7 +123,7 @@ namespace common {
     {                                 \
       std::stringstream kindr_assert_stringstream;             \
       kindr_assert_stringstream << "assert(" << #lowerBound << " <= " << #value << " < " << #upperBound << ") failed [" << (lowerBound) << " <= " << (value) << " < " << (upperBound) << "]: " << message; \
-      kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
+      kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
     }
 
 
@@ -134,7 +133,7 @@ namespace common {
     {                                 \
       std::stringstream kindr_assert_stringstream;             \
       kindr_assert_stringstream << "assert(" << #value << " < " << #upperBound << ") failed [" << (value) << " < " << (upperBound) << "]: " <<  message; \
-      kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
+      kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
     }
 
 #define KINDR_ASSERT_GE(exceptionType, value, lowerBound, message)     \
@@ -142,7 +141,7 @@ namespace common {
     {                                 \
       std::stringstream kindr_assert_stringstream;             \
       kindr_assert_stringstream << "assert(" << #value << " >= " << #lowerBound << ") failed [" << (value) << " >= " << (lowerBound) << "]: " <<  message; \
-      kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
+      kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
     }
 
 
@@ -152,7 +151,7 @@ namespace common {
     {                                 \
       std::stringstream kindr_assert_stringstream;             \
       kindr_assert_stringstream << "assert(" << #value << " <= " << #upperBound << ") failed [" << (value) << " <= " << (upperBound) << "]: " <<  message; \
-      kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
+      kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
     }
 
 #define KINDR_ASSERT_GT(exceptionType, value, lowerBound, message)     \
@@ -160,7 +159,7 @@ namespace common {
     {                                 \
       std::stringstream kindr_assert_stringstream;             \
       kindr_assert_stringstream << "assert(" << #value << " > " << #lowerBound << ") failed [" << (value) << " > " << (lowerBound) << "]: " <<  message; \
-      kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
+      kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
     }
 
 
@@ -170,7 +169,7 @@ namespace common {
     {                                 \
       std::stringstream kindr_assert_stringstream;             \
       kindr_assert_stringstream << "assert(" << #value << " == " << #testValue << ") failed [" << (value) << " == " << (testValue) << "]: " <<  message; \
-      kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
+      kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
     }
 
 #define KINDR_ASSERT_NE(exceptionType, value, testValue, message)      \
@@ -178,7 +177,7 @@ namespace common {
     {                                 \
       std::stringstream kindr_assert_stringstream;             \
       kindr_assert_stringstream << "assert(" << #value << " != " << #testValue << ") failed [" << (value) << " != " << (testValue) << "]: " <<  message; \
-      kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
+      kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
     }
 
 #define KINDR_ASSERT_NEAR(exceptionType, value, testValue, abs_error, message) \
@@ -186,7 +185,7 @@ namespace common {
     {                                 \
       std::stringstream kindr_assert_stringstream;             \
       kindr_assert_stringstream << "assert(" << #value << " == " << #testValue << ") failed [" << (value) << " == " << (testValue) << " (" << fabs((testValue) - (value)) << " > " << fabs(abs_error) << ")]: " <<  message; \
-      kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
+      kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
     }
 
 
@@ -196,7 +195,7 @@ namespace common {
 #define KINDR_THROW_DBG(exceptionType, message){             \
     std::stringstream kindr_assert_stringstream;             \
     kindr_assert_stringstream << message;                  \
-    kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__, kindr_assert_stringstream.str()); \
+    kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__, kindr_assert_stringstream.str()); \
   }
 
 
@@ -206,7 +205,7 @@ namespace common {
     {                                 \
       std::stringstream kindr_assert_stringstream;             \
       kindr_assert_stringstream << "debug assert(" << #condition << ") failed: " << message; \
-      kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__, kindr_assert_stringstream.str()); \
+      kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__, kindr_assert_stringstream.str()); \
     }
 
 #define KINDR_ASSERT_FALSE_DBG(exceptionType, condition, message)      \
@@ -214,7 +213,7 @@ namespace common {
     {                                 \
       std::stringstream kindr_assert_stringstream;             \
       kindr_assert_stringstream << "debug assert( not " << #condition << ") failed: " << message; \
-      kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__, kindr_assert_stringstream.str()); \
+      kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__, kindr_assert_stringstream.str()); \
     }
 
 
@@ -225,7 +224,7 @@ namespace common {
     {                                 \
       std::stringstream kindr_assert_stringstream;             \
       kindr_assert_stringstream << "debug assert(" << #lowerBound << " <= " << #value << " < " << #upperBound << ") failed [" << (lowerBound) << " <= " << (value) << " < " << (upperBound) << "]: " << message; \
-      kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
+      kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
     }
 
 
@@ -235,7 +234,7 @@ namespace common {
     {                                 \
       std::stringstream kindr_assert_stringstream;             \
       kindr_assert_stringstream << "debug assert(" << #value << " < " << #upperBound << ") failed [" << (value) << " < " << (upperBound) << "]: " <<  message; \
-      kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
+      kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
     }
 
 
@@ -245,7 +244,7 @@ namespace common {
     {                                 \
       std::stringstream kindr_assert_stringstream;             \
       kindr_assert_stringstream << "debug assert(" << #value << " >= " << #lowerBound << ") failed [" << (value) << " >= " << (lowerBound) << "]: " <<  message; \
-      kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
+      kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
     }
 
 
@@ -255,7 +254,7 @@ namespace common {
     {                                 \
       std::stringstream kindr_assert_stringstream;             \
       kindr_assert_stringstream << "debug assert(" << #value << " <= " << #upperBound << ") failed [" << (value) << " <= " << (upperBound) << "]: " <<  message; \
-      kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
+      kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
     }
 
 #define KINDR_ASSERT_GT_DBG(exceptionType, value, lowerBound, message)   \
@@ -263,7 +262,7 @@ namespace common {
     {                                 \
       std::stringstream kindr_assert_stringstream;             \
       kindr_assert_stringstream << "debug assert(" << #value << " > " << #lowerBound << ") failed [" << (value) << " > " << (lowerBound) << "]: " <<  message; \
-      kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
+      kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
     }
 
 
@@ -273,7 +272,7 @@ namespace common {
     {                                 \
       std::stringstream kindr_assert_stringstream;             \
       kindr_assert_stringstream << "debug assert(" << #value << " == " << #testValue << ") failed [" << (value) << " == " << (testValue) << "]: " <<  message; \
-      kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
+      kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
     }
 
 
@@ -282,7 +281,7 @@ namespace common {
     {                                 \
       std::stringstream kindr_assert_stringstream;             \
       kindr_assert_stringstream << "debug assert(" << #value << " != " << #testValue << ") failed [" << (value) << " != " << (testValue) << "]: " <<  message; \
-      kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
+      kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
     }
 
 
@@ -292,7 +291,7 @@ namespace common {
     {                                 \
       std::stringstream kindr_assert_stringstream;             \
       kindr_assert_stringstream << "debug assert(" << #value << " == " << #testValue << ") failed [" << (value) << " == " << (testValue) << " (" << fabs((testValue) - (value)) << " > " << fabs(abs_error) << ")]: " <<  message; \
-      kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
+      kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
     }
 
 

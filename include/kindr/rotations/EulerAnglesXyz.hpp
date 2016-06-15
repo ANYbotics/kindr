@@ -254,9 +254,9 @@ class EulerAnglesXyz : public RotationBase<EulerAnglesXyz<PrimType_>> {
    *  \returns copy of the Euler angles rotation which is unique
    */
   EulerAnglesXyz getUnique() const {
-    Base xyz(kindr::common::floatingPointModulo(x()+M_PI,2*M_PI)-M_PI,
-             kindr::common::floatingPointModulo(y()+M_PI,2*M_PI)-M_PI,
-             kindr::common::floatingPointModulo(z()+M_PI,2*M_PI)-M_PI); // wrap all angles into [-pi,pi)
+    Base xyz(kindr::floatingPointModulo(x()+M_PI,2*M_PI)-M_PI,
+             kindr::floatingPointModulo(y()+M_PI,2*M_PI)-M_PI,
+             kindr::floatingPointModulo(z()+M_PI,2*M_PI)-M_PI); // wrap all angles into [-pi,pi)
 
     const double tol = 1e-3;
 

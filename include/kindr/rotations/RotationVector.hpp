@@ -317,7 +317,7 @@ template<typename DestPrimType_, typename SourcePrimType_>
 class ConversionTraits<RotationVector<DestPrimType_>, RotationQuaternion<SourcePrimType_>> {
  public:
   inline static RotationVector<DestPrimType_> convert(const RotationQuaternion<SourcePrimType_>& q) {
-    if (1.0-q.real()*q.real() < common::internal::NumTraits<SourcePrimType_>::dummy_precision()) {
+    if (1.0-q.real()*q.real() < internal::NumTraits<SourcePrimType_>::dummy_precision()) {
       return RotationVector<DestPrimType_>(2.0*q.imaginary().template cast<DestPrimType_>());
     }
     return RotationVector<DestPrimType_>((2.0*acos(q.real())/sqrt(1.0-q.real()*q.real())*q.imaginary()).template cast<DestPrimType_>());

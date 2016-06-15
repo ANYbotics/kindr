@@ -136,7 +136,7 @@ class ComparisonTraits<RotationBase<Left_>, RotationBase<Right_>> {
    *  \returns disparity angle in [-pi,pi) @todo: is this range correct?
    */
   inline static typename Left_::Scalar get_disparity_angle(const RotationBase<Left_>& left, const RotationBase<Right_>& right) {
-    return fabs(common::floatingPointModulo(AngleAxis<typename Left_::Scalar>(left.derived()*right.derived().inverted()).angle() + M_PI,2*M_PI)-M_PI);
+    return fabs(floatingPointModulo(AngleAxis<typename Left_::Scalar>(left.derived()*right.derived().inverted()).angle() + M_PI,2*M_PI)-M_PI);
   }
 };
 

@@ -52,17 +52,17 @@ struct RotationDiffPairTest : public ::testing::Test {
 
   RotationDiffPairTest() {
     rotations.push_back(Rotation());   // identity rotation
-    rotations.push_back(Rotation(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 1.0, 0, 0)));  // small angle
-    rotations.push_back(Rotation(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 1.0, 0)));  // small angle
-    rotations.push_back(Rotation(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 0, 1.0)));  // small angle
+    rotations.push_back(Rotation(AngleAxis(kindr::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 1.0, 0, 0)));  // small angle
+    rotations.push_back(Rotation(AngleAxis(kindr::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 1.0, 0)));  // small angle
+    rotations.push_back(Rotation(AngleAxis(kindr::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 0, 1.0)));  // small angle
     rotations.push_back(Rotation(AngleAxis(1.3, 1.0, 0, 0))); // large angle
     rotations.push_back(Rotation(AngleAxis(1.3, 0, 1.0, 0))); // large angle
     rotations.push_back(Rotation(AngleAxis(1.3, 0, 0, 1.0))); // large angle
 
     angularVelocities.push_back(LocalAngularVelocity());  // zero velocity
-    angularVelocities.push_back(LocalAngularVelocity(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0.0, 0.0));
-    angularVelocities.push_back(LocalAngularVelocity(0.0, kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0.0));
-    angularVelocities.push_back(LocalAngularVelocity(0.0, 0.0, kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0));
+    angularVelocities.push_back(LocalAngularVelocity(kindr::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0.0, 0.0));
+    angularVelocities.push_back(LocalAngularVelocity(0.0, kindr::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0.0));
+    angularVelocities.push_back(LocalAngularVelocity(0.0, 0.0, kindr::internal::NumTraits<RotationScalar>::dummy_precision()/10.0));
     angularVelocities.push_back(LocalAngularVelocity(0.1, 0.0, 0.0));
     angularVelocities.push_back(LocalAngularVelocity(0.0, 0.1, 0.0));
     angularVelocities.push_back(LocalAngularVelocity(0.0, 0.0, 0.1));
@@ -123,17 +123,17 @@ struct RotationDiffSingleTest : public ::testing::Test {
 
   RotationDiffSingleTest() {
     rotationQuaternions.push_back(RotationQuaternion(AngleAxis()));   // identity rotation
-    rotationQuaternions.push_back(RotationQuaternion(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 1.0, 0, 0)));  // small angle
-    rotationQuaternions.push_back(RotationQuaternion(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 1.0, 0)));  // small angle
-    rotationQuaternions.push_back(RotationQuaternion(AngleAxis(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 0, 1.0)));  // small angle
+    rotationQuaternions.push_back(RotationQuaternion(AngleAxis(kindr::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 1.0, 0, 0)));  // small angle
+    rotationQuaternions.push_back(RotationQuaternion(AngleAxis(kindr::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 1.0, 0)));  // small angle
+    rotationQuaternions.push_back(RotationQuaternion(AngleAxis(kindr::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0, 0, 1.0)));  // small angle
     rotationQuaternions.push_back(RotationQuaternion(AngleAxis(1.3, 1.0, 0, 0))); // large angle
     rotationQuaternions.push_back(RotationQuaternion(AngleAxis(1.3, 0, 1.0, 0))); // large angle
     rotationQuaternions.push_back(RotationQuaternion(AngleAxis(1.3, 0, 0, 1.0))); // large angle
 
     angularVelocities.push_back(LocalAngularVelocity());  // zero velocity
-    angularVelocities.push_back(LocalAngularVelocity(kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0.0, 0.0));
-    angularVelocities.push_back(LocalAngularVelocity(0.0, kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0.0));
-    angularVelocities.push_back(LocalAngularVelocity(0.0, 0.0, kindr::common::internal::NumTraits<RotationScalar>::dummy_precision()/10.0));
+    angularVelocities.push_back(LocalAngularVelocity(kindr::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0.0, 0.0));
+    angularVelocities.push_back(LocalAngularVelocity(0.0, kindr::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0.0));
+    angularVelocities.push_back(LocalAngularVelocity(0.0, 0.0, kindr::internal::NumTraits<RotationScalar>::dummy_precision()/10.0));
     angularVelocities.push_back(LocalAngularVelocity(0.1, 0.0, 0.0));
     angularVelocities.push_back(LocalAngularVelocity(0.0, 0.1, 0.0));
     angularVelocities.push_back(LocalAngularVelocity(0.0, 0.0, 0.1));
@@ -173,7 +173,7 @@ TYPED_TEST(RotationDiffSingleTest, testConversionToLocalAngularVelocity)
        ASSERT_NEAR(rotQuatDiff.z(),rotQuatDiff2.z(),1e-3);
 
        // Finite Difference
-       const Scalar dt = rot::common::internal::NumTraits<Scalar>::dummy_precision();
+       const Scalar dt = rot::internal::NumTraits<Scalar>::dummy_precision();
        RotationQuaternion rotQuatPert = rotQuat.boxPlus(angularVelocity.toImplementation()*dt);
        RotationQuaternionDiff rotQuatDiff3((rotQuatPert.w()-rotQuat.w())/dt,
                                            (rotQuatPert.x()-rotQuat.x())/dt,
@@ -200,7 +200,7 @@ TYPED_TEST(RotationDiffSingleTest, testConversionToGlobalAngularVelocity)
        RotationQuaternionDiff rotQuatDiff(0.5*rotQuat.getGlobalQuaternionDiffMatrix().transpose()*angularVelocity.vector());
 
        // Finite Difference
-       const Scalar dt = rot::common::internal::NumTraits<Scalar>::dummy_precision();
+       const Scalar dt = rot::internal::NumTraits<Scalar>::dummy_precision();
        RotationQuaternion rotQuatPert = rotQuat.inverted().boxPlus(-angularVelocity.toImplementation()*dt).inverted(); // (qBI^-1 * exp(-IwIB*dt))^-1
        RotationQuaternionDiff rotQuatDiff3((rotQuatPert.w()-rotQuat.w())/dt,
                                            (rotQuatPert.x()-rotQuat.x())/dt,

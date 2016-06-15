@@ -26,8 +26,7 @@
  *
 */
 
-#ifndef KINDR_COMMON_COMMON_HPP_
-#define KINDR_COMMON_COMMON_HPP_
+#pragma once
 
 #include <cmath>
 #include <cassert>
@@ -35,23 +34,7 @@
 #include <limits>
 
 
-
 namespace kindr {
-
-namespace internal {
-/*! \class get_scalar
- *  \brief Gets the primitive of the vector.
- */
-template<typename Quantitiy_>
-class get_scalar {
- public:
-//  typedef PrimType Scalar;
-};
-
-}
-
-//! Common methods
-namespace common {
 
 /*! \brief Floating-point modulo
  *
@@ -125,6 +108,16 @@ inline T wrapTwoPI(T angle)
 namespace internal {
 
 
+/*! \class get_scalar
+ *  \brief Gets the primitive of the vector.
+ */
+template<typename Quantitiy_>
+class get_scalar {
+ public:
+//  typedef PrimType Scalar;
+};
+
+
 template<typename T>
 class GenericNumTraits {
  public:
@@ -174,8 +167,5 @@ class NumTraits<long double> : GenericNumTraits<long double>
 };
 
 } // namespace internal
-} // namespace common
 } // namespace kindr
 
-
-#endif /* KINDR_COMMON_COMMON_HPP_ */

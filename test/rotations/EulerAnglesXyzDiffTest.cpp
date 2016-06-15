@@ -53,16 +53,16 @@ struct EulerAnglesXyzDiffTest: public ::testing::Test {
   LocalAngularVelocity angularVelocity1 = LocalAngularVelocity(0.0, 0.0, 0.0);
   LocalAngularVelocity angularVelocity2 = LocalAngularVelocity(0.4, 0.3, 0.8);
   LocalAngularVelocity angularVelocity3 = LocalAngularVelocity(0.14, 0.33, 0.25);
-  LocalAngularVelocity angularVelocity4 = LocalAngularVelocity(kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0, 0.0, 0.0);
-  LocalAngularVelocity angularVelocity5 = LocalAngularVelocity(0.0, kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0, 0.0);
-  LocalAngularVelocity angularVelocity6 = LocalAngularVelocity(0.0, 0.0, kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0);
+  LocalAngularVelocity angularVelocity4 = LocalAngularVelocity(kindr::internal::NumTraits<Scalar>::dummy_precision()/10.0, 0.0, 0.0);
+  LocalAngularVelocity angularVelocity5 = LocalAngularVelocity(0.0, kindr::internal::NumTraits<Scalar>::dummy_precision()/10.0, 0.0);
+  LocalAngularVelocity angularVelocity6 = LocalAngularVelocity(0.0, 0.0, kindr::internal::NumTraits<Scalar>::dummy_precision()/10.0);
   Rotation rotation1 = Rotation(0.0, 0.1, 0.0);
   Rotation rotation2 = Rotation(0.3, 0.0, 0.0);
   Rotation rotation3 = Rotation(0.0, 0.3, 0.0);
   Rotation rotation4 = Rotation(0.0, 0.0, 0.3);
-  Rotation rotation5 = Rotation(kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0, 0.0, 0.0);
-  Rotation rotation6 = Rotation(0.0, kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0, 0.0);
-  Rotation rotation7 = Rotation(0.0, 0.0, kindr::common::internal::NumTraits<Scalar>::dummy_precision()/10.0);
+  Rotation rotation5 = Rotation(kindr::internal::NumTraits<Scalar>::dummy_precision()/10.0, 0.0, 0.0);
+  Rotation rotation6 = Rotation(0.0, kindr::internal::NumTraits<Scalar>::dummy_precision()/10.0, 0.0);
+  Rotation rotation7 = Rotation(0.0, 0.0, kindr::internal::NumTraits<Scalar>::dummy_precision()/10.0);
   Rotation rotation8 = Rotation(0.8, 0.2, 0.12);
 
   std::vector<Rotation> rotations;

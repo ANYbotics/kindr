@@ -34,7 +34,6 @@
 // A class and macro that gives you the current file position.
 
 namespace kindr {
-namespace common {
 namespace internal {
 
 class source_file_pos
@@ -62,17 +61,16 @@ class source_file_pos
 };
 
 } // namespace internal
-} // namespace common
 } // namespace kindr
 
-inline std::ostream & operator<<(std::ostream & out, const kindr::common::internal::source_file_pos & sfp)
+inline std::ostream & operator<<(std::ostream & out, const kindr::internal::source_file_pos & sfp)
 {
   out << sfp.file << ":" << std::to_string(sfp.line) << ": " << sfp.function << "()";
   return out;
 }
 
 
-#define KINDR_SOURCE_FILE_POS kindr::common::internal::source_file_pos(__FUNCTION__,__FILE__,__LINE__)
+#define KINDR_SOURCE_FILE_POS kindr::internal::source_file_pos(__FUNCTION__,__FILE__,__LINE__)
 
 #endif
 

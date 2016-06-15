@@ -33,7 +33,7 @@
 namespace rot = kindr;
 namespace quat = kindr;
 
-using namespace kindr::common::test;
+using namespace kindr;
 
 template <typename Rotation_>
 class RotationMatrixSingleTest : public ::testing::Test{
@@ -108,8 +108,8 @@ struct RotationMatrixRotationQuaternionPairTest : public ::testing::Test{
   typedef typename RotationMatrix::Scalar RotationMatrixScalar;
   typedef Eigen::Matrix<RotationQuaternionScalar,3,1> Vector;
 
-  const RotationQuaternionScalar rotQuatSmallNumber = kindr::common::internal::NumTraits<RotationQuaternionScalar>::dummy_precision()/10.0;
-  const RotationQuaternionScalar angleAxisSmallNumber = kindr::common::internal::NumTraits<RotationMatrixScalar>::dummy_precision()/10.0;
+  const RotationQuaternionScalar rotQuatSmallNumber = kindr::internal::NumTraits<RotationQuaternionScalar>::dummy_precision()/10.0;
+  const RotationQuaternionScalar angleAxisSmallNumber = kindr::internal::NumTraits<RotationMatrixScalar>::dummy_precision()/10.0;
 
   const RotationQuaternion rotQuatQuarterX = RotationQuaternion(1/sqrt(2.0),1/sqrt(2.0),0.0,0.0);
   const RotationQuaternion rotQuatQuarterY = RotationQuaternion(1/sqrt(2.0),0.0,1/sqrt(2.0),0.0);

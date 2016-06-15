@@ -320,7 +320,7 @@ class ConversionTraits<RotationMatrix<DestPrimType_>, RotationVector<SourcePrimT
     const SourcePrimType_ v3 = rv.z();
     const SourcePrimType_ v = rv.norm();
 
-    if (v < common::internal::NumTraits<Scalar>::dummy_precision())  {
+    if (v < internal::NumTraits<Scalar>::dummy_precision())  {
 
       // active to passive
 //      matrixdata << 1.0,  v3, -v2,

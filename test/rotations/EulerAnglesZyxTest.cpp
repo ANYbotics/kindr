@@ -33,7 +33,7 @@
 namespace rot = kindr;
 namespace quat = kindr;
 
-using namespace kindr::common::test;
+using namespace kindr;
 
 template <typename Rotation_>
 class EulerAnglesZyxSingleTest : public ::testing::Test{
@@ -83,8 +83,8 @@ struct EulerAnglesZyxRotationQuaternionPairTest : public ::testing::Test{
   typedef typename RotationQuaternionEulerAnglesZyxImplementationPair::second_type EulerAnglesZyx;
   typedef typename EulerAnglesZyx::Scalar EulerAnglesZyxScalar;
 
-  const RotationQuaternionScalar rotQuatSmallNumber = kindr::common::internal::NumTraits<RotationQuaternionScalar>::dummy_precision()/10.0;
-  const RotationQuaternionScalar rotEulerAnglesZyxSmallNumber = kindr::common::internal::NumTraits<EulerAnglesZyxScalar>::dummy_precision()/10.0;
+  const RotationQuaternionScalar rotQuatSmallNumber = kindr::internal::NumTraits<RotationQuaternionScalar>::dummy_precision()/10.0;
+  const RotationQuaternionScalar rotEulerAnglesZyxSmallNumber = kindr::internal::NumTraits<EulerAnglesZyxScalar>::dummy_precision()/10.0;
 
 
   const RotationQuaternion rotQuatQuarterX = RotationQuaternion(1/sqrt(2.0),1/sqrt(2.0),0.0,0.0);

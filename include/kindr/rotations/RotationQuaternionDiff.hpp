@@ -214,7 +214,7 @@ class RotationDiffConversionTraits<RotationQuaternionDiff<PrimType_>, LocalAngul
 //    const PrimType_ dv2 = rotationVectorDiff.y();
 //    const PrimType_ dv3 = rotationVectorDiff.z();
 //
-//    if (v < common::internal::NumTraits<Scalar>::dummy_precision()) {
+//    if (v < internal::NumTraits<Scalar>::dummy_precision()) {
 //      Eigen::Matrix<PrimType_, 3, 3> G_v0;
 //      G_v0 = -v1, -v2, -v3,
 //              2.0, 2.0, 0.0,

@@ -37,8 +37,6 @@
 
 
 namespace kindr {
-namespace common {
-namespace eigen {
 
 // Importing these from namespace std allows us to inject other overloads 
 // from e.g. Ceres in the same namespace.
@@ -93,7 +91,7 @@ inline bool compareRelativePeriodic(SCALAR a, SCALAR b, double periodlength, dou
 }
 
 
-// kindr::common::eigen::assertNear((A),(B),1e-6,(MESSAGE))
+// kindr::assertNear((A),(B),1e-6,(MESSAGE))
 /*          std::cout << MESSAGE << std::endl << "Difference between " << #A << " and " << #B << " exceeds tolerance of " << TOL << "." << std::endl; \
           std::cout << #A << "(" << i << "," << j << ") = " << (A)(i,j) << std::endl; \
           std::cout << #B << "(" << i << "," << j << ") = " << (B)(i,j) << std::endl; \ */
@@ -108,12 +106,12 @@ inline bool compareRelativePeriodic(SCALAR a, SCALAR b, double periodlength, dou
     if ((size_t)(A).rows() != (size_t)(B).rows()) { \
       std::stringstream kindr_assert_stringstream;  \
       kindr_assert_stringstream << MSG << "\nMatrix " << #A << ":\n" << A << "\nand matrix " << #B << "\n" << B << "\nare not the same size"; \
-      kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
+      kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
     } \
     if ((size_t)(A).cols() != (size_t)(B).cols()) { \
       std::stringstream kindr_assert_stringstream;  \
       kindr_assert_stringstream << MSG << "\nMatrix " << #A << ":\n" << A << "\nand matrix " << #B << "\n" << B << "\nare not the same size"; \
-      kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
+      kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
     } \
     for(int r = 0; r < (A).rows(); r++)                 \
     {                                 \
@@ -121,27 +119,27 @@ inline bool compareRelativePeriodic(SCALAR a, SCALAR b, double periodlength, dou
       {                               \
         typedef typename std::remove_reference<decltype(A)>::type::Scalar Scalar; \
         Scalar percentError = static_cast<Scalar>(0.0); \
-        if(!kindr::common::eigen::compareRelative( (A)(r,c), (B)(r,c), PERCENT_TOLERANCE, &percentError)) { \
+        if(!kindr::compareRelative( (A)(r,c), (B)(r,c), PERCENT_TOLERANCE, &percentError)) { \
           std::stringstream kindr_assert_stringstream;  \
           kindr_assert_stringstream << MSG << "\nComparing:\n"                \
           << #A << "(" << r << "," << c << ") = " << (A)(r,c) << std::endl \
           << #B << "(" << r << "," << c << ") = " << (B)(r,c) << std::endl \
           << "Error was " << percentError << "% > " << PERCENT_TOLERANCE << "%\n" \
           << "\nMatrix " << #A << ":\n" << A << "\nand matrix " << #B << "\n" << B; \
-          kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
+          kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
         } \
       } \
     }
 #define KINDR_ASSERT_SCALAR_NEAR_DBG(exceptionType, A, B, PERCENT_TOLERANCE, MESSAGE) \
     decltype(A) percentError = static_cast<decltype(A)>(0.0); \
-    if(!kindr::common::eigen::compareRelative( (A), (B), PERCENT_TOLERANCE, &percentError)) \
+    if(!kindr::compareRelative( (A), (B), PERCENT_TOLERANCE, &percentError)) \
     { \
       std::stringstream kindr_assert_stringstream;  \
       kindr_assert_stringstream << MESSAGE << "\nComparing Scalars:\n"  \
       << "Scalar 1: " << #A << " = " << (A) << std::endl \
       << "Scalar 2: " << #B << " = " << (B) << std::endl \
       << "Error was " << percentError << "% > " << PERCENT_TOLERANCE << "%\n"; \
-      kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
+      kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
     }
 #define PRINT(MESSAGE) std::cout << MESSAGE << std::endl;
 #endif
@@ -159,7 +157,7 @@ inline bool compareRelativePeriodic(SCALAR a, SCALAR b, double periodlength, dou
       {               \
         std::stringstream kindr_assert_stringstream;   \
         kindr_assert_stringstream << "debug assert( isfinite(" << #matrix << "(" << r << ", " << c << ") ) failed. [ isfinite(" << matrix(r,c) << " ) ]" << message << std::endl << matrix; \
-        kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
+        kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
       }               \
     }               \
   }                  \
@@ -178,7 +176,7 @@ inline bool compareRelativePeriodic(SCALAR a, SCALAR b, double periodlength, dou
       {               \
         std::stringstream kindr_assert_stringstream;   \
         kindr_assert_stringstream << "assert( isfinite(" << #matrix << "(" << r << ", " << c << ") ) failed. [ isfinite(" << matrix(r,c) << " ) ]" << message << std::endl << matrix; \
-        kindr::common::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
+        kindr::internal::kindr_throw_exception<exceptionType>("[" #exceptionType "] ", __FUNCTION__,__FILE__,__LINE__,kindr_assert_stringstream.str()); \
       }               \
     }               \
   }                  \
@@ -193,9 +191,7 @@ inline bool compareRelativePeriodic(SCALAR a, SCALAR b, double periodlength, dou
 
 
 
-} // namespace eigen
-} // namespace common
-} // namespace rm
+} // namespace kindr
 
 
 
