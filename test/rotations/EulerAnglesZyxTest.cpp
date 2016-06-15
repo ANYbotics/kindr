@@ -284,6 +284,11 @@ TYPED_TEST(EulerAnglesZyxSingleTest, testUniqueness){
   KINDR_ASSERT_DOUBLE_MX_EQ_PERIODIC(rotEulerAnglesZyxUnique.getUnique().toImplementation(), rotEulerAnglesZyx.toImplementation(), 2*M_PI, 1e-2, "unique");
   KINDR_ASSERT_DOUBLE_MX_EQ_PERIODIC(rotEulerAnglesZyxUnique.getUnique().toImplementation(), rotEulerAnglesZyxV2.toImplementation(), 2*M_PI, 1e-2, "unique");
 
+
+  rotEulerAnglesZyx = EulerAnglesZyx(0.0, M_PI/2.0, 0.0);
+  rotEulerAnglesZyxUnique =  EulerAnglesZyx(0.0, M_PI/2.0, 0.0);
+  KINDR_ASSERT_DOUBLE_MX_EQ_PERIODIC(rotEulerAnglesZyxUnique.getUnique().toImplementation(), rotEulerAnglesZyx.getUnique().toImplementation(), 2*M_PI, 1e-2, "unique");
+
 }
 
 /* Test comparison (equality)

@@ -184,7 +184,7 @@ TYPED_TEST(EulerAnglesZyxDiffTest, testFiniteDifference)
   typedef typename TestFixture::RotationDiff RotationDiff;
   typedef  typename TestFixture::Vector3 Vector3;
 
-  const  double dt = 1.0e-8;
+  const  double dt = 1.0e-3;
   for (auto rotation : this->rotations) {
     for (auto angularVelocity2 : this->angularVelocities) {
       RotationDiff rotationDiff(angularVelocity2.toImplementation());

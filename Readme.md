@@ -1,5 +1,5 @@
-Kindr - Kinematics and Dynamics for Robotics
-============================================
+Kindr1 - Kinematics and Dynamics for Robotics
+=============================================
 
 Autonomous Systems Lab
 ETH Zurich
@@ -146,6 +146,6 @@ unzip gtest-1.7.0.zip
 ln -s gtest-1.7.0 gtest
 mkdir build
 cd build
-cmake  .. -DBUILD_TEST=true
+cmake  .. -DBUILD_GTEST=true
 make
 ```

@@ -272,30 +272,30 @@ class RotationDiffConversionTraits<EulerAnglesZyxDiff<PrimType_>, LocalAngularVe
     const PrimType_ t6 = sin(theta);
     return EulerAnglesZyxDiff<PrimType_>(t3*t4*w3+t3*t5*w2, t4*w2-t5*w3, w1+t3*t4*t6*w3+t3*t5*t6*w2);
 */
-    Eigen::Matrix<PrimType_, 3, 3> jacobianInv = Eigen::Matrix<PrimType_, 3, 3>::Zero();
-    using std::sin;
-    using std::cos;
-    const PrimType_ x = eulerAngles.x();
-    const PrimType_ y = eulerAngles.y();
-    const PrimType_ z = eulerAngles.z();
-    const PrimType_ t2 = sin(x);
-    const PrimType_ t3 = cos(x);
-    const PrimType_ t4 = t2*t2;
-    const PrimType_ t5 = t3*t3;
-    const PrimType_ t6 = cos(y);
-    const PrimType_ t7 = t5*t6;
-    const PrimType_ t8 = t4+t7;
-    const PrimType_ t9 = 1.0/t8;
-    const PrimType_ t10 = sin(y);
-    jacobianInv(0,1) = -t2*t9;
-    jacobianInv(0,2) = t3*t9;
-    jacobianInv(1,1) = t3*t6*t9;
-    jacobianInv(1,2) = t2*t9;
-    jacobianInv(2,0) = 1.0;
-    jacobianInv(2,1) = t2*t3*t9*t10;
-    jacobianInv(2,2) = -t5*t9*t10;
-    Eigen::Matrix<PrimType_, 3, 1> anglesDiff= jacobianInv*angularVelocity.toImplementation();
-    return EulerAnglesZyxDiff<PrimType_>(anglesDiff);
+//    Eigen::Matrix<PrimType_, 3, 3> jacobianInv = Eigen::Matrix<PrimType_, 3, 3>::Zero();
+//    using std::sin;
+//    using std::cos;
+//    const PrimType_ x = eulerAngles.x();
+//    const PrimType_ y = eulerAngles.y();
+//    const PrimType_ z = eulerAngles.z();
+//    const PrimType_ t2 = sin(x);
+//    const PrimType_ t3 = cos(x);
+//    const PrimType_ t4 = t2*t2;
+//    const PrimType_ t5 = t3*t3;
+//    const PrimType_ t6 = cos(y);
+//    const PrimType_ t7 = t5*t6;
+//    const PrimType_ t8 = t4+t7;
+//    const PrimType_ t9 = 1.0/t8;
+//    const PrimType_ t10 = sin(y);
+//    jacobianInv(0,1) = -t2*t9;
+//    jacobianInv(0,2) = t3*t9;
+//    jacobianInv(1,1) = t3*t6*t9;
+//    jacobianInv(1,2) = t2*t9;
+//    jacobianInv(2,0) = 1.0;
+//    jacobianInv(2,1) = t2*t3*t9*t10;
+//    jacobianInv(2,2) = -t5*t9*t10;
+//    Eigen::Matrix<PrimType_, 3, 1> anglesDiff= jacobianInv*angularVelocity.toImplementation();
+//    return EulerAnglesZyxDiff<PrimType_>(anglesDiff);
 
 //    Eigen::Matrix<PrimType_, 3, 3> jacobian = Eigen::Matrix<PrimType_, 3, 3>::Zero();
 //    using std::sin;
@@ -311,6 +311,21 @@ class RotationDiffConversionTraits<EulerAnglesZyxDiff<PrimType_>, LocalAngularVe
 //    jacobian(0, 0) = -t3*t4*angularVelocity.z()+t3*t5*angularVelocity.y();
 //    jacobian(1, 0) = -t4*angularVelocity.y()-t5*angularVelocity.z();
 //    jacobian(2, 0) = -angularVelocity.x()+t3*t4*t6*angularVelocity.z()-t3*t5*t6*angularVelocity.y();
+
+    using std::sin;
+    using std::cos;
+    const PrimType_ y = eulerAngles.y();
+    const PrimType_ x = eulerAngles.x();
+    const PrimType_ w1 = angularVelocity.x();
+    const PrimType_ w2 = angularVelocity.y();
+    const PrimType_ w3 = angularVelocity.z();
+    const PrimType_ t2 = cos(y);
+    KINDR_ASSERT_TRUE(std::runtime_error, t2 != PrimType_(0), "Error: cos(y) is zero! This case is not yet implemented!");
+    const PrimType_ t3 = 1.0/t2;
+    const PrimType_ t4 = cos(x);
+    const PrimType_ t5 = sin(x);
+    const PrimType_ t6 = sin(y);
+    return EulerAnglesZyxDiff<PrimType_>(t3*t4*w3-t3*t5*w2, t4*w2+t5*w3, w1-t3*t4*t6*w3+t3*t5*t6*w2);
 
   }
 };

@@ -255,58 +255,62 @@ class EulerAnglesZyx : public RotationBase<EulerAnglesZyx<PrimType_>> {
    *  \returns copy of the Euler angles rotation which is unique
    */
   EulerAnglesZyx getUnique() const {
+    //return EulerAnglesZyx<Scalar>(RotationQuaternion<Scalar>(*this).getUnique());
     Base zyx(kindr::common::floatingPointModulo(z()+M_PI,2*M_PI)-M_PI,
              kindr::common::floatingPointModulo(y()+M_PI,2*M_PI)-M_PI,
              kindr::common::floatingPointModulo(x()+M_PI,2*M_PI)-M_PI); // wrap all angles into [-pi,pi)
 
     const double tol = 1e-3;
+    Scalar& z = zyx(0);
+    Scalar& y = zyx(1);
+    Scalar& x = zyx(2);
 
     // wrap angles into [-pi,pi),[-pi/2,pi/2),[-pi,pi)
-    if(zyx.y() < -M_PI/2 - tol)
+    if(y < -M_PI/2 - tol)
     {
-      if(zyx.z() < 0) {
-        zyx.z() = zyx.z() + M_PI;
+      if(z < 0) {
+        z = z + M_PI;
       } else {
-        zyx.z() = zyx.z() - M_PI;
+        z = z - M_PI;
       }
 
-      zyx.y() = -(zyx.y() + M_PI);
+      y = -(y + M_PI);
 
-      if(zyx.x() < 0) {
-        zyx.x() = zyx.x() + M_PI;
+      if(x < 0) {
+        x = x + M_PI;
       } else {
-        zyx.x() = zyx.x() - M_PI;
+        x = x - M_PI;
       }
     }
-    else if(-M_PI/2 - tol <= zyx.y() && zyx.y() <= -M_PI/2 + tol)
+    else if(-M_PI/2 - tol <= y && y <= -M_PI/2 + tol)
     {
-      zyx.z() += zyx.x();
-      zyx.x() = 0;
+      z += x;
+      x = Scalar(0.0);
     }
-    else if(-M_PI/2 + tol < zyx.y() && zyx.y() < M_PI/2 - tol)
+    else if(-M_PI/2 + tol < y && y < M_PI/2 - tol)
     {
       // ok
     }
-    else if(M_PI/2 - tol <= zyx.y() && zyx.y() <= M_PI/2 + tol)
+    else if(M_PI/2 - tol <= y && y <= M_PI/2 + tol)
     {
       // todo: M_PI/2 should not be in range, other formula?
-      zyx.z() -= zyx.x();
-      zyx.x() = 0;
+      z -= x;
+      x = 0;
     }
     else // M_PI/2 + tol < zyx.y()
     {
-      if(zyx.z() < 0) {
-        zyx.z() = zyx.z() + M_PI;
+      if(z < 0) {
+        z = z + M_PI;
       } else {
-        zyx.z() = zyx.z() - M_PI;
+        z = z - M_PI;
       }
 
-      zyx.y() = -(zyx.y() - M_PI);
+      y = -(y - M_PI);
 
-      if(zyx.x() < 0) {
-        zyx.x() = zyx.x() + M_PI;
+      if(x < 0) {
+        x = x + M_PI;
       } else {
-        zyx.x() = zyx.x() - M_PI;
+        x = x - M_PI;
       }
     }
 

@@ -57,16 +57,16 @@ if(CATKIN_ENABLE_TESTING)
 	#test/rotations/RotationQuaternionTest.cpp
 	#test/rotations/RotationVectorTest.cpp
 	#test/rotations/AngleAxisTest.cpp
-	test/rotations/EulerAnglesZyxTest.cpp
-	test/rotations/EulerAnglesXyzTest.cpp
+    test/rotations/EulerAnglesZyxTest.cpp
+#	test/rotations/EulerAnglesXyzTest.cpp
 	test/rotations/RotationTest.cpp
 	
 #    test/rotations/LocalAngularVelocityTest.cpp
 #	test/rotations/RotationQuaternionDiffTest.cpp
 #	test/rotations/RotationMatrixDiffTest.cpp
-	test/rotations/EulerAnglesZyxDiffTest.cpp
-	test/rotations/EulerAnglesXyzDiffTest.cpp
-	test/rotations/RotationDiffTest.cpp
+test/rotations/EulerAnglesZyxDiffTest.cpp
+test/rotations/EulerAnglesXyzDiffTest.cpp
+#   test/rotations/RotationDiffTest.cpp
   )
   if(TARGET test_${PROJECT_NAME}_rotations)
     target_link_libraries(test_${PROJECT_NAME}_rotations ${catkin_LIBRARIES})

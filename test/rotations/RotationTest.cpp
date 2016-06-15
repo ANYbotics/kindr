@@ -43,7 +43,7 @@ template <typename ImplementationPair_>
 struct ConversionTest : public ::testing::Test{
   typedef typename ImplementationPair_::first_type RotationA;
   typedef typename ImplementationPair_::second_type RotationB;
-
+  typedef typename RotationB::Scalar Scalar;
   RotationA rotA;
   RotationB rotB;
 
@@ -185,14 +185,17 @@ struct EulerAnglesZyxTestType {
 //    ASSERT_NEAR(rotA.pitch(), rotB.pitch(), tolX)<< "rotA: " << rotAIn << " rotAUnique: " << rotAIn.getUnique() << "\nrotB: " << rotBIn << " rotBUnique: " << rotBIn.getUnique() << "\n" << msg;
 //    ASSERT_NEAR(rotA.yaw(), rotB.yaw(), tolX)  << "rotA: " << rotAIn << " rotAUnique: " << rotAIn.getUnique() << "\nrotB: " << rotBIn << " rotBUnique: " << rotBIn.getUnique() << "\n" << msg;
 
-    ASSERT_EQ(true, (kindr::common::eigen::compareRelativePeriodic(rotA.roll(), rotB.roll(), 2.0*M_PI, 1e-1) &&
-                     kindr::common::eigen::compareRelativePeriodic(rotA.pitch(), rotB.pitch(), 2.0*M_PI, 1e-1) &&
-                     kindr::common::eigen::compareRelativePeriodic(rotA.yaw(), rotB.yaw(), 2.0*M_PI, 1e-1)) ||
-                    (kindr::common::eigen::compareRelativePeriodic(rotA.getUnique().roll(), rotB.getUnique().roll(), 2.0*M_PI, 1e-1) &&
-                     kindr::common::eigen::compareRelativePeriodic(rotA.getUnique().pitch(), rotB.getUnique().pitch(), 2.0*M_PI, 1e-1) &&
-                     kindr::common::eigen::compareRelativePeriodic(rotA.getUnique().yaw(), rotB.getUnique().yaw(), 2.0*M_PI, 1e-1))
-    ) << std::endl << msg << " rotA: " << rotA << " rotB: " << rotB;
+//    ASSERT_EQ(true, (kindr::common::eigen::compareRelativePeriodic(rotA.roll(), rotB.roll(), 2.0*M_PI, 1e-1) &&
+//                     kindr::common::eigen::compareRelativePeriodic(rotA.pitch(), rotB.pitch(), 2.0*M_PI, 1e-1) &&
+//                     kindr::common::eigen::compareRelativePeriodic(rotA.yaw(), rotB.yaw(), 2.0*M_PI, 1e-1)) ||
+//                    (kindr::common::eigen::compareRelativePeriodic(rotA.getUnique().roll(), rotB.getUnique().roll(), 2.0*M_PI, 1e-1) &&
+//                     kindr::common::eigen::compareRelativePeriodic(rotA.getUnique().pitch(), rotB.getUnique().pitch(), 2.0*M_PI, 1e-1) &&
+//                     kindr::common::eigen::compareRelativePeriodic(rotA.getUnique().yaw(), rotB.getUnique().yaw(), 2.0*M_PI, 1e-1))
+//    ) << std::endl << msg << " rotA: " << rotA << " rotB: " << rotB;
 
+    kindr::RotationQuaternion<Scalar> quatA(rotA);
+    kindr::RotationQuaternion<Scalar> quatB(rotB);
+    ASSERT_TRUE(quatA.isNear(quatB, 1.0e-3))<< std::endl << msg << "\n quatA: " << quatA << " quatB: " << quatB;
   }
 };
 
@@ -475,6 +478,7 @@ TYPED_TEST(Conversion4Test, testBToA) {
 
 
 TYPED_TEST(ConcatenationTest, testAToB) {
+  typedef typename TestFixture::Scalar Scalar;
 
   // Check result of multiplication of a generic rotation with identity
   this->rotB.rot = this->rotB.rotGeneric*this->rotA.rotIdentity;
@@ -495,22 +499,22 @@ TYPED_TEST(ConcatenationTest, testAToB) {
 
   // check concatenation of 3 different quarters
   this->rotB.rot = this->rotB.rotQuarterX.inverted()*this->rotA.rotQuarterY*this->rotB.rotQuarterX;
-  this->rotB.assertNear(this->rotB.rotQuarterZ.inverted(), this->rotB.rot.getUnique(), this->tol, "concatenation 1");
+  this->rotB.assertNear(this->rotB.rotQuarterZ.inverted(), this->rotB.rot, this->tol, "concatenation 1");
 
   this->rotB.rot = this->rotB.rotQuarterX.inverted()*this->rotA.rotQuarterZ*this->rotB.rotQuarterX;
-  this->rotB.assertNear(this->rotB.rotQuarterY, this->rotB.rot.getUnique(), this->tol, "concatenation 2");
+  this->rotB.assertNear(this->rotB.rotQuarterY, this->rotB.rot, this->tol, "concatenation 2");
 
   this->rotB.rot = this->rotB.rotQuarterY.inverted()*this->rotA.rotQuarterX*this->rotB.rotQuarterY;
-  this->rotB.assertNear(this->rotB.rotQuarterZ, this->rotB.rot.getUnique(), this->tol, "concatenation 3");
+  this->rotB.assertNear(this->rotB.rotQuarterZ, this->rotB.rot, this->tol, "concatenation 3");
 
   this->rotB.rot = this->rotB.rotQuarterY.inverted()*this->rotA.rotQuarterZ*this->rotB.rotQuarterY;
-  this->rotB.assertNear(this->rotB.rotQuarterX.inverted(), this->rotB.rot.getUnique(), this->tol, "concatenation 4");
+  this->rotB.assertNear(this->rotB.rotQuarterX.inverted(), this->rotB.rot, this->tol, "concatenation 4");
 
   this->rotB.rot = this->rotB.rotQuarterZ.inverted()*this->rotA.rotQuarterX*this->rotB.rotQuarterZ;
-  this->rotB.assertNear(this->rotB.rotQuarterY.inverted(), this->rotB.rot.getUnique(), this->tol, "concatenation 5");
+  this->rotB.assertNear(this->rotB.rotQuarterY.inverted(), this->rotB.rot, this->tol, "concatenation 5");
 
   this->rotB.rot = this->rotB.rotQuarterZ.inverted()*this->rotA.rotQuarterY*this->rotB.rotQuarterZ;
-  this->rotB.assertNear(this->rotB.rotQuarterX, this->rotB.rot.getUnique(), this->tol, "concatenation 6");
+  this->rotB.assertNear(this->rotB.rotQuarterX, this->rotB.rot, this->tol, "concatenation 6");
 }
 
 
