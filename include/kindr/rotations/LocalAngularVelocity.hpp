@@ -225,116 +225,20 @@ template<typename PrimType_>
 class RotationDiffConversionTraits<LocalAngularVelocity<PrimType_>, RotationMatrixDiff<PrimType_>, RotationMatrix<PrimType_>> {
  public:
   inline static LocalAngularVelocity<PrimType_> convert(const RotationMatrix<PrimType_>& rotationMatrix, const RotationMatrixDiff<PrimType_>& rotationMatrixDiff) {
-//    return LocalAngularVelocity<PrimType_>(getVectorFromSkewMatrix<PrimType_>(rotationMatrixDiff.toImplementation()*rotationMatrix.toImplementation().transpose()));
-
-//    if (Usage_ == RotationUsage::ACTIVE) {
       return LocalAngularVelocity<PrimType_>(getVectorFromSkewMatrix<PrimType_>(rotationMatrixDiff.toImplementation()*rotationMatrix.toImplementation().transpose()));
-//    }
-//    if (Usage_ == RotationUsage::PASSIVE) {
-//      return LocalAngularVelocity<PrimType_>(getVectorFromSkewMatrix<PrimType_>(rotationMatrix.toImplementation().transpose()*rotationMatrixDiff.toImplementation()));
-//    }
-
-
   }
 };
 
 
 
-//
-//template<typename PrimType_>
-//class RotationDiffConversionTraits<LocalAngularVelocity<PrimType_>, RotationVectorDiff<PrimType_>, RotationVector<PrimType_>> {
-// public:
-//  inline static LocalAngularVelocity<PrimType_> convert(const RotationVector<PrimType_>& rotationVector, const RotationVectorDiff<PrimType_>& rotationVectorDiff) {
-//    typedef typename RotationVector<PrimType_>::Implementation Vector;
-//    typedef PrimType_ Scalar;
-//    typedef typename Eigen::Matrix<PrimType_, 3, 3> Matrix3x3;
-//
-//
-//    // not tested:
-////    const Vector rv = rotationVector.toImplementation();
-////    const Vector rvDiff = rotationVectorDiff.toImplementation();
-////    const Matrix3x3 rv_hat = getSkewMatrixFromVector(rv);
-////    const Scalar angle = rv.norm();
-////    const Vector angularVelocity = rvDiff-rv_hat*rvDiff*(1-cos(angle)/(angle*angle)) + rv_hat*rv_hat*rvDiff*((angle-sin(angle))/(angle*angle*angle));
-////    return LocalAngularVelocity<PrimType_>(angularVelocity);
-//
-//    const PrimType_ v = rotationVector.vector().norm();
-//    const PrimType_ v1 = rotationVector.x();
-//    const PrimType_ v2 = rotationVector.y();
-//    const PrimType_ v3 = rotationVector.z();
-//    const PrimType_ dv1 = rotationVectorDiff.x();
-//    const PrimType_ dv2 = rotationVectorDiff.y();
-//    const PrimType_ dv3 = rotationVectorDiff.z();
-//
-//
-//    if (v < common::internal::NumTraits<Scalar>::dummy_precision()) {
-//      // small angle
-//      const PrimType_ t2 = v3*(1.0/2.0);
-//      const PrimType_ t3 = v1*v2*(1.0/4.0);
-//      const PrimType_ t4 = v2*(1.0/2.0);
-//      const PrimType_ t5 = v1*(1.0/2.0);
-//      const PrimType_ t6 = v2*v3*(1.0/4.0);
-//      const PrimType_ w1 = dv2*(t2+t3)+dv1*((v1*v1)*(1.0/4.0)+1.0)-dv3*(t4-v1*v3*(1.0/4.0));
-//      const PrimType_ w2 = dv3*(t5+t6)+dv2*((v2*v2)*(1.0/4.0)+1.0)-dv1*(t2-t3);
-//      const PrimType_ w3 = dv3*((v3*v3)*(1.0/4.0)+1.0)-dv2*(t5-t6)+dv1*(t4+v1*v3*(1.0/4.0));
-//      return LocalAngularVelocity<PrimType_>(w1, w2, w3);
-////      if (Usage_ == RotationUsage::ACTIVE) {
-////        return LocalAngularVelocity<PrimType_>(-w1, -w2, -w3);
-////      }
-////      if (Usage_ == RotationUsage::PASSIVE) {
-////        return LocalAngularVelocity<PrimType_>(w1, w2, w3);
-////      }
-//    }
-//
-//    const PrimType_ t2 = 1.0/(v*v*v);
-//    const PrimType_ t3 = cos(v);
-//    const PrimType_ t4 = sin(v);
-//    const PrimType_ t5 = v1*v1;
-//    const PrimType_ t6 = v1*v2;
-//    const PrimType_ t7 = v*v;
-//    const PrimType_ t8 = t4*t7;
-//    const PrimType_ t9 = v2*v2;
-//    const PrimType_ t10 = v2*v3;
-//    const PrimType_ t11 = v1*v3;
-//    const PrimType_ t12 = t3*v2;
-//    const PrimType_ t13 = v3*v3;
-//    const PrimType_ w1 = dv3*t2*(v*(t11+t12-v2)-t4*v1*v3)+dv1*t2*(t8-t4*t5+t5*v)+dv2*t2*(v*(t6+v3-t3*v3)-t4*v1*v2);
-//    const PrimType_ w2 = dv1*t2*(v*(t6-v3+t3*v3)-t4*v1*v2)+dv2*t2*(t8-t4*t9+t9*v)+dv3*t2*(v*(t10+v1-t3*v1)-t4*v2*v3);
-//    const PrimType_ w3 = dv2*t2*(v*(t10-v1+t3*v1)-t4*v2*v3)+dv1*t2*(v*(t11-t12+v2)-t4*v1*v3)+dv3*t2*(t8-t4*t13+t13*v);
-//
-//    return LocalAngularVelocity<PrimType_>(w1, w2, w3);
-//
-////    if (Usage_ == RotationUsage::ACTIVE) {
-////      return LocalAngularVelocity<PrimType_>(-w1, -w2, -w3);
-////    }
-////    if (Usage_ == RotationUsage::PASSIVE) {
-////      return LocalAngularVelocity<PrimType_>(w1, w2, w3);
-////    }
-//
-//  }
-//};
 
 
 template<typename PrimType_>
 class RotationDiffConversionTraits<LocalAngularVelocity<PrimType_>, EulerAnglesZyxDiff<PrimType_>, EulerAnglesZyx<PrimType_>> {
  public:
   inline static LocalAngularVelocity<PrimType_> convert(const EulerAnglesZyx<PrimType_>& eulerAngles, const EulerAnglesZyxDiff<PrimType_>& eulerAnglesDiff) {
-//    const PrimType_ phi = eulerAngles.roll();
-//    const PrimType_ theta = eulerAngles.pitch();
-//    const PrimType_ dphi = eulerAnglesDiff.roll();
-//    const PrimType_ dtheta = eulerAnglesDiff.pitch();
-//    const PrimType_ dpsi = eulerAnglesDiff.yaw();
-//    const PrimType_ t2 = sin(phi);
-//    const PrimType_ t3 = cos(phi);
-//    const PrimType_ t4 = cos(theta);
-//    return LocalAngularVelocity<PrimType_>(dphi-dpsi*sin(theta), dtheta*t3+dpsi*t2*t4, -dtheta*t2+dpsi*t3*t4);
     using std::sin;
     using std::cos;
-
-//    [         sin(y),      0, 1]
-//    [ -cos(y)*sin(x), cos(x), 0]
-//    [  cos(x)*cos(y), sin(x), 0]
-
     Eigen::Matrix<PrimType_, 3, 3> jacobian;
     jacobian << sin(eulerAngles.y()), PrimType_(0.0), PrimType_(1.0),
                 -sin(eulerAngles.x())*cos(eulerAngles.y()), cos(eulerAngles.x()), PrimType_(0.0),
@@ -347,54 +251,16 @@ template<typename PrimType_>
 class RotationDiffConversionTraits<LocalAngularVelocity<PrimType_>, EulerAnglesXyzDiff<PrimType_>, EulerAnglesXyz<PrimType_>> {
  public:
   inline static LocalAngularVelocity<PrimType_> convert(const EulerAnglesXyz<PrimType_>& eulerAngles, const EulerAnglesXyzDiff<PrimType_>& eulerAnglesDiff) {
-//    const PrimType_ beta = eulerAngles.pitch();
-//    const PrimType_ gamma = eulerAngles.yaw();
-//    const PrimType_ dalpha = eulerAnglesDiff.roll();
-//    const PrimType_ dbeta = eulerAnglesDiff.pitch();
-//    const PrimType_ dgamma = eulerAnglesDiff.yaw();
-//    const PrimType_ t2 = cos(gamma);
-//    const PrimType_ t3 = cos(beta);
-//    const PrimType_ t4 = sin(gamma);
-//    return LocalAngularVelocity<PrimType_>(dbeta*t4+dalpha*t2*t3, dbeta*t2-dalpha*t3*t4, dgamma+dalpha*sin(beta));
-//    using std::sin;
-//    using std::cos;
-//    const PrimType_ beta = eulerAngles.pitch();
-//    const PrimType_ gamma = eulerAngles.yaw();
-//    const PrimType_ dalpha = eulerAnglesDiff.roll();
-//    const PrimType_ dbeta = eulerAnglesDiff.pitch();
-//    const PrimType_ dgamma = eulerAnglesDiff.yaw();
-//    const PrimType_ t2 = cos(gamma);
-//    const PrimType_ t3 = cos(beta);
-//    const PrimType_ t4 = sin(gamma);
-//    return LocalAngularVelocity<PrimType_>(dbeta*t4-dalpha*t2*t3, -dbeta*t2-dalpha*t3*t4, -dgamma+dalpha*sin(beta));
-
-//    using std::sin;
-//    using std::cos;
-//    const PrimType_ alpha = eulerAngles.roll();
-//    const PrimType_ beta = eulerAngles.pitch();
-//    const PrimType_ gamma = eulerAngles.yaw();
-//    const PrimType_ dalpha = eulerAnglesDiff.roll();
-//    const PrimType_ dbeta = eulerAnglesDiff.pitch();
-//    const PrimType_ dgamma = eulerAnglesDiff.yaw();
-//    const PrimType_  t2 = sin(alpha);
-//    const PrimType_ t3 = cos(alpha);
-//    const PrimType_ t4 = cos(beta);
-//    return LocalAngularVelocity<PrimType_>(dalpha-dgamma*sin(beta), dbeta*t3+dgamma*t2*t4, -dbeta*t2+dgamma*t3*t4);
-
-
     using std::sin;
     using std::cos;
     const PrimType_ x = eulerAngles.x();
     const PrimType_ y = eulerAngles.y();
     const PrimType_ z = eulerAngles.z();
-    const PrimType_ dx = eulerAnglesDiff.x();
-    const PrimType_ dy = eulerAnglesDiff.y();
-    const PrimType_ dz = eulerAnglesDiff.z();
-    const PrimType_ t2 = cos(z);
-    const PrimType_ t3 = cos(y);
-    const PrimType_ t4 = sin(z);
-    return LocalAngularVelocity<PrimType_>(-dy*t4+dx*t2*t3, dy*t2+dx*t3*t4, dz-dx*sin(y));
-
+    Eigen::Matrix<PrimType_, 3, 3> mat;
+    mat << cos(y)*cos(z), -sin(z), 0,
+           cos(y)*sin(z),  cos(z), 0,
+           -sin(y),       0, 1;
+    return LocalAngularVelocity<PrimType_>(mat*eulerAnglesDiff.toImplementation());
 
 
   }

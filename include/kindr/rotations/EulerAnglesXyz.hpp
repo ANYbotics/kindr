@@ -408,9 +408,7 @@ class ConversionTraits<EulerAnglesXyz<DestPrimType_>, RotationQuaternion<SourceP
  public:
   inline static EulerAnglesXyz<DestPrimType_> convert(const RotationQuaternion<SourcePrimType_>& q) {
      Eigen::Matrix<DestPrimType_, 3, 1>  vec = q.toImplementation().toRotationMatrix().eulerAngles(2, 1, 0).template cast<DestPrimType_>();
-        return EulerAnglesXyz<DestPrimType_>(vec(2), vec(1), vec(0));
-
-//    return EulerAnglesXyz<DestPrimType_>((q.toImplementation().toRotationMatrix().eulerAngles(2, 1, 0)).template cast<DestPrimType_>());
+     return EulerAnglesXyz<DestPrimType_>(vec(2), vec(1), vec(0));
   }
 };
 

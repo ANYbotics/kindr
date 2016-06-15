@@ -58,7 +58,7 @@ if(CATKIN_ENABLE_TESTING)
 	#test/rotations/RotationVectorTest.cpp
 	#test/rotations/AngleAxisTest.cpp
     test/rotations/EulerAnglesZyxTest.cpp
-#	test/rotations/EulerAnglesXyzTest.cpp
+	test/rotations/EulerAnglesXyzTest.cpp
 	test/rotations/RotationTest.cpp
 	
 #    test/rotations/LocalAngularVelocityTest.cpp
