@@ -230,6 +230,21 @@ class EulerAnglesXyzDiff : public RotationDiffBase<EulerAnglesXyzDiff<PrimType_>
 
    using RotationDiffBase<EulerAnglesXyzDiff<PrimType_>>::operator-; // otherwise ambiguous RotationDiffBase and Eigen
 
+   Eigen::Matrix<PrimType_, 3, 3> getMappingFromLocalAngularVelocityToSecondDiff(const EulerAnglesXyz<PrimType_>& rotation) const {
+     using std::sin;
+     using std::cos;
+     Eigen::Matrix<PrimType_, 3, 3>  eulToAngVel;
+     PrimType_ x = rotation.x();
+     PrimType_ y = rotation.y();
+     PrimType_ z = rotation.z();
+     PrimType_ dx = this->x();
+     PrimType_ dy = this->y();
+     PrimType_ dz = this->z();
+     eulToAngVel << - dy*cos(z)*sin(y) - dz*cos(y)*sin(z), -dz*cos(z), PrimType_(0.0),
+        dz*cos(y)*cos(z) - dy*sin(y)*sin(z), -dz*sin(z), PrimType_(0.0),
+                                 -dy*cos(y),          PrimType_(0.0), PrimType_(0.0);
+     return eulToAngVel;
+   }
 
    /*! \brief Used for printing the object with std::cout.
     *
