@@ -227,3 +227,42 @@ TYPED_TEST(EulerAnglesXyzDiffTest, testFiniteDifferenceInverse)
   }
 }
 
+
+TYPED_TEST(EulerAnglesXyzDiffTest, mappingLocalAngularVelocity)
+{
+  typedef typename TestFixture::Scalar Scalar;
+  typedef typename TestFixture::Rotation Rotation;
+  typedef typename TestFixture::RotationDiff RotationDiff;
+  typedef  typename TestFixture::Vector3 Vector3;
+
+  for (auto rotation : this->rotations) {
+    for (auto angularVelocity : this->angularVelocities) {
+      RotationDiff rotationDiff1(rotation, angularVelocity);
+      RotationDiff rotationDiff2(rotation.getMappingFromLocalAngularVelocityToDiff()*angularVelocity.vector());
+      ASSERT_NEAR(rotationDiff1.x(),rotationDiff2.x(),1e-3) << " angular velocity: " << angularVelocity << " rotation: " << rotation   << " diff1: " << rotationDiff1  << " diff2: " << rotationDiff2;
+      ASSERT_NEAR(rotationDiff1.y(),rotationDiff2.y(),1e-3)  << " angular velocity: " << angularVelocity  <<  "rotation: " << rotation  << " diff1: " << rotationDiff1 << " diff2: " << rotationDiff2;
+      ASSERT_NEAR(rotationDiff1.z(),rotationDiff2.z(),1e-3) << " angular velocity: " << angularVelocity << " rotation: " << rotation   << " diff1: " << rotationDiff1 << " diff2: " << rotationDiff2;
+    }
+  }
+}
+
+TYPED_TEST(EulerAnglesXyzDiffTest, mappingLocalAngularVelocityInverse)
+{
+  typedef typename TestFixture::Scalar Scalar;
+  typedef typename TestFixture::Rotation Rotation;
+  typedef typename TestFixture::RotationDiff RotationDiff;
+  typedef  typename TestFixture::Vector3 Vector3;
+  typedef typename TestFixture::LocalAngularVelocity LocalAngularVelocity;
+
+  for (auto rotation : this->rotations) {
+    for (auto angularVelocity : this->angularVelocities) {
+      RotationDiff rotationDiff1(rotation, angularVelocity);
+      LocalAngularVelocity angularVelocity2(rotation.getMappingFromDiffToLocalAngularVelocity()*rotationDiff1.vector());
+      ASSERT_NEAR(angularVelocity.x(),angularVelocity2.x(),1e-3) << " angular velocity: " << angularVelocity << " rotation: " << rotation << " angularVelocity1: " << angularVelocity  << " angularVelocity2: " << angularVelocity2;
+      ASSERT_NEAR(angularVelocity.y(),angularVelocity2.y(),1e-3)  << " angular velocity: " << angularVelocity  <<  "rotation: " << rotation << " angularVelocity1: " << angularVelocity << " angularVelocity2: " << angularVelocity2;
+      ASSERT_NEAR(angularVelocity.z(),angularVelocity2.z(),1e-3) << " angular velocity: " << angularVelocity << " rotation: " << rotation << " angularVelocity1: " << angularVelocity << " angularVelocity2: " << angularVelocity2;
+    }
+  }
+}
+
+

@@ -124,6 +124,13 @@ class EulerAnglesXyzDiff : public RotationDiffBase<EulerAnglesXyzDiff<PrimType_>
     return static_cast<const Base&>(xyzDiff_);
   }
 
+  inline Base& vector() {
+    return toImplementation();
+  }
+
+  inline const Base& vector() const {
+    return toImplementation();
+  }
 
 
   /*! \brief Reading access to time derivative of roll (X) angle.
@@ -247,8 +254,6 @@ typedef EulerAnglesXyzDiff<float> EulerAnglesXyzDiffF;
 
 
 namespace internal {
-
-
 
 template<typename PrimType_>
 class RotationDiffConversionTraits<EulerAnglesXyzDiff<PrimType_>, LocalAngularVelocity<PrimType_>, EulerAnglesXyz<PrimType_>> {
