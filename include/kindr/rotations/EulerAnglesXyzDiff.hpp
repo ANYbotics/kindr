@@ -231,19 +231,24 @@ class EulerAnglesXyzDiff : public RotationDiffBase<EulerAnglesXyzDiff<PrimType_>
    using RotationDiffBase<EulerAnglesXyzDiff<PrimType_>>::operator-; // otherwise ambiguous RotationDiffBase and Eigen
 
    Eigen::Matrix<PrimType_, 3, 3> getMappingFromLocalAngularVelocityToSecondDiff(const EulerAnglesXyz<PrimType_>& rotation) const {
+     // todo: make it more efficient
+     // todo: unit test!
      using std::sin;
      using std::cos;
-     Eigen::Matrix<PrimType_, 3, 3>  eulToAngVel;
-     PrimType_ x = rotation.x();
-     PrimType_ y = rotation.y();
-     PrimType_ z = rotation.z();
-     PrimType_ dx = this->x();
-     PrimType_ dy = this->y();
-     PrimType_ dz = this->z();
-     eulToAngVel << - dy*cos(z)*sin(y) - dz*cos(y)*sin(z), -dz*cos(z), PrimType_(0.0),
-        dz*cos(y)*cos(z) - dy*sin(y)*sin(z), -dz*sin(z), PrimType_(0.0),
-                                 -dy*cos(y),          PrimType_(0.0), PrimType_(0.0);
-     return eulToAngVel;
+     Eigen::Matrix<PrimType_, 3, 3>  matrix;
+     const PrimType_ x = rotation.x();
+     const PrimType_ y = rotation.y();
+     const PrimType_ z = rotation.z();
+     const PrimType_ dx = this->x();
+     const PrimType_ dy = this->y();
+     const PrimType_ dz = this->z();
+     const PrimType_ cy2 = (cos(y)*cos(y));
+     KINDR_ASSERT_TRUE(std::runtime_error, cy2 != PrimType_(0), "Error: cos(y)*cos(y) is zero! This case is not yet implemented!");
+     matrix << (dy*cos(z)*sin(y))/cy2 - (dz*sin(z))/cos(y),  -(dz*cos(z))/cos(y) - (dy*sin(y)*sin(z))/cy2, 0,
+                 dz*cos(z),      -dz*sin(z), 0,
+             (dz*sin(y)*sin(z))/cos(y) - dy*(cos(z) + (cos(z)*sin(y)*sin(y))/cy2), dy*(sin(z) + (sin(y)*sin(y)*sin(z))/cy2) + (dz*cos(z)*sin(y))/cos(y), 0;
+
+     return matrix;
    }
 
    /*! \brief Used for printing the object with std::cout.
