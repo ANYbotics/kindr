@@ -317,10 +317,17 @@ template<typename DestPrimType_, typename SourcePrimType_>
 class ConversionTraits<RotationVector<DestPrimType_>, RotationQuaternion<SourcePrimType_>> {
  public:
   inline static RotationVector<DestPrimType_> convert(const RotationQuaternion<SourcePrimType_>& q) {
-    if (1.0-q.real()*q.real() < internal::NumTraits<SourcePrimType_>::dummy_precision()) {
-      return RotationVector<DestPrimType_>(2.0*q.imaginary().template cast<DestPrimType_>());
+    using std::acos;
+    using std::sqrt;
+    using std::atan2;
+    const DestPrimType_ imaginaryVectorNormSquared = DestPrimType_(1.0)-q.real()*q.real();
+    if (imaginaryVectorNormSquared < internal::NumTraits<SourcePrimType_>::dummy_precision()) {
+      return RotationVector<DestPrimType_>(DestPrimType_(2.0)*q.imaginary().template cast<DestPrimType_>());
+      //return RotationVector<DestPrimType_>(DestPrimType_(1.0), DestPrimType_(0.0), DestPrimType_(0.0));
     }
-    return RotationVector<DestPrimType_>((2.0*acos(q.real())/sqrt(1.0-q.real()*q.real())*q.imaginary()).template cast<DestPrimType_>());
+    const DestPrimType_ imaginaryVectorNorm = q.imaginary().norm();
+    return RotationVector<DestPrimType_>((DestPrimType_(2.0)*atan2(imaginaryVectorNorm, q.real())/imaginaryVectorNorm*q.imaginary()).template cast<DestPrimType_>());
+    //return RotationVector<DestPrimType_>(((DestPrimType_(2.0)*acos(q.real())/sqrt(imaginaryVectorNormSquared))*q.imaginary()).template cast<DestPrimType_>());
   }
 };
 
@@ -337,7 +344,8 @@ template<typename DestPrimType_, typename SourcePrimType_>
 class ConversionTraits<RotationVector<DestPrimType_>, RotationMatrix<SourcePrimType_>> {
  public:
   inline static RotationVector<DestPrimType_> convert(const RotationMatrix<SourcePrimType_>& rotationMatrix) {
-    return RotationVector<DestPrimType_>(AngleAxis<DestPrimType_>(rotationMatrix));
+    // Note that Eigen converts a rotation matrix to angle-axis via quaternion.
+    return RotationVector<DestPrimType_>(RotationQuaternion<DestPrimType_>(rotationMatrix));
 
   }
 };

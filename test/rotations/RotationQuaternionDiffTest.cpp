@@ -198,7 +198,6 @@ TYPED_TEST(RotationQuaternionDiffTest, testSetters)
 }
 
 
-
 TYPED_TEST(RotationQuaternionDiffTest, testFiniteDifference)
 {
   typedef typename TestFixture::Scalar Scalar;
@@ -206,12 +205,12 @@ TYPED_TEST(RotationQuaternionDiffTest, testFiniteDifference)
   typedef typename TestFixture::RotationDiff RotationDiff;
   typedef typename TestFixture::RotationDiff::Imaginary Vector3;
 
- const  double dt = 1e-5;
+  const  double dt = 1e-5;
   for (auto rotation : this->rotations) {
     for (auto angularVelocity : this->angularVelocities) {
       // Finite difference method for checking derivatives
       RotationDiff rotationDiff(rotation, angularVelocity);
-      Rotation rotationNext = rotation.boxPlus(dt*angularVelocity.toImplementation());
+      Rotation rotationNext = rotation.boxPlus(dt*rotation.rotate(angularVelocity.vector()));
       Scalar dreal = (rotationNext.real()-rotation.real())/dt;
       Vector3 dimag = (rotationNext.imaginary()-rotation.imaginary())/dt;
       ASSERT_NEAR(rotationDiff.w(),dreal,1e-2) << "rotation: " << rotation << " angular velocity: " << angularVelocity <<     " rdiff: " << dreal << " " << dimag(0) << " " << dimag(1) << " " << dimag(2) << "diff: " << rotationDiff;

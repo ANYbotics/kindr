@@ -325,6 +325,41 @@ class EulerAnglesZyx : public RotationBase<EulerAnglesZyx<PrimType_>> {
     return *this;
   }
 
+
+  typename Eigen::Matrix<PrimType_, 3, 3> getMappingFromDiffToLocalAngularVelocity() const {
+    /*
+      [ 0, sin(z),  cos(y)*cos(z)]
+      [ 0, cos(z), -cos(y)*sin(z)]
+      [ 1,      0,         sin(y)]
+    */
+
+    using std::sin;
+    using std::cos;
+    Eigen::Matrix<PrimType_, 3, 3> mat;
+    mat << 0, sin(z()),  cos(y())*cos(z()),
+            0, cos(z()), -cos(y())*sin(z()),
+            1.0,      0,         sin(y());
+    return mat;
+  }
+
+  typename Eigen::Matrix<PrimType_, 3, 3> getMappingFromLocalAngularVelocityToDiff() const {
+    /*
+      [ -(cos(z)*sin(y))/cos(y), (sin(y)*sin(z))/cos(y), 1]
+      [                  sin(z),                 cos(z), 0]
+      [           cos(z)/cos(y),         -sin(z)/cos(y), 0]
+    */
+    using std::sin;
+    using std::cos;
+    const PrimType_ cy = cos(y());
+    KINDR_ASSERT_TRUE(std::runtime_error, cy != PrimType_(0.0), "Error: cos(y) is zero! This case is not yet implemented!");
+    Eigen::Matrix<PrimType_, 3, 3> mat;
+    mat << -(cos(z())*sin(y()))/cy, (sin(y())*sin(z()))/cy, 1.0,
+                      sin(z()),                 cos(z()), 0,
+               cos(z())/cy,         -sin(z())/cy, 0;
+    return mat;
+  }
+
+
   /*! \brief Concenation operator.
    *  This is explicitly specified, because Eigen::Matrix provides also an operator*.
    *  \returns the concenation of two rotations

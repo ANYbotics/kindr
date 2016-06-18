@@ -78,15 +78,10 @@ set(ROTATION_SRCS
 	rotations/EulerAnglesZyxTest.cpp
 	rotations/EulerAnglesXyzTest.cpp
 	rotations/RotationTest.cpp
+	rotations/ConventionTest.cpp
 
 )
 add_gtest( runUnitTestsRotation ${ROTATION_SRCS})
-
-set(ROTATIONQUATERNION_SRCS
-	test_main.cpp
-	rotations/RotationQuaternionTest.cpp
-)
-add_gtest( runUnitTestsRotationQuaternion ${ROTATIONQUATERNION_SRCS})
 
 
 set(ROTATIONDIFF_SRCS

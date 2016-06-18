@@ -53,6 +53,8 @@ struct RotationMatrixDiffTest: public ::testing::Test {
   Matrix3 eigenMatrix3vZero = Matrix3::Zero();
   Matrix3 eigenMatrix3v1;
   LocalAngularVelocity angularVelocity0 = LocalAngularVelocity(1.0, 0.0, 0.0);
+  LocalAngularVelocity angularVelocity0y = LocalAngularVelocity(0.0, 1.0, 0.0);
+  LocalAngularVelocity angularVelocity0z = LocalAngularVelocity(0.0, 0.0, 1.0);
   LocalAngularVelocity angularVelocity1 = LocalAngularVelocity(0.0, 0.0, 0.0);
   LocalAngularVelocity angularVelocity2 = LocalAngularVelocity(0.4, 0.3, 0.8)*0.1;
   LocalAngularVelocity angularVelocity3 = LocalAngularVelocity(40, 52, 99)*0.01;
@@ -60,12 +62,12 @@ struct RotationMatrixDiffTest: public ::testing::Test {
   LocalAngularVelocity angularVelocity5 = LocalAngularVelocity(0.0, kindr::internal::NumTraits<Scalar>::dummy_precision()/10.0, 0.0);
   LocalAngularVelocity angularVelocity6 = LocalAngularVelocity(0.0, 0.0, kindr::internal::NumTraits<Scalar>::dummy_precision()/10.0);
   Rotation rotation1 = Rotation();
-  Rotation rotation2 = Rotation(1.00000000000000e+000,    0.00000000000000e+000,    0.00000000000000e+000,
-                                0.00000000000000e+000,    61.2323399573677e-018,    1.00000000000000e+000,
-                                0.00000000000000e+000,   -1.00000000000000e+000,    61.2323399573677e-018); // psi=0, theta=0, phi=pi/2
-  Rotation rotation3 = Rotation(    61.2323399573677e-018,    1.00000000000000e+000,    0.00000000000000e+000,
-                                    -1.00000000000000e+000,    61.2323399573677e-018,    0.00000000000000e+000,
-                                     0.00000000000000e+000 ,   0.00000000000000e+000,    1.00000000000000e+000); // psi=pi/2, theta=0, phi=0
+  Rotation rotation2 = Rotation(1.0, 0.0,  0.0,
+                                0.0, 0.0,  1.0,
+                                0.0, -1.0, 0.0); // psi=0, theta=0, phi=pi/2
+  Rotation rotation3 = Rotation(0.0,   1.0, 0.0,
+                                -1.0,  0.0, 0.0,
+                                0.0 ,  0.0, 1.0); // psi=pi/2, theta=0, phi=0
   Rotation rotation4 = Rotation( 707.106781186548e-003,    0.00000000000000e+000,   -707.106781186547e-003,
                                  0.00000000000000e+000,    1.00000000000000e+000,    0.00000000000000e+000,
                                  707.106781186547e-003,    0.00000000000000e+000,    707.106781186548e-003); // psi=0, theta=pi/2, phi=0
@@ -82,8 +84,10 @@ struct RotationMatrixDiffTest: public ::testing::Test {
                                   -327.579672728226e-003,    925.564159446682e-003,    189.796060978687e-003,
                                    344.131896020075e-003,   -70.1995402393384e-003,    936.293363584199e-003); //psi=0.4, theta=0.3 phi=0.2
 
+
   std::vector<Rotation> rotations;
   std::vector<LocalAngularVelocity> angularVelocities;
+  std::vector<RotationDiff> rotDiffs;
   RotationMatrixDiffTest() {
     eigenMatrix3v1 << 1.1, 2.2, 3.3,
                                          4.4, 5.5, 6.6,
@@ -97,12 +101,18 @@ struct RotationMatrixDiffTest: public ::testing::Test {
     rotations.push_back(rotation7);
     rotations.push_back(rotation8);
     angularVelocities.push_back(angularVelocity0);
+    angularVelocities.push_back(angularVelocity0y);
+    angularVelocities.push_back(angularVelocity0z);
     angularVelocities.push_back(angularVelocity1);
     angularVelocities.push_back(angularVelocity2);
     angularVelocities.push_back(angularVelocity3);
     angularVelocities.push_back(angularVelocity4);
     angularVelocities.push_back(angularVelocity5);
     angularVelocities.push_back(angularVelocity6);
+    rotDiffs.push_back(RotationDiff((rotation1.matrix()+rotation2.matrix())*1e-3));
+    rotDiffs.push_back(RotationDiff((rotation2.matrix()+rotation3.matrix())*1e-3));
+    rotDiffs.push_back(RotationDiff((rotation4.matrix()+rotation5.matrix())*1e-3));
+    rotDiffs.push_back(RotationDiff((rotation6.matrix()+rotation7.matrix())*1e-3));
   }
 };
 
@@ -205,7 +215,36 @@ TYPED_TEST(RotationMatrixDiffTest, testFiniteDifference)
     for (auto angularVelocity : this->angularVelocities) {
       // Finite difference method for checking derivatives
       RotationDiff rotationDiff(rotation, angularVelocity);
-      Rotation rotationNext = rotation.boxPlus(dt*angularVelocity.toImplementation());
+      Rotation rotationNext = rotation.boxPlus(dt*rotation.rotate(angularVelocity.vector()));
+      Matrix3 dmat = (rotationNext.toImplementation()-rotation.toImplementation())/dt;
+      ASSERT_NEAR(rotationDiff.toImplementation()(0,0),dmat(0,0),1e-2) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff << " \ndmat: \n" << dmat;
+      ASSERT_NEAR(rotationDiff.toImplementation()(0,1),dmat(0,1),1e-2) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff << " \ndmat: \n" << dmat;
+      ASSERT_NEAR(rotationDiff.toImplementation()(0,2),dmat(0,2),1e-2) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff << " \ndmat: \n" << dmat;
+      ASSERT_NEAR(rotationDiff.toImplementation()(1,0),dmat(1,0),1e-2) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff << " \ndmat: \n" << dmat;
+      ASSERT_NEAR(rotationDiff.toImplementation()(1,1),dmat(1,1),1e-2) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff << " \ndmat: \n" << dmat;
+      ASSERT_NEAR(rotationDiff.toImplementation()(1,2),dmat(1,2),1e-2) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff << " \ndmat: \n" << dmat;
+      ASSERT_NEAR(rotationDiff.toImplementation()(2,0),dmat(2,0),1e-2) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff << " \ndmat: \n" << dmat;
+      ASSERT_NEAR(rotationDiff.toImplementation()(2,1),dmat(2,1),1e-2) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff << " \ndmat: \n" << dmat;
+      ASSERT_NEAR(rotationDiff.toImplementation()(2,2),dmat(2,2),1e-2) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff << " \ndmat: \n" << dmat;
+    }
+  }
+}
+
+TYPED_TEST(RotationMatrixDiffTest, testFiniteDifferenceInverse)
+{
+  typedef typename TestFixture::Scalar Scalar;
+  typedef typename TestFixture::Rotation Rotation;
+  typedef typename TestFixture::RotationDiff RotationDiff;
+  typedef typename TestFixture::RotationDiff::Matrix3x3 Matrix3;
+  typedef typename TestFixture::LocalAngularVelocity LocalAngularVelocity;
+
+ const  double dt = 1e-5;
+  for (auto rotation : this->rotations) {
+    for (auto rotDiff : this->rotDiffs) {
+      // Finite difference method for checking derivatives
+      RotationDiff rotationDiff(rotDiff);
+      LocalAngularVelocity angularVelocity(rotation, rotDiff);
+      Rotation rotationNext = rotation.boxPlus(dt*rotation.rotate(angularVelocity.vector()));
       Matrix3 dmat = (rotationNext.toImplementation()-rotation.toImplementation())/dt;
       ASSERT_NEAR(rotationDiff.toImplementation()(0,0),dmat(0,0),1e-2) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff << " \ndmat: \n" << dmat;
       ASSERT_NEAR(rotationDiff.toImplementation()(0,1),dmat(0,1),1e-2) << "angularVelocity: " << angularVelocity << " \nrotation: \n" << rotation << " \nrotationNext: \n" << rotationNext <<" \ndiff: \n" << rotationDiff << " \ndmat: \n" << dmat;

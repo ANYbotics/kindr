@@ -190,7 +190,7 @@ TYPED_TEST(EulerAnglesXyzDiffTest, testFiniteDifference)
       rot::LocalAngularVelocity<Scalar> angularVelocity(rotation, rotationDiff);
       // Finite difference method for checking derivatives
 
-      Rotation rotationNext = rotation.boxPlus(dt*angularVelocity.toImplementation());
+      Rotation rotationNext = rotation.boxPlus(dt*rotation.rotate(angularVelocity.vector()));
       rotationNext.setUnique();
       rotation.setUnique();
       Vector3 dn = (rotationNext.toImplementation()-rotation.toImplementation())/dt;
@@ -215,7 +215,7 @@ TYPED_TEST(EulerAnglesXyzDiffTest, testFiniteDifferenceInverse)
     for (auto angularVelocity : this->angularVelocities) {
       // Finite difference method for checking derivatives
       RotationDiff rotationDiff(rotation, angularVelocity);
-      Rotation rotationNext = rotation.boxPlus(dt*angularVelocity.toImplementation());
+      Rotation rotationNext = rotation.boxPlus(dt*rotation.rotate(angularVelocity.vector()));
       rotationNext.setUnique();
       rotation.setUnique();
       Vector3 dn = (rotationNext.toImplementation()-rotation.toImplementation())/dt;

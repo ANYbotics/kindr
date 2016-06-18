@@ -45,32 +45,37 @@ namespace kindr {
 /*! Implement the conversions from the kindr convention to the other convention.
  *  Specialize the conversion traits
  */
-template<typename OtherQuaternion_, typename OtherVelocity_, typename PrimType_>
+template<typename OtherRotation_, typename OtherVelocity_, typename PrimType_>
 class ConversionTraits {
  public:
-  inline static bool convertQuaternion(OtherQuaternion_& quaternionOut, const kindr::RotationQuaternion<PrimType_>& quaternionIn) {
-    // Implement quaternionOut = f(quaternionIn);
-    return false;
+  inline static void convertKindrRotationQuaternionToRotation(OtherRotation_& rotation, const kindr::RotationQuaternion<PrimType_>& quaternionIn) {
+    // Implement rotation = f(quaternionIn);
+    static_assert(sizeof(OtherRotation_) == -1, "You need to implement the method convertKindrRotationQuaternionToRotation!");
   }
 
-  inline static bool convertVelocityVector(OtherVelocity_& velocityOut, const OtherQuaternion_& rot, const Eigen::Matrix<PrimType_,3,1>& velocityIn) {
-    // Implement velocityOut = g(velocityIn, rot);
-    return false;
+  inline static void convertVelocityVector(OtherVelocity_& velocityOut, const OtherRotation_& rotation, const Eigen::Matrix<PrimType_,3,1>& velocityIn) {
+    // Implement velocityOut = g(velocityIn, rotation);
+    static_assert(sizeof(OtherRotation_) == -1, "You need to implement the method convertVelocityVector!");
   }
 
-  inline static bool getRotationMatrixFromQuaternion(Eigen::Matrix<PrimType_,3,3>& rotationMatrix, const OtherQuaternion_& quaternion) {
-    // Implement rotationMatrix = C(quaternion);
-    return false;
+  inline static void getRotationMatrixFromRotation(Eigen::Matrix<PrimType_,3,3>& rotationMatrix, const OtherRotation_& rotation) {
+    // Implement rotationMatrix = C(rotation);
+    static_assert(sizeof(OtherRotation_) == -1, "You need to implement the method getRotationMatrixFromRotation!");
   }
 
-  inline static bool boxPlus(OtherQuaternion_& res, const OtherQuaternion_& quaternion, const OtherVelocity_& velocity) {
-    // Implement res = quternion.boxPlus(vector);
-    return false;
+  inline static void rotateVector(Eigen::Matrix<PrimType_,3,1>& A_r, const OtherRotation_& rotationBToA, const Eigen::Matrix<PrimType_,3,1>& B_r) {
+    // Implement A_r = rotationBtoA.rotate(A_r);
+    static_assert(sizeof(OtherRotation_) == -1, "You need to implement the method rotateVector!");
   }
 
-  inline static bool testQuaternion(const OtherQuaternion_& expected, const OtherQuaternion_& actual) {
+  inline static void boxPlus(OtherRotation_& res, const OtherRotation_& rotation, const OtherVelocity_& velocity) {
+    // Implement res = rotation.boxPlus(vector);
+    static_assert(sizeof(OtherRotation_) == -1, "You need to implement the method boxPlus!");
+  }
+
+  inline static void testRotation(const OtherRotation_& expected, const OtherRotation_& actual) {
     // Implement EXPECT_NEAR(expected, actual, 1.0e-6);
-    return false;
+    static_assert(sizeof(OtherRotation_) == -1, "You need to implement the method testRotation!");
   }
 };
 
@@ -80,78 +85,180 @@ class ConversionTraits {
     ConventionTest<RigidBodyDynamics::Math::Quaternion, Eigen::Vector3d, double>::testConcatenation();
   }
   TEST(ConventionTest, Rotation) {
-    ConventionTest<RigidBodyDynamics::Math::Quaternion, Eigen::Vector3d, double>::testRotation();
+    ConventionTest<RigidBodyDynamics::Math::Quaternion, Eigen::Vector3d, double>::testRotationMatrix();
   }
   TEST(ConventionTest, BoxPlus) {
     ConventionTest<RigidBodyDynamics::Math::Quaternion, Eigen::Vector3d, double>::testBoxPlus();
   }
  */
-template<typename OtherQuaternion_, typename OtherVelocity_, typename PrimType_>
+template<typename OtherRotation_, typename OtherVelocity_, typename PrimType_>
 class ConventionTest {
  public:
   inline static void testConcatenation() {
     kindr::RotationQuaternion<PrimType_> kindrQuat1(kindr::EulerAnglesZyx<PrimType_>(0.1, 0.2, 0.3));
     kindr::RotationQuaternion<PrimType_> kindrQuat2(kindr::EulerAnglesZyx<PrimType_>(-0.4, 0.8, -0.5));
-    OtherQuaternion_ otherQuat1;
-    bool res = ConversionTraits<OtherQuaternion_, OtherVelocity_, PrimType_>::convertQuaternion(otherQuat1, kindrQuat1);
-    ASSERT_TRUE(res);
-    OtherQuaternion_ otherQuat2;
-    res = ConversionTraits<OtherQuaternion_, OtherVelocity_, PrimType_>::convertQuaternion(otherQuat2, kindrQuat2);
-    ASSERT_TRUE(res);
+    OtherRotation_ otherQuat1;
+    ConversionTraits<OtherRotation_, OtherVelocity_, PrimType_>::convertKindrRotationQuaternionToRotation(otherQuat1, kindrQuat1);
+
+    OtherRotation_ otherQuat2;
+    ConversionTraits<OtherRotation_, OtherVelocity_, PrimType_>::convertKindrRotationQuaternionToRotation(otherQuat2, kindrQuat2);
 
     kindr::RotationQuaternion<PrimType_> kindrQuatKindrConcat = kindrQuat1*kindrQuat2;
-    OtherQuaternion_ otherQuatKindrConcat;
-    res = ConversionTraits<OtherQuaternion_, OtherVelocity_, PrimType_>::convertQuaternion(otherQuatKindrConcat, kindrQuatKindrConcat);
-    ASSERT_TRUE(res);
+    OtherRotation_ otherQuatKindrConcat;
+    ConversionTraits<OtherRotation_, OtherVelocity_, PrimType_>::convertKindrRotationQuaternionToRotation(otherQuatKindrConcat, kindrQuatKindrConcat);
 
-    OtherQuaternion_ otherQuatOtherConcat = otherQuat1*otherQuat2;
+    OtherRotation_ otherQuatOtherConcat = otherQuat1*otherQuat2;
 
     // Test quaternions
-    res = ConversionTraits<OtherQuaternion_, OtherVelocity_, PrimType_>::testQuaternion(otherQuatKindrConcat, otherQuatKindrConcat);
-    ASSERT_TRUE(res);
+    ConversionTraits<OtherRotation_, OtherVelocity_, PrimType_>::testRotation(otherQuatKindrConcat, otherQuatKindrConcat);
   }
 
-  inline static void testRotation() {
+  inline static void testRotationMatrix() {
     kindr::RotationQuaternion<PrimType_> kindrQuat(kindr::EulerAnglesZyx<PrimType_>(-0.4, 0.8, -0.5));
     kindr::RotationMatrix<PrimType_> kindrMatrix(kindrQuat);
-    OtherQuaternion_ otherQuat;
-    bool res = ConversionTraits<OtherQuaternion_, OtherVelocity_, PrimType_>::convertQuaternion(otherQuat, kindrQuat);
-    ASSERT_TRUE(res);
+    OtherRotation_ otherQuat;
+    ConversionTraits<OtherRotation_, OtherVelocity_, PrimType_>::convertKindrRotationQuaternionToRotation(otherQuat, kindrQuat);
 
-    Eigen::Matrix3d eigenOtherMatrix;
-    res = ConversionTraits<OtherQuaternion_, OtherVelocity_, PrimType_>::getRotationMatrixFromQuaternion(eigenOtherMatrix, otherQuat);
-    ASSERT_TRUE(res);
+    Eigen::Matrix<PrimType_, 3, 3> eigenOtherMatrix;
+    ConversionTraits<OtherRotation_, OtherVelocity_, PrimType_>::getRotationMatrixFromRotation(eigenOtherMatrix, otherQuat);
 
-    Eigen::Matrix3d eigenKindrMatrix = kindrMatrix.matrix();
+    Eigen::Matrix<PrimType_, 3, 3> eigenKindrMatrix = kindrMatrix.matrix();
 
     // Test matrices
     KINDR_ASSERT_DOUBLE_MX_EQ(eigenKindrMatrix, eigenOtherMatrix, 1.0e-3, "rotation matrix");
+
+  }
+
+
+  inline static void testGeometricalInterpretation() {
+    /* Consider two coordinate frames A and B. A is fixed, while B is rotated around the z-axis by alpha = pi/4 w.r.t. A.
+     * The unit vectors of B in B frame are the vectors of the canonical base of R^3.
+     * Using a geometrical approach, it can easily be shown that the components of these vectors expressed in A frame are:
+     *
+     *   A_r_Bx = [ cos(alpha) sin(alpha)  0]^T;
+     *   A_r_By = [-sin(alpha) cos(alpha)  0]^T;
+     *   A_r_Bz = [ 0          0           1]^T;
+     *
+     * Stacking these transformations column-wise returns a rotation matrix that projects the coordinates of a vector
+     * expressed in the B frame to those of a vector expressed in A frame:
+     *
+     *  C_AB = [ A_r_Bx   A_r_By   A_r_Bz]
+     *
+     *  A_r = C_AB * B_r
+     */
+    using std::cos;
+    using std::sin;
+    typedef Eigen::Matrix<PrimType_, 3, 1> Vector;
+
+    // Angle of elementary rotation
+    const PrimType_ alpha = M_PI_4;
+    kindr::RotationQuaternion<PrimType_> rotationBToA;
+
+    Vector expected_A_r_Bx, expected_A_r_By, expected_A_r_Bz;
+
+    // Elementary rotation around z-axis
+    rotationBToA(kindr::EulerAnglesZyx<PrimType_>(alpha, 0.0, 0.0));
+    expected_A_r_Bx = Vector(cos(alpha),     sin(alpha),     PrimType_(0.0));
+    expected_A_r_By = Vector(-sin(alpha),    cos(alpha),     PrimType_(0.0));
+    expected_A_r_Bz = Vector(PrimType_(0.0), PrimType_(0.0), PrimType_(1.0));
+    checkGeometricalInterpretation(rotationBToA, expected_A_r_Bx, expected_A_r_By, expected_A_r_Bz);
+
+    // Elementary rotation around y-axis
+    rotationBToA(kindr::EulerAnglesZyx<PrimType_>(0.0, alpha, 0.0));
+    expected_A_r_Bx = Vector(cos(alpha),     PrimType_(0.0), -sin(alpha));
+    expected_A_r_By = Vector(PrimType_(0.0), PrimType_(1.0), PrimType_(0.0));
+    expected_A_r_Bz = Vector(sin(alpha),     PrimType_(0.0), cos(alpha));
+    checkGeometricalInterpretation(rotationBToA, expected_A_r_Bx, expected_A_r_By, expected_A_r_Bz);
+
+    // Elementary rotation around x-axis
+    rotationBToA(kindr::EulerAnglesZyx<PrimType_>(0.0, 0.0, alpha));
+    expected_A_r_Bx = Vector(PrimType_(1.0), PrimType_(0.0), PrimType_(0.0));
+    expected_A_r_By = Vector(PrimType_(0.0), cos(alpha),     sin(alpha));
+    expected_A_r_Bz = Vector(PrimType_(0.0), -sin(alpha),    cos(alpha));
+    checkGeometricalInterpretation(rotationBToA, expected_A_r_Bx, expected_A_r_By, expected_A_r_Bz);
+  }
+
+  inline static void checkGeometricalInterpretation(kindr::RotationQuaternion<PrimType_> rotationBToA,
+                                                   Eigen::Matrix<PrimType_, 3, 1> expected_A_r_Bx,
+                                                   Eigen::Matrix<PrimType_, 3, 1> expected_A_r_By,
+                                                   Eigen::Matrix<PrimType_, 3, 1> expected_A_r_Bz) {
+
+    typedef Eigen::Matrix<PrimType_, 3, 1> Vector;
+    using std::cos;
+    using std::sin;
+
+    /* Consider two coordinate frames A and B. A is fixed, while B is rotated by alpha = pi/4 w.r.t. A.
+     * The unit vectors of B in B frame are the vectors of the canonical base of R^3.
+     * Using a geometrical approach, it can easily be shown that the components of these vectors expressed in A frame are:
+     *
+     *   A_r_Bx = [ cos(alpha) sin(alpha)  0]^T;
+     *   A_r_By = [-sin(alpha) cos(alpha)  0]^T;
+     *   A_r_Bz = [ 0          0           1]^T;
+     *
+     * Stacking these transformations column-wise returns a rotation matrix that projects the coordinates of a vector
+     * expressed in the B frame to those of a vector expressed in A frame:
+     *
+     *  C_AB = [ A_r_Bx   A_r_By   A_r_Bz]
+     */
+    const Vector B_r_Bx = Vector::UnitX();
+    const Vector B_r_By = Vector::UnitY();
+    const Vector B_r_Bz = Vector::UnitZ();
+
+    OtherRotation_ otherRotationBToA;
+    ConversionTraits<OtherRotation_, OtherVelocity_, PrimType_>::convertKindrRotationQuaternionToRotation(otherRotationBToA, rotationBToA);
+
+    Eigen::Matrix<PrimType_, 3, 3> eigenRotationMatrix;
+    ConversionTraits<OtherRotation_, OtherVelocity_, PrimType_>::getRotationMatrixFromRotation(eigenRotationMatrix, otherRotationBToA);
+
+
+    // Compute unit vectors with matrix multiplication
+    Vector computed_A_r_Bx = eigenRotationMatrix*B_r_Bx;
+    Vector computed_A_r_By = eigenRotationMatrix*B_r_By;
+    Vector computed_A_r_Bz = eigenRotationMatrix*B_r_Bz;
+
+    // Test unit vectors
+    KINDR_ASSERT_DOUBLE_MX_EQ(expected_A_r_Bx, computed_A_r_Bx, 1.0e-3, "matrix multiply A_r_Bx");
+    KINDR_ASSERT_DOUBLE_MX_EQ(expected_A_r_By, computed_A_r_By, 1.0e-3, "matrix multiply A_r_By");
+    KINDR_ASSERT_DOUBLE_MX_EQ(expected_A_r_Bz, computed_A_r_Bz, 1.0e-3, "matrix multiply A_r_Bz");
+
+
+    computed_A_r_Bx.setZero();
+    computed_A_r_By.setZero();
+    computed_A_r_Bz.setZero();
+
+
+    // Compute unit vectors with custom rotation operator
+    ConversionTraits<OtherRotation_, OtherVelocity_, PrimType_>::rotateVector(computed_A_r_Bx, otherRotationBToA, B_r_Bx);
+    ConversionTraits<OtherRotation_, OtherVelocity_, PrimType_>::rotateVector(computed_A_r_By, otherRotationBToA, B_r_By);
+    ConversionTraits<OtherRotation_, OtherVelocity_, PrimType_>::rotateVector(computed_A_r_Bz, otherRotationBToA, B_r_Bz);
+
+    // Test unit vectors
+    KINDR_ASSERT_DOUBLE_MX_EQ(expected_A_r_Bx, computed_A_r_Bx, 1.0e-3, "rotate A_r_Bx");
+    KINDR_ASSERT_DOUBLE_MX_EQ(expected_A_r_By, computed_A_r_By, 1.0e-3, "rotate A_r_By");
+    KINDR_ASSERT_DOUBLE_MX_EQ(expected_A_r_Bz, computed_A_r_Bz, 1.0e-3, "rotate A_r_Bz");
+
   }
 
   inline static void testBoxPlus() {
     kindr::RotationQuaternion<PrimType_> kindrQuat(kindr::EulerAnglesZyx<PrimType_>(-0.4, 0.8, -0.5));
     Eigen::Matrix<PrimType_, 3, 1> kindrVelocity(0.5, 0.7, 0.9);
-    OtherQuaternion_ otherQuat;
+    OtherRotation_ otherQuat;
 
-    bool res = ConversionTraits<OtherQuaternion_, OtherVelocity_, PrimType_>::convertQuaternion(otherQuat, kindrQuat);
-    ASSERT_TRUE(res);
+    ConversionTraits<OtherRotation_, OtherVelocity_, PrimType_>::convertKindrRotationQuaternionToRotation(otherQuat, kindrQuat);
 
     OtherVelocity_ otherVelocity;
-    res = ConversionTraits<OtherQuaternion_, OtherVelocity_, PrimType_>::convertVelocityVector(otherVelocity, otherQuat, kindrVelocity);
-    ASSERT_TRUE(res);
+    ConversionTraits<OtherRotation_, OtherVelocity_, PrimType_>::convertVelocityVector(otherVelocity, otherQuat, kindrVelocity);
 
-    OtherQuaternion_ otherQuatPlus;
-    res = ConversionTraits<OtherQuaternion_, OtherVelocity_, PrimType_>::boxPlus(otherQuatPlus, otherQuat, otherVelocity);
+    OtherRotation_ otherQuatPlus;
+    ConversionTraits<OtherRotation_, OtherVelocity_, PrimType_>::boxPlus(otherQuatPlus, otherQuat, otherVelocity);
     kindr::RotationQuaternion<PrimType_> kindrQuatPlus = kindrQuat.boxPlus(kindrVelocity);
-    ASSERT_TRUE(res);
 
-    OtherQuaternion_ otherQuatKindrPlus;
-    res = ConversionTraits<OtherQuaternion_, OtherVelocity_, PrimType_>::convertQuaternion(otherQuatKindrPlus, kindrQuatPlus);
-    ASSERT_TRUE(res);
+    OtherRotation_ otherQuatKindrPlus;
+    ConversionTraits<OtherRotation_, OtherVelocity_, PrimType_>::convertKindrRotationQuaternionToRotation(otherQuatKindrPlus, kindrQuatPlus);
+
 
     // Test quaternions
-    res = ConversionTraits<OtherQuaternion_, OtherVelocity_, PrimType_>::testQuaternion(otherQuatKindrPlus, otherQuatPlus);
-    ASSERT_TRUE(res);
+    ConversionTraits<OtherRotation_, OtherVelocity_, PrimType_>::testRotation(otherQuatKindrPlus, otherQuatPlus);
   }
 };
 

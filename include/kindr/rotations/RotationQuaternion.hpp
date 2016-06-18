@@ -377,9 +377,9 @@ class RotationQuaternion : public RotationBase<RotationQuaternion<PrimType_>> {
    */
   Eigen::Matrix<PrimType_,3,4> getGlobalQuaternionDiffMatrix() {
     Eigen::Matrix<PrimType_,3,4> H;
-      H(0,0) =  -x();      H(0,1) =  w();      H(0,2) =  z();      H(0,3) = -y();
-      H(1,0) =  -y();      H(1,1) = -z();      H(1,2) =  w();      H(1,3) =  x();
-      H(2,0) =  -z();      H(2,1) =  y();      H(2,2) = -x();      H(2,3) =  w();
+      H(0,0) = -x();      H(0,1) =  w();      H(0,2) = -z();      H(0,3) =  y();
+      H(1,0) = -y();      H(1,1) =  z();      H(1,2) =  w();      H(1,3) = -x();
+      H(2,0) = -z(); H(2,1) = -y(); H(2,2) = x(); H(2,3) = w();
     return H;
   }
 
@@ -388,9 +388,9 @@ class RotationQuaternion : public RotationBase<RotationQuaternion<PrimType_>> {
    */
   Eigen::Matrix<PrimType_,3,4> getLocalQuaternionDiffMatrix() const {
     Eigen::Matrix<PrimType_,3,4> HBar;
-      HBar(0,0) =  -x();      HBar(0,1) =  w();      HBar(0,2) = -z();      HBar(0,3) =  y();
-      HBar(1,0) =  -y();      HBar(1,1) =  z();      HBar(1,2) =  w();      HBar(1,3) = -x();
-      HBar(2,0) =  -z();      HBar(2,1) = -y();      HBar(2,2) =  x();      HBar(2,3) =  w();
+      HBar(0,0) = -x();      HBar(0,1) =  w();      HBar(0,2) =  z();      HBar(0,3) = -y();
+      HBar(1,0) = -y();      HBar(1,1) = -z();      HBar(1,2) =  w();      HBar(1,3) =  x();
+      HBar(2,0) = -z();      HBar(2,1) = y();       HBar(2,2) = -x();       HBar(2,3) = w();
     return HBar;
   }
 

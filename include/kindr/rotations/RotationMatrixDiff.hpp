@@ -179,27 +179,17 @@ template<typename PrimType_>
 class RotationDiffConversionTraits<RotationMatrixDiff<PrimType_>, LocalAngularVelocity<PrimType_>, RotationMatrix<PrimType_>> {
  public:
   inline static RotationMatrixDiff<PrimType_> convert(const RotationMatrix<PrimType_>& rotationMatrix, const LocalAngularVelocity<PrimType_>& angularVelocity) {
-//    if (Usage_ == RotationUsage::ACTIVE) {
-      return RotationMatrixDiff<PrimType_>(getSkewMatrixFromVector(angularVelocity.toImplementation())*rotationMatrix.toImplementation());
-//    }
-//    if (Usage_ == RotationUsage::PASSIVE) {
 
-//      return RotationMatrixDiff<PrimType_>(rotationMatrix.toImplementation()*getSkewMatrixFromVector(angularVelocity.toImplementation()));
-//    }
+//    // works with boxPlus(-w)
+//    return RotationMatrixDiff<PrimType_>(-getSkewMatrixFromVector(angularVelocity.toImplementation())*rotationMatrix.toImplementation());
+//    // works with boxPlus(-w)
+//    return RotationMatrixDiff<PrimType_>(rotationMatrix.inverted().toImplementation()*getSkewMatrixFromVector(angularVelocity.toImplementation()));
+//    // works with boxPlus(w)
+//    return RotationMatrixDiff<PrimType_>(getSkewMatrixFromVector(angularVelocity.toImplementation())*rotationMatrix.toImplementation());
 
+    return RotationMatrixDiff<PrimType_>(rotationMatrix.matrix()*getSkewMatrixFromVector(angularVelocity.vector()));
   }
 };
-
-
-////!  \f$dC_IB = C_IB*B_\hat{w}_IB$\f
-//template<typename PrimType_>
-//class RotationDiffConversionTraits<RotationMatrixDiff<PrimType_, RotationUsage::PASSIVE>, LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>, RotationMatrix<PrimType_, RotationUsage::PASSIVE>> {
-// public:
-//  inline static RotationMatrixDiff<PrimType_, RotationUsage::PASSIVE> convert(const RotationMatrix<PrimType_, RotationUsage::PASSIVE>& rotationMatrix, const LocalAngularVelocity<PrimType_, RotationUsage::ACTIVE>& angularVelocity) {
-//    return RotationMatrixDiff<PrimType_, RotationUsage::PASSIVE>(rotationMatrix.toImplementation()*getSkewMatrixFromVector(angularVelocity.toImplementation()));
-//  }
-//};
-
 
 
 } // namespace internal

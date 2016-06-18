@@ -231,23 +231,69 @@ class EulerAnglesXyzDiff : public RotationDiffBase<EulerAnglesXyzDiff<PrimType_>
    using RotationDiffBase<EulerAnglesXyzDiff<PrimType_>>::operator-; // otherwise ambiguous RotationDiffBase and Eigen
 
    Eigen::Matrix<PrimType_, 3, 3> getMappingFromLocalAngularVelocityToSecondDiff(const EulerAnglesXyz<PrimType_>& rotation) const {
-     // todo: make it more efficient
      // todo: unit test!
+
+     /*
+       [ 0, dy*(sin(x) + (sin(x)*sin(y)^2)/cos(y)^2) + (dx*cos(x)*sin(y))/cos(y), dy*(cos(x) + (cos(x)*sin(y)^2)/cos(y)^2) - (dx*sin(x)*sin(y))/cos(y)]
+       [ 0,                                                           -dx*sin(x),                                                           -dx*cos(x)]
+       [ 0,                     (dx*cos(x))/cos(y) + (dy*sin(x)*sin(y))/cos(y)^2,                     (dy*cos(x)*sin(y))/cos(y)^2 - (dx*sin(x))/cos(y)]
+     */
      using std::sin;
      using std::cos;
-     Eigen::Matrix<PrimType_, 3, 3>  matrix;
+     Eigen::Matrix<PrimType_, 3, 3>  matrix = Eigen::Matrix<PrimType_, 3, 3>::Zero();
      const PrimType_ x = rotation.x();
      const PrimType_ y = rotation.y();
      const PrimType_ z = rotation.z();
      const PrimType_ dx = this->x();
      const PrimType_ dy = this->y();
      const PrimType_ dz = this->z();
+
      const PrimType_ cy2 = (cos(y)*cos(y));
      KINDR_ASSERT_TRUE(std::runtime_error, cy2 != PrimType_(0), "Error: cos(y)*cos(y) is zero! This case is not yet implemented!");
-     matrix << (dy*cos(z)*sin(y))/cy2 - (dz*sin(z))/cos(y),  -(dz*cos(z))/cos(y) - (dy*sin(y)*sin(z))/cy2, 0,
-                 dz*cos(z),      -dz*sin(z), 0,
-             (dz*sin(y)*sin(z))/cos(y) - dy*(cos(z) + (cos(z)*sin(y)*sin(y))/cy2), dy*(sin(z) + (sin(y)*sin(y)*sin(z))/cy2) + (dz*cos(z)*sin(y))/cos(y), 0;
 
+     const PrimType_ t2 = sin(x);
+     const PrimType_ t3 = sin(y);
+     const PrimType_ t4 = cos(y);
+     const PrimType_ t5 = cos(x);
+     const PrimType_ t6 = 1.0/(t4*t4);
+     const PrimType_ t7 = t3*t3;
+     const PrimType_ t8 = 1.0/t4;
+     matrix(0, 1) = dy*(t2+t2*t6*t7)+dx*t3*t5*t8;
+     matrix(0, 2) = dy*(t5+t5*t6*t7)-dx*t2*t3*t8;
+     matrix(1, 1) = -dx*t2;
+     matrix(1, 2) = -dx*t5;
+     matrix(2, 1) = dx*t5*t8+dy*t2*t3*t6;
+     matrix(2, 2) = -dx*t2*t8+dy*t3*t5*t6;
+     return matrix;
+   }
+
+   Eigen::Matrix<PrimType_, 3, 3> getMappingSecondDiffToLocalAngularVelocity(const EulerAnglesXyz<PrimType_>& rotation) const {
+     // todo: make it more efficient
+     // todo: unit test!
+     using std::sin;
+     using std::cos;
+     Eigen::Matrix<PrimType_, 3, 3>  matrix = Eigen::Matrix<PrimType_, 3, 3>::Zero();
+     const PrimType_ x = rotation.x();
+     const PrimType_ y = rotation.y();
+     const PrimType_ z = rotation.z();
+     const PrimType_ dx = this->x();
+     const PrimType_ dy = this->y();
+     const PrimType_ dz = this->z();
+
+     /*
+     [ 0,          0,                            -dy*cos(y)]
+     [ 0, -dx*sin(x),   dx*cos(x)*cos(y) - dy*sin(x)*sin(y)]
+     [ 0, -dx*cos(x), - dx*cos(y)*sin(x) - dy*cos(x)*sin(y)]
+     */
+     const PrimType_ t2 = cos(y);
+     const PrimType_ t3 = sin(x);
+     const PrimType_ t4 = cos(x);
+     const PrimType_ t5 = sin(y);
+     matrix(0,2) = -dy*t2;
+     matrix(1,1) = -dx*t3;
+     matrix(1,2) = dx*t2*t4-dy*t3*t5;
+     matrix(2,1) = -dx*t4;
+     matrix(2,2) = -dx*t2*t3-dy*t4*t5;
      return matrix;
    }
 
@@ -279,21 +325,7 @@ template<typename PrimType_>
 class RotationDiffConversionTraits<EulerAnglesXyzDiff<PrimType_>, LocalAngularVelocity<PrimType_>, EulerAnglesXyz<PrimType_>> {
  public:
   inline static EulerAnglesXyzDiff<PrimType_> convert(const EulerAnglesXyz<PrimType_>& eulerAngles, const LocalAngularVelocity<PrimType_>& angularVelocity) {
-    using std::sin;
-    using std::cos;
-    const PrimType_ x = eulerAngles.x();
-    const PrimType_ y = eulerAngles.y();
-    const PrimType_ z = eulerAngles.z();
-    const PrimType_ w1 = angularVelocity.x();
-    const PrimType_ w2 = angularVelocity.y();
-    const PrimType_ w3 = angularVelocity.z();
-    const PrimType_ t2 = cos(y);
-    const PrimType_ t3 = 1.0/t2;
-    KINDR_ASSERT_TRUE(std::runtime_error, t2 != PrimType_(0), "Error: cos(y) is zero! This case is not yet implemented!");
-    const PrimType_ t4 = cos(z);
-    const PrimType_ t5 = sin(z);
-    const PrimType_ t6 = sin(y);
-    return EulerAnglesXyzDiff<PrimType_>(t3*t4*w1+t3*t5*w2, t4*w2-t5*w1, w3+t3*t4*t6*w1+t3*t5*t6*w2);
+    return EulerAnglesXyzDiff<PrimType_>(eulerAngles.getMappingFromLocalAngularVelocityToDiff()*angularVelocity.vector());
   }
 };
 

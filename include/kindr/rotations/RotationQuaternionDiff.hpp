@@ -188,69 +188,16 @@ typedef RotationQuaternionDiff<double> RotationQuaternionDiffD;
 typedef RotationQuaternionDiff<float> RotationQuaternionDiffF;
 
 
-
 namespace internal {
-
 
 template<typename PrimType_>
 class RotationDiffConversionTraits<RotationQuaternionDiff<PrimType_>, LocalAngularVelocity<PrimType_>, RotationQuaternion<PrimType_>> {
  public:
   inline static RotationQuaternionDiff<PrimType_> convert(const RotationQuaternion<PrimType_>& rquat, const LocalAngularVelocity<PrimType_>& angularVelocity) {
-    return RotationQuaternionDiff<PrimType_>(Quaternion<PrimType_>(0.5*rquat.getLocalQuaternionDiffMatrix().transpose()*angularVelocity.toImplementation()));
+    return RotationQuaternionDiff<PrimType_>(Quaternion<PrimType_>(0.5*(rquat.getLocalQuaternionDiffMatrix().transpose()*angularVelocity.vector())));
   }
 };
 
-
-//template<typename PrimType_>
-//class RotationDiffConversionTraits<RotationQuaternionDiff<PrimType_>, RotationVectorDiff<PrimType_>, RotationVector<PrimType_>> {
-// public:
-//  inline static RotationQuaternionDiff<PrimType_> convert(const RotationVector<PrimType_>& rotationVector, const RotationVectorDiff<PrimType_>& rotationVectorDiff) {
-//    typedef typename RotationVector<PrimType_>::Scalar Scalar;
-//    const PrimType_ v = rotationVector.vector().norm();
-//    const PrimType_ v1 = rotationVector.x();
-//    const PrimType_ v2 = rotationVector.y();
-//    const PrimType_ v3 = rotationVector.z();
-//    const PrimType_ dv1 = rotationVectorDiff.x();
-//    const PrimType_ dv2 = rotationVectorDiff.y();
-//    const PrimType_ dv3 = rotationVectorDiff.z();
-//
-//    if (v < internal::NumTraits<Scalar>::dummy_precision()) {
-//      Eigen::Matrix<PrimType_, 3, 3> G_v0;
-//      G_v0 = -v1, -v2, -v3,
-//              2.0, 2.0, 0.0,
-//              0.0, 0.0, 2.0;
-//      G_v0 *=0.25;
-//      return RotationQuaternionDiff<PrimType_>(G_v0*rotationVectorDiff.toImplementation());
-//    }
-//
-//
-//
-//    const PrimType_ t2 = 1.0/v;
-//    const PrimType_ t3 = v*(1.0/2.0);
-//    const PrimType_ t4 = sin(t3);
-//    const PrimType_ t5 = 1.0/(v*v*v);
-//    const PrimType_ t6 = t4*2.0;
-//    const PrimType_ t7 = cos(t3);
-//    const PrimType_ t9 = t7*v;
-//    const PrimType_ t8 = t6-t9;
-//    const PrimType_ t10 = t2*t4;
-//    const PrimType_ w = dv1*t2*t4*v1*(-1.0/2.0)-dv2*t2*t4*v2*(1.0/2.0)-dv3*t2*t4*v3*(1.0/2.0);
-//    const PrimType_ x = dv1*(t10-t5*t8*(v1*v1)*(1.0/2.0))-dv2*t5*t8*v1*v2*(1.0/2.0)-dv3*t5*t8*v1*v3*(1.0/2.0);
-//    const PrimType_ y = dv2*(t10-t5*t8*(v2*v2)*(1.0/2.0))-dv1*t5*t8*v1*v2*(1.0/2.0)-dv3*t5*t8*v2*v3*(1.0/2.0);
-//    const PrimType_ z = dv3*(t10-t5*t8*(v3*v3)*(1.0/2.0))-dv1*t5*t8*v1*v3*(1.0/2.0)-dv2*t5*t8*v2*v3*(1.0/2.0);
-//
-//
-//    return RotationQuaternionDiff<PrimType_>(w, x, y, z);
-//  }
-//};
-
-//template<typename PrimType_>
-//class RotationDiffConversionTraits<RotationQuaternionDiff<PrimType_>, RotationVectorDiff<PrimType_>, RotationQuaternion<PrimType_>> {
-// public:
-//  inline static RotationQuaternionDiff<PrimType_> convert(const RotationQuaternion<PrimType_>& rquat, const RotationVectorDiff<PrimType_>& rotationVectorDiff) {
-//    return RotationDiffConversionTraits<RotationQuaternionDiff<PrimType_>, RotationVectorDiff<PrimType_>, RotationVector<PrimType_>>::convert(RotationVector<PrimType_>(rquat), rotationVectorDiff);
-//  }
-//};
 
 
 
