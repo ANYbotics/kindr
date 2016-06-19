@@ -693,3 +693,24 @@ TYPED_TEST(EulerAnglesXyzSingleTest, testRotationOrder)
 
 }
 
+
+TYPED_TEST(EulerAnglesXyzSingleTest, testRotationMatrix)
+{
+  typedef typename TestFixture::Scalar Scalar;
+  typedef typename TestFixture::EulerAnglesXyz EulerAnglesXyz;
+
+  Scalar x = M_PI_4;
+  Scalar y = 1.2;
+  Scalar z = -0.8;
+  kindr::RotationMatrix<Scalar> rotMatKindr(EulerAnglesXyz(x, y, z));
+
+  using std::cos;
+  using std::sin;
+  Eigen::Matrix<Scalar, 3, 3> rotMat;
+
+  rotMat <<   cos(y)*cos(z), cos(z)*sin(x)*sin(y) - cos(x)*sin(z), sin(x)*sin(z) + cos(x)*cos(z)*sin(y),
+                cos(y)*sin(z), cos(x)*cos(z) + sin(x)*sin(y)*sin(z), cos(x)*sin(y)*sin(z) - cos(z)*sin(x),
+                      -sin(y),                        cos(y)*sin(x),                        cos(x)*cos(y);
+  KINDR_ASSERT_DOUBLE_MX_EQ(rotMat, rotMatKindr.matrix(), 1.0e-3, "rotation matrix")
+}
+

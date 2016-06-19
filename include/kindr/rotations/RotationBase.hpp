@@ -328,8 +328,9 @@ class RotationBase {
   /*! \brief Sets the rotation from two vectors such that v2 = R(v1).
    */
   template <typename Vector_>
-  void setFromVectors(const Vector_& v1, const Vector_& v2) {
+  Derived_& setFromVectors(const Vector_& v1, const Vector_& v2) {
     internal::SetFromVectorsTraits<RotationBase<Derived_>>::setFromVectors(this->derived(), v1, v2);
+    return *this;
   }
 
   /*! \brief Fixes the rotation to get rid of numerical errors (e.g. normalize quaternion).

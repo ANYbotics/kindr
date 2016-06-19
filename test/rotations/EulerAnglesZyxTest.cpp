@@ -47,6 +47,7 @@ class EulerAnglesZyxSingleTest : public ::testing::Test{
   // Rotation Quaternion
   typedef typename rot::RotationQuaternion<Scalar> RotationQuaternion;
 
+
   // Eigen::Matrix
   const Vector eigenVector3Identity = Vector(0.0,0.0,0.0);
   const Vector eigenVector3v1 = Vector(0.36,0.48,0.8);
@@ -696,4 +697,22 @@ TYPED_TEST(EulerAnglesZyxSingleTest, testRotationOrder)
 
 }
 
+TYPED_TEST(EulerAnglesZyxSingleTest, testRotationMatrix)
+{
+  typedef typename TestFixture::Scalar Scalar;
+  typedef typename TestFixture::EulerAnglesZyx EulerAnglesZyx;
+
+  Scalar x = M_PI_4;
+  Scalar y = 1.2;
+  Scalar z = -0.8;
+  kindr::RotationMatrix<Scalar> rotMatKindr(EulerAnglesZyx(z, y, x));
+
+  using std::cos;
+  using std::sin;
+  Eigen::Matrix<Scalar, 3, 3> rotMat;
+  rotMat <<                        cos(y)*cos(z),                       -cos(y)*sin(z),         sin(y),
+   cos(x)*sin(z) + cos(z)*sin(x)*sin(y), cos(x)*cos(z) - sin(x)*sin(y)*sin(z), -cos(y)*sin(x),
+   sin(x)*sin(z) - cos(x)*cos(z)*sin(y), cos(z)*sin(x) + cos(x)*sin(y)*sin(z),  cos(x)*cos(y);
+  KINDR_ASSERT_DOUBLE_MX_EQ(rotMat, rotMatKindr.matrix(), 1.0e-3, "rotation matrix")
+}
 

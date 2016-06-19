@@ -77,28 +77,59 @@ C_IB = simplify(C_z*C_y*C_x)
 dC_IB = dMATdt( C_IB, xyz, dxyz )
 
 % local angular velocity
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 B_w_IB = simplify(unskew(C_IB'*dC_IB))
 
 % It must hold 
 %  w = B_w_IB  or f := w - B_w_IB = 0 
-f = w-B_w_IB;
+f_local = w-B_w_IB;
 
 % B_w_IB = E_zyx*dzyx;
-res1 = solve(f, w1, w2, w3);
-E_xyz = [jacobian(simplify(res1.w1), dxyz)
-         jacobian(simplify(res1.w2), dxyz)
-         jacobian(simplify(res1.w3), dxyz)]
-     
+res1_local = solve(f_local, w1, w2, w3);
+E_xyz_local = [jacobian(simplify(res1_local.w1), dxyz)
+              jacobian(simplify(res1_local.w2), dxyz)
+              jacobian(simplify(res1_local.w3), dxyz)]
+ccode(E_xyz_local,'file', 'tmp/E_xyz_local.hpp')
+
 % time derivative of E_zyx
-dE_xyz = dMATdt(E_xyz, xyz, dxyz)
-ccode(dE_xyz,'file', 'tmp/dE_xyz.hpp')
+dE_xyz_local = dMATdt(E_xyz_local, xyz, dxyz)
+ccode(dE_xyz_local,'file', 'tmp/dE_xyz_local.hpp')
 
 % dzyx = E_zyx_inv*B_w_IB;
-res2 = solve(f, dx, dy, dz);
-E_xyz_inv = [jacobian(simplify(res2.dx), w)
-            jacobian(simplify(res2.dy), w)
-            jacobian(simplify(res2.dz), w)]
-        
+res2_local = solve(f_local, dx, dy, dz);
+E_xyz_local_inv = [jacobian(simplify(res2_local.dx), w)
+            jacobian(simplify(res2_local.dy), w)
+            jacobian(simplify(res2_local.dz), w)]
+ccode(E_xyz_local_inv,'file', 'tmp/E_xyz_local_inv.hpp')
+
 % time derivative of E_zyx_inv  
-dE_xyz_inv = dMATdt(E_xyz_inv, xyz, dxyz)
-ccode(dE_xyz_inv,'file', 'tmp/dE_xyz_inv.hpp')
+dE_xyz_local_inv = dMATdt(E_xyz_local_inv, xyz, dxyz)
+ccode(dE_xyz_local_inv,'file', 'tmp/dE_xyz_local_inv.hpp')
+
+% global angular velocity
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+I_w_IB = simplify(unskew(dC_IB*C_IB'))
+f_global = w-I_w_IB;
+
+% B_w_IB = E_zyx*dzyx;
+res1_global = solve(f_global, w1, w2, w3);
+E_xyz_global = [jacobian(simplify(res1_global.w1), dxyz)
+              jacobian(simplify(res1_global.w2), dxyz)
+              jacobian(simplify(res1_global.w3), dxyz)]
+ccode(E_xyz_global,'file', 'tmp/E_xyz_global.hpp')
+
+% time derivative of E_zyx
+dE_xyz_global = dMATdt(E_xyz_global, xyz, dxyz)
+ccode(dE_xyz_global,'file', 'tmp/dE_xyz_global.hpp')
+
+% dzyx = E_zyx_inv*B_w_IB;
+res2_global = solve(f_global, dx, dy, dz);
+E_xyz_global_inv = [jacobian(simplify(res2_global.dx), w)
+            jacobian(simplify(res2_global.dy), w)
+            jacobian(simplify(res2_global.dz), w)]
+ccode(E_xyz_global_inv,'file', 'tmp/E_xyz_global_inv.hpp')
+
+% time derivative of E_zyx_inv  
+dE_xyz_global_inv = dMATdt(E_xyz_global_inv, xyz, dxyz)
+ccode(dE_xyz_global_inv,'file', 'tmp/dE_xyz_global_inv.hpp')

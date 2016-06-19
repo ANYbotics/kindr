@@ -359,7 +359,6 @@ class EulerAnglesZyx : public RotationBase<EulerAnglesZyx<PrimType_>> {
     return mat;
   }
 
-
   /*! \brief Concenation operator.
    *  This is explicitly specified, because Eigen::Matrix provides also an operator*.
    *  \returns the concenation of two rotations

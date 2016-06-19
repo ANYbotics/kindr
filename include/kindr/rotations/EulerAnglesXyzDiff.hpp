@@ -297,6 +297,42 @@ class EulerAnglesXyzDiff : public RotationDiffBase<EulerAnglesXyzDiff<PrimType_>
      return matrix;
    }
 
+
+   Eigen::Matrix<PrimType_, 3, 3> getMappingFromGlobalAngularVelocityToSecondDiff(const EulerAnglesXyz<PrimType_>& rotation) const {
+     // todo: unit test!
+
+     /*
+      [                     (dy*cos(z)*sin(y))/cos(y)^2 - (dz*sin(z))/cos(y),                     (dz*cos(z))/cos(y) + (dy*sin(y)*sin(z))/cos(y)^2, 0]
+      [                                                           -dz*cos(z),                                                           -dz*sin(z), 0]
+      [ dy*(cos(z) + (cos(z)*sin(y)^2)/cos(y)^2) - (dz*sin(y)*sin(z))/cos(y), dy*(sin(z) + (sin(y)^2*sin(z))/cos(y)^2) + (dz*cos(z)*sin(y))/cos(y), 0]
+
+     */
+     using std::sin;
+     using std::cos;
+     Eigen::Matrix<PrimType_, 3, 3>  matrix = Eigen::Matrix<PrimType_, 3, 3>::Zero();
+     const PrimType_ x = rotation.x();
+     const PrimType_ y = rotation.y();
+     const PrimType_ z = rotation.z();
+     const PrimType_ dx = this->x();
+     const PrimType_ dy = this->y();
+     const PrimType_ dz = this->z();
+     const PrimType_ t2 = cos(y);
+     KINDR_ASSERT_TRUE(std::runtime_error, t2 != PrimType_(0), "Error: cos(y)*cos(y) is zero! This case is not yet implemented!");
+     const PrimType_ t3 = 1.0/t2;
+     const PrimType_ t4 = cos(z);
+     const PrimType_ t5 = 1.0/(t2*t2);
+     const PrimType_ t6 = sin(y);
+     const PrimType_ t7 = sin(z);
+     const PrimType_ t8 = t6*t6;
+     matrix(0,0) = -dz*t3*t7+dy*t4*t5*t6;
+     matrix(0,1) = dz*t3*t4+dy*t5*t6*t7;
+     matrix(1,0) = -dz*t4;
+     matrix(1,1) = -dz*t7;
+     matrix(2,0) = dy*(t4+t4*t5*t8)-dz*t3*t6*t7;
+     matrix(2,1) = dy*(t7+t5*t7*t8)+dz*t3*t4*t6;
+     return matrix;
+   }
+
    /*! \brief Used for printing the object with std::cout.
     *
     *   Prints: roll pitch yaw
