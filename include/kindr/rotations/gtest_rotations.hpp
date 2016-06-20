@@ -243,7 +243,6 @@ class ConventionTest {
     kindr::RotationQuaternion<PrimType_> kindrQuat(kindr::EulerAnglesZyx<PrimType_>(-0.4, 0.8, -0.5));
     Eigen::Matrix<PrimType_, 3, 1> kindrVelocity(0.5, 0.7, 0.9);
     OtherRotation_ otherQuat;
-
     ConversionTraits<OtherRotation_, OtherVelocity_, PrimType_>::convertKindrRotationQuaternionToRotation(otherQuat, kindrQuat);
 
     OtherVelocity_ otherVelocity;
