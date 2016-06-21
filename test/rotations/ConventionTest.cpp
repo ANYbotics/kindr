@@ -12,17 +12,22 @@ namespace kindr {
 
 
 template<typename Rotation_>
-class ConversionTraits<Rotation_, Eigen::Matrix<typename Rotation_::Scalar, 3,1>, typename Rotation_::Scalar> {
+class RotationConversion<Rotation_, Eigen::Matrix<typename Rotation_::Scalar, 3,1>, typename Rotation_::Scalar> {
   typedef typename Rotation_::Scalar Scalar;
   typedef Rotation_ Rotation;
   typedef Eigen::Matrix<Scalar, 3,1> Vector;
  public:
-  inline static void convertKindrRotationQuaternionToRotation(Rotation& rotation, const kindr::RotationQuaternion<Scalar>& quaternionIn) {
+  inline static void convertToOtherRotation(Rotation& otherRotation, const kindr::RotationQuaternion<Scalar>& quaternionIn) {
     // Implement quaternionOut = f(quaternionIn);
-    rotation = Rotation(quaternionIn);
+    otherRotation = Rotation(quaternionIn);
   }
 
-  inline static void convertVelocityVector(Vector& velocityOut, const Rotation& rot, const Eigen::Matrix<Scalar,3,1>& velocityIn) {
+  inline static void convertToKindr(kindr::RotationQuaternion<Scalar>& quaternion, const Rotation& otherRotation) {
+    // Implement quaternionOut = f(quaternionIn);
+    quaternion = kindr::RotationQuaternion<Scalar>(otherRotation);
+  }
+
+  inline static void convertToOtherVelocityVector(Vector& velocityOut, const Rotation& rot, const Eigen::Matrix<Scalar,3,1>& velocityIn) {
     // Implement velocityOut = g(velocityIn, rot);
     velocityOut = velocityIn;
   }
@@ -30,6 +35,10 @@ class ConversionTraits<Rotation_, Eigen::Matrix<typename Rotation_::Scalar, 3,1>
   inline static void getRotationMatrixFromRotation(Eigen::Matrix<Scalar,3,3>& rotationMatrix, const Rotation& rotation) {
     // Implement rotationMatrix = C(quaternion);
     rotationMatrix = kindr::RotationMatrix<Scalar>(rotation).matrix();
+  }
+
+  inline static void concatenate(Rotation& res,  const Rotation& rot1,  const Rotation& rot2) {
+    res = rot2*rot1;
   }
 
   inline static void rotateVector(Eigen::Matrix<Scalar,3,1>& A_r, const Rotation& rotation, const Eigen::Matrix<Scalar,3,1>& B_r) {
@@ -41,9 +50,9 @@ class ConversionTraits<Rotation_, Eigen::Matrix<typename Rotation_::Scalar, 3,1>
     res = rotation.boxPlus(velocity);
   }
 
-  inline static void testRotation(const Rotation& expected, const Rotation& actual) {
+  inline static bool testRotation(const Rotation& expected, const Rotation& actual) {
     // Implement EXPECT_NEAR(expected, actual, 1.0e-6);
-    EXPECT_NEAR(0.0, expected.getDisparityAngle(actual), 1.0e-6);
+    return expected.isNear(actual, 1.0e-3);
   }
 };
 
