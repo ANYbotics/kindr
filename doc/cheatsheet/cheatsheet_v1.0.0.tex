@@ -462,43 +462,45 @@ $\dot{\vvph} = \left(\identity_{3\times 3} + \frac{1}{2}\hat{\vvph} + \hat{\vvph
 
 \subsubsection{Time Derivative of Euler Angles ZYX  $\Leftrightarrow$ Angular Velocity}
 %  is correct  according to Eq. 76 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
-$\begin{bmatrix} \dot{\psi} \\ \dot{\theta} \\ \dot{\phi} \end{bmatrix} = \begin{bmatrix} \frac{\cos{\psi}\sin{\theta}}{\cos{\theta}} & \frac{\sin{\psi}\sin{\theta}}{\cos{\theta}} & 1 \\
-                        -\sin{\psi} &                         \cos{\psi} & 0 \\
-              \frac{\cos{\psi}}{\cos{\theta}} &              \frac{\sin{\psi}}{\cos{\theta}} & 0 \end{bmatrix}  \rotvel{I}{I}{B} \quad \forall \theta \in \mathbb{R}\backslash\{\frac{\pi}{2}+k\pi\}, k\in\mathbb{Z}$ 
-%  is correct  according to Eq. 79 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
-$\begin{bmatrix} \dot{\psi} \\ \dot{\theta} \\ \dot{\phi}  \end{bmatrix} =  \begin{bmatrix} 0 &              \frac{\sin{\phi}}{\cos{\theta}} &              \frac{\cos{\phi}}{\cos{\theta}} \\
- 0 &                         \cos{\phi} &                        -\sin{\phi} \\
- 1 & \frac{\sin{\phi}\sin{\theta}}{\cos{\theta}} & \frac{\cos{\phi}\sin{\theta}}{\cos{\theta}} \end{bmatrix} \rotvel{B}{I}{B} \quad \forall \theta \in \mathbb{R}\backslash\{\frac{\pi}{2}+k\pi\}, k\in\mathbb{Z}$ 
+%$\begin{bmatrix} \dot{\psi} \\ \dot{\theta} \\ \dot{\phi} \end{bmatrix} = \begin{bmatrix} \frac{\cos{\psi}\sin{\theta}}{\cos{\theta}} & \frac{\sin{\psi}\sin{\theta}}{\cos{\theta}} & 1 \\
+%                        -\sin{\psi} &                         \cos{\psi} & 0 \\
+%              \frac{\cos{\psi}}{\cos{\theta}} &              \frac{\sin{\psi}}{\cos{\theta}} & 0 \end{bmatrix}  \rotvel{I}{I}{B} \quad \forall \theta \in \mathbb{R}\backslash\{\frac{\pi}{2}+k\pi\}, k\in\mathbb{Z}$ 
+
+              
+              %  is correct  according to Eq. 79 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
+$\begin{bmatrix} \dot{\psi} \\ \dot{\theta} \\ \dot{\phi}  \end{bmatrix} =  \begin{bmatrix}\frac{-\cos{\psi} \sin{\theta}}{\cos{\theta}}& \frac{(\sin{\theta} \sin{\psi})}{\cos{\theta}}& 1 \\
+                        \sin{\psi} &                 \cos{\psi} & 0 \\
+                 \frac{\cos{\psi}}{\cos{\theta}}&         \frac{-\sin{\psi}}{\cos{\theta}} & 0 \end{bmatrix} \rotvel{B}{I}{B} \quad \forall \theta \in \mathbb{R}\backslash\{\frac{\pi}{2}+k\pi\}, k\in\mathbb{Z}$ 
 
 % I_w_IB is correct  according to Eq. 74 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
-$  \rotvel{I}{I}{B} = \begin{bmatrix} 0 & -\sin{\psi} & \cos{\psi}\cos{\theta} \\
- 0 &  \cos{\psi} & \cos{\theta}\sin{\psi} \\
- 1 &         0 &         -\sin{\theta} \end{bmatrix}  \begin{bmatrix}  \dot{\psi} \\ \dot{\theta} \\ \dot{\phi}  \end{bmatrix} $
+%$  \rotvel{I}{I}{B} = \begin{bmatrix} 0 & -\sin{\psi} & \cos{\psi}\cos{\theta} \\
+% 0 &  \cos{\psi} & \cos{\theta}\sin{\psi} \\
+% 1 &         0 &         -\sin{\theta} \end{bmatrix}  \begin{bmatrix}  \dot{\psi} \\ \dot{\theta} \\ \dot{\phi}  \end{bmatrix} $
 
 % B_w_IB is correct  according to Eq. 77 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
-$ \rotvel{B}{I}{B} = \begin{bmatrix}         -\sin{\theta} &         0 & 1 \\
- \cos{\theta}\sin{\phi} &  \cos{\phi} & 0 \\
- \cos{\phi}\cos{\theta} & -\sin{\phi} & 0 \end{bmatrix} \begin{bmatrix} \dot{\psi} \\ \dot{\theta} \\ \dot{\phi}  \end{bmatrix}  $ 
+$ \rotvel{B}{I}{B} = \begin{bmatrix}       0 & \sin{\psi} &  \cos{\theta}\cos{\psi} \\
+      0 & \cos{\psi} & -\cos{\theta}\sin{\psi} \\
+      1 &      0 &         \sin{\theta} \end{bmatrix} \begin{bmatrix} \dot{\psi} \\ \dot{\theta} \\ \dot{\phi}  \end{bmatrix}  $ 
 
-\subsubsection{Time Derivative of Euler Angles XYZ  $\Leftrightarrow$ Angular Velocity}
-% is correct  according to Eq. 457 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
-$\begin{bmatrix} \dot{\alpha} \\ \dot{\beta} \\ \dot{\gamma} \end{bmatrix}  =  \begin{bmatrix} 1 & \frac{\sin{\alpha}\sin{\beta}}{\cos{\beta}} & -\frac{\cos{\alpha}\sin{\beta}}{\cos{\beta}} \\
- 0 &                       \cos{\alpha} &                        \sin{\alpha} \\
- 0 &            \frac{-\sin{\alpha}}{\cos{\beta}} &              \frac{\cos{\alpha}}{\cos{\beta}}\end{bmatrix}  \rotvel{I}{I}{B}\quad \forall \beta \in \mathbb{R}\backslash\{\frac{\pi}{2}+k\pi\}, k\in\mathbb{Z}$ 
-% is correct according to Eq. 458 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
-$\begin{bmatrix} \dot{\alpha} \\ \dot{\beta} \\ \dot{\gamma} \end{bmatrix} = \begin{bmatrix} \frac{\cos{\gamma}}{\cos{\beta}} &            \frac{-\sin{\gamma}}{\cos{\beta}} & 0 \\
-                        \sin{\gamma} &                       \cos{\gamma} & 0 \\
- \frac{-\cos{\gamma}\sin{\beta}}{\cos{\beta}} & \frac{\sin{\beta}\sin{\gamma}}{\cos{\beta}} & 1 \end{bmatrix} \rotvel{B}{I}{B} \quad \forall \beta \in \mathbb{R}\backslash\{\frac{\pi}{2}+k\pi\}, k\in\mathbb{Z}$ 
-
-% I_w_IB is correct  according to Eq. 453 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
-$ \rotvel{I}{I}{B} =  \begin{bmatrix} 1 &          0 &             \sin{\beta} \\
- 0 & \cos{\alpha} & -\cos{\beta}\sin{\alpha} \\
- 0 & \sin{\alpha} &  \cos{\alpha}\cos{\beta} \end{bmatrix} \begin{bmatrix} \dot{\alpha} \\ \dot{\beta} \\ \dot{\gamma} \end{bmatrix}$
-
-% B_w_IB is correct  according to Eq. 455 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
-$ \rotvel{B}{I}{B} =\begin{bmatrix}  \cos{\beta}\cos{\gamma} & \sin{\gamma} & 0 \\
- -\cos{\beta}\sin{\gamma} & \cos{\gamma} & 0 \\
-             \sin{\beta} &          0 & 1 \end{bmatrix} \begin{bmatrix} \dot{\alpha} \\ \dot{\beta} \\ \dot{\gamma} \end{bmatrix} $
+%\subsubsection{Time Derivative of Euler Angles XYZ  $\Leftrightarrow$ Angular Velocity}
+%% is correct  according to Eq. 457 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
+%$\begin{bmatrix} \dot{\alpha} \\ \dot{\beta} \\ \dot{\gamma} \end{bmatrix}  =  \begin{bmatrix} 1 & \frac{\sin{\alpha}\sin{\beta}}{\cos{\beta}} & -\frac{\cos{\alpha}\sin{\beta}}{\cos{\beta}} \\
+% 0 &                       \cos{\alpha} &                        \sin{\alpha} \\
+% 0 &            \frac{-\sin{\alpha}}{\cos{\beta}} &              \frac{\cos{\alpha}}{\cos{\beta}}\end{bmatrix}  \rotvel{I}{I}{B}\quad \forall \beta \in \mathbb{R}\backslash\{\frac{\pi}{2}+k\pi\}, k\in\mathbb{Z}$ 
+%% is correct according to Eq. 458 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
+%$\begin{bmatrix} \dot{\alpha} \\ \dot{\beta} \\ \dot{\gamma} \end{bmatrix} = \begin{bmatrix} \frac{\cos{\gamma}}{\cos{\beta}} &            \frac{-\sin{\gamma}}{\cos{\beta}} & 0 \\
+%                        \sin{\gamma} &                       \cos{\gamma} & 0 \\
+% \frac{-\cos{\gamma}\sin{\beta}}{\cos{\beta}} & \frac{\sin{\beta}\sin{\gamma}}{\cos{\beta}} & 1 \end{bmatrix} \rotvel{B}{I}{B} \quad \forall \beta \in \mathbb{R}\backslash\{\frac{\pi}{2}+k\pi\}, k\in\mathbb{Z}$ 
+%
+%% I_w_IB is correct  according to Eq. 453 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
+%$ \rotvel{I}{I}{B} =  \begin{bmatrix} 1 &          0 &             \sin{\beta} \\
+% 0 & \cos{\alpha} & -\cos{\beta}\sin{\alpha} \\
+% 0 & \sin{\alpha} &  \cos{\alpha}\cos{\beta} \end{bmatrix} \begin{bmatrix} \dot{\alpha} \\ \dot{\beta} \\ \dot{\gamma} \end{bmatrix}$%
+%
+%% B_w_IB is correct  according to Eq. 455 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
+%$ \rotvel{B}{I}{B} =\begin{bmatrix}  \cos{\beta}\cos{\gamma} & \sin{\gamma} & 0 \\
+% -\cos{\beta}\sin{\gamma} & \cos{\gamma} & 0 \\
+%             \sin{\beta} &          0 & 1 \end{bmatrix} \begin{bmatrix} \dot{\alpha} \\ \dot{\beta} \\ \dot{\gamma} \end{bmatrix} $
 
 \newpage
 \section{Dynamics of a Multi-Rigid-Body System}

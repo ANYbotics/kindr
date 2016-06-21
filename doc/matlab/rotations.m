@@ -31,7 +31,6 @@ C_z = [cos(z)  -sin(z)  0;
 zyx = [z, y, x]';
 dzyx = [dz, dy, dx]';
 
-
 % rotation matrix
 C_IB_zyx = simplify(C_x*C_y*C_z)
 
