@@ -33,13 +33,13 @@ dzyx = [dz, dy, dx]';
 
 
 % rotation matrix
-C_IB = simplify(C_x*C_y*C_z)
+C_IB_zyx = simplify(C_x*C_y*C_z)
 
 % time derivative of rotation matrix
-dC_IB = dMATdt( C_IB, zyx, dzyx )
+dC_IB_zyx = dMATdt( C_IB_zyx, zyx, dzyx )
 
 % local angular velocity
-B_w_IB = simplify(unskew(C_IB'*dC_IB))
+B_w_IB = simplify(unskew(C_IB_zyx'*dC_IB_zyx))
 
 % It must hold 
 %  w = B_w_IB  or f := w - B_w_IB = 0 
@@ -65,20 +65,21 @@ E_zyx_inv = [jacobian(simplify(res2.dz), w)
 dE_zyx_inv = dMATdt(E_zyx_inv, zyx, dzyx)
 ccode(dE_zyx_inv,'file', 'tmp/dE_zyx_inv.hpp')
 
+
 %% Euler Angles XYZ
 
 xyz = [x, y, z]';
 dxyz = [dx, dy, dz]';
 
 % rotation matrix
-C_IB = simplify(C_z*C_y*C_x)
+C_IB_xyz = simplify(C_z*C_y*C_x)
 
 % time derivative of rotation matrix
-dC_IB = dMATdt( C_IB, xyz, dxyz )
+dC_IB_xyz = dMATdt( C_IB_xyz, xyz, dxyz )
 
 % local angular velocity
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-B_w_IB = simplify(unskew(C_IB'*dC_IB))
+B_w_IB = simplify(unskew(C_IB_xyz'*dC_IB_xyz))
 
 % It must hold 
 %  w = B_w_IB  or f := w - B_w_IB = 0 
@@ -109,7 +110,7 @@ ccode(dE_xyz_local_inv,'file', 'tmp/dE_xyz_local_inv.hpp')
 % global angular velocity
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-I_w_IB = simplify(unskew(dC_IB*C_IB'))
+I_w_IB = simplify(unskew(dC_IB_xyz*C_IB_xyz'))
 f_global = w-I_w_IB;
 
 % B_w_IB = E_zyx*dzyx;
