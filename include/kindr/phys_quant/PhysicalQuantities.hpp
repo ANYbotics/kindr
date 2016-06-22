@@ -27,6 +27,7 @@
 */
 #pragma once
 
+#include "kindr/common/common.hpp"
 #include <kindr/phys_quant/PhysicalType.hpp>
 #include <kindr/vectors/Vector.hpp>
 

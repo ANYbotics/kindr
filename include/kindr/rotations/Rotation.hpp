@@ -28,6 +28,7 @@
 
 #pragma once
 
+#include "kindr/common/common.hpp"
 #include "kindr/math/LinearAlgebra.hpp"
 #include "kindr/common/assert_macros.hpp"
 #include "kindr/rotations/RotationBase.hpp"
