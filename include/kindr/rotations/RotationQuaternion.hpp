@@ -542,9 +542,9 @@ class ConversionTraits<RotationQuaternion<DestPrimType_>, EulerAnglesXyz<SourceP
  public:
   inline static RotationQuaternion<DestPrimType_> convert(const EulerAnglesXyz<SourcePrimType_>& xyz) {
     return RotationQuaternion<DestPrimType_>(Eigen::Quaternion<DestPrimType_>(
-      Eigen::AngleAxis<DestPrimType_>((DestPrimType_)xyz.z(), Eigen::Matrix<DestPrimType_, 3, 1>::UnitZ()) *
+      Eigen::AngleAxis<DestPrimType_>((DestPrimType_)xyz.x(), Eigen::Matrix<DestPrimType_, 3, 1>::UnitX()) *
       Eigen::AngleAxis<DestPrimType_>((DestPrimType_)xyz.y(), Eigen::Matrix<DestPrimType_, 3, 1>::UnitY()) *
-      Eigen::AngleAxis<DestPrimType_>((DestPrimType_)xyz.x(), Eigen::Matrix<DestPrimType_, 3, 1>::UnitX())));
+      Eigen::AngleAxis<DestPrimType_>((DestPrimType_)xyz.z(), Eigen::Matrix<DestPrimType_, 3, 1>::UnitZ())));
   }
 };
 
@@ -553,9 +553,9 @@ class ConversionTraits<RotationQuaternion<DestPrimType_>, EulerAnglesZyx<SourceP
  public:
   inline static RotationQuaternion<DestPrimType_> convert(const EulerAnglesZyx<SourcePrimType_>& zyx) {
     return RotationQuaternion<DestPrimType_>(Eigen::Quaternion<DestPrimType_>(
-      Eigen::AngleAxis<DestPrimType_>((DestPrimType_)zyx.x(), Eigen::Matrix<DestPrimType_, 3, 1>::UnitX()) *
+      Eigen::AngleAxis<DestPrimType_>((DestPrimType_)zyx.z(), Eigen::Matrix<DestPrimType_, 3, 1>::UnitZ()) *
       Eigen::AngleAxis<DestPrimType_>((DestPrimType_)zyx.y(), Eigen::Matrix<DestPrimType_, 3, 1>::UnitY()) *
-      Eigen::AngleAxis<DestPrimType_>((DestPrimType_)zyx.z(), Eigen::Matrix<DestPrimType_, 3, 1>::UnitZ())));
+      Eigen::AngleAxis<DestPrimType_>((DestPrimType_)zyx.x(), Eigen::Matrix<DestPrimType_, 3, 1>::UnitX())));
   }
 };
 

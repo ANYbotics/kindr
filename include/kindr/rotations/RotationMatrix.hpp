@@ -465,28 +465,32 @@ class ConversionTraits<RotationMatrix<DestPrimType_>, EulerAnglesZyx<SourcePrimT
 //    matrix.toImplementation() = RotationQuaternion<DestPrimType_>(zyx).toImplementation().toRotationMatrix();
 //    return matrix;
 
-    using std::sin;
-    using std::cos;
-    Eigen::Matrix<DestPrimType_,3,3> matrix;
-    const DestPrimType_ phi = zyx.x();
-    const DestPrimType_ theta = zyx.y();
-    const DestPrimType_ psi = zyx.z();
-    const DestPrimType_ t2 = cos(theta);
-    const DestPrimType_ t3 = sin(psi);
-    const DestPrimType_ t4 = cos(psi);
-    const DestPrimType_ t5 = sin(theta);
-    const DestPrimType_ t6 = cos(phi);
-    const DestPrimType_ t7 = sin(phi);
-    matrix(0,0) = t2*t4;
-    matrix(0,1) = -t2*t3;
-    matrix(0,2) = t5;
-    matrix(1,0) = t3*t6+t4*t5*t7;
-    matrix(1,1) = t4*t6-t3*t5*t7;
-    matrix(1,2) = -t2*t7;
-    matrix(2,0) = t3*t7-t4*t5*t6;
-    matrix(2,1) = t4*t7+t3*t5*t6;
-    matrix(2,2) = t2*t6;
-    return RotationMatrix<DestPrimType_>(matrix);
+//    using std::sin;
+//    using std::cos;
+//    Eigen::Matrix<DestPrimType_,3,3> matrix;
+//    const DestPrimType_ phi = zyx.x();
+//    const DestPrimType_ theta = zyx.y();
+//    const DestPrimType_ psi = zyx.z();
+//    const DestPrimType_ t2 = cos(theta);
+//    const DestPrimType_ t3 = sin(psi);
+//    const DestPrimType_ t4 = cos(psi);
+//    const DestPrimType_ t5 = sin(theta);
+//    const DestPrimType_ t6 = cos(phi);
+//    const DestPrimType_ t7 = sin(phi);
+//    matrix(0,0) = t2*t4;
+//    matrix(0,1) = -t2*t3;
+//    matrix(0,2) = t5;
+//    matrix(1,0) = t3*t6+t4*t5*t7;
+//    matrix(1,1) = t4*t6-t3*t5*t7;
+//    matrix(1,2) = -t2*t7;
+//    matrix(2,0) = t3*t7-t4*t5*t6;
+//    matrix(2,1) = t4*t7+t3*t5*t6;
+//    matrix(2,2) = t2*t6;
+//    return RotationMatrix<DestPrimType_>(matrix);
+
+    RotationMatrix<DestPrimType_> matrix;
+    matrix.toImplementation() = RotationQuaternion<DestPrimType_>(zyx).toImplementation().toRotationMatrix();
+    return matrix;
   }
 };
 

@@ -228,4 +228,3 @@ TYPED_TEST(EulerAnglesZyxDiffTest, testFiniteDifferenceInverse)
     }
   }
 }
-

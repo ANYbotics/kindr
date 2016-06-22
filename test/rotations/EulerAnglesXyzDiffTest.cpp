@@ -265,4 +265,27 @@ TYPED_TEST(EulerAnglesXyzDiffTest, mappingLocalAngularVelocityInverse)
   }
 }
 
+TYPED_TEST(EulerAnglesXyzDiffTest, secondDiff)
+{
+  typedef typename TestFixture::Scalar Scalar;
+  typedef typename TestFixture::Rotation Rotation;
+  typedef typename TestFixture::RotationDiff RotationDiff;
+  typedef  typename TestFixture::Vector3 Vector3;
+  const  double dt = 1.0e-3;
+
+  for (auto rotation : this->rotations) {
+    for (auto angularVelocity : this->angularVelocities) {
+      RotationDiff rotationDiff(rotation, angularVelocity);
+      Rotation rotationNext = rotation.boxPlus(dt*rotation.rotate(angularVelocity.vector()));
+      rotationNext.setUnique();
+      rotation.setUnique();
+      RotationDiff rotationDiffNext(rotationNext, angularVelocity);
+      RotationDiff rotationSecondDiff(rotationDiff.getMappingFromLocalAngularVelocityToSecondDiff(rotation)*angularVelocity.vector());
+      RotationDiff rotationSecondDiffFiniteDifference((rotationDiffNext.vector()-rotationDiff.vector())/dt);
+      ASSERT_NEAR(rotationSecondDiffFiniteDifference.x(),rotationSecondDiff.x(),1e-3) << " angular velocity: " << angularVelocity << " rotation: " << rotation   << " diff1: " << rotationSecondDiffFiniteDifference  << " diff2: " << rotationSecondDiff;
+      ASSERT_NEAR(rotationSecondDiffFiniteDifference.y(),rotationSecondDiff.y(),1e-3)  << " angular velocity: " << angularVelocity  <<  "rotation: " << rotation  << " diff1: " << rotationSecondDiffFiniteDifference << " diff2: " << rotationSecondDiff;
+      ASSERT_NEAR(rotationSecondDiffFiniteDifference.z(),rotationSecondDiff.z(),1e-3) << " angular velocity: " << angularVelocity << " rotation: " << rotation   << " diff1: " << rotationSecondDiffFiniteDifference << " diff2: " << rotationSecondDiff;
+    }
+  }
+}
 

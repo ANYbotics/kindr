@@ -683,9 +683,9 @@ TYPED_TEST(EulerAnglesXyzSingleTest, testRotationOrder)
   typedef typename TestFixture::Vector Vector;
 
   EulerAnglesXyz rot1(this->eigenVector3v1);
-  EulerAnglesXyz rot2 = EulerAnglesXyz(0,0,this->eigenVector3v1(2))
+  EulerAnglesXyz rot2 = EulerAnglesXyz(this->eigenVector3v1(0),0,0)
                         *EulerAnglesXyz(0,this->eigenVector3v1(1),0)
-                        *EulerAnglesXyz(this->eigenVector3v1(0),0,0);
+                        *EulerAnglesXyz(0.0, 0.0, this->eigenVector3v1(2));
 
   ASSERT_NEAR(rot1.x(), rot2.x(),1e-6);
   ASSERT_NEAR(rot1.y(), rot2.y(),1e-6);
@@ -708,9 +708,9 @@ TYPED_TEST(EulerAnglesXyzSingleTest, testRotationMatrix)
   using std::sin;
   Eigen::Matrix<Scalar, 3, 3> rotMat;
 
-  rotMat <<   cos(y)*cos(z), cos(z)*sin(x)*sin(y) - cos(x)*sin(z), sin(x)*sin(z) + cos(x)*cos(z)*sin(y),
-                cos(y)*sin(z), cos(x)*cos(z) + sin(x)*sin(y)*sin(z), cos(x)*sin(y)*sin(z) - cos(z)*sin(x),
-                      -sin(y),                        cos(y)*sin(x),                        cos(x)*cos(y);
+  rotMat <<                         cos(y)*cos(z),                       -cos(y)*sin(z),         sin(y),
+   cos(x)*sin(z) + cos(z)*sin(x)*sin(y), cos(x)*cos(z) - sin(x)*sin(y)*sin(z), -cos(y)*sin(x),
+   sin(x)*sin(z) - cos(x)*cos(z)*sin(y), cos(z)*sin(x) + cos(x)*sin(y)*sin(z),  cos(x)*cos(y);
   KINDR_ASSERT_DOUBLE_MX_EQ(rotMat, rotMatKindr.matrix(), 1.0e-3, "rotation matrix")
 }
 

@@ -250,67 +250,131 @@ class EulerAnglesZyx : public RotationBase<EulerAnglesZyx<PrimType_>> {
     return *this;
   }
 
+//  /*! \brief Returns a unique Euler angles rotation with angles in [-pi,pi),[-pi/2,pi/2),[-pi,pi).
+//   *  This function is used to compare different rotations.
+//   *  \returns copy of the Euler angles rotation which is unique
+//   */
+//  EulerAnglesZyx getUnique() const {
+//    //return EulerAnglesZyx<Scalar>(RotationQuaternion<Scalar>(*this).getUnique());
+//    Base zyx(kindr::floatingPointModulo(z()+M_PI,2*M_PI)-M_PI,
+//             kindr::floatingPointModulo(y()+M_PI,2*M_PI)-M_PI,
+//             kindr::floatingPointModulo(x()+M_PI,2*M_PI)-M_PI); // wrap all angles into [-pi,pi)
+//
+//    const double tol = 1e-3;
+//    Scalar& z = zyx(0);
+//    Scalar& y = zyx(1);
+//    Scalar& x = zyx(2);
+//
+//    // wrap angles into [-pi,pi),[-pi/2,pi/2),[-pi,pi)
+//    if(y < -M_PI/2 - tol)
+//    {
+//      if(z < 0) {
+//        z = z + M_PI;
+//      } else {
+//        z = z - M_PI;
+//      }
+//
+//      y = -(y + M_PI);
+//
+//      if(x < 0) {
+//        x = x + M_PI;
+//      } else {
+//        x = x - M_PI;
+//      }
+//    }
+//    else if(-M_PI/2 - tol <= y && y <= -M_PI/2 + tol)
+//    {
+//      z += x;
+//      x = Scalar(0.0);
+//    }
+//    else if(-M_PI/2 + tol < y && y < M_PI/2 - tol)
+//    {
+//      // ok
+//    }
+//    else if(M_PI/2 - tol <= y && y <= M_PI/2 + tol)
+//    {
+//      // todo: M_PI/2 should not be in range, other formula?
+//      z -= x;
+//      x = 0;
+//    }
+//    else // M_PI/2 + tol < zyx.y()
+//    {
+//      if(z < 0) {
+//        z = z + M_PI;
+//      } else {
+//        z = z - M_PI;
+//      }
+//
+//      y = -(y - M_PI);
+//
+//      if(x < 0) {
+//        x = x + M_PI;
+//      } else {
+//        x = x - M_PI;
+//      }
+//    }
+//
+//    return EulerAnglesZyx(zyx);
+//  }
+
+
   /*! \brief Returns a unique Euler angles rotation with angles in [-pi,pi),[-pi/2,pi/2),[-pi,pi).
    *  This function is used to compare different rotations.
    *  \returns copy of the Euler angles rotation which is unique
    */
   EulerAnglesZyx getUnique() const {
-    //return EulerAnglesZyx<Scalar>(RotationQuaternion<Scalar>(*this).getUnique());
     Base zyx(kindr::floatingPointModulo(z()+M_PI,2*M_PI)-M_PI,
              kindr::floatingPointModulo(y()+M_PI,2*M_PI)-M_PI,
              kindr::floatingPointModulo(x()+M_PI,2*M_PI)-M_PI); // wrap all angles into [-pi,pi)
 
     const double tol = 1e-3;
-    Scalar& z = zyx(0);
-    Scalar& y = zyx(1);
-    Scalar& x = zyx(2);
 
     // wrap angles into [-pi,pi),[-pi/2,pi/2),[-pi,pi)
-    if(y < -M_PI/2 - tol)
+    if(zyx.y() < -M_PI/2 - tol)
     {
-      if(z < 0) {
-        z = z + M_PI;
+      if(zyx.x() < 0) {
+        zyx.x() = zyx.x() + M_PI;
       } else {
-        z = z - M_PI;
+        zyx.x() = zyx.x() - M_PI;
       }
 
-      y = -(y + M_PI);
+      zyx.y() = -(zyx.y() + M_PI);
 
-      if(x < 0) {
-        x = x + M_PI;
+      if(zyx.z() < 0) {
+        zyx.z() = zyx.z() + M_PI;
       } else {
-        x = x - M_PI;
+        zyx.z() = zyx.z() - M_PI;
       }
     }
-    else if(-M_PI/2 - tol <= y && y <= -M_PI/2 + tol)
+    else if(-M_PI/2 - tol <= zyx.y() && zyx.y() <= -M_PI/2 + tol)
     {
-      z += x;
-      x = Scalar(0.0);
+      zyx.x() -= zyx.z();
+      zyx.z() = 0;
     }
-    else if(-M_PI/2 + tol < y && y < M_PI/2 - tol)
+    else if(-M_PI/2 + tol < zyx.y() && zyx.y() < M_PI/2 - tol)
     {
       // ok
     }
-    else if(M_PI/2 - tol <= y && y <= M_PI/2 + tol)
+    else if(M_PI/2 - tol <= zyx.y() && zyx.y() <= M_PI/2 + tol)
     {
       // todo: M_PI/2 should not be in range, other formula?
-      z -= x;
-      x = 0;
+      zyx.x() += zyx.z();
+      zyx.z() = 0;
     }
     else // M_PI/2 + tol < zyx.y()
     {
-      if(z < 0) {
-        z = z + M_PI;
+      if(zyx.x() < 0) {
+        zyx.x() = zyx.x() + M_PI;
       } else {
-        z = z - M_PI;
+        zyx.x() = zyx.x() - M_PI;
       }
 
-      y = -(y - M_PI);
+      zyx.y() = -(zyx.y() - M_PI);
 
-      if(x < 0) {
-        x = x + M_PI;
+      if(zyx.z() < 0) {
+        zyx.z() = zyx.z() + M_PI;
       } else {
-        x = x - M_PI;
+        zyx.z() = zyx.z() - M_PI;
       }
     }
 
@@ -327,35 +391,44 @@ class EulerAnglesZyx : public RotationBase<EulerAnglesZyx<PrimType_>> {
 
 
   typename Eigen::Matrix<PrimType_, 3, 3> getMappingFromDiffToLocalAngularVelocity() const {
-    /*
-      [ 0, sin(z),  cos(y)*cos(z)]
-      [ 0, cos(z), -cos(y)*sin(z)]
-      [ 1,      0,         sin(y)]
-    */
-
     using std::sin;
     using std::cos;
-    Eigen::Matrix<PrimType_, 3, 3> mat;
-    mat << 0, sin(z()),  cos(y())*cos(z()),
-            0, cos(z()), -cos(y())*sin(z()),
-            1.0,      0,         sin(y());
+    Eigen::Matrix<PrimType_, 3, 3> mat =  Eigen::Matrix<PrimType_, 3, 3>::Zero();
+    const PrimType_ x = this->x();
+    const PrimType_ y = this->y();
+    const PrimType_ z = this->z();
+    const PrimType_ t2 = cos(x);
+    const PrimType_ t3 = cos(y);
+    const PrimType_ t4 = sin(x);
+    mat(0, 0) = -sin(y);
+    mat(0, 2) = 1.0;
+    mat(1, 0) = t3*t4;
+    mat(1, 1) = t2;
+    mat(2, 0) = t2*t3;
+    mat(2, 1) = -t4;
     return mat;
   }
 
   typename Eigen::Matrix<PrimType_, 3, 3> getMappingFromLocalAngularVelocityToDiff() const {
-    /*
-      [ -(cos(z)*sin(y))/cos(y), (sin(y)*sin(z))/cos(y), 1]
-      [                  sin(z),                 cos(z), 0]
-      [           cos(z)/cos(y),         -sin(z)/cos(y), 0]
-    */
     using std::sin;
     using std::cos;
-    const PrimType_ cy = cos(y());
-    KINDR_ASSERT_TRUE(std::runtime_error, cy != PrimType_(0.0), "Error: cos(y) is zero! This case is not yet implemented!");
-    Eigen::Matrix<PrimType_, 3, 3> mat;
-    mat << -(cos(z())*sin(y()))/cy, (sin(y())*sin(z()))/cy, 1.0,
-                      sin(z()),                 cos(z()), 0,
-               cos(z())/cy,         -sin(z())/cy, 0;
+    Eigen::Matrix<PrimType_, 3, 3> mat =  Eigen::Matrix<PrimType_, 3, 3>::Zero();
+    const PrimType_ x = this->x();
+    const PrimType_ y = this->y();
+    const PrimType_ z = this->z();
+    const PrimType_ t2 = cos(y);
+    const PrimType_ t3 = 1.0/t2;
+    KINDR_ASSERT_TRUE(std::runtime_error, t2 != PrimType_(0.0), "Gimbal lock: cos(y) is zero!");
+    const PrimType_ t4 = cos(x);
+    const PrimType_ t5 = sin(x);
+    const PrimType_ t6 = sin(y);
+    mat(0,1) = t3*t5;
+    mat(0,2) = t3*t4;
+    mat(1,1) = t4;
+    mat(1,2) = -t5;
+    mat(2,0) = 1.0;
+    mat(2,1) = t3*t5*t6;
+    mat(2,2) = t3*t4*t6;
     return mat;
   }
 
@@ -453,8 +526,8 @@ template<typename DestPrimType_, typename SourcePrimType_>
 class ConversionTraits<EulerAnglesZyx<DestPrimType_>, RotationQuaternion<SourcePrimType_>> {
  public:
   inline static EulerAnglesZyx<DestPrimType_> convert(const RotationQuaternion<SourcePrimType_>& q) {
-    const Eigen::Matrix<DestPrimType_, 3, 1> vec = (q.toImplementation().toRotationMatrix().eulerAngles(0, 1, 2)).template cast<DestPrimType_>();
-    return EulerAnglesZyx<DestPrimType_>(vec(2), vec(1), vec(0));
+    const Eigen::Matrix<DestPrimType_, 3, 1> vec = (q.toImplementation().toRotationMatrix().eulerAngles(2, 1, 0)).template cast<DestPrimType_>();
+    return EulerAnglesZyx<DestPrimType_>(vec(0), vec(1), vec(2));
   }
 };
 

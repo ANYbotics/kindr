@@ -323,46 +323,92 @@ class EulerAnglesXyz : public RotationBase<EulerAnglesXyz<PrimType_>> {
   typename Eigen::Matrix<PrimType_, 3, 3> getMappingFromDiffToLocalAngularVelocity() const {
     using std::sin;
     using std::cos;
-    Eigen::Matrix<PrimType_, 3, 3> mat;
-    mat <<  PrimType_(1),       PrimType_(0),       -sin(y()),
-            PrimType_(0),  cos(x()), cos(y())*sin(x()),
-             PrimType_(0), -sin(x()), cos(x())*cos(y());
+    Eigen::Matrix<PrimType_, 3, 3> mat =  Eigen::Matrix<PrimType_, 3, 3>::Zero();
+    const PrimType_ x = this->x();
+    const PrimType_ y = this->y();
+    const PrimType_ z = this->z();
+
+    const PrimType_ t2 = cos(y);
+    const PrimType_ t3 = sin(z);
+    const PrimType_ t4 = cos(z);
+    mat(0, 0) = t2*t4;
+    mat(0, 1) = t3;
+    mat(1, 0) = -t2*t3;
+    mat(1, 1) = t4;
+    mat(2, 0) = sin(y);
+    mat(2, 2) = 1.0;
+
     return mat;
   }
 
   typename Eigen::Matrix<PrimType_, 3, 3> getMappingFromLocalAngularVelocityToDiff() const {
     using std::sin;
     using std::cos;
-    const PrimType_ cy = cos(y());
-    KINDR_ASSERT_TRUE(std::runtime_error, cy != PrimType_(0.0), "Error: cos(y) is zero! This case is not yet implemented!");
-    Eigen::Matrix<PrimType_, 3, 3> mat;
-    mat << PrimType_(1), (sin(x())*sin(y()))/cy, (cos(x())*sin(y()))/cy,
-           PrimType_(0),                 cos(x()),     -sin(x()),
-           PrimType_(0),          sin(x())/cy,          cos(x())/cy;
+    Eigen::Matrix<PrimType_, 3, 3> mat =  Eigen::Matrix<PrimType_, 3, 3>::Zero();
+    const PrimType_ x = this->x();
+    const PrimType_ y = this->y();
+    const PrimType_ z = this->z();
+
+    const PrimType_ t2 = cos(y);
+    KINDR_ASSERT_TRUE(std::runtime_error, t2 != PrimType_(0.0), "Gimbal lock: cos(y) is zero!");
+    const PrimType_ t3 = 1.0/t2;
+    const PrimType_ t4 = sin(z);
+    const PrimType_ t5 = cos(z);
+    const PrimType_ t6 = sin(y);
+    mat(0,0) = t3*t5;
+    mat(0,1) = -t3*t4;
+    mat(1,0) = t4;
+    mat(1,1) = t5;
+    mat(2,0) = -t3*t5*t6;
+    mat(2,1) = t3*t4*t6;
+    mat(2,2) = 1.0;
+
     return mat;
   }
 
   typename Eigen::Matrix<PrimType_, 3, 3> getMappingFromGlobalAngularVelocityToDiff() const {
-    /*
-        [          cos(z)/cos(y),          sin(z)/cos(y), 0]
-        [                -sin(z),                 cos(z), 0]
-        [ (cos(z)*sin(y))/cos(y), (sin(y)*sin(z))/cos(y), 1]
-
-    */
     using std::sin;
     using std::cos;
-    const PrimType_ cy = cos(y());
+    Eigen::Matrix<PrimType_, 3, 3> mat =  Eigen::Matrix<PrimType_, 3, 3>::Zero();
     const PrimType_ x = this->x();
     const PrimType_ y = this->y();
     const PrimType_ z = this->z();
-    KINDR_ASSERT_TRUE(std::runtime_error, cy != PrimType_(0.0), "Error: cos(y) is zero! This case is not yet implemented!");
-    Eigen::Matrix<PrimType_, 3, 3> mat;
-    mat <<  cos(z)/cos(y),          sin(z)/cos(y), 0,
-              -sin(z),                 cos(z), 0,
-           (cos(z)*sin(y))/cos(y), (sin(y)*sin(z))/cos(y), 1;
-
+    const PrimType_ t2 = cos(y);
+    KINDR_ASSERT_TRUE(std::runtime_error, t2 != PrimType_(0.0), "Gimbal lock: cos(y) is zero!");
+    const PrimType_ t3 = 1.0/t2;
+    const PrimType_ t4 = sin(y);
+    const PrimType_ t5 = cos(x);
+    const PrimType_ t6 = sin(x);
+    mat(0,0) = 1.0;
+    mat(0,1) = t3*t4*t6;
+    mat(0,2) = -t3*t4*t5;
+    mat(1,1) = t5;
+    mat(1,2) = t6;
+    mat(2,1) = -t3*t6;
+    mat(2,2) = t3*t5;
     return mat;
   }
+
+
+  typename Eigen::Matrix<PrimType_, 3, 3> getMappingFromDiffToGlobalAngularVelocity() const {
+    using std::sin;
+    using std::cos;
+    Eigen::Matrix<PrimType_, 3, 3> mat =  Eigen::Matrix<PrimType_, 3, 3>::Zero();
+    const PrimType_ x = this->x();
+    const PrimType_ y = this->y();
+    const PrimType_ z = this->z();
+    const PrimType_ t2 = sin(x);
+    const PrimType_ t3 = cos(x);
+    const PrimType_ t4 = cos(y);
+    mat(0,0) = 1.0;
+    mat(0,2) = sin(y);
+    mat(1,1) = t3;
+    mat(1,2) = -t2*t4;
+    mat(2,1) = t2;
+    mat(2,2) = t3*t4;
+    return mat;
+  }
+
 
   /*! \brief Concenation operator.
    *  This is explicitly specified, because Eigen::Matrix provides also an operator*.
@@ -451,8 +497,8 @@ template<typename DestPrimType_, typename SourcePrimType_>
 class ConversionTraits<EulerAnglesXyz<DestPrimType_>, RotationQuaternion<SourcePrimType_>> {
  public:
   inline static EulerAnglesXyz<DestPrimType_> convert(const RotationQuaternion<SourcePrimType_>& q) {
-     Eigen::Matrix<DestPrimType_, 3, 1>  vec = q.toImplementation().toRotationMatrix().eulerAngles(2, 1, 0).template cast<DestPrimType_>();
-     return EulerAnglesXyz<DestPrimType_>(vec(2), vec(1), vec(0));
+     Eigen::Matrix<DestPrimType_, 3, 1>  vec = q.toImplementation().toRotationMatrix().eulerAngles(0, 1, 2).template cast<DestPrimType_>();
+     return EulerAnglesXyz<DestPrimType_>(vec(0), vec(1), vec(2));
   }
 };
 

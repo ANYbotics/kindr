@@ -32,7 +32,7 @@ zyx = [z, y, x]';
 dzyx = [dz, dy, dx]';
 
 % rotation matrix
-C_IB_zyx = simplify(C_x*C_y*C_z)
+C_IB_zyx = simplify(C_z*C_y*C_x)
 
 % time derivative of rotation matrix
 dC_IB_zyx = dMATdt( C_IB_zyx, zyx, dzyx )
@@ -49,20 +49,50 @@ res1 = solve(f, w1, w2, w3);
 E_zyx = [jacobian(simplify(res1.w1), dzyx)
          jacobian(simplify(res1.w2), dzyx)
          jacobian(simplify(res1.w3), dzyx)]
-     
+ccode(E_zyx,'file', 'tmp/E_zyx_local.hpp')
+
 % time derivative of E_zyx
 dE_zyx = dMATdt(E_zyx, zyx, dzyx)
-ccode(dE_zyx,'file', 'tmp/dE_zyx.hpp')
+ccode(dE_zyx,'file', 'tmp/dE_zyx_local.hpp')
 
 % dzyx = E_zyx_inv*B_w_IB;
 res2 = solve(f, dx, dy, dz);
 E_zyx_inv = [jacobian(simplify(res2.dz), w)
             jacobian(simplify(res2.dy), w)
             jacobian(simplify(res2.dx), w)]
-        
+ccode(E_zyx_inv,'file', 'tmp/E_zyx_local_inv.hpp')
+
 % time derivative of E_zyx_inv  
 dE_zyx_inv = dMATdt(E_zyx_inv, zyx, dzyx)
-ccode(dE_zyx_inv,'file', 'tmp/dE_zyx_inv.hpp')
+ccode(dE_zyx_inv,'file', 'tmp/dE_zyx_local_inv.hpp')
+
+% global angular velocity
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+I_w_IB = simplify(unskew(dC_IB_zyx*C_IB_zyx'))
+f_global = w-I_w_IB;
+
+% B_w_IB = E_zyx*dzyx;
+res1_global = solve(f_global, w1, w2, w3);
+E_zyx_global = [jacobian(simplify(res1_global.w1), dzyx)
+              jacobian(simplify(res1_global.w2), dzyx)
+              jacobian(simplify(res1_global.w3), dzyx)]
+ccode(E_zyx_global,'file', 'tmp/E_zyx_global.hpp')
+
+% time derivative of E_zyx
+dE_zyx_global = dMATdt(E_zyx_global, zyx, dzyx)
+ccode(dE_zyx_global,'file', 'tmp/dE_zyx_global.hpp')
+
+% dzyx = E_zyx_inv*B_w_IB;
+res2_global = solve(f_global, dz, dy, dx);
+E_zyx_global_inv = [jacobian(simplify(res2_global.dz), w)
+            jacobian(simplify(res2_global.dy), w)
+            jacobian(simplify(res2_global.dx), w)]
+ccode(E_zyx_global_inv,'file', 'tmp/E_zyx_global_inv.hpp')
+
+% time derivative of E_zyx_inv  
+dE_zyx_global_inv = dMATdt(E_zyx_global_inv, zyx, dzyx)
+ccode(dE_zyx_global_inv,'file', 'tmp/dE_zyx_global_inv.hpp')
 
 
 %% Euler Angles XYZ
@@ -71,7 +101,7 @@ xyz = [x, y, z]';
 dxyz = [dx, dy, dz]';
 
 % rotation matrix
-C_IB_xyz = simplify(C_z*C_y*C_x)
+C_IB_xyz = simplify(C_x*C_y*C_z)
 
 % time derivative of rotation matrix
 dC_IB_xyz = dMATdt( C_IB_xyz, xyz, dxyz )
