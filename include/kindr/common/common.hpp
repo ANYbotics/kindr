@@ -107,6 +107,16 @@ inline T wrapTwoPI(T angle)
 
 namespace internal {
 
+/*! \brief Multiplication traits
+ *  \class MultiplicationTraits
+ *  (only for advanced users)
+ */
+template<typename Left_, typename Right_>
+class MultiplicationTraits {
+ public:
+//  inline static Left_ mult(const Left_& lhs, const Right_& rhs);
+};
+
 
 /*! \class get_scalar
  *  \brief Gets the primitive of the vector.

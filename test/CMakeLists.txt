@@ -104,7 +104,7 @@ add_gtest( runUnitTestsPositions  ${POSITIONS_SRCS})
 set(POSES_SRCS
 	test_main.cpp
 	poses/PositionTest.cpp
-	poses/PoseTest.cpp
+	poses/HomogeneousTransformationTest.cpp
 )
 add_gtest( runUnitTestsPose  ${POSES_SRCS})
 

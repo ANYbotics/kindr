@@ -131,29 +131,19 @@ class PoseBase {
     return internal::TransformationTraits<Derived_>::inverseTransform(this->derived(), position);
   }
 
+  /*! \brief Concatenates two transformations.
+   *  \returns the concatenation of two transformations
+   */
+  template<typename OtherDerived_>
+  Derived_ operator *(const PoseBase<OtherDerived_>& other) const {
+    return internal::MultiplicationTraits<PoseBase<Derived_>,PoseBase<OtherDerived_>>::mult(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
+  }
+
   /*! \brief Sets the pose to identity
    *  \returns reference
    */
   Derived_& setIdentity();
 };
-
-/*! \class HomogeneousTransformationBase
- * \brief Base class that defines the interface of a homogeneous transformation
- *
- * \tparam Derived_ the derived class that should implement the homogeneous transformation
- * \ingroup poses
- */
-template<typename Derived_>
-class HomogeneousTransformationBase : public PoseBase<Derived_> {
- public:
-
-//  template<typename OtherDerived_>
-//  HomogeneousTransformationBase& operator =(const HomogeneousTransformationBase<OtherDerived_>& other) {
-//    return *this;
-//  }
-
-};
-
 
 
 } // namespace kindr

@@ -80,15 +80,7 @@ class ComparisonTraits {
   }
 };
 
-/*! \brief Multiplication traits for concatenating rotations
- *  \class MultiplicationTraits
- *  (only for advanced users)
- */
-template<typename Left_, typename Right_>
-class MultiplicationTraits {
- public:
-//  inline static Left_ mult(const Left_& lhs, const Right_& rhs);
-};
+
 
 /*! \brief Rotation traits for rotating vectors and matrices
  *  \class RotationTraits

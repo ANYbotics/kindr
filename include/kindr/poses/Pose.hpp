@@ -30,3 +30,60 @@
 
 #include "kindr/poses/HomogeneousTransformation.hpp"
 
+namespace kindr {
+
+template<typename PrimType_, typename Position_, typename Rotation_>
+class HomogeneousTransformation;
+
+
+namespace internal {
+
+/*! \brief Multiplication of two rotations with the same parameterization
+ */
+template<typename Left_, typename Right_>
+class MultiplicationTraits<PoseBase<Left_>, PoseBase<Right_> > {
+ public:
+  typedef typename Left_::Position Position;
+  typedef typename Left_::Rotation Rotation;
+  typedef typename Left_::Scalar Scalar;
+  typedef HomogeneousTransformation<Scalar, Position, Rotation> HomTrans;
+ public:
+  //! Default multiplication of rotations converts the representations of the rotations to rotation quaternions and multiplies them
+  inline static Left_ mult(const PoseBase<Left_>& lhs, const PoseBase<Right_>& rhs) {
+    const Position position = lhs.derived().getPosition()+lhs.derived().getRotation().rotate(rhs.derived().getPosition());
+    const Rotation rotation = lhs.derived().getRotation()*rhs.derived().getRotation();
+    return Left_(HomTrans(position, rotation));
+  }
+};
+
+///*! \brief Multiplication of two rotations with the same parameterization
+// */
+//template<typename PrimType_, typename Position_, typename Rotation_>
+//class MultiplicationTraits<HomogeneousTransformation<PrimType_, Position_, Rotation_>, HomogeneousTransformation<PrimType_, Position_, Rotation_> > {
+// public:
+//  //! Default multiplication of rotations converts the representations of the rotations to rotation quaternions and multiplies them
+//  inline static HomogeneousTransformation<PrimType_, Position_, Rotation_> mult(const HomogeneousTransformation<PrimType_, Position_, Rotation_>& lhs, const HomogeneousTransformation<PrimType_, Position_, Rotation_>& rhs) {
+//    const typename HomogeneousTransformation<PrimType_, Position_, Rotation_>::Position position = lhs.getPosition()+lhs.getRotation().rotate(rhs.getPosition());
+//    const typename HomogeneousTransformation<PrimType_, Position_, Rotation_>::Rotation rotation = lhs.getRotation()*rhs.getRotation();
+//    return HomogeneousTransformation<PrimType_, Position_, Rotation_>(position, rotation);
+//  }
+//};
+
+///*! \brief Multiplication of two rotations with the same parameterization
+// */
+//template<typename LeftAndRight_>
+//class MultiplicationTraits<RotationBase<LeftAndRight_>, RotationBase<LeftAndRight_> > {
+// public:
+//  //! Default multiplication of rotations converts the representations of the rotations to rotation quaternions and multiplies them
+//  inline static LeftAndRight_ mult(const RotationBase<LeftAndRight_>& lhs, const RotationBase<LeftAndRight_>& rhs) {
+//      return LeftAndRight_(RotationQuaternion<typename LeftAndRight_::Scalar>(
+//                          (RotationQuaternion<typename LeftAndRight_::Scalar>(lhs.derived())).toImplementation() *
+//                          (RotationQuaternion<typename LeftAndRight_::Scalar>(rhs.derived())).toImplementation()
+//                          ));
+//
+//  }
+//};
+
+
+} // namespace internal
+} // namespace kindr

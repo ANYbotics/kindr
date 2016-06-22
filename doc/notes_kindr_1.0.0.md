@@ -8,13 +8,6 @@
 * EulerAnglesZyx(z, y, x) ==> EulerAnglesZyx(-z, -y,-x)
 * EulerAnglesXyz(x, y, z) ==> EulerAnglesXyz(-x, -y,-z)
 
-
-## Legged Robotics Software
-* quadruped_msgs::QuadrupedState contains (I_r_IB, C_IB, B_v_B, B_w_IB)
-* quadruped_model::QuadrupedState contains (I_r_IB, C_IB, I_v_B, B_w_IB)
-* quadrupedModel.getOrientationWorldToBody(BodyEnum::BASE) = kindr::RotationMatrix(quadrupedModel.getState().getOrientationBaseToWorld().inverted()).matrix()
-* romo::RobotState interface changed form getOrientationWorldToBase to getOrientationBaseToWorld
-
 # Kindr 1.0.0
 * Convention: Hamilton, passive
 

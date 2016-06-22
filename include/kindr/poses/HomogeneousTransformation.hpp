@@ -39,7 +39,10 @@ namespace kindr {
 
 
 template<typename PrimType_, typename Position_, typename Rotation_>
-class HomogeneousTransformation : public HomogeneousTransformationBase<HomogeneousTransformation<PrimType_, Position_, Rotation_>>, private Position_, private Rotation_ {
+class HomogeneousTransformation : public PoseBase<HomogeneousTransformation<PrimType_, Position_, Rotation_> > {
+ protected:
+  Position_ position_;
+  Rotation_ rotation_;
  public:
 
   typedef PrimType_ Scalar;
@@ -48,29 +51,55 @@ class HomogeneousTransformation : public HomogeneousTransformationBase<Homogeneo
   typedef Eigen::Matrix<PrimType_, 4, 4> TransformationMatrix;
 
 
-  HomogeneousTransformation() = default;
+  explicit HomogeneousTransformation(): position_(), rotation_() {
 
-  HomogeneousTransformation(const Position& position, const Rotation& rotation) :
-    Position(position),Rotation(rotation) {
   }
 
+  inline explicit HomogeneousTransformation(const Position& position, const Rotation& rotation) :
+    position_(position),rotation_(rotation) {
+  }
+
+  /*! \brief Constructor using another rotation.
+   *  \param other   other rotation
+   */
+  template<typename OtherDerived_>
+  inline explicit HomogeneousTransformation(const PoseBase<OtherDerived_>& other)
+    : position_(Position(other.derived().getPosition())), position_(Rotation(other.derived().getRotation()))
+  {
+    // todo: use conversion trait
+  }
+
+  /*! \brief Assignment operator
+   *  \param other   other transformation
+   *  \returns reference
+   */
+  HomogeneousTransformation& operator =(const HomogeneousTransformation& other) {
+    position_ = Position(other.getPosition());
+    rotation_ = Rotation(other.getRotation());
+    return *this;
+  }
 
   inline Position_ & getPosition() {
-    return static_cast<Position_ &>(*this);
+    return position_;
   }
 
   inline const Position_ & getPosition() const {
-    return static_cast<const Position_ &>(*this);
+    return position_;
   }
 
   inline Rotation_ & getRotation() {
-    return static_cast<Rotation_ &>(*this);
+    return rotation_;
   }
 
   inline const Rotation_ & getRotation() const {
-    return static_cast<const Rotation_ &>(*this);
+    return rotation_;
   }
 
+  /*! \brief Concenation operator.
+   *  This is explicitly specified, because RotationBase provides also an operator*.
+   *  \returns the concenation of two tansformations
+   */
+  using PoseBase<HomogeneousTransformation<PrimType_, Position_, Rotation_> >::operator*;
 
   inline TransformationMatrix getTransformationMatrix() const {
     TransformationMatrix mat = TransformationMatrix::Zero();
@@ -92,36 +121,30 @@ class HomogeneousTransformation : public HomogeneousTransformationBase<Homogeneo
    *  \returns reference
    */
   HomogeneousTransformation& setIdentity() {
-    Position::setZero();
-    Rotation::setIdentity();
+    position_.setZero();
+    rotation_.setIdentity();
     return *this;
   }
 };
 
-template<typename PrimType_>
-class HomogeneousTransformationPosition3RotationQuaternion: public HomogeneousTransformation<PrimType_, Position<PrimType_, 3>, RotationQuaternion<PrimType_>> {
- private:
-  typedef HomogeneousTransformation<PrimType_, Position<PrimType_, 3>, kindr::RotationQuaternion<PrimType_>> Base;
- public:
-  typedef PrimType_ Scalar;
-  typedef typename Base::Position Translation;
-  typedef typename Base::Rotation Rotation;
+template <typename PrimType_>
+using HomTransformQuat = HomogeneousTransformation<PrimType_, Position<PrimType_, 3>, RotationQuaternion<PrimType_>>;
+typedef HomTransformQuat<double> HomTransformQuatD;
+typedef HomTransformQuat<float> HomTransformQuatF;
 
-  HomogeneousTransformationPosition3RotationQuaternion() = default;
-
-  HomogeneousTransformationPosition3RotationQuaternion(const Translation& position, const Rotation& rotation):
-    Base(position, rotation) {
-  }
-
-};
-
+// For backwards comp.
+template <typename PrimType_>
+using HomogeneousTransformationPosition3RotationQuaternion = HomogeneousTransformation<PrimType_, Position<PrimType_, 3>, RotationQuaternion<PrimType_>>;
 typedef HomogeneousTransformationPosition3RotationQuaternion<double> HomogeneousTransformationPosition3RotationQuaternionD;
 typedef HomogeneousTransformationPosition3RotationQuaternion<float> HomogeneousTransformationPosition3RotationQuaternionF;
 
+template <typename PrimType_>
+using HomTransformMatrix = HomogeneousTransformation<PrimType_, Position<PrimType_, 3>, RotationMatrix<PrimType_>>;
+typedef HomTransformMatrix<double> HomTransformMatrixD;
+typedef HomTransformMatrix<float> HomTransformMatrixF;
 
 
 namespace internal {
-
 
 template<typename PrimType_, typename Position_, typename Rotation_>
 class get_position<HomogeneousTransformation<PrimType_, Position_, Rotation_>> {
@@ -141,6 +164,20 @@ class TransformationTraits<HomogeneousTransformation<PrimType_, Position_, Rotat
   }
   inline static Translation inverseTransform(const Pose & pose, const Translation & position){
     return pose.getRotation().inverseRotate((position-pose.getPosition()));
+  }
+};
+
+
+/*! \brief Multiplication of two rotations with the same parameterization
+ */
+template<typename PrimType_, typename Position_, typename Rotation_>
+class MultiplicationTraits<PoseBase<HomogeneousTransformation<PrimType_, Position_, Rotation_>>, PoseBase<HomogeneousTransformation<PrimType_, Position_, Rotation_>> > {
+ public:
+  //! Default multiplication of rotations converts the representations of the rotations to rotation quaternions and multiplies them
+  inline static HomogeneousTransformation<PrimType_, Position_, Rotation_> mult(const HomogeneousTransformation<PrimType_, Position_, Rotation_>& lhs, const HomogeneousTransformation<PrimType_, Position_, Rotation_>& rhs) {
+    const typename HomogeneousTransformation<PrimType_, Position_, Rotation_>::Position position = lhs.getPosition()+lhs.getRotation().rotate(rhs.getPosition());
+    const typename HomogeneousTransformation<PrimType_, Position_, Rotation_>::Rotation rotation = lhs.getRotation()*rhs.getRotation();
+    return HomogeneousTransformation<PrimType_, Position_, Rotation_>(position, rotation);
   }
 };
 
