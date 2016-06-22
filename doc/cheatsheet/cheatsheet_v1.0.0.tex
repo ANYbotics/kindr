@@ -295,7 +295,7 @@ A rotation quaternion is a Hamiltonian unit quaternion: \\
 $\begin{aligned}Q &= q_0 + q_1 i + q_2 j + q_3 k \in \mathbb{H}, \quad q_i \in \mathbb{R}, 
 i^2 = j^2=k^2 = ijk = -1, \quad \norm{Q}= \sqrt{q_0^2 + q_1^2 + q_2^2 + q_3^2} = 1 \\
 \end{aligned}$   \\
-Note that $\Quat{A}{B}$ and $-\Quat{A}{B}$ represent the same rotation, but not the same unit quaternion. \\
+Note that $\Quat{I}{B}$ and $-\Quat{I}{B}$ represent the same rotation, but not the same unit quaternion. \\
 Rot. quaternion as tuple: $Q = (q_0, q_1, q_2, q_3) = (q_0, \imquatvec{q})$ with $\imquatvec{q} := (q_1, q_2, q_3)^\transpose $ \\
 Rot. quaternion as vector: $\vq = \begin{bmatrix} q_0 & q_1 & q_2 & q_3 \end{bmatrix}^\transpose $\\
 % Imaginary part: $\overrightarrow{\vp} := (p_1, p_2, p_3)^\transpose$
@@ -359,10 +359,10 @@ $\begin{aligned}\comat{I}{B}^{-1} &= \comat{B}{I}  = \identity_{3 \times 3} - 2 
 
 \subsubsection{Euler Angles ZYX $\Leftrightarrow$ Direction Cosine Matrix}
 \myfigure{\includegraphics[width=1\columnwidth]{coordinate_systems/coordinate_system_ypr_kindr1-crop.pdf}\vspace{-3mm}
-\figcaption{Rotation from $A$-frame to $D$-frame: ($z-y'-x''$) -- (yaw-pitch-roll) -- ($\psi-\theta-\phi$) -- ($50^\circ-25^\circ-30^\circ)$}\label{fig:yaw-pitch-roll}}
+\figcaption{Rotation from $A$-frame to $D$-frame: ($z-y'-x''$) -- (yaw-pitch-roll) -- ($50^\circ-25^\circ-30^\circ)$}\label{fig:yaw-pitch-roll}}
 \subsubsection{Euler Angles XYZ $\Leftrightarrow$ Direction Cosine Matrix}
 \myfigure{\includegraphics[width=1\columnwidth]{coordinate_systems/coordinate_system_rpy_kindr1-crop.pdf}\vspace{-3mm}
-\figcaption{Rotation from $A$-frame to $D$-frame: ($x-y'-z''$) -- (roll-pitch-yaw) -- ($\alpha-\beta-\gamma$) -- ($50^\circ-25^\circ-30^\circ)$}\label{fig:roll-pitch-yaw}}
+\figcaption{Rotation from $A$-frame to $D$-frame: ($x-y'-z''$) -- (roll-pitch-yaw) -- ($50^\circ-25^\circ-30^\circ)$}\label{fig:roll-pitch-yaw}}
 
 
 % \subsection{Eigen Library}
