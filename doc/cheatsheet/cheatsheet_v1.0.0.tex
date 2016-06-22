@@ -199,7 +199,7 @@ Identity matrix & $\identity_{n\times m}$ & ${n \times m}$-matrix  \\  \hline
 Coordinate system (CS) & ${\ve_x^A,\ve_y^A,\ve_z^A}$ & Cartesian right-hand system $A$ with basis (unit) vectors $\ve$  \\ \hline
 Inertial frame & ${\ve_x^I,\ve_y^I,\ve_z^I}$ & global / inertial / world coordinate system (never moves) \\ \hline
 Body-fixed frame & ${\ve_x^B,\ve_y^B,\ve_z^B}$ & local / body-fixed coordinate system (moves with body) \\ \hline
-Rotation & $\cR \in \mathrm{SO}(3)$ & generic rotation (for all parameterizations) \\ \hline
+Rotation & $\Phi \in \mathrm{SO}(3)$ & generic rotation (for all parameterizations) \\ \hline
 Machine precision & $\epsilon$ & \\ \hline
 %Translational velocity & $\linvel{I}{P} \in \mathbb{R}^3 $  & translational velocity of point $P$ expressed in CS $I$ \\ \hline
 %Angular velocity & $\rotvel{I}{I}{B} \in \mathbb{R}^3 $ & ang. velocity of CS $B$ w.r.t. to CS $B$ expressed in CS $I$ \\ \hline
@@ -233,8 +233,8 @@ Homogeneous pos. vector & ${}_B\bar{\vr}_{O\!P} = \begin{bmatrix}\postranspose{B
 \parbox[t]{0.7\columnwidth}{\null
   \vskip-\abovecaptionskip
 \begin{tabular}[h!]{r@{ }p{3cm}@{ }l@{ }}
- 1) & Active Rotation: & $\cR^A: {}_A\color{blue}{\vr_{O\!P}} \color{black}\mapsto {}_A\color{green!50!black}{\vr_{O\!Q}} $ (rotates the vector $\vr_{O\!P}$) \\
- 2) & Passive Rotation:& $\cR^P: {}_A\color{blue}{\vr_{O\!P}} \color{black}\mapsto \color{red}{}_B\color{blue}{\vr_{O\!P}} $ (rotates the frame $(\ve_x^I,\ve_y^I,\ve_z^I)$)\\
+ 1) & Active Rotation: & $\Phi^A: {}_I\color{blue}{\vr_{O\!P}} \color{black}\mapsto {}_I\color{green!50!black}{\vr_{O\!Q}} $ (rotates the vector $\vr_{O\!P}$) \\
+ 2) & Passive Rotation:& $\Phi^P: {}_I\color{blue}{\vr_{O\!P}} \color{black}\mapsto \color{red}{}_B\color{blue}{\vr_{O\!P}} $ (rotates the frame $(\ve_x^I,\ve_y^I,\ve_z^I)$)\\
  3) & Elementary Rotations &  ${}_I\color{blue}{\vr_{O\!P}} = \color{black} \comat{I}{B} \color{red}{}_B\color{blue}{\vr_{O\!P}}$ \\ 
  & & around z-axis: \tiny  $\comat{I}{B} = \begin{bmatrix} \cos{\theta} & -\sin{\theta} & 0 \\ 
 			    \sin{\theta} & \cos{\theta} & 0 \\
@@ -248,19 +248,18 @@ Homogeneous pos. vector & ${}_B\bar{\vr}_{O\!P} = \begin{bmatrix}\postranspose{B
 							   0 & \cos{\theta} & -\sin{\theta} \\
 							   0 & \sin{\theta} & \cos{\theta} 
 					    \end{bmatrix}$ \\
- 4) & Inversion: & $\cR^{A^{-1}}(\vr) = \cR^P(\vr)$ \\ 
- 5) & Concatenation: & \multicolumn{1}{l}{$\begin{aligned}\cR_2^A\left(\cR_1^A(\vr)\right) &= \left(\cR_2^A \otimes \cR_1^A\right)(\vr) 
-											    = \left(\cR_1^{A^{-1}} \otimes \cR_2^{A^{-1}}\right)^{-1}(\vr) \\
-                                            \cR_2^P\left(\cR_1^P(\vr)\right) &= \left(\cR_2^P \otimes \cR_1^P\right)(\vr) 
-									     = \left(\cR_1^{P^{-1}} \otimes \cR_2^{P^{-1}}\right)^{-1}(\vr) 
+ 4) & Inversion: & $\Phi^{A^{-1}}(\vr) = \Phi^P(\vr)$ \\ 
+ 5) & Concatenation: & \multicolumn{1}{l}{$\begin{aligned}\Phi_2^A\left(\Phi_1^A(\vr)\right) &= \left(\Phi_2^A \otimes \Phi_1^A\right)(\vr) = \left(\Phi_1^{A^{-1}} \otimes \Phi_2^{A^{-1}}\right)^{-1}(\vr) \\
+\Phi_2^P\left(\Phi_1^P(\vr)\right) &= \left(\Phi_2^P \otimes \Phi_1^P\right)(\vr) 
+									     = \left(\Phi_1^{P^{-1}} \otimes \Phi_2^{P^{-1}}\right)^{-1}(\vr) 
 					      \end{aligned}$} \\
  6) & Exponential map: & $ \expmap: \mathbb{R}^3 \rightarrow \mathrm{SO}(3), \vv \mapsto \expmatrix(\hat{\vv}), \quad \vv \in \mathbb{R}^3$ \\
- 7) & Logarithmic map: & $ \logmap: \mathrm{SO}(3) \rightarrow \mathbb{R}^3, \cR \mapsto \logmatrix(\cR)^\vee, \quad \cR \in \mathrm{SO}(3)$ \\ 
- 8) & Box plus: & $\cR_{2} = \cR_{1} \boxplus \vv = \expmap{(\vv)} \otimes \cR_{1}, \quad  \cR_1, \cR_2 \in \mathrm{SO}(3), \vv \in \mathbb{R}^3$   \\
- 9) & Box minus: & $\vv = \cR_{1} \boxminus \cR_2 = \logmap{(\cR_1\otimes\cR_2^{-1})}, \quad \cR_1, \cR_2 \in \mathrm{SO}(3), \vv \in \mathbb{R}^3$  \\ 
- 10) & Discrete integration: & $\cR_{I\!B}^{k+1} = \cR_{I\!B}^k \boxplus ({}_I\vom_{I\!B}^k\Delta t), \quad \cR_{B\!I}^{k+1} = \cR_{B\!I}^k \boxplus (-{}_B\vom_{I\!B}^k\Delta t)$ \\
- 11) & Discrete differential: & ${}_I\vom_{I\!B}^k = (\cR_{I\!B}^{k+1} \boxminus \cR_{I\!B}^k)/\Delta t, \quad {}_B\vom_{I\!B}^k = -(\cR_{B\!I}^{k+1} \boxminus{\cR_{B\!I}^k }/\Delta t)$ \\
- 12) & (Spherical) linear interpolation $t \in [0, 1]$: & $\begin{aligned}\cR_t &= \cR_0 \boxplus \left( (\cR_1 \boxminus \cR_0) t \right), \quad \cR_t = \cR(t), \cR_0 = \cR(0), \cR_1=\cR(1) \\ &= (\cR_1 \otimes \cR_0^{-1})^t \otimes \cR_0 \end{aligned}$ \\ 
+ 7) & Logarithmic map: & $ \logmap: \mathrm{SO}(3) \rightarrow \mathbb{R}^3, \Phi \mapsto \logmatrix(\Phi)^\vee, \quad \Phi \in \mathrm{SO}(3)$ \\ 
+ 8) & Box plus: & $\Phi_{2} = \Phi_{1} \boxplus \vv = \expmap{(\vv)} \otimes \Phi_{1}, \quad  \Phi_1, \Phi_2 \in \mathrm{SO}(3), \vv \in \mathbb{R}^3$   \\
+ 9) & Box minus: & $\vv = \Phi_{1} \boxminus \Phi_2 = \logmap{(\Phi_1\otimes\Phi_2^{-1})}, \quad \Phi_1, \Phi_2 \in \mathrm{SO}(3), \vv \in \mathbb{R}^3$  \\ 
+ 10) & Discrete integration: & $\Phi_{I\!B}^{k+1} = \Phi_{I\!B}^k \boxplus ({}_I\vom_{I\!B}^k\Delta t), \quad \Phi_{B\!I}^{k+1} = \Phi_{B\!I}^k \boxplus (-{}_B\vom_{I\!B}^k\Delta t)$ \\
+ 11) & Discrete differential: & ${}_I\vom_{I\!B}^k = (\Phi_{I\!B}^{k+1} \boxminus \Phi_{I\!B}^k)/\Delta t, \quad {}_B\vom_{I\!B}^k = -(\Phi_{B\!I}^{k+1} \boxminus{\Phi_{B\!I}^k }/\Delta t)$ \\
+ 12) & (Spherical) linear interpolation $t \in [0, 1]$: & $\begin{aligned}\Phi_t &= \Phi_0 \boxplus \left( (\Phi_1 \boxminus \Phi_0) t \right), \quad \Phi_t = \Phi(t), \Phi_0 = \Phi(0), \Phi_1=\Phi(1) \\ &= (\Phi_1 \otimes \Phi_0^{-1})^t \otimes \Phi_0 \end{aligned}$ \\ 
 \end{tabular}
 }
 \parbox[t]{0.25\columnwidth}{\null
@@ -276,17 +275,17 @@ Homogeneous pos. vector & ${}_B\bar{\vr}_{O\!P} = \begin{bmatrix}\postranspose{B
 %& $ \pos{B}{O}{P} = \rotmat{B}{A}^\transpose \pos{A}{O}{P}$ & basis vectors $(_A\ve_x^B, _A\ve_y^B, _A\ve_z^B)$ of $B$ expressed in $A$. \\ 
  %& &  The rotation is active (alibi). \\
 %& & $_A\rotmat{B}{A} = \begin{bmatrix}_A\ve_x^B & _A\ve_y^B & _A\ve_z^B\end{bmatrix}$ \\ \hline
-Rotation Matrix& $\comat{B}{A} \in \mathrm{SO}(3)$ & The rotation matrix (Direction Cosine Matrix)  \\  
-  & $ \pos{B}{O}{P} = \comat{B}{A} \pos{A}{O}{P}$ & is a coordinate tranformation matrix,  \\
-& $\comat{B}{A} = \comat{A}{B}^\transpose$ & which transforms vectors from frame $A$ to frame $B$. \\  \hline 
- Rotation  & $\quat{B}{A}$ &  Hamiltonian unit quaternion (hypercomplex number)\\
+Rotation Matrix& $\comat{A}{B} \in \mathrm{SO}(3)$ & The rotation matrix (Direction Cosine Matrix)  \\  
+  & $ \pos{A}{O}{P} = \comat{A}{B} \pos{B}{O}{P}$ & is a coordinate transformation matrix,  \\
+& $\comat{A}{B} = \comat{B}{A}^\transpose$ & which transforms vectors from frame $B$ to frame $A$. \\  \hline 
+ Rotation  & $\quat{A}{B}$ &  Hamiltonian unit quaternion (hypercomplex number)\\
 Quaternion &  $\vq = [ q_0 \, q_1  \, q_2  \,  q_3 ]^\transpose $ & $Q = q_0 + q_1 i + q_2 j + q_3 k \in \mathbb{H}, \quad q_i \in \mathbb{R}, \quad \norm{Q}= 1$ \\ \hline
-Angle-axis & $\angleaxis{B}{A}$ &   Rotation with unit rotation axis $\vn$ and angle $\theta \in [0, \pi]$. \\ \hline
-Rotation Vector & $ \rotvec{B}{A} $  &  Rotation with rotation axis $\vn = \frac{\vvph}{\norm{\vvph}}$ and angle $\theta = \norm{\vvph}$. \\ \hline
-Euler Angles ZYX &  $(\psi, \theta, \phi)_{B\!A}$  & Tait-Bryan angles (Flight conv.): $z-y'-x''$, i.e.\   \\
+Angle-axis & $\angleaxis{A}{B}$ &   Rotation with unit rotation axis $\vn$ and angle $\theta \in [0, \pi]$. \\ \hline
+Rotation Vector & $ \rotvec{A}{B} $  &  Rotation with rotation axis $\vn = \frac{\vvph}{\norm{\vvph}}$ and angle $\theta = \norm{\vvph}$. \\ \hline
+Euler Angles ZYX &  $(\psi, \theta, \phi)_{A\!B}$  & Tait-Bryan angles (Flight conv.): $z-y'-x''$, i.e.\   \\
 Euler Angles YPR &  & yaw-pitch-roll. Singularities are at $\theta=\pm\frac{\pi}{2}$. \\
  &  & $\psi\in[-\pi,\pi), \theta\in[-\frac{\pi}{2},\frac{\pi}{2}), \phi\in[-\pi,\pi)$  \\  \hline
-Euler Angles XYZ &  $(\alpha, \beta, \gamma)_{B\!A}$ & Cardan angles (Glocker conv.): $x-y'-z''$, i.e.\ \\
+Euler Angles XYZ &  $(\alpha, \beta, \gamma)_{A\!B}$ & Cardan angles (Glocker conv.): $x-y'-z''$, i.e.\ \\
 Euler Angles RPY & & roll-pitch-yaw. Singularities are at $\beta=\pm\frac{\pi}{2}$.  \\
  &  & $\alpha\in[-\pi,\pi), \beta\in[-\frac{\pi}{2},\frac{\pi}{2}), \gamma\in[-\pi,\pi)$  \\  \hline
 \end{tabular} % \multirow{2}{*}{}
@@ -461,46 +460,48 @@ $\dot{\vvph} = \left(\identity_{3\times 3} + \frac{1}{2}\hat{\vvph} + \hat{\vvph
 \end{tabular}
 
 \subsubsection{Time Derivative of Euler Angles ZYX  $\Leftrightarrow$ Angular Velocity}
-%  is correct  according to Eq. 76 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
-%$\begin{bmatrix} \dot{\psi} \\ \dot{\theta} \\ \dot{\phi} \end{bmatrix} = \begin{bmatrix} \frac{\cos{\psi}\sin{\theta}}{\cos{\theta}} & \frac{\sin{\psi}\sin{\theta}}{\cos{\theta}} & 1 \\
-%                        -\sin{\psi} &                         \cos{\psi} & 0 \\
-%              \frac{\cos{\psi}}{\cos{\theta}} &              \frac{\sin{\psi}}{\cos{\theta}} & 0 \end{bmatrix}  \rotvel{I}{I}{B} \quad \forall \theta \in \mathbb{R}\backslash\{\frac{\pi}{2}+k\pi\}, k\in\mathbb{Z}$ 
 
-              
-              %  is correct  according to Eq. 79 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
-$\begin{bmatrix} \dot{\psi} \\ \dot{\theta} \\ \dot{\phi}  \end{bmatrix} =  \begin{bmatrix}\frac{-\cos{\psi} \sin{\theta}}{\cos{\theta}}& \frac{(\sin{\theta} \sin{\psi})}{\cos{\theta}}& 1 \\
-                        \sin{\psi} &                 \cos{\psi} & 0 \\
-                 \frac{\cos{\psi}}{\cos{\theta}}&         \frac{-\sin{\psi}}{\cos{\theta}} & 0 \end{bmatrix} \rotvel{B}{I}{B} \quad \forall \theta \in \mathbb{R}\backslash\{\frac{\pi}{2}+k\pi\}, k\in\mathbb{Z}$ 
+% Project B_w_IB to dZYX
+$\begin{bmatrix} \dot{z} \\ \dot{y} \\ \dot{x}  \end{bmatrix} = 
+\begin{bmatrix}
+0 			& \dfrac{\sin(x)}{\cos(y)} 			& \dfrac{\cos(x)}{\cos(y)}\\
+0 			& \cos(x)        					& -\sin(x) \\
+1 			& \dfrac{\sin(x)\sin(y)}{\cos(y)} 	& \dfrac{\cos(x)\sin(y)}{\cos(y)}
+\end{bmatrix}
+\rotvel{B}{I}{B}
+$
 
-% I_w_IB is correct  according to Eq. 74 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
-%$  \rotvel{I}{I}{B} = \begin{bmatrix} 0 & -\sin{\psi} & \cos{\psi}\cos{\theta} \\
-% 0 &  \cos{\psi} & \cos{\theta}\sin{\psi} \\
-% 1 &         0 &         -\sin{\theta} \end{bmatrix}  \begin{bmatrix}  \dot{\psi} \\ \dot{\theta} \\ \dot{\phi}  \end{bmatrix} $
 
-% B_w_IB is correct  according to Eq. 77 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
-$ \rotvel{B}{I}{B} = \begin{bmatrix}       0 & \sin{\psi} &  \cos{\theta}\cos{\psi} \\
-      0 & \cos{\psi} & -\cos{\theta}\sin{\psi} \\
-      1 &      0 &         \sin{\theta} \end{bmatrix} \begin{bmatrix} \dot{\psi} \\ \dot{\theta} \\ \dot{\phi}  \end{bmatrix}  $ 
+% Project I_w_IB to dZYX
+$\begin{bmatrix} \dot{z} \\ \dot{y} \\ \dot{x}  \end{bmatrix} = 
+\begin{bmatrix}
+\dfrac{\cos(z)\sin(y)}{\cos(y)}		&		\dfrac{\sin(y)\sin(z)}{\cos(y)}	&	1 \\
+-\sin(z)							&		\cos(z)							&	0 \\
+\dfrac{\cos(z)}{\cos(y)}			&		\dfrac{\sin(z)}{\cos(y)}		&	0 \\
+\end{bmatrix}
+\rotvel{I}{I}{B}
+$
 
-%\subsubsection{Time Derivative of Euler Angles XYZ  $\Leftrightarrow$ Angular Velocity}
-%% is correct  according to Eq. 457 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
-%$\begin{bmatrix} \dot{\alpha} \\ \dot{\beta} \\ \dot{\gamma} \end{bmatrix}  =  \begin{bmatrix} 1 & \frac{\sin{\alpha}\sin{\beta}}{\cos{\beta}} & -\frac{\cos{\alpha}\sin{\beta}}{\cos{\beta}} \\
-% 0 &                       \cos{\alpha} &                        \sin{\alpha} \\
-% 0 &            \frac{-\sin{\alpha}}{\cos{\beta}} &              \frac{\cos{\alpha}}{\cos{\beta}}\end{bmatrix}  \rotvel{I}{I}{B}\quad \forall \beta \in \mathbb{R}\backslash\{\frac{\pi}{2}+k\pi\}, k\in\mathbb{Z}$ 
-%% is correct according to Eq. 458 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
-%$\begin{bmatrix} \dot{\alpha} \\ \dot{\beta} \\ \dot{\gamma} \end{bmatrix} = \begin{bmatrix} \frac{\cos{\gamma}}{\cos{\beta}} &            \frac{-\sin{\gamma}}{\cos{\beta}} & 0 \\
-%                        \sin{\gamma} &                       \cos{\gamma} & 0 \\
-% \frac{-\cos{\gamma}\sin{\beta}}{\cos{\beta}} & \frac{\sin{\beta}\sin{\gamma}}{\cos{\beta}} & 1 \end{bmatrix} \rotvel{B}{I}{B} \quad \forall \beta \in \mathbb{R}\backslash\{\frac{\pi}{2}+k\pi\}, k\in\mathbb{Z}$ 
-%
-%% I_w_IB is correct  according to Eq. 453 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
-%$ \rotvel{I}{I}{B} =  \begin{bmatrix} 1 &          0 &             \sin{\beta} \\
-% 0 & \cos{\alpha} & -\cos{\beta}\sin{\alpha} \\
-% 0 & \sin{\alpha} &  \cos{\alpha}\cos{\beta} \end{bmatrix} \begin{bmatrix} \dot{\alpha} \\ \dot{\beta} \\ \dot{\gamma} \end{bmatrix}$%
-%
-%% B_w_IB is correct  according to Eq. 455 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
-%$ \rotvel{B}{I}{B} =\begin{bmatrix}  \cos{\beta}\cos{\gamma} & \sin{\gamma} & 0 \\
-% -\cos{\beta}\sin{\gamma} & \cos{\gamma} & 0 \\
-%             \sin{\beta} &          0 & 1 \end{bmatrix} \begin{bmatrix} \dot{\alpha} \\ \dot{\beta} \\ \dot{\gamma} \end{bmatrix} $
+
+% Project dZYX to B_w_IB
+$ \rotvel{B}{I}{B} =
+\begin{bmatrix}
+-\sin(y) 		&		0			& 1 \\
+\cos(y)\sin(x)	&		\cos(x)		& 0 \\
+\cos(x)\cos(y)	&	   -\sin(x)  	& 0 \\
+\end{bmatrix}
+\begin{bmatrix} \dot{z} \\ \dot{y} \\ \dot{x}  \end{bmatrix} $
+
+
+% Project dZYX to I_w_IB
+$ \rotvel{I}{I}{B} =
+\begin{bmatrix}
+0	&	-\sin(z)	&	 \cos(y)\cos(z)	\\
+0	&	 \cos(z)	&	 \cos(y)\sin(z)	\\
+1	&	 0			&	-\sin(y)
+\end{bmatrix}
+\begin{bmatrix} \dot{z} \\ \dot{y} \\ \dot{x}  \end{bmatrix} $
+
 
 \newpage
 \section{Dynamics of a Multi-Rigid-Body System}
@@ -521,7 +522,7 @@ $ \rotvel{B}{I}{B} = \begin{bmatrix}       0 & \sin{\psi} &  \cos{\theta}\cos{\p
 %   $\vp$			& Momentum \\
 %   $\vN_S$		& Spin at center of gravity \\
   $m$ 			& Mass \\
-  $\vTh$ 		& Intertia tensor \\
+  $\vTh$ 		& Inertia tensor \\
 %   $\vv_P$		& Velocity of point P \\
 %   $\va_P$		& Acceleration of point P \\
 %   $\vOm$		& Angular velocity \\
