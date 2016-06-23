@@ -1,28 +1,3 @@
-% Copyright (c) 2013, Christian Gehring, Hannes Sommer, Paul Furgale, Remo Diethelm
-% All rights reserved.
-%
-% Redistribution and use in source and binary forms, with or without
-% modification, are permitted provided that the following conditions are met:
-%     * Redistributions of source code must retain the above copyright
-%       notice, this list of conditions and the following disclaimer.
-%     * Redistributions in binary form must reproduce the above copyright
-%       notice, this list of conditions and the following disclaimer in the
-%       documentation and/or other materials provided with the distribution.
-%     * Neither the name of the Autonomous Systems Lab, ETH Zurich nor the
-%       names of its contributors may be used to endorse or promote products
-%       derived from this software without specific prior written permission.
-%
-% THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-% ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-% WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-% DISCLAIMED. IN NO EVENT SHALL Christian Gehring, Hannes Sommer, Paul Furgale,
-% Remo Diethelm BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
-% OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
-% GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-% HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-% OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-% SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 \documentclass[10pt,landscape,a4paper]{article}
 \usepackage{nonfloat}
 \usepackage{multicol}
@@ -94,7 +69,6 @@
 \pagestyle{empty}
  
 
-
 % Redefine section commands to use less space
 \makeatletter
   \renewcommand{\section}{\@startsection{section}{1}{0mm}%
@@ -128,15 +102,11 @@
 % -----------------------------------------------------------------------
 \DeclareGraphicsExtensions{.pdf,.eps}
 
-
-
-
-
- \DeclareMathOperator{\tr}{tr}
- \DeclareMathOperator{\logmap}{log}
- \DeclareMathOperator{\expmap}{exp}
- \DeclareMathOperator{\logmatrix}{logM}
- \DeclareMathOperator{\expmatrix}{expM}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\logmap}{log}
+\DeclareMathOperator{\expmap}{exp}
+\DeclareMathOperator{\logmatrix}{logM}
+\DeclareMathOperator{\expmatrix}{expM}
 % identity matrix
 \newcommand\identity{\mathds{1}}
 \newcommand\zero{\mathbf{0}}
@@ -173,7 +143,6 @@
 \footnotesize
 \begin{multicols}{2}
 
-
 % multicol parameters
 % These lengths are set only within the two main columns
 %\setlength{\columnseprule}{0.25pt}
@@ -183,7 +152,7 @@
 \setlength{\columnsep}{2pt}
 
 \begin{center}
-     \Large{\textbf{Kindr Library} \small{\textbf{-- Kinematics and Dynamics for Robotics}}\\
+     \Large{\textbf{Kindr Library}} \small{\textbf{-- Kinematics and Dynamics for Robotics}}\\
        %\small{\\\textbf{Kinematics and Dynamics for Robotics}}}  \\
         \vspace{2mm}\scriptsize{Christian Gehring, C. Dario Bellicoso, Michael Bloesch, Hannes Sommer, Peter Fankhauser, \\ Marco Hutter, Roland Siegwart} \\ 
         %\scriptsize{Autonomous Systems Lab & Robotics Systems Lab, ETH Zurich}
@@ -203,13 +172,7 @@ Inertial frame & ${\ve_x^I,\ve_y^I,\ve_z^I}$ & global / inertial / world coordin
 Body-fixed frame & ${\ve_x^B,\ve_y^B,\ve_z^B}$ & local / body-fixed coordinate system (moves with body) \\ \hline
 Rotation & $\Phi \in \mathrm{SO}(3)$ & generic rotation (for all parameterizations) \\ \hline
 Machine precision & $\epsilon$ & \\ \hline
-%Translational velocity & $\linvel{I}{P} \in \mathbb{R}^3 $  & translational velocity of point $P$ expressed in CS $I$ \\ \hline
-%Angular velocity & $\rotvel{I}{I}{B} \in \mathbb{R}^3 $ & ang. velocity of CS $B$ w.r.t. to CS $B$ expressed in CS $I$ \\ \hline
-%Ang. vel. of rigid body & ${}_B\vOm = \rotvel{B}{I}{B}$ & with body-fixed CS $B$ and inertial CS $I$ \\ \hline
-%Ang. acc. of rigid body & ${}_B\vPs$ \\ \hline
 
-% Generalized coordinates & $\vq \in \mathbb{Q} \subset \mathbb{R}^{n_q}$ & set of coordinates to describe a multi-rigid-body system\\ \hline
-% Generalized velocities & $\vu \in \mathbb{U} \subset \mathbb{R}^{n_u}$ & gen. velocities of multi-rigid-body system, where $\vu = \vF\dot{\vq}$\\ \hline
 \end{tabular}
 \section{Operators}
 \begin{tabular}{ll}
@@ -229,7 +192,6 @@ Vector & $\vr_{O\!P}$ & from point $O$ to point $P$ \\ \hline
 Position vector & $\pos{B}{O}{P} \in \mathbb{R}^3 $ & from point $O$ to point $P$ expr. in frame $B$ \\ \hline 
 Homogeneous pos. vector & ${}_B\bar{\vr}_{O\!P} = \begin{bmatrix}\postranspose{B}{O}{P} & 1 \end{bmatrix}^\transpose$ & from point $O$ to point $P$ expr. in frame $B$ \\ \hline
 \end{tabular}
-
 
 \subsection{Orientation/Rotation}
 \parbox[t]{0.7\columnwidth}{\null
@@ -271,12 +233,6 @@ Homogeneous pos. vector & ${}_B\bar{\vr}_{O\!P} = \begin{bmatrix}\postranspose{B
 \subsubsection{Rotation Parameterizations}
 \begin{tabular}{ll@{}l@{}}
 \hline
-%Rotation Matrix &  $\rotmat{B}{A}  =\begin{bmatrix} R_{11} & R_{12} & R_{13} \\  R_{21} & R_{22} & R_{23} \\ R_{31} & R_{32} & R_{33} \end{bmatrix} \in \mathrm{SO}(3)$ & Maps the coord. of the basis vectors $(_A\ve_x^A, _A\ve_y^A, _A\ve_z^A)$ \\
-%Rotation Matrix &  $\rotmat{B}{A} \in \mathrm{SO}(3)$ & Maps the coord. of the basis vectors $(_A\ve_x^A, _A\ve_y^A, _A\ve_z^A)$ \\
-% & $ \pos{A}{O}{Q} = \rotmat{B}{A} \pos{A}{O}{P}$ & of frame $A$ expressed in $A$  into the coordinates of the  \\
-%& $ \pos{B}{O}{P} = \rotmat{B}{A}^\transpose \pos{A}{O}{P}$ & basis vectors $(_A\ve_x^B, _A\ve_y^B, _A\ve_z^B)$ of $B$ expressed in $A$. \\ 
- %& &  The rotation is active (alibi). \\
-%& & $_A\rotmat{B}{A} = \begin{bmatrix}_A\ve_x^B & _A\ve_y^B & _A\ve_z^B\end{bmatrix}$ \\ \hline
 Rotation Matrix& $\comat{A}{B} \in \mathrm{SO}(3)$ & The rotation matrix (Direction Cosine Matrix)  \\  
   & $ \pos{A}{O}{P} = \comat{A}{B} \pos{B}{O}{P}$ & is a coordinate transformation matrix,  \\
 & $\comat{A}{B} = \comat{B}{A}^\transpose$ & which transforms vectors from frame $B$ to frame $A$. \\  \hline 
@@ -298,13 +254,8 @@ $\begin{aligned}Q &= q_0 + q_1 i + q_2 j + q_3 k \in \mathbb{H}, \quad q_i \in \
 i^2 = j^2=k^2 = ijk = -1, \quad \norm{Q}= \sqrt{q_0^2 + q_1^2 + q_2^2 + q_3^2} = 1 \\
 \end{aligned}$   \\
 Note that $\Quat{I}{B}$ and $-\Quat{I}{B}$ represent the same rotation, but not the same unit quaternion. \\
-Rot. quaternion as tuple: $Q = (q_0, q_1, q_2, q_3) = (q_0, \imquatvec{q})$ with $\imquatvec{q} := (q_1, q_2, q_3)^\transpose $ \\
-Rot. quaternion as vector: $\vq = \begin{bmatrix} q_0 & q_1 & q_2 & q_3 \end{bmatrix}^\transpose $\\
-% Imaginary part: $\overrightarrow{\vp} := (p_1, p_2, p_3)^\transpose$
-% Real part: $p_0 = \vP_\mathnormal{Re}\vp $ \\
-
-% Imaginary part: $\vp_{1:3} := \vP_\mathnormal{Im}\vp = \begin{bmatrix} p_1 & p_2 & p_3 \end{bmatrix}^\transpose $\\
-
+Rot. quaternion as tuple: $Q = (q_0, q_1, q_2, q_3) = (q_0, \imquatvec{q})$ with $\imquatvec{q} := (q_1, q_2, q_3)^\transpose$ \\
+Rot. quaternion as vector: $\vq = \begin{bmatrix} q_0 & q_1 & q_2 & q_3 \end{bmatrix}^\transpose$ \\
 Conjugate: $Q^\ast = (q_0, -\imquatvec{q})$ \\
 Inverse: $Q^{-1} = Q^\ast = (q_0, -\imquatvec{q})$ \\
 %  The Eq. 109 and Eq. 111 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006. are wrong, they should be switched.
@@ -324,11 +275,6 @@ Quaternion multiplication: $\begin{aligned}Q \cdot P &= (q_0, \imquatvec{q})\cdo
 \end{aligned}$ \\
 
 
-%$\begin{aligned}{}_B\vr_{OP} &= {}_I\vr_{OP} + 2a_0\tilde{\va} {}_I\vr_{OP} + 2 \tilde{\va}^2 {}_I\vr_{OP}, \quad  \text{(Eigen)} \\
-% &= \vp_{BI} (0, {}_I\vr_{OP}^T)^T \vp_{BI}^{-1} = (a_0, \va^T)^T (0, {}_I\vr_{OP}^T)^T (a_0, -\va^T)^T \end{aligned}$
-
-
-
 \subsubsection{Rotation Quaternion $\Leftrightarrow$ Rotation Angle-Axis}
 
 \begin{tabular}{@{}lll@{}} 
@@ -346,18 +292,12 @@ $\begin{aligned}\comat{I}{B} &=  \identity_{3\times 3} + 2 q_0\hat{\imquatvec{q}
          2p_0p_3 + 2p_1p_2 & p_0^2 - p_1^2 + p_2^2 - p_3^2 &         2p_2p_3 - 2p_0p_1 \\
          2p_1p_3 - 2p_0p_2 &         2p_0p_1 + 2p_2p_3 & p_0^2 - p_1^2 - p_2^2 + p_3^2 \\ \end{bmatrix} \\
 \end{aligned}$
-%= \begin{pmatrix} 1 - 2 a_2^2 - 2 a_3^2  &     2 a_1 a_2 - 2 a_0 a_3 &     2 a_0 a_2 + 2 a_1 a_3 \\
-     %2 a_0 a_3 + 2 a_1 a_2 & 1 - 2 a_1^2 - 2 a_3^2 &     2 a_2 a_3 - 2 a_0 a_1 \\
-     %2 a_1 a_3 - 2 a_0 a_2 &     2 a_0 a_1 + 2 a_2 a_3 & 1 - 2 a_1^2 - 2 a_2^2  \\
-%\end{pmatrix}
 
 $\begin{aligned}\comat{I}{B}^{-1} &= \comat{B}{I}  = \identity_{3 \times 3} - 2 p_0\hat{\imquatvec{p}} + 2 \hat{\imquatvec{p}}^2 \\
 &= \begin{bmatrix}  p_0^2 + p_1^2 - p_2^2 - p_3^2 &         2p_0p_3 + 2p_1p_2 &         2p_1p_3 - 2p_0p_2 \\
          2p_1p_2 - 2p_0p_3 & p_0^2 - p_1^2 + p_2^2 - p_3^2 &         2p_0p_1 + 2p_2p_3 \\
          2p_0p_2 + 2p_1p_3 &         2p_2p_3 - 2p_0p_1 & p_0^2 - p_1^2 - p_2^2 + p_3^2 \\ \end{bmatrix}  \\  
 \end{aligned}$ \\
-
-%$\vp_{BA} = \vp_{BA}(\comat{A}{B}) = \begin{bmatrix} \frac{1}{2} \sqrt{1 + \tr(\vC)} \\ \frac{C_{32} - C_{23}}{4 p_0} \\ \frac{C_{13} - C_{31}}{4 p_0} \\ \frac{C_{21} - C_{12}}{4 p_0} \end{bmatrix} \quad \text{if $\tr{(\vC	)} > 0 $}$ ($\comat{A}{B} \rightarrow \quat{B}{A}$ is not unique)
 
 \subsubsection{Euler Angles ZYX $\Leftrightarrow$ Direction Cosine Matrix}
 \myfigure{\includegraphics[width=1\columnwidth]{coordinate_systems/coordinate_system_ypr_kindr1-crop.pdf}\vspace{-3mm}
@@ -366,28 +306,6 @@ $\begin{aligned}\comat{I}{B}^{-1} &= \comat{B}{I}  = \identity_{3 \times 3} - 2 
 \myfigure{\includegraphics[width=1\columnwidth]{coordinate_systems/coordinate_system_rpy_kindr1-crop.pdf}\vspace{-3mm}
 \figcaption{Rotation from $A$-frame to $D$-frame: ($x-y'-z''$) -- (roll-pitch-yaw) -- ($50^\circ-25^\circ-30^\circ)$}\label{fig:roll-pitch-yaw}}
 
-
-% \subsection{Eigen Library}
-% \begin{tabular}{@{}ll@{}} 
-%  \verb!Vector3d ypr_BI = Vectord(psi,theta, phi);!  \\
-%  \verb!aa_BI = AngleAxis(ypr_BI(0), Vector3d::UnitZ())*! \\
-%  \verb!        AngleAxis(ypr_BI(1), Vector3d::UnitY())*! \\
-%  \verb!        AngleAxis(ypr_BI(2), Vector3d::UnitX());! \\ 
-%  \verb!Quaterniond p_BI = Quaterniond(aa_BI);! \\
-%  \verb!Matrix3d A_IB = p_BI.toRotationMatrix();! \\
-%  \verb!Vector3d I_r_OP = A_IB*B_r_OP! & \\
-% \end{tabular}
-
-
-
-% \subsubsection{Successive Composition of Rotations}
-% $\vp_{IB} = \vp_{ID} \vp_{DC} \vp_{CB} \Leftrightarrow \vA_{BI} = \vA_{BC}\vA_{CD}\vA_{DI}$
-% 
-% \subsubsection{Transformation of a Vector}
-% 
-% ${}_{B}\vr_{OP} = \vA_{BI} {}_{I}\vr_{OP}$
-% 
-% $(0, {}_B\vr_{OP}) = \vp_{IB} (0, {}_I\vr_{OP}) \vp_{IB}^{-1}$ ????
 
 \subsection{Pose}
 
@@ -564,7 +482,6 @@ $\begin{aligned}\vM &= \sum_{i=1}^n \left[ (\vJ_S^\mathsf{T} m \vJ_S + \vJ_R^\ma
 \vf &= \sum_{i=1}^n \left[ (\vJ_Q^\mathsf{T} \vF_Q^A + \vJ_R^\mathsf{T} \vM^A) \right]_i \end{aligned}$ \\
 \end{tabular}
 
-
 \subsection{Equations of Motion with Contacts and Impulses}
 $\boxed{\vM \mathrm{\Delta} \vu - \vh \mathrm{\Delta} t = \vW \vP}  \quad \left\{
   \begin{array}{r l} \vM (\vu^+ - \vu^-) &= \vW \vLa \\
@@ -577,10 +494,6 @@ $\begin{aligned}
 \vM &= \vB^\mathsf{T} \bar{\vM} \vB \\
 \vh &= \vB^\mathsf{T} \bar{\vh} - \vB^\mathsf{T} \bar{\vM} \dot{\vB} \vu \\
 \end{aligned}$
-
-
-% \subsubsection{Eigen}
-% If the quaternion is used to rotate several points (>1) then it is much more efficient to first convert it to a 3x3 Matrix.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
