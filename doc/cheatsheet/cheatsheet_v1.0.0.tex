@@ -183,8 +183,10 @@
 \setlength{\columnsep}{2pt}
 
 \begin{center}
-     \Large{\textbf{Kindr Cheat Sheet v1.0}} \\
-      \small{Kinematics and Dynamics for Robotics}
+     \Large{\textbf{Kindr Library} \small{\textbf{-- Kinematics and Dynamics for Robotics}}\\
+       %\small{\\\textbf{Kinematics and Dynamics for Robotics}}}  \\
+        \vspace{2mm}\scriptsize{Christian Gehring, C. Dario Bellicoso, Michael Bloesch, Hannes Sommer, Peter Fankhauser, \\ Marco Hutter, Roland Siegwart} \\ 
+        %\scriptsize{Autonomous Systems Lab & Robotics Systems Lab, ETH Zurich}
 \end{center}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  BEGIN CONTENT
@@ -282,12 +284,12 @@ Rotation Matrix& $\comat{A}{B} \in \mathrm{SO}(3)$ & The rotation matrix (Direct
 Quaternion &  $\vq = [ q_0 \, q_1  \, q_2  \,  q_3 ]^\transpose $ & $Q = q_0 + q_1 i + q_2 j + q_3 k \in \mathbb{H}, \quad q_i \in \mathbb{R}, \quad \norm{Q}= 1$ \\ \hline
 Angle-axis & $\angleaxis{A}{B}$ &   Rotation with unit rotation axis $\vn$ and angle $\theta \in [0, \pi]$. \\ \hline
 Rotation Vector & $ \rotvec{A}{B} $  &  Rotation with rotation axis $\vn = \frac{\vvph}{\norm{\vvph}}$ and angle $\theta = \norm{\vvph}$. \\ \hline
-Euler Angles ZYX &  $(\psi, \theta, \phi)_{A\!B}$  & Tait-Bryan angles (Flight conv.): $z-y'-x''$, i.e.\   \\
-Euler Angles YPR &  & yaw-pitch-roll. Singularities are at $\theta=\pm\frac{\pi}{2}$. \\
- &  & $\psi\in[-\pi,\pi), \theta\in[-\frac{\pi}{2},\frac{\pi}{2}), \phi\in[-\pi,\pi)$  \\  \hline
-Euler Angles XYZ &  $(\alpha, \beta, \gamma)_{A\!B}$ & Cardan angles (Glocker conv.): $x-y'-z''$, i.e.\ \\
-Euler Angles RPY & & roll-pitch-yaw. Singularities are at $\beta=\pm\frac{\pi}{2}$.  \\
- &  & $\alpha\in[-\pi,\pi), \beta\in[-\frac{\pi}{2},\frac{\pi}{2}), \gamma\in[-\pi,\pi)$  \\  \hline
+Euler Angles ZYX &  $[z, y, x]^\transpose_{A\!B}$  & Tait-Bryan angles (Flight conv.): $z-y'-x''$, i.e.\   \\
+Euler Angles YPR &  & yaw-pitch-roll. Singularities are at $y=\pm\frac{\pi}{2}$. \\
+ &  & $z\in[-\pi,\pi), y\in[-\frac{\pi}{2},\frac{\pi}{2}), x\in[-\pi,\pi)$  \\  \hline
+Euler Angles XYZ &  $[x, y, z]^\transpose_{A\!B}$ & Cardan angles: $x-y'-z''$, i.e.\ roll-pitch-yaw. \\
+Euler Angles RPY & &  Singularities are at $y=\pm\frac{\pi}{2}$.  \\
+ &  & $x\in[-\pi,\pi), y\in[-\frac{\pi}{2},\frac{\pi}{2}), z\in[-\pi,\pi)$  \\  \hline
 \end{tabular} % \multirow{2}{*}{}
 
 \subsubsection{Rotation Quaternion}
@@ -584,11 +586,11 @@ $\begin{aligned}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  END CONTENT
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\rule{0.3\linewidth}{0.25pt}
-\scriptsize
+%\rule{0.3\linewidth}{0.25pt}
+%\scriptsize
 
-Copyright \copyright\ 2014 Autonomous Systems Lab, ETH Zurich (asl.ethz.ch)\\
-Contact: Christian Gehring (gehrinch@ethz.ch) \\
+%Copyright \copyright\ 2014 Autonomous Systems Lab, ETH Zurich (asl.ethz.ch)\\
+%Contact: Christian Gehring (gehrinch@ethz.ch) \\
 
 \end{multicols}
 \end{document}
