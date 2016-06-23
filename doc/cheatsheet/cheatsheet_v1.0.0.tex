@@ -233,17 +233,17 @@ Homogeneous pos. vector & ${}_B\bar{\vr}_{O\!P} = \begin{bmatrix}\postranspose{B
 \subsubsection{Rotation Parameterizations}
 \begin{tabular}{ll@{}l@{}}
 \hline
-Rotation Matrix& $\comat{A}{B} \in \mathrm{SO}(3)$ & The rotation matrix (Direction Cosine Matrix)  \\  
-  & $ \pos{A}{O}{P} = \comat{A}{B} \pos{B}{O}{P}$ & is a coordinate transformation matrix,  \\
-& $\comat{A}{B} = \comat{B}{A}^\transpose$ & which transforms vectors from frame $B$ to frame $A$. \\  \hline 
- Rotation  & $\quat{A}{B}$ &  Hamiltonian unit quaternion (hypercomplex number)\\
+Rotation Matrix& $\comat{I}{B} \in \mathrm{SO}(3)$ & The rotation matrix (Direction Cosine Matrix)  \\  
+  & $ \pos{I}{O}{P} = \comat{I}{B} \pos{B}{O}{P}$ & is a coordinate transformation matrix,  \\
+& $\comat{I}{B} = \comat{B}{I}^\transpose$ & which transforms vectors from frame $B$ to frame $I$. \\  \hline 
+ Rotation  & $\quat{I}{B}$ &  Hamiltonian unit quaternion (hypercomplex number)\\
 Quaternion &  $\vq = [ q_0 \, q_1  \, q_2  \,  q_3 ]^\transpose $ & $Q = q_0 + q_1 i + q_2 j + q_3 k \in \mathbb{H}, \quad q_i \in \mathbb{R}, \quad \norm{Q}= 1$ \\ \hline
-Angle-axis & $\angleaxis{A}{B}$ &   Rotation with unit rotation axis $\vn$ and angle $\theta \in [0, \pi]$. \\ \hline
-Rotation Vector & $ \rotvec{A}{B} $  &  Rotation with rotation axis $\vn = \frac{\vvph}{\norm{\vvph}}$ and angle $\theta = \norm{\vvph}$. \\ \hline
-Euler Angles ZYX &  $[z, y, x]^\transpose_{A\!B}$  & Tait-Bryan angles (Flight conv.): $z-y'-x''$, i.e.\   \\
+Angle-axis & $\angleaxis{I}{B}$ &   Rotation with unit rotation axis $\vn$ and angle $\theta \in [0, \pi]$. \\ \hline
+Rotation Vector & $ \rotvec{I}{B} $  &  Rotation with rotation axis $\vn = \frac{\vvph}{\norm{\vvph}}$ and angle $\theta = \norm{\vvph}$. \\ \hline
+Euler Angles ZYX &  $[z, y, x]^\transpose_{I\!B}$  & Tait-Bryan angles (Flight conv.): $z-y'-x''$, i.e.\   \\
 Euler Angles YPR &  & yaw-pitch-roll. Singularities are at $y=\pm\frac{\pi}{2}$. \\
  &  & $z\in[-\pi,\pi), y\in[-\frac{\pi}{2},\frac{\pi}{2}), x\in[-\pi,\pi)$  \\  \hline
-Euler Angles XYZ &  $[x, y, z]^\transpose_{A\!B}$ & Cardan angles: $x-y'-z''$, i.e.\ roll-pitch-yaw. \\
+Euler Angles XYZ &  $[x, y, z]^\transpose_{I\!B}$ & Cardan angles: $x-y'-z''$, i.e.\ roll-pitch-yaw. \\
 Euler Angles RPY & &  Singularities are at $y=\pm\frac{\pi}{2}$.  \\
  &  & $x\in[-\pi,\pi), y\in[-\frac{\pi}{2},\frac{\pi}{2}), z\in[-\pi,\pi)$  \\  \hline
 \end{tabular} % \multirow{2}{*}{}
