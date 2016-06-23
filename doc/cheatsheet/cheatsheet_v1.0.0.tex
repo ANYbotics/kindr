@@ -105,8 +105,8 @@
 \DeclareMathOperator{\tr}{tr}
 \DeclareMathOperator{\logmap}{log}
 \DeclareMathOperator{\expmap}{exp}
-\DeclareMathOperator{\logmatrix}{logM}
-\DeclareMathOperator{\expmatrix}{expM}
+\DeclareMathOperator{\logmatrix}{log}
+\DeclareMathOperator{\expmatrix}{exp}
 % identity matrix
 \newcommand\identity{\mathds{1}}
 \newcommand\zero{\mathbf{0}}
@@ -180,8 +180,8 @@ Machine precision & $\epsilon$ & \\ \hline
 Cross product & $\va \times \vb = \begin{bmatrix} a_1 \\ a_2 \\ a_3\end{bmatrix} \times \begin{bmatrix} b_1 \\ b_2 \\ b_3\end{bmatrix} \Leftrightarrow (\va)^\wedge \vb = \hat{\va}\vb = \begin{bmatrix} 0 & -a_3 & a_2 \\ a_3 & 0 & -a_1 \\ -a_2 & a_1 & 0 \end{bmatrix} \begin{bmatrix} b_1 \\ b_2 \\ b_3\end{bmatrix}$ \\ \hline
 Skew/unskew &  $ \va = \hat{\va}^\vee$ \\ \hline
 Euclidean norm & $\norm{\va} = \sqrt{\va^T\va} = \sqrt{a_1^2 + \ldots + a_n^2}$ \\ \hline
-Exponential map for matrix & $\expmatrix: \mathbb{R}^3 \rightarrow \mathbb{R}^3,  \vA \mapsto e^\vA, \quad \vA \in \mathbb{R}^{3\times 3}$ \\ \hline
-Logarithmic map for matrix & $\logmatrix: \mathbb{R}^3 \rightarrow \mathbb{R}^3, \vA \mapsto \log{\vA}, \quad  \vA \in \mathbb{R}^{3\times 3}$\\ \hline
+Exponential map for matrix & $\expmatrix: \mathbb{R}^{3\times 3} \rightarrow \mathbb{R}^{3\times 3},  \vA \mapsto e^\vA, \quad \vA \in \mathbb{R}^{3\times 3}$ \\ \hline
+Logarithmic map for matrix & $\logmatrix: \mathbb{R}^{3\times 3} \rightarrow \mathbb{R}^{3\times 3}, \vA \mapsto \log{\vA}, \quad  \vA \in \mathbb{R}^{3\times 3}$\\ \hline
 \end{tabular}
 
 \section{Position \& Orientation}
@@ -222,7 +222,7 @@ Homogeneous pos. vector & ${}_B\bar{\vr}_{O\!P} = \begin{bmatrix}\postranspose{B
  8) & Box plus: & $\Phi_{2} = \Phi_{1} \boxplus \vv = \expmap{(\vv)} \otimes \Phi_{1}, \quad  \Phi_1, \Phi_2 \in \mathrm{SO}(3), \vv \in \mathbb{R}^3$   \\
  9) & Box minus: & $\vv = \Phi_{1} \boxminus \Phi_2 = \logmap{(\Phi_1\otimes\Phi_2^{-1})}, \quad \Phi_1, \Phi_2 \in \mathrm{SO}(3), \vv \in \mathbb{R}^3$  \\ 
  10) & Discrete integration: & $\Phi_{I\!B}^{k+1} = \Phi_{I\!B}^k \boxplus ({}_I\vom_{I\!B}^k\Delta t), \quad \Phi_{B\!I}^{k+1} = \Phi_{B\!I}^k \boxplus (-{}_B\vom_{I\!B}^k\Delta t)$ \\
- 11) & Discrete differential: & ${}_I\vom_{I\!B}^k = (\Phi_{I\!B}^{k+1} \boxminus \Phi_{I\!B}^k)/\Delta t, \quad {}_B\vom_{I\!B}^k = -(\Phi_{B\!I}^{k+1} \boxminus{\Phi_{B\!I}^k }/\Delta t)$ \\
+ 11) & Discrete differential: & ${}_I\vom_{I\!B}^k = (\Phi_{I\!B}^{k+1} \boxminus \Phi_{I\!B}^k)/\Delta t, \quad {}_B\vom_{I\!B}^k = -(\Phi_{B\!I}^{k+1} \boxminus{\Phi_{B\!I}^k })/\Delta t$ \\
  12) & (Spherical) linear interpolation $t \in [0, 1]$: & $\begin{aligned}\Phi_t &= \Phi_0 \boxplus \left( (\Phi_1 \boxminus \Phi_0) t \right), \quad \Phi_t = \Phi(t), \Phi_0 = \Phi(0), \Phi_1=\Phi(1) \\ &= (\Phi_1 \otimes \Phi_0^{-1})^t \otimes \Phi_0 \end{aligned}$ \\ 
 \end{tabular}
 }
@@ -313,7 +313,7 @@ $\begin{aligned}\comat{I}{B}^{-1} &= \comat{B}{I}  = \identity_{3 \times 3} - 2 
  $\begin{bmatrix}{}_I\vr_{I\!P} \\ 1 \end{bmatrix} = \vT_{I\!B} \begin{bmatrix}{}_B\vr_{B\!P}\\ 1 \end{bmatrix}, \quad \vT_{I\!B} = \begin{bmatrix}
               \comat{I}{B} & \pos{I}{I}{B} \\
 	      \zero^\transpose & 1 \\
-             \end{bmatrix}
+             \end{bmatrix},
 \quad
  \vT_{I\!B}^{-1} =\vT_{B\!I} = \begin{bmatrix}
               \comat{I}{B}^\transpose & -\comat{I}{B}^\transpose \pos{I}{I}{B} \\
@@ -322,9 +322,8 @@ $\begin{aligned}\comat{I}{B}^{-1} &= \comat{B}{I}  = \identity_{3 \times 3} - 2 
              $
 
 \section{Time Derivatives of Position \& Orientation}
-
 \subsection{Linear Velocity}
-Velocity of point $P$ expressed in a rotating frame $B$  w.r.t. to the inertial frame $I$: \\
+Velocity of point $P$ expressed in a rotating frame $B$  w.r.t. to the inertial frame $I$ using a moving point $A$: \\
 ${}_B\vv_P = {}_B\vv_A  + {}_B\dot{\vr}_{AP} + \rotvel{B}{I}{B} \times \pos{B}{A}{P}$ \\
 Velocity of point $Q$ on rigid body $B$ that rotates with ${}_B\vOm$, where point $P$ is on the same rigid body $B$: \\
 ${}_B\vv_Q = {}_B\vv_{P} + {}_B\vOm \times \pos{B}{P}{Q}, \quad {}_B\vOm=\rotvel{B}{I}{B}$ 
@@ -338,6 +337,32 @@ $\rotvel{I}{I}{B} =  \comat{I}{B} \rotvel{B}{I}{B}$  &  (global) angular velocit
 $\rotvelhat{I}{I}{B} =  \comat{I}{B} \rotvelhat{B}{I}{B} \comat{I}{B}^\transpose$ & coord. transformation of angular velocity from frame $B$ to frame $I$  \\
 $\rotvel{D}{A}{D} = \rotvel{D}{A}{B} +  \rotvel{D}{B}{C} + \rotvel{D}{C}{D}$ & composition of (relative) angular velocity \\
 \end{tabular}
+
+\subsection{Derivatives}
+\begin{tabular}[h!]{p{3.5cm}@{ }|@{ }p{4cm}@{ }|l@{ }}
+$\begin{aligned}
+\frac{\partial}{\partial t}\Phi_{B\!I}(t) &= -\rotvel{B}{I}{B}(t) \\
+\frac{\partial}{\partial \vr}(\Phi(\vr)) &= \vC(\Phi) \\
+\frac{\partial}{\partial \Phi}(\Phi(\vr)) &= -(\Phi(\vr))^\wedge \\
+\frac{\partial}{\partial \Phi}(\Phi^{-1}) &= -\vC(\Phi)^\transpose \\
+ \end{aligned}$ & 
+ $\begin{aligned}
+ \frac{\partial}{\partial \Phi_1}(\Phi_1 \otimes \Phi_2) &= \identity  \\
+\frac{\partial}{\partial \Phi_2}(\Phi_1 \otimes \Phi_2) &= \vC(\Phi_1) \\
+\frac{\partial}{\partial \vv}(\exp{(\vv))} &= \vGa(\vv) \\
+\frac{\partial}{\partial \vv}(\log{(\Phi))} &= \vGa^{-1}(\log{\Phi}) \\
+    \end{aligned}$ & 
+     $\begin{aligned}
+       \frac{\partial}{\partial \Phi_1} (\Phi_1 \boxminus \Phi_2) &=  \vGa^{-1}(\Phi_1 \boxminus \Phi_2)
+      \end{aligned}$ \\
+ \end{tabular}
+ \\
+ Jacobian of exponential map: 
+ $\vGa(\vv) = \left\{
+  \begin{array}{l l}
+     \identity + \frac{1-\cos{(\norm{\vv})\hat{\vv}}}{\norm{\vv}^2} + \frac{(\norm{\vv}-\sin{(\norm{\vv}))\hat{\vv}^2}}{\norm{\vv}^3} & \quad \text{if $\norm{\vv} = 0$}\\
+     \identity + \frac{1}{2}\hat{\vv}&  \quad \text{otherwise}
+  \end{array} \right.$
 
 \subsubsection{Time Derivative of Direction Cosine Matrix $\Leftrightarrow$ Angular Velocity}
 \begin{tabular}{@{}lll@{}}

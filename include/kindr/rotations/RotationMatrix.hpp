@@ -257,11 +257,7 @@ class RotationMatrix : public RotationBase<RotationMatrix<PrimType_>>, private E
    *  \returns std::stream object
    */
   friend std::ostream& operator << (std::ostream& out, const RotationMatrix& rotationMatrix) {
-//    if(Usage_ == RotationUsage::ACTIVE) {
-      out << rotationMatrix.toImplementation();
-//    } else {
-//      out << rotationMatrix.inverted().toImplementation();
-//    }
+    out << rotationMatrix.toImplementation();
     return out;
   }
 };
@@ -312,59 +308,6 @@ template<typename DestPrimType_, typename SourcePrimType_>
 class ConversionTraits<RotationMatrix<DestPrimType_>, RotationVector<SourcePrimType_>> {
  public:
   inline static RotationMatrix<DestPrimType_> convert(const RotationVector<SourcePrimType_>& rotationVector) {
-//    typename RotationMatrix<DestPrimType_>::Implementation matrixdata;
-//    typedef typename RotationVector<SourcePrimType_>::Scalar Scalar;
-//    const  typename RotationVector<DestPrimType_>::Implementation rv = rotationVector.toImplementation().template cast<DestPrimType_>();
-//    const SourcePrimType_ v1 = rv.x();
-//    const SourcePrimType_ v2 = rv.y();
-//    const SourcePrimType_ v3 = rv.z();
-//    const SourcePrimType_ v = rv.norm();
-//
-//    if (v < internal::NumTraits<Scalar>::dummy_precision())  {
-//
-//      // active to passive
-////      matrixdata << 1.0,  v3, -v2,
-////                        -v3, 1.0,  v1,
-////                          v2, -v1, 1.0;
-//      // active to active
-//      matrixdata << 1.0,  -v3, v2,
-//                    v3, 1.0,  -v1,
-//                   -v2, v1, 1.0;
-//    } else {
-//      // active rotation vector to active matrix // not matlab code (is transposed)
-//      const DestPrimType_ t3 = v*(1.0/2.0);
-//      const DestPrimType_ t2 = sin(t3);
-//      const DestPrimType_ t4 = cos(t3);
-//      const DestPrimType_ t5 = 1.0/(v*v);
-//      const DestPrimType_ t6 = t4*v*v3;
-//      const DestPrimType_ t7 = t2*v1*v2;
-//      const DestPrimType_ t8 = t2*t2;
-//      const DestPrimType_ t9 = v1*v1;
-//      const DestPrimType_ t10 = v2*v2;
-//      const DestPrimType_ t11 = v3*v3;
-//      const DestPrimType_ t12 = v*v;
-//      const DestPrimType_ t13 = t4*t4;
-//      const DestPrimType_ t14 = t12*t13;
-//      const DestPrimType_ t15 = t2*v1*v3;
-//      const DestPrimType_ t16 = t4*v*v1;
-//      const DestPrimType_ t17 = t2*v2*v3;
-//      matrixdata(0,0) = t5*(t14-t8*(-t9+t10+t11));
-//      matrixdata(1,0) = t2*t5*(t6+t7)*2.0;
-//      matrixdata(2,0) = t2*t5*(t15-t4*v*v2)*2.0;
-//      matrixdata(0,1) = t2*t5*(t6-t7)*-2.0;
-//      matrixdata(1,1) = t5*(t14-t8*(t9-t10+t11));
-//      matrixdata(2,1) = t2*t5*(t16+t17)*2.0;
-//      matrixdata(0,2) = t2*t5*(t15+t4*v*v2)*2.0;
-//      matrixdata(1,2) = t2*t5*(t16-t17)*-2.0;
-//      matrixdata(2,2) = t5*(t14-t8*(t9+t10-t11));
-//
-//
-//
-//    }
-//
-//    RotationMatrix<DestPrimType_> matrix;
-//    matrix.toImplementation() = matrixdata;
-//    return matrix;
     return RotationMatrix<DestPrimType_>(RotationQuaternion<DestPrimType_>(rotationVector));
   }
 };
@@ -393,39 +336,9 @@ template<typename DestPrimType_, typename SourcePrimType_>
 class ConversionTraits<RotationMatrix<DestPrimType_>, EulerAnglesXyz<SourcePrimType_>> {
  public:
   inline static RotationMatrix<DestPrimType_> convert(const EulerAnglesXyz<SourcePrimType_>& xyz) {
-//    RotationMatrix<DestPrimType_> matrix;
-//
-//    Eigen::Matrix<DestPrimType_,3,3> R_BI;
-//
-//    const DestPrimType_ sr = sin(xyz.toImplementation()(0));
-//    const DestPrimType_ cr = cos(xyz.toImplementation()(0));
-//    const DestPrimType_ sp = sin(xyz.toImplementation()(1));
-//    const DestPrimType_ cp = cos(xyz.toImplementation()(1));
-//    const DestPrimType_ sy = sin(xyz.toImplementation()(2));
-//    const DestPrimType_ cy = cos(xyz.toImplementation()(2));
-//
-//    const DestPrimType_ srsy = sr*sy;
-//    const DestPrimType_ srcy = sr*cy;
-//    const DestPrimType_ crsy = cr*sy;
-//    const DestPrimType_ crcy = cr*cy;
-//
-//    R_BI(0,0) = cp*cy;
-//    R_BI(0,1) = -cp*sy;
-//    R_BI(0,2) = sp;
-//    R_BI(1,0) = crsy+srcy*sp;
-//    R_BI(1,1) = crcy-srsy*sp;
-//    R_BI(1,2) = -sr*cp;
-//    R_BI(2,0) = srsy-crcy*sp;
-//    R_BI(2,1) = srcy+crsy*sp;
-//    R_BI(2,2) = cr*cp;
-//
-//    matrix.toImplementation() = R_BI;
-//    return matrix;
-//
-
-        RotationMatrix<DestPrimType_> matrix;
-        matrix.toImplementation() = RotationQuaternion<DestPrimType_>(xyz).toImplementation().toRotationMatrix();
-        return matrix;
+      RotationMatrix<DestPrimType_> matrix;
+      matrix.toImplementation() = RotationQuaternion<DestPrimType_>(xyz).toImplementation().toRotationMatrix();
+      return matrix;
   }
 };
 
@@ -433,61 +346,6 @@ template<typename DestPrimType_, typename SourcePrimType_>
 class ConversionTraits<RotationMatrix<DestPrimType_>, EulerAnglesZyx<SourcePrimType_>> {
  public:
   inline static RotationMatrix<DestPrimType_> convert(const EulerAnglesZyx<SourcePrimType_>& zyx) {
-//    RotationMatrix<DestPrimType_> matrix;
-//    Eigen::Matrix<DestPrimType_,3,3> R_BI;
-//
-//    const DestPrimType_ sy = sin(zyx.toImplementation()(0));
-//    const DestPrimType_ cy = cos(zyx.toImplementation()(0));
-//    const DestPrimType_ sp = sin(zyx.toImplementation()(1));
-//    const DestPrimType_ cp = cos(zyx.toImplementation()(1));
-//    const DestPrimType_ sr = sin(zyx.toImplementation()(2));
-//    const DestPrimType_ cr = cos(zyx.toImplementation()(2));
-//
-//    const DestPrimType_ sysr = sy*sr;
-//    const DestPrimType_ sycr = sy*cr;
-//    const DestPrimType_ cysr = cy*sr;
-//    const DestPrimType_ cycr = cy*cr;
-//
-//    R_BI(0,0) = cy*cp;
-//    R_BI(0,1) = cysr*sp-sycr;
-//    R_BI(0,2) = sysr+cycr*sp;
-//    R_BI(1,0) = cp*sy;
-//    R_BI(1,1) = sysr*sp+cycr;
-//    R_BI(1,2) = sycr*sp-cysr;
-//    R_BI(2,0) = -sp;
-//    R_BI(2,1) = cp*sr;
-//    R_BI(2,2) = cp*cr;
-//
-//    matrix.toImplementation() = R_BI;
-//
-//
-//    RotationMatrix<DestPrimType_> matrix;
-//    matrix.toImplementation() = RotationQuaternion<DestPrimType_>(zyx).toImplementation().toRotationMatrix();
-//    return matrix;
-
-//    using std::sin;
-//    using std::cos;
-//    Eigen::Matrix<DestPrimType_,3,3> matrix;
-//    const DestPrimType_ phi = zyx.x();
-//    const DestPrimType_ theta = zyx.y();
-//    const DestPrimType_ psi = zyx.z();
-//    const DestPrimType_ t2 = cos(theta);
-//    const DestPrimType_ t3 = sin(psi);
-//    const DestPrimType_ t4 = cos(psi);
-//    const DestPrimType_ t5 = sin(theta);
-//    const DestPrimType_ t6 = cos(phi);
-//    const DestPrimType_ t7 = sin(phi);
-//    matrix(0,0) = t2*t4;
-//    matrix(0,1) = -t2*t3;
-//    matrix(0,2) = t5;
-//    matrix(1,0) = t3*t6+t4*t5*t7;
-//    matrix(1,1) = t4*t6-t3*t5*t7;
-//    matrix(1,2) = -t2*t7;
-//    matrix(2,0) = t3*t7-t4*t5*t6;
-//    matrix(2,1) = t4*t7+t3*t5*t6;
-//    matrix(2,2) = t2*t6;
-//    return RotationMatrix<DestPrimType_>(matrix);
-
     RotationMatrix<DestPrimType_> matrix;
     matrix.toImplementation() = RotationQuaternion<DestPrimType_>(zyx).toImplementation().toRotationMatrix();
     return matrix;
