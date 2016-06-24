@@ -456,36 +456,37 @@ $ \rotvel{I}{I}{B} =
 \section{Dynamics of a Multi-Rigid-Body System}
 
 \begin{tabular}{@{}ll@{}}
-  $n$			& Number of bodies in system \\
-  $n_j$ 		& Number of DoFs of the joints \\
-  $n_q$ 		& Number of generalized coordinates \\
-  $n_u$ 		& Number of generalized velocities \\
-  $\vM$			& Mass matrix \\
-  $\vg$			& Gyroscopic and Coriolis forces \\
-  $\vf$			& Generalized external forces and torques \\
-  $\vh$			& Combined force vector \\
-  $\vJ_P$		& Jacobi matrix for translation of point P \\
-  $\vJ_{R}$		& Jacobi matrix for rotation \\
-  $\vf_Q^A$		& External forces on point Q \\
-  $\vt^A$		& External torques \\
+  $DoFs$				& Degrees of Freedom \\
+  $n$					& Number of bodies in system \\
+  $n_j$ 				& Number of DoFs of the joints \\
+  $n_q$ 				& Number of generalized coordinates \\
+  $n_u$ 				& Number of generalized velocities \\
+  $\vM$					& Mass matrix \\
+  $\vg$					& Gyroscopic and Coriolis forces \\
+  $\vf$					& Generalized external forces and torques \\
+  $\vh$					& Combined force vector \\
+  $\vJ_P$				& Jacobi matrix for translation of point P \\
+  $\vJ_{R}$				& Jacobi matrix for rotation \\
+  $\vf_Q^A$				& External forces on point Q \\
+  $\vt^A$				& External torques \\
 %   $\vp$			& Momentum \\
 %   $\vN_S$		& Spin at center of gravity \\
-  $m$ 			& Mass \\
-  $\vTh$ 		& Inertia tensor \\
+  $m$ 					& Mass \\
+  $\vTh$ 				& Inertia tensor \\
 %   $\vv_P$		& Velocity of point P \\
 %   $\va_P$		& Acceleration of point P \\
 %   $\vOm$		& Angular velocity \\
 %   $\vPs$		& Angular acceleration \\
-  $(...)^-$		& Variable before impact \\
-  $(...)^+$		& Variable after impact \\
-  $(...)^\pm$		& Variable before/after impact \\
+  $(...)^-$				& Variable before impact \\
+  $(...)^+$				& Variable after impact \\
+  $(...)^\pm$			& Variable before/after impact \\
   $\mathrm{\Delta} t$	& Time step duration \\
   $\mathrm{\Delta} \vu$	& Velocity change over one time step \\
-  $\vW$			& Generalized force directions for contact forces \\
-  $\vla$		& Lebesgue-measurable contact forces \\
-  $\vLa$		& Purely atomic impact impulses \\
-  $\vP$			& Contact percussions \\
-  $\mathrm{COM}$	& Center of mass\\
+  $\vW$					& Generalized force directions for contact forces \\
+  $\vla$				& Lebesgue-measurable contact forces \\
+  $\vLa$				& Purely atomic impact impulses \\
+  $\vP$					& Contact percussions \\
+  $\mathrm{COM}$		& Center of mass\\
 \end{tabular}
 
 
@@ -520,6 +521,135 @@ $\begin{aligned}
 \vM &= \vB^\mathsf{T} \bar{\vM} \vB \\
 \vh &= \vB^\mathsf{T} \bar{\vh} - \vB^\mathsf{T} \bar{\vM} \dot{\vB} \vu \\
 \end{aligned}$
+
+\section{Appendix I: Euler Angles ZYX velocities to angular velocity mapping}
+Given a set of Euler angles $\phi = \begin{bmatrix}z & y & x\end{bmatrix}^T$ and velocities $\dot{\phi} = \begin{bmatrix} \dot{z} & \dot{y} & \dot{x} \end{bmatrix}^T$,
+we wish to find the mapping $E(\varphi) \in \mathbb{R}^{3 \times 3}$ that maps $\dot{\varphi}$ to $\rotvel{I}{I}{B}$:
+
+\begin{equation}
+\rotvel{I}{I}{B} = E(\varphi) \cdot \dot{\varphi}
+\end{equation}
+
+The columns of $E(\varphi)$ are the components of the unit vectors around which the rotational velocities are applied expressed in fixed frame. These are obtained by selecting the columns of a rotation matrix which is built up by successive elementary rotations specified by the Euler angle parametrization.
+
+Starting from the reference frame $I$, the first rotation will be an elementary rotation around ${}_I \hat{z}_I$, which is simply given by:
+
+\begin{equation}
+{}_I \hat{z}_I = 
+\mathbb{I}_{3 \times 3}
+\begin{bmatrix}
+0 \\ 0 \\ 1
+\end{bmatrix}
+=
+\begin{bmatrix}
+0 \\ 0 \\ 1
+\end{bmatrix}
+\end{equation}
+
+After an elementary rotation around ${}_I \hat{z}_I$, the y axis ${}_I \hat{y}_A$ will be expressed by:
+
+\begin{equation}
+{}_I \hat{y}_{I'} = 
+C_{II'}(z) 
+\cdot
+\begin{bmatrix}
+0 \\ 1 \\ 0
+\end{bmatrix}
+=
+\begin{bmatrix}
+\cos(z) & -\sin(z) & 0 \\ 
+\sin(z) &  \cos(z) & 0 \\ 
+0 & 0 & 1
+\end{bmatrix}
+\begin{bmatrix}
+0 \\ 1 \\ 0
+\end{bmatrix}
+=
+\begin{bmatrix}
+-\sin(z) \\ \cos(z) \\ 0
+\end{bmatrix}
+\end{equation}
+
+After an elementary rotation around ${}_I \hat{y}_A$, the x axis ${}_I \hat{x}_B$ will be expressed by:
+
+\begin{equation}
+{}_I \hat{x}_{I''} = 
+C_{II'}(z) \cdot C_{I'I''}(y)
+\cdot
+\begin{bmatrix}
+1 \\ 0 \\ 0
+\end{bmatrix}
+=
+\begin{bmatrix}
+\cos(z) & -\sin(z) 	& 0 \\ 
+\sin(z) &  \cos(z) 	& 0 \\ 
+0	 	& 0 		& 1
+\end{bmatrix}
+\begin{bmatrix}
+\cos(y) 	& 	0 	& \sin(y)	\\ 
+0 			&  	1 	& 0 		\\ 
+-\sin(y) 	& 	0 	& \cos(z)
+\end{bmatrix}
+\begin{bmatrix}
+1 \\ 0 \\ 0
+\end{bmatrix}
+=
+\begin{bmatrix}
+\cos(y)\cos(z) \\ \cos(y)\sin(z) \\ -\sin(z)
+\end{bmatrix}
+\end{equation}
+
+Finally, the mapping $E(\varphi)$ will be computed as:
+
+\begin{equation}
+E(\varphi) =
+\begin{bmatrix}
+{}_I \hat{z}_I & {}_I \hat{y}_{I'} & {}_I \hat{x}_{I''}
+\end{bmatrix}
+=
+\begin{bmatrix}
+0 & -\sin(z) 	& \cos(y)\cos(z) \\
+0 &  \cos(z) 	& \cos(y)\sin(z) \\
+1 &  0			& -\sin(y)		 \\
+\end{bmatrix}
+\end{equation}
+
+It is easy to find that $det(E(\varphi)) = -\cos(y)$. The mapping then becomes singular when $y = \pi/2 + k\pi, \forall k \in \mathbb{Z}$. This means that although we can always describe an angular velocity using Euler angle velocities, the inverse is not always possible. The inverse mapping is given by:
+
+\begin{equation}
+\bar{E}(\varphi) =
+E^{-1}(\varphi) =
+\begin{bmatrix}
+\dfrac{\cos(z)\sin(y)}{\cos(y)} &	\dfrac{\sin(y)\sin(z)}{\cos(y)} & 1 \\
+-\sin(z)						&	\cos(z) 						& 0 \\
+\dfrac{\cos(z)}{\cos(y)} 		& \dfrac{\sin(z)}{\cos(y)} 			& 0
+\end{bmatrix}
+\end{equation}
+
+If we compute the rotation matrix $C_{IB} = C_{IB}(z,y,x) = C_z(z) \cdot C_y(y) \cdot C_x(x)$, we can also derive the following mappings:
+
+\begin{equation}\label{mapEulerToOmegainBase}
+\rotvel{B}{I}{B} = C_{IB}^T \cdot E(\varphi) \cdot \dot{\varphi}
+\end{equation}
+
+\begin{equation}\label{mapOmegaInBaseToEuler}
+\dot{\varphi} = \bar{E}(\varphi) \cdot C_{IB}  \cdot \rotvel{B}{I}{B}
+\end{equation}
+
+The mapping described by \eqref{mapOmegaInBaseToEuler} is valid $\forall y \ne \pi/2 + k\pi, \forall k \in \mathbb{Z}$.
+
+\section{Appendix II: Hessians and time derivatives of Jacobians}
+
+\begin{equation}
+\dfrac{d\vJ(\vq)}{dt}
+=
+\dfrac{\partial \vJ(\vq)}{\partial \vq} \cdot  \dfrac{d\vq}{dt}
+=
+\sum_{k=1}^{n} \dfrac{\partial \vJ(\vq)}{\partial q_k} \cdot  \dfrac{dq_k}{dt}
+=
+\sum_{k=1}^{n} \mathcal{H}(\vq) \cdot  \dfrac{dq_k}{dt}
+\end{equation}
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
