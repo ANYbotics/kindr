@@ -285,18 +285,18 @@ $ \quat{I}{B} = \begin{bmatrix} \cos{\frac{\theta}{2}} \\ \vn \sin{\frac{\theta}
     (0, \begin{bmatrix}1 & 0 & 0\end{bmatrix}^\transpose)  & \quad \text{otherwise}
   \end{array} \right. $ \\
 \end{tabular}
-\subsubsection{Rotation Quaternion $\Leftrightarrow$ Direction Cosine Matrix }
+\subsubsection{Rotation Quaternion $\Leftrightarrow$ Rotation Matrix }
 $\begin{aligned}\comat{I}{B} &=  \identity_{3\times 3} + 2 q_0\hat{\imquatvec{q}} + 2 \hat{\imquatvec{q}}^2  = (2 q_0^2 -1) \identity_{3\times 3} + 2q_0\hat{\imquatvec{q}} + 2 \imquatvec{q}\imquatvec{q}^\transpose \\
 &= \begin{bmatrix}
- p_0^2 + p_1^2 - p_2^2 - p_3^2 &         2p_1p_2 - 2p_0p_3 &         2p_0p_2 + 2p_1p_3 \\
-         2p_0p_3 + 2p_1p_2 & p_0^2 - p_1^2 + p_2^2 - p_3^2 &         2p_2p_3 - 2p_0p_1 \\
-         2p_1p_3 - 2p_0p_2 &         2p_0p_1 + 2p_2p_3 & p_0^2 - p_1^2 - p_2^2 + p_3^2 \\ \end{bmatrix} \\
+ q_0^2 + q_1^2 - q_2^2 - q_3^2 &         2q_1q_2 - 2q_0q_3 &         2q_0q_2 + 2q_1q_3 \\
+         2q_0q_3 + 2q_1q_2 & q_0^2 - q_1^2 + q_2^2 - q_3^2 &         2q_2q_3 - 2q_0q_1 \\
+         2q_1q_3 - 2q_0q_2 &         2q_0q_1 + 2q_2q_3 & q_0^2 - q_1^2 - q_2^2 + q_3^2 \\ \end{bmatrix} \\
 \end{aligned}$
 
-$\begin{aligned}\comat{I}{B}^{-1} &= \comat{B}{I}  = \identity_{3 \times 3} - 2 p_0\hat{\imquatvec{p}} + 2 \hat{\imquatvec{p}}^2 \\
-&= \begin{bmatrix}  p_0^2 + p_1^2 - p_2^2 - p_3^2 &         2p_0p_3 + 2p_1p_2 &         2p_1p_3 - 2p_0p_2 \\
-         2p_1p_2 - 2p_0p_3 & p_0^2 - p_1^2 + p_2^2 - p_3^2 &         2p_0p_1 + 2p_2p_3 \\
-         2p_0p_2 + 2p_1p_3 &         2p_2p_3 - 2p_0p_1 & p_0^2 - p_1^2 - p_2^2 + p_3^2 \\ \end{bmatrix}  \\  
+$\begin{aligned}\comat{I}{B}^{-1} &= \comat{B}{I}  = \identity_{3 \times 3} - 2 q_0\hat{\imquatvec{q}} + 2 \hat{\imquatvec{q}}^2 \\
+&= \begin{bmatrix}  q_0^2 + q_1^2 - q_2^2 - q_3^2 &         2q_0q_3 + 2q_1q_2 &         2q_1q_3 - 2q_0q_2 \\
+         2q_1q_2 - 2q_0q_3 & q_0^2 - q_1^2 + q_2^2 - q_3^2 &         2q_0q_1 + 2q_2q_3 \\
+         2q_0q_2 + 2q_1q_3 &         2q_2q_3 - 2q_0q_1 & q_0^2 - q_1^2 - q_2^2 + q_3^2 \\ \end{bmatrix}  \\  
 \end{aligned}$ \\
 
 \subsubsection{Euler Angles ZYX $\Leftrightarrow$ Direction Cosine Matrix}
@@ -360,7 +360,7 @@ $\begin{aligned}
  Jacobian of exponential map: 
  $\vGa(\vv) = \left\{
   \begin{array}{l l}
-     \identity + \frac{1-\cos{(\norm{\vv})\hat{\vv}}}{\norm{\vv}^2} + \frac{(\norm{\vv}-\sin{(\norm{\vv}))\hat{\vv}^2}}{\norm{\vv}^3} & \quad \text{if $\norm{\vv} = 0$}\\
+     \identity + \frac{1-\cos{(\norm{\vv})\hat{\vv}}}{\norm{\vv}^2} + \frac{(\norm{\vv}-\sin{(\norm{\vv}))\hat{\vv}^2}}{\norm{\vv}^3} & \quad \text{if $\norm{\vv} \neq 0$}\\
      \identity + \frac{1}{2}\hat{\vv}&  \quad \text{otherwise}
   \end{array} \right.$
 
