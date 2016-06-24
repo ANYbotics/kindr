@@ -466,8 +466,8 @@ $ \rotvel{I}{I}{B} =
   $\vh$			& Combined force vector \\
   $\vJ_P$		& Jacobi matrix for translation of point P \\
   $\vJ_{R}$		& Jacobi matrix for rotation \\
-  $\vF_Q^A$		& External forces on point Q \\
-  $\vM^A$		& External torques \\
+  $\vf_Q^A$		& External forces on point Q \\
+  $\vt^A$		& External torques \\
 %   $\vp$			& Momentum \\
 %   $\vN_S$		& Spin at center of gravity \\
   $m$ 			& Mass \\
@@ -485,6 +485,7 @@ $ \rotvel{I}{I}{B} =
   $\vla$		& Lebesgue-measurable contact forces \\
   $\vLa$		& Purely atomic impact impulses \\
   $\vP$			& Contact percussions \\
+  $\mathrm{COM}$	& Center of mass\\
 \end{tabular}
 
 
@@ -502,9 +503,9 @@ $\dot{\vq} = \vF \vu, \quad \vF = \begin{pmatrix} \identity_{3\times 3} & \mathb
 Projected Newton-Euler Equations
 \begin{tabular}{@{}ll@{}}
 $\boxed{\vM\dot{\vu} - \vh = \vW\vla}$ with $\vh := \vf - \vg$, and &
-$\begin{aligned}\vM &= \sum_{i=1}^n \left[ (\vJ_S^\mathsf{T} m \vJ_S + \vJ_R^\mathsf{T} \vTh_S \vJ_R) \right]_i \\
-\vg &= \sum_{i=1}^n \left[ (\vJ_S^\mathsf{T} m \dot{\vJ}_S \vu + \vJ_R^\mathsf{T} (\vTh_S \dot{\vJ}_R \vu + \vOm \times \vTh_S \vOm)) \right]_i \\
-\vf &= \sum_{i=1}^n \left[ (\vJ_Q^\mathsf{T} \vF_Q^A + \vJ_R^\mathsf{T} \vM^A) \right]_i \end{aligned}$ \\
+$\begin{aligned}\vM &= \sum_{i=1}^n \left[ (\vJ_\mathrm{COM}^\mathsf{T} m \vJ_\mathrm{COM} + \vJ_R^\mathsf{T} \vTh_\mathrm{COM} \vJ_R) \right]_i \\
+\vg &= \sum_{i=1}^n \left[ (\vJ_\mathrm{COM}^\mathsf{T} m \dot{\vJ}_\mathrm{COM} \vu + \vJ_R^\mathsf{T} (\vTh_\mathrm{COM} \dot{\vJ}_R \vu + \vOm \times \vTh_\mathrm{COM} \vOm)) \right]_i \\
+\vf &= \sum_{i=1}^n \left[ (\vJ_Q^\mathsf{T} \vf_Q^A + \vJ_R^\mathsf{T} \vt^A) \right]_i \end{aligned}$ \\
 \end{tabular}
 
 \subsection{Equations of Motion with Contacts and Impulses}
