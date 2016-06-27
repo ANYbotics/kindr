@@ -317,11 +317,12 @@ class RotationBase {
   }
 
 
-  /*! \brief Sets the rotation from two vectors such that v2 = R(v1).
+  /*! \brief Sets the rotation C_IB from two vectors such that I_v = C_IB*B_v i.e.
+   * I_v = this->rotate(B_v).
    */
   template <typename Vector_>
-  Derived_& setFromVectors(const Vector_& v1, const Vector_& v2) {
-    internal::SetFromVectorsTraits<RotationBase<Derived_>>::setFromVectors(this->derived(), v1, v2);
+  Derived_& setFromVectors(const Vector_& B_v, const Vector_& I_v) {
+    internal::SetFromVectorsTraits<RotationBase<Derived_>>::setFromVectors(this->derived(), B_v, I_v);
     return *this;
   }
 

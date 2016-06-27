@@ -260,6 +260,14 @@ TYPED_TEST(RotationMatrixSingleTest, testSetters)
   rot.setFromVectors(this->vecX, this->vecY);
   KINDR_ASSERT_DOUBLE_MX_EQ(rot.matrix(), this->rotRotationMatrixQuarterZ.matrix(), 1e-4, "setFromVectors");
 
+  rot.setFromVectors(Eigen::Matrix<Scalar, 3, 1>(1.0, 1.0, 0.0), Eigen::Matrix<Scalar, 3, 1>(-1.0, 1.0, 0.0));
+  KINDR_ASSERT_DOUBLE_MX_EQ(rot.matrix(), this->rotRotationMatrixQuarterZ.matrix(), 1e-4, "setFromVectors");
+
+  Eigen::Matrix<Scalar, 3, 1> vector1(1.0, 1.0, 0.0);
+  Eigen::Matrix<Scalar, 3, 1> vector2(-1.0, 1.0, 0.0);
+  rot.setFromVectors(vector1, vector2);
+  KINDR_ASSERT_DOUBLE_MX_EQ(vector2, rot.rotate(vector1), 1e-4, "setFromVectors");
+
   rot.setFromVectors(this->vecX, this->vecX);
   KINDR_ASSERT_DOUBLE_MX_EQ(rot.matrix(), this->rotRotationMatrixIdentity.matrix(), 1e-4, "setFromVectors");
 
