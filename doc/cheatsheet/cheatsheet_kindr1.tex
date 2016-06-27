@@ -117,6 +117,9 @@
 \newcommand\imquatvec[1]{\check{\mathbf{#1}}}
 
 \newcommand\pos[3]{{}_#1\vr_{#2\!#3}}
+\newcommand\posdot[3]{{}_#1\dot{\vr}_{#2\!#3}}
+\newcommand\poshat[3]{{}_#1\hat{\vr}_{#2\!#3}}
+\newcommand\poshatdot[3]{{}_#1\dot{\hat{\vr}}_{#2\!#3}}
 \newcommand\postranspose[3]{{}_#1\vr_{#2\!#3}^\transpose}
 \newcommand\rotmat[2]{\vR_{#1\!#2}}
 \newcommand\drotmat[2]{\dot{\vR}_{#1\!#2}}
@@ -129,6 +132,7 @@
 \newcommand\linvel[2]{{}_#1\vv_{#2}}
 \newcommand\rotvel[3]{{}_#1\vom_{#2\!#3}}
 \newcommand\rotvelhat[3]{{}_#1\hat{\vom}_{#2\!#3}}
+\newcommand\dvch[0]{\dot{\vch}}
 
 \newcommand\myfigure[1]{%
 \medskip\noindent\begin{minipage}{\columnwidth}
@@ -456,36 +460,37 @@ $ \rotvel{I}{I}{B} =
 \section{Dynamics of a Multi-Rigid-Body System}
 
 \begin{tabular}{@{}ll@{}}
-  $n$			& Number of bodies in system \\
-  $n_j$ 		& Number of DoFs of the joints \\
-  $n_q$ 		& Number of generalized coordinates \\
-  $n_u$ 		& Number of generalized velocities \\
-  $\vM$			& Mass matrix \\
-  $\vg$			& Gyroscopic and Coriolis forces \\
-  $\vf$			& Generalized external forces and torques \\
-  $\vh$			& Combined force vector \\
-  $\vJ_P$		& Jacobi matrix for translation of point P \\
-  $\vJ_{R}$		& Jacobi matrix for rotation \\
-  $\vf_Q^A$		& External forces on point Q \\
-  $\vt^A$		& External torques \\
+  $DoFs$				& Degrees of Freedom \\
+  $n$					& Number of bodies in system \\
+  $n_j$ 				& Number of DoFs of the joints \\
+  $n_q$ 				& Number of generalized coordinates \\
+  $n_u$ 				& Number of generalized velocities \\
+  $\vM$					& Mass matrix \\
+  $\vg$					& Gyroscopic and Coriolis forces \\
+  $\vf$					& Generalized external forces and torques \\
+  $\vh$					& Combined force vector \\
+  $\vJ_P$				& Jacobi matrix for translation of point P \\
+  $\vJ_{R}$				& Jacobi matrix for rotation \\
+  $\vf_Q^A$				& External forces on point Q \\
+  $\vt^A$				& External torques \\
 %   $\vp$			& Momentum \\
 %   $\vN_S$		& Spin at center of gravity \\
-  $m$ 			& Mass \\
-  $\vTh$ 		& Inertia tensor \\
+  $m$ 					& Mass \\
+  $\vTh$ 				& Inertia tensor \\
 %   $\vv_P$		& Velocity of point P \\
 %   $\va_P$		& Acceleration of point P \\
 %   $\vOm$		& Angular velocity \\
 %   $\vPs$		& Angular acceleration \\
-  $(...)^-$		& Variable before impact \\
-  $(...)^+$		& Variable after impact \\
-  $(...)^\pm$		& Variable before/after impact \\
+  $(...)^-$				& Variable before impact \\
+  $(...)^+$				& Variable after impact \\
+  $(...)^\pm$			& Variable before/after impact \\
   $\mathrm{\Delta} t$	& Time step duration \\
   $\mathrm{\Delta} \vu$	& Velocity change over one time step \\
-  $\vW$			& Generalized force directions for contact forces \\
-  $\vla$		& Lebesgue-measurable contact forces \\
-  $\vLa$		& Purely atomic impact impulses \\
-  $\vP$			& Contact percussions \\
-  $\mathrm{COM}$	& Center of mass\\
+  $\vW$					& Generalized force directions for contact forces \\
+  $\vla$				& Lebesgue-measurable contact forces \\
+  $\vLa$				& Purely atomic impact impulses \\
+  $\vP$					& Contact percussions \\
+  $\mathrm{COM}$		& Center of mass\\
 \end{tabular}
 
 
@@ -521,6 +526,256 @@ $\begin{aligned}
 \vh &= \vB^\mathsf{T} \bar{\vh} - \vB^\mathsf{T} \bar{\vM} \dot{\vB} \vu \\
 \end{aligned}$
 
+\section{Appendix I: Euler Angles ZYX velocities to angular velocity mapping}
+Given a set of Euler angles $\vch = \begin{bmatrix}z & y & x\end{bmatrix}^T$ and velocities $\dvch = \begin{bmatrix} \dot{z} & \dot{y} & \dot{x} \end{bmatrix}^T$,
+we wish to find the mapping $\vE(\vch) \in \mathbb{R}^{3 \times 3}$ that maps $\dvch$ to $\rotvel{I}{I}{B}$:
+
+\begin{equation}
+\rotvel{I}{I}{B} = \vE(\vch) \cdot \dvch
+\end{equation}
+
+The columns of $\vE(\vch)$ are the components of the unit vectors around which the rotational velocities are applied expressed in fixed frame. These are obtained by selecting the columns of a rotation matrix which is built up by successive elementary rotations specified by the Euler angle parametrization.
+
+Starting from the reference frame $I$, the first rotation will be an elementary rotation around ${}_I \ve^z_I$, which is simply given by:
+
+\begin{equation}
+{}_I \ve^z_I = 
+\mathbb{I}_{3 \times 3}
+\begin{bmatrix}
+0 \\ 0 \\ 1
+\end{bmatrix}
+=
+\begin{bmatrix}
+0 \\ 0 \\ 1
+\end{bmatrix}
+\end{equation}
+
+After an elementary rotation around ${}_I \ve^z_I$, the y axis ${}_I \ve^y_A$ will be expressed by:
+
+\begin{equation}
+{}_I \ve^y_{I'} = 
+\comat{I}{I'}(z) 
+\cdot
+\begin{bmatrix}
+0 \\ 1 \\ 0
+\end{bmatrix}
+=
+\begin{bmatrix}
+\cos(z) & -\sin(z) & 0 \\ 
+\sin(z) &  \cos(z) & 0 \\ 
+0 & 0 & 1
+\end{bmatrix}
+\begin{bmatrix}
+0 \\ 1 \\ 0
+\end{bmatrix}
+=
+\begin{bmatrix}
+-\sin(z) \\ \cos(z) \\ 0
+\end{bmatrix}
+\end{equation}
+
+After an elementary rotation around ${}_I \ve^y_A$, the x axis ${}_I \ve^x_B$ will be expressed by:
+
+\begin{equation}
+{}_I \ve^x_{I''} = 
+\comat{I}{I'}(z) \cdot \comat{I}{'I''}(y)
+\cdot
+\begin{bmatrix}
+1 \\ 0 \\ 0
+\end{bmatrix}
+=
+\begin{bmatrix}
+\cos(z) & -\sin(z) 	& 0 \\ 
+\sin(z) &  \cos(z) 	& 0 \\ 
+0	 	& 0 		& 1
+\end{bmatrix}
+\begin{bmatrix}
+\cos(y) 	& 	0 	& \sin(y)	\\ 
+0 			&  	1 	& 0 		\\ 
+-\sin(y) 	& 	0 	& \cos(z)
+\end{bmatrix}
+\begin{bmatrix}
+1 \\ 0 \\ 0
+\end{bmatrix}
+=
+\begin{bmatrix}
+\cos(y)\cos(z) \\ \cos(y)\sin(z) \\ -\sin(z)
+\end{bmatrix}
+\end{equation}
+
+Finally, the mapping $\vE(\vch)$ will be computed as:
+
+\begin{equation}
+\vE(\vch) =
+\begin{bmatrix}
+{}_I \ve^z_I & {}_I \ve^y_{I'} & {}_I \ve^x_{I''}
+\end{bmatrix}
+=
+\begin{bmatrix}
+0 & -\sin(z) 	& \cos(y)\cos(z) \\
+0 &  \cos(z) 	& \cos(y)\sin(z) \\
+1 &  0			& -\sin(y)		 \\
+\end{bmatrix}
+\end{equation}
+
+It is easy to find that $det(\vE(\vch)) = -\cos(y)$. The mapping then becomes singular when $y = \pi/2 + k\pi, \forall k \in \mathbb{Z}$. This means that although we can always describe an angular velocity using Euler angle velocities, the inverse is not always possible. The inverse mapping is given by:
+
+\begin{equation}
+\bar{\vE}(\vch) =
+\vE^{-1}(\vch) =
+\begin{bmatrix}
+\dfrac{\cos(z)\sin(y)}{\cos(y)} &	\dfrac{\sin(y)\sin(z)}{\cos(y)} & 1 \\
+-\sin(z)						&	\cos(z) 						& 0 \\
+\dfrac{\cos(z)}{\cos(y)} 		& \dfrac{\sin(z)}{\cos(y)} 			& 0
+\end{bmatrix}
+\end{equation}
+
+If we compute the rotation matrix $\comat{I}{B} = \comat{I}{B}(z,y,x) = \comat{z}{}(z) \cdot \comat{y}{}(y) \cdot \comat{x}{}(x)$, we can also derive the following mappings:
+
+\begin{equation}\label{mapEulerToOmegainBase}
+\rotvel{B}{I}{B} = \comat{I}{B}^T \cdot \vE(\vch) \cdot \dot{\vch}
+\end{equation}
+
+\begin{equation}\label{mapOmegaInBaseToEuler}
+\dvch = \bar{\vE}(\vch) \cdot \comat{I}{B}  \cdot \rotvel{B}{I}{B}
+\end{equation}
+
+The mapping described by \eqref{mapOmegaInBaseToEuler} is valid $\forall y \ne \pi/2 + k\pi, \forall k \in \mathbb{Z}$.
+
+\section{Appendix II: Jacobians}
+We wish to derive the relationship between the generalized velocities $\vu$ and the operational space velocities ${}_I\vv_{Q}$ of a point $Q$, which is fixed at the end of a kinematic chain that stems from a floating base $B$. The position vector $\pos{I}{I}{Q}$ of a point w.r.t. the inertial frame $I$ is given by:
+
+\begin{equation}
+\pos{I}{I}{Q} = \pos{I}{I}{B} + \comat{I}{B} \cdot \pos{B}{B}{Q},
+\end{equation}
+
+where the rotation matrix $\comat{I}{B} = \comat{I}{B}(\vq)$ which describes the orientation of the floating base $B$ w.r.t. the inertial frame $I$ is a function of the joint configuration $\vq$. Time differentiation yields:
+
+\begin{equation}
+\begin{aligned}
+{}_I \vv_{Q} 
+&= {}_I \vv_{B} + \dcomat{I}{B} \cdot \pos{B}{B}{Q} + \comat{I}{B} \cdot \posdot{B}{B}{Q} \\
+&= {}_I \vv_{B} + \comat{I}{B} \cdot \rotvelhat{B}{I}{B} \cdot \pos{B}{B}{Q} + \comat{I}{B} \cdot \posdot{B}{B}{Q} \\
+&= {}_I \vv_{B} - \comat{I}{B} \cdot \poshat{B}{B}{Q} \cdot \rotvel{B}{I}{B} + \comat{I}{B} \cdot \posdot{B}{B}{Q} \\
+&= {}_I \vv_{B} - \comat{I}{B} \cdot \poshat{B}{B}{Q} \cdot \rotvel{B}{I}{B} + \comat{I}{B} \cdot {}_B \vJ_{P_{q_j}}(\vq_j) \cdot \dot{\vq}_j \\
+&=
+\begin{bmatrix}
+\identity_{3\times 3} && -\comat{I}{B} \cdot \poshat{B}{B}{Q} && \comat{I}{B} \cdot {}_B \vJ_{P_{q_j}}(\vq_j)
+\end{bmatrix}
+\cdot \vu
+\end{aligned}
+\end{equation}
+
+If we attach a frame at $\pos{I}{I}{Q}$, we can derive a similar mapping for angular velocities. The orientation of frame $Q$ w.r.t. the inertial frame $I$ is described by:
+
+\begin{equation}\label{eq_c_iq}
+\comat{I}{Q} = \comat{I}{B} \cdot \comat{B}{Q}
+\end{equation}
+
+Time differentiation both sides of \eqref{eq_c_iq} yields:
+
+\begin{equation}
+\begin{aligned}
+\rotvelhat{I}{I}{Q} \cdot \comat{I}{Q}
+&= \rotvelhat{I}{I}{B} \cdot \comat{I}{B} \cdot \comat{B}{Q} + \comat{I}{B} \cdot \rotvelhat{B}{B}{Q} \cdot \comat{B}{Q} \\
+&= \rotvelhat{I}{I}{B} \cdot \comat{I}{Q} + \comat{I}{B} \cdot \comat{B}{I} \cdot \rotvelhat{I}{B}{Q} \cdot \comat{B}{I}^\transpose \cdot \comat{B}{Q} \\
+&= \rotvelhat{I}{I}{B} \cdot \comat{I}{Q} + \rotvel{I}{B}{Q} \cdot \comat{I}{Q},
+\end{aligned}
+\end{equation}
+
+which gives finally:
+
+\begin{equation}
+\begin{aligned}
+\rotvel{I}{I}{Q}
+&= \rotvel{I}{I}{B} + \rotvel{I}{B}{Q} \\
+&= 
+\begin{bmatrix}
+\mathbf{0}_{3 \times 3} && \comat{I}{B} && \comat{I}{B} \cdot {}_B \vJ_{R_{q_j}}(\vq_j)
+\end{bmatrix}
+\cdot \vu
+\end{aligned}
+\end{equation}
+
+Hence, the mapping from generalized velocities $\vu$ to the operational space twist $\begin{bmatrix}{}_I \vv_{Q}^T && \rotvel{I}{I}{Q}^T \end{bmatrix}^T$ of frame $Q$ is realized by the spatial Jacobian:
+
+\begin{equation}
+\begin{aligned}
+{}_I \vJ_Q(\vq)
+&=
+\begin{bmatrix}
+{}_I \vJ_P \\
+{}_I \vJ_R
+\end{bmatrix} \\
+&=
+\begin{bmatrix}
+\identity_{3\times 3} && -\comat{I}{B} \cdot \poshat{B}{B}{Q} && \comat{I}{B} \cdot {}_B \vJ_{P_{q_j}}(\vq_j) \\
+\mathbf{0}_{3 \times 3} && \comat{I}{B} && \comat{I}{B} \cdot {}_B \vJ_{R_{q_j}}(\vq_j)
+\end{bmatrix}
+\end{aligned}
+\end{equation}
+
+\section{Appendix III: Hessians and time derivatives of Jacobians}
+Consider a kinematic chain which connects two rigid bodies. We represent the set of indexes of the rigid bodies in this chain with $U_A$. As shown in Iwamura et al. 2013, the $i-th$ column of the spatial Hessian matrix of the spatial Jacobian J w.r.t. the j-th configuration variable $q_j$ can be computed as:
+
+\begin{equation}
+\dfrac{\partial \vJ_i}{\partial q_j}
+= \begin{bmatrix}
+\dfrac{\partial \vJ_{P_i}}{\partial q_j} \\ \dfrac{\partial \vJ_{R_i}}{\partial q_j}
+\end{bmatrix}
+=
+\begin{cases}
+\begin{bmatrix}
+\vJ_{R_j} \times \vJ_{P_i}\\ 
+\vJ_{R_j} \times \vJ_{R_i}
+\end{bmatrix} & i \ge j \\
+
+\begin{bmatrix}
+\vJ_{R_j} \times \vJ_{P_i} \\ 
+\mathbf{0} \\
+\end{bmatrix} & i < j \\
+
+\begin{bmatrix}
+\mathbf{0} \\ 
+\mathbf{0} \\
+\end{bmatrix} & i,j \not\in U_A
+\end{cases}
+\end{equation}
+
+The Hessian $\vH_k(\vq)$ is then expressed by:
+
+\begin{equation}
+\vH_k(\vq) =
+\begin{bmatrix}
+\dfrac{\partial \vJ_1}{\partial q_k} && \dfrac{\partial \vJ_2}{\partial q_k} && \dots && \dfrac{\partial \vJ_n}{\partial q_k}
+\end{bmatrix}
+\end{equation}
+
+Knowledge of the Hessian matrix w.r.t. to each configuration variable $q_k$ enables the computation of the time derivative of $\vJ(\vq(t))$. Its generic element $i,j$ can be computed as:
+
+\begin{equation}
+\begin{aligned}
+\dfrac{d J_{i,j}(\vq)}{dt}
+=
+\dfrac{\partial J_{i,j}(\vq)}{\partial \vq} \cdot \dfrac{d\vq}{dt}
+=
+\sum_{k=1}^{n} \dfrac{\partial J_{i,j}(\vq)}{\partial q_k} \cdot \dfrac{dq_k}{dt}
+=
+\sum_{k=1}^{n} H_{k_{i,j}}(\vq) \cdot \dfrac{dq_k}{dt}
+\end{aligned}
+\end{equation}
+
+which yields:
+
+\begin{equation}
+\dfrac{d\vJ(\vq)}{dt}
+=
+\dfrac{\partial \vJ(\vq)}{\partial \vq} \cdot \dfrac{d\vq}{dt}
+=
+\sum_{k=1}^{n} \mathbf{H}_k(\vq) \cdot  \dfrac{dq_k}{dt}
+\end{equation}
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  END CONTENT
@@ -530,6 +785,7 @@ $\begin{aligned}
 
 %Copyright \copyright\ 2014 Autonomous Systems Lab, ETH Zurich (asl.ethz.ch)\\
 %Contact: Christian Gehring (gehrinch@ethz.ch) \\
+
 
 \end{multicols}
 \end{document}
