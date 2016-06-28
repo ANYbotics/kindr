@@ -504,6 +504,28 @@ $\dot{\vu} = \begin{pmatrix} {}_I \va_B \\ {}_B\vps_{I\!B} \\ \ddot{\varphi}_1 \
 \end{tabular}
 $\dot{\vq} = \vF \vu, \quad \vF = \begin{pmatrix} \identity_{3\times 3} & \mathbf{0} & \mathbf{0} \\ \mathbf{0} & \frac{1}{2}\bar{\vH}^\mathsf{T} & \mathbf{0} \\ \mathbf{0} & \mathbf{0} & \identity_{n_j\times n_j} \end{pmatrix} \quad \Leftrightarrow \quad \vu = \bar{\vF}\dot{\vq}, \quad \bar{\vF} = \begin{pmatrix} \identity_{3x3} & \mathbf{0} & \mathbf{0} \\ \mathbf{0} & 2\bar{\vH} & \mathbf{0} \\ \mathbf{0} & \mathbf{0} & \identity_{n_j \times n_j} \end{pmatrix}$ \\
 
+
+$
+\begin{bmatrix}
+{}_I \vv_{IQ} \\
+\rotvel{I}{I}{Q}
+\end{bmatrix}
+=
+{}_I \vJ_Q(\vq)\cdot \vu
+, \quad
+{}_I \vJ_Q(\vq)
+=
+\begin{bmatrix}
+{}_I \vJ_P(\vq) \\
+{}_I \vJ_R(\vq)
+\end{bmatrix}
+=
+\begin{bmatrix}
+\identity_{3\times 3} && -\comat{I}{B} \cdot \poshat{B}{B}{Q} && \comat{I}{B} \cdot {}_B \vJ_{P_{q_j}}(\vq_j) \\
+\mathbf{0}_{3 \times 3} && \comat{I}{B} && \comat{I}{B} \cdot {}_B \vJ_{R_{q_j}}(\vq_j)
+\end{bmatrix}
+$
+
 \subsection{Equations of Motion with Contacts and no Impulses}
 Projected Newton-Euler Equations
 \begin{tabular}{@{}ll@{}}
@@ -551,7 +573,7 @@ Starting from the reference frame $I$, the first rotation will be an elementary 
 \end{bmatrix}
 \end{equation}
 
-After an elementary rotation around ${}_I \ve^z_I$, the y axis ${}_I \ve^y_A$ will be expressed by:
+After an elementary rotation around ${}_I \ve^z_I$, the y axis ${}_I \ve^y_{I'}$ will be expressed by:
 
 \begin{equation}
 {}_I \ve^y_{I'} = 
@@ -575,7 +597,7 @@ After an elementary rotation around ${}_I \ve^z_I$, the y axis ${}_I \ve^y_A$ wi
 \end{bmatrix}
 \end{equation}
 
-After an elementary rotation around ${}_I \ve^y_A$, the x axis ${}_I \ve^x_B$ will be expressed by:
+After an elementary rotation around ${}_I \ve^y_{I'}$, the x axis ${}_I \ve^x_{I''}$ will be expressed by:
 
 \begin{equation}
 {}_I \ve^x_{I''} = 
@@ -645,13 +667,16 @@ The mapping described by \eqref{mapOmegaInBaseToEuler} is valid $\forall y \ne \
 
 
 \section{Appendix II: Jacobians}
-We wish to derive the relationship between the generalized velocities $\vu$ and the operational space velocities ${}_I\vv_{Q}$ of a point $Q$, which is fixed at the end of a kinematic chain that stems from a floating base $B$. The position vector $\pos{I}{I}{Q}$ of a point w.r.t. the inertial frame $I$ is given by:
+We wish to derive the relationship between the generalized velocities $\vu$ and the operational space velocities ${}_I\vv_{Q}$ of a point $Q$, which is fixed at the end of a kinematic chain that stems from a floating base $B$. The position vector $\pos{I}{I}{Q} = \pos{I}{I}{Q}(\vq)$ of a point w.r.t. the inertial frame $I$ is given by:
 
 \begin{equation}
-\pos{I}{I}{Q} = \pos{I}{I}{B} + \comat{I}{B} \cdot \pos{B}{B}{Q},
+\pos{I}{I}{Q}(\vq) = \pos{I}{I}{B}(\vq) + \comat{I}{B}(\vq) \cdot \pos{B}{B}{Q}(\vq),
 \end{equation}
 
-where the rotation matrix $\comat{I}{B} = \comat{I}{B}(\vq)$ which describes the orientation of the floating base $B$ w.r.t. the inertial frame $I$ is a function of the joint configuration $\vq$. Time differentiation yields:
+where the rotation matrix $\comat{I}{B}(\vq)$ describes the orientation of the floating base $B$ w.r.t. the inertial frame $I$, $\pos{I}{I}{B}(\vq)$ represents the position of the floating base $B$ w.r.t. the inertial frame $I$ expressed in the inertial frame and $\vq = \vq(t)$ is a function of time $t$.
+
+
+Time differentiation yields:
 
 \begin{equation}
 \begin{aligned}
@@ -674,14 +699,14 @@ If we attach a frame at $\pos{I}{I}{Q}$, we can derive a similar mapping for ang
 \comat{I}{Q} = \comat{I}{B} \cdot \comat{B}{Q}
 \end{equation}
 
-Time differentiation both sides of \eqref{eq_c_iq} yields:
+Time differentiation of both sides of \eqref{eq_c_iq} yields:
 
 \begin{equation}
 \begin{aligned}
 \rotvelhat{I}{I}{Q} \cdot \comat{I}{Q}
 &= \rotvelhat{I}{I}{B} \cdot \comat{I}{B} \cdot \comat{B}{Q} + \comat{I}{B} \cdot \rotvelhat{B}{B}{Q} \cdot \comat{B}{Q} \\
 &= \rotvelhat{I}{I}{B} \cdot \comat{I}{Q} + \comat{I}{B} \cdot \comat{B}{I} \cdot \rotvelhat{I}{B}{Q} \cdot \comat{B}{I}^\transpose \cdot \comat{B}{Q} \\
-&= \rotvelhat{I}{I}{B} \cdot \comat{I}{Q} + \rotvel{I}{B}{Q} \cdot \comat{I}{Q},
+&= \rotvelhat{I}{I}{B} \cdot \comat{I}{Q} + \rotvelhat{I}{B}{Q} \cdot \comat{I}{Q},
 \end{aligned}
 \end{equation}
 
@@ -753,7 +778,7 @@ The Hessian $\vH_k(\vq)$ is then expressed by:
 \end{bmatrix}
 \end{equation}
 
-Knowledge of the Hessian matrix w.r.t. to each configuration variable $q_k$ enables the computation of the time derivative of $\vJ(\vq(t))$. Its generic element $i,j$ can be computed as:
+Knowledge of the Hessian matrix w.r.t. each configuration variable $q_k$ enables the computation of the time derivative of $\vJ(\vq(t))$. Its generic element $i,j$ can be computed as:
 
 \begin{equation}
 \begin{aligned}
