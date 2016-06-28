@@ -526,6 +526,7 @@ $\begin{aligned}
 \vh &= \vB^\mathsf{T} \bar{\vh} - \vB^\mathsf{T} \bar{\vM} \dot{\vB} \vu \\
 \end{aligned}$
 
+\clearpage
 \section{Appendix I: Euler Angles ZYX velocities to angular velocity mapping}
 Given a set of Euler angles $\vch = \begin{bmatrix}z & y & x\end{bmatrix}^T$ and velocities $\dvch = \begin{bmatrix} \dot{z} & \dot{y} & \dot{x} \end{bmatrix}^T$,
 we wish to find the mapping $\vE(\vch) \in \mathbb{R}^{3 \times 3}$ that maps $\dvch$ to $\rotvel{I}{I}{B}$:
@@ -641,6 +642,7 @@ If we compute the rotation matrix $\comat{I}{B} = \comat{I}{B}(z,y,x) = \comat{z
 \end{equation}
 
 The mapping described by \eqref{mapOmegaInBaseToEuler} is valid $\forall y \ne \pi/2 + k\pi, \forall k \in \mathbb{Z}$.
+
 
 \section{Appendix II: Jacobians}
 We wish to derive the relationship between the generalized velocities $\vu$ and the operational space velocities ${}_I\vv_{Q}$ of a point $Q$, which is fixed at the end of a kinematic chain that stems from a floating base $B$. The position vector $\pos{I}{I}{Q}$ of a point w.r.t. the inertial frame $I$ is given by:
@@ -776,6 +778,7 @@ which yields:
 \end{equation}
 
 
+\clearpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  END CONTENT
