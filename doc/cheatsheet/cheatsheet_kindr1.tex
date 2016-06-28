@@ -343,6 +343,7 @@ $\rotvel{D}{A}{D} = \rotvel{D}{A}{B} +  \rotvel{D}{B}{C} + \rotvel{D}{C}{D}$ & c
 \end{tabular}
 
 \subsection{Derivatives}
+The derivation of the following identities can be found in \cite{Bloesch2016}.
 \begin{tabular}[h!]{p{3.5cm}@{ }|@{ }p{4cm}@{ }|l@{ }}
 $\begin{aligned}
 \frac{\partial}{\partial t}\Phi_{B\!I}(t) &= -\rotvel{B}{I}{B}(t) \\
@@ -743,7 +744,7 @@ Hence, the mapping from generalized velocities $\vu$ to the operational space tw
 \end{equation}
 
 \section{Appendix III: Hessians and Time Derivatives of Jacobians}
-Consider a kinematic chain which connects two rigid bodies. We represent the set of indexes of the rigid bodies in this chain with $U_A$. As shown in Iwamura et al. 2013, the $i-th$ column of the spatial Hessian matrix of the spatial Jacobian J w.r.t. the j-th configuration variable $q_j$ can be computed as:
+Consider a kinematic chain which connects two rigid bodies. We represent the set of indexes of the rigid bodies in this chain with $U_A$. As shown in \cite{Iwamura2013}, the $i-th$ column of the spatial Hessian matrix of the spatial Jacobian J w.r.t. the j-th configuration variable $q_j$ can be computed as:
 
 \begin{equation}
 \dfrac{\partial \vJ_i}{\partial q_j}
@@ -758,7 +759,7 @@ Consider a kinematic chain which connects two rigid bodies. We represent the set
 \end{bmatrix} & i \ge j \\
 
 \begin{bmatrix}
-\vJ_{R_j} \times \vJ_{P_i} \\ 
+\vJ_{R_i} \times \vJ_{P_j} \\ 
 \mathbf{0} \\
 \end{bmatrix} & i < j \\
 
@@ -774,7 +775,7 @@ The Hessian $\vH_k(\vq)$ is then expressed by:
 \begin{equation}
 \vH_k(\vq) =
 \begin{bmatrix}
-\dfrac{\partial \vJ_1}{\partial q_k} && \dfrac{\partial \vJ_2}{\partial q_k} && \dots && \dfrac{\partial \vJ_n}{\partial q_k}
+\dfrac{\partial \vJ_1}{\partial q_k} && \dfrac{\partial \vJ_2}{\partial q_k} && \dots && \dfrac{\partial \vJ_n}{\partial q_k}.
 \end{bmatrix}
 \end{equation}
 
@@ -788,7 +789,7 @@ Knowledge of the Hessian matrix w.r.t. each configuration variable $q_k$ enables
 =
 \sum_{k=1}^{n} \dfrac{\partial J_{i,j}(\vq)}{\partial q_k} \cdot \dfrac{dq_k}{dt}
 =
-\sum_{k=1}^{n} H_{k_{i,j}}(\vq) \cdot \dfrac{dq_k}{dt}
+\sum_{k=1}^{n} H_{k_{i,j}}(\vq) \cdot \dfrac{dq_k}{dt},
 \end{aligned}
 \end{equation}
 
@@ -797,23 +798,13 @@ which yields:
 \begin{equation}
 \dfrac{d\vJ(\vq)}{dt}
 =
-\dfrac{\partial \vJ(\vq)}{\partial \vq} \cdot \dfrac{d\vq}{dt}
+\dfrac{\partial \vJ(\vq)}{\partial \vq} \cdot \dfrac{d\vq}{dt},
 =
-\sum_{k=1}^{n} \mathbf{H}_k(\vq) \cdot  \dfrac{dq_k}{dt}
+\sum_{k=1}^{n} \mathbf{H}_k(\vq) \cdot  \dfrac{dq_k}{dt}.
 \end{equation}
 
-
-\clearpage
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%  END CONTENT
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\rule{0.3\linewidth}{0.25pt}
-%\scriptsize
-
-%Copyright \copyright\ 2014 Autonomous Systems Lab, ETH Zurich (asl.ethz.ch)\\
-%Contact: Christian Gehring (gehrinch@ethz.ch) \\
-
+\bibliographystyle{./IEEEtran}
+\bibliography{references.bib}
 
 \end{multicols}
 \end{document}
