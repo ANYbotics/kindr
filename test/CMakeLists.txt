@@ -26,19 +26,9 @@
 # Project configuration
 cmake_minimum_required (VERSION 2.8)
 
-# Set the build type.  Options are:
-#  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
-#  Debug          : w/ debug symbols, w/o optimization
-#  Release        : w/o debug symbols, w/ optimization
-#  RelWithDebInfo : w/ debug symbols, w/ optimization
-#  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
-#set(ROS_BUILD_TYPE Debug)
-set(ROS_BUILD_TYPE Release)
-
-add_definitions(-std=c++0x)
+add_definitions(-std=c++11)
 
 find_package(Eigen REQUIRED)
-find_package(ROS REQUIRED)
 
 include_directories(${EIGEN_INCLUDE_DIRS})
 include_directories(../include)
@@ -66,96 +56,76 @@ macro(add_gtest target)
   add_test(${target} ${target})
 endmacro(add_gtest)
 
-set(LINEARALGEBRA_SRCS
-      test_main.cpp 
-      linear_algebra/SkewMatrixFromVectorTest.cpp
-)
-add_gtest(runUnitTestsLinearAlgebra ${LINEARALGEBRA_SRCS})
-
-set(QUATERNIONS_SRCS
-	test_main.cpp
-	quaternions/QuaternionEigenTest.cpp
-)
-add_gtest( runUnitTestsQuaternions ${QUATERNIONS_SRCS} )
+#set(LINEARALGEBRA_SRCS
+#      test_main.cpp 
+#      linear_algebra/SkewMatrixFromVectorTest.cpp
+#)
+#add_gtest(runUnitTestsLinearAlgebra ${LINEARALGEBRA_SRCS})
+#
+#set(QUATERNIONS_SRCS
+#	test_main.cpp
+#	quaternions/QuaternionTest.cpp
+#)
+#add_gtest( runUnitTestsQuaternions ${QUATERNIONS_SRCS} )
 
 set(ROTATION_SRCS
 	test_main.cpp
-	rotations/eigen/RotationMatrixTest.cpp
-	rotations/eigen/RotationQuaternionTest.cpp
-	rotations/eigen/RotationVectorTest.cpp
-	rotations/eigen/AngleAxisTest.cpp
-	rotations/eigen/RotationMatrixTest.cpp
-	rotations/eigen/EulerAnglesZyxTest.cpp
-	rotations/eigen/EulerAnglesXyzTest.cpp
-	rotations/RotationEigenTest.cpp
+	rotations/RotationMatrixTest.cpp
+	rotations/RotationQuaternionTest.cpp
+	rotations/RotationVectorTest.cpp
+	rotations/AngleAxisTest.cpp
+	rotations/RotationMatrixTest.cpp
+	rotations/EulerAnglesZyxTest.cpp
+	rotations/EulerAnglesXyzTest.cpp
+	rotations/RotationTest.cpp
+	rotations/ConventionTest.cpp
+
 )
 add_gtest( runUnitTestsRotation ${ROTATION_SRCS})
 
-set(ROTATIONQUATERNION_SRCS
-	test_main.cpp
-	rotations/eigen/RotationQuaternionTest.cpp
-)
-add_gtest( runUnitTestsRotationQuaternion ${ROTATIONQUATERNION_SRCS})
-
-
+#
 set(ROTATIONDIFF_SRCS
 	test_main.cpp
-	rotations/RotationDiffEigenTest.cpp
-	rotations/eigen/LocalAngularVelocityTest.cpp
-	rotations/eigen/RotationQuaternionDiffTest.cpp
-	rotations/eigen/RotationMatrixDiffTest.cpp
-	rotations/eigen/EulerAnglesZyxDiffTest.cpp
-	rotations/eigen/EulerAnglesXyzDiffTest.cpp
+#	rotations/RotationDiffTest.cpp
+#	rotations/LocalAngularVelocityTest.cpp
+#	rotations/RotationQuaternionDiffTest.cpp
+#	rotations/RotationMatrixDiffTest.cpp
+	rotations/EulerAnglesZyxDiffTest.cpp
+	rotations/EulerAnglesXyzDiffTest.cpp
 )
 add_gtest( runUnitTestsRotationDiff ${ROTATIONDIFF_SRCS})
 
-set(POSITIONS_SRCS
-	test_main.cpp
-	positions/PositionEigenTest.cpp
-)
-add_gtest( runUnitTestsPositions  ${POSITIONS_SRCS})
-
-set(POSITIONSDIFF_SRCS
-	test_main.cpp
-	positions/PositionDiffEigenTest.cpp
-)
-add_gtest( runUnitTestsPositionsDiff  ${POSITIONSDIFF_SRCS})
-
-
-set(POSES_SRCS
-	test_main.cpp
-	poses/PoseEigenTest.cpp
-)
-add_gtest( runUnitTestsPose  ${POSES_SRCS})
-
-set(POSESDIFF_SRCS
-	test_main.cpp
-	poses/PoseDiffEigenTest.cpp
-)
-add_gtest( runUnitTestsPoseDiff  ${POSESDIFF_SRCS})
-
-set(VECTOR_SRCS
-	test_main.cpp
-	vectors/VectorsTest.cpp
-)
-add_gtest( runUnitTestsVector  ${VECTOR_SRCS})
-
-set(FORCE_SRCS
-	test_main.cpp
-	phys_quant/ForceTest.cpp
-)
-add_gtest( runUnitTestsForce  ${FORCE_SRCS})
-
-IF (ROS_FOUND)
-    set(THIRDPARTY_ROS_SRCS
-    	test_main.cpp
-    	thirdparty/ros/RosTfPoseEigenTest.cpp
-    	thirdparty/ros/RosGeometryMsgPoseEigenTest.cpp
-    	thirdparty/ros/RosGeometryMsgRotationEigenTest.cpp
-    	thirdparty/ros/RosGeometryMsgPhysicalQuantitiesEigenTest.cpp
-    )
-    add_gtest( runUnitTestsThirdpartyRos  ${THIRDPARTY_ROS_SRCS})
-ENDIF (ROS_FOUND)
+#set(POSITIONS_SRCS
+#	test_main.cpp
+#
+#)
+#add_gtest( runUnitTestsPositions  ${POSITIONS_SRCS})
+#
+#set(POSES_SRCS
+#	test_main.cpp
+#	poses/PositionTest.cpp
+#	poses/HomogeneousTransformationTest.cpp
+#)
+#add_gtest( runUnitTestsPose  ${POSES_SRCS})
+#
+#set(POSESDIFF_SRCS
+#	test_main.cpp
+#	poses/PoseDiffTest.cpp
+#	poses/PositionDiffTest.cpp
+#)
+#add_gtest( runUnitTestsPoseDiff  ${POSESDIFF_SRCS})
+#
+#set(VECTOR_SRCS
+#	test_main.cpp
+#	vectors/VectorsTest.cpp
+#)
+#add_gtest( runUnitTestsVector  ${VECTOR_SRCS})
+#
+#set(FORCE_SRCS
+#	test_main.cpp
+#	phys_quant/ForceTest.cpp
+#)
+#add_gtest( runUnitTestsForce  ${FORCE_SRCS})
 
 # Run all unit tests post-build.
 add_custom_target(run_tests ALL

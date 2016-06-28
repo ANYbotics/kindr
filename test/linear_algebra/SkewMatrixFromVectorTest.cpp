@@ -28,12 +28,12 @@
 
 
 #include <gtest/gtest.h>
-#include <kindr/linear_algebra/LinearAlgebra.hpp>
+#include <kindr/math/LinearAlgebra.hpp>
 
 TEST (SkewMatrixFromVectorTest, testVector) {
 	Eigen::Matrix3d skewMatrix;
 	Eigen::Vector3d vec;
 	vec << 1, 2, 3;
 	skewMatrix << 0, -3, 2, 3, 0, -1, -2, 1, 0;
-	EXPECT_EQ(skewMatrix, kindr::linear_algebra::getSkewMatrixFromVector(vec));
+	EXPECT_EQ(skewMatrix, kindr::getSkewMatrixFromVector(vec));
 }

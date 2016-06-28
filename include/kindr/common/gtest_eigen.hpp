@@ -25,8 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-#ifndef GTEST_EIGEN_HPP_
-#define GTEST_EIGEN_HPP_
+#pragma once
 
 #include <type_traits>
 #include <gtest/gtest.h>
@@ -35,9 +34,6 @@
 #include <Eigen/Core>
 
 namespace kindr {
-namespace common {
-
-namespace test {
 
 //TODO we should have a better place for test tools - especially libeigen independent ones
 template <typename T>
@@ -57,31 +53,10 @@ double calcRotationQuatDisparityAngle(const T & q1, const T & q2){
   return calcRotationQuatDisparityAngleToIdentity(q1.inverted() * q2);
 }
 
-}
-
-namespace eigen {
-
-
-//    template<int N>
-//    Eigen::Matrix<double,N,N> randomCovariance()
-//    {
-//      Eigen::Matrix<double,N,N> U;
-//      U.setRandom();
-//      return U.transpose() * U + 5.0 * Eigen::Matrix<double,N,N>::Identity();
-//    }
-//
-//
-//    inline Eigen::MatrixXd randomCovarianceXd(int N)
-//    {
-//        Eigen::MatrixXd U(N,N);
-//        U.setRandom();
-//        return U.transpose() * U + 5.0 * Eigen::MatrixXd::Identity(N,N);
-//    }
-
 
 
 template<typename M1, typename M2>
-void assertEqual(const M1 & A, const M2 & B, kindr::common::internal::source_file_pos const & sfp, std::string const & message = "")
+void assertEqual(const M1 & A, const M2 & B, kindr::internal::source_file_pos const & sfp, std::string const & message = "")
 {
   ASSERT_EQ((size_t)A.rows(),(size_t)B.rows()) << message << "\nMatrix A:\n" << A << "\nand matrix B\n" << B << "\nare not the same\n" << sfp.toString();
   ASSERT_EQ((size_t)A.cols(),(size_t)B.cols()) << message << "\nMatrix A:\n" << A << "\nand matrix B\n" << B << "\nare not the same\n" << sfp.toString();
@@ -98,7 +73,7 @@ void assertEqual(const M1 & A, const M2 & B, kindr::common::internal::source_fil
 
 
 template<typename M1, typename M2, typename T>
-void assertNear(const M1 & A, const M2 & B, T tolerance, kindr::common::internal::source_file_pos const & sfp, std::string const & message = "")
+void assertNear(const M1 & A, const M2 & B, T tolerance, kindr::internal::source_file_pos const & sfp, std::string const & message = "")
 {
   // Note: If these assertions fail, they only abort this subroutine.
   // see: http://code.google.com/p/googletest/wiki/AdvancedGuide#Using_Assertions_in_Sub-routines
@@ -117,7 +92,7 @@ void assertNear(const M1 & A, const M2 & B, T tolerance, kindr::common::internal
 }
 
 template<typename M1, typename M2, typename T>
-void expectNear(const M1 & A, const M2 & B, T tolerance, kindr::common::internal::source_file_pos const & sfp, std::string const & message = "")
+void expectNear(const M1 & A, const M2 & B, T tolerance, kindr::internal::source_file_pos const & sfp, std::string const & message = "")
 {
   EXPECT_EQ((size_t)A.rows(),(size_t)B.rows()) << message << "\nMatrix A:\n" << A << "\nand matrix B\n" << B << "\nare not the same\n" << sfp.toString();
   EXPECT_EQ((size_t)A.cols(),(size_t)B.cols()) << message << "\nMatrix A:\n" << A << "\nand matrix B\n" << B << "\nare not the same\n" << sfp.toString();
@@ -134,7 +109,7 @@ void expectNear(const M1 & A, const M2 & B, T tolerance, kindr::common::internal
 
 
 template<typename M1>
-void assertFinite(const M1 & A, kindr::common::internal::source_file_pos const & sfp, std::string const & message = "")
+void assertFinite(const M1 & A, kindr::internal::source_file_pos const & sfp, std::string const & message = "")
 {
   for(int r = 0; r < A.rows(); r++)
   {
@@ -155,7 +130,7 @@ void assertFinite(const M1 & A, kindr::common::internal::source_file_pos const &
       {                               \
         typedef typename std::remove_reference<decltype(A)>::type::Scalar Scalar; \
         Scalar percentError = static_cast<Scalar>(0.0); \
-        ASSERT_TRUE(kindr::common::eigen::compareRelative( (A)(r,c), (B)(r,c), PERCENT_TOLERANCE, &percentError)) \
+        ASSERT_TRUE(kindr::compareRelative( (A)(r,c), (B)(r,c), PERCENT_TOLERANCE, &percentError)) \
         << MSG << "\nComparing:\n"                \
         << #A << "(" << r << "," << c << ") = " << (A)(r,c) << std::endl \
         << #B << "(" << r << "," << c << ") = " << (B)(r,c) << std::endl \
@@ -193,7 +168,7 @@ void assertFinite(const M1 & A, kindr::common::internal::source_file_pos const &
       {                               \
         typedef typename std::remove_reference<decltype(A)>::type::Scalar Scalar; \
         Scalar percentError = static_cast<Scalar>(0.0); \
-        ASSERT_TRUE(kindr::common::eigen::compareRelativePeriodic( (A)(r,c), (B)(r,c), PERIODLENGTH, PERCENT_TOLERANCE, &percentError)) \
+        ASSERT_TRUE(kindr::compareRelativePeriodic( (A)(r,c), (B)(r,c), PERIODLENGTH, PERCENT_TOLERANCE, &percentError)) \
         << MSG << "\nComparing:\n"                \
         << #A << "(" << r << "," << c << ") = " << (A)(r,c) << std::endl \
         << #B << "(" << r << "," << c << ") = " << (B)(r,c) << std::endl \
@@ -204,10 +179,7 @@ void assertFinite(const M1 & A, kindr::common::internal::source_file_pos const &
 
 
 
-} // namespace eigen
-} // namespace common
+
 } // namespace kindr
 
 
-
-#endif /* GTEST_EIGEN_HPP_ */

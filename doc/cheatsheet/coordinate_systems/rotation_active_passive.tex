@@ -1,0 +1,130 @@
+\documentclass[landscape]{article}
+\thispagestyle{empty}
+\usepackage{amsmath,amssymb}
+\usepackage{wasysym}
+\usepackage{tikz}
+\usetikzlibrary{plotmarks}
+\usepackage{tikz-3dplot}
+\usepackage{pgfplots}
+\usepackage[margin=0cm]{geometry}
+
+   % Workaround for making use of externalization possible
+   % -> remove hardcoded pdflatex and replace by lualatex
+%    \usepgfplotslibrary{external}
+%        \tikzset{external/system call={lualatex \tikzexternalcheckshellescape%
+%         -halt-on-error -interaction=batchmode -jobname "\image" "\texsource"}}
+
+% Redefine rotation sequence for tikz3d-plot to z-y-x
+\newcommand{\tdseteulerxyz}{
+\renewcommand{\tdplotcalctransformrotmain}{%
+%perform some trig for the Euler transformation
+\tdplotsinandcos{\sinalpha}{\cosalpha}{\tdplotalpha} 
+\tdplotsinandcos{\sinbeta}{\cosbeta}{\tdplotbeta}
+\tdplotsinandcos{\singamma}{\cosgamma}{\tdplotgamma}
+%
+\tdplotmult{\sasb}{\sinalpha}{\sinbeta}
+\tdplotmult{\sasg}{\sinalpha}{\singamma}
+\tdplotmult{\sasbsg}{\sasb}{\singamma}
+%
+\tdplotmult{\sacb}{\sinalpha}{\cosbeta}
+\tdplotmult{\sacg}{\sinalpha}{\cosgamma}
+\tdplotmult{\sasbcg}{\sasb}{\cosgamma}
+%
+\tdplotmult{\casb}{\cosalpha}{\sinbeta}
+\tdplotmult{\cacb}{\cosalpha}{\cosbeta}
+\tdplotmult{\cacg}{\cosalpha}{\cosgamma}
+\tdplotmult{\casg}{\cosalpha}{\singamma}
+%
+\tdplotmult{\cbsg}{\cosbeta}{\singamma}
+\tdplotmult{\cbcg}{\cosbeta}{\cosgamma}
+%
+\tdplotmult{\casbsg}{\casb}{\singamma}
+\tdplotmult{\casbcg}{\casb}{\cosgamma}
+%
+%determine rotation matrix elements for Euler transformation
+\pgfmathsetmacro{\raaeul}{\cacb}
+\pgfmathsetmacro{\rabeul}{\casbsg - \sacg}
+\pgfmathsetmacro{\raceul}{\sasg + \casbcg}
+\pgfmathsetmacro{\rbaeul}{\sacb}
+\pgfmathsetmacro{\rbbeul}{\sasbsg + \cacg}
+\pgfmathsetmacro{\rbceul}{\sasbcg - \casg}
+\pgfmathsetmacro{\rcaeul}{-\sinbeta}
+\pgfmathsetmacro{\rcbeul}{\cbsg}
+\pgfmathsetmacro{\rcceul}{\cbcg}
+}
+}
+
+\tdseteulerxyz
+
+\usepackage{siunitx}
+ \input{../styles/def}
+
+%%%%%%%%% Z
+\begin{document}
+\clearpage
+\centering
+
+
+
+% Set the plot display orientation
+% Syntax: \tdplotsetdisplay{\theta_d}{\phi_d}
+
+ \tdplotsetmaincoords{60}{120}
+%\tdplotsetmaincoords{60}{140}
+
+\pgfmathsetmacro{\zRot}{20}
+\pgfmathsetmacro{\yRot}{25}
+\pgfmathsetmacro{\xRot}{30}
+
+
+%%%%%%%%%%%%% Z-Y-X
+\begin{tikzpicture}[scale=2,tdplot_main_coords,baseline=(current bounding box.north)]
+% \node[anchor=east](rectangle) at (0,0,0){\textcolor{blue}O};
+% \node(rectangle) at (0,5.7,1.6){$\begin{aligned}
+% 1) &\text{ Vector: } \vr_{O\!P} \quad \text{vector from point $O$ to point $P$)}\\ 
+% 2) &\text{ Position: } {}_A\vr_{O\!P} \quad \text{position vector from point $O$ to point $P$ expressed in frame $A$)}\\ 
+% 3) &\text{ Active Rotation: } R^A(\theta): {}_A\color{blue}{\vr_{O\!P}} \color{black}\mapsto {}_A\color{green!50!black}{\vr_{O\!Q}} \quad \text{(rotates the vector $\vr_{O\!P}$)}\\
+% 4) &\text{ Passive Rotation: } R^P(\theta): {}_A\color{blue}{\vr_{O\!P}} \color{black}\mapsto \color{red}{}_B\color{blue}{\vr_{O\!P}} \quad \text{(rotates the frame $(\ve_x^A,\ve_y^A,\ve_z^A)$)}\\
+% 5) & R^{A^{-1}}(\vr) = R^P(\vr) \\ 
+% \end{aligned}$};
+% Set origin of main (body) coordinate system
+\coordinate (O) at (0,0,0);
+%\node[draw=none] at (0.5,-0.25,1) {3)};
+\filldraw (0,0,0) circle (0.5pt);
+\node[draw=none,anchor=east] at (0.0,0,0) {$O$};
+% Draw main coordinate system
+%\node[mark size=1pt,color=blue] at (1,1,0) {\pgfuseplotmark{*}};
+\filldraw (1,1,0) circle (0.5pt);
+\draw[black, ,->] (0,0,0) -- (1,0,0) node[anchor=east]{$e_x^{I}$};
+\draw[black, ,->] (0,0,0) -- (0,1,0) node[anchor= west]{$e_y^{I}$};
+\draw[black, ,->] (0,0,0) -- (0,0,1) node[anchor=west]{$e_z^{I}$   \textcolor{red}{$e_{z}^B$}}; 
+\draw[blue, very thick,->] (0,0,0) -- (1,1,0) node[anchor=south west]{\textcolor{black}{$P$}};
+\node[anchor=north](rectangle) at (1,1,0) {$\color{black}{{}_I}\color{blue}{\vr_{O\!P}}, \color{red}{{}_B} \color{blue}{\vr_{O\!P}}$};
+
+% Intermediate frame 1
+\tdplotsetrotatedcoords{\zRot}{0}{0}
+\draw[tdplot_rotated_coords,->, red] (0,0,0) -- (1,0,0) node[anchor=north]{$e_{x}^B$};
+\draw[tdplot_rotated_coords,->, red] (0,0,0) -- (0,1,0) node[anchor=south]{$e_{y}^B$};
+\draw[tdplot_rotated_coords,->, red] (0,0,0) -- (0,0,1) node[anchor=west]{};
+\filldraw[tdplot_rotated_coords](1,1,0) circle (0.5pt);
+\draw[tdplot_rotated_coords,very thick,->, green!50!black] (0,0,0) -- (1,1,0) node[anchor=south west]{};
+\node[tdplot_rotated_coords, draw=none, anchor=south west, yshift=-3pt] at (1,1,0) {$Q$};
+\node[tdplot_rotated_coords, anchor=north west ](rectangle) at (1,1,0) {$\color{black}{{}_I}\color{green!50!black}{\vr_{O\!Q}},  {\color{red} {}_B} \color{green!50!black}{\vr_{O\!Q}}$};
+%\tdplotsetrotatedthetaplanecoords{0}
+%\tdplotdrawarc[thick,tdplot_rotated_coords,->,color=gray]{(0,0,0)}{0.5}{0}{\yRot}{anchor=east,color=gray}{$\theta$}
+
+
+
+\tdplotsetrotatedthetaplanecoords{0}
+\tdplotdrawarc[thick,->,color=gray]{(0,0,0)}{.5}{0}{\zRot}{anchor=north east,color=gray}{$\theta$}
+\tdplotdrawarc[thick,->,color=gray]{(0,0,0)}{.5}{45}{45+\zRot}{anchor=north west,color=gray}{$\theta$}
+
+%\tdplotsetrotatedcoords{\zRot}{\yRot+90}{0}
+%\tdplotdrawarc[thick,tdplot_rotated_coords,->,color=gray]{(0,0,0)}{0.5}{90}{90+\xRot}{anchor=south,color=gray}{$\phi$}
+
+
+
+\end{tikzpicture}
+
+
+\end{document}

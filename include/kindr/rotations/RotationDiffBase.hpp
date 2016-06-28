@@ -26,15 +26,14 @@
  *
 */
 
-#ifndef KINDR_ROTATIONS_RDIFFBASE_HPP_
-#define KINDR_ROTATIONS_RDIFFBASE_HPP_
+#pragma once
 
 
 #include "kindr/common/common.hpp"
 #include "kindr/rotations/RotationBase.hpp"
 
 namespace kindr {
-namespace rotations {
+
 //! Internal stuff (only for developers)
 namespace internal {
 
@@ -71,13 +70,9 @@ class RotationDiffConversionTraits {
  * \ingroup rotations
  *
  */
-template<typename Derived_, enum RotationUsage Usage_>
+template<typename Derived_>
 class RotationDiffBase {
  public:
-  /*! \brief Rotation usage.
-   *  The rotation usage is either active (rotation of an object) or passive (transformation of its coordinates)
-   */
-  static constexpr enum RotationUsage Usage = Usage_;
 
   /*! \brief Default constructor.
    *
@@ -127,96 +122,29 @@ class RotationDiffBase {
    *  \returns sum of the two time derivatives.
    */
   template<typename OtherDerived_>
-  Derived_ operator +(const RotationDiffBase<OtherDerived_, Usage_>& other) const {
-    return internal::RotationDiffAdditionTraits<RotationDiffBase<Derived_, Usage_>, RotationDiffBase<OtherDerived_, Usage_>>::add(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
+  Derived_ operator +(const RotationDiffBase<OtherDerived_>& other) const {
+    return internal::RotationDiffAdditionTraits<RotationDiffBase<Derived_>, RotationDiffBase<OtherDerived_>>::add(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
   }
 
   /*! \brief Subtraction of two time derivatives.
    *  \returns result of the subtraction of the two time derivatives.
    */
   template<typename OtherDerived_>
-  Derived_ operator -(const RotationDiffBase<OtherDerived_, Usage_>& other) const {
-    return internal::RotationDiffAdditionTraits<RotationDiffBase<Derived_, Usage_>, RotationDiffBase<OtherDerived_, Usage_>>::subtract(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
+  Derived_ operator -(const RotationDiffBase<OtherDerived_>& other) const {
+    return internal::RotationDiffAdditionTraits<RotationDiffBase<Derived_>, RotationDiffBase<OtherDerived_>>::subtract(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
   }
 
   /*! \brief Addition and assignment.
    *  \returns sum of the two time derivatives.
    */
   template<typename OtherDerived_>
-  Derived_& operator +=(const RotationDiffBase<OtherDerived_, Usage_>& other);
+  Derived_& operator +=(const RotationDiffBase<OtherDerived_>& other);
 
   /*! \brief Subtraction and assignment.
    *  \returns result of the subtraction of the two time derivatives.
    */
   template<typename OtherDerived_>
-  Derived_& operator -=(const RotationDiffBase<OtherDerived_, Usage_>& other);
-
-};
-
-/*! \class AngularVelocityBase
- * \brief Interface for an angular velocity of a rigid body in 3D-space.
- *
- * This class defines the generic interface for an angular velocity in 3D-space.
- * More precisely an interface to store and access the three components of the angular velocity of a rigid body is provided.
-
- * \tparam Derived_ the derived class that should implement the angular velocity.
- *
- *  \ingroup rotations
- */
-template<typename Implementation_, enum RotationUsage Usage_>
-class AngularVelocityBase : public RotationDiffBase<Implementation_, Usage_> {
-
-
-};
-
-
-template<typename Implementation_, enum RotationUsage Usage_>
-class LocalAngularVelocityBase : public AngularVelocityBase<Implementation_, Usage_> {
-
-
-};
-
-template<typename Implementation_, enum RotationUsage Usage_>
-class AngleAxisDiffBase : public RotationDiffBase<Implementation_, Usage_> {
- public:
-
-};
-
-template<typename Implementation_, enum RotationUsage Usage_>
-class RotationVectorDiffBase : public RotationDiffBase<Implementation_, Usage_> {
- public:
-
-};
-
-template<typename Implementation_, enum RotationUsage Usage_>
-class RotationQuaternionDiffBase : public RotationDiffBase<Implementation_, Usage_> {
- public:
-
-};
-
-template<typename Implementation_, enum RotationUsage Usage_>
-class RotationMatrixDiffBase : public RotationDiffBase<Implementation_, Usage_> {
- public:
-
-};
-
-
-template<typename Implementation_, enum RotationUsage Usage_>
-class EulerAnglesDiffBase : public RotationDiffBase<Implementation_, Usage_> {
- public:
-
-};
-
-
-template<typename Implementation_, enum RotationUsage Usage_>
-class EulerAnglesDiffZyxBase : public EulerAnglesDiffBase<Implementation_, Usage_> {
- public:
-
-};
-
-template<typename Implementation_, enum RotationUsage Usage_>
-class EulerAnglesDiffXyzBase : public EulerAnglesDiffBase<Implementation_, Usage_> {
- public:
+  Derived_& operator -=(const RotationDiffBase<OtherDerived_>& other);
 
 };
 
@@ -224,39 +152,39 @@ class EulerAnglesDiffXyzBase : public EulerAnglesDiffBase<Implementation_, Usage
 
 namespace internal {
 
-template<typename Left_, typename Right_, enum RotationUsage Usage_>
-class RotationDiffAdditionTraits<RotationDiffBase<Left_, Usage_>, RotationDiffBase<Right_, Usage_>> {
+template<typename Left_, typename Right_>
+class RotationDiffAdditionTraits<RotationDiffBase<Left_>, RotationDiffBase<Right_>> {
  public:
-  inline static Left_ add(const RotationDiffBase<Left_, Usage_>& lhs, const RotationDiffBase<Right_, Usage_>& rhs) {
-    return Left_(typename eigen_impl::LocalAngularVelocity<typename Left_::Scalar, Usage_>(
-               (typename eigen_impl::LocalAngularVelocity<typename Left_::Scalar, Usage_>(lhs.derived())).toImplementation() +
-               (typename eigen_impl::LocalAngularVelocity<typename Right_::Scalar, Usage_>(rhs.derived())).toImplementation()
+  inline static Left_ add(const RotationDiffBase<Left_>& lhs, const RotationDiffBase<Right_>& rhs) {
+    return Left_(LocalAngularVelocity<typename Left_::Scalar>(
+               (LocalAngularVelocity<typename Left_::Scalar>(lhs.derived())).toImplementation() +
+               (LocalAngularVelocity<typename Right_::Scalar>(rhs.derived())).toImplementation()
                ));
   }
-  inline static Left_ subtract(const RotationDiffBase<Left_, Usage_>& lhs, const RotationDiffBase<Right_, Usage_>& rhs) {
-    return Left_(typename eigen_impl::LocalAngularVelocity<typename Left_::Scalar, Usage_>(
-               (typename eigen_impl::LocalAngularVelocity<typename Left_::Scalar, Usage_>(lhs.derived())).toImplementation() -
-               (typename eigen_impl::LocalAngularVelocity<typename Right_::Scalar, Usage_>(rhs.derived())).toImplementation()
+  inline static Left_ subtract(const RotationDiffBase<Left_>& lhs, const RotationDiffBase<Right_>& rhs) {
+    return Left_(LocalAngularVelocity<typename Left_::Scalar>(
+               ( LocalAngularVelocity<typename Left_::Scalar>(lhs.derived())).toImplementation() -
+               ( LocalAngularVelocity<typename Right_::Scalar>(rhs.derived())).toImplementation()
                ));
   }
 };
 
 
-template<typename LeftAndRight_, enum RotationUsage Usage_>
-class RotationDiffAdditionTraits<RotationDiffBase<LeftAndRight_, Usage_>, RotationDiffBase<LeftAndRight_, Usage_>> {
+template<typename LeftAndRight_>
+class RotationDiffAdditionTraits<RotationDiffBase<LeftAndRight_>, RotationDiffBase<LeftAndRight_>> {
  public:
   /*! \returns the sum of two angular velocities
    * \param lhs left-hand side
    * \param rhs right-hand side
    */
-  inline static LeftAndRight_ add(const RotationDiffBase<LeftAndRight_, Usage_>& lhs, const RotationDiffBase<LeftAndRight_, Usage_>& rhs) {
+  inline static LeftAndRight_ add(const RotationDiffBase<LeftAndRight_>& lhs, const RotationDiffBase<LeftAndRight_>& rhs) {
     return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() + rhs.derived().toImplementation()));
   }
   /*! \returns the subtraction of two angular velocities
    * \param lhs left-hand side
    * \param rhs right-hand side
    */
-  inline static LeftAndRight_ subtract(const RotationDiffBase<LeftAndRight_, Usage_>& lhs, const RotationDiffBase<LeftAndRight_,Usage_>& rhs) {
+  inline static LeftAndRight_ subtract(const RotationDiffBase<LeftAndRight_>& lhs, const RotationDiffBase<LeftAndRight_>& rhs) {
     return LeftAndRight_(typename LeftAndRight_::Implementation(lhs.derived().toImplementation() - rhs.derived().toImplementation()));
   }
 };
@@ -265,11 +193,6 @@ class RotationDiffAdditionTraits<RotationDiffBase<LeftAndRight_, Usage_>, Rotati
 
 
 } // namespace internal
-
-} // namespace rotations
 } // namespace kindr
 
 
-
-
-#endif /* KINDR_ROTATIONS_RDIFFBASE_HPP_ */

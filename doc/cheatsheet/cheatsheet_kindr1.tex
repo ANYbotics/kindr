@@ -1,0 +1,810 @@
+\documentclass[10pt,landscape,a4paper]{article}
+\usepackage{nonfloat}
+\usepackage{multicol}
+\usepackage[font=scriptsize]{caption}
+\usepackage{calc}
+\usepackage{ifthen}
+\usepackage[landscape]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{multirow}
+ \usepackage[T1]{fontenc}
+% \usepackage{bbold}
+    \usepackage{dsfont}
+%\usepackage{esvect}
+\usepackage{graphics}
+   \usepackage[pdftex]{graphicx}
+
+\usepackage{tabularx,booktabs} 
+\usepackage{epstopdf}
+ \usepackage{ifpdf}
+\usepackage{sectsty}
+\usepackage{tikz}
+\usepackage{mathtools} % \mathclap for underbrace
+\paragraphfont{\small}
+
+\usepackage[explicit]{titlesec}
+\usepackage{xcolor}
+
+% To make this come out properly in landscape mode, do one of the following
+% 1.
+%  pdflatex latexsheet.tex
+%
+% 2.
+%  latex latexsheet.tex
+%  dvips -P pdf  -t landscape latexsheet.dvi
+%  ps2pdf latexsheet.ps
+
+
+% If you're reading this, be prepared for confusion.  Making this was
+% a learning experience for me, and it shows.  Much of the placement
+% was hacked in; if you make it better, let me know...
+
+
+% 2008-04
+% Changed page margin code to use the geometry package. Also added code for
+% conditional page margins, depending on paper size. Thanks to Uwe Ziegenhagen
+% for the suggestions.
+
+% 2006-08
+% Made changes based on suggestions from Gene Cooperman. <gene at ccs.neu.edu>
+
+
+% To Do:
+% \listoffigures \listoftables
+% \setcounter{secnumdepth}{0}
+
+
+% This sets page margins to .5 inch if using letter paper, and to 1cm
+% if using A4 paper. (This probably isn't strictly necessary.)
+% If using another size paper, use default 1cm margins.
+\ifthenelse{\lengthtest { \paperwidth = 11in}}
+	{ \geometry{top=.5in,left=.5in,right=.5in,bottom=.5in} }
+	{\ifthenelse{ \lengthtest{ \paperwidth = 297mm}}
+		{\geometry{top=1cm,left=1cm,right=1cm,bottom=1cm} }
+		{\geometry{top=1cm,left=1cm,right=1cm,bottom=1cm} }
+	}
+
+% Turn off header and footer
+\pagestyle{empty}
+ 
+
+% Redefine section commands to use less space
+\makeatletter
+  \renewcommand{\section}{\@startsection{section}{1}{0mm}%
+                               {-1ex plus -.5ex minus -.2ex}%
+                                {0.5ex plus .2ex}%x
+                                {\normalfont\large\bfseries}}
+  
+\renewcommand{\subsection}{\@startsection{subsection}{2}{0mm}%
+                                {-1explus -.5ex minus -.2ex}%
+                                {0.5ex plus .2ex}%
+                                {\normalfont\normalsize\bfseries}}
+\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{0mm}%
+                                {-1ex plus -.5ex minus -.2ex}%
+                                {1ex plus .2ex}%
+                                {\normalfont\small\bfseries}}
+\makeatother
+
+% Define BibTeX command
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+% Don't print section numbers
+\setcounter{secnumdepth}{0}
+
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt plus 0.5ex}
+
+
+ \input{styles/def}
+% -----------------------------------------------------------------------
+\DeclareGraphicsExtensions{.pdf,.eps}
+
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\logmap}{log}
+\DeclareMathOperator{\expmap}{exp}
+\DeclareMathOperator{\logmatrix}{log}
+\DeclareMathOperator{\expmatrix}{exp}
+% identity matrix
+\newcommand\identity{\mathds{1}}
+\newcommand\zero{\mathbf{0}}
+\newcommand\norm[1]{\lVert #1 \rVert}
+\newcommand\transpose{\mathsf{T}}
+
+%\newcommand\imquatvec[1]{\overrightarrow{\mathbf{#1}}}
+\newcommand\imquatvec[1]{\check{\mathbf{#1}}}
+
+\newcommand\pos[3]{{}_#1\vr_{#2\!#3}}
+\newcommand\posdot[3]{{}_#1\dot{\vr}_{#2\!#3}}
+\newcommand\poshat[3]{{}_#1\hat{\vr}_{#2\!#3}}
+\newcommand\poshatdot[3]{{}_#1\dot{\hat{\vr}}_{#2\!#3}}
+\newcommand\postranspose[3]{{}_#1\vr_{#2\!#3}^\transpose}
+\newcommand\rotmat[2]{\vR_{#1\!#2}}
+\newcommand\drotmat[2]{\dot{\vR}_{#1\!#2}}
+\newcommand\comat[2]{\vC_{#1\!#2}}
+\newcommand\dcomat[2]{\dot{\vC}_{#1\!#2}}
+\newcommand\quat[2]{\vq_{#1\!#2}}
+\newcommand\Quat[2]{Q_{#1\!#2}}
+\newcommand\angleaxis[2]{(\theta,\vn)_{#1\!#2}}
+\newcommand\rotvec[2]{\vvph_{#1\!#2}}
+\newcommand\linvel[2]{{}_#1\vv_{#2}}
+\newcommand\rotvel[3]{{}_#1\vom_{#2\!#3}}
+\newcommand\rotvelhat[3]{{}_#1\hat{\vom}_{#2\!#3}}
+\newcommand\dvch[0]{\dot{\vch}}
+
+\newcommand\myfigure[1]{%
+\medskip\noindent\begin{minipage}{\columnwidth}
+\centering%
+#1%
+%figure,caption, and label go here
+\end{minipage}\medskip}
+
+\begin{document}
+
+\raggedright
+\footnotesize
+\begin{multicols}{2}
+
+% multicol parameters
+% These lengths are set only within the two main columns
+%\setlength{\columnseprule}{0.25pt}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+
+\begin{center}
+     \Large{\textbf{Kindr Library}} \small{\textbf{-- Kinematics and Dynamics for Robotics}}\\
+       %\small{\\\textbf{Kinematics and Dynamics for Robotics}}}  \\
+        \vspace{2mm}\scriptsize{Christian Gehring, C. Dario Bellicoso, Michael Bloesch, Hannes Sommer, Peter Fankhauser, \\ Marco Hutter, Roland Siegwart} \\ 
+        %\scriptsize{Autonomous Systems Lab & Robotics Systems Lab, ETH Zurich}
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  BEGIN CONTENT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Nomenclature}
+\begin{tabular}{ll@{   }l}
+\hline
+(Hyper-)complex number & $Q$ & normal capital letter  \\ \hline
+Column vector & $\va$ & bold small letter  \\ \hline
+Matrix & $\vM$ & bold capital letter  \\ \hline
+Identity matrix & $\identity_{n\times m}$ & ${n \times m}$-matrix  \\  \hline
+Coordinate system (CS) & ${\ve_x^A,\ve_y^A,\ve_z^A}$ & Cartesian right-hand system $A$ with basis (unit) vectors $\ve$  \\ \hline
+Inertial frame & ${\ve_x^I,\ve_y^I,\ve_z^I}$ & global / inertial / world coordinate system (never moves) \\ \hline
+Body-fixed frame & ${\ve_x^B,\ve_y^B,\ve_z^B}$ & local / body-fixed coordinate system (moves with body) \\ \hline
+Rotation & $\Phi \in \mathrm{SO}(3)$ & generic rotation (for all parameterizations) \\ \hline
+Machine precision & $\epsilon$ & \\ \hline
+
+\end{tabular}
+\section{Operators}
+\begin{tabular}{ll}
+\hline
+Cross product & $\va \times \vb = \begin{bmatrix} a_1 \\ a_2 \\ a_3\end{bmatrix} \times \begin{bmatrix} b_1 \\ b_2 \\ b_3\end{bmatrix} \Leftrightarrow (\va)^\wedge \vb = \hat{\va}\vb = \begin{bmatrix} 0 & -a_3 & a_2 \\ a_3 & 0 & -a_1 \\ -a_2 & a_1 & 0 \end{bmatrix} \begin{bmatrix} b_1 \\ b_2 \\ b_3\end{bmatrix}$ \\ \hline
+Skew/unskew &  $ \va = \hat{\va}^\vee$ \\ \hline
+Euclidean norm & $\norm{\va} = \sqrt{\va^T\va} = \sqrt{a_1^2 + \ldots + a_n^2}$ \\ \hline
+Exponential map for matrix & $\expmatrix: \mathbb{R}^{3\times 3} \rightarrow \mathbb{R}^{3\times 3},  \vA \mapsto e^\vA, \quad \vA \in \mathbb{R}^{3\times 3}$ \\ \hline
+Logarithmic map for matrix & $\logmatrix: \mathbb{R}^{3\times 3} \rightarrow \mathbb{R}^{3\times 3}, \vA \mapsto \log{\vA}, \quad  \vA \in \mathbb{R}^{3\times 3}$\\ \hline
+\end{tabular}
+
+\section{Position \& Orientation}
+\subsection{Position}
+\begin{tabular}{lll}
+ \hline
+Vector & $\vr_{O\!P}$ & from point $O$ to point $P$ \\ \hline
+Position vector & $\pos{B}{O}{P} \in \mathbb{R}^3 $ & from point $O$ to point $P$ expr. in frame $B$ \\ \hline 
+Homogeneous pos. vector & ${}_B\bar{\vr}_{O\!P} = \begin{bmatrix}\postranspose{B}{O}{P} & 1 \end{bmatrix}^\transpose$ & from point $O$ to point $P$ expr. in frame $B$ \\ \hline
+\end{tabular}
+
+\subsection{Orientation/Rotation}
+\parbox[t]{0.7\columnwidth}{\null
+  \vskip-\abovecaptionskip
+\begin{tabular}[h!]{r@{ }p{3cm}@{ }l@{ }}
+ 1) & Active Rotation: & $\Phi^A: {}_I\color{blue}{\vr_{O\!P}} \color{black}\mapsto {}_I\color{green!50!black}{\vr_{O\!Q}} $ (rotates the vector $\vr_{O\!P}$) \\
+ 2) & Passive Rotation:& $\Phi^P: {}_I\color{blue}{\vr_{O\!P}} \color{black}\mapsto \color{red}{}_B\color{blue}{\vr_{O\!P}} $ (rotates the frame $(\ve_x^I,\ve_y^I,\ve_z^I)$)\\
+ 3) & Elementary Rotations &  ${}_I\color{blue}{\vr_{O\!P}} = \color{black} \comat{I}{B} \color{red}{}_B\color{blue}{\vr_{O\!P}}$ \\ 
+ & & around z-axis: \tiny  $\comat{I}{B} = \begin{bmatrix} \cos{\theta} & -\sin{\theta} & 0 \\ 
+			    \sin{\theta} & \cos{\theta} & 0 \\
+			     0           & 0 & 1  
+			     \end{bmatrix}$ \\
+ & & around y-axis: \tiny  $\comat{I}{B} = \begin{bmatrix} \cos{\theta} & 0 & \sin{\theta} \\ 
+			     0 & 1 & 0 \\
+			     -\sin{\theta}          & 0 & \cos{\theta}  
+			     \end{bmatrix}$ \\
+ & & around x-axis: \tiny  $\comat{I}{B} = \begin{bmatrix} 1 & 0            & 0 \\ 
+							   0 & \cos{\theta} & -\sin{\theta} \\
+							   0 & \sin{\theta} & \cos{\theta} 
+					    \end{bmatrix}$ \\
+ 4) & Inversion: & $\Phi^{A^{-1}}(\vr) = \Phi^P(\vr)$ \\ 
+ 5) & Concatenation: & \multicolumn{1}{l}{$\begin{aligned}\Phi_2^A\left(\Phi_1^A(\vr)\right) &= \left(\Phi_2^A \otimes \Phi_1^A\right)(\vr) = \left(\Phi_1^{A^{-1}} \otimes \Phi_2^{A^{-1}}\right)^{-1}(\vr) \\
+\Phi_2^P\left(\Phi_1^P(\vr)\right) &= \left(\Phi_2^P \otimes \Phi_1^P\right)(\vr) 
+									     = \left(\Phi_1^{P^{-1}} \otimes \Phi_2^{P^{-1}}\right)^{-1}(\vr) 
+					      \end{aligned}$} \\
+ 6) & Exponential map: & $ \expmap: \mathbb{R}^3 \rightarrow \mathrm{SO}(3), \vv \mapsto \expmatrix(\hat{\vv}), \quad \vv \in \mathbb{R}^3$ \\
+ 7) & Logarithmic map: & $ \logmap: \mathrm{SO}(3) \rightarrow \mathbb{R}^3, \Phi \mapsto \logmatrix(\Phi)^\vee, \quad \Phi \in \mathrm{SO}(3)$ \\ 
+ 8) & Box plus: & $\Phi_{2} = \Phi_{1} \boxplus \vv = \expmap{(\vv)} \otimes \Phi_{1}, \quad  \Phi_1, \Phi_2 \in \mathrm{SO}(3), \vv \in \mathbb{R}^3$   \\
+ 9) & Box minus: & $\vv = \Phi_{1} \boxminus \Phi_2 = \logmap{(\Phi_1\otimes\Phi_2^{-1})}, \quad \Phi_1, \Phi_2 \in \mathrm{SO}(3), \vv \in \mathbb{R}^3$  \\ 
+ 10) & Discrete integration: & $\Phi_{I\!B}^{k+1} = \Phi_{I\!B}^k \boxplus ({}_I\vom_{I\!B}^k\Delta t), \quad \Phi_{B\!I}^{k+1} = \Phi_{B\!I}^k \boxplus (-{}_B\vom_{I\!B}^k\Delta t)$ \\
+ 11) & Discrete differential: & ${}_I\vom_{I\!B}^k = (\Phi_{I\!B}^{k+1} \boxminus \Phi_{I\!B}^k)/\Delta t, \quad {}_B\vom_{I\!B}^k = -(\Phi_{B\!I}^{k+1} \boxminus{\Phi_{B\!I}^k })/\Delta t$ \\
+ 12) & (Spherical) linear interpolation $t \in [0, 1]$: & $\begin{aligned}\Phi_t &= \Phi_0 \boxplus \left( (\Phi_1 \boxminus \Phi_0) t \right), \quad \Phi_t = \Phi(t), \Phi_0 = \Phi(0), \Phi_1=\Phi(1) \\ &= (\Phi_1 \otimes \Phi_0^{-1})^t \otimes \Phi_0 \end{aligned}$ \\ 
+\end{tabular}
+}
+\parbox[t]{0.25\columnwidth}{\null
+\vspace{+3mm}
+        \includegraphics[width=0.25\columnwidth]{coordinate_systems/rotation_active_passive-crop.pdf}
+}
+\subsubsection{Rotation Parameterizations}
+\begin{tabular}{ll@{}l@{}}
+\hline
+Rotation Matrix& $\comat{I}{B} \in \mathrm{SO}(3)$ & The rotation matrix (Direction Cosine Matrix)  \\  
+  & $ \pos{I}{O}{P} = \comat{I}{B} \pos{B}{O}{P}$ & is a coordinate transformation matrix,  \\
+& $\comat{I}{B} = \comat{B}{I}^\transpose$ & which transforms vectors from frame $B$ to frame $I$. \\  \hline 
+ Rotation  & $\quat{I}{B}$ &  Hamiltonian unit quaternion (hypercomplex number)\\
+Quaternion &  $\vq = [ q_0 \, q_1  \, q_2  \,  q_3 ]^\transpose $ & $Q = q_0 + q_1 i + q_2 j + q_3 k \in \mathbb{H}, \quad q_i \in \mathbb{R}, \quad \norm{Q}= 1$ \\ \hline
+Angle-axis & $\angleaxis{I}{B}$ &   Rotation with unit rotation axis $\vn$ and angle $\theta \in [0, \pi]$. \\ \hline
+Rotation Vector & $ \rotvec{I}{B} $  &  Rotation with rotation axis $\vn = \frac{\vvph}{\norm{\vvph}}$ and angle $\theta = \norm{\vvph}$. \\ \hline
+Euler Angles ZYX &  $[z, y, x]^\transpose_{I\!B}$  & Tait-Bryan angles (Flight conv.): $z-y'-x''$, i.e.\   \\
+Euler Angles YPR &  & yaw-pitch-roll. Singularities are at $y=\pm\frac{\pi}{2}$. \\
+ &  & $z\in[-\pi,\pi), y\in[-\frac{\pi}{2},\frac{\pi}{2}), x\in[-\pi,\pi)$  \\  \hline
+Euler Angles XYZ &  $[x, y, z]^\transpose_{I\!B}$ & Cardan angles: $x-y'-z''$, i.e.\ roll-pitch-yaw. \\
+Euler Angles RPY & &  Singularities are at $y=\pm\frac{\pi}{2}$.  \\
+ &  & $x\in[-\pi,\pi), y\in[-\frac{\pi}{2},\frac{\pi}{2}), z\in[-\pi,\pi)$  \\  \hline
+\end{tabular} % \multirow{2}{*}{}
+
+\subsubsection{Rotation Quaternion}
+A rotation quaternion is a Hamiltonian unit quaternion: \\
+$\begin{aligned}Q &= q_0 + q_1 i + q_2 j + q_3 k \in \mathbb{H}, \quad q_i \in \mathbb{R}, 
+i^2 = j^2=k^2 = ijk = -1, \quad \norm{Q}= \sqrt{q_0^2 + q_1^2 + q_2^2 + q_3^2} = 1 \\
+\end{aligned}$   \\
+Note that $\Quat{I}{B}$ and $-\Quat{I}{B}$ represent the same rotation, but not the same unit quaternion. \\
+Rot. quaternion as tuple: $Q = (q_0, q_1, q_2, q_3) = (q_0, \imquatvec{q})$ with $\imquatvec{q} := (q_1, q_2, q_3)^\transpose$ \\
+Rot. quaternion as vector: $\vq = \begin{bmatrix} q_0 & q_1 & q_2 & q_3 \end{bmatrix}^\transpose$ \\
+Conjugate: $Q^\ast = (q_0, -\imquatvec{q})$ \\
+Inverse: $Q^{-1} = Q^\ast = (q_0, -\imquatvec{q})$ \\
+%  The Eq. 109 and Eq. 111 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006. are wrong, they should be switched.
+Quaternion multiplication: $\begin{aligned}Q \cdot P &= (q_0, \imquatvec{q})\cdot(p_0, \imquatvec{p}) = (q_0 p_0 - \imquatvec{q}^\transpose \imquatvec{p}, q_{0} \imquatvec{p} + p_0 \imquatvec{q} + \imquatvec{q} \times \imquatvec{p}) \quad \Leftrightarrow \\
+	   \vq \otimes \vp &= \underbrace{\vQ(\vq)}_{\mathclap{\text{quaternion matrix}}}\vp \, = \, \begin{pmatrix}q_0 & -\imquatvec{q}^\transpose \\  \imquatvec{q} & q_0\identity_{3 \times 3}+\hat{\imquatvec{q}} \\ \end{pmatrix} \begin{pmatrix} p_0 \\ p_1 \\ p_2 \\ p_3 \end{pmatrix} 
+	  = \begin{pmatrix} 
+ q_0 & -q_1 & -q_2 & -q_3 \\
+ q_1 &  q_0 & -q_3 &  q_2 \\
+ q_2 &  q_3 &  q_0 & -q_1 \\
+ q_3 & -q_2 &  q_1 &  q_0 \\ \end{pmatrix}\begin{pmatrix} p_0 \\ p_1 \\ p_2 \\ p_3 \end{pmatrix} \\
+ &= \underbrace{\bar{\vQ}(\vp)}_{\mathclap{\text{conjugate quat. matrix}}}\vq \, = \, \begin{pmatrix}p_0 & -\imquatvec{p}^\transpose \\  \imquatvec{p} & p_0\identity_{3 \times 3}-\hat{\imquatvec{p}} \\ \end{pmatrix} \begin{pmatrix} q_0 \\ q_1 \\ q_2 \\ q_3 \end{pmatrix} 
+	  = \begin{pmatrix} 
+ p_0 & -p_1 & -p_2 & -p_3 \\
+ p_1 &  p_0 & p_3 &  -p_2 \\
+ p_2 &  -p_3 &  p_0 & p_1 \\
+ p_3 & p_2 &  -p_1 &  p_0 \\ \end{pmatrix}\begin{pmatrix} q_0 \\ q_1 \\ q_2 \\ q_3 \end{pmatrix} \\
+\end{aligned}$ \\
+
+
+\subsubsection{Rotation Quaternion $\Leftrightarrow$ Rotation Angle-Axis}
+
+\begin{tabular}{@{}lll@{}} 
+$ \quat{I}{B} = \begin{bmatrix} \cos{\frac{\theta}{2}} \\ \vn \sin{\frac{\theta}{2}} \end{bmatrix}$ & $\Leftrightarrow$ & $
+(\theta, \vn)_{I\!B} = \left\{
+  \begin{array}{l l}
+    (2\arccos{(p_0)}, \frac{\imquatvec{q}}{\norm{\imquatvec{q}}}) & \quad \text{if $\lVert \imquatvec{q} \rVert^2 \geq \epsilon^2$}\\
+    (0, \begin{bmatrix}1 & 0 & 0\end{bmatrix}^\transpose)  & \quad \text{otherwise}
+  \end{array} \right. $ \\
+\end{tabular}
+\subsubsection{Rotation Quaternion $\Leftrightarrow$ Rotation Matrix }
+$\begin{aligned}\comat{I}{B} &=  \identity_{3\times 3} + 2 q_0\hat{\imquatvec{q}} + 2 \hat{\imquatvec{q}}^2  = (2 q_0^2 -1) \identity_{3\times 3} + 2q_0\hat{\imquatvec{q}} + 2 \imquatvec{q}\imquatvec{q}^\transpose \\
+&= \begin{bmatrix}
+ q_0^2 + q_1^2 - q_2^2 - q_3^2 &         2q_1q_2 - 2q_0q_3 &         2q_0q_2 + 2q_1q_3 \\
+         2q_0q_3 + 2q_1q_2 & q_0^2 - q_1^2 + q_2^2 - q_3^2 &         2q_2q_3 - 2q_0q_1 \\
+         2q_1q_3 - 2q_0q_2 &         2q_0q_1 + 2q_2q_3 & q_0^2 - q_1^2 - q_2^2 + q_3^2 \\ \end{bmatrix} \\
+\end{aligned}$
+
+$\begin{aligned}\comat{I}{B}^{-1} &= \comat{B}{I}  = \identity_{3 \times 3} - 2 q_0\hat{\imquatvec{q}} + 2 \hat{\imquatvec{q}}^2 \\
+&= \begin{bmatrix}  q_0^2 + q_1^2 - q_2^2 - q_3^2 &         2q_0q_3 + 2q_1q_2 &         2q_1q_3 - 2q_0q_2 \\
+         2q_1q_2 - 2q_0q_3 & q_0^2 - q_1^2 + q_2^2 - q_3^2 &         2q_0q_1 + 2q_2q_3 \\
+         2q_0q_2 + 2q_1q_3 &         2q_2q_3 - 2q_0q_1 & q_0^2 - q_1^2 - q_2^2 + q_3^2 \\ \end{bmatrix}  \\  
+\end{aligned}$ \\
+
+\subsubsection{Euler Angles ZYX $\Leftrightarrow$ Direction Cosine Matrix}
+\myfigure{\includegraphics[width=1\columnwidth]{coordinate_systems/coordinate_system_ypr_kindr1-crop.pdf}\vspace{-3mm}
+\figcaption{Rotation from $A$-frame to $D$-frame: ($z-y'-x''$) -- (yaw-pitch-roll) -- ($50^\circ-25^\circ-30^\circ)$}\label{fig:yaw-pitch-roll}}
+\subsubsection{Euler Angles XYZ $\Leftrightarrow$ Direction Cosine Matrix}
+\myfigure{\includegraphics[width=1\columnwidth]{coordinate_systems/coordinate_system_rpy_kindr1-crop.pdf}\vspace{-3mm}
+\figcaption{Rotation from $A$-frame to $D$-frame: ($x-y'-z''$) -- (roll-pitch-yaw) -- ($50^\circ-25^\circ-30^\circ)$}\label{fig:roll-pitch-yaw}}
+
+
+\subsection{Pose}
+
+\subsubsection{Homogeneous Transformation Matrix}
+ $\begin{bmatrix}{}_I\vr_{I\!P} \\ 1 \end{bmatrix} = \vT_{I\!B} \begin{bmatrix}{}_B\vr_{B\!P}\\ 1 \end{bmatrix}, \quad \vT_{I\!B} = \begin{bmatrix}
+              \comat{I}{B} & \pos{I}{I}{B} \\
+	      \zero^\transpose & 1 \\
+             \end{bmatrix},
+\quad
+ \vT_{I\!B}^{-1} =\vT_{B\!I} = \begin{bmatrix}
+              \comat{I}{B}^\transpose & -\comat{I}{B}^\transpose \pos{I}{I}{B} \\
+	      \zero^\transpose & 1 \\
+             \end{bmatrix}
+             $
+
+\section{Time Derivatives of Position \& Orientation}
+\subsection{Linear Velocity}
+Velocity of point $P$ expressed in a rotating frame $B$  w.r.t. to the inertial frame $I$ using a moving point $A$: \\
+${}_B\vv_P = {}_B\vv_A  + {}_B\dot{\vr}_{AP} + \rotvel{B}{I}{B} \times \pos{B}{A}{P}$ \\
+Velocity of point $Q$ on rigid body $B$ that rotates with ${}_B\vOm$, where point $P$ is on the same rigid body $B$: \\
+${}_B\vv_Q = {}_B\vv_{P} + {}_B\vOm \times \pos{B}{P}{Q}, \quad {}_B\vOm=\rotvel{B}{I}{B}$ 
+
+\subsection{Angular Velocity}
+
+\begin{tabular}{@{}ll@{}}
+$\rotvel{B}{I}{B} =: {}_B\vOm$ & (local) absolute angular velocity of rigid body $B$ expr. in frame $B$ \\ 
+$\rotvel{B}{I}{B} = -\rotvel{B}{B}{I}$ & inverse of angular velocity \\
+$\rotvel{I}{I}{B} =  \comat{I}{B} \rotvel{B}{I}{B}$  &  (global) angular velocity from frame $B$ to frame $I$ \\
+$\rotvelhat{I}{I}{B} =  \comat{I}{B} \rotvelhat{B}{I}{B} \comat{I}{B}^\transpose$ & coord. transformation of angular velocity from frame $B$ to frame $I$  \\
+$\rotvel{D}{A}{D} = \rotvel{D}{A}{B} +  \rotvel{D}{B}{C} + \rotvel{D}{C}{D}$ & composition of (relative) angular velocity \\
+\end{tabular}
+
+\subsection{Derivatives}
+The derivation of the following identities can be found in \cite{Bloesch2016}.
+\begin{tabular}[h!]{p{3.5cm}@{ }|@{ }p{4cm}@{ }|l@{ }}
+$\begin{aligned}
+\frac{\partial}{\partial t}\Phi_{B\!I}(t) &= -\rotvel{B}{I}{B}(t) \\
+\frac{\partial}{\partial \vr}(\Phi(\vr)) &= \vC(\Phi) \\
+\frac{\partial}{\partial \Phi}(\Phi(\vr)) &= -(\Phi(\vr))^\wedge \\
+\frac{\partial}{\partial \Phi}(\Phi^{-1}) &= -\vC(\Phi)^\transpose \\
+ \end{aligned}$ & 
+ $\begin{aligned}
+ \frac{\partial}{\partial \Phi_1}(\Phi_1 \otimes \Phi_2) &= \identity  \\
+\frac{\partial}{\partial \Phi_2}(\Phi_1 \otimes \Phi_2) &= \vC(\Phi_1) \\
+\frac{\partial}{\partial \vv}(\exp{(\vv))} &= \vGa(\vv) \\
+\frac{\partial}{\partial \vv}(\log{(\Phi))} &= \vGa^{-1}(\log{\Phi}) \\
+    \end{aligned}$ & 
+     $\begin{aligned}
+       \frac{\partial}{\partial \Phi_1} (\Phi_1 \boxminus \Phi_2) &=  \vGa^{-1}(\Phi_1 \boxminus \Phi_2)
+      \end{aligned}$ \\
+ \end{tabular}
+ \\
+ Jacobian of exponential map: 
+ $\vGa(\vv) = \left\{
+  \begin{array}{l l}
+     \identity + \frac{1-\cos{(\norm{\vv})\hat{\vv}}}{\norm{\vv}^2} + \frac{(\norm{\vv}-\sin{(\norm{\vv}))\hat{\vv}^2}}{\norm{\vv}^3} & \quad \text{if $\norm{\vv} \neq 0$}\\
+     \identity + \frac{1}{2}\hat{\vv}&  \quad \text{otherwise}
+  \end{array} \right.$
+
+\subsubsection{Time Derivative of Rotation Matrix $\Leftrightarrow$ Angular Velocity}
+\begin{tabular}{@{}lll@{}}
+$\rotvelhat{I}{I}{B} = \dcomat{I}{B}\comat{I}{B}^\transpose  = \dcomat{B}{I}^\transpose\comat{B}{I}$  & $\Leftrightarrow$ & $\dcomat{I}{B} = \rotvelhat{I}{I}{B}\comat{I}{B}$ \\
+$\rotvelhat{B}{I}{B} = \comat{I}{B}^\transpose \dcomat{I}{B} = \comat{B}{I} \dcomat{B}{I}^\transpose$ & $\Leftrightarrow$ & $\dcomat{I}{B} = \comat{I}{B}\rotvelhat{B}{I}{B}$ \\
+\end{tabular}
+
+\subsubsection{Time Derivative of Rotation Quaternion $\Leftrightarrow$ Angular Velocity}
+\begin{tabular}{@{}lll@{}}
+%  The following line is correct  according to Eq. 164 and Eq. 158 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
+$\rotvel{I}{I}{B} = 2 \vH(\quat{I}{B}) \dot{\vq}_{I\!B}$  & $\Leftrightarrow$ &  $\dot{\vq}_{I\!B} = \frac{1}{2}\vH(\quat{I}{B})^\transpose \rotvel{I}{I}{B}$ \\ 
+%  The following line correct  according to Eq. 165 and Eq. 159 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
+$\rotvel{B}{I}{B} = 2 \bar{\vH}(\quat{I}{B}) \dot{\vq}_{I\!B}$  &  $\Leftrightarrow$ & $\dot{\vq}_{I\!B} = \frac{1}{2}\bar{\vH}(\quat{I}{B})^\transpose \rotvel{B}{I}{B}$   \\ 
+%  The following line correct  according to Eq. 150 and Eq. 151 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006.
+$\begin{aligned}\vH(\vq) &= \begin{bmatrix}-\imquatvec{q} & \hat{\imquatvec{q}}+q_0\identity_{3\times 3}\end{bmatrix} \in \mathbb{R}^{3\times4} \\
+ &=\begin{bmatrix}  -q_1 &  q_0 & -q_3 &  q_2 \\
+ -q_2 &  q_3 &  q_0 & -q_1 \\
+ -q_3 & -q_2 &  q_1 &  q_0 \end{bmatrix}
+\end{aligned}$ & &  $\begin{aligned}\bar{\vH}(\vq) &= \begin{bmatrix}-\imquatvec{q} & -\hat{\imquatvec{q}}+q_0\identity_{3\times 3}\end{bmatrix} \in \mathbb{R}^{3\times4} \\
+ &=\begin{bmatrix} -q_1 &  q_0 &  q_3 & -q_2 \\
+ -q_2 & -q_3 &  q_0 &  q_1 \\
+ -q_3 &  q_2 & -q_1 &  q_0 \end{bmatrix}
+\end{aligned}$\\
+\end{tabular}
+
+\subsubsection{Time Derivative of Angle-Axis  $\Leftrightarrow$ Angular Velocity}
+\begin{tabular}{@{}ll@{}}
+$\rotvel{I}{I}{B} = \vn \dot{\theta} + \dot{\vn}\sin{\theta} + \hat{\vn}\dot{\vn}(1-\cos{\theta})$ &  \\
+$\rotvel{B}{I}{B} = \vn \dot{\theta} + \dot{\vn}\sin{\theta} - \hat{\vn}\dot{\vn}(1-\cos{\theta})$ &   \\
+$\dot{\theta} = \vn^\transpose \rotvel{I}{I}{B}, \quad \dot{\vn}=\left(-\frac{1}{2}\frac{\sin{\theta}}{1-cos{\theta}}\hat{\vn}^2 -\frac{1}{2}\hat{\vn}\right) \rotvel{I}{I}{B} \quad \forall \theta \in \mathbb{R}\backslash\{0\}$  & \\
+$\dot{\theta} = \vn^\transpose \rotvel{B}{I}{B}, \quad \dot{\vn}=\left(-\frac{1}{2}\frac{\sin{\theta}}{1-cos{\theta}}\hat{\vn}^2 +\frac{1}{2}\hat{\vn}\right) \rotvel{B}{I}{B} \quad \forall \theta \in \mathbb{R}\backslash\{0\}$  & \\
+\end{tabular}
+
+\subsubsection{Time Derivative of Rotation Vector $\Leftrightarrow$ Angular Velocity}
+\begin{tabular}{@{}ll@{}}
+$\rotvel{I}{I}{B} = \left(\identity_{3\times 3} + \hat{\vvph}\left(\frac{1-\cos{\norm{\vvph}}}{\norm{\vvph}^2}\right) +\hat{\vvph}^2 \left( \frac{\norm{\vvph}-\sin{\norm{\vvph}}}{\norm{\vvph}^3} \right)\right)\dot{\vvph} \quad \forall \norm{\vvph} \in \mathbb{R}\backslash\{0\}$ & \\
+$\rotvel{B}{I}{B} = \left(\identity_{3\times 3} - \hat{\vvph}\left(\frac{1-\cos{\norm{\vvph}}}{\norm{\vvph}^2}\right) +\hat{\vvph}^2 \left( \frac{\norm{\vvph}-\sin{\norm{\vvph}}}{\norm{\vvph}^3} \right)\right)\dot{\vvph} \quad \forall \norm{\vvph} \in \mathbb{R}\backslash\{0\}$ & \\
+$\dot{\vvph} = \left(\identity_{3\times 3} - \frac{1}{2}\hat{\vvph} + \hat{\vvph}^2 \frac{1}{\norm{\vvph}^2}\left(1 - \frac{\norm{\vvph}}{2}\frac{\sin{\norm{\vvph}}}{1-\cos{\norm{\vvph}}}\right)\right)\rotvel{I}{I}{B} \quad \forall \norm{\vvph} \in \mathbb{R}\backslash\{0\}$ & \\
+$\dot{\vvph} = \left(\identity_{3\times 3} + \frac{1}{2}\hat{\vvph} + \hat{\vvph}^2 \frac{1}{\norm{\vvph}^2}\left(1 - \frac{\norm{\vvph}}{2}\frac{\sin{\norm{\vvph}}}{1-\cos{\norm{\vvph}}}\right)\right)\rotvel{B}{I}{B} \quad \forall \norm{\vvph} \in \mathbb{R}\backslash\{0\}$ & \\
+\end{tabular}
+
+\subsubsection{Time Derivative of Euler Angles ZYX  $\Leftrightarrow$ Angular Velocity}
+
+% Project B_w_IB to dZYX
+$\begin{bmatrix} \dot{z} \\ \dot{y} \\ \dot{x}  \end{bmatrix} = 
+\begin{bmatrix}
+0 			& \dfrac{\sin(x)}{\cos(y)} 			& \dfrac{\cos(x)}{\cos(y)}\\
+0 			& \cos(x)        					& -\sin(x) \\
+1 			& \dfrac{\sin(x)\sin(y)}{\cos(y)} 	& \dfrac{\cos(x)\sin(y)}{\cos(y)}
+\end{bmatrix}
+\rotvel{B}{I}{B}
+\quad
+\forall y \in \mathbb{R} \backslash \{ \frac{\pi}{2}+k\pi \},k\in \mathbb{Z}
+$
+
+
+% Project I_w_IB to dZYX
+$\begin{bmatrix} \dot{z} \\ \dot{y} \\ \dot{x}  \end{bmatrix} = 
+\begin{bmatrix}
+\dfrac{\cos(z)\sin(y)}{\cos(y)}		&		\dfrac{\sin(y)\sin(z)}{\cos(y)}	&	1 \\
+-\sin(z)							&		\cos(z)							&	0 \\
+\dfrac{\cos(z)}{\cos(y)}			&		\dfrac{\sin(z)}{\cos(y)}		&	0 \\
+\end{bmatrix}
+\rotvel{I}{I}{B}
+\quad
+\forall y \in \mathbb{R} \backslash \{ \frac{\pi}{2}+k\pi \},k\in \mathbb{Z}
+$
+
+
+% Project dZYX to B_w_IB
+$ \rotvel{B}{I}{B} =
+\begin{bmatrix}
+-\sin(y) 		&		0			& 1 \\
+\cos(y)\sin(x)	&		\cos(x)		& 0 \\
+\cos(x)\cos(y)	&	   -\sin(x)  	& 0 \\
+\end{bmatrix}
+\begin{bmatrix} \dot{z} \\ \dot{y} \\ \dot{x}  \end{bmatrix} $
+
+
+% Project dZYX to I_w_IB
+$ \rotvel{I}{I}{B} =
+\begin{bmatrix}
+0	&	-\sin(z)	&	 \cos(y)\cos(z)	\\
+0	&	 \cos(z)	&	 \cos(y)\sin(z)	\\
+1	&	 0			&	-\sin(y)
+\end{bmatrix}
+\begin{bmatrix} \dot{z} \\ \dot{y} \\ \dot{x}  \end{bmatrix} $
+
+
+\newpage
+\section{Dynamics of a Multi-Rigid-Body System}
+
+\begin{tabular}{@{}ll@{}}
+  $DoFs$				& Degrees of Freedom \\
+  $n$					& Number of bodies in system \\
+  $n_j$ 				& Number of DoFs of the joints \\
+  $n_q$ 				& Number of generalized coordinates \\
+  $n_u$ 				& Number of generalized velocities \\
+  $\vM$					& Mass matrix \\
+  $\vg$					& Gyroscopic and Coriolis forces \\
+  $\vf$					& Generalized external forces and torques \\
+  $\vh$					& Combined force vector \\
+  $\vJ_P$				& Jacobi matrix for translation of point P \\
+  $\vJ_{R}$				& Jacobi matrix for rotation \\
+  $\vf_Q^A$				& External forces on point Q \\
+  $\vt^A$				& External torques \\
+%   $\vp$			& Momentum \\
+%   $\vN_S$		& Spin at center of gravity \\
+  $m$ 					& Mass \\
+  $\vTh$ 				& Inertia tensor \\
+%   $\vv_P$		& Velocity of point P \\
+%   $\va_P$		& Acceleration of point P \\
+%   $\vOm$		& Angular velocity \\
+%   $\vPs$		& Angular acceleration \\
+  $(...)^-$				& Variable before impact \\
+  $(...)^+$				& Variable after impact \\
+  $(...)^\pm$			& Variable before/after impact \\
+  $\mathrm{\Delta} t$	& Time step duration \\
+  $\mathrm{\Delta} \vu$	& Velocity change over one time step \\
+  $\vW$					& Generalized force directions for contact forces \\
+  $\vla$				& Lebesgue-measurable contact forces \\
+  $\vLa$				& Purely atomic impact impulses \\
+  $\vP$					& Contact percussions \\
+  $\mathrm{COM}$		& Center of mass\\
+\end{tabular}
+
+
+\subsection{Generalized Coordinates of a Floating-Base System with Rotational Joints}
+Recommended set of generalized coordinates $\vq$ with quaternion $\quat{I}{B}$ and generalized velocities $\vu$:
+\begin{tabular}{@{}lll@{}}
+$\vq = \begin{pmatrix} \pos{I}{I}{B} \\ \quat{I}{B} \\ \varphi_1 \\ \vdots \\ \varphi_{n_j} \end{pmatrix} \in \mathbb{R}^{7+n_j} = \mathbb{R}^{n_q}$ & 
+$\vu = \begin{pmatrix} {}_I \vv_B \\ \rotvel{B}{I}{B} \\ \dot{\varphi}_1 \\ \vdots \\ \dot{\varphi}_{n_j} \end{pmatrix} \in \mathbb{R}^{6+n_j} = \mathbb{R}^{n_u}$  & 
+$\dot{\vu} = \begin{pmatrix} {}_I \va_B \\ {}_B\vps_{I\!B} \\ \ddot{\varphi}_1 \\ \vdots \\ \ddot{\varphi}_{n_j} \end{pmatrix} \in \mathbb{R}^{6+n_j}$
+\\
+\end{tabular}
+$\dot{\vq} = \vF \vu, \quad \vF = \begin{pmatrix} \identity_{3\times 3} & \mathbf{0} & \mathbf{0} \\ \mathbf{0} & \frac{1}{2}\bar{\vH}^\mathsf{T} & \mathbf{0} \\ \mathbf{0} & \mathbf{0} & \identity_{n_j\times n_j} \end{pmatrix} \quad \Leftrightarrow \quad \vu = \bar{\vF}\dot{\vq}, \quad \bar{\vF} = \begin{pmatrix} \identity_{3x3} & \mathbf{0} & \mathbf{0} \\ \mathbf{0} & 2\bar{\vH} & \mathbf{0} \\ \mathbf{0} & \mathbf{0} & \identity_{n_j \times n_j} \end{pmatrix}$ \\
+
+
+$
+\begin{bmatrix}
+{}_I \vv_{IQ} \\
+\rotvel{I}{I}{Q}
+\end{bmatrix}
+=
+{}_I \vJ_Q(\vq)\cdot \vu
+, \quad
+{}_I \vJ_Q(\vq)
+=
+\begin{bmatrix}
+{}_I \vJ_P(\vq) \\
+{}_I \vJ_R(\vq)
+\end{bmatrix}
+=
+\begin{bmatrix}
+\identity_{3\times 3} && -\comat{I}{B} \cdot \poshat{B}{B}{Q} && \comat{I}{B} \cdot {}_B \vJ_{P_{q_j}}(\vq_j) \\
+\mathbf{0}_{3 \times 3} && \comat{I}{B} && \comat{I}{B} \cdot {}_B \vJ_{R_{q_j}}(\vq_j)
+\end{bmatrix}
+$
+
+\subsection{Equations of Motion with Contacts and no Impulses}
+Projected Newton-Euler Equations
+\begin{tabular}{@{}ll@{}}
+$\boxed{\vM\dot{\vu} - \vh = \vW\vla}$ with $\vh := \vf - \vg$, and &
+$\begin{aligned}\vM &= \sum_{i=1}^n \left[ (\vJ_\mathrm{COM}^\mathsf{T} m \vJ_\mathrm{COM} + \vJ_R^\mathsf{T} \vTh_\mathrm{COM} \vJ_R) \right]_i \\
+\vg &= \sum_{i=1}^n \left[ (\vJ_\mathrm{COM}^\mathsf{T} m \dot{\vJ}_\mathrm{COM} \vu + \vJ_R^\mathsf{T} (\vTh_\mathrm{COM} \dot{\vJ}_R \vu + \vOm \times \vTh_\mathrm{COM} \vOm)) \right]_i \\
+\vf &= \sum_{i=1}^n \left[ (\vJ_Q^\mathsf{T} \vf_Q^A + \vJ_R^\mathsf{T} \vt^A) \right]_i \end{aligned}$ \\
+\end{tabular}
+
+\subsection{Equations of Motion with Contacts and Impulses}
+$\boxed{\vM \mathrm{\Delta} \vu - \vh \mathrm{\Delta} t = \vW \vP}  \quad \left\{
+  \begin{array}{r l} \vM (\vu^+ - \vu^-) &= \vW \vLa \\
+ \vM \underbrace{(\dot{\vu} \mathrm{d}t + (\vu^+ - \vu^-) \mathrm{d}\eta)}_{\mathrm{d}\vu} - \vh \mathrm{d}t &= \vW \underbrace{(\vla \mathrm{d}t + \vLa \mathrm{d}\eta)}_{\mathrm{d}\vP}\end{array}\right.$ \\
+
+\subsection{Transformation of Equations of Motion}
+Transformation from  $\bar{\vM}(\bar{\vq}),\bar{\vh}(\bar{\vq},\bar{\vu})$ to $\vM(\vq),\vh(\vq, \vu)$,
+where $\bar{\vu} = \vB \vu$:
+$\begin{aligned}
+\vM &= \vB^\mathsf{T} \bar{\vM} \vB \\
+\vh &= \vB^\mathsf{T} \bar{\vh} - \vB^\mathsf{T} \bar{\vM} \dot{\vB} \vu \\
+\end{aligned}$
+
+\clearpage
+\section{Appendix I: Euler Angles ZYX Velocities to Angular Velocity Mapping}
+Given a set of Euler angles $\vch = \begin{bmatrix}z & y & x\end{bmatrix}^T$ and velocities $\dvch = \begin{bmatrix} \dot{z} & \dot{y} & \dot{x} \end{bmatrix}^T$,
+we wish to find the mapping $\vE(\vch) \in \mathbb{R}^{3 \times 3}$ that maps $\dvch$ to $\rotvel{I}{I}{B}$:
+
+\begin{equation}
+\rotvel{I}{I}{B} = \vE(\vch) \cdot \dvch
+\end{equation}
+
+The columns of $\vE(\vch)$ are the components of the unit vectors around which the rotational velocities are applied expressed in fixed frame. These are obtained by selecting the columns of a rotation matrix which is built up by successive elementary rotations specified by the Euler angle parametrization.
+
+Starting from the reference frame $I$, the first rotation will be an elementary rotation around ${}_I \ve^z_I$, which is simply given by:
+
+\begin{equation}
+{}_I \ve^z_I = 
+\mathbb{I}_{3 \times 3}
+\begin{bmatrix}
+0 \\ 0 \\ 1
+\end{bmatrix}
+=
+\begin{bmatrix}
+0 \\ 0 \\ 1
+\end{bmatrix}
+\end{equation}
+
+After an elementary rotation around ${}_I \ve^z_I$, the y axis ${}_I \ve^y_{I'}$ will be expressed by:
+
+\begin{equation}
+{}_I \ve^y_{I'} = 
+\comat{I}{I'}(z) 
+\cdot
+\begin{bmatrix}
+0 \\ 1 \\ 0
+\end{bmatrix}
+=
+\begin{bmatrix}
+\cos(z) & -\sin(z) & 0 \\ 
+\sin(z) &  \cos(z) & 0 \\ 
+0 & 0 & 1
+\end{bmatrix}
+\begin{bmatrix}
+0 \\ 1 \\ 0
+\end{bmatrix}
+=
+\begin{bmatrix}
+-\sin(z) \\ \cos(z) \\ 0
+\end{bmatrix}
+\end{equation}
+
+After an elementary rotation around ${}_I \ve^y_{I'}$, the x axis ${}_I \ve^x_{I''}$ will be expressed by:
+
+\begin{equation}
+{}_I \ve^x_{I''} = 
+\comat{I}{I'}(z) \cdot \comat{I}{'I''}(y)
+\cdot
+\begin{bmatrix}
+1 \\ 0 \\ 0
+\end{bmatrix}
+=
+\begin{bmatrix}
+\cos(z) & -\sin(z) 	& 0 \\ 
+\sin(z) &  \cos(z) 	& 0 \\ 
+0	 	& 0 		& 1
+\end{bmatrix}
+\begin{bmatrix}
+\cos(y) 	& 	0 	& \sin(y)	\\ 
+0 			&  	1 	& 0 		\\ 
+-\sin(y) 	& 	0 	& \cos(z)
+\end{bmatrix}
+\begin{bmatrix}
+1 \\ 0 \\ 0
+\end{bmatrix}
+=
+\begin{bmatrix}
+\cos(y)\cos(z) \\ \cos(y)\sin(z) \\ -\sin(z)
+\end{bmatrix}
+\end{equation}
+
+Finally, the mapping $\vE(\vch)$ will be computed as:
+
+\begin{equation}
+\vE(\vch) =
+\begin{bmatrix}
+{}_I \ve^z_I & {}_I \ve^y_{I'} & {}_I \ve^x_{I''}
+\end{bmatrix}
+=
+\begin{bmatrix}
+0 & -\sin(z) 	& \cos(y)\cos(z) \\
+0 &  \cos(z) 	& \cos(y)\sin(z) \\
+1 &  0			& -\sin(y)		 \\
+\end{bmatrix}
+\end{equation}
+
+It is easy to find that $det(\vE(\vch)) = -\cos(y)$. The mapping then becomes singular when $y = \pi/2 + k\pi, \forall k \in \mathbb{Z}$. This means that although we can always describe an angular velocity using Euler angle velocities, the inverse is not always possible. The inverse mapping is given by:
+
+\begin{equation}
+\bar{\vE}(\vch) =
+\vE^{-1}(\vch) =
+\begin{bmatrix}
+\dfrac{\cos(z)\sin(y)}{\cos(y)} &	\dfrac{\sin(y)\sin(z)}{\cos(y)} & 1 \\
+-\sin(z)						&	\cos(z) 						& 0 \\
+\dfrac{\cos(z)}{\cos(y)} 		& \dfrac{\sin(z)}{\cos(y)} 			& 0
+\end{bmatrix}
+\end{equation}
+
+If we compute the rotation matrix $\comat{I}{B} = \comat{I}{B}(z,y,x) = \comat{z}{}(z) \cdot \comat{y}{}(y) \cdot \comat{x}{}(x)$, we can also derive the following mappings:
+
+\begin{equation}\label{mapEulerToOmegainBase}
+\rotvel{B}{I}{B} = \comat{I}{B}^T \cdot \vE(\vch) \cdot \dot{\vch}
+\end{equation}
+
+\begin{equation}\label{mapOmegaInBaseToEuler}
+\dvch = \bar{\vE}(\vch) \cdot \comat{I}{B}  \cdot \rotvel{B}{I}{B}
+\end{equation}
+
+The mapping described by \eqref{mapOmegaInBaseToEuler} is valid $\forall y \ne \pi/2 + k\pi, \forall k \in \mathbb{Z}$.
+
+
+\section{Appendix II: Jacobians}
+We wish to derive the relationship between the generalized velocities $\vu$ and the operational space velocities ${}_I\vv_{Q}$ of a point $Q$, which is fixed at the end of a kinematic chain that stems from a floating base $B$. The position vector $\pos{I}{I}{Q} = \pos{I}{I}{Q}(\vq)$ of a point w.r.t. the inertial frame $I$ is given by:
+
+\begin{equation}
+\pos{I}{I}{Q}(\vq) = \pos{I}{I}{B}(\vq) + \comat{I}{B}(\vq) \cdot \pos{B}{B}{Q}(\vq),
+\end{equation}
+
+where the rotation matrix $\comat{I}{B}(\vq)$ describes the orientation of the floating base $B$ w.r.t. the inertial frame $I$, $\pos{I}{I}{B}(\vq)$ represents the position of the floating base $B$ w.r.t. the inertial frame $I$ expressed in the inertial frame and $\vq = \vq(t)$ is a function of time $t$.
+
+
+Time differentiation yields:
+
+\begin{equation}
+\begin{aligned}
+{}_I \vv_{Q} 
+&= {}_I \vv_{B} + \dcomat{I}{B} \cdot \pos{B}{B}{Q} + \comat{I}{B} \cdot \posdot{B}{B}{Q} \\
+&= {}_I \vv_{B} + \comat{I}{B} \cdot \rotvelhat{B}{I}{B} \cdot \pos{B}{B}{Q} + \comat{I}{B} \cdot \posdot{B}{B}{Q} \\
+&= {}_I \vv_{B} - \comat{I}{B} \cdot \poshat{B}{B}{Q} \cdot \rotvel{B}{I}{B} + \comat{I}{B} \cdot \posdot{B}{B}{Q} \\
+&= {}_I \vv_{B} - \comat{I}{B} \cdot \poshat{B}{B}{Q} \cdot \rotvel{B}{I}{B} + \comat{I}{B} \cdot {}_B \vJ_{P_{q_j}}(\vq_j) \cdot \dot{\vq}_j \\
+&=
+\begin{bmatrix}
+\identity_{3\times 3} && -\comat{I}{B} \cdot \poshat{B}{B}{Q} && \comat{I}{B} \cdot {}_B \vJ_{P_{q_j}}(\vq_j)
+\end{bmatrix}
+\cdot \vu
+\end{aligned}
+\end{equation}
+
+If we attach a frame at $\pos{I}{I}{Q}$, we can derive a similar mapping for angular velocities. The orientation of frame $Q$ w.r.t. the inertial frame $I$ is described by:
+
+\begin{equation}\label{eq_c_iq}
+\comat{I}{Q} = \comat{I}{B} \cdot \comat{B}{Q}
+\end{equation}
+
+Time differentiation of both sides of \eqref{eq_c_iq} yields:
+
+\begin{equation}
+\begin{aligned}
+\rotvelhat{I}{I}{Q} \cdot \comat{I}{Q}
+&= \rotvelhat{I}{I}{B} \cdot \comat{I}{B} \cdot \comat{B}{Q} + \comat{I}{B} \cdot \rotvelhat{B}{B}{Q} \cdot \comat{B}{Q} \\
+&= \rotvelhat{I}{I}{B} \cdot \comat{I}{Q} + \comat{I}{B} \cdot \comat{B}{I} \cdot \rotvelhat{I}{B}{Q} \cdot \comat{B}{I}^\transpose \cdot \comat{B}{Q} \\
+&= \rotvelhat{I}{I}{B} \cdot \comat{I}{Q} + \rotvelhat{I}{B}{Q} \cdot \comat{I}{Q},
+\end{aligned}
+\end{equation}
+
+which gives finally:
+
+\begin{equation}
+\begin{aligned}
+\rotvel{I}{I}{Q}
+&= \rotvel{I}{I}{B} + \rotvel{I}{B}{Q} \\
+&= 
+\begin{bmatrix}
+\mathbf{0}_{3 \times 3} && \comat{I}{B} && \comat{I}{B} \cdot {}_B \vJ_{R_{q_j}}(\vq_j)
+\end{bmatrix}
+\cdot \vu
+\end{aligned}
+\end{equation}
+
+Hence, the mapping from generalized velocities $\vu$ to the operational space twist $\begin{bmatrix}{}_I \vv_{Q}^T && \rotvel{I}{I}{Q}^T \end{bmatrix}^T$ of frame $Q$ is realized by the spatial Jacobian:
+
+\begin{equation}
+\begin{aligned}
+{}_I \vJ_Q(\vq)
+&=
+\begin{bmatrix}
+{}_I \vJ_P \\
+{}_I \vJ_R
+\end{bmatrix} \\
+&=
+\begin{bmatrix}
+\identity_{3\times 3} && -\comat{I}{B} \cdot \poshat{B}{B}{Q} && \comat{I}{B} \cdot {}_B \vJ_{P_{q_j}}(\vq_j) \\
+\mathbf{0}_{3 \times 3} && \comat{I}{B} && \comat{I}{B} \cdot {}_B \vJ_{R_{q_j}}(\vq_j)
+\end{bmatrix}
+\end{aligned}
+\end{equation}
+
+\section{Appendix III: Hessians and Time Derivatives of Jacobians}
+Consider a kinematic chain which connects two rigid bodies. We represent the set of indexes of the rigid bodies in this chain with $U_A$. As shown in \cite{Iwamura2013}, the $i-th$ column of the spatial Hessian matrix of the spatial Jacobian J w.r.t. the j-th configuration variable $q_j$ can be computed as:
+
+\begin{equation}
+\dfrac{\partial \vJ_i}{\partial q_j}
+= \begin{bmatrix}
+\dfrac{\partial \vJ_{P_i}}{\partial q_j} \\ \dfrac{\partial \vJ_{R_i}}{\partial q_j}
+\end{bmatrix}
+=
+\begin{cases}
+\begin{bmatrix}
+\vJ_{R_j} \times \vJ_{P_i}\\ 
+\vJ_{R_j} \times \vJ_{R_i}
+\end{bmatrix} & i \ge j \\
+
+\begin{bmatrix}
+\vJ_{R_i} \times \vJ_{P_j} \\ 
+\mathbf{0} \\
+\end{bmatrix} & i < j \\
+
+\begin{bmatrix}
+\mathbf{0} \\ 
+\mathbf{0} \\
+\end{bmatrix} & i,j \not\in U_A
+\end{cases}
+\end{equation}
+
+The Hessian $\vH_k(\vq)$ is then expressed by:
+
+\begin{equation}
+\vH_k(\vq) =
+\begin{bmatrix}
+\dfrac{\partial \vJ_1}{\partial q_k} && \dfrac{\partial \vJ_2}{\partial q_k} && \dots && \dfrac{\partial \vJ_n}{\partial q_k}.
+\end{bmatrix}
+\end{equation}
+
+Knowledge of the Hessian matrix w.r.t. each configuration variable $q_k$ enables the computation of the time derivative of $\vJ(\vq(t))$. Its generic element $i,j$ can be computed as:
+
+\begin{equation}
+\begin{aligned}
+\dfrac{d J_{i,j}(\vq)}{dt}
+=
+\dfrac{\partial J_{i,j}(\vq)}{\partial \vq} \cdot \dfrac{d\vq}{dt}
+=
+\sum_{k=1}^{n} \dfrac{\partial J_{i,j}(\vq)}{\partial q_k} \cdot \dfrac{dq_k}{dt}
+=
+\sum_{k=1}^{n} H_{k_{i,j}}(\vq) \cdot \dfrac{dq_k}{dt},
+\end{aligned}
+\end{equation}
+
+which yields:
+
+\begin{equation}
+\dfrac{d\vJ(\vq)}{dt}
+=
+\dfrac{\partial \vJ(\vq)}{\partial \vq} \cdot \dfrac{d\vq}{dt},
+=
+\sum_{k=1}^{n} \mathbf{H}_k(\vq) \cdot  \dfrac{dq_k}{dt}.
+\end{equation}
+
+\bibliographystyle{./IEEEtran}
+\bibliography{references.bib}
+
+\end{multicols}
+\end{document}
