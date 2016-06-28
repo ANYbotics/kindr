@@ -5,29 +5,23 @@
  
  /*! \page page_posesdiff Time Derivatives of Poses
 
-This library defines an \ref posesdiff_interface "interface" for the time derivative of a pose (position and orientation) of a rigid body or a (displacement) frame to enable different representations of a time derivative of a pose (twist, etc.) and different \ref posesdiff_implementations "implementations" (based on Eigen, Bullet, etc.). 
-The section \ref posesdiff_interface "Interface" describes the functionalities, whereas the section \ref posesdiff_implementations "Implementation" shows some examples.
+This library defines an \ref posesdiff_interface "interface" for the time derivative of a pose (position and orientation) of a rigid body or a (displacement) frame to enable different representations of a time derivative of a pose (twist, etc.). 
 
 \tableofcontents
 
-\section posesdiff_interface Interface
-The class kindr::poses::PoseDiffBase serves as an interface for the time derivative of a pose of a rigid body, i.e. the position and orientation of a rigid body. All types of representations of time derivatives of a pose, such as twist motions, are derived from this base class.
+\section posesdiff_interface Generic Interface
+The class kindr::PoseDiffBase serves as an interface for the time derivative of a pose of a rigid body, i.e. the position and orientation of a rigid body. All types of representations of time derivatives of a pose, such as twist motions, are derived from this base class.
 
 
+\section posesdiff_implementations Parameterizations
 
+\subsection posesdiff_implementations_twist Twist
 
-\section posesdiff_implementations Implementations
+The class kindr::Twist implements a 6d twist:
 
+\f$\boxed{\mathbf{\phi} = \begin{pmatrix} {}_B\mathbf{v}_B \\ {}_B\mathbf{\omega}_{I\!B}\end{pmatrix}}\f$
 
-\subsection poses_eigen Eigen
-The library comes along with an implementation based on the <a href="http://eigen.tuxfamily.org">C++ Eigen library</a>.
-
-All types can be included by
-\code{.cpp}
-#include <kindr/poses/PoseDiffEigen.hpp>
-\endcode
-and lie within the namespace kindr::poses::eigen_impl.
-
+where \f${}_B\mathbf{v}_B\f$ is the linear velocity in body-fixed frame and \f${}_B\mathbf{\omega}_{I\!B}\f$ is the local angular velocity.
 
 
 <br/>

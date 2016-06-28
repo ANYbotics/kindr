@@ -36,9 +36,10 @@ See also section 'Building the documentation' below.
        - `rotation.setFromVectors(v1, v2)` -> `rotation.setFromVectors(v2, v1)`
        - `C_BI.boxPlus(dt * B_w_IB)` -> `C_BI.boxPlus(dt * C_IB * B_w_IB)`
        - `C_BI.boxMinus(dt *  B_w_IB)` ->  `-C_BI.boxMinus(dt * B_w_IB)`
-       - Euler angles need be negated.
+       - Euler angles probably have to be negated.
 * Conversion methods between ROS and kindr have been moved to the package [kindr_ros](https://github.com/ethz-asl/kindr_ros).
 * Concatenation of Homogeneous Transformation is now implemented. 
+* Short typedefs are provided for Homogeneous Transformation: `HomTransformQuatD`, `HomTransformMatrixD`.
 * Jacobian of exponential map is implemented.
 * Unit tests based on gtest are provided to test the convention of other software packages.
     - Gazebo (gazebo::math::Quaternion) uses the same convention as kindr.
@@ -115,7 +116,6 @@ Build kindr with [catkin](wiki.ros.org/catkin):
 cd ~/catkin_ws/src
 git clone git@github.com:ethz-asl/kindr.git
 catkin_make_isolated -C ~/catkin_ws
-
 ```
 
 or with [catkin command line tools](http://catkin-tools.readthedocs.org):
@@ -128,7 +128,6 @@ catkin build -w ~/catkin_ws kindr
 
 Kindr can be included in your catkin project with:
 Add the following to your *CMakeLists.txt*:
-
 ```
 find_package(catkin COMPONENTS kindr) 
 include_directories(${catkin_INCLUDE_DIRS}) 

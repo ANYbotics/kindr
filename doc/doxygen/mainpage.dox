@@ -12,6 +12,7 @@ This library is <a href="http://www.gnu.org/philosophy/free-sw.html">Free Softwa
 
 \section acknowledgement Acknowledgement
 Involved people:
+ - C. Dario Bellicoso
  - Michael Bloesch
  - Remo Diethelm
  - Peter Fankhauser
@@ -28,18 +29,22 @@ Christian Gehring  (gehrinch ( at ) ethz.ch)
 //-----------------------------------------------------------
 
 /*! \page getting_started Getting started 
+
+This library comes a long with a <a href="cheatsheet_latest.pdf" target="_blank"><b>Cheatsheet</b></a>, which shows the mathematical notation and should help you to understand what is implemented.
+
 This is a very short guide on how to get started with this library.
 
 \section requirements Requirements
 This library is written in C++11.
 
-\subsection linux Linux
-GCC 4.7 is required at the minimum.
+ - [Eigen 3.2.0](http://eigen.tuxfamily.org) (Older versions might also work)
+ - GCC 4.7 is required at the minimum.
+ - CMake 2.8.3 is required at the minimum.
+
 
 \section install Installation
-\subsection build_lib Build the Library
+\subsection build_lib_cmake Build the Library with CMake
 
-Build the library with CMake:
 \code{.sh}
 mkdir build
 cd build
@@ -52,6 +57,68 @@ The library can additionally be installed by
 sudo make install
 \endcode
 This will copy the file FindKindr.cmake to the module path of CMake.
+
+\subsection build_lib_ros Install the Library from Debian Package for ROS
+
+The maintainers of this project provide binary packages for ROS and Ubuntu
+LTS releases. To install these packages, you may follow these instructions:
+
+- Add the project PPA to your APT sources by issuing 
+
+\code{.sh}
+  sudo add-apt-repository ppa:ethz-asl/common
+\endcode
+
+  on the command line
+
+- To re-synchronize your package index files, run
+
+\code{.sh}
+  sudo apt-get update
+\endcode
+
+- Install all project packages and their dependencies through
+
+\code{.sh}
+  sudo apt-get install ros-indigo-kindr-*
+\endcode
+
+  or selected packages using your favorite package management tool. The package will be installed to the default ROS directory.
+
+
+\subsection build_lib_catkin Build the Library with Catkin
+
+Build kindr with [catkin](wiki.ros.org/catkin):
+
+\code{.sh}
+cd ~/catkin_ws/src
+git clone git@github.com:ethz-asl/kindr.git
+catkin_make_isolated -C ~/catkin_ws
+\endcode
+
+or with [catkin command line tools](http://catkin-tools.readthedocs.org):
+
+\code{.sh}
+cd ~/catkin_ws/src
+git clone git@github.com:ethz-asl/kindr.git
+catkin build -w ~/catkin_ws kindr
+\endcode
+
+Kindr can be included in your catkin project with:
+Add the following to your *CMakeLists.txt*:
+
+\code{.sh}
+find_package(catkin COMPONENTS kindr) 
+include_directories(${catkin_INCLUDE_DIRS}) 
+\endcode
+
+And to your *package.xml*:
+
+\code{.xml}
+<package>
+	<build_depend>kindr</build_depend>
+</package>
+\endcode
 
 \subsection build_doc Build this Documentation
 <a href="http://www.stack.nl/~dimitri/doxygen/" >Doxygen</a> needs to be installed to create this documentation.
@@ -82,10 +149,6 @@ make
 \endcode
 
 
-
-\section math_notation Mathematical Notation
-This library comes a long with a <a href="cheatsheet_latest.pdf" target="_blank"><b>Cheatsheet</b></a>, which shows the mathematical notation.
-
 \section sec_continue How to Continue
 See \ref page_users "Users" to learn how to use this library.
 
@@ -97,8 +160,8 @@ See \ref page_developers "Developers" to learn how to develop this library.
 /*!
 \page page_users Users
 
-
- 
+  Check the <a href="cheatsheet_latest.pdf" target="_blank"><b>cheatsheet</b></a> to understand the math behind.
+  
  \section orientation_pose Rotations and Poses
   - \subpage page_rotations 
   - \subpage page_poses

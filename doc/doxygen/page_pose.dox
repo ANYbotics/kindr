@@ -5,38 +5,55 @@
  
  /*! \page page_poses Poses
 
-This library defines an \ref poses_interface "interface" for a pose (position and orientation) of a rigid body or a (displacement) frame to enable different representations of a pose (homogeneous transformation, screw motion, etc.) and different \ref poses_implementations "implementations" (based on Eigen, Bullet, etc.). 
-The section \ref poses_interface "Interface" describes the functionalities, whereas the section \ref poses_implementations "Implementation" shows some examples.
+This library defines an \ref poses_interface "interface" for a pose (position and orientation) of a rigid body or a (displacement) frame to enable different representations of a pose (homogeneous transformation, screw motion, etc.).
 
 \tableofcontents
 
-\section poses_interface Interface
-The class kindr::poses::PoseBase serves as an interface for a pose of a rigid body, i.e. the position and orientation of a rigid body. All types of representations of a pose, such as homogeneous transformations and screw motions, are derived from this base class.
+\section poses_interface Generic Interface
+The class kindr::PoseBase serves as an interface for a pose of a rigid body, i.e. the position and orientation of a rigid body. All types of representations of a pose, such as homogeneous transformations and screw motions, are derived from this base class.
 
 
+\section poses_implementations Parameterizations
+
+\subsection poses_implementations_homtransform Homogeneous Transformation
+\f$\boxed{\begin{bmatrix}{}_I\mathbf{r}_{I\!P} \\ 1 \end{bmatrix} = \mathbf{T}_{I\!B} \begin{bmatrix}{}_B\mathbf{r}_{B\!P}\\ 1 \end{bmatrix}, \quad \mathbf{T}_{I\!B} = \begin{bmatrix}
+              \mathbf{C}_{I\!B} & {}_I\mathbf{r}_{I\!B} \\
+	      0^T & 1 \\
+             \end{bmatrix},
+             \quad
+ \mathbf{T}_{I\!B}^{-1} =\mathbf{T}_{B\!I} = \begin{bmatrix}
+              \mathbf{C}_{I\!B}^T & -\mathbf{C}_{I\!B}^T {}_I\mathbf{r}_{I\!B} \\
+	      0^T & 1 \\
+             \end{bmatrix}}\f$
 
 
-\section poses_implementations Implementations
-Each implementation lies in its own namespace, such that the implementation can be altered later very easily via namespace alias.
-For example: 
+The following typedefs are provided for convenience:
+ - \ref kindr::HomTransformQuatD "HomTransformQuatD" for primitive type double (stores internally a rotation quaternion)
+ - \ref kindr::HomTransformQuatF "HomTransformQuatF" for primitive type float (stores internally a rotation quaternion)
+ - \ref kindr::HomTransformMatrixD "HomTransformMatrixD" for primitive type double (stores internally a rotation matrix)
+ - \ref kindr::HomTransformMatrixF "HomTransformMatrixF" for primitive type float (stores internally a rotation matrix)
+ 
+\subsubsection poses_implementation_homtransform Create a Homogeneous Transformation
 \code{.cpp}
-namespace pos = kindr::poses::eigen_impl; // select implementation based on Eigen
-pos::Position3D position;		     // create 3D-Position
+Position3D position;
+RotationQuaternionD rotation;
+HomTransformQuatD transform1; 						// identity tranformation
+HomTransformQuatD transform2(position, rotation);			// create with position and rotation
 \endcode
-If the implementation needs to be changed, only one line of code has to be altered:
+
+\subsubsection poses_implementation_homtransform Use a Homogeneous Transformation
 \code{.cpp}
-namespace pos = kindr::poses::bullet_impl; // select implementation based on bullet	
+
+  Eigen::Matrix<double, 4, 4> matrix = transform1.getTransformationMatrix();		// gets the 4x4 transformation matrix
+  transform1.setIdentity();								// sets it to identity
+  transform2.invert();									// invert transformation
+  Eigen::Vector3d vector_transform = transform2.rotate(Eigen::Vector3d(1.0,2.0,3.0));				// tranform a vector
+  Eigen::Vector3d vector_invtransform = transform2.inverseTransform(Eigen::Vector3d(1.0,2.0,3.0));  		// reverse tranform a vector
+  HomTransformQuatD transform3 = transform2*transform1;								// composition of transformations
+  
 \endcode
-\subsection poses_eigen Eigen
-The library comes along with an implementation based on the <a href="http://eigen.tuxfamily.org">C++ Eigen library</a>.
 
-All types can be included by
-\code{.cpp}
-#include <kindr/poses/PoseEigen.hpp>
-\endcode
-and lie within the namespace kindr::poses::eigen_impl.
-
-
+             
 
 <br/>
 <br/>
