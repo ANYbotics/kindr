@@ -64,7 +64,7 @@ class HomogeneousTransformation : public PoseBase<HomogeneousTransformation<Prim
    */
   template<typename OtherDerived_>
   inline explicit HomogeneousTransformation(const PoseBase<OtherDerived_>& other)
-    : position_(Position(other.derived().getPosition())), position_(Rotation(other.derived().getRotation()))
+    : position_(Position(other.derived().getPosition())), rotation_(Rotation(other.derived().getRotation()))
   {
     // todo: use conversion trait
   }
