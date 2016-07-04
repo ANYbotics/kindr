@@ -56,6 +56,23 @@ struct HomogeneousTransformationTest: public ::testing::Test {
 TYPED_TEST_CASE(HomogeneousTransformationTest, Types);
 
 
+TYPED_TEST(HomogeneousTransformationTest, testCopyConstructor)
+{
+  typedef typename TestFixture::Pose Pose;
+  typedef typename TestFixture::Position Position;
+  typedef typename TestFixture::Rotation Rotation;
+  typedef typename TestFixture::Scalar Scalar;
+
+  Pose poseA(Position(1.0,2.0,3.0), Rotation(kindr::EulerAnglesZyx<Scalar>(0.5,1.2,-1.7)));
+  Pose poseB(poseA);
+
+  ASSERT_EQ(poseA.getPosition().x(), poseB.getPosition().x());
+  ASSERT_EQ(poseA.getPosition().y(), poseB.getPosition().y());
+  ASSERT_EQ(poseA.getPosition().z(), poseB.getPosition().z());
+  ASSERT_TRUE(poseA.getRotation().isNear(poseB.getRotation(),1.0e-6));
+}
+
+
 TYPED_TEST(HomogeneousTransformationTest, testSetIdentity)
 {
   typedef typename TestFixture::Pose Pose;
