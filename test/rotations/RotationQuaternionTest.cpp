@@ -905,3 +905,25 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionBoxOperators){
 }
 
 
+TYPED_TEST(RotationQuaternionSingleTest, testSetRandom){
+  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
+  RotationQuaternion rotA;
+  rotA.setRandom();
+  ASSERT_TRUE(!rotA.isNear(RotationQuaternion(), 1e-6)) << "rotA: " << rotA;
+
+  // check if setRandom returns by reference
+  rotA.setRandom().setIdentity();
+  ASSERT_TRUE(rotA.isNear(RotationQuaternion(), 1e-6));
+}
+
+TYPED_TEST(RotationQuaternionSingleTest, testGetRandom){
+  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
+  RotationQuaternion rotA;
+  rotA.setRandom();
+  RotationQuaternion rotB = rotA;
+  RotationQuaternion rotC;
+  rotC = rotA.getRandom();
+
+  ASSERT_TRUE(rotB.isNear(rotA, 1e-4));
+  ASSERT_TRUE(!rotC.isNear(rotA, 1e-4));
+}

@@ -208,7 +208,19 @@ class SetFromVectorsTraits<RotationBase<Rotation_>> {
   }
 };
 
-
+/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Random Traits
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+template<typename Rotation_>
+class RandomTraits<RotationBase<Rotation_>> {
+ public:
+  inline static void set_random(Rotation_& rot) {
+    typedef typename Rotation_::Scalar Scalar;
+    Eigen::Matrix<Scalar, 3, 1> vector;
+    setUniformRandom<Scalar, 3>(vector, -M_PI, M_PI);
+    rot = Rotation_(RotationVector<Scalar>(vector));
+  }
+};
 
 } // namespace internal
 } // namespace kindr

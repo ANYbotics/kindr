@@ -176,23 +176,6 @@ struct EulerAnglesZyxTestType {
   Rotation rot;
 
   void assertNear(const Rotation_& rotA, const Rotation_& rotB, double tol=1e-6, const std::string& msg = "") {
-//    Rotation_ rotA = rotAIn.getUnique();
-//    Rotation_ rotB = rotBIn.getUnique();
-//      const Rotation_ rotA = rotAIn;
-//      const Rotation_ rotB = rotBIn;
-//    const double tolX = 1e-3;
-//    ASSERT_NEAR(rotA.roll(), rotB.roll(), tolX) << "rotA: " << rotAIn << " rotAUnique: " << rotAIn.getUnique() << "\nrotB: " << rotBIn << " rotBUnique: " << rotBIn.getUnique() << "\n" << msg;
-//    ASSERT_NEAR(rotA.pitch(), rotB.pitch(), tolX)<< "rotA: " << rotAIn << " rotAUnique: " << rotAIn.getUnique() << "\nrotB: " << rotBIn << " rotBUnique: " << rotBIn.getUnique() << "\n" << msg;
-//    ASSERT_NEAR(rotA.yaw(), rotB.yaw(), tolX)  << "rotA: " << rotAIn << " rotAUnique: " << rotAIn.getUnique() << "\nrotB: " << rotBIn << " rotBUnique: " << rotBIn.getUnique() << "\n" << msg;
-
-//    ASSERT_EQ(true, (kindr::compareRelativePeriodic(rotA.roll(), rotB.roll(), 2.0*M_PI, 1e-1) &&
-//                     kindr::compareRelativePeriodic(rotA.pitch(), rotB.pitch(), 2.0*M_PI, 1e-1) &&
-//                     kindr::compareRelativePeriodic(rotA.yaw(), rotB.yaw(), 2.0*M_PI, 1e-1)) ||
-//                    (kindr::compareRelativePeriodic(rotA.getUnique().roll(), rotB.getUnique().roll(), 2.0*M_PI, 1e-1) &&
-//                     kindr::compareRelativePeriodic(rotA.getUnique().pitch(), rotB.getUnique().pitch(), 2.0*M_PI, 1e-1) &&
-//                     kindr::compareRelativePeriodic(rotA.getUnique().yaw(), rotB.getUnique().yaw(), 2.0*M_PI, 1e-1))
-//    ) << std::endl << msg << " rotA: " << rotA << " rotB: " << rotB;
-
     kindr::RotationQuaternion<Scalar> quatA(rotA);
     kindr::RotationQuaternion<Scalar> quatB(rotB);
     ASSERT_TRUE(quatA.isNear(quatB, 1.0e-3))<< std::endl << msg << "\n quatA: " << quatA << " quatB: " << quatB;

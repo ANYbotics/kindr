@@ -32,7 +32,8 @@
 #include <cassert>
 #include <iostream>
 #include <limits>
-
+#include <random>
+#include <Eigen/Core>
 
 namespace kindr {
 
@@ -102,6 +103,17 @@ template<typename T>
 inline T wrapTwoPI(T angle)
 {
     return floatingPointModulo(angle, 2*M_PI);
+}
+
+
+template <typename PrimType_,  int Rows_>
+static inline void setUniformRandom(Eigen::Matrix<PrimType_, Rows_, 1>& vector, PrimType_ min, PrimType_ max) {
+  std::random_device  rand_dev;
+  std::mt19937 generator(rand_dev());
+  std::uniform_real_distribution<PrimType_>  distr(min, max);
+  for (int i=0; i<vector.size(); i++) {
+    vector(i) = distr(generator);
+  }
 }
 
 
@@ -175,6 +187,7 @@ class NumTraits<long double> : GenericNumTraits<long double>
  public:
   static inline long double dummy_precision() { return 1e-15l; }
 };
+
 
 } // namespace internal
 } // namespace kindr
