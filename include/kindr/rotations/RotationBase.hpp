@@ -135,6 +135,17 @@ class FixingTraits {
   }
 };
 
+
+/*! \brief Sets the rotation to a random one.
+ *  \class RandomTraits
+ *  (only for advanced users)
+ */
+template<typename Rotation_>
+class RandomTraits {
+ public:
+  //inline static Rotation_ set_random(const Rotation_& rot);
+};
+
 } // namespace internal
 
 
@@ -205,6 +216,23 @@ class RotationBase {
    */
   Derived_& setIdentity();
 
+  /*! \brief Sets the rotation to a random one.
+   * \return  reference to modified rotation
+   */
+  Derived_& setRandom() {
+   internal::RandomTraits<RotationBase<Derived_>>::set_random(this->derived());
+   return *this;
+  }
+
+  /*! \brief Returns a random rotation.
+   * \return  reference to modified rotation
+   */
+  Derived_ getRandom() const {
+   Derived_ other;
+   internal::RandomTraits<RotationBase<Derived_>>::set_random(other);
+   return other;
+  }
+
   /*! \brief Returns the rotation in a unique form
    *  This function is used to compare different rotations.
    *  \returns copy of the rotation which is unique
@@ -215,6 +243,7 @@ class RotationBase {
    *  \returns reference
    */
   Derived_& setUnique();
+
 
   /*! \brief Concatenates two rotations.
    *  \returns the concatenation of two rotations

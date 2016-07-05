@@ -83,7 +83,7 @@ set(ROTATION_SRCS
 )
 add_gtest( runUnitTestsRotation ${ROTATION_SRCS})
 
-#
+
 set(ROTATIONDIFF_SRCS
 	test_main.cpp
 	rotations/RotationDiffTest.cpp
