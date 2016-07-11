@@ -154,6 +154,8 @@ typedef TwistLinearVelocityLocalAngularVelocity<double> TwistLinearVelocityLocal
 typedef TwistLinearVelocityLocalAngularVelocity<float> TwistLinearVelocityLocalAngularVelocityF;
 typedef TwistLinearVelocityLocalAngularVelocity<double> TwistLinearVelocityLocalAngularVelocityPD;
 typedef TwistLinearVelocityLocalAngularVelocity<float> TwistLinearVelocityLocalAngularVelocityPF;
+typedef TwistLinearVelocityLocalAngularVelocity<double> TwistLocalD;
+typedef TwistLinearVelocityLocalAngularVelocity<float> TwistLocalF;
 
 
 } // namespace kindr
