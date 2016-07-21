@@ -157,6 +157,21 @@ class RotationQuaternion : public RotationBase<RotationQuaternion<PrimType_>> {
     return rotationQuaternion_.z();
   }
 
+  inline Scalar& w() {
+    return rotationQuaternion_.w();
+  }
+
+  inline Scalar& x() {
+    return rotationQuaternion_.x();
+  }
+
+  inline Scalar& y() {
+    return rotationQuaternion_.y();
+  }
+
+  inline Scalar& z() {
+    return rotationQuaternion_.z();
+  }
 
   inline Scalar real() const {
     return this->toUnitQuaternion().real();
