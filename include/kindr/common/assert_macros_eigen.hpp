@@ -45,14 +45,13 @@ using std::max;
 using std::min;
 
 template<typename SCALAR>
-inline bool compareRelative(SCALAR a, SCALAR b, double percentTolerance, SCALAR * percentError = NULL)
+inline bool compareRelative(SCALAR a, SCALAR b, double percentTolerance, SCALAR * percentError = NULL, SCALAR bothZeroThreshold = SCALAR(1.0e-15))
 {
   // \todo: does anyone have a better idea?
   SCALAR fa = abs(a);
   SCALAR fb = abs(b);
-  SCALAR tolerance = static_cast<SCALAR>(1e-15);
   SCALAR tolerance_zero = static_cast<SCALAR>(1e-6);
-  if( (fa < tolerance && fb < tolerance) ||  // Both zero.
+  if( (fa < bothZeroThreshold && fb < bothZeroThreshold) ||  // Both zero.
       (fa == static_cast<SCALAR>(0.0)  && fb < tolerance_zero)  ||  // One exactly zero and the other small
       (fb == static_cast<SCALAR>(0.0)  && fa < tolerance_zero) )    // ditto
     return true;
@@ -66,7 +65,6 @@ inline bool compareRelative(SCALAR a, SCALAR b, double percentTolerance, SCALAR 
   }
   return true;
 }
-
 
 template<typename SCALAR>
 inline bool compareRelativePeriodic(SCALAR a, SCALAR b, double periodlength, double percentTolerance, SCALAR * percentError = NULL)
