@@ -120,6 +120,23 @@ void assertFinite(const M1 & A, kindr::internal::source_file_pos const & sfp, st
   }
 }
 
+#define KINDR_ASSERT_DOUBLE_MX_EQ_ZT(A, B, PERCENT_TOLERANCE, MSG, ZERO_THRESHOLD)       \
+    ASSERT_EQ((size_t)(A).rows(), (size_t)(B).rows())  << MSG << "\nMatrix " << #A << ":\n" << A << "\nand matrix " << #B << "\n" << B << "\nare not the same size"; \
+    ASSERT_EQ((size_t)(A).cols(), (size_t)(B).cols())  << MSG << "\nMatrix " << #A << ":\n" << A << "\nand matrix " << #B << "\n" << B << "\nare not the same size"; \
+    for(int r = 0; r < (A).rows(); r++)                 \
+    {                                 \
+      for(int c = 0; c < (A).cols(); c++)               \
+      {                               \
+        typedef typename std::remove_reference<decltype(A)>::type::Scalar Scalar; \
+        Scalar percentError = static_cast<Scalar>(0.0); \
+        ASSERT_TRUE(kindr::compareRelative( (A)(r,c), (B)(r,c), PERCENT_TOLERANCE, &percentError, ZERO_THRESHOLD)) \
+        << MSG << "\nComparing:\n"                \
+        << #A << "(" << r << "," << c << ") = " << (A)(r,c) << std::endl \
+        << #B << "(" << r << "," << c << ") = " << (B)(r,c) << std::endl \
+        << "Error was " << percentError << "% > " << PERCENT_TOLERANCE << "%\n" \
+        << "\nMatrix " << #A << ":\n" << A << "\nand matrix " << #B << "\n" << B; \
+      }                               \
+    }
 
 #define KINDR_ASSERT_DOUBLE_MX_EQ(A, B, PERCENT_TOLERANCE, MSG)       \
     ASSERT_EQ((size_t)(A).rows(), (size_t)(B).rows())  << MSG << "\nMatrix " << #A << ":\n" << A << "\nand matrix " << #B << "\n" << B << "\nare not the same size"; \
