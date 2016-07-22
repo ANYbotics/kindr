@@ -240,8 +240,8 @@ Homogeneous pos. vector & ${}_B\bar{\vr}_{O\!P} = \begin{bmatrix}\postranspose{B
 Rotation Matrix& $\comat{I}{B} \in \mathrm{SO}(3)$ & The rotation matrix (Direction Cosine Matrix)  \\  
   & $ \pos{I}{O}{P} = \comat{I}{B} \pos{B}{O}{P}$ & is a coordinate transformation matrix,  \\
 & $\comat{I}{B} = \comat{B}{I}^\transpose$ & which transforms vectors from frame $B$ to frame $I$. \\  \hline 
- Rotation  & $\quat{I}{B}$ &  Hamiltonian unit quaternion (hypercomplex number)\\
-Quaternion &  $\vq = [ q_0 \, q_1  \, q_2  \,  q_3 ]^\transpose $ & $Q = q_0 + q_1 i + q_2 j + q_3 k \in \mathbb{H}, \quad q_i \in \mathbb{R}, \quad \norm{Q}= 1$ \\ \hline
+ Rotation  & $\quat{I}{B} = [ q_0 \, q_1  \, q_2  \,  q_3 ]^\transpose $ &  Hamiltonian unit quaternion (hypercomplex number)\\
+Quaternion &   & $Q = q_0 + q_1 i + q_2 j + q_3 k \in \mathbb{H}, \quad q_i \in \mathbb{R}, \quad \norm{Q}= 1$ \\ \hline
 Angle-axis & $\angleaxis{I}{B}$ &   Rotation with unit rotation axis $\vn$ and angle $\theta \in [0, \pi]$. \\ \hline
 Rotation Vector & $ \rotvec{I}{B} $  &  Rotation with rotation axis $\vn = \frac{\vvph}{\norm{\vvph}}$ and angle $\theta = \norm{\vvph}$. \\ \hline
 Euler Angles ZYX &  $[z, y, x]^\transpose_{I\!B}$  & Tait-Bryan angles (Flight conv.): $z-y'-x''$, i.e.\   \\
@@ -355,7 +355,7 @@ $\begin{aligned}
  \frac{\partial}{\partial \Phi_1}(\Phi_1 \otimes \Phi_2) &= \identity  \\
 \frac{\partial}{\partial \Phi_2}(\Phi_1 \otimes \Phi_2) &= \vC(\Phi_1) \\
 \frac{\partial}{\partial \vv}(\exp{(\vv))} &= \vGa(\vv) \\
-\frac{\partial}{\partial \vv}(\log{(\Phi))} &= \vGa^{-1}(\log{\Phi}) \\
+\frac{\partial}{\partial \Phi}(\log{(\Phi))} &= \vGa^{-1}(\log{\Phi}) \\
     \end{aligned}$ & 
      $\begin{aligned}
        \frac{\partial}{\partial \Phi_1} (\Phi_1 \boxminus \Phi_2) &=  \vGa^{-1}(\Phi_1 \boxminus \Phi_2)
