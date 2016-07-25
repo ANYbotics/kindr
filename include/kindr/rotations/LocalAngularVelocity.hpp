@@ -46,7 +46,6 @@ namespace kindr {
  *
  * This class implements an angular velocity of a rigid body in 3D-space expressed in body fixed (local) frame.
  *
- * Note that only the version with the active usage type makes sense to represent a physical angular velocity of a body.
  * The angular velocity should represent the absolute rotational velocity of a rigid body with respect to an inertial (global) frame I
  * and its coordinates are expressed in the body fixed (local) frame (\f$\B_Omega = B_\omega_{IB}$\f)
  *

@@ -363,7 +363,7 @@ class RotationQuaternion : public RotationBase<RotationQuaternion<PrimType_>> {
    *  This function can be used to get the derivative of the concatenation with respect to the right quaternion.
    *  \returns the quaternion matrix Qleft
    */
-  Eigen::Matrix<PrimType_,4,4> getQuaternionMatrix() {
+  Eigen::Matrix<PrimType_,4,4> getQuaternionMatrix() const {
     Eigen::Matrix<PrimType_,4,4> Qleft;
     Qleft(0,0) =  w();      Qleft(0,1) = -x();      Qleft(0,2) = -y();      Qleft(0,3) = -z();
     Qleft(1,0) =  x();      Qleft(1,1) =  w();      Qleft(1,2) = -z();      Qleft(1,3) =  y();
@@ -377,7 +377,7 @@ class RotationQuaternion : public RotationBase<RotationQuaternion<PrimType_>> {
    *  This function can be used to get the derivative of the concatenation with respect to the left quaternion.
    *  \returns the quaternion matrix Qright
    */
-  Eigen::Matrix<PrimType_,4,4> getConjugateQuaternionMatrix() {
+  Eigen::Matrix<PrimType_,4,4> getConjugateQuaternionMatrix() const {
     Eigen::Matrix<PrimType_,4,4> Qright;
     Qright(0,0) =  w();      Qright(0,1) = -x();      Qright(0,2) = -y();      Qright(0,3) = -z();
     Qright(1,0) =  x();      Qright(1,1) =  w();      Qright(1,2) =  z();      Qright(1,3) = -y();
@@ -390,7 +390,7 @@ class RotationQuaternion : public RotationBase<RotationQuaternion<PrimType_>> {
   /*! \brief Returns the global quaternion diff matrix H: GlobalAngularVelocity = 2*H*qdiff, qdiff = 0.5*H^T*GlobalAngularVelocity
    *  \returns the global quaternion diff matrix H
    */
-  Eigen::Matrix<PrimType_,3,4> getGlobalQuaternionDiffMatrix() {
+  Eigen::Matrix<PrimType_,3,4> getGlobalQuaternionDiffMatrix() const {
     Eigen::Matrix<PrimType_,3,4> H;
       H(0,0) = -x();      H(0,1) =  w();      H(0,2) = -z();      H(0,3) =  y();
       H(1,0) = -y();      H(1,1) =  z();      H(1,2) =  w();      H(1,3) = -x();

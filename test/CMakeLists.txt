@@ -88,6 +88,7 @@ set(ROTATIONDIFF_SRCS
 	test_main.cpp
 	rotations/RotationDiffTest.cpp
 	rotations/LocalAngularVelocityTest.cpp
+	rotations/GlobalAngularVelocityTest.cpp
 	rotations/RotationQuaternionDiffTest.cpp
 	rotations/RotationMatrixDiffTest.cpp
 	rotations/EulerAnglesZyxDiffTest.cpp
