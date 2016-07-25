@@ -125,6 +125,16 @@ class EulerAnglesZyxDiff : public RotationDiffBase<EulerAnglesZyxDiff<PrimType_>
     return static_cast<const Base&>(zyxDiff_);
   }
 
+
+  inline Base& vector() {
+    return toImplementation();
+  }
+
+  inline const Base& vector() const {
+    return toImplementation();
+  }
+
+
   /*! \brief Reading access to time derivative of yaw (Z) angle.
     *  \returns time derivative of yaw angle (scalar) with reading access
     */
