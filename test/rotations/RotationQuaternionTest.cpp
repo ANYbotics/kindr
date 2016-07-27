@@ -902,6 +902,21 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionBoxOperators){
   ASSERT_NEAR(rotQuat.getDisparityAngle(rotQuat2),norm,1e-4); // Check distance to double
   rotQuat2 = this->rotQuat1.boxPlus(-testVec);
   ASSERT_NEAR(rotQuat.getDisparityAngle(rotQuat2),2*norm,1e-4); // Check distance to reverse
+
+  // box minus (bug)
+  Scalar h = 1.0e-8;
+  RotationQuaternion rotA(-0.96172135575480655, -0.071670794727345111, -0.25459502556731622, -0.071670803153484147);
+  RotationQuaternion rotB( 0.96172135489322863,  0.07167080867178631,   0.25459502571498405,  0.071670800245647273);
+  std::cout << "------------------------------> compute angularVel: \n";
+  Vector angularVel = rotB.boxMinus(rotA)/(2.0*h);
+  std::cout << "------------------------------> compute angularVel2: \n";
+  Vector angularVel2 = rotB.boxMinus(rotA.getUnique())/(2.0*h);
+  EXPECT_EQ(angularVel.x(), angularVel2.x());
+  EXPECT_EQ(angularVel.y(), angularVel2.y());
+  EXPECT_EQ(angularVel.z(), angularVel2.z());
+  std::cout << "angularVel: " << angularVel.transpose() << std::endl;
+  std::cout << "angularVel2: " << angularVel2.transpose() << std::endl;
+
 }
 
 

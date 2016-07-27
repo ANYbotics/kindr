@@ -137,7 +137,8 @@ class ComparisonTraits<RotationBase<Left_>, RotationBase<Right_>> {
    *  \returns disparity angle in [-pi,pi) @todo: is this range correct?
    */
   inline static typename Left_::Scalar get_disparity_angle(const RotationBase<Left_>& left, const RotationBase<Right_>& right) {
-    return fabs(floatingPointModulo(AngleAxis<typename Left_::Scalar>(left.derived()*right.derived().inverted()).angle() + M_PI,2*M_PI)-M_PI);
+    typedef typename Left_::Scalar Scalar;
+    return std::abs(floatingPointModulo(AngleAxis<Scalar>(left.derived()*right.derived().inverted()).angle() + Scalar(M_PI), Scalar(2.0*M_PI))-M_PI);
   }
 };
 
@@ -156,7 +157,8 @@ class MapTraits<RotationBase<Rotation_>> {
 
   inline static typename internal::get_matrix3X<Rotation_>::template Matrix3X<1> get_logarithmic_map(const Rotation_& rotation) {
     typedef typename get_scalar<Rotation_>::Scalar Scalar;
-    return RotationVector<Scalar>(rotation).getUnique().toImplementation(); // unique?
+//    return RotationVector<Scalar>(rotation).getUnique().toImplementation(); // unique?
+    return RotationVector<Scalar>(rotation).toImplementation(); // unique?
   }
 
 };

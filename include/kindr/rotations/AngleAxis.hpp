@@ -250,35 +250,43 @@ class AngleAxis : public RotationBase<AngleAxis<PrimType_>> {
    *  \returns copy of the angle axis rotation which is unique
    */
   AngleAxis getUnique() const {
-    AngleAxis aa(kindr::floatingPointModulo(angle()+M_PI,2*M_PI)-M_PI, axis()); // first wraps angle into [-pi,pi)
-    if(aa.angle() > 0)  {
-      return aa;
-    } else if(aa.angle() < 0) {
+    const Scalar anglePosNegPi = kindr::wrapPosNegPI(angle());
+    AngleAxis aa(anglePosNegPi, axis()); // first wraps angle into [-pi,pi)
+    if(aa.angle() > 0.0)  {
+        return aa;
+    }
+    else if(aa.angle() < 0.0) {
       if(aa.angle() != -M_PI) {
         return AngleAxis(-aa.angle(),-aa.axis());
-      } else { // angle == -pi, so axis must be viewed further, because -pi,axis does the same as -pi,-axis
-
-        if(aa.axis()[0] < 0) {
+      }
+      else { // angle == -pi, so axis must be viewed further, because -pi,axis does the same as -pi,-axis
+        if(aa.axis()[0] < 0.0) {
           return AngleAxis(-aa.angle(),-aa.axis());
-        } else if(aa.axis()[0] > 0) {
+        }
+        else if(aa.axis()[0] > 0) {
           return AngleAxis(-aa.angle(),aa.axis());
-        } else { // v1 == 0
+        }
+        else { // v1 == 0
 
-          if(aa.axis()[1] < 0) {
+          if(aa.axis()[1] < 0.0) {
             return AngleAxis(-aa.angle(),-aa.axis());
-          } else if(aa.axis()[1] > 0) {
+          }
+          else if(aa.axis()[1] > 0) {
             return AngleAxis(-aa.angle(),aa.axis());
-          } else { // v2 == 0
+          }
+          else { // v2 == 0
 
-            if(aa.axis()[2] < 0) { // v3 must be -1 or 1
+            if(aa.axis()[2] < 0.0) { // v3 must be -1 or 1
               return AngleAxis(-aa.angle(),-aa.axis());
-            } else  {
+            }
+            else  {
               return AngleAxis(-aa.angle(),aa.axis());
             }
           }
         }
       }
-    } else { // angle == 0
+    }
+    else { // angle == 0
       return AngleAxis();
     }
   }
@@ -352,12 +360,15 @@ class ConversionTraits<AngleAxis<DestPrimType_>, RotationVector<SourcePrimType_>
   inline static AngleAxis<DestPrimType_> convert(const RotationVector<SourcePrimType_>& rotationVector) {
     typedef typename RotationVector<SourcePrimType_>::Scalar Scalar;
 
-    const RotationVector<DestPrimType_> rv(rotationVector);
+    // Cast to destination primitive type
+    const Eigen::Matrix<DestPrimType_, 3, 1> vector = rotationVector.toImplementation().template cast<DestPrimType_>();
+    const DestPrimType_ norm = vector.norm();
 
-    if (rv.toImplementation().norm() < internal::NumTraits<Scalar>::dummy_precision()) {
+    // Check for identity rotation (we cannot divide by zero norm).
+    if (norm < internal::NumTraits<Scalar>::dummy_precision()) {
       return AngleAxis<DestPrimType_>();
     }
-    return AngleAxis<DestPrimType_>(rv.toImplementation().norm(), rv.toImplementation().normalized());
+    return AngleAxis<DestPrimType_>(norm, vector.normalized());
   }
 };
 
@@ -374,18 +385,6 @@ template<typename DestPrimType_, typename SourcePrimType_>
 class ConversionTraits<AngleAxis<DestPrimType_>, RotationMatrix<SourcePrimType_>> {
  public:
   inline static AngleAxis<DestPrimType_> convert(const RotationMatrix<SourcePrimType_>& rotationMatrix) {
-//    return AngleAxis<DestPrimType_>(getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()));
-//    return AngleAxis<DestPrimType_>(internal::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()));
-
-//   if (Usage_ == RotationUsage::ACTIVE) {
-//     return AngleAxis<DestPrimType_>(internal::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.matrix()));
-//
-//   }
-//   if (Usage_ == RotationUsage::PASSIVE) {
-//     return AngleAxis<DestPrimType_>(internal::getAngleAxisFromRotationMatrix<SourcePrimType_, DestPrimType_>(rotationMatrix.toImplementation()));
-//
-//   }
-//
     // Bad precision!
    return AngleAxis<DestPrimType_>(Eigen::AngleAxis<DestPrimType_>(rotationMatrix.toImplementation().template cast<DestPrimType_>()));
 
