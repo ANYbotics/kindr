@@ -114,7 +114,10 @@
 \newcommand\transpose{\mathsf{T}}
 
 %\newcommand\imquatvec[1]{\overrightarrow{\mathbf{#1}}}
+
 \newcommand\imquatvec[1]{\check{\mathbf{#1}}}
+\newcommand\imquatvecFrame[3]{\check{\mathbf{#1}}_{#2\!#3}}
+\newcommand\skewImquatvecFrame[3]{\hat{\check{\mathbf{#1}}}_{#2\!#3}}
 
 \newcommand\pos[3]{{}_#1\vr_{#2\!#3}}
 \newcommand\posdot[3]{{}_#1\dot{\vr}_{#2\!#3}}
@@ -133,6 +136,8 @@
 \newcommand\rotvel[3]{{}_#1\vom_{#2\!#3}}
 \newcommand\rotvelhat[3]{{}_#1\hat{\vom}_{#2\!#3}}
 \newcommand\dvch[0]{\dot{\vch}}
+
+\DeclareMathOperator{\atantwo}{atan2}
 
 \newcommand\myfigure[1]{%
 \medskip\noindent\begin{minipage}{\columnwidth}
@@ -181,8 +186,8 @@ Machine precision & $\epsilon$ & \\ \hline
 \section{Operators}
 \begin{tabular}{ll}
 \hline
-Cross product & $\va \times \vb = \begin{bmatrix} a_1 \\ a_2 \\ a_3\end{bmatrix} \times \begin{bmatrix} b_1 \\ b_2 \\ b_3\end{bmatrix} \Leftrightarrow (\va)^\wedge \vb = \hat{\va}\vb = \begin{bmatrix} 0 & -a_3 & a_2 \\ a_3 & 0 & -a_1 \\ -a_2 & a_1 & 0 \end{bmatrix} \begin{bmatrix} b_1 \\ b_2 \\ b_3\end{bmatrix}$ \\ \hline
-Skew/unskew &  $ \va = \hat{\va}^\vee$ \\ \hline
+Cross product/skew/unskew  & $\va \times \vb = \begin{bmatrix} a_1 \\ a_2 \\ a_3\end{bmatrix} \times \begin{bmatrix} b_1 \\ b_2 \\ b_3\end{bmatrix} = (\va)^\wedge \vb = \hat{\va}\vb = \begin{bmatrix} 0 & -a_3 & a_2 \\ a_3 & 0 & -a_1 \\ -a_2 & a_1 & 0 \end{bmatrix} \begin{bmatrix} b_1 \\ b_2 \\ b_3\end{bmatrix}$ \\ 
+ &  $\va = \hat{\va}^\vee, \quad \hat{\va} = - \hat{\va}^\transpose, \quad \va \times \vb = - \vb \times \va$ \\ \hline
 Euclidean norm & $\norm{\va} = \sqrt{\va^T\va} = \sqrt{a_1^2 + \ldots + a_n^2}$ \\ \hline
 Exponential map for matrix & $\expmatrix: \mathbb{R}^{3\times 3} \rightarrow \mathbb{R}^{3\times 3},  \vA \mapsto e^\vA, \quad \vA \in \mathbb{R}^{3\times 3}$ \\ \hline
 Logarithmic map for matrix & $\logmatrix: \mathbb{R}^{3\times 3} \rightarrow \mathbb{R}^{3\times 3}, \vA \mapsto \log{\vA}, \quad  \vA \in \mathbb{R}^{3\times 3}$\\ \hline
@@ -243,7 +248,7 @@ Rotation Matrix& $\comat{I}{B} \in \mathrm{SO}(3)$ & The rotation matrix (Direct
  Rotation  & $\quat{I}{B} = [ q_0 \, q_1  \, q_2  \,  q_3 ]^\transpose $ &  Hamiltonian unit quaternion (hypercomplex number)\\
 Quaternion &   & $Q = q_0 + q_1 i + q_2 j + q_3 k \in \mathbb{H}, \quad q_i \in \mathbb{R}, \quad \norm{Q}= 1$ \\ \hline
 Angle-axis & $\angleaxis{I}{B}$ &   Rotation with unit rotation axis $\vn$ and angle $\theta \in [0, \pi]$. \\ \hline
-Rotation Vector & $ \rotvec{I}{B} $  &  Rotation with rotation axis $\vn = \frac{\vvph}{\norm{\vvph}}$ and angle $\theta = \norm{\vvph}$. \\ \hline
+Rotation Vector & $\rotvec{I}{B}$  &  Rotation with rotation axis $\vn = \frac{\vvph}{\norm{\vvph}}$ and angle $\theta = \norm{\vvph}$. \\ \hline
 Euler Angles ZYX &  $[z, y, x]^\transpose_{I\!B}$  & Tait-Bryan angles (Flight conv.): $z-y'-x''$, i.e.\   \\
 Euler Angles YPR &  & yaw-pitch-roll. Singularities are at $y=\pm\frac{\pi}{2}$. \\
  &  & $z\in[-\pi,\pi), y\in[-\frac{\pi}{2},\frac{\pi}{2}), x\in[-\pi,\pi)$  \\  \hline
@@ -257,11 +262,12 @@ A rotation quaternion is a Hamiltonian unit quaternion: \\
 $\begin{aligned}Q &= q_0 + q_1 i + q_2 j + q_3 k \in \mathbb{H}, \quad q_i \in \mathbb{R}, 
 i^2 = j^2=k^2 = ijk = -1, \quad \norm{Q}= \sqrt{q_0^2 + q_1^2 + q_2^2 + q_3^2} = 1 \\
 \end{aligned}$   \\
-Note that $\Quat{I}{B}$ and $-\Quat{I}{B}$ represent the same rotation, but not the same unit quaternion. \\
-Rot. quaternion as tuple: $Q = (q_0, q_1, q_2, q_3) = (q_0, \imquatvec{q})$ with $\imquatvec{q} := (q_1, q_2, q_3)^\transpose$ \\
-Rot. quaternion as vector: $\vq = \begin{bmatrix} q_0 & q_1 & q_2 & q_3 \end{bmatrix}^\transpose$ \\
-Conjugate: $Q^\ast = (q_0, -\imquatvec{q})$ \\
-Inverse: $Q^{-1} = Q^\ast = (q_0, -\imquatvec{q})$ \\
+\begin{tabular}{@{}lll@{}} 
+Tuple: & $Q = (q_0, q_1, q_2, q_3) = (q_0, \imquatvec{q})$ with $\imquatvec{q} := (q_1, q_2, q_3)^\transpose$ \\
+$4\times1$-vector: & $\vq = \begin{bmatrix} q_0 & q_1 & q_2 & q_3 \end{bmatrix}^\transpose$ \\
+Conjugate: & $Q^\ast = (q_0, -\imquatvec{q})$ \\
+Inverse: & $Q^{-1} = Q^\ast = (q_0, -\imquatvec{q})$ \\
+\end{tabular} \\
 %  The Eq. 109 and Eq. 111 in J. Diebel, 'Representating Attitude: Euler Angles, Unit Quaternions, and Rostation Vectors', Standford University, 2006. are wrong, they should be switched.
 Quaternion multiplication: $\begin{aligned}Q \cdot P &= (q_0, \imquatvec{q})\cdot(p_0, \imquatvec{p}) = (q_0 p_0 - \imquatvec{q}^\transpose \imquatvec{p}, q_{0} \imquatvec{p} + p_0 \imquatvec{q} + \imquatvec{q} \times \imquatvec{p}) \quad \Leftrightarrow \\
 	   \vq \otimes \vp &= \underbrace{\vQ(\vq)}_{\mathclap{\text{quaternion matrix}}}\vp \, = \, \begin{pmatrix}q_0 & -\imquatvec{q}^\transpose \\  \imquatvec{q} & q_0\identity_{3 \times 3}+\hat{\imquatvec{q}} \\ \end{pmatrix} \begin{pmatrix} p_0 \\ p_1 \\ p_2 \\ p_3 \end{pmatrix} 
@@ -277,19 +283,43 @@ Quaternion multiplication: $\begin{aligned}Q \cdot P &= (q_0, \imquatvec{q})\cdo
  p_2 &  -p_3 &  p_0 & p_1 \\
  p_3 & p_2 &  -p_1 &  p_0 \\ \end{pmatrix}\begin{pmatrix} q_0 \\ q_1 \\ q_2 \\ q_3 \end{pmatrix} \\
 \end{aligned}$ \\
+Note that $\Quat{I}{B}$ and $-\Quat{I}{B}$ represent the same rotation, but not the same unit quaternion. \\
+\subsubsection{Rotation Quaternion $\Leftrightarrow$ Rotation Vector}
+\begin{tabular}{@{}lll@{}} 
+% $ \quat{I}{B} =   \begin{array}{l l}
+% 		\begin{bmatrix} \cos{(\frac{1}{2}{\lVert \rotvec{I}{B}\rVert})} \\
+% 				\frac{\rotvec{I}{B}}{\lVert \rotvec{I}{B}\rVert} \sin{(\frac{1}{2}{\lVert \rotvec{I}{B}\rVert})} 
+% 		\end{bmatrix} 
+% 	 \end{array}$ \text{if $\lVert \rotvec{I}{B} \rVert \geq \epsilon$} & $\Leftrightarrow $ & $ \rotvec{I}{B} = 2\atantwo{(\imquatvec{q}, q_0)}\frac{\rotvec{I}{B}}{\lVert \rotvec{I}{B}\rVert}  $ \\
+% $ \quat{I}{B} =  \begin{bmatrix} 1 \\
+% 			\frac{1}{2}\rotvec{I}{B}
+% 	\end{bmatrix}$  \text{if $\lVert \rotvec{I}{B} \rVert < \epsilon$}
+ $ \quat{I}{B} = \left\{ 
+ 	      \begin{array}{l l}
+ 		\begin{bmatrix} \cos{(\frac{1}{2}{\lVert \vvph\rVert})},
+ 				\frac{\vvph^\transpose}{\lVert\vvph\rVert} \sin{(\frac{1}{2}{\lVert \vvph\rVert})} 
+ 		\end{bmatrix}^\transpose & \text{if $\lVert \vvph \rVert \geq \epsilon$}\\
+ 		\begin{bmatrix} 1,
+ 				\frac{1}{2}\vvph^\transpose 
+ 		\end{bmatrix}^\transpose & \text{otherwise}
+ 	 \end{array}\right.$  
+ 	  & $\Leftrightarrow$ & $ \rotvec{I}{B} =  \left\{\begin{array}{l l} 
+							2\atantwo{(\lVert\imquatvec{q}\rVert, q_0)}\frac{\imquatvec{q}}{\lVert \imquatvec{q}\rVert} & \text{if $\lVert\imquatvec{q} \rVert \geq \epsilon$} \\ 
+							  2\imquatvec{q} & \text{otherwise}
+						    \end{array}\right. $ \\
+\end{tabular}
 
 
-\subsubsection{Rotation Quaternion $\Leftrightarrow$ Rotation Angle-Axis}
-
+\subsubsection{Rotation Quaternion $\Leftrightarrow$ Angle-Axis}
 \begin{tabular}{@{}lll@{}} 
 $ \quat{I}{B} = \begin{bmatrix} \cos{\frac{\theta}{2}} \\ \vn \sin{\frac{\theta}{2}} \end{bmatrix}$ & $\Leftrightarrow$ & $
 (\theta, \vn)_{I\!B} = \left\{
   \begin{array}{l l}
-    (2\arccos{(p_0)}, \frac{\imquatvec{q}}{\norm{\imquatvec{q}}}) & \quad \text{if $\lVert \imquatvec{q} \rVert^2 \geq \epsilon^2$}\\
+    (2\arccos{(q_0)}, \frac{\imquatvec{q}}{\norm{\imquatvec{q}}}) & \quad \text{if $\lVert \imquatvec{q} \rVert \geq \epsilon$}\\
     (0, \begin{bmatrix}1 & 0 & 0\end{bmatrix}^\transpose)  & \quad \text{otherwise}
   \end{array} \right. $ \\
 \end{tabular}
-\subsubsection{Rotation Quaternion $\Leftrightarrow$ Rotation Matrix }
+\subsubsection{Rotation Quaternion $\Leftrightarrow$ Rotation Matrix}
 $\begin{aligned}\comat{I}{B} &=  \identity_{3\times 3} + 2 q_0\hat{\imquatvec{q}} + 2 \hat{\imquatvec{q}}^2  = (2 q_0^2 -1) \identity_{3\times 3} + 2q_0\hat{\imquatvec{q}} + 2 \imquatvec{q}\imquatvec{q}^\transpose \\
 &= \begin{bmatrix}
  q_0^2 + q_1^2 - q_2^2 - q_3^2 &         2q_1q_2 - 2q_0q_3 &         2q_0q_2 + 2q_1q_3 \\
@@ -303,10 +333,19 @@ $\begin{aligned}\comat{I}{B}^{-1} &= \comat{B}{I}  = \identity_{3 \times 3} - 2 
          2q_0q_2 + 2q_1q_3 &         2q_2q_3 - 2q_0q_1 & q_0^2 - q_1^2 - q_2^2 + q_3^2 \\ \end{bmatrix}  \\  
 \end{aligned}$ \\
 
-\subsubsection{Euler Angles ZYX $\Leftrightarrow$ Direction Cosine Matrix}
+\subsubsection{Rotation Matrix $\Leftrightarrow$ Rotation Vector}
+\begin{tabular}{@{}lll@{}} 
+$\comat{I}{B} = \left\{
+  \begin{array}{l l}
+    \identity + \frac{\sin{(\lVert\vvph\lVert)}\hat{\vvph}}{\lVert\vvph\lVert} + \frac{(1-\cos{(\lVert\vvph\rVert)})\hat{\vvph}^2}{\lVert\vvph\rVert^2}  & \quad \text{if $\lVert\vvph\rVert \geq \epsilon$}\\
+    \identity + \hat{\vvph} & \quad \text{otherwise}
+ \end{array} \right. $ \\
+\end{tabular}
+
+\subsubsection{Euler Angles ZYX $\Leftrightarrow$ Rotation Matrix}
 \myfigure{\includegraphics[width=1\columnwidth]{coordinate_systems/coordinate_system_ypr_kindr1-crop.pdf}\vspace{-3mm}
 \figcaption{Rotation from $A$-frame to $D$-frame: ($z-y'-x''$) -- (yaw-pitch-roll) -- ($50^\circ-25^\circ-30^\circ)$}\label{fig:yaw-pitch-roll}}
-\subsubsection{Euler Angles XYZ $\Leftrightarrow$ Direction Cosine Matrix}
+\subsubsection{Euler Angles XYZ $\Leftrightarrow$ Rotation Matrix}
 \myfigure{\includegraphics[width=1\columnwidth]{coordinate_systems/coordinate_system_rpy_kindr1-crop.pdf}\vspace{-3mm}
 \figcaption{Rotation from $A$-frame to $D$-frame: ($x-y'-z''$) -- (roll-pitch-yaw) -- ($50^\circ-25^\circ-30^\circ)$}\label{fig:roll-pitch-yaw}}
 
@@ -357,9 +396,13 @@ $\begin{aligned}
 \frac{\partial}{\partial \vv}(\exp{(\vv))} &= \vGa(\vv) \\
 \frac{\partial}{\partial \Phi}(\log{(\Phi))} &= \vGa^{-1}(\log{\Phi}) \\
     \end{aligned}$ & 
-     $\begin{aligned}
-       \frac{\partial}{\partial \Phi_1} (\Phi_1 \boxminus \Phi_2) &=  \vGa^{-1}(\Phi_1 \boxminus \Phi_2)
-      \end{aligned}$ \\
+$\begin{aligned}
+  \frac{\partial}{\partial \Phi_1} (\Phi_1 \boxminus \Phi_2) &=  \vGa^{-1}(\Phi_1 \boxminus \Phi_2) \\
+  \vGa(\vv)\vv &= \vv \\
+   \vGa^{-1}(\vv)\vv &= \vv \\
+    \vGa(-\vv) &=  \vGa(\vv)^\transpose
+\end{aligned}$ \\
+   \\
  \end{tabular}
  \\
  Jacobian of exponential map: 
