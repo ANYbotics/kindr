@@ -70,6 +70,7 @@ inline static Eigen::Matrix<PrimType_, 3, 3> getJacobianOfExponentialMap(const E
 
 
 #include "kindr/rotations/LocalAngularVelocity.hpp"
+#include "kindr/rotations/GlobalAngularVelocity.hpp"
 #include "kindr/rotations/RotationQuaternionDiff.hpp"
 #include "kindr/rotations/RotationMatrixDiff.hpp"
 #include "kindr/rotations/EulerAnglesZyxDiff.hpp"

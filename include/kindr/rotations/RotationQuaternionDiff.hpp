@@ -198,7 +198,13 @@ class RotationDiffConversionTraits<RotationQuaternionDiff<PrimType_>, LocalAngul
   }
 };
 
-
+template<typename PrimType_>
+class RotationDiffConversionTraits<RotationQuaternionDiff<PrimType_>, GlobalAngularVelocity<PrimType_>, RotationQuaternion<PrimType_>> {
+ public:
+  inline static RotationQuaternionDiff<PrimType_> convert(const RotationQuaternion<PrimType_>& rquat, const GlobalAngularVelocity<PrimType_>& angularVelocity) {
+    return RotationQuaternionDiff<PrimType_>(Quaternion<PrimType_>(0.5*(rquat.getGlobalQuaternionDiffMatrix().transpose()*angularVelocity.vector())));
+  }
+};
 
 
 } // namespace internal

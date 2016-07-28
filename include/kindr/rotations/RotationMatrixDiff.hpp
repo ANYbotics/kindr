@@ -174,23 +174,21 @@ typedef RotationMatrixDiff<float> RotationMatrixDiffF;
 
 namespace internal {
 
-//! \f$dR_IB = B_\hat{w}_IB'*R_IB$\f
 template<typename PrimType_>
 class RotationDiffConversionTraits<RotationMatrixDiff<PrimType_>, LocalAngularVelocity<PrimType_>, RotationMatrix<PrimType_>> {
  public:
   inline static RotationMatrixDiff<PrimType_> convert(const RotationMatrix<PrimType_>& rotationMatrix, const LocalAngularVelocity<PrimType_>& angularVelocity) {
-
-//    // works with boxPlus(-w)
-//    return RotationMatrixDiff<PrimType_>(-getSkewMatrixFromVector(angularVelocity.toImplementation())*rotationMatrix.toImplementation());
-//    // works with boxPlus(-w)
-//    return RotationMatrixDiff<PrimType_>(rotationMatrix.inverted().toImplementation()*getSkewMatrixFromVector(angularVelocity.toImplementation()));
-//    // works with boxPlus(w)
-//    return RotationMatrixDiff<PrimType_>(getSkewMatrixFromVector(angularVelocity.toImplementation())*rotationMatrix.toImplementation());
-
     return RotationMatrixDiff<PrimType_>(rotationMatrix.matrix()*getSkewMatrixFromVector(angularVelocity.vector()));
   }
 };
 
+template<typename PrimType_>
+class RotationDiffConversionTraits<RotationMatrixDiff<PrimType_>, GlobalAngularVelocity<PrimType_>, RotationMatrix<PrimType_>> {
+ public:
+  inline static RotationMatrixDiff<PrimType_> convert(const RotationMatrix<PrimType_>& rotationMatrix, const GlobalAngularVelocity<PrimType_>& angularVelocity) {
+    return RotationMatrixDiff<PrimType_>(getSkewMatrixFromVector(angularVelocity.vector())*rotationMatrix.matrix());
+  }
+};
 
 } // namespace internal
 } // namespace kindr
