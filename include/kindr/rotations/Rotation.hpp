@@ -149,7 +149,6 @@ class ComparisonTraits<RotationBase<Left_>, RotationBase<Right_>> {
 template<typename Rotation_>
 class MapTraits<RotationBase<Rotation_>> {
  public:
-
   inline static Rotation_ set_exponential_map(const typename internal::get_matrix3X<Rotation_>::template Matrix3X<1>& vector) {
     typedef typename get_scalar<Rotation_>::Scalar Scalar;
     return Rotation_(RotationVector<Scalar>(vector));
@@ -157,8 +156,7 @@ class MapTraits<RotationBase<Rotation_>> {
 
   inline static typename internal::get_matrix3X<Rotation_>::template Matrix3X<1> get_logarithmic_map(const Rotation_& rotation) {
     typedef typename get_scalar<Rotation_>::Scalar Scalar;
-//    return RotationVector<Scalar>(rotation).getUnique().toImplementation(); // unique?
-    return RotationVector<Scalar>(rotation).toImplementation(); // unique?
+    return RotationVector<Scalar>(rotation).getUnique().toImplementation(); // unique is required
   }
 
 };
