@@ -1,4 +1,4 @@
-functianimateAngularVelocityUsingExpMap(I_w_IB, rate, updateFrequency)
+function animateAngularVelocityUsingExpMap(I_w_IB, rate, updateFrequency)
 % ANIMATEANGULARVELOCITYUSINGEXPMAP(I_w_IB, rate, updateFrequency) 
 % generates an animation showing the rotation of a coordinate system w.r.t.
 % a fixed one.

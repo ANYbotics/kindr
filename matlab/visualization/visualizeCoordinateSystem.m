@@ -1,7 +1,8 @@
 function [h, frameHandle] = visualizeCoordinateSystem(C_AB, h, name)
 % VISUALIZECOORDINATESYSTEM visualizes a Cartesian coordinate system which
 % is rotated according to the rotation matrix C_AB w.r.t. a fixed frame.
-% The visualization will update an existing figure with handle h.
+% The visualization will update an existing axes with handle h or create a
+% new one.
 %
 % Author(s): Dario Bellicoso
 
@@ -13,7 +14,7 @@ if (res == 0)
 end
 
 if nargin == 1
-    h = axes();
+    h = gca();
     useName = 0;
 elseif nargin == 2
     axes(h);
@@ -22,7 +23,7 @@ else
     useName = 1;
     name = ['_' name];
 end
-hold on;
+hold on; grid on;
 
 B_u_BX = [1 0 0]';
 B_u_BY = [0 1 0]';
