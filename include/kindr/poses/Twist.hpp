@@ -44,7 +44,7 @@ class Twist : public PoseDiffBase<Twist<PrimType_, PositionDiff_, RotationDiff_>
   typedef PositionDiff_ PositionDiff;
   typedef RotationDiff_ RotationDiff;
   typedef Eigen::Matrix<PrimType_, 6, 1> Vector6;
-
+  typedef Eigen::Matrix<PrimType_,3, 1> Vector3;
 
   Twist() = default;
 
@@ -133,11 +133,22 @@ class TwistLinearVelocityLocalAngularVelocity: public Twist<PrimType_,
   typedef typename Base::PositionDiff PositionDiff;
   typedef typename Base::RotationDiff RotationDiff;
   typedef typename Base::Vector6 Vector6;
+  typedef typename Base::Vector3 Vector3;
 
   TwistLinearVelocityLocalAngularVelocity() = default;
 
   TwistLinearVelocityLocalAngularVelocity(const PositionDiff& positionDiff, const RotationDiff& rotationDiff):
     Base(positionDiff, rotationDiff) {
+  }
+
+  TwistLinearVelocityLocalAngularVelocity(const Vector3& linearVelocity, const Vector3& localAngularVelocity):
+    Base(PositionDiff(linearVelocity), RotationDiff(localAngularVelocity)) {
+  }
+
+  /*! Sets the twist by a 6D-vector [linear velocity, angular velocity]'
+   */
+  TwistLinearVelocityLocalAngularVelocity(const Vector6& vector6):
+    Base(PositionDiff(vector6.template head<3>()), RotationDiff(vector6.template tail<3>())) {
   }
 
   /*!
@@ -149,7 +160,6 @@ class TwistLinearVelocityLocalAngularVelocity: public Twist<PrimType_,
     vector.template block<3,1>(3,0) = this->getRotationalVelocity().toImplementation();
     return vector;
   }
-
 
   /*! Sets the twist by a 6D-vector [linear velocity, angular velocity]'
    */
@@ -179,11 +189,22 @@ class TwistLinearVelocityGlobalAngularVelocity: public Twist<PrimType_,
   typedef typename Base::PositionDiff PositionDiff;
   typedef typename Base::RotationDiff RotationDiff;
   typedef typename Base::Vector6 Vector6;
+  typedef typename Base::Vector3 Vector3;
 
   TwistLinearVelocityGlobalAngularVelocity() = default;
 
   TwistLinearVelocityGlobalAngularVelocity(const PositionDiff& positionDiff, const RotationDiff& rotationDiff):
     Base(positionDiff, rotationDiff) {
+  }
+
+  TwistLinearVelocityGlobalAngularVelocity(const Vector3& linearVelocity, const Vector3& globalAngularVelocity):
+    Base(PositionDiff(linearVelocity), RotationDiff(globalAngularVelocity)) {
+  }
+
+  /*! Sets the twist by a 6D-vector [linear velocity, angular velocity]'
+   */
+  TwistLinearVelocityGlobalAngularVelocity(const Vector6& vector6):
+    Base(PositionDiff(vector6.template head<3>()), RotationDiff(vector6.template tail<3>())) {
   }
 
   /*!
