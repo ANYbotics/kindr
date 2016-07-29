@@ -28,7 +28,7 @@ See also section 'Building the documentation' below.
 
 * Simplified header include `#include <kindr/Core>` is provided.
 * Kindr is now strongly dependent on Eigen.
-* All sub namspaces have been removed. (e.g. `kindr::rotations::eigen_impl` -> `kindr::`) 
+* All sub namespaces have been removed. (e.g. `kindr::rotations::eigen_impl` -> `kindr::`) 
 * The implementations of rotations and time derivatives have been simplified (Passive, Hamiltonian).
     - Active typedefs (e.g. RotationQuaternionAD) have been removed and simpler ones (e.g. RotationQuaternionD) have been introduced.
     - Note that the functionality of some operators changed! Please check the [cheat sheet](http://ethz-asl-lr.bitbucket.org/kindr/cheatsheet_latest.pdf) to understand what is implemented.
