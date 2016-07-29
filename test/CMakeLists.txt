@@ -56,6 +56,13 @@ macro(add_gtest target)
   add_test(${target} ${target})
 endmacro(add_gtest)
 
+set(COMMON_SRCS
+      test_main.cpp 
+      common/CommonTest.cpp
+)
+add_gtest(runUnitTestsCommon ${COMMON_SRCS})
+
+
 set(LINEARALGEBRA_SRCS
       test_main.cpp 
       linear_algebra/SkewMatrixFromVectorTest.cpp
@@ -113,6 +120,7 @@ set(POSESDIFF_SRCS
 	test_main.cpp
 	poses/PoseDiffTest.cpp
 	poses/PositionDiffTest.cpp
+	poses/TwistWithAngularVelocityTest.cpp
 )
 add_gtest( runUnitTestsPoseDiff  ${POSESDIFF_SRCS})
 

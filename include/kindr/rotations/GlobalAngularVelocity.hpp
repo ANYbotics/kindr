@@ -213,6 +213,14 @@ namespace internal {
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  * Conversion Traits
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+template<typename PrimType_, typename Rotation_>
+class RotationDiffConversionTraits<GlobalAngularVelocity<PrimType_>, LocalAngularVelocity<PrimType_>, Rotation_> {
+ public:
+  inline static GlobalAngularVelocity<PrimType_> convert(const Rotation_& rotationLocalToGlobal, const LocalAngularVelocity<PrimType_>& localAngularVelocity) {
+    return GlobalAngularVelocity<PrimType_>(rotationLocalToGlobal.rotate(localAngularVelocity.toImplementation()));
+  }
+};
+
 
 template<typename PrimType_>
 class RotationDiffConversionTraits<GlobalAngularVelocity<PrimType_>, RotationQuaternionDiff<PrimType_>, RotationQuaternion<PrimType_>> {

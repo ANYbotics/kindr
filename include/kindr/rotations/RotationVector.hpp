@@ -320,14 +320,19 @@ class ConversionTraits<RotationVector<DestPrimType_>, RotationQuaternion<SourceP
     using std::acos;
     using std::sqrt;
     using std::atan2;
+
     const DestPrimType_ imaginaryVectorNormSquared = DestPrimType_(1.0)-q.real()*q.real();
+
     if (imaginaryVectorNormSquared < internal::NumTraits<SourcePrimType_>::dummy_precision()) {
-      return RotationVector<DestPrimType_>(DestPrimType_(2.0)*q.imaginary().template cast<DestPrimType_>());
-      //return RotationVector<DestPrimType_>(DestPrimType_(1.0), DestPrimType_(0.0), DestPrimType_(0.0));
+      if (q.real() > 0.0) {
+        return RotationVector<DestPrimType_>(DestPrimType_(2.0)*q.imaginary().template cast<DestPrimType_>());
+      }
+      else {
+        return RotationVector<DestPrimType_>(DestPrimType_(-2.0)*q.imaginary().template cast<DestPrimType_>());
+      }
     }
     const DestPrimType_ imaginaryVectorNorm = q.imaginary().norm();
     return RotationVector<DestPrimType_>((DestPrimType_(2.0)*atan2(imaginaryVectorNorm, q.real())/imaginaryVectorNorm*q.imaginary()).template cast<DestPrimType_>());
-    //return RotationVector<DestPrimType_>(((DestPrimType_(2.0)*acos(q.real())/sqrt(imaginaryVectorNormSquared))*q.imaginary()).template cast<DestPrimType_>());
   }
 };
 

@@ -140,12 +140,22 @@ class TwistLinearVelocityLocalAngularVelocity: public Twist<PrimType_,
     Base(positionDiff, rotationDiff) {
   }
 
-
+  /*!
+   * @returns the twist in a 6D-vector [linear velocity, angular velocity]'
+   */
   inline Vector6 getVector() const {
     Vector6 vector = Vector6::Zero();
     vector.template block<3,1>(0,0) = this->getTranslationalVelocity().toImplementation();
     vector.template block<3,1>(3,0) = this->getRotationalVelocity().toImplementation();
     return vector;
+  }
+
+
+  /*! Sets the twist by a 6D-vector [linear velocity, angular velocity]'
+   */
+  inline void setVector(const Vector6& vector6) {
+    this->getTranslationalVelocity().toImplementation() = vector6.template head<3>();
+    this->getRotationalVelocity().toImplementation() = vector6.template tail<3>();
   }
 
 };
@@ -156,6 +166,53 @@ typedef TwistLinearVelocityLocalAngularVelocity<double> TwistLinearVelocityLocal
 typedef TwistLinearVelocityLocalAngularVelocity<float> TwistLinearVelocityLocalAngularVelocityPF;
 typedef TwistLinearVelocityLocalAngularVelocity<double> TwistLocalD;
 typedef TwistLinearVelocityLocalAngularVelocity<float> TwistLocalF;
+
+template<typename PrimType_>
+class TwistLinearVelocityGlobalAngularVelocity: public Twist<PrimType_,
+                                                           Velocity<PrimType_, 3>,
+                                                           GlobalAngularVelocity<PrimType_>>
+ {
+ private:
+  typedef Twist<PrimType_, kindr::Velocity<PrimType_, 3>, GlobalAngularVelocity<PrimType_>> Base;
+ public:
+  typedef PrimType_ Scalar;
+  typedef typename Base::PositionDiff PositionDiff;
+  typedef typename Base::RotationDiff RotationDiff;
+  typedef typename Base::Vector6 Vector6;
+
+  TwistLinearVelocityGlobalAngularVelocity() = default;
+
+  TwistLinearVelocityGlobalAngularVelocity(const PositionDiff& positionDiff, const RotationDiff& rotationDiff):
+    Base(positionDiff, rotationDiff) {
+  }
+
+  /*!
+   * @returns the twist in a 6D-vector [linear velocity, angular velocity]'
+   */
+  inline Vector6 getVector() const {
+    Vector6 vector = Vector6::Zero();
+    vector.template block<3,1>(0,0) = this->getTranslationalVelocity().toImplementation();
+    vector.template block<3,1>(3,0) = this->getRotationalVelocity().toImplementation();
+    return vector;
+  }
+
+  /*! Sets the twist by a 6D-vector [linear velocity, angular velocity]'
+   */
+  inline void setVector(const Vector6& vector6) {
+    this->getTranslationalVelocity().toImplementation() = vector6.template head<3>();
+    this->getRotationalVelocity().toImplementation() = vector6.template tail<3>();
+  }
+
+};
+
+
+
+typedef TwistLinearVelocityGlobalAngularVelocity<double> TwistLinearVelocityGlobalAngularVelocityD;
+typedef TwistLinearVelocityGlobalAngularVelocity<float> TwistLinearVelocityGlobalAngularVelocityF;
+typedef TwistLinearVelocityGlobalAngularVelocity<double> TwistLinearVelocityGlobalAngularVelocityPD;
+typedef TwistLinearVelocityGlobalAngularVelocity<float> TwistLinearVelocityGlobalAngularVelocityPF;
+typedef TwistLinearVelocityGlobalAngularVelocity<double> TwistGlobalD;
+typedef TwistLinearVelocityGlobalAngularVelocity<float> TwistGlobalF;
 
 
 } // namespace kindr

@@ -183,3 +183,21 @@ TYPED_TEST(LocalAngularVelocityTest, testMultiplication)
   ASSERT_EQ(angVel2.z(), mult2.z());
 }
 
+TYPED_TEST(LocalAngularVelocityTest, testConversionFromGlobalAngularVelocity)
+{
+  typedef typename TestFixture::LocalAngularVelocity LocalAngularVelocity;
+  typedef typename TestFixture::Scalar Scalar;
+  using namespace kindr;
+
+  Eigen::Matrix<Scalar, 3, 1> globalVector(1.0, 2.0, 3.0);
+  GlobalAngularVelocity<Scalar> globalAngularVelocity(globalVector);
+  RotationQuaternion<Scalar> rotationLocalToGlobal;
+  rotationLocalToGlobal.setRandom();
+  LocalAngularVelocity localAngularVelocity(rotationLocalToGlobal, globalAngularVelocity);
+  Eigen::Matrix<Scalar, 3, 1> localVector = rotationLocalToGlobal.inverseRotate(globalVector);
+  ASSERT_EQ(localVector.x(), localAngularVelocity.x());
+  ASSERT_EQ(localVector.y(), localAngularVelocity.y());
+  ASSERT_EQ(localVector.z(), localAngularVelocity.z());
+}
+
+

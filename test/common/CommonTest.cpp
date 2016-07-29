@@ -26,57 +26,18 @@
  *
 */
 
-#pragma once
 
-#include "kindr/math/LinearAlgebra.hpp"
-#include "kindr/rotations/RotationBase.hpp"
+#include <gtest/gtest.h>
+#include <kindr/common/common.hpp>
 
-namespace kindr {
+TEST (CommonTest, wrapPosNegPI) {
 
+  using namespace kindr;
+  double h = -1.0e-8;
+  double angle = kindr::wrapPosNegPI(2.0*M_PI+h);
+	EXPECT_NEAR(h , angle, 1.0e-10);
 
-template<typename PrimType_>
-class LocalAngularVelocity;
-
-template<typename PrimType_>
-class GlobalAngularVelocity;
-
-template<typename PrimType_>
-class RotationQuaternionDiff;
-
-template<typename PrimType_>
-class RotationMatrixDiff;
-
-template<typename PrimType_>
-class EulerAnglesZyxDiff;
-
-template<typename PrimType_>
-class EulerAnglesXyzDiff;
-
-
-/*!
- * \brief Gets the 3x3 Jacobian of the exponential map.
- * \param   vector 3x1-matrix
- * \return  matrix  (3x3-matrix)
- */
-template<typename PrimType_>
-inline static Eigen::Matrix<PrimType_, 3, 3> getJacobianOfExponentialMap(const Eigen::Matrix<PrimType_, 3, 1>& vector) {
-  const PrimType_ norm = vector.norm();
-  const Eigen::Matrix<PrimType_, 3, 3> skewMatrix = getSkewMatrixFromVector(vector);
-  if (norm < 1.0e-4) {
-    return Eigen::Matrix<PrimType_, 3, 3>::Identity() + 0.5*skewMatrix;
-  }
-  return Eigen::Matrix<PrimType_, 3, 3>::Identity() + (PrimType_(1.0) - cos(norm))/(norm*norm)*skewMatrix + (norm - sin(norm))/(norm*norm*norm)*(skewMatrix*skewMatrix);
+  double h2 = 1.0e-8;
+  double angle2 = kindr::wrapPosNegPI(-2.0*M_PI+h2);
+  EXPECT_NEAR(h2 , angle2, 1.0e-10);
 }
-
-
-} // namespace kindr
-
-
-#include "kindr/rotations/LocalAngularVelocity.hpp"
-#include "kindr/rotations/GlobalAngularVelocity.hpp"
-#include "kindr/rotations/RotationQuaternionDiff.hpp"
-#include "kindr/rotations/RotationMatrixDiff.hpp"
-#include "kindr/rotations/EulerAnglesZyxDiff.hpp"
-#include "kindr/rotations/EulerAnglesXyzDiff.hpp"
-
-

@@ -95,14 +95,14 @@ inline T wrapAngle(T angle, T x1, T x2)
 template<typename T>
 inline T wrapPosNegPI(T angle)
 {
-    return floatingPointModulo(angle + M_PI, 2*M_PI) - M_PI;
+    return floatingPointModulo(angle + T(M_PI), T(2.0*M_PI)  ) - M_PI;
 }
 
 //! wrap angle to [0..2*PI)
 template<typename T>
 inline T wrapTwoPI(T angle)
 {
-    return floatingPointModulo(angle, 2*M_PI);
+    return floatingPointModulo(angle, T(2.0*M_PI));
 }
 
 

@@ -48,7 +48,7 @@ struct RotationDiffPairTest : public ::testing::Test {
   typedef rot::LocalAngularVelocity<RotationDiffScalar> LocalAngularVelocity;
   typedef typename rot::AngleAxis<RotationScalar> AngleAxis;
   std::vector<Rotation> rotations;
-  std::vector<LocalAngularVelocity> angularVelocities;
+  std::vector<LocalAngularVelocity> localAngularVelocities;
 
   RotationDiffPairTest() {
     rotations.push_back(Rotation());   // identity rotation
@@ -59,19 +59,17 @@ struct RotationDiffPairTest : public ::testing::Test {
     rotations.push_back(Rotation(AngleAxis(1.3, 0, 1.0, 0))); // large angle
     rotations.push_back(Rotation(AngleAxis(1.3, 0, 0, 1.0))); // large angle
 
-    angularVelocities.push_back(LocalAngularVelocity());  // zero velocity
-    angularVelocities.push_back(LocalAngularVelocity(kindr::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0.0, 0.0));
-    angularVelocities.push_back(LocalAngularVelocity(0.0, kindr::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0.0));
-    angularVelocities.push_back(LocalAngularVelocity(0.0, 0.0, kindr::internal::NumTraits<RotationScalar>::dummy_precision()/10.0));
-    angularVelocities.push_back(LocalAngularVelocity(0.1, 0.0, 0.0));
-    angularVelocities.push_back(LocalAngularVelocity(0.0, 0.1, 0.0));
-    angularVelocities.push_back(LocalAngularVelocity(0.0, 0.0, 0.1));
-
-    angularVelocities.push_back(LocalAngularVelocity(2.2, 3.3, 4.4));
+    localAngularVelocities.push_back(LocalAngularVelocity());  // zero velocity
+    localAngularVelocities.push_back(LocalAngularVelocity(kindr::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0.0, 0.0));
+    localAngularVelocities.push_back(LocalAngularVelocity(0.0, kindr::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0.0));
+    localAngularVelocities.push_back(LocalAngularVelocity(0.0, 0.0, kindr::internal::NumTraits<RotationScalar>::dummy_precision()/10.0));
+    localAngularVelocities.push_back(LocalAngularVelocity(0.1, 0.0, 0.0));
+    localAngularVelocities.push_back(LocalAngularVelocity(0.0, 0.1, 0.0));
+    localAngularVelocities.push_back(LocalAngularVelocity(0.0, 0.0, 0.1));
+    localAngularVelocities.push_back(LocalAngularVelocity(2.2, 3.3, 4.4));
   }
 
 };
-
 
 typedef ::testing::Types<
   std::pair<rot::RotationQuaternionPD, rot::RotationQuaternionDiffPD>,
@@ -92,21 +90,16 @@ TYPED_TEST(RotationDiffPairTest, testConversionToLocalAngularVelocity)
   typedef typename TestFixture::LocalAngularVelocity LocalAngularVelocity;
 
   for (auto rotation : this->rotations) {
-     for (auto angularVelocity : this->angularVelocities) {
-       RotationDiff rotDiff(rotation, angularVelocity);
-       LocalAngularVelocity angularVelocity2(rotation, rotDiff);
-//       LocalAngularVelocity angularVelocity3 = rotDiff.template cast<LocalAngularVelocity>(rotation);
-       ASSERT_NEAR(angularVelocity.x(),angularVelocity2.x(),1e-3) << "rotation: " << rotation << " angularVelocity: " << angularVelocity  << " angularVelocity2: " << angularVelocity2 << " rotDiff: " << rotDiff;
-       ASSERT_NEAR(angularVelocity.y(),angularVelocity2.y(),1e-3) << "rotation: " << rotation << " angularVelocity: " << angularVelocity  << " angularVelocity2: " << angularVelocity2 << " rotDiff: " << rotDiff;
-       ASSERT_NEAR(angularVelocity.z(),angularVelocity2.z(),1e-3) << "rotation: " << rotation << " angularVelocity: " << angularVelocity  << " angularVelocity2: " << angularVelocity2 << " rotDiff: " << rotDiff;
+     for (auto localAngularVelocity : this->localAngularVelocities) {
+       RotationDiff rotDiff(rotation, localAngularVelocity);
+       LocalAngularVelocity localAngularVelocity2(rotation, rotDiff);
+//       LocalAngularVelocity localAngularVelocity3 = rotDiff.template cast<LocalAngularVelocity>(rotation);
+       ASSERT_NEAR(localAngularVelocity.x(),localAngularVelocity2.x(),1e-3) << "rotation: " << rotation << " localAngularVelocity: " << localAngularVelocity  << " localAngularVelocity2: " << localAngularVelocity2 << " rotDiff: " << rotDiff;
+       ASSERT_NEAR(localAngularVelocity.y(),localAngularVelocity2.y(),1e-3) << "rotation: " << rotation << " localAngularVelocity: " << localAngularVelocity  << " localAngularVelocity2: " << localAngularVelocity2 << " rotDiff: " << rotDiff;
+       ASSERT_NEAR(localAngularVelocity.z(),localAngularVelocity2.z(),1e-3) << "rotation: " << rotation << " localAngularVelocity: " << localAngularVelocity  << " localAngularVelocity2: " << localAngularVelocity2 << " rotDiff: " << rotDiff;
      }
   }
 }
-
-
-
-
-
 
 
 template <typename ImplementationPair>
@@ -119,7 +112,7 @@ struct RotationDiffSingleTest : public ::testing::Test {
 //  typedef rot::GlobalAngularVelocity<RotationDiffScalar, RotationDiff::Usage> GlobalAngularVelocity;
   typedef typename rot::AngleAxis<RotationScalar> AngleAxis;
   std::vector<RotationQuaternion> rotationQuaternions;
-  std::vector<LocalAngularVelocity> angularVelocities;
+  std::vector<LocalAngularVelocity> localAngularVelocities;
 
   RotationDiffSingleTest() {
     rotationQuaternions.push_back(RotationQuaternion(AngleAxis()));   // identity rotation
@@ -130,15 +123,14 @@ struct RotationDiffSingleTest : public ::testing::Test {
     rotationQuaternions.push_back(RotationQuaternion(AngleAxis(1.3, 0, 1.0, 0))); // large angle
     rotationQuaternions.push_back(RotationQuaternion(AngleAxis(1.3, 0, 0, 1.0))); // large angle
 
-    angularVelocities.push_back(LocalAngularVelocity());  // zero velocity
-    angularVelocities.push_back(LocalAngularVelocity(kindr::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0.0, 0.0));
-    angularVelocities.push_back(LocalAngularVelocity(0.0, kindr::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0.0));
-    angularVelocities.push_back(LocalAngularVelocity(0.0, 0.0, kindr::internal::NumTraits<RotationScalar>::dummy_precision()/10.0));
-    angularVelocities.push_back(LocalAngularVelocity(0.1, 0.0, 0.0));
-    angularVelocities.push_back(LocalAngularVelocity(0.0, 0.1, 0.0));
-    angularVelocities.push_back(LocalAngularVelocity(0.0, 0.0, 0.1));
-
-    angularVelocities.push_back(LocalAngularVelocity(2.2, 3.3, 4.4));
+    localAngularVelocities.push_back(LocalAngularVelocity());  // zero velocity
+    localAngularVelocities.push_back(LocalAngularVelocity(kindr::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0.0, 0.0));
+    localAngularVelocities.push_back(LocalAngularVelocity(0.0, kindr::internal::NumTraits<RotationScalar>::dummy_precision()/10.0, 0.0));
+    localAngularVelocities.push_back(LocalAngularVelocity(0.0, 0.0, kindr::internal::NumTraits<RotationScalar>::dummy_precision()/10.0));
+    localAngularVelocities.push_back(LocalAngularVelocity(0.1, 0.0, 0.0));
+    localAngularVelocities.push_back(LocalAngularVelocity(0.0, 0.1, 0.0));
+    localAngularVelocities.push_back(LocalAngularVelocity(0.0, 0.0, 0.1));
+    localAngularVelocities.push_back(LocalAngularVelocity(2.2, 3.3, 4.4));
   }
 
 };
@@ -158,15 +150,15 @@ TYPED_TEST(RotationDiffSingleTest, testConversionToLocalAngularVelocity)
   typedef typename RotationQuaternion::Scalar Scalar;
 
   for (auto rotQuat : this->rotationQuaternions) {
-     for (auto angularVelocity : this->angularVelocities) {
-       RotationQuaternionDiff rotQuatDiff(rotQuat, angularVelocity);
+     for (auto localAngularVelocity : this->localAngularVelocities) {
+       RotationQuaternionDiff rotQuatDiff(rotQuat, localAngularVelocity);
 
-       LocalAngularVelocity angularVelocity2(2.0*rotQuat.getLocalQuaternionDiffMatrix()*rotQuatDiff.vector());
-       ASSERT_NEAR(angularVelocity.x(),angularVelocity2.x(),1e-3) << "rquat: " << rotQuat;
-       ASSERT_NEAR(angularVelocity.y(),angularVelocity2.y(),1e-3);
-       ASSERT_NEAR(angularVelocity.z(),angularVelocity2.z(),1e-3);
+       LocalAngularVelocity localAngularVelocity2(2.0*rotQuat.getLocalQuaternionDiffMatrix()*rotQuatDiff.vector());
+       ASSERT_NEAR(localAngularVelocity.x(),localAngularVelocity2.x(),1e-3) << "rquat: " << rotQuat;
+       ASSERT_NEAR(localAngularVelocity.y(),localAngularVelocity2.y(),1e-3);
+       ASSERT_NEAR(localAngularVelocity.z(),localAngularVelocity2.z(),1e-3);
 
-       RotationQuaternionDiff rotQuatDiff2(0.5*rotQuat.getLocalQuaternionDiffMatrix().transpose()*angularVelocity.vector());
+       RotationQuaternionDiff rotQuatDiff2(0.5*rotQuat.getLocalQuaternionDiffMatrix().transpose()*localAngularVelocity.vector());
        ASSERT_NEAR(rotQuatDiff.w(),rotQuatDiff2.w(),1e-3);
        ASSERT_NEAR(rotQuatDiff.x(),rotQuatDiff2.x(),1e-3);
        ASSERT_NEAR(rotQuatDiff.y(),rotQuatDiff2.y(),1e-3);
@@ -174,7 +166,7 @@ TYPED_TEST(RotationDiffSingleTest, testConversionToLocalAngularVelocity)
 
        // Finite Difference
        const Scalar dt = rot::internal::NumTraits<Scalar>::dummy_precision();
-       RotationQuaternion rotQuatPert = rotQuat.boxPlus(rotQuat.rotate(angularVelocity.toImplementation())*dt);
+       RotationQuaternion rotQuatPert = rotQuat.boxPlus(rotQuat.rotate(localAngularVelocity.toImplementation())*dt);
        RotationQuaternionDiff rotQuatDiff3((rotQuatPert.w()-rotQuat.w())/dt,
                                            (rotQuatPert.x()-rotQuat.x())/dt,
                                            (rotQuatPert.y()-rotQuat.y())/dt,
@@ -196,12 +188,12 @@ TYPED_TEST(RotationDiffSingleTest, DISABLED_testConversionToGlobalAngularVelocit
   typedef typename RotationQuaternion::Scalar Scalar;
 
   for (auto rotQuat : this->rotationQuaternions) { // qBI
-     for (auto angularVelocity : this->angularVelocities) { // IwIB
-       RotationQuaternionDiff rotQuatDiff(0.5*rotQuat.getGlobalQuaternionDiffMatrix().transpose()*angularVelocity.vector());
+     for (auto localAngularVelocity : this->localAngularVelocities) { // IwIB
+       RotationQuaternionDiff rotQuatDiff(0.5*rotQuat.getGlobalQuaternionDiffMatrix().transpose()*localAngularVelocity.vector());
 
        // Finite Difference
        const Scalar dt = rot::internal::NumTraits<Scalar>::dummy_precision();
-       RotationQuaternion rotQuatPert = rotQuat.inverted().boxPlus(-angularVelocity.toImplementation()*dt).inverted(); // (qBI^-1 * exp(-IwIB*dt))^-1
+       RotationQuaternion rotQuatPert = rotQuat.inverted().boxPlus(-localAngularVelocity.toImplementation()*dt).inverted(); // (qBI^-1 * exp(-IwIB*dt))^-1
        RotationQuaternionDiff rotQuatDiff3((rotQuatPert.w()-rotQuat.w())/dt,
                                            (rotQuatPert.x()-rotQuat.x())/dt,
                                            (rotQuatPert.y()-rotQuat.y())/dt,
