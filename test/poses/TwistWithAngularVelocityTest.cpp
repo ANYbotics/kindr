@@ -69,7 +69,6 @@ TYPED_TEST(TwistWithAngularVelocityTest, constructors)
   EXPECT_EQ(0.0, twist1.getRotationalVelocity().y());
   EXPECT_EQ(0.0, twist1.getRotationalVelocity().z());
 
-
   // Copy constructor
   Twist twist2(PositionDiff(1.0, 2.0, 3.0), RotationDiff(5.0, 6.0, 7.0));
   Twist twist3(twist2);
@@ -85,6 +84,31 @@ TYPED_TEST(TwistWithAngularVelocityTest, constructors)
   EXPECT_EQ(5.0, twist3.getVector()(3));
   EXPECT_EQ(6.0, twist3.getVector()(4));
   EXPECT_EQ(7.0, twist3.getVector()(5));
+
+
+
+  //  Vector6
+  typename Twist::Vector6 vector6;
+  vector6 << 1.0, 2.0, 3.0, 5.0, 6.0, 7.0;
+  Twist twist4(vector6);
+  EXPECT_EQ(1.0, twist4.getTranslationalVelocity().x());
+  EXPECT_EQ(2.0, twist4.getTranslationalVelocity().y());
+  EXPECT_EQ(3.0, twist4.getTranslationalVelocity().z());
+  EXPECT_EQ(5.0, twist4.getRotationalVelocity().x());
+  EXPECT_EQ(6.0, twist4.getRotationalVelocity().y());
+  EXPECT_EQ(7.0, twist4.getRotationalVelocity().z());
+
+  //  2xVector3
+  typename Twist::Vector3 linVel(1.0, 2.0, 3.0);
+  typename Twist::Vector3 angVel(5.0, 6.0, 7.0);
+  Twist twist5(linVel, angVel);
+  EXPECT_EQ(1.0, twist5.getTranslationalVelocity().x());
+  EXPECT_EQ(2.0, twist5.getTranslationalVelocity().y());
+  EXPECT_EQ(3.0, twist5.getTranslationalVelocity().z());
+  EXPECT_EQ(5.0, twist5.getRotationalVelocity().x());
+  EXPECT_EQ(6.0, twist5.getRotationalVelocity().y());
+  EXPECT_EQ(7.0, twist5.getRotationalVelocity().z());
+
 }
 
 
