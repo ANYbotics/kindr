@@ -38,6 +38,9 @@ template<typename PrimType_>
 class LocalAngularVelocity;
 
 template<typename PrimType_>
+class GlobalAngularVelocity;
+
+template<typename PrimType_>
 class RotationQuaternionDiff;
 
 template<typename PrimType_>

@@ -30,18 +30,16 @@
 #include <Eigen/Core>
 
 #include <gtest/gtest.h>
-
+#include "kindr/rotations/Rotation.hpp"
 #include "kindr/rotations/RotationDiff.hpp"
 #include "kindr/common/gtest_eigen.hpp"
 
-namespace rot = kindr;
 
 template <typename Implementation>
 struct GlobalAngularVelocityTest: public ::testing::Test {
   typedef Implementation GlobalAngularVelocity;
   typedef typename GlobalAngularVelocity::Scalar Scalar;
   typedef Eigen::Matrix<Scalar, 3, 1> Vector3;
-
 
   Vector3 eigenVector3vZero = Vector3::Zero();
   Vector3 eigenVector3v1 = Vector3(1.1, 2.2, 3.3);
@@ -50,18 +48,13 @@ struct GlobalAngularVelocityTest: public ::testing::Test {
   Vector3 eigenVector3vAdd2And3 = Vector3(11,22,33);
   Vector3 eigenVector3vSubtract3from2 = Vector3(9,18,27);
 
-
-
   GlobalAngularVelocityTest() {}
 };
 
 
-
-
-
 typedef ::testing::Types<
-    rot::GlobalAngularVelocityD,
-    rot::GlobalAngularVelocityF
+    kindr::GlobalAngularVelocityD,
+    kindr::GlobalAngularVelocityF
 > GlobalAngularVelocityTypes;
 
 TYPED_TEST_CASE(GlobalAngularVelocityTest, GlobalAngularVelocityTypes);
@@ -182,4 +175,22 @@ TYPED_TEST(GlobalAngularVelocityTest, testMultiplication)
   ASSERT_EQ(angVel2.y(), mult2.y());
   ASSERT_EQ(angVel2.z(), mult2.z());
 }
+
+TYPED_TEST(GlobalAngularVelocityTest, testConversionFromLocalAngularVelocity)
+{
+  typedef typename TestFixture::GlobalAngularVelocity GlobalAngularVelocity;
+  typedef typename TestFixture::Scalar Scalar;
+  using namespace kindr;
+
+  Eigen::Matrix<Scalar, 3, 1> localVector(1.0, 2.0, 3.0);
+  LocalAngularVelocity<Scalar> localAngularVelocity(localVector);
+  RotationQuaternion<Scalar> rotationLocalToGlobal;
+  rotationLocalToGlobal.setRandom();
+  GlobalAngularVelocity globalAngularVelocity(rotationLocalToGlobal, localAngularVelocity);
+  Eigen::Matrix<Scalar, 3, 1> globalVector = rotationLocalToGlobal.rotate(localVector);
+  ASSERT_EQ(globalVector.x(), globalAngularVelocity.x());
+  ASSERT_EQ(globalVector.y(), globalAngularVelocity.y());
+  ASSERT_EQ(globalVector.z(), globalAngularVelocity.z());
+}
+
 

@@ -350,9 +350,9 @@ $\comat{I}{B} = \left\{
 \figcaption{Rotation from $A$-frame to $D$-frame: ($x-y'-z''$) -- (roll-pitch-yaw) -- ($50^\circ-25^\circ-30^\circ)$}\label{fig:roll-pitch-yaw}}
 
 
-\subsection{Pose}
+%\subsection{Pose}
 
-\subsubsection{Homogeneous Transformation Matrix}
+\subsection{Homogeneous Transformation Matrix}
  $\begin{bmatrix}{}_I\vr_{I\!P} \\ 1 \end{bmatrix} = \vT_{I\!B} \begin{bmatrix}{}_B\vr_{B\!P}\\ 1 \end{bmatrix}, \quad \vT_{I\!B} = \begin{bmatrix}
               \comat{I}{B} & \pos{I}{I}{B} \\
 	      \zero^\transpose & 1 \\
@@ -383,24 +383,33 @@ $\rotvel{D}{A}{D} = \rotvel{D}{A}{B} +  \rotvel{D}{B}{C} + \rotvel{D}{C}{D}$ & c
 
 \subsection{Derivatives}
 The derivation of the following identities can be found in \cite{Bloesch2016}.
-\begin{tabular}[h!]{p{3.5cm}@{ }|@{ }p{4cm}@{ }|l@{ }}
+\begin{tabular}[h!]{p{3.7cm}@{ }|@{ }p{5cm}@{ }|l@{ }}
 $\begin{aligned}
 \frac{\partial}{\partial t}\Phi_{B\!I}(t) &= -\rotvel{B}{I}{B}(t) \\
 \frac{\partial}{\partial \vr}(\Phi(\vr)) &= \vC(\Phi) \\
 \frac{\partial}{\partial \Phi}(\Phi(\vr)) &= -(\Phi(\vr))^\wedge \\
 \frac{\partial}{\partial \Phi}(\Phi^{-1}) &= -\vC(\Phi)^\transpose \\
- \end{aligned}$ & 
- $\begin{aligned}
  \frac{\partial}{\partial \Phi_1}(\Phi_1 \otimes \Phi_2) &= \identity  \\
 \frac{\partial}{\partial \Phi_2}(\Phi_1 \otimes \Phi_2) &= \vC(\Phi_1) \\
+ \end{aligned}$ & 
+ $\begin{aligned}
 \frac{\partial}{\partial \vv}(\exp{(\vv))} &= \vGa(\vv) \\
 \frac{\partial}{\partial \Phi}(\log{(\Phi))} &= \vGa^{-1}(\log{\Phi}) \\
+ \frac{\partial}{\partial \Phi_1} (\Phi_1 \boxminus \Phi_2) &=  \vGa^{-1}(\Phi_1 \boxminus \Phi_2) \\
+\frac{\partial}{\partial \Phi_2} (\Phi_1 \boxminus \Phi_2) &=  \vGa^{-1}\left(-\left( \Phi_1 \boxminus \Phi_2 \right)\right) \\ 
+\dfrac{d}{d\vv_1}(\hat{\vv}_1 \vv_2) &= -\hat{\vv}_2 \\
+\dfrac{d}{d\vv_2}(\hat{\vv}_1 \vv_2) &= \hat{\vv}_1 \\
     \end{aligned}$ & 
 $\begin{aligned}
-  \frac{\partial}{\partial \Phi_1} (\Phi_1 \boxminus \Phi_2) &=  \vGa^{-1}(\Phi_1 \boxminus \Phi_2) \\
-  \vGa(\vv)\vv &= \vv \\
-   \vGa^{-1}(\vv)\vv &= \vv \\
-    \vGa(-\vv) &=  \vGa(\vv)^\transpose
+\Phi_1 \boxminus \Phi_2 &= -\left( \Phi_2 \boxminus \Phi_1 \right) \\ 
+\vC(\Phi_1\Phi_2) &= \vC(\Phi_1)\vC(\Phi_2) \\
+(\vC(\Phi))^{-1} &= \vC(\Phi^{-1}) \\
+\vGa(\vv)\vv &= \vv \\
+\vGa^{-1}(\vv)\vv &= \vv \\
+\vGa(-\vv) &=  \vGa(\vv)^\transpose \\
+\vGa^{-1}(-\vv) &= \vGa(\vv)+\hat{\vv} \\
+\vGa^{-1}(\vv)\cdot \vC(\vv) &= \vGa^{-1}(\vv) + \hat{\vv} \\
+\vGa^{-1}(\vv) &\approx \identity - \dfrac{1}{2}\hat{\vv}\space, \quad \norm{\vv} \approx 0\\
 \end{aligned}$ \\
    \\
  \end{tabular}

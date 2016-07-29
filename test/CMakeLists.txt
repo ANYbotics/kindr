@@ -120,6 +120,7 @@ set(POSESDIFF_SRCS
 	test_main.cpp
 	poses/PoseDiffTest.cpp
 	poses/PositionDiffTest.cpp
+	poses/TwistWithAngularVelocityTest.cpp
 )
 add_gtest( runUnitTestsPoseDiff  ${POSESDIFF_SRCS})
 
