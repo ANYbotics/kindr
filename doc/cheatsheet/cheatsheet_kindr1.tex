@@ -107,6 +107,7 @@
 \DeclareMathOperator{\expmap}{exp}
 \DeclareMathOperator{\logmatrix}{log}
 \DeclareMathOperator{\expmatrix}{exp}
+\DeclareMathOperator{\sign}{sign}
 % identity matrix
 \newcommand\identity{\mathds{1}}
 \newcommand\zero{\mathbf{0}}
@@ -305,12 +306,12 @@ Note that $\Quat{I}{B}$ and $-\Quat{I}{B}$ represent the same rotation, but not 
  	 \end{array}\right.$  
  	  & $\Leftrightarrow$ & $ \rotvec{I}{B} =  \left\{\begin{array}{l l} 
 							2\atantwo{(\lVert\imquatvec{q}\rVert, q_0)}\frac{\imquatvec{q}}{\lVert \imquatvec{q}\rVert} & \text{if $\lVert\imquatvec{q} \rVert \geq \epsilon$} \\ 
-							  2\imquatvec{q} & \text{otherwise}
+							  2\sign(q_0)\imquatvec{q} & \text{otherwise}
 						    \end{array}\right. $ \\
 \end{tabular}
 
 
-\subsubsection{Rotation Quaternion $\Leftrightarrow$ Angle-Axis}
+\subsubsection{Rotation Quat	ernion $\Leftrightarrow$ Angle-Axis}
 \begin{tabular}{@{}lll@{}} 
 $ \quat{I}{B} = \begin{bmatrix} \cos{\frac{\theta}{2}} \\ \vn \sin{\frac{\theta}{2}} \end{bmatrix}$ & $\Leftrightarrow$ & $
 (\theta, \vn)_{I\!B} = \left\{
@@ -524,6 +525,7 @@ $ \rotvel{I}{I}{B} =
   $\vh$					& Combined force vector \\
   $\vJ_P$				& Jacobi matrix for translation of point P \\
   $\vJ_{R}$				& Jacobi matrix for rotation \\
+  $\vOm$				& Abosolute angular velocity of a body \\
   $\vf_Q^A$				& External forces on point Q \\
   $\vt^A$				& External torques \\
 %   $\vp$			& Momentum \\
@@ -550,7 +552,7 @@ $ \rotvel{I}{I}{B} =
 \subsection{Generalized Coordinates of a Floating-Base System with Rotational Joints}
 Recommended set of generalized coordinates $\vq$ with quaternion $\quat{I}{B}$ and generalized velocities $\vu$:
 \begin{tabular}{@{}lll@{}}
-$\vq = \begin{pmatrix} \pos{I}{I}{B} \\ \quat{I}{B} \\ \varphi_1 \\ \vdots \\ \varphi_{n_j} \end{pmatrix} \in \mathbb{R}^{7+n_j} = \mathbb{R}^{n_q}$ & 
+$\vq = \begin{pmatrix} \pos{I}{I}{B} \\ \quat{I}{B} \\ \varphi_1 \\ \vdots \\ \varphi_{n_j} \end{pmatrix} \in SE(3) \times \mathbb{R}^{n_j}$ & 
 $\vu = \begin{pmatrix} {}_I \vv_B \\ \rotvel{B}{I}{B} \\ \dot{\varphi}_1 \\ \vdots \\ \dot{\varphi}_{n_j} \end{pmatrix} \in \mathbb{R}^{6+n_j} = \mathbb{R}^{n_u}$  & 
 $\dot{\vu} = \begin{pmatrix} {}_I \va_B \\ {}_B\vps_{I\!B} \\ \ddot{\varphi}_1 \\ \vdots \\ \ddot{\varphi}_{n_j} \end{pmatrix} \in \mathbb{R}^{6+n_j}$
 \\
