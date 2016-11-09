@@ -116,9 +116,9 @@ for k=1:(t_f*updateFrequency)
         tk = (k - (skipSteps*g-skipSteps)) / updateFrequency;
         
         % Map the rotation vector to the rotation matrix in SO(3)
-        C_IB{g,1} = expm(tk*skew(I_w_IB));
-        
-        
+        phi_IB = tk*I_w_IB;
+        C_IB{g,1} = expm(skew(phi_IB));
+
         % todo: rotation matrix check sometimes fails
         %[isRot, errMsg] = isRotationMatrix(C_IB{g,1});
         %errMsg = [errMsg ' Time step: ' num2str(k)];
