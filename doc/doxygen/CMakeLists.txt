@@ -31,7 +31,7 @@ cmake_minimum_required (VERSION 2.8)
 
 
 find_package(Doxygen)
-if(DOXYGEN_FOUND)
+if(DOXYGEN)
   set(DOCSOURCE_DIR ${PROJECT_SOURCE_DIR}/doc)
   set(DOXYGEN_IMAGE_DIRS "\"${CMAKE_CURRENT_SOURCE_DIR}/figures/\"" )
   set(DOXYGEN_SOURCE_DIRS "${DOXYGEN_SOURCE_DIRS} \"${CMAKE_CURRENT_SOURCE_DIR}\" ")
@@ -43,10 +43,12 @@ if(DOXYGEN_FOUND)
   set(DOXYGEN_QUIET YES)
   make_directory(${HTML_DIR})
   set( HAVE_DOT YES )
-  
+      
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doxygen.config.in ${DOCSOURCE_DIR}/doxygen.config IMMEDIATE)
   
   add_custom_target(doc ${DOXYGEN} ${DOCSOURCE_DIR}/doxygen.config)
+else(DOXYGEN)
+  message(STATUS "Doxygen not found")
 endif(DOXYGEN_FOUND)
 
 #-------------------------#
