@@ -30,23 +30,25 @@ cmake_minimum_required (VERSION 2.8)
 
 
 
-FIND_PACKAGE(Doxygen)
-IF(DOXYGEN)
-  Set(DOCSOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/doc)
-  SET(DOXYGEN_IMAGE_DIRS "\"${CMAKE_CURRENT_SOURCE_DIR}/figures/\"" )
-  SET(DOXYGEN_SOURCE_DIRS "${DOXYGEN_SOURCE_DIRS} \"${CMAKE_CURRENT_SOURCE_DIR}\" ")
-  SET(DOXYGEN_SOURCE_DIRS "${DOXYGEN_SOURCE_DIRS} \"${CMAKE_CURRENT_SOURCE_DIR}/../../include/\" ")
+find_package(Doxygen)
+if(DOXYGEN)
+  set(DOCSOURCE_DIR ${PROJECT_SOURCE_DIR}/doc)
+  set(DOXYGEN_IMAGE_DIRS "\"${CMAKE_CURRENT_SOURCE_DIR}/figures/\"" )
+  set(DOXYGEN_SOURCE_DIRS "${DOXYGEN_SOURCE_DIRS} \"${CMAKE_CURRENT_SOURCE_DIR}\" ")
+  set(DOXYGEN_SOURCE_DIRS "${DOXYGEN_SOURCE_DIRS} \"${CMAKE_CURRENT_SOURCE_DIR}/../../include/\" ")
 
 
-  SET(HTML_EXTRA_FILES "${CMAKE_CURRENT_SOURCE_DIR}/../cheatsheet/cheatsheet_latest.pdf")
-  Set(HTML_DIR ${CMAKE_CURRENT_SOURCE_DIR}/doc/html)
-  SET(DOXYGEN_QUIET YES)
-  MAKE_DIRECTORY(${HTML_DIR})
-  SET( HAVE_DOT YES )
+  set(HTML_EXTRA_FILES "${CMAKE_CURRENT_SOURCE_DIR}/../cheatsheet/cheatsheet_latest.pdf")
+  set(HTML_DIR ${PROJECT_SOURCE_DIR}/doc/html)
+  set(DOXYGEN_QUIET YES)
+  make_directory(${HTML_DIR})
+  set( HAVE_DOT YES )
+      
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doxygen.config.in ${DOCSOURCE_DIR}/doxygen.config IMMEDIATE)
   
-  CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/doxygen.config.in ${DOCSOURCE_DIR}/doxygen.config IMMEDIATE)
-  
-  ADD_CUSTOM_TARGET(doc ${DOXYGEN} ${DOCSOURCE_DIR}/doxygen.config)
-ENDIF(DOXYGEN)
+  add_custom_target(doc ${DOXYGEN} ${DOCSOURCE_DIR}/doxygen.config)
+else(DOXYGEN)
+  message(STATUS "Doxygen not found")
+endif(DOXYGEN_FOUND)
 
 #-------------------------#

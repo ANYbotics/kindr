@@ -16,9 +16,9 @@ Date     : June-2016
 
 ## Documentation
 
-[Online](http://ethz-asl-lr.bitbucket.org/kindr)
+[Online](http://leggedrobotics.bitbucket.org/kindr)
 
-Impatient individuals can directly download the [cheat sheet](http://ethz-asl-lr.bitbucket.org/kindr/cheatsheet_latest.pdf).
+Impatient individuals can directly download the [cheat sheet](http://leggedrobotics.bitbucket.org/kindr/cheatsheet_latest.pdf).
 
 See also section 'Building the documentation' below.
 
