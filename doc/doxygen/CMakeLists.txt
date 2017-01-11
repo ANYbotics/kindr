@@ -45,7 +45,6 @@ if(DOXYGEN)
   set( HAVE_DOT YES )
       
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doxygen.config.in ${DOCSOURCE_DIR}/doxygen.config IMMEDIATE)
-  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doxygen.config.in ${DOCSOURCE_DIR}/Doxyfile IMMEDIATE)
   
   add_custom_target(doc ${DOXYGEN} ${DOCSOURCE_DIR}/doxygen.config)
 else(DOXYGEN)
