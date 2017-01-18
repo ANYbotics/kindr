@@ -49,6 +49,6 @@ if(DOXYGEN)
   add_custom_target(doc ${DOXYGEN} ${DOCSOURCE_DIR}/doxygen.config)
 else(DOXYGEN)
   message(STATUS "Doxygen not found")
-endif(DOXYGEN_FOUND)
+endif(DOXYGEN)
 
 #-------------------------#
