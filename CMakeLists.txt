@@ -31,10 +31,16 @@ project(kindr)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}" ${CMAKE_MODULE_PATH})
 
-find_package(Eigen3 REQUIRED)
+find_package(Eigen3)
+if(NOT Eigen3_FOUND)
+  # Attempt to find eigen_catkin
+  find_package(eigen_catkin REQUIRED)
+  include_directories(${eigen_catkin_INCLUDE_DIRS})
+else()
+  include_directories(${EIGEN3_INCLUDE_DIR})
+endif()
 
 include_directories(include)
-include_directories(${EIGEN3_INCLUDE_DIR})
 
 # Noisily default to Release build
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
