@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Christian Gehring, Hannes Sommer, Paul Furgale, Remo Diethelm
+ * Copyright (c) 2017, Christian Gehring, Hannes Sommer, Paul Furgale, Remo Diethelm
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,13 +25,74 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
 */
+/*
+ * Wernch.hpp
+ *
+ *  Created on: Jan 31, 2017
+ *      Author: Christian Gehring
+ */
 
 #pragma once
 
-#include <kindr/rotations/Rotation.hpp>
-#include <kindr/rotations/RotationDiff.hpp>
-#include <kindr/poses/Pose.hpp>
-#include <kindr/poses/PoseDiff.hpp>
-#include <kindr/poses/Twist.hpp>
-#include <kindr/phys_quant/PhysicalQuantities.hpp>
-#include <kindr/phys_quant/Wrench.hpp>
+#include <kindr/phys_quant/WrenchBase.hpp>
+
+namespace kindr {
+
+//!
+template <typename PrimType_, typename Force_, typename Torque_>
+class Wrench : public WrenchBase<Wrench<PrimType_, Force_, Torque_>> {
+public:
+  typedef PrimType_ Scalar;
+  typedef Force_ Force;
+  typedef Torque_ Torque;
+  typedef Eigen::Matrix<PrimType_, 6, 1> Vector6;
+  typedef Eigen::Matrix<PrimType_,3, 1> Vector3;
+
+  Wrench() : force_(Force::Zero()),  torque_(Torque::Zero()) {
+
+  }
+
+  Wrench(const Force& force, const Torque& torque) :
+    force_(force),
+    torque_(torque) {
+  }
+
+  inline Force & getForce() {
+    return force_;
+  }
+
+  inline const Force & getForce() const {
+    return force_;
+  }
+
+  inline Torque & getTorque() {
+    return torque_;
+  }
+
+  inline const Torque & getTorque() const {
+    return torque_;
+  }
+
+  inline Vector6 getVector() const {
+    Vector6 vector;
+    vector.template block<3,1>(0,0) = getForce().toImplementation();
+    vector.template block<3,1>(3,0) = getTorque().toImplementation();
+    return vector;
+  }
+
+  Wrench& setZero() {
+    force_.setZero();
+    torque_.setZero();
+    return *this;
+  }
+
+protected:
+  Force force_;
+  Torque torque_;
+};
+
+typedef Wrench<double, kindr::Force3D, kindr::Torque3D> WrenchD;
+typedef Wrench<float, kindr::Force3F, kindr::Torque3F> WrenchF;
+
+
+} // namespace kindr
