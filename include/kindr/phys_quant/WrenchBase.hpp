@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Christian Gehring, Hannes Sommer, Paul Furgale, Remo Diethelm
+ * Copyright (c) 2017, Christian Gehring, Hannes Sommer, Paul Furgale, Remo Diethelm
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,13 +25,62 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
 */
+/*
+ * WrenchBase.hpp
+ *
+ *  Created on: Jan 31, 2017
+ *      Author: Christian Gehring
+ */
 
 #pragma once
 
-#include <kindr/rotations/Rotation.hpp>
-#include <kindr/rotations/RotationDiff.hpp>
-#include <kindr/poses/Pose.hpp>
-#include <kindr/poses/PoseDiff.hpp>
-#include <kindr/poses/Twist.hpp>
-#include <kindr/phys_quant/PhysicalQuantities.hpp>
-#include <kindr/phys_quant/Wrench.hpp>
+namespace kindr {
+
+template<typename Derived_>
+class WrenchBase {
+ public:
+  /*! \brief Default constructor.
+   *
+   *  Creates a wrench with all values set to zero.
+   */
+  WrenchBase() = default;
+
+  /*! \brief Constructor from derived.
+   *  This constructor has been deleted because the abstract class does not contain any data.
+   */
+  WrenchBase(const Derived_&) = delete; // on purpose!!
+
+  /*! \brief Gets the derived.
+   *
+   *  (only for advanced users)
+   *  \returns the derived time derivative of a pose
+   */
+  operator Derived_& () {
+    return static_cast<Derived_&>(*this);
+  }
+
+  /*! \brief Gets the derived.
+   *
+   *  (only for advanced users)
+   *  \returns the derived time derivative of a pose
+   */
+  operator const Derived_& () const {
+    return static_cast<const Derived_&>(*this);
+  }
+
+  /*! \brief Gets the derived.
+   *
+   *  (only for advanced users)
+   *  \returns the derived time derivative of a pose
+   */
+  const Derived_& derived() const {
+    return static_cast<const Derived_&>(*this);
+  }
+
+  /*! \brief Sets wrench to zero
+   *  \returns reference
+   */
+  Derived_& setZero();
+};
+
+} // namespace
