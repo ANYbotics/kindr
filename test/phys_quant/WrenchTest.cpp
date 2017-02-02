@@ -81,8 +81,38 @@ TYPED_TEST(WrenchTest, constructor)
   typename Wrench::Vector6 wrenchVector;
   wrenchVector << 0.1, 0.2, 0.3, 1.1, 2.2, 3.3;
   Wrench third(wrenchVector);
-//  KINDR_ASSERT_DOUBLE_MX_EQ(wrenchVector.segment<3>(0), third.getForce().toImplementation(), 0.5, "third");
-//  KINDR_ASSERT_DOUBLE_MX_EQ(wrenchVector.segment<3>(3), third.getTorque().toImplementation(), 0.5, "third");
+  KINDR_ASSERT_DOUBLE_MX_EQ(forceVector1, third.getForce().toImplementation(), 0.5, "third");
+  KINDR_ASSERT_DOUBLE_MX_EQ(torqueVector1, third.getTorque().toImplementation(), 0.5, "third");
+}
+
+TYPED_TEST(WrenchTest, setters)
+{
+  typedef typename TestFixture::Wrench Wrench;
+  typedef typename TestFixture::Force Force;
+  typedef typename TestFixture::Torque Torque;
+  typedef typename TestFixture::Vector3 Vector3;
+
+  const Force force1(0.1, 0.2, 0.3);
+  const Torque torque1(1.1, 2.2, 3.3);
+  Wrench first;
+  first.setForce(force1);
+  first.setTorque(torque1);
+  KINDR_ASSERT_DOUBLE_MX_EQ(force1.toImplementation(), first.getForce().toImplementation(), 0.5, "first");
+  KINDR_ASSERT_DOUBLE_MX_EQ(torque1.toImplementation(), first.getTorque().toImplementation(), 0.5, "first");
+
+  const Vector3 forceVector1(0.1, 0.2, 0.3);
+  const Vector3 torqueVector1(1.1, 2.2, 3.3);
+  Wrench second;
+  second.setForce(forceVector1);
+  second.setTorque(torqueVector1);
+  KINDR_ASSERT_DOUBLE_MX_EQ(forceVector1, second.getForce().toImplementation(), 0.5, "second");
+  KINDR_ASSERT_DOUBLE_MX_EQ(torqueVector1, second.getTorque().toImplementation(), 0.5, "second");
+
+  typename Wrench::Vector6 wrenchVector;
+  wrenchVector << 0.1, 0.2, 0.3, 1.1, 2.2, 3.3;
+  Wrench third;
+  third.setVector(wrenchVector);
+  KINDR_ASSERT_DOUBLE_MX_EQ(wrenchVector, third.getVector(), 0.5, "third");
 }
 
 TYPED_TEST(WrenchTest, setZero)

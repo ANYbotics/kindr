@@ -88,10 +88,30 @@ public:
     return torque_;
   }
 
+  inline void setForce(const Force& force) {
+    force_ = force;
+  }
+
+  inline void setTorque(const Torque& torque) {
+    torque_ = torque;
+  }
+
+  inline void setForce(const Vector3& force) {
+    force_ = Force(force);
+  }
+
+  inline  void setTorque(const Vector3& torque) {
+    torque_ = Torque(torque);
+  }
+
+  inline void setVector(const Vector6& wrench) {
+    *this = Wrench6(wrench);
+  }
+
   inline Vector6 getVector() const {
     Vector6 vector;
-    vector.template head(3) = getForce().toImplementation();
-    vector.template tail(3) = getTorque().toImplementation();
+    vector.template head<3>() = getForce().toImplementation();
+    vector.template tail<3>() = getTorque().toImplementation();
     return vector;
   }
 
