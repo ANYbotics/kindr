@@ -56,83 +56,84 @@ macro(add_gtest target)
   add_test(${target} ${target})
 endmacro(add_gtest)
 
-set(COMMON_SRCS
-      test_main.cpp 
-      common/CommonTest.cpp
-)
-add_gtest(runUnitTestsCommon ${COMMON_SRCS})
-
-
-set(LINEARALGEBRA_SRCS
-      test_main.cpp 
-      linear_algebra/SkewMatrixFromVectorTest.cpp
-)
-add_gtest(runUnitTestsLinearAlgebra ${LINEARALGEBRA_SRCS})
-
-set(QUATERNIONS_SRCS
-	test_main.cpp
-	quaternions/QuaternionTest.cpp
-)
-add_gtest( runUnitTestsQuaternions ${QUATERNIONS_SRCS} )
-
-set(ROTATION_SRCS
-	test_main.cpp
-	rotations/RotationMatrixTest.cpp
-	rotations/RotationQuaternionTest.cpp
-	rotations/RotationVectorTest.cpp
-	rotations/AngleAxisTest.cpp
-	rotations/RotationMatrixTest.cpp
-	rotations/EulerAnglesZyxTest.cpp
-	rotations/EulerAnglesXyzTest.cpp
-	rotations/RotationTest.cpp
-	rotations/ConventionTest.cpp
-
-)
-add_gtest( runUnitTestsRotation ${ROTATION_SRCS})
-
-
-set(ROTATIONDIFF_SRCS
-	test_main.cpp
-	rotations/RotationDiffTest.cpp
-	rotations/LocalAngularVelocityTest.cpp
-	rotations/GlobalAngularVelocityTest.cpp
-	rotations/RotationQuaternionDiffTest.cpp
-	rotations/RotationMatrixDiffTest.cpp
-	rotations/EulerAnglesZyxDiffTest.cpp
-	rotations/EulerAnglesXyzDiffTest.cpp
-)
-add_gtest( runUnitTestsRotationDiff ${ROTATIONDIFF_SRCS})
-
-set(POSITIONS_SRCS
-	test_main.cpp
-
-)
-add_gtest( runUnitTestsPositions  ${POSITIONS_SRCS})
-
-set(POSES_SRCS
-	test_main.cpp
-	poses/PositionTest.cpp
-	poses/HomogeneousTransformationTest.cpp
-)
-add_gtest( runUnitTestsPose  ${POSES_SRCS})
-
-set(POSESDIFF_SRCS
-	test_main.cpp
-	poses/PoseDiffTest.cpp
-	poses/PositionDiffTest.cpp
-	poses/TwistWithAngularVelocityTest.cpp
-)
-add_gtest( runUnitTestsPoseDiff  ${POSESDIFF_SRCS})
-
-set(VECTOR_SRCS
-	test_main.cpp
-	vectors/VectorsTest.cpp
-)
-add_gtest( runUnitTestsVector  ${VECTOR_SRCS})
-
+#set(COMMON_SRCS
+#      test_main.cpp 
+#      common/CommonTest.cpp
+#)
+#add_gtest(runUnitTestsCommon ${COMMON_SRCS})
+#
+#
+#set(LINEARALGEBRA_SRCS
+#      test_main.cpp 
+#      linear_algebra/SkewMatrixFromVectorTest.cpp
+#)
+#add_gtest(runUnitTestsLinearAlgebra ${LINEARALGEBRA_SRCS})
+#
+#set(QUATERNIONS_SRCS
+#	test_main.cpp
+#	quaternions/QuaternionTest.cpp
+#)
+#add_gtest( runUnitTestsQuaternions ${QUATERNIONS_SRCS} )
+#
+#set(ROTATION_SRCS
+#	test_main.cpp
+#	rotations/RotationMatrixTest.cpp
+#	rotations/RotationQuaternionTest.cpp
+#	rotations/RotationVectorTest.cpp
+#	rotations/AngleAxisTest.cpp
+#	rotations/RotationMatrixTest.cpp
+#	rotations/EulerAnglesZyxTest.cpp
+#	rotations/EulerAnglesXyzTest.cpp
+#	rotations/RotationTest.cpp
+#	rotations/ConventionTest.cpp
+#
+#)
+#add_gtest( runUnitTestsRotation ${ROTATION_SRCS})
+#
+#
+#set(ROTATIONDIFF_SRCS
+#	test_main.cpp
+#	rotations/RotationDiffTest.cpp
+#	rotations/LocalAngularVelocityTest.cpp
+#	rotations/GlobalAngularVelocityTest.cpp
+#	rotations/RotationQuaternionDiffTest.cpp
+#	rotations/RotationMatrixDiffTest.cpp
+#	rotations/EulerAnglesZyxDiffTest.cpp
+#	rotations/EulerAnglesXyzDiffTest.cpp
+#)
+#add_gtest( runUnitTestsRotationDiff ${ROTATIONDIFF_SRCS})
+#
+#set(POSITIONS_SRCS
+#	test_main.cpp
+#
+#)
+#add_gtest( runUnitTestsPositions  ${POSITIONS_SRCS})
+#
+#set(POSES_SRCS
+#	test_main.cpp
+#	poses/PositionTest.cpp
+#	poses/HomogeneousTransformationTest.cpp
+#)
+#add_gtest( runUnitTestsPose  ${POSES_SRCS})
+#
+#set(POSESDIFF_SRCS
+#	test_main.cpp
+#	poses/PoseDiffTest.cpp
+#	poses/PositionDiffTest.cpp
+#	poses/TwistWithAngularVelocityTest.cpp
+#)
+#add_gtest( runUnitTestsPoseDiff  ${POSESDIFF_SRCS})
+#
+#set(VECTOR_SRCS
+#	test_main.cpp
+#	vectors/VectorsTest.cpp
+#)
+#add_gtest( runUnitTestsVector  ${VECTOR_SRCS})
+#
 set(FORCE_SRCS
 	test_main.cpp
 	phys_quant/ForceTest.cpp
+	phys_quant/WrenchTest.cpp
 )
 add_gtest( runUnitTestsForce  ${FORCE_SRCS})
 

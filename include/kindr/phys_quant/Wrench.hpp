@@ -35,26 +35,41 @@
 #pragma once
 
 #include <kindr/phys_quant/WrenchBase.hpp>
+#include <kindr/phys_quant/PhysicalQuantities.hpp>
 
 namespace kindr {
 
 //!
-template <typename PrimType_, typename Force_, typename Torque_>
-class Wrench : public WrenchBase<Wrench<PrimType_, Force_, Torque_>> {
+template <typename PrimType_>
+class Wrench6 : public WrenchBase<Wrench6<PrimType_>> {
 public:
   typedef PrimType_ Scalar;
-  typedef Force_ Force;
-  typedef Torque_ Torque;
+  typedef Vector<PhysicalType::Force, PrimType_, 3> Force;
+  typedef Vector<PhysicalType::Torque, PrimType_, 3> Torque;
   typedef Eigen::Matrix<PrimType_, 6, 1> Vector6;
-  typedef Eigen::Matrix<PrimType_,3, 1> Vector3;
+  typedef Eigen::Matrix<PrimType_, 3, 1> Vector3;
 
-  Wrench() : force_(Force::Zero()),  torque_(Torque::Zero()) {
+  explicit Wrench6() : force_(Force::Zero()),  torque_(Torque::Zero()) {
 
   }
 
-  Wrench(const Force& force, const Torque& torque) :
+  explicit Wrench6(const Force& force, const Torque& torque) :
     force_(force),
     torque_(torque) {
+  }
+
+  explicit Wrench6(const Vector3& force, const Vector3& torque) :
+    force_(Force(force)),
+    torque_(Torque(torque)) {
+  }
+
+  explicit Wrench6(const Vector6& wrench) :
+    force_(Force(wrench.head(3))),
+    torque_(Torque(wrench.tail(3))) {
+  }
+
+  virtual ~Wrench6() {
+
   }
 
   inline Force & getForce() {
@@ -75,24 +90,133 @@ public:
 
   inline Vector6 getVector() const {
     Vector6 vector;
-    vector.template block<3,1>(0,0) = getForce().toImplementation();
-    vector.template block<3,1>(3,0) = getTorque().toImplementation();
+    vector.template head(3) = getForce().toImplementation();
+    vector.template tail(3) = getTorque().toImplementation();
     return vector;
   }
 
-  Wrench& setZero() {
+  Wrench6& setZero() {
     force_.setZero();
     torque_.setZero();
     return *this;
   }
 
+  /*! \brief Assignment operator.
+     * \param other   other vector
+     * \returns reference
+     */
+  Wrench6 & operator=(const Wrench6& other) {
+    this->getForce() = other.getForce();
+    this->getTorque() = other.getTorque();
+    return *this;
+  }
+
+  /*! \brief Addition of two vectors.
+   * \param other   other vector
+   * \returns sum
+   */
+  Wrench6 operator+(const Wrench6& other) const {
+    return Wrench6(this->getForce() + other.getForce(), this->getTorque() + other.getTorque());
+  }
+
+  /*! \brief Subtraction of two vectors.
+   * \param other   other vector
+   * \returns difference
+   */
+  Wrench6 operator-(const Wrench6& other) const {
+    return Wrench6(this->getForce() - other.getForce(), this->getTorque() - other.getTorque());
+  }
+
+  /*! \brief Multiplies vector with a scalar.
+   * \param factor   factor
+   * \returns product
+   */
+  template<typename PrimTypeFactor_>
+  Wrench6 operator*(PrimTypeFactor_ factor) const {
+    return Wrench6(this->getForce()*(PrimType_)factor, this->getTorque()*(PrimType_)factor);
+  }
+
+  /*! \brief Divides vector by a scalar.
+   * \param divisor   divisor
+   * \returns quotient
+   */
+  template<typename PrimTypeDivisor_>
+  Wrench6 operator/(PrimTypeDivisor_ divisor) const {
+    return Wrench6(this->getForce()/(PrimType_)divisor, this->getTorque()/(PrimType_)divisor);
+  }
+
+  /*! \brief Addition and assignment of two vectors.
+   * \param other   other vector
+   * \returns reference
+   */
+  Wrench6& operator+=(const Wrench6& other) {
+    this->getForce() += other.getForce();
+    this->getTorque() += other.getTorque();
+    return *this;
+  }
+
+  /*! \brief Subtraction and assignment of two vectors.
+   * \param other   other vector
+   * \returns reference
+   */
+  Wrench6& operator-=(const Wrench6& other) {
+    this->getForce() -= other.getForce();
+    this->getTorque() -= other.getTorque();
+    return *this;
+  }
+
+  /*! \brief Multiplication with a scalar and assignment.
+   * \param factor   factor
+   * \returns reference
+   */
+  template<typename PrimTypeFactor_>
+  Wrench6& operator*=(PrimTypeFactor_ factor) {
+    this->getForce() *= (PrimType_)factor;
+    this->getTorque() *= (PrimType_)factor;
+    return *this;
+  }
+
+  /*! \brief Division by a scalar and assignment.
+   * \param divisor   divisor
+   * \returns reference
+   */
+  template<typename PrimTypeDivisor_>
+  Wrench6& operator/=(PrimTypeDivisor_ divisor) {
+    this->getForce() /= (PrimType_)divisor;
+    this->getTorque() /= (PrimType_)divisor;
+    return *this;
+  }
+
+  /*! \brief Negation of a vector.
+   * \returns negative vector
+   */
+  Wrench6 operator-() const {
+    return Wrench6(-this->getForce(), -this->getTorque());
+  }
+
+  /*! \brief Comparison operator.
+   * \param other   other vector
+   * \returns true if equal
+   */
+  bool operator==(const Wrench6& other) const {
+    return ((this->getForce() == other.getForce()) && (this->getTorque() == other.getTorque()));
+  }
+
+
+  /*! \brief Used for printing the object with std::cout.
+   *  \returns std::stream object
+   */
+  friend std::ostream & operator << (std::ostream & out, const Wrench6 & wrench) {
+    out << wrench.getForce() << " " << wrench.getTorque();
+    return out;
+  }
 protected:
   Force force_;
   Torque torque_;
 };
 
-typedef Wrench<double, kindr::Force3D, kindr::Torque3D> WrenchD;
-typedef Wrench<float, kindr::Force3F, kindr::Torque3F> WrenchF;
+typedef Wrench6<double> WrenchD;
+typedef Wrench6<float> WrenchF;
 
 
 } // namespace kindr
