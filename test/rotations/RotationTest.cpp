@@ -223,7 +223,7 @@ struct RotationMatrixTestType {
 
   Rotation rot;
 
-  void assertNear(const Rotation_& rotA, const Rotation_& rotB, double tol=1e-4, const std::string& msg = "") {
+  void assertNear(const Rotation_& rotA, const Rotation_& rotB, Scalar tol=Scalar(1e-4), const std::string& msg = "") {
     KINDR_ASSERT_DOUBLE_MX_EQ(rotA.toImplementation(), rotB.toImplementation(), tol, msg);
   }
 

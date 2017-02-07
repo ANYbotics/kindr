@@ -432,7 +432,7 @@ template<typename PrimType_>
 class ComparisonTraits<AngleAxis<PrimType_>, AngleAxis<PrimType_>> {
  public:
   inline static bool isEqual(const AngleAxis<PrimType_>& a, const AngleAxis<PrimType_>& b){
-    const double tolPercent = 0.01;
+    const PrimType_ tolPercent = 0.01;
     return compareRelative(a.angle(), b.angle(), tolPercent) &&
         compareRelative(a.axis().x(), b.axis().x(), tolPercent) &&
         compareRelative(a.axis().y(), b.axis().y(), tolPercent) &&

@@ -150,19 +150,19 @@ TYPED_TEST(EulerAnglesXyzSingleTest, testConstructors){
   typedef typename TestFixture::Scalar Scalar;
 
   EulerAnglesXyz rot;
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenVector3Identity, rot.toImplementation(), 1e-4, "constructor");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenVector3Identity, rot.toImplementation(), Scalar(1e-4), "constructor");
 
   EulerAnglesXyz rot2(this->eigenVector3v1.x(),this->eigenVector3v1.y(),this->eigenVector3v1.z());
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenVector3v1, rot2.toImplementation(), 1e-4, "constructor");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenVector3v1, rot2.toImplementation(), Scalar(1e-4), "constructor");
 
   EulerAnglesXyz rot3(this->eigenVector3v1);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenVector3v1, rot3.toImplementation(), 1e-4, "constructor");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenVector3v1, rot3.toImplementation(), Scalar(1e-4), "constructor");
 
   EulerAnglesXyz rot4(this->rotEulerAnglesXyzV1);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenVector3v1, rot4.toImplementation(), 1e-4, "constructor");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenVector3v1, rot4.toImplementation(), Scalar(1e-4), "constructor");
 
   EulerAnglesXyz rot5(rot4);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenVector3v1, rot5.toImplementation(), 1e-4, "constructor");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenVector3v1, rot5.toImplementation(), Scalar(1e-4), "constructor");
 }
 
 TYPED_TEST(EulerAnglesXyzSingleTest, testGetters)
@@ -171,7 +171,7 @@ TYPED_TEST(EulerAnglesXyzSingleTest, testGetters)
   typedef typename TestFixture::Scalar Scalar;
 
   EulerAnglesXyz rot(this->eigenVector3v1);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenVector3v1, rot.vector(), 1e-4, "vector()");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenVector3v1, rot.vector(), Scalar(1e-4), "vector()");
   ASSERT_NEAR(rot.x(), this->eigenVector3v1.x(),1e-6);
   ASSERT_NEAR(rot.y(), this->eigenVector3v1.y(),1e-6);
   ASSERT_NEAR(rot.z(), this->eigenVector3v1.z(),1e-6);
@@ -187,7 +187,7 @@ TYPED_TEST(EulerAnglesXyzSingleTest, testAssignmentOperator){
 
   EulerAnglesXyz rot(this->eigenVector3v1);
   EulerAnglesXyz rot1 = rot;
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenVector3v1, rot1.toImplementation(), 1e-4, "constructor");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenVector3v1, rot1.toImplementation(), Scalar(1e-4), "constructor");
 
 }
 
@@ -198,7 +198,7 @@ TYPED_TEST(EulerAnglesXyzSingleTest, testParenthesisOperator) {
   EulerAnglesXyz rot(this->eigenVector3v1);
   EulerAnglesXyz rot1;
   rot1(rot);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenVector3v1, rot1.toImplementation(), 1e-4, "constructor");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenVector3v1, rot1.toImplementation(), Scalar(1e-4), "constructor");
 
 }
 
@@ -210,7 +210,7 @@ TYPED_TEST(EulerAnglesXyzSingleTest, testSetters)
 
   EulerAnglesXyz rot(this->eigenVector3v1);
   rot.setIdentity();
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenVector3Identity, rot.toImplementation(), 1e-4, "identity");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenVector3Identity, rot.toImplementation(), Scalar(1e-4), "identity");
 
   rot.setFromVectors(this->vec, this->vec);
   ASSERT_NEAR(rot.x(), this->rotEulerAnglesXyzIdentity.x(),1e-6);
@@ -410,111 +410,111 @@ TYPED_TEST(EulerAnglesXyzSingleTest, testVectorRotation){
 
   // Check rotation of base vectors around main axis
   testVec = this->rotEulerAnglesXyzQuarterX.rotate(this->vecX);
-  ASSERT_NEAR(testVec(0), this->vecX(0),1e-4);
-  ASSERT_NEAR(testVec(1), this->vecX(1),1e-4);
-  ASSERT_NEAR(testVec(2), this->vecX(2),1e-4);
+  ASSERT_NEAR(testVec(0), this->vecX(0),Scalar(1e-4));
+  ASSERT_NEAR(testVec(1), this->vecX(1),Scalar(1e-4));
+  ASSERT_NEAR(testVec(2), this->vecX(2),Scalar(1e-4));
   testVec = this->rotEulerAnglesXyzQuarterX.rotate(this->vecY);
-  ASSERT_NEAR(testVec(0), signSwitch*this->vecZ(0),1e-4);
-  ASSERT_NEAR(testVec(1), signSwitch*this->vecZ(1),1e-4);
-  ASSERT_NEAR(testVec(2), signSwitch*this->vecZ(2),1e-4);
+  ASSERT_NEAR(testVec(0), signSwitch*this->vecZ(0),Scalar(1e-4));
+  ASSERT_NEAR(testVec(1), signSwitch*this->vecZ(1),Scalar(1e-4));
+  ASSERT_NEAR(testVec(2), signSwitch*this->vecZ(2),Scalar(1e-4));
   testVec = this->rotEulerAnglesXyzQuarterX.rotate(this->vecZ);
-  ASSERT_NEAR(testVec(0), -signSwitch*this->vecY(0),1e-4);
-  ASSERT_NEAR(testVec(1), -signSwitch*this->vecY(1),1e-4);
-  ASSERT_NEAR(testVec(2), -signSwitch*this->vecY(2),1e-4);
+  ASSERT_NEAR(testVec(0), -signSwitch*this->vecY(0),Scalar(1e-4));
+  ASSERT_NEAR(testVec(1), -signSwitch*this->vecY(1),Scalar(1e-4));
+  ASSERT_NEAR(testVec(2), -signSwitch*this->vecY(2),Scalar(1e-4));
   testVec = this->rotEulerAnglesXyzQuarterY.rotate(this->vecX);
-  ASSERT_NEAR(testVec(0), -signSwitch*this->vecZ(0),1e-4);
-  ASSERT_NEAR(testVec(1), -signSwitch*this->vecZ(1),1e-4);
-  ASSERT_NEAR(testVec(2), -signSwitch*this->vecZ(2),1e-4);
+  ASSERT_NEAR(testVec(0), -signSwitch*this->vecZ(0),Scalar(1e-4));
+  ASSERT_NEAR(testVec(1), -signSwitch*this->vecZ(1),Scalar(1e-4));
+  ASSERT_NEAR(testVec(2), -signSwitch*this->vecZ(2),Scalar(1e-4));
   testVec = this->rotEulerAnglesXyzQuarterY.rotate(this->vecY);
-  ASSERT_NEAR(testVec(0), this->vecY(0),1e-4);
-  ASSERT_NEAR(testVec(1), this->vecY(1),1e-4);
-  ASSERT_NEAR(testVec(2), this->vecY(2),1e-4);
+  ASSERT_NEAR(testVec(0), this->vecY(0),Scalar(1e-4));
+  ASSERT_NEAR(testVec(1), this->vecY(1),Scalar(1e-4));
+  ASSERT_NEAR(testVec(2), this->vecY(2),Scalar(1e-4));
   testVec = this->rotEulerAnglesXyzQuarterY.rotate(this->vecZ);
-  ASSERT_NEAR(testVec(0), signSwitch*this->vecX(0),1e-4);
-  ASSERT_NEAR(testVec(1), signSwitch*this->vecX(1),1e-4);
-  ASSERT_NEAR(testVec(2), signSwitch*this->vecX(2),1e-4);
+  ASSERT_NEAR(testVec(0), signSwitch*this->vecX(0),Scalar(1e-4));
+  ASSERT_NEAR(testVec(1), signSwitch*this->vecX(1),Scalar(1e-4));
+  ASSERT_NEAR(testVec(2), signSwitch*this->vecX(2),Scalar(1e-4));
   testVec = this->rotEulerAnglesXyzQuarterZ.rotate(this->vecX);
-  ASSERT_NEAR(testVec(0), signSwitch*this->vecY(0),1e-4);
-  ASSERT_NEAR(testVec(1), signSwitch*this->vecY(1),1e-4);
-  ASSERT_NEAR(testVec(2), signSwitch*this->vecY(2),1e-4);
+  ASSERT_NEAR(testVec(0), signSwitch*this->vecY(0),Scalar(1e-4));
+  ASSERT_NEAR(testVec(1), signSwitch*this->vecY(1),Scalar(1e-4));
+  ASSERT_NEAR(testVec(2), signSwitch*this->vecY(2),Scalar(1e-4));
   testVec = this->rotEulerAnglesXyzQuarterZ.rotate(this->vecY);
-  ASSERT_NEAR(testVec(0), -signSwitch*this->vecX(0),1e-4);
-  ASSERT_NEAR(testVec(1), -signSwitch*this->vecX(1),1e-4);
-  ASSERT_NEAR(testVec(2), -signSwitch*this->vecX(2),1e-4);
+  ASSERT_NEAR(testVec(0), -signSwitch*this->vecX(0),Scalar(1e-4));
+  ASSERT_NEAR(testVec(1), -signSwitch*this->vecX(1),Scalar(1e-4));
+  ASSERT_NEAR(testVec(2), -signSwitch*this->vecX(2),Scalar(1e-4));
   testVec = this->rotEulerAnglesXyzQuarterZ.rotate(this->vecZ);
-  ASSERT_NEAR(testVec(0), this->vecZ(0),1e-4);
-  ASSERT_NEAR(testVec(1), this->vecZ(1),1e-4);
-  ASSERT_NEAR(testVec(2), this->vecZ(2),1e-4);
+  ASSERT_NEAR(testVec(0), this->vecZ(0),Scalar(1e-4));
+  ASSERT_NEAR(testVec(1), this->vecZ(1),Scalar(1e-4));
+  ASSERT_NEAR(testVec(2), this->vecZ(2),Scalar(1e-4));
 
   testVec = this->rotEulerAnglesXyzQuarterX.inverseRotate(this->vecX);
-  ASSERT_NEAR(testVec(0), this->vecX(0),1e-4);
-  ASSERT_NEAR(testVec(1), this->vecX(1),1e-4);
-  ASSERT_NEAR(testVec(2), this->vecX(2),1e-4);
+  ASSERT_NEAR(testVec(0), this->vecX(0),Scalar(1e-4));
+  ASSERT_NEAR(testVec(1), this->vecX(1),Scalar(1e-4));
+  ASSERT_NEAR(testVec(2), this->vecX(2),Scalar(1e-4));
   testVec = this->rotEulerAnglesXyzQuarterX.inverseRotate(this->vecY);
-  ASSERT_NEAR(testVec(0), -signSwitch*this->vecZ(0),1e-4);
-  ASSERT_NEAR(testVec(1), -signSwitch*this->vecZ(1),1e-4);
-  ASSERT_NEAR(testVec(2), -signSwitch*this->vecZ(2),1e-4);
+  ASSERT_NEAR(testVec(0), -signSwitch*this->vecZ(0),Scalar(1e-4));
+  ASSERT_NEAR(testVec(1), -signSwitch*this->vecZ(1),Scalar(1e-4));
+  ASSERT_NEAR(testVec(2), -signSwitch*this->vecZ(2),Scalar(1e-4));
   testVec = this->rotEulerAnglesXyzQuarterX.inverseRotate(this->vecZ);
-  ASSERT_NEAR(testVec(0), signSwitch*this->vecY(0),1e-4);
-  ASSERT_NEAR(testVec(1), signSwitch*this->vecY(1),1e-4);
-  ASSERT_NEAR(testVec(2), signSwitch*this->vecY(2),1e-4);
+  ASSERT_NEAR(testVec(0), signSwitch*this->vecY(0),Scalar(1e-4));
+  ASSERT_NEAR(testVec(1), signSwitch*this->vecY(1),Scalar(1e-4));
+  ASSERT_NEAR(testVec(2), signSwitch*this->vecY(2),Scalar(1e-4));
   testVec = this->rotEulerAnglesXyzQuarterY.inverseRotate(this->vecX);
-  ASSERT_NEAR(testVec(0), signSwitch*this->vecZ(0),1e-4);
-  ASSERT_NEAR(testVec(1), signSwitch*this->vecZ(1),1e-4);
-  ASSERT_NEAR(testVec(2), signSwitch*this->vecZ(2),1e-4);
+  ASSERT_NEAR(testVec(0), signSwitch*this->vecZ(0),Scalar(1e-4));
+  ASSERT_NEAR(testVec(1), signSwitch*this->vecZ(1),Scalar(1e-4));
+  ASSERT_NEAR(testVec(2), signSwitch*this->vecZ(2),Scalar(1e-4));
   testVec = this->rotEulerAnglesXyzQuarterY.inverseRotate(this->vecY);
-  ASSERT_NEAR(testVec(0), this->vecY(0),1e-4);
-  ASSERT_NEAR(testVec(1), this->vecY(1),1e-4);
-  ASSERT_NEAR(testVec(2), this->vecY(2),1e-4);
+  ASSERT_NEAR(testVec(0), this->vecY(0),Scalar(1e-4));
+  ASSERT_NEAR(testVec(1), this->vecY(1),Scalar(1e-4));
+  ASSERT_NEAR(testVec(2), this->vecY(2),Scalar(1e-4));
   testVec = this->rotEulerAnglesXyzQuarterY.inverseRotate(this->vecZ);
-  ASSERT_NEAR(testVec(0), -signSwitch*this->vecX(0),1e-4);
-  ASSERT_NEAR(testVec(1), -signSwitch*this->vecX(1),1e-4);
-  ASSERT_NEAR(testVec(2), -signSwitch*this->vecX(2),1e-4);
+  ASSERT_NEAR(testVec(0), -signSwitch*this->vecX(0),Scalar(1e-4));
+  ASSERT_NEAR(testVec(1), -signSwitch*this->vecX(1),Scalar(1e-4));
+  ASSERT_NEAR(testVec(2), -signSwitch*this->vecX(2),Scalar(1e-4));
   testVec = this->rotEulerAnglesXyzQuarterZ.inverseRotate(this->vecX);
-  ASSERT_NEAR(testVec(0), -signSwitch*this->vecY(0),1e-4);
-  ASSERT_NEAR(testVec(1), -signSwitch*this->vecY(1),1e-4);
-  ASSERT_NEAR(testVec(2), -signSwitch*this->vecY(2),1e-4);
+  ASSERT_NEAR(testVec(0), -signSwitch*this->vecY(0),Scalar(1e-4));
+  ASSERT_NEAR(testVec(1), -signSwitch*this->vecY(1),Scalar(1e-4));
+  ASSERT_NEAR(testVec(2), -signSwitch*this->vecY(2),Scalar(1e-4));
   testVec = this->rotEulerAnglesXyzQuarterZ.inverseRotate(this->vecY);
-  ASSERT_NEAR(testVec(0), signSwitch*this->vecX(0),1e-4);
-  ASSERT_NEAR(testVec(1), signSwitch*this->vecX(1),1e-4);
-  ASSERT_NEAR(testVec(2), signSwitch*this->vecX(2),1e-4);
+  ASSERT_NEAR(testVec(0), signSwitch*this->vecX(0),Scalar(1e-4));
+  ASSERT_NEAR(testVec(1), signSwitch*this->vecX(1),Scalar(1e-4));
+  ASSERT_NEAR(testVec(2), signSwitch*this->vecX(2),Scalar(1e-4));
   testVec = this->rotEulerAnglesXyzQuarterZ.inverseRotate(this->vecZ);
-  ASSERT_NEAR(testVec(0), this->vecZ(0),1e-4);
-  ASSERT_NEAR(testVec(1), this->vecZ(1),1e-4);
-  ASSERT_NEAR(testVec(2), this->vecZ(2),1e-4);
+  ASSERT_NEAR(testVec(0), this->vecZ(0),Scalar(1e-4));
+  ASSERT_NEAR(testVec(1), this->vecZ(1),Scalar(1e-4));
+  ASSERT_NEAR(testVec(2), this->vecZ(2),Scalar(1e-4));
 
   // Check rotation with Identity
   testVec = this->rotEulerAnglesXyzIdentity.rotate(this->vecX);
-  ASSERT_NEAR(testVec(0), this->vecX(0),1e-4);
-  ASSERT_NEAR(testVec(1), this->vecX(1),1e-4);
-  ASSERT_NEAR(testVec(2), this->vecX(2),1e-4);
+  ASSERT_NEAR(testVec(0), this->vecX(0),Scalar(1e-4));
+  ASSERT_NEAR(testVec(1), this->vecX(1),Scalar(1e-4));
+  ASSERT_NEAR(testVec(2), this->vecX(2),Scalar(1e-4));
   testVec = this->rotEulerAnglesXyzIdentity.rotate(this->vecY);
-  ASSERT_NEAR(testVec(0), this->vecY(0),1e-4);
-  ASSERT_NEAR(testVec(1), this->vecY(1),1e-4);
-  ASSERT_NEAR(testVec(2), this->vecY(2),1e-4);
+  ASSERT_NEAR(testVec(0), this->vecY(0),Scalar(1e-4));
+  ASSERT_NEAR(testVec(1), this->vecY(1),Scalar(1e-4));
+  ASSERT_NEAR(testVec(2), this->vecY(2),Scalar(1e-4));
   testVec = this->rotEulerAnglesXyzIdentity.rotate(this->vecZ);
-  ASSERT_NEAR(testVec(0), this->vecZ(0),1e-4);
-  ASSERT_NEAR(testVec(1), this->vecZ(1),1e-4);
-  ASSERT_NEAR(testVec(2), this->vecZ(2),1e-4);
+  ASSERT_NEAR(testVec(0), this->vecZ(0),Scalar(1e-4));
+  ASSERT_NEAR(testVec(1), this->vecZ(1),Scalar(1e-4));
+  ASSERT_NEAR(testVec(2), this->vecZ(2),Scalar(1e-4));
   testVec = this->rotEulerAnglesXyzIdentity.inverseRotate(this->vecX);
-  ASSERT_NEAR(testVec(0), this->vecX(0),1e-4);
-  ASSERT_NEAR(testVec(1), this->vecX(1),1e-4);
-  ASSERT_NEAR(testVec(2), this->vecX(2),1e-4);
+  ASSERT_NEAR(testVec(0), this->vecX(0),Scalar(1e-4));
+  ASSERT_NEAR(testVec(1), this->vecX(1),Scalar(1e-4));
+  ASSERT_NEAR(testVec(2), this->vecX(2),Scalar(1e-4));
   testVec = this->rotEulerAnglesXyzIdentity.inverseRotate(this->vecY);
-  ASSERT_NEAR(testVec(0), this->vecY(0),1e-4);
-  ASSERT_NEAR(testVec(1), this->vecY(1),1e-4);
-  ASSERT_NEAR(testVec(2), this->vecY(2),1e-4);
+  ASSERT_NEAR(testVec(0), this->vecY(0),Scalar(1e-4));
+  ASSERT_NEAR(testVec(1), this->vecY(1),Scalar(1e-4));
+  ASSERT_NEAR(testVec(2), this->vecY(2),Scalar(1e-4));
   testVec = this->rotEulerAnglesXyzIdentity.inverseRotate(this->vecZ);
-  ASSERT_NEAR(testVec(0), this->vecZ(0),1e-4);
-  ASSERT_NEAR(testVec(1), this->vecZ(1),1e-4);
-  ASSERT_NEAR(testVec(2), this->vecZ(2),1e-4);
+  ASSERT_NEAR(testVec(0), this->vecZ(0),Scalar(1e-4));
+  ASSERT_NEAR(testVec(1), this->vecZ(1),Scalar(1e-4));
+  ASSERT_NEAR(testVec(2), this->vecZ(2),Scalar(1e-4));
 
   // Check combination between concatenation and rotate
   testVec1 = this->rotEulerAnglesXyzV4.rotate(this->rotEulerAnglesXyzV3.rotate(this->vec));
   testVec2 = (this->rotEulerAnglesXyzV4*this->rotEulerAnglesXyzV3).rotate(this->vec);
-  ASSERT_NEAR(testVec1(0), testVec2(0),1e-4);
-  ASSERT_NEAR(testVec1(1), testVec2(1),1e-4);
-  ASSERT_NEAR(testVec1(2), testVec2(2),1e-4);
+  ASSERT_NEAR(testVec1(0), testVec2(0),Scalar(1e-4));
+  ASSERT_NEAR(testVec1(1), testVec2(1),Scalar(1e-4));
+  ASSERT_NEAR(testVec1(2), testVec2(2),Scalar(1e-4));
 }
 
 
@@ -537,11 +537,11 @@ TYPED_TEST(EulerAnglesXyzSingleTest, testMaps){
 
   testVec = this->rotEulerAnglesXyzV3.logarithmicMap();
   EulerAnglesXyz rotExpMap = rot.exponentialMap(testVec);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotEulerAnglesXyzV3.toImplementation(), rotExpMap.toImplementation(), 1e-4, "maps");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotEulerAnglesXyzV3.toImplementation(), rotExpMap.toImplementation(), Scalar(1e-4), "maps");
 
   testVec = this->rotEulerAnglesXyzV4.logarithmicMap();
   rotExpMap =  rot.exponentialMap(testVec);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotEulerAnglesXyzV4.toImplementation(), rotExpMap.toImplementation(), 1e-4, "maps");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotEulerAnglesXyzV4.toImplementation(), rotExpMap.toImplementation(), Scalar(1e-4), "maps");
 
   double norm = 0.1;
   testVec = this->vec/this->vec.norm()*norm;
@@ -550,7 +550,7 @@ TYPED_TEST(EulerAnglesXyzSingleTest, testMaps){
 
   testVec.setZero();
   rotExpMap = rot.exponentialMap(testVec);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotEulerAnglesXyzIdentity.toImplementation(), rotExpMap.toImplementation(), 1e-4, "maps");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotEulerAnglesXyzIdentity.toImplementation(), rotExpMap.toImplementation(), Scalar(1e-4), "maps");
 
 }
 
@@ -587,19 +587,19 @@ TYPED_TEST(EulerAnglesXyzSingleTest, testBoxOperators){
   testVec = this->vec;
   rot = this->rotEulerAnglesXyzV3.boxPlus(testVec);
   testVec = rot.boxMinus(this->rotEulerAnglesXyzV3);
-  ASSERT_NEAR(testVec(0),this->vec(0),1e-4);
-  ASSERT_NEAR(testVec(1),this->vec(1),1e-4);
-  ASSERT_NEAR(testVec(2),this->vec(2),1e-4);
+  ASSERT_NEAR(testVec(0),this->vec(0),Scalar(1e-4));
+  ASSERT_NEAR(testVec(1),this->vec(1),Scalar(1e-4));
+  ASSERT_NEAR(testVec(2),this->vec(2),Scalar(1e-4));
 
   // Test overlap with disparity angle
   double norm = 0.1;
   testVec = this->vec/this->vec.norm()*norm;
   rot = this->rotEulerAnglesXyzV3.boxPlus(testVec);
-  ASSERT_NEAR(rot.getDisparityAngle(this->rotEulerAnglesXyzV3),norm,1e-4); // Check distance between both
+  ASSERT_NEAR(rot.getDisparityAngle(this->rotEulerAnglesXyzV3),norm,Scalar(1e-4)); // Check distance between both
   rot2 = this->rotEulerAnglesXyzV3.boxPlus(2*testVec);
-  ASSERT_NEAR(rot.getDisparityAngle(rot2),norm,1e-4); // Check distance to double
+  ASSERT_NEAR(rot.getDisparityAngle(rot2),norm,Scalar(1e-4)); // Check distance to double
   rot2 = this->rotEulerAnglesXyzV3.boxPlus(-testVec);
-  ASSERT_NEAR(rot.getDisparityAngle(rot2),2*norm,1e-4); // Check distance to reverse
+  ASSERT_NEAR(rot.getDisparityAngle(rot2),2*norm,Scalar(1e-4)); // Check distance to reverse
 }
 
 
@@ -711,6 +711,6 @@ TYPED_TEST(EulerAnglesXyzSingleTest, testRotationMatrix)
   rotMat <<                         cos(y)*cos(z),                       -cos(y)*sin(z),         sin(y),
    cos(x)*sin(z) + cos(z)*sin(x)*sin(y), cos(x)*cos(z) - sin(x)*sin(y)*sin(z), -cos(y)*sin(x),
    sin(x)*sin(z) - cos(x)*cos(z)*sin(y), cos(z)*sin(x) + cos(x)*sin(y)*sin(z),  cos(x)*cos(y);
-  KINDR_ASSERT_DOUBLE_MX_EQ(rotMat, rotMatKindr.matrix(), 1.0e-3, "rotation matrix")
+  KINDR_ASSERT_DOUBLE_MX_EQ(rotMat, rotMatKindr.matrix(), Scalar(1.0e-3), "rotation matrix")
 }
 
