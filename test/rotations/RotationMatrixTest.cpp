@@ -104,6 +104,7 @@ template <typename RotationPair_>
 struct RotationMatrixRotationQuaternionPairTest : public ::testing::Test{
   typedef typename RotationPair_::first_type RotationQuaternion;
   typedef typename RotationQuaternion::Scalar RotationQuaternionScalar;
+  typedef typename RotationQuaternion::Scalar Scalar;
   typedef typename RotationPair_::second_type RotationMatrix;
   typedef typename RotationMatrix::Scalar RotationMatrixScalar;
   typedef Eigen::Matrix<RotationQuaternionScalar,3,1> Vector;
@@ -181,18 +182,18 @@ TYPED_TEST(RotationMatrixSingleTest, testConstructors){
   typedef typename TestFixture::Scalar Scalar;
 
   RotationMatrix rot;
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3Identity, rot.matrix(), 1e-4, "constructor");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3Identity, rot.matrix(), Scalar(1e-4), "constructor");
 
   RotationMatrix rot2(this->eigenMatrix3x3v1(0,0), this->eigenMatrix3x3v1(0,1), this->eigenMatrix3x3v1(0,2),
                       this->eigenMatrix3x3v1(1,0), this->eigenMatrix3x3v1(1,1), this->eigenMatrix3x3v1(1,2),
                       this->eigenMatrix3x3v1(2,0), this->eigenMatrix3x3v1(2,1), this->eigenMatrix3x3v1(2,2));
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot2.matrix(), 1e-4, "constructor");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot2.matrix(), Scalar(1e-4), "constructor");
 
   RotationMatrix rot4(this->eigenMatrix3x3v1);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot4.matrix(), 1e-4, "constructor");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot4.matrix(), Scalar(1e-4), "constructor");
 
   RotationMatrix rot5(rot4);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot5.matrix(), 1e-4, "constructor");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot5.matrix(), Scalar(1e-4), "constructor");
 }
 
 TYPED_TEST(RotationMatrixSingleTest, testAssignmentOperator){
@@ -201,7 +202,7 @@ TYPED_TEST(RotationMatrixSingleTest, testAssignmentOperator){
 
   RotationMatrix rot(this->eigenMatrix3x3v1);
   RotationMatrix rot1 = rot;
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot1.matrix(), 1e-4, "constructor");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot1.matrix(), Scalar(1e-4), "constructor");
 }
 
 TYPED_TEST(RotationMatrixSingleTest, testParenthesisOperator) {
@@ -211,7 +212,7 @@ TYPED_TEST(RotationMatrixSingleTest, testParenthesisOperator) {
   RotationMatrix rot(this->eigenMatrix3x3v1);
   RotationMatrix rot1;
   rot1(rot);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot1.matrix(), 1e-4, "constructor");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot1.matrix(), Scalar(1e-4), "constructor");
 }
 
 TYPED_TEST(RotationMatrixSingleTest, testGetters)
@@ -220,24 +221,24 @@ TYPED_TEST(RotationMatrixSingleTest, testGetters)
   typedef typename TestFixture::Scalar Scalar;
 
   RotationMatrix rot(this->eigenMatrix3x3v1);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot.matrix(), 1e-4, "matrix()");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot.matrix(), Scalar(1e-4), "matrix()");
 
   RotationMatrix rot1(this->eigenMatrix3x3v1);
   RotationMatrix rot2 = rot1.getUnique();
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot1.matrix(), 1e-4, "unique");
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot2.matrix(), 1e-4, "unique");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot1.matrix(), Scalar(1e-4), "unique");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot2.matrix(), Scalar(1e-4), "unique");
 
   RotationMatrix rot3(this->eigenMatrix3x3v1);
   ASSERT_EQ(this->eigenMatrix3x3v1.determinant(), rot3.determinant());
 
   RotationMatrix rot4(this->eigenMatrix3x3v1);
   RotationMatrix rot5 = rot4.transposed();
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot4.matrix(), 1e-4, "transposed");
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1.transpose(), rot5.matrix(), 1e-4, "transposed");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot4.matrix(), Scalar(1e-4), "transposed");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1.transpose(), rot5.matrix(), Scalar(1e-4), "transposed");
 
   RotationMatrix rot6 = rot4.transpose();
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1.transpose(), rot4.matrix(), 1e-4, "transpose");
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1.transpose(), rot6.matrix(), 1e-4, "transpose");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1.transpose(), rot4.matrix(), Scalar(1e-4), "transpose");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1.transpose(), rot6.matrix(), Scalar(1e-4), "transpose");
 }
 
 TYPED_TEST(RotationMatrixSingleTest, testSetters)
@@ -247,32 +248,32 @@ TYPED_TEST(RotationMatrixSingleTest, testSetters)
 
   RotationMatrix rot(this->eigenMatrix3x3v1);
   rot.setIdentity();
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3Identity, rot.matrix(), 1e-4, "identity");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3Identity, rot.matrix(), Scalar(1e-4), "identity");
 
   RotationMatrix rot1(this->eigenMatrix3x3v1);
   RotationMatrix rot2 = rot1.setUnique();
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot1.matrix(), 1e-4, "unique");
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot2.matrix(), 1e-4, "unique");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot1.matrix(), Scalar(1e-4), "unique");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->eigenMatrix3x3v1, rot2.matrix(), Scalar(1e-4), "unique");
 
   rot.setFromVectors(this->vec, this->vec);
-  KINDR_ASSERT_DOUBLE_MX_EQ(rot.matrix(), this->rotRotationMatrixIdentity.matrix(), 1e-4, "setFromVectors");
+  KINDR_ASSERT_DOUBLE_MX_EQ(rot.matrix(), this->rotRotationMatrixIdentity.matrix(), Scalar(1e-4), "setFromVectors");
 
   rot.setFromVectors(this->vecX, this->vecY);
-  KINDR_ASSERT_DOUBLE_MX_EQ(rot.matrix(), this->rotRotationMatrixQuarterZ.matrix(), 1e-4, "setFromVectors");
+  KINDR_ASSERT_DOUBLE_MX_EQ(rot.matrix(), this->rotRotationMatrixQuarterZ.matrix(), Scalar(1e-4), "setFromVectors");
 
   rot.setFromVectors(Eigen::Matrix<Scalar, 3, 1>(1.0, 1.0, 0.0), Eigen::Matrix<Scalar, 3, 1>(-1.0, 1.0, 0.0));
-  KINDR_ASSERT_DOUBLE_MX_EQ(rot.matrix(), this->rotRotationMatrixQuarterZ.matrix(), 1e-4, "setFromVectors");
+  KINDR_ASSERT_DOUBLE_MX_EQ(rot.matrix(), this->rotRotationMatrixQuarterZ.matrix(), Scalar(1e-4), "setFromVectors");
 
   Eigen::Matrix<Scalar, 3, 1> vector1(1.0, 1.0, 0.0);
   Eigen::Matrix<Scalar, 3, 1> vector2(-1.0, 1.0, 0.0);
   rot.setFromVectors(vector1, vector2);
-  KINDR_ASSERT_DOUBLE_MX_EQ(vector2, rot.rotate(vector1), 1e-4, "setFromVectors");
+  KINDR_ASSERT_DOUBLE_MX_EQ(vector2, rot.rotate(vector1), Scalar(1e-4), "setFromVectors");
 
   rot.setFromVectors(this->vecX, this->vecX);
-  KINDR_ASSERT_DOUBLE_MX_EQ(rot.matrix(), this->rotRotationMatrixIdentity.matrix(), 1e-4, "setFromVectors");
+  KINDR_ASSERT_DOUBLE_MX_EQ(rot.matrix(), this->rotRotationMatrixIdentity.matrix(), Scalar(1e-4), "setFromVectors");
 
   rot.setFromVectors(this->vecX, this->vecXSmallError);
-  KINDR_ASSERT_DOUBLE_MX_EQ(rot.matrix(), this->rotRotationMatrixIdentity.matrix(), 1e-4, "setFromVectors");
+  KINDR_ASSERT_DOUBLE_MX_EQ(rot.matrix(), this->rotRotationMatrixIdentity.matrix(), Scalar(1e-4), "setFromVectors");
 }
 
 
@@ -337,32 +338,32 @@ TYPED_TEST(RotationMatrixSingleTest, testConcatenation){
 
   // Check concatenation of 4 quarters
   rotRotationMatrix = this->rotRotationMatrixQuarterX*this->rotRotationMatrixQuarterX*this->rotRotationMatrixQuarterX*this->rotRotationMatrixQuarterX;
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixIdentity.matrix(), rotRotationMatrix.matrix(), 1e-4, "concatenation");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixIdentity.matrix(), rotRotationMatrix.matrix(), Scalar(1e-4), "concatenation");
 
   rotRotationMatrix = this->rotRotationMatrixQuarterY*this->rotRotationMatrixQuarterY*this->rotRotationMatrixQuarterY*this->rotRotationMatrixQuarterY;
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixIdentity.matrix(), rotRotationMatrix.matrix(), 1e-4, "concatenation");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixIdentity.matrix(), rotRotationMatrix.matrix(), Scalar(1e-4), "concatenation");
 
   rotRotationMatrix = this->rotRotationMatrixQuarterZ*this->rotRotationMatrixQuarterZ*this->rotRotationMatrixQuarterZ*this->rotRotationMatrixQuarterZ;
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixIdentity.matrix(), rotRotationMatrix.matrix(), 1e-4, "concatenation");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixIdentity.matrix(), rotRotationMatrix.matrix(), Scalar(1e-4), "concatenation");
 
   // Check concatenation of 3 different quarters
   rotRotationMatrix = this->rotRotationMatrixQuarterX.inverted()*this->rotRotationMatrixQuarterY*this->rotRotationMatrixQuarterX;
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterZ.inverted().matrix(), rotRotationMatrix.matrix(), 1e-4, "concatenation");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterZ.inverted().matrix(), rotRotationMatrix.matrix(), Scalar(1e-4), "concatenation");
 
   rotRotationMatrix = this->rotRotationMatrixQuarterX.inverted()*this->rotRotationMatrixQuarterZ*this->rotRotationMatrixQuarterX;
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterY.matrix(), rotRotationMatrix.matrix(), 1e-4, "concatenation");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterY.matrix(), rotRotationMatrix.matrix(), Scalar(1e-4), "concatenation");
 
   rotRotationMatrix = this->rotRotationMatrixQuarterY.inverted()*this->rotRotationMatrixQuarterX*this->rotRotationMatrixQuarterY;
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterZ.matrix(), rotRotationMatrix.matrix(), 1e-4, "concatenation");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterZ.matrix(), rotRotationMatrix.matrix(), Scalar(1e-4), "concatenation");
 
   rotRotationMatrix = this->rotRotationMatrixQuarterY.inverted()*this->rotRotationMatrixQuarterZ*this->rotRotationMatrixQuarterY;
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterX.inverted().matrix(), rotRotationMatrix.matrix(), 1e-4, "concatenation");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterX.inverted().matrix(), rotRotationMatrix.matrix(), Scalar(1e-4), "concatenation");
 
   rotRotationMatrix = this->rotRotationMatrixQuarterZ.inverted()*this->rotRotationMatrixQuarterX*this->rotRotationMatrixQuarterZ;
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterY.inverted().matrix(), rotRotationMatrix.matrix(), 1e-4, "concatenation");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterY.inverted().matrix(), rotRotationMatrix.matrix(), Scalar(1e-4), "concatenation");
 
   rotRotationMatrix = this->rotRotationMatrixQuarterZ.inverted()*this->rotRotationMatrixQuarterY*this->rotRotationMatrixQuarterZ;
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterX.matrix(), rotRotationMatrix.matrix(), 1e-4, "concatenation");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterX.matrix(), rotRotationMatrix.matrix(), Scalar(1e-4), "concatenation");
 }
 
 
@@ -378,7 +379,7 @@ TYPED_TEST(RotationMatrixSingleTest, testFix){
   rotModified = rot;
   rotModified.toImplementation() *= 1.1;
   rotModified.fix();
-  KINDR_ASSERT_DOUBLE_MX_EQ(rotModified.matrix(), rot.matrix(), 1e-4, "fix");
+  KINDR_ASSERT_DOUBLE_MX_EQ(rotModified.matrix(), rot.matrix(), Scalar(1e-4), "fix");
 }
 
 
@@ -521,7 +522,7 @@ TYPED_TEST(RotationMatrixSingleTest, testExpMap){
   rotTrue.toImplementation() << 1.000000000000000e+00, 0, 0,
                       0,     5.403023058681397e-01,    -8.414709848078965e-01,
                       0,     8.414709848078965e-01,     5.403023058681398e-01;
-  KINDR_ASSERT_DOUBLE_MX_EQ(rotMeas.matrix(), rotTrue.matrix(), 1e-4, "testExpMap");
+  KINDR_ASSERT_DOUBLE_MX_EQ(rotMeas.matrix(), rotTrue.matrix(), Scalar(1e-4), "testExpMap");
 
 
   vector << 0.1, 0.2, 0.3;
@@ -529,7 +530,7 @@ TYPED_TEST(RotationMatrixSingleTest, testExpMap){
      3.029327134026372e-01,     9.505806179060916e-01,    -6.803131640494003e-02,
     -1.805400766943977e-01,     1.273345749176302e-01,     9.752903089530458e-01;
   rotMeas = identity.exponentialMap(vector);
-  KINDR_ASSERT_DOUBLE_MX_EQ(rotMeas.toImplementation(), rotTrue.toImplementation(), 1e-4, "expMap");
+  KINDR_ASSERT_DOUBLE_MX_EQ(rotMeas.toImplementation(), rotTrue.toImplementation(), Scalar(1e-4), "expMap");
 
 }
 
@@ -549,7 +550,7 @@ TYPED_TEST(RotationMatrixSingleTest, testLogMap){
                          -3.343428285240700e-01,
                          -3.656800136918290e-01);
   Vector vector = rot.logarithmicMap();
-  KINDR_ASSERT_DOUBLE_MX_EQ(vector, vectorCorrect, 1e-4, "logMap1");
+  KINDR_ASSERT_DOUBLE_MX_EQ(vector, vectorCorrect, Scalar(1e-4), "logMap1");
 
 
   rot.toImplementation() << 8.799231762812570e-01,    -3.720255519422596e-01,     2.955202066613395e-01,
@@ -558,7 +559,7 @@ TYPED_TEST(RotationMatrixSingleTest, testLogMap){
 
   vectorCorrect <<  2.558835877170818e-01,2.555418313115193e-01, 4.256689608943892e-01;
   vector = rot.logarithmicMap();
-  KINDR_ASSERT_DOUBLE_MX_EQ(vector, vectorCorrect, 1e-4, "logMap2");
+  KINDR_ASSERT_DOUBLE_MX_EQ(vector, vectorCorrect, Scalar(1e-4), "logMap2");
 
 }
 
@@ -581,20 +582,20 @@ TYPED_TEST(RotationMatrixSingleTest, testMaps){
 
   testVec = this->rotRotationMatrix1.logarithmicMap();
   RotationMatrix rotRotationMatrixExpMap = rotRotationMatrix.exponentialMap(testVec);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrix1.toImplementation(), rotRotationMatrixExpMap.toImplementation(), 1e-3, "logExpMapMat1");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrix1.toImplementation(), rotRotationMatrixExpMap.toImplementation(), Scalar(1e-3), "logExpMapMat1");
 
   testVec = this->rotRotationMatrix2.logarithmicMap();
   rotRotationMatrixExpMap = rotRotationMatrix.exponentialMap(testVec);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrix2.matrix(), rotRotationMatrixExpMap.matrix(), 1e-4, "logExpMapMat2");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrix2.matrix(), rotRotationMatrixExpMap.matrix(), Scalar(1e-4), "logExpMapMat2");
 
   double norm = 0.1;
   testVec = this->vec/this->vec.norm()*norm;
   rotRotationMatrixExpMap = rotRotationMatrix.exponentialMap(testVec);
-  ASSERT_NEAR(rotRotationMatrixExpMap.getDisparityAngle(this->rotRotationMatrixIdentity),norm,1e-6);
+  ASSERT_NEAR(rotRotationMatrixExpMap.getDisparityAngle(this->rotRotationMatrixIdentity),norm,Scalar(1e-6));
 
   testVec.setZero();
   rotRotationMatrixExpMap = rotRotationMatrix.exponentialMap(testVec);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixIdentity.matrix(), rotRotationMatrixExpMap.matrix(), 1e-4, "maps");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixIdentity.matrix(), rotRotationMatrixExpMap.matrix(), Scalar(1e-4), "maps");
 
 }
 
@@ -619,7 +620,7 @@ TYPED_TEST(RotationMatrixSingleTest, testBoxPlus){
    rotRotationMatrix4Correct.toImplementation() <<     1.000000000000000e+00,   0,     0,
                                                  0,     9.999999999833334e-06,     9.999999999500001e-01,
                                                  0,    -9.999999999500001e-01,     9.999999999833334e-06;
-   KINDR_ASSERT_DOUBLE_MX_EQ(rotRotationMatrix4Correct.matrix(), rotRotationMatrix4.matrix(), 1e-4, "boxPlus");
+   KINDR_ASSERT_DOUBLE_MX_EQ(rotRotationMatrix4Correct.matrix(), rotRotationMatrix4.matrix(), Scalar(1e-4), "boxPlus");
 }
 
 
@@ -696,9 +697,9 @@ TYPED_TEST(RotationMatrixSingleTest, testBoxOperators){
   // Test backward-forward
   testVec = this->rotRotationMatrix1.boxMinus(this->rotRotationMatrix2);
   rot1 = this->rotRotationMatrix2.boxPlus(testVec);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrix1.matrix(), rot1.matrix(), 1e-4, "testBoxOperators");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrix1.matrix(), rot1.matrix(), Scalar(1e-4), "testBoxOperators");
 
-//  ASSERT_EQ(rot1.isNear(this->rotRotationMatrix1,1e-4),true);
+//  ASSERT_EQ(rot1.isNear(this->rotRotationMatrix1,Scalar(1e-4)),true);
 
   // Test forward-backward
   testVec = this->vec;
@@ -712,11 +713,11 @@ TYPED_TEST(RotationMatrixSingleTest, testBoxOperators){
   double norm = 0.1;
   testVec = this->vec/this->vec.norm()*norm;
   rot1 = this->rotRotationMatrix1.boxPlus(testVec);
-  ASSERT_NEAR(rot1.getDisparityAngle(this->rotRotationMatrix1),norm,1e-4); // Check distance between both
+  ASSERT_NEAR(rot1.getDisparityAngle(this->rotRotationMatrix1),norm,Scalar(1e-4)); // Check distance between both
   rot2 = this->rotRotationMatrix1.boxPlus(2*testVec);
-  ASSERT_NEAR(rot1.getDisparityAngle(rot2),norm,1e-4); // Check distance to double
+  ASSERT_NEAR(rot1.getDisparityAngle(rot2),norm,Scalar(1e-4)); // Check distance to double
   rot2 = this->rotRotationMatrix1.boxPlus(-testVec);
-  ASSERT_NEAR(rot1.getDisparityAngle(rot2),2*norm,1e-4); // Check distance to reverse
+  ASSERT_NEAR(rot1.getDisparityAngle(rot2),2*norm,Scalar(1e-4)); // Check distance to reverse
 
 
 }
@@ -730,6 +731,7 @@ TYPED_TEST(RotationMatrixSingleTest, testBoxOperators){
 TYPED_TEST(RotationMatrixRotationQuaternionPairTest, testConvertToRotationQuaternionUsingConstructor){
   typedef typename TestFixture::RotationQuaternion RotationQuaternion;
   typedef typename TestFixture::RotationMatrix RotationMatrix;
+  typedef typename TestFixture::Scalar Scalar;
 
   RotationQuaternion rotQuat2(this->rotRotationMatrixIdentity);
   ASSERT_NEAR(rotQuat2.w(), this->rotQuatIdentity.w(),1e-6);
@@ -756,24 +758,26 @@ TYPED_TEST(RotationMatrixRotationQuaternionPairTest, testConvertToRotationQuater
 TYPED_TEST(RotationMatrixRotationQuaternionPairTest, testConvertToRotationMatrixUsingConstructor){
   typedef typename TestFixture::RotationQuaternion RotationQuaternion;
   typedef typename TestFixture::RotationMatrix RotationMatrix;
+  typedef typename TestFixture::Scalar Scalar;
 
   RotationMatrix rot1(this->rotQuatIdentity);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixIdentity.matrix(), rot1.matrix(), 1e-4, "conversion");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixIdentity.matrix(), rot1.matrix(), Scalar(1e-4), "conversion");
 
   RotationMatrix rot2(this->rotQuatQuarterX);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterX.matrix(), rot2.matrix(), 1e-4, "conversion");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterX.matrix(), rot2.matrix(), Scalar(1e-4), "conversion");
 
   RotationMatrix rot3(this->rotQuatQuarterY);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterY.matrix(), rot3.matrix(), 1e-4, "conversion");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterY.matrix(), rot3.matrix(), Scalar(1e-4), "conversion");
 
   RotationMatrix rot4(this->rotQuatQuarterZ);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterZ.matrix(), rot4.matrix(), 1e-4, "conversion");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterZ.matrix(), rot4.matrix(), Scalar(1e-4), "conversion");
 
 }
 
 TYPED_TEST(RotationMatrixRotationQuaternionPairTest, testConvertToRotationQuaternionUsingAssignment) {
   typedef typename TestFixture::RotationQuaternion RotationQuaternion;
   typedef typename TestFixture::RotationMatrix RotationMatrix;
+  typedef typename TestFixture::Scalar Scalar;
   RotationQuaternion rotQuat;
 
   // TODO: add generic
@@ -803,16 +807,17 @@ TYPED_TEST(RotationMatrixRotationQuaternionPairTest, testConvertToRotationQuater
 TYPED_TEST(RotationMatrixRotationQuaternionPairTest, testConvertToRotationMatrixUsingAssignment) {
   typedef typename TestFixture::RotationQuaternion RotationQuaternion;
   typedef typename TestFixture::RotationMatrix RotationMatrix;
+  typedef typename TestFixture::Scalar Scalar;
   RotationMatrix rot;
 
   rot = this->rotQuatIdentity;
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixIdentity.matrix(), rot.matrix(), 1e-4, "conversion");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixIdentity.matrix(), rot.matrix(), Scalar(1e-4), "conversion");
   rot = this->rotQuatQuarterX;
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterX.matrix(), rot.matrix(), 1e-4, "conversion");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterX.matrix(), rot.matrix(), Scalar(1e-4), "conversion");
   rot = this->rotQuatQuarterY;
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterY.matrix(), rot.matrix(), 1e-4, "conversion");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterY.matrix(), rot.matrix(), Scalar(1e-4), "conversion");
   rot = this->rotQuatQuarterZ;
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterZ.matrix(), rot.matrix(), 1e-4, "conversion");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterZ.matrix(), rot.matrix(), Scalar(1e-4), "conversion");
 
 
 }
@@ -820,6 +825,7 @@ TYPED_TEST(RotationMatrixRotationQuaternionPairTest, testConvertToRotationMatrix
 TYPED_TEST(RotationMatrixRotationQuaternionPairTest, testConvertToRotationQuaternionUsingParenthesisOperator){
   typedef typename TestFixture::RotationQuaternion RotationQuaternion;
   typedef typename TestFixture::RotationMatrix RotationMatrix;
+  typedef typename TestFixture::Scalar Scalar;
   RotationQuaternion rotQuat;
 
   rotQuat(this->rotRotationMatrixIdentity);
@@ -847,16 +853,17 @@ TYPED_TEST(RotationMatrixRotationQuaternionPairTest, testConvertToRotationQuater
 TYPED_TEST(RotationMatrixRotationQuaternionPairTest, testConvertToRotationMatrixUsingParenthesisOperator){
   typedef typename TestFixture::RotationQuaternion RotationQuaternion;
   typedef typename TestFixture::RotationMatrix RotationMatrix;
+  typedef typename TestFixture::Scalar Scalar;
   RotationMatrix rot;
 
   rot(this->rotQuatIdentity);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixIdentity.matrix(), rot.matrix(), 1e-4, "conversion");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixIdentity.matrix(), rot.matrix(), Scalar(1e-4), "conversion");
   rot(this->rotQuatQuarterX);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterX.matrix(), rot.matrix(), 1e-4, "conversion");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterX.matrix(), rot.matrix(), Scalar(1e-4), "conversion");
   rot(this->rotQuatQuarterY);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterY.matrix(), rot.matrix(), 1e-4, "conversion");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterY.matrix(), rot.matrix(), Scalar(1e-4), "conversion");
   rot(this->rotQuatQuarterZ);
-  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterZ.matrix(), rot.matrix(), 1e-4, "conversion");
+  KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixQuarterZ.matrix(), rot.matrix(), Scalar(1e-4), "conversion");
 
 }
 
@@ -867,6 +874,7 @@ TYPED_TEST(RotationMatrixRotationQuaternionPairTest, testConvertToRotationMatrix
 TYPED_TEST(RotationMatrixRotationQuaternionPairTest, testInversion){
   typedef typename TestFixture::RotationQuaternion RotationQuaternion;
   typedef typename TestFixture::RotationMatrix RotationMatrix;
+  typedef typename TestFixture::Scalar Scalar;
   RotationQuaternion rotQuat;
   RotationMatrix rot1;
   RotationMatrix rot2;
@@ -881,13 +889,13 @@ TYPED_TEST(RotationMatrixRotationQuaternionPairTest, testInversion){
   // Use rotation vector method and compare
   rot2 = this->rotQuat1;
   rot2.invert();
-  KINDR_ASSERT_DOUBLE_MX_EQ(rot2.matrix(), rot1.matrix(), 1e-4, "inversion");
+  KINDR_ASSERT_DOUBLE_MX_EQ(rot2.matrix(), rot1.matrix(), Scalar(1e-4), "inversion");
 
   rot3 = this->rotQuat1;
   rot5 = this->rotQuat1;
   rot4 = rot3.inverted();
-  KINDR_ASSERT_DOUBLE_MX_EQ(rot4.matrix(), rot1.matrix(), 1e-4, "inversion");
-  KINDR_ASSERT_DOUBLE_MX_EQ(rot3.matrix(), rot5.matrix(), 1e-4, "inversion");
+  KINDR_ASSERT_DOUBLE_MX_EQ(rot4.matrix(), rot1.matrix(), Scalar(1e-4), "inversion");
+  KINDR_ASSERT_DOUBLE_MX_EQ(rot3.matrix(), rot5.matrix(), Scalar(1e-4), "inversion");
 }
 
 

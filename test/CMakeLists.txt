@@ -133,6 +133,7 @@ add_gtest( runUnitTestsVector  ${VECTOR_SRCS})
 set(FORCE_SRCS
 	test_main.cpp
 	phys_quant/ForceTest.cpp
+	phys_quant/WrenchTest.cpp
 )
 add_gtest( runUnitTestsForce  ${FORCE_SRCS})
 

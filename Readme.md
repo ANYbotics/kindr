@@ -12,13 +12,13 @@ Author(s): C. Dario Bellicoso, Michael Bloesch, Remo Diethelm, Peter Fankhauser,
 
 Date     : June-2016
 
-[![Build Status](http://129.132.38.183:8080/job/kindr/badge/icon)](http://129.132.38.183:8080/job/kindr/)
+[![Build Status](http://rsl-ci.ethz.ch/buildStatus/icon?job=kindr)](http://rsl-ci.ethz.ch/job/kindr/)
 
 ## Documentation
 
-[Online](http://leggedrobotics.bitbucket.org/kindr)
+[Online](http://docs.leggedrobotics.com/kindr/)
 
-Impatient individuals can directly download the [cheat sheet](http://leggedrobotics.bitbucket.org/kindr/cheatsheet_latest.pdf).
+Impatient individuals can directly download the [cheat sheet](http://docs.leggedrobotics.com/kindr/cheatsheet_latest.pdf).
 
 See also section 'Building the documentation' below.
 
