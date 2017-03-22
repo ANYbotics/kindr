@@ -62,6 +62,7 @@ class RotationQuaternion : public RotationBase<RotationQuaternion<PrimType_>> {
    */
   Base rotationQuaternion_;
  public:
+   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   /*! \brief The implementation type.
    *  The implementation type is always an Eigen object.
    */

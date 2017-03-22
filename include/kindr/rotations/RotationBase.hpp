@@ -158,7 +158,7 @@ class RandomTraits {
 template<typename Derived_>
 class RotationBase {
  public:
-
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   /*! \brief Standard constructor.
    *  Creates an empty generic rotation object
    */
