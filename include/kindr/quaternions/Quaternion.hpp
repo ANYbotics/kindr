@@ -52,9 +52,9 @@ class UnitQuaternion;
  * \see rm::rotations::RotationQuaternion for quaternions that represent a rotation
  */
 template<typename PrimType_>
-class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::Quaternion<PrimType_> {
+class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::Quaternion<PrimType_, Eigen::DontAlign> {
  private:
-  typedef Eigen::Quaternion<PrimType_> Base;
+  typedef Eigen::Quaternion<PrimType_, Eigen::DontAlign> Base;
  public:
   //! the implementation type, i.e., Eigen::Quaternion<>
   typedef Base Implementation;
@@ -517,4 +517,3 @@ typedef UnitQuaternion<float> UnitQuaternionF;
 
 
 } // namespace kindr
-
