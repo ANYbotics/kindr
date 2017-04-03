@@ -52,10 +52,12 @@ class UnitQuaternion;
  * \see rm::rotations::RotationQuaternion for quaternions that represent a rotation
  */
 template<typename PrimType_>
-class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::Quaternion<PrimType_, Eigen::DontAlign> {
+class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::Quaternion<PrimType_> {
  private:
-  typedef Eigen::Quaternion<PrimType_, Eigen::DontAlign> Base;
+  typedef Eigen::Quaternion<PrimType_> Base;
  public:
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
   //! the implementation type, i.e., Eigen::Quaternion<>
   typedef Base Implementation;
   //! the scalar type, i.e., the type of the coefficients
