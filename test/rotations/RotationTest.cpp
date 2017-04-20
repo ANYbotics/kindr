@@ -462,7 +462,6 @@ TYPED_TEST(Conversion4Test, testBToA) {
 
 TYPED_TEST(ConcatenationTest, testAToB) {
   typedef typename TestFixture::Scalar Scalar;
-
   // Check result of multiplication of a generic rotation with identity
   this->rotB.rot = this->rotB.rotGeneric*this->rotA.rotIdentity;
   this->rotB.assertNear(this->rotB.rotGeneric.getUnique(), this->rotB.rot.getUnique(), this->tol, "rhs: identity");
@@ -472,13 +471,13 @@ TYPED_TEST(ConcatenationTest, testAToB) {
 
   // Check concatenation of 4 quarters
   this->rotB.rot = this->rotA.rotQuarterX*this->rotB.rotQuarterX*this->rotA.rotQuarterX*this->rotB.rotQuarterX;
-  this->rotB.assertNear(this->rotB.rotIdentity, this->rotB.rot.getUnique(), this->tol, "4 quarters");
+  this->rotB.assertNear(this->rotB.rotIdentity, this->rotB.rot.getUnique(), this->tol, "4 quarters X");
 
   this->rotB.rot = this->rotA.rotQuarterY*this->rotB.rotQuarterY*this->rotA.rotQuarterY*this->rotB.rotQuarterY;
-  this->rotB.assertNear(this->rotB.rotIdentity, this->rotB.rot.getUnique(), this->tol, "4 quarters");
+  this->rotB.assertNear(this->rotB.rotIdentity, this->rotB.rot.getUnique(), this->tol, "4 quarters Y");
 
   this->rotB.rot = this->rotA.rotQuarterZ*this->rotB.rotQuarterZ*this->rotA.rotQuarterZ*this->rotB.rotQuarterZ;
-  this->rotB.assertNear(this->rotB.rotIdentity, this->rotB.rot.getUnique(), this->tol, "4 quarters");
+  this->rotB.assertNear(this->rotB.rotIdentity, this->rotB.rot.getUnique(), this->tol, "4 quarters Z");
 
   // check concatenation of 3 different quarters
   this->rotB.rot = this->rotB.rotQuarterX.inverted()*this->rotA.rotQuarterY*this->rotB.rotQuarterX;
@@ -513,13 +512,13 @@ TYPED_TEST(ConcatenationTest, testBToA) {
 
   // Check concatenation of 4 quarters
   this->rotA.rot = this->rotB.rotQuarterX*this->rotA.rotQuarterX*this->rotB.rotQuarterX*this->rotA.rotQuarterX;
-  this->rotA.assertNear(this->rotA.rotIdentity, this->rotA.rot.getUnique(), this->tol, "4 quarters");
+  this->rotA.assertNear(this->rotA.rotIdentity, this->rotA.rot.getUnique(), this->tol, "4 quarters X");
 
   this->rotA.rot = this->rotB.rotQuarterY*this->rotA.rotQuarterY*this->rotB.rotQuarterY*this->rotA.rotQuarterY;
-  this->rotA.assertNear(this->rotA.rotIdentity, this->rotA.rot.getUnique(), this->tol, "4 quarters");
+  this->rotA.assertNear(this->rotA.rotIdentity, this->rotA.rot.getUnique(), this->tol, "4 quarters Y");
 
   this->rotA.rot = this->rotB.rotQuarterZ*this->rotA.rotQuarterZ*this->rotB.rotQuarterZ*this->rotA.rotQuarterZ;
-  this->rotA.assertNear(this->rotA.rotIdentity, this->rotA.rot.getUnique(), this->tol, "4 quarters");
+  this->rotA.assertNear(this->rotA.rotIdentity, this->rotA.rot.getUnique(), this->tol, "4 quarters Z");
 
 
   // Check concatenation of 3 different quarters
