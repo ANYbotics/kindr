@@ -358,7 +358,7 @@ TYPED_TEST(VectorTest, testVector)
   // segment
   EigenVector vec12(this->vec1);
   auto segmentResult(vec12.block(1,0,3,1));
-  auto segmentVector(vector1FromEigen2.template getSegment<3>(1));
+  Vector segmentVector(vector1FromEigen2.template getSegment<3>(1));
   ASSERT_EQ(segmentResult(0), segmentVector(0));
   ASSERT_EQ(segmentResult(1), segmentVector(1));
   ASSERT_EQ(segmentResult(2), segmentVector(2));

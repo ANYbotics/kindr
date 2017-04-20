@@ -150,7 +150,7 @@ TYPED_TEST(RotationDiffSingleTest, testConversionToLocalAngularVelocity)
   typedef typename RotationQuaternion::Scalar Scalar;
 
   for (auto rotQuat : this->rotationQuaternions) {
-     for (auto localAngularVelocity : this->localAngularVelocities) {
+     for (LocalAngularVelocity& localAngularVelocity : this->localAngularVelocities) {
        RotationQuaternionDiff rotQuatDiff(rotQuat, localAngularVelocity);
 
        LocalAngularVelocity localAngularVelocity2(2.0*rotQuat.getLocalQuaternionDiffMatrix()*rotQuatDiff.vector());
@@ -184,11 +184,12 @@ TYPED_TEST(RotationDiffSingleTest, testConversionToLocalAngularVelocity)
 TYPED_TEST(RotationDiffSingleTest, DISABLED_testConversionToGlobalAngularVelocity)
 {
   typedef typename TestFixture::RotationQuaternionDiff RotationQuaternionDiff;
+  typedef typename TestFixture::LocalAngularVelocity LocalAngularVelocity;
   typedef typename TestFixture::RotationQuaternion RotationQuaternion;
   typedef typename RotationQuaternion::Scalar Scalar;
 
   for (auto rotQuat : this->rotationQuaternions) { // qBI
-     for (auto localAngularVelocity : this->localAngularVelocities) { // IwIB
+     for (LocalAngularVelocity& localAngularVelocity : this->localAngularVelocities) { // IwIB
        RotationQuaternionDiff rotQuatDiff(0.5*rotQuat.getGlobalQuaternionDiffMatrix().transpose()*localAngularVelocity.vector());
 
        // Finite Difference
