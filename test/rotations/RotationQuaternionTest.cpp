@@ -29,6 +29,7 @@
 #include "kindr/rotations/Rotation.hpp"
 #include "kindr/common/gtest_eigen.hpp"
 #include "kindr/quaternions/Quaternion.hpp"
+#include <cmath>
 
 namespace rot = kindr;
 namespace quat = kindr;
@@ -881,13 +882,13 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionBoxOperators){
   testVec = Vector(5.45377e-10,9.59447e-10,-2.18031e-12);
   rotQuat.setValues(1,-1.76722e-15,2.01142e-15,-4.71845e-15);
   rotQuat2 = rotQuat.boxPlus(testVec);
-  ASSERT_EQ(isnan(rotQuat2.w()),false) << rotQuat2;
+  ASSERT_EQ(std::isnan(rotQuat2.w()),false) << rotQuat2;
 
 
   // Test forward-backward with small angle
   testVec = this->vec*1e-12;
   rotQuat = this->rotQuat1.boxPlus(testVec);
-  ASSERT_EQ(isnan(rotQuat.w()),false);
+  ASSERT_EQ(std::isnan(rotQuat.w()),false);
   testVec = rotQuat.boxMinus(this->rotQuat1);
   ASSERT_NEAR(testVec(0),this->vec(0)*1e-12,1e-6);
   ASSERT_NEAR(testVec(1),this->vec(1)*1e-12,1e-6);

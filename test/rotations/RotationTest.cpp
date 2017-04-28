@@ -155,10 +155,22 @@ struct AngleAxisTestType {
   Rotation rot;
 
   void assertNear(const Rotation_& rotA, const Rotation_& rotB, double tol=1e-6, const std::string& msg = "") {
-    ASSERT_EQ(true, kindr::compareRelativePeriodic(rotA.angle(), rotB.angle(), 2*M_PI, 1e-1)) << msg;
-    ASSERT_NEAR(rotA.axis().x(), rotB.axis().x(), tol) << msg;
-    ASSERT_NEAR(rotA.axis().y(), rotB.axis().y(), tol) << msg;
-    ASSERT_NEAR(rotA.axis().z(), rotB.axis().z(), tol) << msg;
+    /* Due to changes in Eigen's implementation of the conversion from unit quaternions to the
+     * angle axis representation, we compare the rotational vector representation of rotations A and B.
+     * In particular, the tolerance on the angle of the rotation representation has been lowered from
+     *      NumTraits<Scalar>::dummy_precision()*NumTraits<Scalar>::dummy_precision()
+     * to Scalar(0).
+     *
+     * Reference:
+     *  Eigen 3.2   http://eigen.tuxfamily.org/dox-3.2/AngleAxis_8h_source.html, line 173
+     *  Eigen 3.3   http://eigen.tuxfamily.org/dox/AngleAxis_8h_source.html, line 178
+     */
+    kindr::RotationVector<Scalar> vecA(rotA.axis()*rotA.angle());
+    kindr::RotationVector<Scalar> vecB(rotB.axis()*rotB.angle());
+
+    ASSERT_NEAR(vecA.x(), vecB.x(), tol) << msg;
+    ASSERT_NEAR(vecA.y(), vecB.y(), tol) << msg;
+    ASSERT_NEAR(vecA.z(), vecB.z(), tol) << msg;
   }
 };
 
@@ -462,7 +474,6 @@ TYPED_TEST(Conversion4Test, testBToA) {
 
 TYPED_TEST(ConcatenationTest, testAToB) {
   typedef typename TestFixture::Scalar Scalar;
-
   // Check result of multiplication of a generic rotation with identity
   this->rotB.rot = this->rotB.rotGeneric*this->rotA.rotIdentity;
   this->rotB.assertNear(this->rotB.rotGeneric.getUnique(), this->rotB.rot.getUnique(), this->tol, "rhs: identity");
@@ -472,13 +483,13 @@ TYPED_TEST(ConcatenationTest, testAToB) {
 
   // Check concatenation of 4 quarters
   this->rotB.rot = this->rotA.rotQuarterX*this->rotB.rotQuarterX*this->rotA.rotQuarterX*this->rotB.rotQuarterX;
-  this->rotB.assertNear(this->rotB.rotIdentity, this->rotB.rot.getUnique(), this->tol, "4 quarters");
+  this->rotB.assertNear(this->rotB.rotIdentity, this->rotB.rot.getUnique(), this->tol, "4 quarters X");
 
   this->rotB.rot = this->rotA.rotQuarterY*this->rotB.rotQuarterY*this->rotA.rotQuarterY*this->rotB.rotQuarterY;
-  this->rotB.assertNear(this->rotB.rotIdentity, this->rotB.rot.getUnique(), this->tol, "4 quarters");
+  this->rotB.assertNear(this->rotB.rotIdentity, this->rotB.rot.getUnique(), this->tol, "4 quarters Y");
 
   this->rotB.rot = this->rotA.rotQuarterZ*this->rotB.rotQuarterZ*this->rotA.rotQuarterZ*this->rotB.rotQuarterZ;
-  this->rotB.assertNear(this->rotB.rotIdentity, this->rotB.rot.getUnique(), this->tol, "4 quarters");
+  this->rotB.assertNear(this->rotB.rotIdentity, this->rotB.rot.getUnique(), this->tol, "4 quarters Z");
 
   // check concatenation of 3 different quarters
   this->rotB.rot = this->rotB.rotQuarterX.inverted()*this->rotA.rotQuarterY*this->rotB.rotQuarterX;
@@ -513,13 +524,13 @@ TYPED_TEST(ConcatenationTest, testBToA) {
 
   // Check concatenation of 4 quarters
   this->rotA.rot = this->rotB.rotQuarterX*this->rotA.rotQuarterX*this->rotB.rotQuarterX*this->rotA.rotQuarterX;
-  this->rotA.assertNear(this->rotA.rotIdentity, this->rotA.rot.getUnique(), this->tol, "4 quarters");
+  this->rotA.assertNear(this->rotA.rotIdentity, this->rotA.rot.getUnique(), this->tol, "4 quarters X");
 
   this->rotA.rot = this->rotB.rotQuarterY*this->rotA.rotQuarterY*this->rotB.rotQuarterY*this->rotA.rotQuarterY;
-  this->rotA.assertNear(this->rotA.rotIdentity, this->rotA.rot.getUnique(), this->tol, "4 quarters");
+  this->rotA.assertNear(this->rotA.rotIdentity, this->rotA.rot.getUnique(), this->tol, "4 quarters Y");
 
   this->rotA.rot = this->rotB.rotQuarterZ*this->rotA.rotQuarterZ*this->rotB.rotQuarterZ*this->rotA.rotQuarterZ;
-  this->rotA.assertNear(this->rotA.rotIdentity, this->rotA.rot.getUnique(), this->tol, "4 quarters");
+  this->rotA.assertNear(this->rotA.rotIdentity, this->rotA.rot.getUnique(), this->tol, "4 quarters Z");
 
 
   // Check concatenation of 3 different quarters

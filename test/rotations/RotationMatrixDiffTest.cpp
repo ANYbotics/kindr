@@ -211,8 +211,8 @@ TYPED_TEST(RotationMatrixDiffTest, testFiniteDifference)
   typedef typename TestFixture::RotationDiff::Matrix3x3 Matrix3;
 
  const  double dt = 1e-5;
-  for (auto rotation : this->rotations) {
-    for (auto angularVelocity : this->angularVelocities) {
+  for (auto& rotation : this->rotations) {
+    for (auto& angularVelocity : this->angularVelocities) {
       // Finite difference method for checking derivatives
       RotationDiff rotationDiff(rotation, angularVelocity);
       Rotation rotationNext = rotation.boxPlus(dt*rotation.rotate(angularVelocity.vector()));
@@ -239,8 +239,8 @@ TYPED_TEST(RotationMatrixDiffTest, testFiniteDifferenceInverse)
   typedef typename TestFixture::LocalAngularVelocity LocalAngularVelocity;
 
  const  double dt = 1e-5;
-  for (auto rotation : this->rotations) {
-    for (auto rotDiff : this->rotDiffs) {
+  for (auto& rotation : this->rotations) {
+    for (auto& rotDiff : this->rotDiffs) {
       // Finite difference method for checking derivatives
       RotationDiff rotationDiff(rotDiff);
       LocalAngularVelocity angularVelocity(rotation, rotDiff);

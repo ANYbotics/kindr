@@ -103,7 +103,7 @@ class RotationMatrixDiff : public RotationDiffBase<RotationMatrixDiff<PrimType_>
    */
   template<typename RotationDerived_, typename OtherDerived_>
   inline explicit RotationMatrixDiff(const RotationBase<RotationDerived_>& rotation, const RotationDiffBase<OtherDerived_>& other)
-    : Base(internal::RotationDiffConversionTraits<RotationMatrixDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived())){
+    : Base(internal::RotationDiffConversionTraits<RotationMatrixDiff, OtherDerived_, RotationDerived_>::convert(rotation.derived(), other.derived()).toImplementation()){
   }
 
 
@@ -192,4 +192,3 @@ class RotationDiffConversionTraits<RotationMatrixDiff<PrimType_>, GlobalAngularV
 
 } // namespace internal
 } // namespace kindr
-
