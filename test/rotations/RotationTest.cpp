@@ -155,10 +155,22 @@ struct AngleAxisTestType {
   Rotation rot;
 
   void assertNear(const Rotation_& rotA, const Rotation_& rotB, double tol=1e-6, const std::string& msg = "") {
-    ASSERT_EQ(true, kindr::compareRelativePeriodic(rotA.angle(), rotB.angle(), 2*M_PI, 1e-1)) << msg;
-    ASSERT_NEAR(rotA.axis().x(), rotB.axis().x(), tol) << msg;
-    ASSERT_NEAR(rotA.axis().y(), rotB.axis().y(), tol) << msg;
-    ASSERT_NEAR(rotA.axis().z(), rotB.axis().z(), tol) << msg;
+    /* Due to changes in Eigen's implementation of the conversion from unit quaternions to the
+     * angle axis representation, we compare the rotational vector representation of rotations A and B.
+     * In particular, the tolerance on the angle of the rotation representation has been lowered from
+     *      NumTraits<Scalar>::dummy_precision()*NumTraits<Scalar>::dummy_precision()
+     * to Scalar(0).
+     *
+     * Reference:
+     *  Eigen 3.2   http://eigen.tuxfamily.org/dox-3.2/AngleAxis_8h_source.html, line 173
+     *  Eigen 3.3   http://eigen.tuxfamily.org/dox/AngleAxis_8h_source.html, line 178
+     */
+    kindr::RotationVector<Scalar> vecA(rotA.axis()*rotA.angle());
+    kindr::RotationVector<Scalar> vecB(rotB.axis()*rotB.angle());
+
+    ASSERT_NEAR(vecA.x(), vecB.x(), tol) << msg;
+    ASSERT_NEAR(vecA.y(), vecB.y(), tol) << msg;
+    ASSERT_NEAR(vecA.z(), vecB.z(), tol) << msg;
   }
 };
 
