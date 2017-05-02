@@ -43,10 +43,10 @@ if(DOXYGEN)
   set(DOXYGEN_QUIET YES)
   make_directory(${HTML_DIR})
   set( HAVE_DOT YES )
-      
+
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doxygen.config.in ${DOCSOURCE_DIR}/doxygen.config IMMEDIATE)
-  
-  add_custom_target(doc ${DOXYGEN} ${DOCSOURCE_DIR}/doxygen.config)
+
+  add_custom_target(kindr_doc ${DOXYGEN} ${DOCSOURCE_DIR}/doxygen.config)
 else(DOXYGEN)
   message(STATUS "Doxygen not found")
 endif(DOXYGEN)
