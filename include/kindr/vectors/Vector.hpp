@@ -145,7 +145,7 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
     return Vector<PhysicalType_, PrimType_, Dimension_>(Implementation::Random());
   }
 
-  /*! \brief Sets all components of the vector to zero.
+  /*! \brief Sets all components of the vector to random.
    * \returns reference
    */
   Vector<PhysicalType_, PrimType_, Dimension_>& setRandom() {
