@@ -124,6 +124,16 @@ class VectorBase {
    */
   Derived_& setZero();
 
+  /*! \brief Get random element.
+   * \returns random element
+   */
+  static Derived_ Random();
+
+  /*! \brief Sets the vector to random.
+   *  \returns reference
+   */
+  Derived_& setRandom();
+
   /*! \brief Accesses an entry of the vector.
    *  \returns A copy of an entry of the vector.
    */

@@ -138,6 +138,21 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
     return *this;
   }
 
+  /*! \brief Get random element.
+   * \returns random element
+   */
+  static Vector<PhysicalType_, PrimType_, Dimension_> Random() {
+    return Vector<PhysicalType_, PrimType_, Dimension_>(Implementation::Random());
+  }
+
+  /*! \brief Sets all components of the vector to random.
+   * \returns reference
+   */
+  Vector<PhysicalType_, PrimType_, Dimension_>& setRandom() {
+    Implementation::setRandom();
+    return *this;
+  }
+
   /*! \brief Get the unity vector in x.
    * \returns the unity vector in x
    */

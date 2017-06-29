@@ -163,6 +163,25 @@ TYPED_TEST(VectorTest, testVector)
   ASSERT_EQ(zero(3), 0);
   ASSERT_EQ(zero(4), 0);
 
+  // Random()
+  Vector randomVector;
+  randomVector << 1,2,3,4,5;
+  randomVector = Vector::Random();
+  ASSERT_NE(randomVector(0), 0.0);
+  ASSERT_NE(randomVector(1), 0.0);
+  ASSERT_NE(randomVector(2), 0.0);
+  ASSERT_NE(randomVector(3), 0.0);
+  ASSERT_NE(randomVector(4), 0.0);
+
+  // setRandom
+  randomVector << 1,2,3,4,5;
+  randomVector.setRandom();
+  ASSERT_NE(randomVector(0), 0.0);
+  ASSERT_NE(randomVector(1), 0.0);
+  ASSERT_NE(randomVector(2), 0.0);
+  ASSERT_NE(randomVector(3), 0.0);
+  ASSERT_NE(randomVector(4), 0.0);
+
   // UnitX()
   Length3d unit;
   unit = Length3d::UnitX();
