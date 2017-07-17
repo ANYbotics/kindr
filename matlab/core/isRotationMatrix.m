@@ -22,7 +22,7 @@ if ( (detC-1) > 1e-10)
 end
 
 % Check orthonormality
-if (C*C'~=eye(3))
+if (norm( (C*C')-eye(3)) > 1e-10)
     res = false;
     str = [str ' C is not orthonormal.'];
 end
