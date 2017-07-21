@@ -29,10 +29,9 @@ cmake_minimum_required (VERSION 2.8)
 project(kindr)
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}" ${CMAKE_MODULE_PATH})
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
 find_package(Eigen3 REQUIRED)
-
 include_directories(include)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
