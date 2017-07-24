@@ -29,12 +29,20 @@ cmake_minimum_required (VERSION 2.8)
 project(kindr)
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}" ${CMAKE_MODULE_PATH})
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
-find_package(Eigen3 REQUIRED)
-
+find_package(Eigen REQUIRED)
 include_directories(include)
-include_directories(${EIGEN3_INCLUDE_DIR})
+include_directories(${EIGEN_INCLUDE_DIR})
+
+# Ensure Eigen version is at least 3.2
+if(${EIGEN_WORLD_VERSION} LESS "3" OR (${EIGEN_WORLD_VERSION} EQUAL "3" AND 
+   ${EIGEN_MAJOR_VERSION} LESS "2"))
+  message(FATAL_ERROR "Eigen must be of version 3.2 or higher. Detected version 
+          ${EIGEN_WORLD_VERSION}.${EIGEN_MAJOR_VERSION}.${EIGEN_MINOR_VERSION}")
+else()
+ message(STATUS "Using Eigen of version ${EIGEN_WORLD_VERSION}.${EIGEN_MAJOR_VERSION}.${EIGEN_MINOR_VERSION} from ${EIGEN_INCLUDE_DIR}")
+endif()
 
 # Noisily default to Release build
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
