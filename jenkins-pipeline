@@ -1,4 +1,2 @@
 library 'continuous_integration_pipeline'
-
-sh "ln -s /usr/src/gtest src/package/gtest"
-ciPipeline('--enable-debian --cmake-args="-DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TEST=true" --no-tests --enable-doxygen --publish-doxygen')
+ciPipeline('--enable-debian --cmake-args="-DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TEST=true" --no-tests --enable-doxygen --publish-doxygen', "ln -s /usr/src/gtest src/package/gtest")
