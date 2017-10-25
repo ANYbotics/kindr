@@ -12,7 +12,7 @@ Author(s): C. Dario Bellicoso, Michael Bloesch, Remo Diethelm, Peter Fankhauser,
 
 Date     : June-2016
 
-[![Build Status](http://rsl-ci.ethz.ch/buildStatus/icon?job=kindr)](http://rsl-ci.ethz.ch/job/kindr/)
+[![Build Status](https://ci.leggedrobotics.com/buildStatus/icon?job=github_ethz-asl/kindr/master)](https://ci.leggedrobotics.com/job/github_ethz-asl/job/kindr/job/master/)
 
 ## Documentation
 
