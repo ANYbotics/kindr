@@ -68,20 +68,26 @@ template<typename _Matrix_TypeA_, typename _Matrix_TypeB_>
 bool static pseudoInverse(const _Matrix_TypeA_ &a, _Matrix_TypeB_ &result,
                           double epsilon = std::numeric_limits<typename _Matrix_TypeA_::Scalar>::epsilon())
 {
+  constexpr auto rowsA = static_cast<int>(_Matrix_TypeA_::RowsAtCompileTime);
+  constexpr auto colsA = static_cast<int>(_Matrix_TypeA_::ColsAtCompileTime);
+  constexpr auto rowsB = static_cast<int>(_Matrix_TypeB_::RowsAtCompileTime);
+  constexpr auto colsB = static_cast<int>(_Matrix_TypeB_::ColsAtCompileTime);
+  constexpr auto m = (colsA < rowsA) ? colsA : rowsA;
+
   static_assert(std::is_same<typename _Matrix_TypeA_::Scalar, typename _Matrix_TypeB_::Scalar>::value,
                 "[kindr::pseudoInverse] Matrices must be of the same Scalar type!");
-  static_assert(
-    static_cast<int>(_Matrix_TypeA_::ColsAtCompileTime) == static_cast<int>(_Matrix_TypeB_::RowsAtCompileTime) &&
-    static_cast<int>(_Matrix_TypeA_::RowsAtCompileTime) == static_cast<int>(_Matrix_TypeB_::ColsAtCompileTime),
-    "[kindr::pseudoInverse] Result type has wrong size!");
-  
+  static_assert(rowsA == colsB && colsA == rowsB, "[kindr::pseudoInverse] Result type has wrong size!");
+
   Eigen::JacobiSVD< _Matrix_TypeA_ > svd = a.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV);
 
   typename _Matrix_TypeA_::Scalar tolerance =
     epsilon * std::max(a.cols(), a.rows()) * svd.singularValues().array().abs().maxCoeff();
 
-  result = svd.matrixV() * Eigen::MatrixXd((svd.singularValues().array().abs() > tolerance).select(
-    svd.singularValues().array().inverse(), 0) ).asDiagonal() * svd.matrixU().adjoint();
+  _Matrix_TypeB_ sigma = _Matrix_TypeB_::Zero(rowsB, colsB);
+  sigma.topLeftCorner(m,m) = Eigen::Matrix<double, m, 1>((svd.singularValues().array().abs() > tolerance).select(
+    svd.singularValues().array().inverse(), 0)).asDiagonal();
+
+  result = svd.matrixV() * sigma * svd.matrixU().adjoint();
 
   return true;
 }
