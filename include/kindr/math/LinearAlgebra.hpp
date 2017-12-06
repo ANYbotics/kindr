@@ -64,16 +64,27 @@ inline static Eigen::Matrix<PrimType_, 3, 1> getVectorFromSkewMatrix(const Eigen
  * \param epsilon: Numerical precision (for example 1e-6)
  * \return true if successful
  */
-template<typename _Matrix_Type_>
-bool static pseudoInverse(const _Matrix_Type_ &a, _Matrix_Type_ &result, double epsilon = std::numeric_limits<typename _Matrix_Type_::Scalar>::epsilon())
+template<typename _Matrix_TypeA_, typename _Matrix_TypeB_>
+bool static pseudoInverse(const _Matrix_TypeA_ &a, _Matrix_TypeB_ &result,
+                          double epsilon = std::numeric_limits<typename _Matrix_TypeA_::Scalar>::epsilon())
 {
-  Eigen::JacobiSVD< _Matrix_Type_ > svd = a.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV);
+  static_assert(std::is_same<typename _Matrix_TypeA_::Scalar, typename _Matrix_TypeB_::Scalar>::value,
+                "[kindr::pseudoInverse] Matrices must be of the same Scalar type!");
+  static_assert(
+    static_cast<int>(_Matrix_TypeA_::ColsAtCompileTime) == static_cast<int>(_Matrix_TypeB_::RowsAtCompileTime) &&
+    static_cast<int>(_Matrix_TypeA_::RowsAtCompileTime) == static_cast<int>(_Matrix_TypeB_::ColsAtCompileTime),
+    "[kindr::pseudoInverse] Result type has wrong size!");
+  
+  Eigen::JacobiSVD< _Matrix_TypeA_ > svd = a.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV);
 
-  typename _Matrix_Type_::Scalar tolerance = epsilon * std::max(a.cols(), a.rows()) * svd.singularValues().array().abs().maxCoeff();
+  typename _Matrix_TypeA_::Scalar tolerance =
+    epsilon * std::max(a.cols(), a.rows()) * svd.singularValues().array().abs().maxCoeff();
 
-  result = svd.matrixV() * _Matrix_Type_( (svd.singularValues().array().abs() > tolerance).select(svd.singularValues().array().inverse(), 0) ).asDiagonal() * svd.matrixU().adjoint();
+  result = svd.matrixV() * Eigen::MatrixXd((svd.singularValues().array().abs() > tolerance).select(
+    svd.singularValues().array().inverse(), 0) ).asDiagonal() * svd.matrixU().adjoint();
 
   return true;
 }
+
 
 } // end namespace kindr
