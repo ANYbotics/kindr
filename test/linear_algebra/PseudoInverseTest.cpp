@@ -44,7 +44,7 @@ TEST (SquarePseudoInverseTest, testVector) {
 	Eigen::Matrix2d pinvA;
 	kindr::pseudoInverse(A, pinvA);
 
-	KINDR_ASSERT_DOUBLE_MX_EQ_ABS_REL(pinvA, expectedPinvA, 1e-4, 1, "");
+	KINDR_ASSERT_DOUBLE_MX_EQ_ABS_REL(pinvA, expectedPinvA, 2e-3, 0, "");
 }
 
 
@@ -67,8 +67,8 @@ TEST (RowPseudoInverseTest, testVector) {
 	kindr::pseudoInverse(A, pinvA);
 	kindr::pseudoInverse(Ad, pinvAd);
 
-	KINDR_ASSERT_DOUBLE_MX_EQ_ABS_REL(pinvA, expectedPinvA, 1e-4, 1, "");
-	KINDR_ASSERT_DOUBLE_MX_EQ_ABS_REL(pinvAd, expectedPinvAd, 1e-4, 1, "");
+	KINDR_ASSERT_DOUBLE_MX_EQ_ABS_REL(pinvA, expectedPinvA, 2e-3, 0, "");
+	KINDR_ASSERT_DOUBLE_MX_EQ_ABS_REL(pinvAd, expectedPinvAd, 2e-3, 0, "");
 }
 
 TEST (ColPseudoInverseTest, testVector) {
@@ -89,6 +89,6 @@ TEST (ColPseudoInverseTest, testVector) {
 	kindr::pseudoInverse(A, pinvA);
 	kindr::pseudoInverse(Ad, pinvAd);
 
-	KINDR_ASSERT_DOUBLE_MX_EQ_ABS_REL(pinvA, expectedPinvA, 1e-4, 1, "");
-	KINDR_ASSERT_DOUBLE_MX_EQ_ABS_REL(pinvAd, expectedPinvAd, 1e-4, 1, "");
+  KINDR_ASSERT_DOUBLE_MX_EQ_ABS_REL(pinvA, expectedPinvA, 2e-3, 0, "");
+	KINDR_ASSERT_DOUBLE_MX_EQ_ABS_REL(pinvAd, expectedPinvAd, 2e-3, 0, "");
 }
