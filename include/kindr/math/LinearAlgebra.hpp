@@ -54,25 +54,6 @@ inline static Eigen::Matrix<PrimType_, 3, 1> getVectorFromSkewMatrix(const Eigen
   return Eigen::Matrix<PrimType_, 3, 1> (matrix(2,1), matrix(0,2), matrix(1,0));
 }
 
-
-
-namespace internal {
-
-template< typename _Matrix_TypeB_, int _m_ >
-_Matrix_TypeB_ getSigma( const Eigen::Matrix<typename _Matrix_TypeB_::Scalar, _m_, _m_> &sigmaThin,
-                         typename std::enable_if<_m_ == Eigen::Dynamic>::type * = 0 ) {
-  return sigmaThin;
-}
-
-template< typename _Matrix_TypeB_, int _m_ >
-_Matrix_TypeB_ getSigma( const Eigen::Matrix<typename _Matrix_TypeB_::Scalar, _m_, _m_> &sigmaThin,
-                         typename std::enable_if<_m_ != Eigen::Dynamic>::type * = 0 ) {
-  _Matrix_TypeB_ sigma = _Matrix_TypeB_::Zero();
-  sigma.template topLeftCorner<_m_, _m_>() = sigmaThin;
-  return sigma;
-}
-
-}
 /*!
  * \brief Computes the Moore–Penrose pseudoinverse
  * info: http://eigen.tuxfamily.org/bz/show_bug.cgi?id=257
@@ -96,19 +77,19 @@ bool static pseudoInverse(const _Matrix_TypeA_ &a, _Matrix_TypeB_ &result,
                 "[kindr::pseudoInverse] Matrices must be of the same Scalar type!");
   static_assert(rowsA == colsB && colsA == rowsB, "[kindr::pseudoInverse] Result type has wrong size!");
 
+  // If one dimension is dynamic, compute everything as dynamic size
+  constexpr auto m = Eigen::JacobiSVD< _Matrix_TypeA_ >::DiagSizeAtCompileTime;
 
-  Eigen::JacobiSVD< _Matrix_TypeA_ > svd = a.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV);
+  Eigen::JacobiSVD< _Matrix_TypeA_ > svd = a.jacobiSvd(Eigen::ComputeFullU | Eigen::ComputeFullV);
 
   typename _Matrix_TypeA_::Scalar tolerance =
     epsilon * std::max(a.cols(), a.rows()) * svd.singularValues().array().abs().maxCoeff();
 
-  // If one dimension is dynamic, compute everything as dynamic size
-  constexpr auto m = Eigen::JacobiSVD< _Matrix_TypeA_ >::DiagSizeAtCompileTime;
   // Sigma for ThinU and ThinV
   Eigen::Matrix<typename _Matrix_TypeA_::Scalar, m, m> sigmaThin = Eigen::Matrix<typename _Matrix_TypeA_::Scalar, m, 1>(
     (svd.singularValues().array().abs() > tolerance).select(svd.singularValues().array().inverse(), 0)).asDiagonal();
 
-  result = svd.matrixV() * internal::getSigma<_Matrix_TypeB_>(sigmaThin) * svd.matrixU().adjoint();
+  result = svd.matrixV().leftCols(sigmaThin.cols()) * sigmaThin * svd.matrixU().adjoint().topRows(sigmaThin.rows());
 
   return true;
 }
