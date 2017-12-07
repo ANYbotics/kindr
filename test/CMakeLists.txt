@@ -66,7 +66,8 @@ add_gtest(runUnitTestsCommon ${COMMON_SRCS})
 set(LINEARALGEBRA_SRCS
       test_main.cpp 
       linear_algebra/SkewMatrixFromVectorTest.cpp
-)
+			linear_algebra/PseudoInverseTest.cpp
+	)
 add_gtest(runUnitTestsLinearAlgebra ${LINEARALGEBRA_SRCS})
 
 set(QUATERNIONS_SRCS

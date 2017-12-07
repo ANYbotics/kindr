@@ -56,6 +56,23 @@ inline static Eigen::Matrix<PrimType_, 3, 1> getVectorFromSkewMatrix(const Eigen
 
 
 
+namespace internal {
+
+template< typename _Matrix_TypeB_, int _m_ >
+_Matrix_TypeB_ getSigma( const Eigen::Matrix<typename _Matrix_TypeB_::Scalar, _m_, _m_> &sigmaThin,
+                         typename std::enable_if<_m_ == Eigen::Dynamic>::type * = 0 ) {
+  return sigmaThin;
+}
+
+template< typename _Matrix_TypeB_, int _m_ >
+_Matrix_TypeB_ getSigma( const Eigen::Matrix<typename _Matrix_TypeB_::Scalar, _m_, _m_> &sigmaThin,
+                         typename std::enable_if<_m_ != Eigen::Dynamic>::type * = 0 ) {
+  _Matrix_TypeB_ sigma = _Matrix_TypeB_::Zero();
+  sigma.template topLeftCorner<_m_, _m_>() = sigmaThin;
+  return sigma;
+}
+
+}
 /*!
  * \brief Computes the Moore–Penrose pseudoinverse
  * info: http://eigen.tuxfamily.org/bz/show_bug.cgi?id=257
@@ -68,26 +85,30 @@ template<typename _Matrix_TypeA_, typename _Matrix_TypeB_>
 bool static pseudoInverse(const _Matrix_TypeA_ &a, _Matrix_TypeB_ &result,
                           double epsilon = std::numeric_limits<typename _Matrix_TypeA_::Scalar>::epsilon())
 {
+  // Shorthands
   constexpr auto rowsA = static_cast<int>(_Matrix_TypeA_::RowsAtCompileTime);
   constexpr auto colsA = static_cast<int>(_Matrix_TypeA_::ColsAtCompileTime);
   constexpr auto rowsB = static_cast<int>(_Matrix_TypeB_::RowsAtCompileTime);
   constexpr auto colsB = static_cast<int>(_Matrix_TypeB_::ColsAtCompileTime);
-  constexpr auto m = (colsA < rowsA) ? colsA : rowsA;
 
+  // Assert wrong matrix types
   static_assert(std::is_same<typename _Matrix_TypeA_::Scalar, typename _Matrix_TypeB_::Scalar>::value,
                 "[kindr::pseudoInverse] Matrices must be of the same Scalar type!");
   static_assert(rowsA == colsB && colsA == rowsB, "[kindr::pseudoInverse] Result type has wrong size!");
+
 
   Eigen::JacobiSVD< _Matrix_TypeA_ > svd = a.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV);
 
   typename _Matrix_TypeA_::Scalar tolerance =
     epsilon * std::max(a.cols(), a.rows()) * svd.singularValues().array().abs().maxCoeff();
 
-  _Matrix_TypeB_ sigma = _Matrix_TypeB_::Zero(rowsB, colsB);
-  sigma.topLeftCorner(m,m) = Eigen::Matrix<double, m, 1>((svd.singularValues().array().abs() > tolerance).select(
-    svd.singularValues().array().inverse(), 0)).asDiagonal();
+  // If one dimension is dynamic, compute everything as dynamic size
+  constexpr auto m = Eigen::JacobiSVD< _Matrix_TypeA_ >::DiagSizeAtCompileTime;
+  // Sigma for ThinU and ThinV
+  Eigen::Matrix<typename _Matrix_TypeA_::Scalar, m, m> sigmaThin = Eigen::Matrix<typename _Matrix_TypeA_::Scalar, m, 1>(
+    (svd.singularValues().array().abs() > tolerance).select(svd.singularValues().array().inverse(), 0)).asDiagonal();
 
-  result = svd.matrixV() * sigma * svd.matrixU().adjoint();
+  result = svd.matrixV() * internal::getSigma<_Matrix_TypeB_>(sigmaThin) * svd.matrixU().adjoint();
 
   return true;
 }
