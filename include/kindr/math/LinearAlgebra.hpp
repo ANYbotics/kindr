@@ -54,8 +54,6 @@ inline static Eigen::Matrix<PrimType_, 3, 1> getVectorFromSkewMatrix(const Eigen
   return Eigen::Matrix<PrimType_, 3, 1> (matrix(2,1), matrix(0,2), matrix(1,0));
 }
 
-
-
 /*!
  * \brief Computes the Moore–Penrose pseudoinverse
  * info: http://eigen.tuxfamily.org/bz/show_bug.cgi?id=257
@@ -64,16 +62,37 @@ inline static Eigen::Matrix<PrimType_, 3, 1> getVectorFromSkewMatrix(const Eigen
  * \param epsilon: Numerical precision (for example 1e-6)
  * \return true if successful
  */
-template<typename _Matrix_Type_>
-bool static pseudoInverse(const _Matrix_Type_ &a, _Matrix_Type_ &result, double epsilon = std::numeric_limits<typename _Matrix_Type_::Scalar>::epsilon())
+template<typename _Matrix_TypeA_, typename _Matrix_TypeB_>
+bool static pseudoInverse(const _Matrix_TypeA_ &a, _Matrix_TypeB_ &result,
+                          double epsilon = std::numeric_limits<typename _Matrix_TypeA_::Scalar>::epsilon())
 {
-  Eigen::JacobiSVD< _Matrix_Type_ > svd = a.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV);
+  // Shorthands
+  constexpr auto rowsA = static_cast<int>(_Matrix_TypeA_::RowsAtCompileTime);
+  constexpr auto colsA = static_cast<int>(_Matrix_TypeA_::ColsAtCompileTime);
+  constexpr auto rowsB = static_cast<int>(_Matrix_TypeB_::RowsAtCompileTime);
+  constexpr auto colsB = static_cast<int>(_Matrix_TypeB_::ColsAtCompileTime);
 
-  typename _Matrix_Type_::Scalar tolerance = epsilon * std::max(a.cols(), a.rows()) * svd.singularValues().array().abs().maxCoeff();
+  // Assert wrong matrix types
+  static_assert(std::is_same<typename _Matrix_TypeA_::Scalar, typename _Matrix_TypeB_::Scalar>::value,
+                "[kindr::pseudoInverse] Matrices must be of the same Scalar type!");
+  static_assert(rowsA == colsB && colsA == rowsB, "[kindr::pseudoInverse] Result type has wrong size!");
 
-  result = svd.matrixV() * _Matrix_Type_( (svd.singularValues().array().abs() > tolerance).select(svd.singularValues().array().inverse(), 0) ).asDiagonal() * svd.matrixU().adjoint();
+  // If one dimension is dynamic, compute everything as dynamic size
+  constexpr auto m = Eigen::JacobiSVD< _Matrix_TypeA_ >::DiagSizeAtCompileTime;
+
+  Eigen::JacobiSVD< _Matrix_TypeA_ > svd = a.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV);
+
+  typename _Matrix_TypeA_::Scalar tolerance =
+    epsilon * std::max(a.cols(), a.rows()) * svd.singularValues().array().abs().maxCoeff();
+
+  // Sigma for ThinU and ThinV
+  Eigen::Matrix<typename _Matrix_TypeA_::Scalar, m, m> sigmaThin = Eigen::Matrix<typename _Matrix_TypeA_::Scalar, m, 1>(
+    (svd.singularValues().array().abs() > tolerance).select(svd.singularValues().array().inverse(), 0)).asDiagonal();
+
+  result = svd.matrixV().leftCols(sigmaThin.cols()) * sigmaThin * svd.matrixU().adjoint().topRows(sigmaThin.rows());
 
   return true;
 }
+
 
 } // end namespace kindr
