@@ -80,7 +80,7 @@ bool static pseudoInverse(const _Matrix_TypeA_ &a, _Matrix_TypeB_ &result,
   // If one dimension is dynamic, compute everything as dynamic size
   constexpr auto m = Eigen::JacobiSVD< _Matrix_TypeA_ >::DiagSizeAtCompileTime;
 
-  Eigen::JacobiSVD< _Matrix_TypeA_ > svd = a.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV);
+  Eigen::JacobiSVD< Eigen::Matrix<typename _Matrix_TypeA_::Scalar, Eigen::Dynamic, Eigen::Dynamic> > svd(a, Eigen::ComputeThinU | Eigen::ComputeThinV);
 
   typename _Matrix_TypeA_::Scalar tolerance =
     epsilon * std::max(a.cols(), a.rows()) * svd.singularValues().array().abs().maxCoeff();
