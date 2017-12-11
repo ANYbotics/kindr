@@ -172,7 +172,7 @@ class RotationQuaternionDiff : public RotationDiffBase<RotationQuaternionDiff<Pr
    *  \returns std::stream object
    */
   friend std::ostream& operator << (std::ostream& out, const RotationQuaternionDiff& diff) {
-    out << diff.toQuaternion();
+    out << static_cast<const Base&>(diff).toImplementation();
     return out;
   }
 };
