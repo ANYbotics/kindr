@@ -1,5 +1,4 @@
 /*
-  /*
  * Copyright (c) 2013, Christian Gehring, Hannes Sommer, Paul Furgale, Remo Diethelm
  * All rights reserved.
  *
