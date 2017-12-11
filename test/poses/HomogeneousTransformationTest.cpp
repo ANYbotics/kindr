@@ -139,9 +139,9 @@ TYPED_TEST(HomogeneousTransformationTest, testTransformAndInverseTransform)
   Position positionInB(0.5, 0.4, -5.4);
   Position positionInA = poseBToA.transform(positionInB);
   Position positionInBNew = poseBToA.inverseTransform(positionInA);
-  EXPECT_NEAR(positionInB.x(), positionInB.x(), 1.0e-6);
-  EXPECT_NEAR(positionInB.y(), positionInB.y(), 1.0e-6);
-  EXPECT_NEAR(positionInB.z(), positionInB.z(), 1.0e-6);
+  EXPECT_NEAR(positionInB.x(), positionInBNew.x(), 1.0e-6);
+  EXPECT_NEAR(positionInB.y(), positionInBNew.y(), 1.0e-6);
+  EXPECT_NEAR(positionInB.z(), positionInBNew.z(), 1.0e-6);
 }
 
 TYPED_TEST(HomogeneousTransformationTest, testConcatenation)
