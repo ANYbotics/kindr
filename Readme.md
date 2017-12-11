@@ -8,7 +8,7 @@ ETH Zurich
 
 Contact  : Christian Gehring [gehrinch ( at ) ethz.ch]
 
-Author(s): C. Dario Bellicoso, Michael Bloesch, Remo Diethelm, Peter Fankhauser, Paul Furgale, Christian Gehring, Hannes Sommer
+Author(s): C. Dario Bellicoso, Michael Bloesch, Remo Diethelm, Peter Fankhauser, Paul Furgale, Christian Gehring, Hannes Sommer, Michael Neunert, Google LLC
 
 Date     : June-2016
 
