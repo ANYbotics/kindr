@@ -359,7 +359,6 @@ TYPED_TEST(VectorTest, testVector)
   Length6d length6d(length6dEigen);
   Length2d headVectorTest(length6d.getHead<2>());
   Length2d tailVectorTest(length6d.getTail<2>());
-  Length2d sumVectorTest = tailVectorTest + headVectorTest;
   LengthDynd headVectorTestDyn(length6d.getHead(2));
   LengthDynd tailVectorTestDyn(length6d.getTail(2));
   LengthDynd sumVectorTestDyn = tailVectorTestDyn + headVectorTestDyn;
