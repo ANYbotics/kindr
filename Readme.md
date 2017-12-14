@@ -1,18 +1,15 @@
 Kindr - Kinematics and Dynamics for Robotics
 =============================================
 
-**Kindr 1.0.0 released!** (28.06.2016, see changelog below)
-
-Autonomous Systems Lab
-ETH Zurich
-
 Contact  : Christian Gehring [gehrinch ( at ) ethz.ch]
 
-Author(s): C. Dario Bellicoso, Michael Bloesch, Remo Diethelm, Peter Fankhauser, Paul Furgale, Christian Gehring, Hannes Sommer, Michael Neunert, Google LLC
+Author(s): C. Dario Bellicoso, Michael Bloesch, Remo Diethelm, Peter Fankhauser, Paul Furgale, Christian Gehring, Michael Neunert, Hannes Sommer
 
-Date     : June-2016
+The source code is released under a [BSD 3-Clause license](LICENSE).
+
 
 [![Build Status](https://ci.leggedrobotics.com/buildStatus/icon?job=github_ethz-asl/kindr/master)](https://ci.leggedrobotics.com/job/github_ethz-asl/job/kindr/job/master/)
+
 
 ## Documentation
 
