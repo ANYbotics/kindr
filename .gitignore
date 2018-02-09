@@ -25,6 +25,7 @@ install_manifest.txt
 # Eclipse
 .project
 .cproject
+.settings
 
 build/*
 gtest
