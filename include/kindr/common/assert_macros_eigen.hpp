@@ -44,8 +44,8 @@ using std::abs;
 using std::max;
 using std::min;
 
-template<typename SCALAR>
-inline bool compareRelative(SCALAR a, SCALAR b, SCALAR percentTolerance, SCALAR * percentError = NULL, SCALAR bothZeroThreshold = SCALAR(1.0e-15))
+template<typename SCALAR, typename SCALAR2, typename SCALAR3>
+inline bool compareRelative(SCALAR a, SCALAR2 b, SCALAR3 percentTolerance, SCALAR * percentError = NULL, SCALAR bothZeroThreshold = SCALAR(1.0e-15))
 {
   // \todo: does anyone have a better idea?
   SCALAR fa = abs(a);

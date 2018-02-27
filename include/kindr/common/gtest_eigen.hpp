@@ -165,7 +165,6 @@ void assertFinite(const M1 & A, kindr::internal::source_file_pos const & sfp, st
       for(int c = 0; c < (M_TRUE).cols(); c++)               \
       {                               \
         typedef typename std::remove_reference<decltype(M_TRUE)>::type::Scalar Scalar; \
-        Scalar percentError = static_cast<Scalar>(0.0); \
         ASSERT_TRUE(fabs((M_MEAS)(r,c) - (M_TRUE)(r,c)) <= (fabs((M_TRUE)(r,c))*RTOL + ATOL)) \
         << MSG << "\nComparing:\n"                \
         << #M_TRUE << "(" << r << "," << c << ") = " << (M_TRUE)(r,c) << std::endl \

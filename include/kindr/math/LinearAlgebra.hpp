@@ -80,7 +80,9 @@ bool static pseudoInverse(const _Matrix_TypeA_ &a, _Matrix_TypeB_ &result,
   // If one dimension is dynamic, compute everything as dynamic size
   constexpr auto m = Eigen::JacobiSVD< _Matrix_TypeA_ >::DiagSizeAtCompileTime;
 
-  Eigen::JacobiSVD< _Matrix_TypeA_ > svd = a.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV);
+  // JacobiSVD needs to be computed on dynamic size if we need ComputeThinU, ComputeThinV, see:
+  // https://eigen.tuxfamily.org/dox/classEigen_1_1JacobiSVD.html
+  Eigen::JacobiSVD< Eigen::Matrix<typename _Matrix_TypeA_::Scalar, Eigen::Dynamic, Eigen::Dynamic> > svd(a, Eigen::ComputeThinU | Eigen::ComputeThinV);
 
   typename _Matrix_TypeA_::Scalar tolerance =
     epsilon * std::max(a.cols(), a.rows()) * svd.singularValues().array().abs().maxCoeff();
@@ -89,7 +91,7 @@ bool static pseudoInverse(const _Matrix_TypeA_ &a, _Matrix_TypeB_ &result,
   Eigen::Matrix<typename _Matrix_TypeA_::Scalar, m, m> sigmaThin = Eigen::Matrix<typename _Matrix_TypeA_::Scalar, m, 1>(
     (svd.singularValues().array().abs() > tolerance).select(svd.singularValues().array().inverse(), 0)).asDiagonal();
 
-  result = svd.matrixV().leftCols(sigmaThin.cols()) * sigmaThin * svd.matrixU().adjoint().topRows(sigmaThin.rows());
+  result = svd.matrixV() * sigmaThin * svd.matrixU().transpose();
 
   return true;
 }
