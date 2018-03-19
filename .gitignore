@@ -70,3 +70,4 @@ gtest-1.7.0.zip
 
 cmake/FindKindr.cmake
 doc/doxygen.config
+doc/html
