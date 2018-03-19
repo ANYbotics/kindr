@@ -94,7 +94,7 @@ Uninstall the library with:
 
 ```bash
 cd build
-sudo sudo make uninstall
+sudo make uninstall
 ```
 
 Kindr can be included in your cmake project.
