@@ -134,7 +134,7 @@ And to your *package.xml*:
 
 ```xml
 <package>
-	<build_depend>kindr</build_depend>
+  <build_depend>kindr</build_depend>
 </package>
 ```
 
@@ -146,13 +146,13 @@ Build the documentation with [Doxygen](www.doxygen.org):
 mkdir build
 cd build
 cmake ..
-make doc
+make kindr_doc
 ```
 
 The doxygen documentation can be found here:
 
 ```
-doc/doxygen/doc/html/index.html
+doc/html/index.html
 ```
 
 ### Building unit tests with gtest
@@ -167,6 +167,6 @@ unzip gtest-1.7.0.zip
 ln -s gtest-1.7.0 gtest
 mkdir build
 cd build
-cmake  .. -DBUILD_TEST=true
+cmake .. -DBUILD_TEST=true
 make
 ```
