@@ -518,11 +518,11 @@ class ConversionTraits<RotationQuaternion<DestPrimType_>, RotationVector<SourceP
     Scalar theta = (Scalar)rotationVector.toImplementation().norm();
 
     // na is 1/theta sin(theta/2)
-    double na;
+    Scalar na;
     if(isLessThenEpsilons4thRoot(theta))
     {
-        const Scalar one_over_48 = 1.0/48.0;
-        na = 0.5 + (theta * theta) * one_over_48;
+        const Scalar one_over_48 = Scalar(1.0/48.0);
+        na = Scalar(0.5) - (theta * theta) * one_over_48;
     }
     else
     {
