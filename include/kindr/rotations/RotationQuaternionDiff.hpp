@@ -42,7 +42,7 @@ namespace kindr {
 /*! \class RotationQuaternionDiff
  * \brief Time derivative of a rotation quaternion.
  *
- * This class implements the time derivative of a rotation quaterion using a Quaternion<Scalar> as data storage.
+ * This class implements the time derivative of a rotation quaternion using a Quaternion<Scalar> as data storage.
  *
  * \tparam PrimType_  Primitive data type of the coordinates.
  * \ingroup rotations
@@ -167,12 +167,11 @@ class RotationQuaternionDiff : public RotationDiffBase<RotationQuaternionDiff<Pr
     return *this;
   }
 
-
   /*! \brief Used for printing the object with std::cout.
    *  \returns std::stream object
    */
   friend std::ostream& operator << (std::ostream& out, const RotationQuaternionDiff& diff) {
-    out << static_cast<const Base&>(diff).toImplementation();
+    out << diff.w() << " " << diff.x() << " " << diff.y() << " " << diff.z();
     return out;
   }
 };
