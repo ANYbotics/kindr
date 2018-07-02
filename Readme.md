@@ -162,9 +162,9 @@ doc/html/index.html
 Download and use GTest:
 
 ```bash
-wget http://googletest.googlecode.com/files/gtest-1.7.0.zip
-unzip gtest-1.7.0.zip
-ln -s gtest-1.7.0 gtest
+wget https://github.com/google/googletest/archive/release-1.7.0.zip
+unzip release-1.7.0.zip
+ln -s googletest-release-1.7.0 gtest
 mkdir build
 cd build
 cmake .. -DBUILD_TEST=true
