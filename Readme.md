@@ -1,15 +1,17 @@
 Kindr - Kinematics and Dynamics for Robotics
 =============================================
 
-Contact  : Christian Gehring [gehrinch ( at ) ethz.ch]
+**Authors: Christian Gehring, C. Dario Bellicoso, Michael Bloesch, Remo Diethelm, Peter Fankhauser, Paul Furgale, Michael Neunert, Hannes Sommer<br />
+Maintainer: Remo Diethelm, rdiethelm@anybotics.com<br />
+Affiliation: [ANYbotics](https://www.anybotics.com/)**
 
-Author(s): C. Dario Bellicoso, Michael Bloesch, Remo Diethelm, Peter Fankhauser, Paul Furgale, Christian Gehring, Michael Neunert, Hannes Sommer
+This projected was initially developed at ETH Zurich (Autonomous Systems Lab & Robotic Systems Lab).
+
+[This work is conducted as part of ANYmal Research, a community to advance legged robotics.](https://www.anymal-research.org/)
 
 The source code is released under a [BSD 3-Clause license](LICENSE).
 
-
-[![Build Status](https://ci.leggedrobotics.com/buildStatus/icon?job=github_ethz-asl/kindr/master)](https://ci.leggedrobotics.com/job/github_ethz-asl/job/kindr/job/master/)
-
+[![Build Status](https://ci.leggedrobotics.com/buildStatus/icon?job=github_anybotics/kindr/master)](https://ci.leggedrobotics.com/job/github_anybotics/job/kindr/job/master/)
 
 ## Documentation
 
