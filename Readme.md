@@ -1,15 +1,17 @@
 Kindr - Kinematics and Dynamics for Robotics
 =============================================
 
-Contact  : Christian Gehring [gehrinch ( at ) ethz.ch]
+**Authors: Christian Gehring, C. Dario Bellicoso, Michael Bloesch, Remo Diethelm, Peter Fankhauser, Paul Furgale, Michael Neunert, Hannes Sommer<br />
+Maintainer: Remo Diethelm, rdiethelm@anybotics.com<br />
+Affiliation: [ANYbotics](https://www.anybotics.com/)**
 
-Author(s): C. Dario Bellicoso, Michael Bloesch, Remo Diethelm, Peter Fankhauser, Paul Furgale, Christian Gehring, Michael Neunert, Hannes Sommer
+This projected was initially developed at ETH Zurich (Autonomous Systems Lab & Robotic Systems Lab).
+
+This work is conducted as part of [ANYmal Research](https://www.anymal-research.org/), a community to advance legged robotics.
 
 The source code is released under a [BSD 3-Clause license](LICENSE).
 
-
-[![Build Status](https://ci.leggedrobotics.com/buildStatus/icon?job=github_ethz-asl/kindr/master)](https://ci.leggedrobotics.com/job/github_ethz-asl/job/kindr/job/master/)
-
+[![Build Status](https://ci.leggedrobotics.com/buildStatus/icon?job=github_anybotics/kindr/master)](https://ci.leggedrobotics.com/job/github_anybotics/job/kindr/job/master/)
 
 ## Documentation
 
@@ -28,13 +30,13 @@ See also section 'Building the documentation' below.
 * All sub namespaces have been removed. (e.g. `kindr::rotations::eigen_impl` -> `kindr::`) 
 * The implementations of rotations and time derivatives have been simplified (Passive, Hamiltonian).
     - Active typedefs (e.g. RotationQuaternionAD) have been removed and simpler ones (e.g. RotationQuaternionD) have been introduced.
-    - Note that the functionality of some operators changed! Please check the [cheat sheet](http://ethz-asl-lr.bitbucket.org/kindr/cheatsheet_latest.pdf) to understand what is implemented.
+    - Note that the functionality of some operators changed! Please check the [cheat sheet](http://docs.leggedrobotics.com/kindr/cheatsheet_latest.pdf) to understand what is implemented.
     - Some hints on what needs to be changed from kindr 0.0.1:
        - `rotation.setFromVectors(v1, v2)` -> `rotation.setFromVectors(v2, v1)`
        - `C_BI.boxPlus(dt * B_w_IB)` -> `C_BI.boxPlus(dt * C_IB * B_w_IB)`
        - `C_BI.boxMinus(dt *  B_w_IB)` ->  `-C_BI.boxMinus(dt * B_w_IB)`
        - Euler angles probably have to be negated.
-* Conversion methods between ROS and kindr have been moved to the package [kindr_ros](https://github.com/ethz-asl/kindr_ros).
+* Conversion methods between ROS and kindr have been moved to the package [kindr_ros](https://github.com/anybotics/kindr_ros).
 * Concatenation of Homogeneous Transformation is now implemented. 
 * Short typedefs are provided for Homogeneous Transformation: `HomTransformQuatD`, `HomTransformMatrixD`.
 * Jacobian of exponential map is implemented.
@@ -53,6 +55,8 @@ See also section 'Building the documentation' below.
 ## Installation
 
 ### Installing from packages (recommended for Ubuntu LTS users)
+
+Current version: 1.0.1.
 
 The maintainers of this project provide binary packages for ROS and Ubuntu
 LTS releases. To install these packages, you may follow these instructions:
@@ -111,7 +115,7 @@ Build kindr with [catkin](wiki.ros.org/catkin):
 
 ```bash
 cd ~/catkin_ws/src
-git clone git@github.com:ethz-asl/kindr.git
+git clone git@github.com:anybotics/kindr.git
 catkin_make_isolated -C ~/catkin_ws
 ```
 
@@ -119,7 +123,7 @@ or with [catkin command line tools](http://catkin-tools.readthedocs.org):
 
 ```bash
 cd ~/catkin_ws/src
-git clone git@github.com:ethz-asl/kindr.git
+git clone git@github.com:anybotics/kindr.git
 catkin build -w ~/catkin_ws kindr
 ```
 

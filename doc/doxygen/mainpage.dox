@@ -5,7 +5,7 @@
 This library provides interfaces and implementations of kinematic and dynamic quantities for robotics.
 
 \section source_code Source Code
-The source code is available at <a href="http://github.com/ethz-asl/kindr">http://github.com/ethz-asl/kindr</a>
+The source code is available at <a href="http://github.com/anybotics/kindr">http://github.com/anybotics/kindr</a>
 
 \section license License
 This library is <a href="http://www.gnu.org/philosophy/free-sw.html">Free Software</a> and is licensed under <a href="http://opensource.org/licenses/BSD-3-Clause">BSD 3-Clause</a>.
@@ -22,7 +22,7 @@ Involved people:
  - Hannes Sommer
  
 Contact: 
-Christian Gehring  (gehrinch ( at ) ethz.ch)
+Remo Diethelm  (rdiethelm ( at ) anybotics.com)
 */
 
 
@@ -93,7 +93,7 @@ Build kindr with [catkin](wiki.ros.org/catkin):
 
 \code{.sh}
 cd ~/catkin_ws/src
-git clone git@github.com:ethz-asl/kindr.git
+git clone git@github.com:anybotics/kindr.git
 catkin_make_isolated -C ~/catkin_ws
 \endcode
 
@@ -101,7 +101,7 @@ or with [catkin command line tools](http://catkin-tools.readthedocs.org):
 
 \code{.sh}
 cd ~/catkin_ws/src
-git clone git@github.com:ethz-asl/kindr.git
+git clone git@github.com:anybotics/kindr.git
 catkin build -w ~/catkin_ws kindr
 \endcode
 
