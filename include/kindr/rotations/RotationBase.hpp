@@ -68,18 +68,6 @@ class ConversionTraits {
   // inline static Dest_ convert(const Source_& );
 };
 
-/*! \brief Comparison traits for comparing different rotations
- *  \class ComparisonTraits
- *  (only for advanced users)
- */
-template<typename Left_, typename Right_>
-class ComparisonTraits {
- public:
-  inline static bool isEqual(const Left_& left, const Right_& right) {
-    return left.toImplementation() == Left_(right).toImplementation();
-  }
-};
-
 
 
 /*! \brief Rotation traits for rotating vectors and matrices

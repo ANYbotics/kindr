@@ -84,6 +84,17 @@ class MultiplicationTraits<PoseBase<Left_>, PoseBase<Right_> > {
 //  }
 //};
 
+/*! \brief Compare two poses.
+ */
+template<typename Left_, typename Right_>
+class ComparisonTraits<PoseBase<Left_>, PoseBase<Right_>>{
+ public:
+  inline static bool isEqual(const PoseBase<Left_>& lhs, const PoseBase<Right_>& rhs) {
+    return lhs.derived().getPosition() == rhs.derived().getPosition() &&
+           lhs.derived().getRotation() == rhs.derived().getRotation();
+  }
+};
+
 
 } // namespace internal
 } // namespace kindr
