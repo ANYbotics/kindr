@@ -204,7 +204,7 @@ class SetFromVectorsTraits<RotationBase<Rotation_>> {
  * Disparity Angle Traits
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-/*! \brief Compares two rotations.
+/*! \brief Compute the disparity angle between two rotations.
  *
  */
 template<typename Left_, typename Right_>
