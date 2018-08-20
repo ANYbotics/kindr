@@ -129,16 +129,14 @@ class MultiplicationTraits {
 //  inline static Left_ mult(const Left_& lhs, const Right_& rhs);
 };
 
-/*! \brief Comparison traits for comparing different rotations
+/*! \brief Comparison traits
  *  \class ComparisonTraits
  *  (only for advanced users)
  */
 template<typename Left_, typename Right_>
 class ComparisonTraits {
  public:
-  inline static bool isEqual(const Left_& left, const Right_& right) {
-    return left.toImplementation() == Left_(right).toImplementation();
-  }
+//  inline static bool isEqual(const Left_& left, const Right_& right);
 };
 
 

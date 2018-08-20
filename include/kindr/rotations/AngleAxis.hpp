@@ -429,14 +429,14 @@ class ConversionTraits<AngleAxis<DestPrimType_>, EulerAnglesZyx<SourcePrimType_>
  * Comparison Traits
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 template<typename PrimType_>
-class ComparisonTraits<AngleAxis<PrimType_>, AngleAxis<PrimType_>> {
+class ComparisonTraits<RotationBase<AngleAxis<PrimType_>>, RotationBase<AngleAxis<PrimType_>>> {
  public:
-  inline static bool isEqual(const AngleAxis<PrimType_>& a, const AngleAxis<PrimType_>& b){
+  inline static bool isEqual(const RotationBase<AngleAxis<PrimType_>>& a, const RotationBase<AngleAxis<PrimType_>>& b){
     const PrimType_ tolPercent = 0.01;
-    return compareRelative(a.angle(), b.angle(), tolPercent) &&
-        compareRelative(a.axis().x(), b.axis().x(), tolPercent) &&
-        compareRelative(a.axis().y(), b.axis().y(), tolPercent) &&
-        compareRelative(a.axis().z(), b.axis().z(), tolPercent);
+    return compareRelative(a.derived().angle(), b.derived().angle(), tolPercent) &&
+        compareRelative(a.derived().axis().x(), b.derived().axis().x(), tolPercent) &&
+        compareRelative(a.derived().axis().y(), b.derived().axis().y(), tolPercent) &&
+        compareRelative(a.derived().axis().z(), b.derived().axis().z(), tolPercent);
   }
 };
 
