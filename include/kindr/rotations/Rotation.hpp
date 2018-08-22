@@ -129,16 +129,8 @@ class RotationTraits<RotationBase<Rotation_>> {
 template<typename Left_, typename Right_>
 class ComparisonTraits<RotationBase<Left_>, RotationBase<Right_>> {
  public:
-  /*! \brief Gets the disparity angle between two rotations.
-   *
-   *  The disparity angle is defined as the angle of the angle-axis representation of the concatenation of
-   *  the first rotation and the inverse of the second rotation. If the disparity angle is zero,
-   *  the rotations are equal.
-   *  \returns disparity angle in [-pi,pi) @todo: is this range correct?
-   */
-  inline static typename Left_::Scalar get_disparity_angle(const RotationBase<Left_>& left, const RotationBase<Right_>& right) {
-    typedef typename Left_::Scalar Scalar;
-    return std::abs(floatingPointModulo(AngleAxis<Scalar>(left.derived()*right.derived().inverted()).angle() + Scalar(M_PI), Scalar(2.0*M_PI))-M_PI);
+  inline static bool isEqual(const RotationBase<Left_>& left, const RotationBase<Right_>& right) {
+    return left.derived().toImplementation() == RotationBase<Left_>(right).derived().toImplementation();
   }
 };
 
@@ -205,6 +197,29 @@ class SetFromVectorsTraits<RotationBase<Rotation_>> {
 //      const Eigen::Matrix<PrimType_, 3, 1> axis = (v1.cross(v2)).normalized();
 //      rot = AngleAxis<PrimType_>(angle, axis);
 //    }
+  }
+};
+
+/* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Disparity Angle Traits
+ * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+/*! \brief Compute the disparity angle between two rotations.
+ *
+ */
+template<typename Left_, typename Right_>
+class DisparityAngleTraits<RotationBase<Left_>, RotationBase<Right_>> {
+ public:
+  /*! \brief Gets the disparity angle between two rotations.
+   *
+   *  The disparity angle is defined as the angle of the angle-axis representation of the concatenation of
+   *  the first rotation and the inverse of the second rotation. If the disparity angle is zero,
+   *  the rotations are equal.
+   *  \returns disparity angle in [-pi,pi) @todo: is this range correct?
+   */
+  inline static typename Left_::Scalar compute(const RotationBase<Left_>& left, const RotationBase<Right_>& right) {
+    typedef typename Left_::Scalar Scalar;
+    return std::abs(floatingPointModulo(AngleAxis<Scalar>(left.derived()*right.derived().inverted()).angle() + Scalar(M_PI), Scalar(2.0*M_PI))-M_PI);
   }
 };
 

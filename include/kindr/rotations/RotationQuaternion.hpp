@@ -586,13 +586,13 @@ class ConversionTraits<RotationQuaternion<DestPrimType_>, EulerAnglesZyx<SourceP
  * Comparison Traits
  * ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 template<typename PrimType_>
-class ComparisonTraits<RotationQuaternion<PrimType_>, RotationQuaternion<PrimType_>> {
+class ComparisonTraits<RotationBase<RotationQuaternion<PrimType_>>, RotationBase<RotationQuaternion<PrimType_>>> {
  public:
-   inline static bool isEqual(const RotationQuaternion<PrimType_>& a, const RotationQuaternion<PrimType_>& b){
-     return a.toImplementation().w() ==  b.toImplementation().w() &&
-            a.toImplementation().x() ==  b.toImplementation().x() &&
-            a.toImplementation().y() ==  b.toImplementation().y() &&
-            a.toImplementation().z() ==  b.toImplementation().z();
+   inline static bool isEqual(const RotationBase<RotationQuaternion<PrimType_>>& a, const RotationBase<RotationQuaternion<PrimType_>>& b){
+     return a.derived().toImplementation().w() ==  b.derived().toImplementation().w() &&
+            a.derived().toImplementation().x() ==  b.derived().toImplementation().x() &&
+            a.derived().toImplementation().y() ==  b.derived().toImplementation().y() &&
+            a.derived().toImplementation().z() ==  b.derived().toImplementation().z();
    }
 };
 

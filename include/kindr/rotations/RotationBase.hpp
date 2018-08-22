@@ -68,18 +68,6 @@ class ConversionTraits {
   // inline static Dest_ convert(const Source_& );
 };
 
-/*! \brief Comparison traits for comparing different rotations
- *  \class ComparisonTraits
- *  (only for advanced users)
- */
-template<typename Left_, typename Right_>
-class ComparisonTraits {
- public:
-  inline static bool isEqual(const Left_& left, const Right_& right) {
-    return left.toImplementation() == Left_(right).toImplementation();
-  }
-};
-
 
 
 /*! \brief Rotation traits for rotating vectors and matrices
@@ -121,6 +109,16 @@ class BoxOperationTraits {
 template<typename Rotation_>
 class SetFromVectorsTraits {
  public:
+};
+
+/*! \brief Disparity angle traits for computing the disparity angle between two rotations.
+ *  \class DisparityAngleTraits
+ *  (only for advanced users)
+ */
+template<typename Left_, typename Right_>
+class DisparityAngleTraits {
+ public:
+  // inline static typename internal::get_scalar<Derived_>::Scalar compute(const Left_& left, const Right_& right);
 };
 
 /*! \brief Fixes the rotation to get rid of numerical errors (e.g. normalize quaternion).
@@ -258,7 +256,7 @@ class RotationBase {
    */
   template<typename OtherDerived_>
   bool operator ==(const RotationBase<OtherDerived_>& other) const { // todo: may be optimized
-    return internal::ComparisonTraits<Derived_,OtherDerived_>::isEqual(this->derived().getUnique(), other.derived().getUnique()); // the type conversion must already take place here to ensure the specialised isequal function is called more often
+    return internal::ComparisonTraits<RotationBase<Derived_>, RotationBase<OtherDerived_>>::isEqual(this->derived().getUnique(), other.derived().getUnique()); // the type conversion must already take place here to ensure the specialised isequal function is called more often
   }
 
   /*! \brief Gets the disparity angle between two rotations for comparison.
@@ -271,7 +269,7 @@ class RotationBase {
    */
   template<typename OtherDerived_>
   typename internal::get_scalar<Derived_>::Scalar getDisparityAngle(const RotationBase<OtherDerived_>& other) const {
-    return internal::ComparisonTraits<RotationBase<Derived_>, RotationBase<OtherDerived_>>::get_disparity_angle(this->derived(), other.derived());
+    return internal::DisparityAngleTraits<RotationBase<Derived_>, RotationBase<OtherDerived_>>::compute(this->derived(), other.derived());
   }
 
   /*! \brief Compares two rotations with a tolerance.
