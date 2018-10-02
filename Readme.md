@@ -52,36 +52,7 @@ See also section 'Building the documentation' below.
 * GCC 4.7 is required at the minimum.
 * CMake 2.8.3 is required at the minimum.
 
-## Installation
-
-### Installing from packages (recommended for Ubuntu LTS users)
-
-Current version: 1.0.1.
-
-The maintainers of this project provide binary packages for ROS and Ubuntu
-LTS releases. To install these packages, you may follow these instructions:
-
-* Add the project PPA to your APT sources by issuing 
-
-  ```
-  sudo add-apt-repository ppa:ethz-asl/common
-  ```
-
-  on the command line
-
-* To re-synchronize your package index files, run
-
-  ```
-  sudo apt-get update
-  ```
-
-* Install all project packages and their dependencies through
-
-  ```
-  sudo apt-get install ros-indigo-kindr-*
-  ```
-
-  or selected packages using your favorite package management tool.
+## Building
 
 ### Building with cmake
 
