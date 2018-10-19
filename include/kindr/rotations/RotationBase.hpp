@@ -318,7 +318,7 @@ class RotationBase {
    * \param vector  Eigen::Matrix<Scalar 3, 1>
    * \return  reference to modified rotation
    */
-  Derived_ exponentialMap(const typename internal::get_matrix3X<Derived_>::template Matrix3X<1>& vector)  {
+  static Derived_ exponentialMap(const typename internal::get_matrix3X<Derived_>::template Matrix3X<1>& vector)  {
    return internal::MapTraits<RotationBase<Derived_>>::set_exponential_map(vector);
   }
 
