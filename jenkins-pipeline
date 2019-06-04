@@ -1,2 +1,0 @@
-library 'continuous_integration_pipeline'
-ciPipeline('--cmake-args="-DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TEST=true" --enable-doxygen --publish-doxygen')
