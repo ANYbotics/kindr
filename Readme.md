@@ -11,8 +11,6 @@ This work is conducted as part of [ANYmal Research](https://www.anymal-research.
 
 The source code is released under a [BSD 3-Clause license](LICENSE).
 
-[![Build Status](https://ci.leggedrobotics.com/buildStatus/icon?job=github_anybotics/kindr/master)](https://ci.leggedrobotics.com/job/github_anybotics/job/kindr/job/master/)
-
 ## Documentation
 
 [Online](http://docs.leggedrobotics.com/kindr/)
@@ -23,11 +21,11 @@ See also section 'Building the documentation' below.
 
 ## Changelog
 
-### Kindr 1.0.0 
+### Kindr 1.0.0
 
 * Simplified header include `#include <kindr/Core>` is provided.
 * Kindr is now strongly dependent on Eigen.
-* All sub namespaces have been removed. (e.g. `kindr::rotations::eigen_impl` -> `kindr::`) 
+* All sub namespaces have been removed. (e.g. `kindr::rotations::eigen_impl` -> `kindr::`)
 * The implementations of rotations and time derivatives have been simplified (Passive, Hamiltonian).
     - Active typedefs (e.g. RotationQuaternionAD) have been removed and simpler ones (e.g. RotationQuaternionD) have been introduced.
     - Note that the functionality of some operators changed! Please check the [cheat sheet](http://docs.leggedrobotics.com/kindr/cheatsheet_latest.pdf) to understand what is implemented.
@@ -37,7 +35,7 @@ See also section 'Building the documentation' below.
        - `C_BI.boxMinus(dt *  B_w_IB)` ->  `-C_BI.boxMinus(dt * B_w_IB)`
        - Euler angles probably have to be negated.
 * Conversion methods between ROS and kindr have been moved to the package [kindr_ros](https://github.com/anybotics/kindr_ros).
-* Concatenation of Homogeneous Transformation is now implemented. 
+* Concatenation of Homogeneous Transformation is now implemented.
 * Short typedefs are provided for Homogeneous Transformation: `HomTransformQuatD`, `HomTransformMatrixD`.
 * Jacobian of exponential map is implemented.
 * Unit tests based on gtest are provided to test the convention of other software packages.
@@ -76,8 +74,8 @@ Kindr can be included in your cmake project.
 Add the following to your *CmakeLists.txt*:
 
 ```
-find_package(kindr) 
-include_directories(${kindr_INCLUDE_DIRS}) 
+find_package(kindr)
+include_directories(${kindr_INCLUDE_DIRS})
 ```
 
 ### Building with catkin
@@ -101,8 +99,8 @@ catkin build -w ~/catkin_ws kindr
 Kindr can be included in your catkin project with:
 Add the following to your *CMakeLists.txt*:
 ```
-find_package(catkin COMPONENTS kindr) 
-include_directories(${catkin_INCLUDE_DIRS}) 
+find_package(catkin COMPONENTS kindr)
+include_directories(${catkin_INCLUDE_DIRS})
 ```
 
 And to your *package.xml*:
