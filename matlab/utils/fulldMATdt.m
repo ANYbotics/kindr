@@ -7,7 +7,7 @@
 %
 % Created by Christian Gehring on 11.10.2012
 % from Matlab2010a
-% -> gehrinch@ethz.ch
+% -> cgehring@anybotics.com
 
 function [ ddA ] = fulldMATdt( A, n, q, dq, ddq)
 if n > 2
