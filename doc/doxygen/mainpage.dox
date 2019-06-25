@@ -20,8 +20,8 @@ Involved people:
  - Christian Gehring
  - Michael Neunert
  - Hannes Sommer
- 
-Contact: 
+
+Contact:
 Remo Diethelm  (rdiethelm ( at ) anybotics.com)
 */
 
@@ -29,7 +29,7 @@ Remo Diethelm  (rdiethelm ( at ) anybotics.com)
 
 //-----------------------------------------------------------
 
-/*! \page getting_started Getting started 
+/*! \page getting_started Getting started
 
 This library comes a long with a <a href="cheatsheet_latest.pdf" target="_blank"><b>Cheatsheet</b></a>, which shows the mathematical notation and should help you to understand what is implemented.
 
@@ -64,7 +64,7 @@ This will copy the file FindKindr.cmake to the module path of CMake.
 The maintainers of this project provide binary packages for ROS and Ubuntu
 LTS releases. To install these packages, you may follow these instructions:
 
-- Add the project PPA to your APT sources by issuing 
+- Add the project PPA to your APT sources by issuing
 
 \code{.sh}
   sudo add-apt-repository ppa:ethz-asl/common
@@ -109,8 +109,8 @@ Kindr can be included in your catkin project with:
 Add the following to your *CMakeLists.txt*:
 
 \code{.sh}
-find_package(catkin COMPONENTS kindr) 
-include_directories(${catkin_INCLUDE_DIRS}) 
+find_package(catkin COMPONENTS kindr)
+include_directories(${catkin_INCLUDE_DIRS})
 \endcode
 
 And to your *package.xml*:
@@ -162,11 +162,11 @@ See \ref page_developers "Developers" to learn how to develop this library.
 \page page_users Users
 
   Check the <a href="cheatsheet_latest.pdf" target="_blank"><b>cheatsheet</b></a> to understand the math behind.
-  
+
  \section orientation_pose Rotations and Poses
-  - \subpage page_rotations 
+  - \subpage page_rotations
   - \subpage page_poses
- 
+
  \section velocities Time Derivatives of Rotations and Poses
   - \subpage page_rdiff
   - \subpage page_posesdiff
@@ -176,7 +176,7 @@ See \ref page_developers "Developers" to learn how to develop this library.
 
  \section vectors Vectors
   - \subpage page_vector
- 
+
 */
 
 //-----------------------------------------------------------
@@ -184,10 +184,9 @@ See \ref page_developers "Developers" to learn how to develop this library.
 /*!
 \page page_developers Developers
 
- 
+
 \section coding_style Coding Style
-The coding style of this library must be in compliance with the <a href="https://github.com/ethz-asl/programming_styleguide/wiki/Cpp-Coding-Style-Guidelines">coding style guidelines of the Autonomous Systems Lab</a>.
-There exist  <a href="https://github.com/ethz-asl/programming_styleguide/">auto formatters for Eclipse and Emacs</a>.
+The coding style of this library must be in compliance with the <a href="https://anybotics.github.io/styleguide/cppguide.html">coding style guidelines of ANYbotics</a>.
 
 Developers are encouraged to make use of the new features of C++11.
 
