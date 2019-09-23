@@ -13,9 +13,9 @@ The source code is released under a [BSD 3-Clause license](LICENSE).
 
 ## Documentation
 
-[Online](http://docs.leggedrobotics.com/kindr/)
+[Online](https://opensource.docs.anymal.com/doxygen/kindr/master/index.html)
 
-Impatient individuals can directly download the [cheat sheet](http://docs.leggedrobotics.com/kindr/cheatsheet_latest.pdf).
+Impatient individuals can directly download the [cheat sheet](https://opensource.docs.anymal.com/doxygen/kindr/master/cheatsheet_latest.pdf).
 
 See also section 'Building the documentation' below.
 
@@ -28,7 +28,7 @@ See also section 'Building the documentation' below.
 * All sub namespaces have been removed. (e.g. `kindr::rotations::eigen_impl` -> `kindr::`)
 * The implementations of rotations and time derivatives have been simplified (Passive, Hamiltonian).
     - Active typedefs (e.g. RotationQuaternionAD) have been removed and simpler ones (e.g. RotationQuaternionD) have been introduced.
-    - Note that the functionality of some operators changed! Please check the [cheat sheet](http://docs.leggedrobotics.com/kindr/cheatsheet_latest.pdf) to understand what is implemented.
+    - Note that the functionality of some operators changed! Please check the [cheat sheet](https://opensource.docs.anymal.com/doxygen/kindr/master/cheatsheet_latest.pdf) to understand what is implemented.
     - Some hints on what needs to be changed from kindr 0.0.1:
        - `rotation.setFromVectors(v1, v2)` -> `rotation.setFromVectors(v2, v1)`
        - `C_BI.boxPlus(dt * B_w_IB)` -> `C_BI.boxPlus(dt * C_IB * B_w_IB)`
