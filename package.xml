@@ -4,14 +4,13 @@
 
   <name>kindr</name>
   <version>1.3.0</version>
-  <description>
-    Kinematics and Dynamics for Robotics
-  </description>
+  <description>Kinematics and Dynamics for Robotics</description>
 
   <license>BSD</license>
   <url type="repository">https://github.com/anybotics/kindr</url>
   <maintainer email="rdiethelm@anybotics.com">Remo Diethelm</maintainer>
-  <author>Michael Bloesch</author>
+  <maintainer email="pleemann@anybotics.com">Philipp Leemann</maintainer>
+  <author email="bloeschm@ethz.ch">Michael Bloesch</author>
   <author>Remo Diethelm</author>
   <author>Péter Fankhauser</author>
   <author>Paul Furgale</author>
