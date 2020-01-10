@@ -36,9 +36,9 @@ include_directories(include)
 include_directories(${EIGEN_INCLUDE_DIR})
 
 # Ensure Eigen version is at least 3.2
-if(${EIGEN_WORLD_VERSION} LESS "3" OR (${EIGEN_WORLD_VERSION} EQUAL "3" AND 
+if(${EIGEN_WORLD_VERSION} LESS "3" OR (${EIGEN_WORLD_VERSION} EQUAL "3" AND
    ${EIGEN_MAJOR_VERSION} LESS "2"))
-  message(FATAL_ERROR "Eigen must be of version 3.2 or higher. Detected version 
+  message(FATAL_ERROR "Eigen must be of version 3.2 or higher. Detected version
           ${EIGEN_WORLD_VERSION}.${EIGEN_MAJOR_VERSION}.${EIGEN_MINOR_VERSION}")
 else()
  message(STATUS "Using Eigen of version ${EIGEN_WORLD_VERSION}.${EIGEN_MAJOR_VERSION}.${EIGEN_MINOR_VERSION} from ${EIGEN_INCLUDE_DIR}")
@@ -90,11 +90,11 @@ add_subdirectory(doc/doxygen)
 #=============================================
 # to allow find_package() on kindr
 #=============================================
-# 
+#
 # the following case be used in an external project requiring kindr:
 #  ...
-#  find_package(kindr) 
-#  include_directories(${kindr_INCLUDE_DIRS}) 
+#  find_package(kindr)
+#  include_directories(${kindr_INCLUDE_DIRS})
 #  ...
 
 # NOTE: the following will support find_package for 1) local build (make) and 2) for installed files (make install)
@@ -125,6 +125,9 @@ install(FILES
   "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/kindrConfig.cmake"
   DESTINATION share/kindr/cmake COMPONENT dev)
 
+install(FILES
+  package.xml
+  DESTINATION share/kindr COMPONENT dev)
 
 
 #=============================================
