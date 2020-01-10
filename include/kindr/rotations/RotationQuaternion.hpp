@@ -421,7 +421,7 @@ class RotationQuaternion : public RotationBase<RotationQuaternion<PrimType_>> {
    *  The RotationQuaternion should always have unit length.
    *  \returns norm of the quaternion
    */
-  Scalar norm() {
+  Scalar norm() const {
     return rotationQuaternion_.norm();
   }
 
