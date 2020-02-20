@@ -336,6 +336,7 @@ class RotationBase {
   typename internal::get_matrix3X<Derived_>::template Matrix3X<1> boxMinus(const RotationBase<OtherDerived_>& other) const {
     return internal::BoxOperationTraits<RotationBase<Derived_>, RotationBase<OtherDerived_>>::box_minus(this->derived(), other.derived());
   }
+
   /*! \brief Applies the box plus operation
    * \returns rotation
    */
@@ -343,6 +344,15 @@ class RotationBase {
     return internal::BoxOperationTraits<RotationBase<Derived_>, RotationBase<Derived_>>::box_plus(this->derived(), vector);
   }
 
+  /*! \brief Interpolate between two rotations.
+   * \param other Rotation to interpolate towards.
+   * \param ratio Interpolation ratio between 0 and 1. Returns self when 0, and other when 1.
+   * \returns Interpolated rotation.
+   */
+  template<typename OtherDerived_>
+  Derived_ interpolate(const RotationBase<OtherDerived_>& other, double ratio) const {
+    return this->boxPlus(other.boxMinus(*this) * ratio);
+  }
 
   /*! \brief Sets the rotation C_IB from two vectors such that I_v = C_IB*B_v i.e.
    * I_v = this->rotate(B_v).
