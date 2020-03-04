@@ -351,6 +351,11 @@ class RotationBase {
    */
   template<typename OtherDerived_>
   Derived_ interpolate(const RotationBase<OtherDerived_>& other, double ratio) const {
+    if (ratio > 1.) {
+      ratio = 1.;
+    } else if (ratio < 0.) {
+      ratio = 0.;
+    }
     return this->boxPlus(other.boxMinus(*this) * ratio);
   }
 
