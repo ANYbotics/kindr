@@ -125,7 +125,7 @@ make kindr_doc
 The doxygen documentation can be found here:
 
 ```
-doc/html/index.html
+build/doc/html/index.html
 ```
 
 ### Building unit tests with gtest

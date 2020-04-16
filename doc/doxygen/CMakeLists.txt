@@ -32,21 +32,21 @@ cmake_minimum_required (VERSION 2.8)
 
 find_package(Doxygen)
 if(DOXYGEN)
-  set(DOCSOURCE_DIR ${PROJECT_SOURCE_DIR}/doc)
+  set(DOC_OUTPUT_DIR ${PROJECT_BINARY_DIR}/doc)
   set(DOXYGEN_IMAGE_DIRS "\"${CMAKE_CURRENT_SOURCE_DIR}/figures/\"" )
   set(DOXYGEN_SOURCE_DIRS "${DOXYGEN_SOURCE_DIRS} \"${CMAKE_CURRENT_SOURCE_DIR}\" ")
   set(DOXYGEN_SOURCE_DIRS "${DOXYGEN_SOURCE_DIRS} \"${CMAKE_CURRENT_SOURCE_DIR}/../../include/\" ")
 
 
   set(HTML_EXTRA_FILES "${CMAKE_CURRENT_SOURCE_DIR}/../cheatsheet/cheatsheet_latest.pdf")
-  set(HTML_DIR ${PROJECT_SOURCE_DIR}/doc/html)
+  set(HTML_DIR ${DOC_OUTPUT_DIR}/html)
   set(DOXYGEN_QUIET YES)
   make_directory(${HTML_DIR})
   set( HAVE_DOT YES )
 
-  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doxygen.config.in ${DOCSOURCE_DIR}/doxygen.config IMMEDIATE)
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doxygen.config.in ${DOC_OUTPUT_DIR}/doxygen.config IMMEDIATE)
 
-  add_custom_target(kindr_doc ${DOXYGEN} ${DOCSOURCE_DIR}/doxygen.config)
+  add_custom_target(kindr_doc ${DOXYGEN} ${DOC_OUTPUT_DIR}/doxygen.config)
 else(DOXYGEN)
   message(STATUS "Doxygen not found")
 endif(DOXYGEN)
