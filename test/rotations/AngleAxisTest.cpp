@@ -369,19 +369,13 @@ TYPED_TEST(AngleAxisSingleTest, testConcatenation){
   // Check concatenation of 4 quarters
   rotAngleAxis = this->rotAngleAxisQuarterX*this->rotAngleAxisQuarterX*this->rotAngleAxisQuarterX*this->rotAngleAxisQuarterX;
   ASSERT_NEAR(rotAngleAxis.getUnique().angle(), this->rotAngleAxisIdentity.getUnique().angle(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.getUnique().axis().x(), this->rotAngleAxisIdentity.getUnique().axis().x(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.getUnique().axis().y(), this->rotAngleAxisIdentity.getUnique().axis().y(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.getUnique().axis().z(), this->rotAngleAxisIdentity.getUnique().axis().z(),1e-6);
+  // Axis is undefined if rotation near 0 -> no test necessary
   rotAngleAxis = this->rotAngleAxisQuarterY*this->rotAngleAxisQuarterY*this->rotAngleAxisQuarterY*this->rotAngleAxisQuarterY;
   ASSERT_NEAR(rotAngleAxis.getUnique().angle(), this->rotAngleAxisIdentity.getUnique().angle(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.getUnique().axis().x(), this->rotAngleAxisIdentity.getUnique().axis().x(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.getUnique().axis().y(), this->rotAngleAxisIdentity.getUnique().axis().y(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.getUnique().axis().z(), this->rotAngleAxisIdentity.getUnique().axis().z(),1e-6);
+// Axis is undefined if rotation near 0 -> no test necessary
   rotAngleAxis = this->rotAngleAxisQuarterZ*this->rotAngleAxisQuarterZ*this->rotAngleAxisQuarterZ*this->rotAngleAxisQuarterZ;
   ASSERT_NEAR(rotAngleAxis.getUnique().angle(), this->rotAngleAxisIdentity.getUnique().angle(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.getUnique().axis().x(), this->rotAngleAxisIdentity.getUnique().axis().x(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.getUnique().axis().y(), this->rotAngleAxisIdentity.getUnique().axis().y(),1e-6);
-  ASSERT_NEAR(rotAngleAxis.getUnique().axis().z(), this->rotAngleAxisIdentity.getUnique().axis().z(),1e-6);
+// Axis is undefined if rotation near 0 -> no test necessary
 
   // Check concatenation of 3 different quarters
   rotAngleAxis = this->rotAngleAxisQuarterX.inverted()*this->rotAngleAxisQuarterY*this->rotAngleAxisQuarterX;
