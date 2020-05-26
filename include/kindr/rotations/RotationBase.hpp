@@ -162,6 +162,10 @@ class RotationBase {
    */
   RotationBase() = default;
 
+  RotationBase(const RotationBase& other) {
+    derived() = other.derived();
+  }
+
   /*! \brief Constructor from derived rotation.
    *  This constructor has been deleted because the abstract class does not contain any data.
    */
