@@ -368,20 +368,22 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
 
   /*! \brief Multiplies vector with a scalar.
    * \param factor   1-dimensional vector
-   * \returns product with physical type
+   * \returns product
    */
   template <PhysicalType PhysicalTypeFactor_, typename PrimTypeFactor_>
-  // TODO (kersimon): Create return type trait with correct dimensionFactor_
-  typename internal::MultiplicationReturnTypeTrait<Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeFactor_, PrimTypeFactor_, Dimension_>>::ReturnType
+  typename internal::MultiplicationReturnTypeTrait<Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeFactor_, PrimTypeFactor_, 1>>::ReturnType
   operator*(const Vector<PhysicalTypeFactor_, PrimTypeFactor_, 1>& factor) const {
     return typename internal::MultiplicationReturnTypeTrait<
-        Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeFactor_, PrimType_, Dimension_>>::ReturnType(
+        Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeFactor_, PrimType_, 1>>::ReturnType(
             this->toImplementation() * static_cast<PrimType_>(factor.toImplementation()(0)));
   }
 
+  /*! \brief Multiplies vector with a scalar, if lhs is 1-dimensional
+   * \param vector  vector
+   * \returns product
+   */
   template <PhysicalType PhysicalTypeVector_, typename PrimTypeVector_, int DimensionVector_, int DimensionCopy_ = Dimension_, typename std::enable_if<DimensionCopy_ == 1>::type* = nullptr>
-  // TODO (kersimon): Create return type trait with corect DimensionVector_
-  typename internal::MultiplicationReturnTypeTrait<Vector<PhysicalType_, PrimType_, DimensionVector_>, Vector<PhysicalTypeVector_, PrimTypeVector_, DimensionVector_>>::ReturnType
+  typename internal::MultiplicationReturnTypeTrait<Vector<PhysicalType_, PrimType_, 1>, Vector<PhysicalTypeVector_, PrimTypeVector_, DimensionVector_>>::ReturnType
   operator*(const Vector<PhysicalTypeVector_, PrimTypeVector_, DimensionVector_>& vector) const {
     return vector * *this;
   }
@@ -394,12 +396,16 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
   Vector<PhysicalType_, PrimType_, Dimension_> operator/(PrimTypeDivisor_ divisor) const {
     return Vector<PhysicalType_, PrimType_, Dimension_>(this->toImplementation()/(PrimType_)divisor);
   }
+
+  /*! \brief Divides vector by a scalar.
+ * \param divisor   divisor with physical type
+ * \returns quotient
+ */
   template <PhysicalType PhysicalTypeDivisor_, typename PrimTypeDivisor_>
-  // TODO (kersimon): Create return type trait with correct dimensionFactor_
-  typename internal::DivisionReturnTypeTrait<Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeDivisor_, PrimTypeDivisor_, Dimension_>>::ReturnType
+  typename internal::DivisionReturnTypeTrait<Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeDivisor_, PrimTypeDivisor_, 1>>::ReturnType
   operator/(const Vector<PhysicalTypeDivisor_, PrimTypeDivisor_, 1>& divisor) const {
     return typename internal::DivisionReturnTypeTrait<
-        Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeDivisor_, PrimTypeDivisor_, Dimension_>>::ReturnType(
+        Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeDivisor_, PrimTypeDivisor_, 1>>::ReturnType(
         this->toImplementation() / static_cast<PrimType_>(divisor.toImplementation()(0)));
   }
 
@@ -625,12 +631,11 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
   }
 };
 
-
 /*! \brief Multiplies a vector with a scalar.
  * \param factor   factor
  * \returns product
  */
-template<enum PhysicalType PhysicalType_, typename PrimTypeFactor_, typename PrimType_, int Dimension_, typename std::enable_if<std::is_arithmetic<PrimTypeFactor_>::value>::type>
+template<enum PhysicalType PhysicalType_, typename PrimTypeFactor_, typename PrimType_, int Dimension_, typename std::enable_if<std::is_arithmetic<PrimTypeFactor_>::value>::type* = nullptr>
 Vector<PhysicalType_, PrimType_, Dimension_> operator*(PrimTypeFactor_ factor, const Vector<PhysicalType_, PrimType_, Dimension_>& vector) {
   return vector*(PrimType_)factor;
 }
@@ -671,9 +676,9 @@ class DivisionReturnTypeTrait<Vector<PhysicalType1_, PrimType_, Dimension_>, Vec
   typedef Vector<PhysicalType::Typeless, PrimType_, Dimension_> ReturnType;
 };
 
-/*! \brief Specializes multiplication and division traits for the triple (factor1 != factor2)
- */
-#define KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(FACTOR1, FACTOR2, PRODUCT) \
+/*! \brief Specializes multiplication and division traits for factor1 * factor2 -> product; and product / factor1 -> factor2
+*/
+#define KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_ONEWAY(FACTOR1, FACTOR2, PRODUCT) \
     template<typename PrimType_, int Dimension_> \
     class MultiplicationReturnTypeTrait<Vector<PhysicalType::FACTOR1, PrimType_, Dimension_>, Vector<PhysicalType::FACTOR2, PrimType_, Dimension_>> \
     { \
@@ -681,7 +686,13 @@ class DivisionReturnTypeTrait<Vector<PhysicalType1_, PrimType_, Dimension_>, Vec
       typedef Vector<PhysicalType::PRODUCT, PrimType_, Dimension_> ReturnType; \
     }; \
     template<typename PrimType_, int Dimension_> \
-    class MultiplicationReturnTypeTrait<Vector<PhysicalType::FACTOR2, PrimType_, Dimension_>, Vector<PhysicalType::FACTOR1, PrimType_, Dimension_>> \
+    class MultiplicationReturnTypeTrait<Vector<PhysicalType::FACTOR1, PrimType_, Dimension_>, Vector<PhysicalType::FACTOR2, PrimType_, 1>, typename std::enable_if<Dimension_ != 1>::type> \
+    { \
+     public: \
+      typedef Vector<PhysicalType::PRODUCT, PrimType_, Dimension_> ReturnType; \
+    }; \
+    template<typename PrimType_, int Dimension_> \
+    class MultiplicationReturnTypeTrait<Vector<PhysicalType::FACTOR1, PrimType_, 1>, Vector<PhysicalType::FACTOR2, PrimType_, Dimension_>, typename std::enable_if<Dimension_ != 1>::type> \
     { \
      public: \
       typedef Vector<PhysicalType::PRODUCT, PrimType_, Dimension_> ReturnType; \
@@ -693,27 +704,23 @@ class DivisionReturnTypeTrait<Vector<PhysicalType1_, PrimType_, Dimension_>, Vec
       typedef Vector<PhysicalType::FACTOR2, PrimType_, Dimension_> ReturnType; \
     }; \
     template<typename PrimType_, int Dimension_> \
-    class DivisionReturnTypeTrait<Vector<PhysicalType::PRODUCT, PrimType_, Dimension_>, Vector<PhysicalType::FACTOR2, PrimType_, Dimension_>> \
+    class DivisionReturnTypeTrait<Vector<PhysicalType::PRODUCT, PrimType_, Dimension_>, Vector<PhysicalType::FACTOR1, PrimType_, 1>, typename std::enable_if<Dimension_ != 1>::type> \
     { \
      public: \
-      typedef Vector<PhysicalType::FACTOR1, PrimType_, Dimension_> ReturnType; \
+      typedef Vector<PhysicalType::FACTOR2, PrimType_, Dimension_> ReturnType; \
     };
+
+/*! \brief Specializes multiplication and division traits for the triple (factor1 != factor2)
+*/
+#define KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_A(FACTOR1, FACTOR2, PRODUCT) \
+    KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_ONEWAY(FACTOR1, FACTOR2, PRODUCT) \
+    KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_ONEWAY(FACTOR2, FACTOR1, PRODUCT)
 
 /*! \brief Specializes multiplication and division traits for the triple (factor1 == factor2)
  */
 #define KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_B(FACTOR1AND2, PRODUCT) \
-    template<typename PrimType_, int Dimension_> \
-    class MultiplicationReturnTypeTrait<Vector<PhysicalType::FACTOR1AND2, PrimType_, Dimension_>, Vector<PhysicalType::FACTOR1AND2, PrimType_, Dimension_>> \
-    { \
-     public: \
-      typedef Vector<PhysicalType::PRODUCT, PrimType_, Dimension_> ReturnType; \
-    }; \
-    template<typename PrimType_, int Dimension_> \
-    class DivisionReturnTypeTrait<Vector<PhysicalType::PRODUCT, PrimType_, Dimension_>, Vector<PhysicalType::FACTOR1AND2, PrimType_, Dimension_>> \
-    { \
-     public: \
-      typedef Vector<PhysicalType::FACTOR1AND2, PrimType_, Dimension_> ReturnType; \
-    };
+    KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_ONEWAY(FACTOR1AND2, FACTOR1AND2, PRODUCT)
+
 
 KINDR_SPECIALIZE_PHYS_QUANT_RETURN_TYPE_B(Typeless, Typeless)
 

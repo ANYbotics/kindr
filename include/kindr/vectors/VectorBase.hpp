@@ -44,13 +44,13 @@ class get_dimension {
 //  typedef PrimType Scalar;
 };
 
-template<typename factor1, typename factor2>
+template<typename factor1, typename factor2, typename = void>
 class MultiplicationReturnTypeTrait
 {
  public:
 };
 
-template<typename dividend, typename divisor>
+template<typename dividend, typename divisor, typename = void>
 class DivisionReturnTypeTrait
 {
  public:
