@@ -113,6 +113,14 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
     : Implementation(other) {
   }
 
+  /*! \brief Constructor using single scalar
+   * @param value
+   */
+  template <int DimensionCopy_ = Dimension_>
+  explicit Vector(Scalar value, typename std::enable_if<DimensionCopy_ == 1>::type* = nullptr)
+    : Implementation(value) {
+  }
+
   /*! \brief Constructor using three scalars.
    *  \param x x-Component
    *  \param y y-Component
@@ -353,9 +361,29 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
    * \param factor   factor
    * \returns product
    */
-  template<typename PrimTypeFactor_>
+  template<typename PrimTypeFactor_, typename std::enable_if<std::is_arithmetic<PrimTypeFactor_>::value>::type* = nullptr>
   Vector<PhysicalType_, PrimType_, Dimension_> operator*(PrimTypeFactor_ factor) const {
     return Vector<PhysicalType_, PrimType_, Dimension_>(this->toImplementation()*(PrimType_)factor);
+  }
+
+  /*! \brief Multiplies vector with a scalar.
+   * \param factor   1-dimensional vector
+   * \returns product with physical type
+   */
+  template <PhysicalType PhysicalTypeFactor_, typename PrimTypeFactor_>
+  // TODO (kersimon): Create return type trait with correct dimensionFactor_
+  typename internal::MultiplicationReturnTypeTrait<Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeFactor_, PrimTypeFactor_, Dimension_>>::ReturnType
+  operator*(const Vector<PhysicalTypeFactor_, PrimTypeFactor_, 1>& factor) const {
+    return typename internal::MultiplicationReturnTypeTrait<
+        Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeFactor_, PrimType_, Dimension_>>::ReturnType(
+            this->toImplementation() * static_cast<PrimType_>(factor.toImplementation()(0)));
+  }
+
+  template <PhysicalType PhysicalTypeVector_, typename PrimTypeVector_, int DimensionVector_, int DimensionCopy_ = Dimension_, typename std::enable_if<DimensionCopy_ == 1>::type* = nullptr>
+  // TODO (kersimon): Create return type trait with corect DimensionVector_
+  typename internal::MultiplicationReturnTypeTrait<Vector<PhysicalType_, PrimType_, DimensionVector_>, Vector<PhysicalTypeVector_, PrimTypeVector_, DimensionVector_>>::ReturnType
+  operator*(const Vector<PhysicalTypeVector_, PrimTypeVector_, DimensionVector_>& vector) const {
+    return vector * *this;
   }
 
   /*! \brief Divides vector by a scalar.
@@ -365,6 +393,14 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
   template<typename PrimTypeDivisor_>
   Vector<PhysicalType_, PrimType_, Dimension_> operator/(PrimTypeDivisor_ divisor) const {
     return Vector<PhysicalType_, PrimType_, Dimension_>(this->toImplementation()/(PrimType_)divisor);
+  }
+  template <PhysicalType PhysicalTypeDivisor_, typename PrimTypeDivisor_>
+  // TODO (kersimon): Create return type trait with correct dimensionFactor_
+  typename internal::DivisionReturnTypeTrait<Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeDivisor_, PrimTypeDivisor_, Dimension_>>::ReturnType
+  operator/(const Vector<PhysicalTypeDivisor_, PrimTypeDivisor_, 1>& divisor) const {
+    return typename internal::DivisionReturnTypeTrait<
+        Vector<PhysicalType_, PrimType_, Dimension_>, Vector<PhysicalTypeDivisor_, PrimTypeDivisor_, Dimension_>>::ReturnType(
+        this->toImplementation() / static_cast<PrimType_>(divisor.toImplementation()(0)));
   }
 
   /*! \brief Addition and assignment of two vectors.
@@ -395,6 +431,16 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
     return *this;
   }
 
+  /*! \brief Multiplication with a scalar and assignment
+   * @param factor  factor with physical type
+   * @returns reference
+   */
+  template <PhysicalType PhysicalTypeFactor_, typename PrimTypeFactor_>
+  Vector<PhysicalType_, PrimType_, Dimension_>& operator*=(Vector<PhysicalTypeFactor_, PrimTypeFactor_, 1> factor) {
+    this->toImplementation() *= static_cast<PrimType_>(factor.toImplementation()(0));
+    return *this;
+  }
+
   /*! \brief Division by a scalar and assignment.
    * \param divisor   divisor
    * \returns reference
@@ -402,6 +448,16 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
   template<typename PrimTypeDivisor_>
   Vector<PhysicalType_, PrimType_, Dimension_>& operator/=(PrimTypeDivisor_ divisor) {
     this->toImplementation() /= (PrimType_)divisor;
+    return *this;
+  }
+
+  /*! \brief Division by a scalar and assignment
+   * @param divisor  divisor with physical type
+   * @returns reference
+   */
+  template <PhysicalType PhysicalTypeDivisor_, typename PrimTypeDivisor_>
+  Vector<PhysicalType_, PrimType_, Dimension_>& operator/=(Vector<PhysicalTypeDivisor_, PrimTypeDivisor_, 1> divisor) {
+    this->toImplementation() /= static_cast<PrimType_>(divisor.toImplementation()(0));
     return *this;
   }
 
@@ -574,11 +630,10 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
  * \param factor   factor
  * \returns product
  */
-template<enum PhysicalType PhysicalType_, typename PrimTypeFactor_, typename PrimType_, int Dimension_>
+template<enum PhysicalType PhysicalType_, typename PrimTypeFactor_, typename PrimType_, int Dimension_, typename std::enable_if<std::is_arithmetic<PrimTypeFactor_>::value>::type>
 Vector<PhysicalType_, PrimType_, Dimension_> operator*(PrimTypeFactor_ factor, const Vector<PhysicalType_, PrimType_, Dimension_>& vector) {
   return vector*(PrimType_)factor;
 }
-
 
 namespace internal {
 
