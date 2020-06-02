@@ -130,7 +130,7 @@ template<typename Left_, typename Right_>
 class ComparisonTraits<RotationBase<Left_>, RotationBase<Right_>> {
  public:
   inline static bool isEqual(const RotationBase<Left_>& left, const RotationBase<Right_>& right) {
-    return left.derived().toImplementation() == RotationBase<Left_>(right).derived().toImplementation();
+    return left.derived().toImplementation() == static_cast<Left_>(right).toImplementation();
   }
 };
 
