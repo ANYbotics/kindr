@@ -561,7 +561,6 @@ TYPED_TEST(AngleAxisSingleTest, testMaps){
   typedef typename TestFixture::AngleAxis AngleAxis;
   typedef typename TestFixture::Scalar Scalar;
   typedef typename TestFixture::Vector Vector;
-  AngleAxis rotAngleAxis;
   Vector testVec;
 
   testVec = this->rotAngleAxisIdentity.logarithmicMap();
@@ -570,20 +569,20 @@ TYPED_TEST(AngleAxisSingleTest, testMaps){
   ASSERT_NEAR(testVec(2), 0.0,1e-6);
 
   testVec = this->rotAngleAxis1.logarithmicMap();
-  AngleAxis rotAngleAxisExpMap = rotAngleAxis.exponentialMap(testVec);
+  AngleAxis rotAngleAxisExpMap = AngleAxis::exponentialMap(testVec);
   ASSERT_EQ(rotAngleAxisExpMap.isNear(this->rotAngleAxis1,1e-6),true);
 
   testVec = this->rotAngleAxis2.logarithmicMap();
-  rotAngleAxisExpMap =  rotAngleAxis.exponentialMap(testVec);
+  rotAngleAxisExpMap =  AngleAxis::exponentialMap(testVec);
   ASSERT_EQ(rotAngleAxisExpMap.isNear(this->rotAngleAxis2,1e-6),true);
 
   double norm = 0.1;
   testVec = this->vec/this->vec.norm()*norm;
-  rotAngleAxisExpMap = rotAngleAxis.exponentialMap(testVec);
+  rotAngleAxisExpMap = AngleAxis::exponentialMap(testVec);
   ASSERT_NEAR(rotAngleAxisExpMap.getDisparityAngle(this->rotAngleAxisIdentity),norm,1e-6);
 
   testVec.setZero();
-  rotAngleAxisExpMap = rotAngleAxis.exponentialMap(testVec);
+  rotAngleAxisExpMap = AngleAxis::exponentialMap(testVec);
   ASSERT_NEAR(rotAngleAxisExpMap.angle(), this->rotAngleAxisIdentity.angle(),1e-6);
   ASSERT_NEAR(rotAngleAxisExpMap.axis().x(), this->rotAngleAxisIdentity.axis().x(),1e-6);
   ASSERT_NEAR(rotAngleAxisExpMap.axis().y(), this->rotAngleAxisIdentity.axis().y(),1e-6);

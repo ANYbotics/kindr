@@ -73,8 +73,8 @@ To rotate a vector or a matrix columnwise, the following methods are provided:
 - \ref kindr::RotationBase::inverseRotate() "inverseRotate()": reverse rotates a vector or a matrix columnwise
 
 \subsection rotations_interfaces_rotation_exponentialmap Exponential Map and Logarithmic Map
-The exponential map maps a vector in \f$\mathsf{R}^3\f$ describing the axis and magnitude of a three degree-of-freedom rotation to the corresponding rotation parameterization. The mapping is provided by the method \ref kindr::RotationBase::setExponentialMap() "setExponentialMap()".
-The corresponding logarithmic map is provided by the method \ref kindr::RotationBase::getLogarithmicMap() "getLogarithmicMap()".
+The exponential map maps a vector in \f$\mathsf{R}^3\f$ describing the axis and magnitude of a three degree-of-freedom rotation to the corresponding rotation parameterization. The mapping is provided by the method \ref kindr::RotationBase::exponentialMap() "exponentialMap()".
+The corresponding logarithmic map is provided by the method \ref kindr::RotationBase::logarithmicMap() "logarithmicMap()".
 
 \subsection rotations_interfaces_rotation_boxoperations Box Plus and Box Minus Operations
 The box plus operation defined as \f$\mathcal{R}_2 = \mathcal{R}_1\boxplus\mathbf{v} = \mathcal{R}(e^{\hat{\mathbf{v}}}) \cdot \mathcal{R}_1 \f$, where \f$\mathcal{R}\f$ is a rotation, \f$\mathbf{v}\f$ is a vector in \f$\mathsf{R}^3\f$ and \f$\hat{}\f$ maps a vector to the skew-symmetric matrix corresponding to the cross product, is provided by the method \ref kindr::RotationBase::boxPlus() "boxPlus()".

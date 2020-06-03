@@ -526,7 +526,6 @@ TYPED_TEST(RotationVectorSingleTest, testMaps){
   typedef typename TestFixture::RotationVector RotationVector;
   typedef typename TestFixture::Scalar Scalar;
   typedef typename TestFixture::Vector Vector;
-  RotationVector rot;
   Vector testVec;
 
   testVec = this->rotRotationVectorIdentity.logarithmicMap();
@@ -535,20 +534,20 @@ TYPED_TEST(RotationVectorSingleTest, testMaps){
   ASSERT_NEAR(testVec(2), 0.0,1e-6);
 
   testVec = this->rotRotationVectorV3.logarithmicMap();
-  RotationVector rotExpMap = rot.exponentialMap(testVec);
+  RotationVector rotExpMap = RotationVector::exponentialMap(testVec);
   ASSERT_EQ(rotExpMap.isNear(this->rotRotationVectorV3,1e-6),true);
 
   testVec = this->rotRotationVectorV4.logarithmicMap();
-  rotExpMap = rot.exponentialMap(testVec);
+  rotExpMap = RotationVector::exponentialMap(testVec);
   ASSERT_EQ(rotExpMap.isNear(this->rotRotationVectorV4,1e-6),true);
 
   double norm = 0.1;
   testVec = this->vec/this->vec.norm()*norm;
-  rotExpMap = rot.exponentialMap(testVec);
+  rotExpMap = RotationVector::exponentialMap(testVec);
   ASSERT_NEAR(rotExpMap.getDisparityAngle(this->rotRotationVectorIdentity),norm,1e-6);
 
   testVec.setZero();
-  rotExpMap = rot.exponentialMap(testVec);
+  rotExpMap = RotationVector::exponentialMap(testVec);
   KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationVectorIdentity.toImplementation(), rotExpMap.toImplementation(), Scalar(1e-4), "maps");
 
 }

@@ -513,10 +513,8 @@ TYPED_TEST(RotationMatrixSingleTest, testExpMap){
   typedef typename TestFixture::Vector Vector;
   typedef typename TestFixture::Matrix3x3 Matrix;
 
-  RotationMatrix identity;
-
   Vector vector(1.0, 0.0, 0.0);
-  RotationMatrix rotMeas = identity.exponentialMap(vector);
+  RotationMatrix rotMeas = RotationMatrix::exponentialMap(vector);
 
   RotationMatrix rotTrue;
   rotTrue.toImplementation() << 1.000000000000000e+00, 0, 0,
@@ -529,7 +527,7 @@ TYPED_TEST(RotationMatrixSingleTest, testExpMap){
   rotTrue.toImplementation() << 9.357548032779188e-01,    -2.831649605650737e-01,     2.101917059507429e-01,
      3.029327134026372e-01,     9.505806179060916e-01,    -6.803131640494003e-02,
     -1.805400766943977e-01,     1.273345749176302e-01,     9.752903089530458e-01;
-  rotMeas = identity.exponentialMap(vector);
+  rotMeas = RotationMatrix::exponentialMap(vector);
   KINDR_ASSERT_DOUBLE_MX_EQ(rotMeas.toImplementation(), rotTrue.toImplementation(), Scalar(1e-4), "expMap");
 
 }
@@ -572,7 +570,6 @@ TYPED_TEST(RotationMatrixSingleTest, testMaps){
   typedef typename TestFixture::RotationMatrix RotationMatrix;
   typedef typename TestFixture::Scalar Scalar;
   typedef typename TestFixture::Vector Vector;
-  RotationMatrix rotRotationMatrix;
   Vector testVec;
 
   testVec = this->rotRotationMatrixIdentity.logarithmicMap();
@@ -581,20 +578,20 @@ TYPED_TEST(RotationMatrixSingleTest, testMaps){
   ASSERT_NEAR(testVec(2), 0.0,1e-6);
 
   testVec = this->rotRotationMatrix1.logarithmicMap();
-  RotationMatrix rotRotationMatrixExpMap = rotRotationMatrix.exponentialMap(testVec);
+  RotationMatrix rotRotationMatrixExpMap = RotationMatrix::exponentialMap(testVec);
   KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrix1.toImplementation(), rotRotationMatrixExpMap.toImplementation(), Scalar(1e-3), "logExpMapMat1");
 
   testVec = this->rotRotationMatrix2.logarithmicMap();
-  rotRotationMatrixExpMap = rotRotationMatrix.exponentialMap(testVec);
+  rotRotationMatrixExpMap = RotationMatrix::exponentialMap(testVec);
   KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrix2.matrix(), rotRotationMatrixExpMap.matrix(), Scalar(1e-4), "logExpMapMat2");
 
   double norm = 0.1;
   testVec = this->vec/this->vec.norm()*norm;
-  rotRotationMatrixExpMap = rotRotationMatrix.exponentialMap(testVec);
+  rotRotationMatrixExpMap = RotationMatrix::exponentialMap(testVec);
   ASSERT_NEAR(rotRotationMatrixExpMap.getDisparityAngle(this->rotRotationMatrixIdentity),norm,Scalar(1e-6));
 
   testVec.setZero();
-  rotRotationMatrixExpMap = rotRotationMatrix.exponentialMap(testVec);
+  rotRotationMatrixExpMap = RotationMatrix::exponentialMap(testVec);
   KINDR_ASSERT_DOUBLE_MX_EQ(this->rotRotationMatrixIdentity.matrix(), rotRotationMatrixExpMap.matrix(), Scalar(1e-4), "maps");
 
 }

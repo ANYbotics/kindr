@@ -527,7 +527,6 @@ TYPED_TEST(EulerAnglesXyzSingleTest, testMaps){
   typedef typename TestFixture::EulerAnglesXyz EulerAnglesXyz;
   typedef typename TestFixture::Scalar Scalar;
   typedef typename TestFixture::Vector Vector;
-  EulerAnglesXyz rot;
   Vector testVec;
 
   testVec = this->rotEulerAnglesXyzIdentity.logarithmicMap();
@@ -536,20 +535,20 @@ TYPED_TEST(EulerAnglesXyzSingleTest, testMaps){
   ASSERT_NEAR(testVec(2), 0.0,1e-6);
 
   testVec = this->rotEulerAnglesXyzV3.logarithmicMap();
-  EulerAnglesXyz rotExpMap = rot.exponentialMap(testVec);
+  EulerAnglesXyz rotExpMap = EulerAnglesXyz::exponentialMap(testVec);
   KINDR_ASSERT_DOUBLE_MX_EQ(this->rotEulerAnglesXyzV3.toImplementation(), rotExpMap.toImplementation(), Scalar(1e-4), "maps");
 
   testVec = this->rotEulerAnglesXyzV4.logarithmicMap();
-  rotExpMap =  rot.exponentialMap(testVec);
+  rotExpMap =  EulerAnglesXyz::exponentialMap(testVec);
   KINDR_ASSERT_DOUBLE_MX_EQ(this->rotEulerAnglesXyzV4.toImplementation(), rotExpMap.toImplementation(), Scalar(1e-4), "maps");
 
   double norm = 0.1;
   testVec = this->vec/this->vec.norm()*norm;
-  rotExpMap = rot.exponentialMap(testVec);
+  rotExpMap = EulerAnglesXyz::exponentialMap(testVec);
   ASSERT_NEAR(rotExpMap.getDisparityAngle(this->rotEulerAnglesXyzIdentity),norm,1e-6);
 
   testVec.setZero();
-  rotExpMap = rot.exponentialMap(testVec);
+  rotExpMap = EulerAnglesXyz::exponentialMap(testVec);
   KINDR_ASSERT_DOUBLE_MX_EQ(this->rotEulerAnglesXyzIdentity.toImplementation(), rotExpMap.toImplementation(), Scalar(1e-4), "maps");
 
 }
