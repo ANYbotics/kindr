@@ -658,7 +658,7 @@ class MultiplicationDimensionTraits
 
   // If this class is instantiated, there is no better fit for the trait, meaning that the dimensions mismatch.
   // Instead of throwing an error about inexistent `ReturnDimension`, the following static assert will always evaluate to `false`, producing a better error message.
-  static_assert(sizeof(Dimension1_) != sizeof(Dimension1_), "Multiplication failed. Dimension mismatch.");
+  static_assert(Dimension1_ != Dimension1_, "Multiplication failed. Dimension mismatch.");
 };
 
 template<int Dimension_>
@@ -724,7 +724,7 @@ class DivisionDimensionTraits
 
   // If this class is instantiated, there is no better fit for the trait, meaning that the dimensions mismatch.
   // Instead of throwing an error about inexistent `ReturnDimension`, the following static assert will always evaluate to `false`, producing a better error message.
-  static_assert(sizeof(Dimension1_) != sizeof(Dimension1_), "Division failed. Dimension mismatch.");
+  static_assert(Dimension1_ != Dimension1_, "Division failed. Dimension mismatch.");
 };
 
 template<int Dimension_>
