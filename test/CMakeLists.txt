@@ -131,12 +131,13 @@ set(VECTOR_SRCS
 )
 add_gtest( runUnitTestsVector  ${VECTOR_SRCS})
 
-set(FORCE_SRCS
+set(PHYS_QUANT_SRCS
 	test_main.cpp
 	phys_quant/ForceTest.cpp
 	phys_quant/WrenchTest.cpp
+	phys_quant/ScalarTest.cpp
 )
-add_gtest( runUnitTestsForce  ${FORCE_SRCS})
+add_gtest( runUnitTestsPhysQuant  ${PHYS_QUANT_SRCS})
 
 # Run all unit tests post-build.
 add_custom_target(run_tests ALL

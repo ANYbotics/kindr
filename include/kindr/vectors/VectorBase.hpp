@@ -29,6 +29,7 @@
 #pragma once
 
 #include "kindr/common/common.hpp"
+#include "kindr/phys_quant/PhysicalType.hpp"
 
 namespace kindr {
 //! Internal stuff (only for developers)
@@ -41,19 +42,43 @@ namespace internal {
 template<typename Vector_>
 class get_dimension {
  public:
-//  typedef PrimType Scalar;
+//  typedef ... Scalar;
 };
 
-template<typename factor1, typename factor2>
-class MultiplicationReturnTypeTrait
+/*! \brief Trait to derive the physical return type of a multiplication
+ */
+template<enum PhysicalType PhysicalType1_, enum PhysicalType PhysicalType2_>
+class MultiplicationPhysicalTypeTraits
 {
  public:
+  static constexpr PhysicalType ReturnType = PhysicalType::Typeless;
 };
 
-template<typename dividend, typename divisor>
-class DivisionReturnTypeTrait
+/*! \brief Trait to derive the physical return type of a division
+ */
+template<enum PhysicalType PhysicalType1_, enum PhysicalType PhysicalType2_>
+class DivisionPhysicalTypeTraits
 {
  public:
+  static constexpr PhysicalType ReturnType = PhysicalType::Typeless;
+};
+
+/*! \brief Trait to derive the return type of a multiplication
+ */
+template<typename Factor1_, typename Factor2_>
+class MultiplicationReturnTypeTraits
+{
+ public:
+// typedef ... ReturnType;
+};
+
+/*! \brief Trait to derive the return type of a division
+ */
+template<typename Dividend_, typename Divisor_>
+class DivisionReturnTypeTraits
+{
+ public:
+// typedef ... ReturnType;
 };
 
 } // namespace internal

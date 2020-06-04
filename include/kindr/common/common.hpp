@@ -123,7 +123,7 @@ namespace internal {
  *  \class MultiplicationTraits
  *  (only for advanced users)
  */
-template<typename Left_, typename Right_>
+template<typename Left_, typename Right_, typename Enable_ = void>
 class MultiplicationTraits {
  public:
 //  inline static Left_ mult(const Left_& lhs, const Right_& rhs);

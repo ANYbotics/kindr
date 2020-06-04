@@ -41,36 +41,36 @@ typedef Acceleration<double, 3> Acceleration3D;
 //! \brief 3D-Acceleration-Vector with primitive type float
 typedef Acceleration<float,  3> Acceleration3F;
 
-//! \brief AngularAcceleration-Vector
+//! \brief Angular-Acceleration-Vector
 template <typename PrimType_, int Dimension_>
 using AngularAcceleration = Vector<PhysicalType::AngularAcceleration, PrimType_, Dimension_>;
-//! \brief 3D-AngularAcceleration-Vector with primitive type double
+//! \brief 3D-Angular-Acceleration-Vector with primitive type double
 typedef AngularAcceleration<double, 3> AngularAcceleration3D;
-//! \brief 3D-AngularAcceleration-Vector with primitive type float
+//! \brief 3D-Angular-Acceleration-Vector with primitive type float
 typedef AngularAcceleration<float,  3> AngularAcceleration3F;
 
-//! \brief AngularJerk-Vector
+//! \brief Angular-Jerk-Vector
 template <typename PrimType_, int Dimension_>
 using AngularJerk = Vector<PhysicalType::AngularJerk, PrimType_, Dimension_>;
-//! \brief 3D-Angle-Vector with primitive type double
+//! \brief 3D-Angular-Jerk-Vector with primitive type double
 typedef AngularJerk<double, 3> AngularJerk3D;
-//! \brief 3D-Angle-Vector with primitive type float
+//! \brief 3D-Angular-Jerk-Vector with primitive type float
 typedef AngularJerk<float,  3> AngularJerk3F;
 
-//! \brief AngularVelocity-Vector
+//! \brief Angular-Velocity-Vector
 template <typename PrimType_, int Dimension_>
 using AngularVelocity = Vector<PhysicalType::AngularVelocity, PrimType_, Dimension_>;
-//! \brief 3D-Angle-Vector with primitive type double
+//! \brief 3D-Angular-Velocity-Vector with primitive type double
 typedef AngularVelocity<double, 3> AngularVelocity3D;
-//! \brief 3D-Angle-Vector with primitive type float
+//! \brief 3D-Angular-Velocity-Vector with primitive type float
 typedef AngularVelocity<float,  3> AngularVelocity3F;
 
-//! \brief AngularMomentum-Vector
+//! \brief Angular-Momentum-Vector
 template <typename PrimType_, int Dimension_>
 using AngularMomentum = Vector<PhysicalType::AngularMomentum, PrimType_, Dimension_>;
-//! \brief 3D-AngularMomentum-Vector with primitive type double
+//! \brief 3D-Angular-Momentum-Vector with primitive type double
 typedef AngularMomentum<double, 3> AngularMomentum3D;
-//! \brief 3D-AngularMomentum-Vector with primitive type float
+//! \brief 3D-Angular-Momentum-Vector with primitive type float
 typedef AngularMomentum<float,  3> AngularMomentum3F;
 
 //! \brief Force-Vector
@@ -81,13 +81,29 @@ typedef Force<double, 3> Force3D;
 //! \brief 3D-Force-Vector with primitive type float
 typedef Force<float,  3> Force3F;
 
+//! \brief Inertia-Vector
+template <typename PrimType_, int Dimension_>
+using Inertia = Vector<PhysicalType::Inertia, PrimType_, Dimension_>;
+//! \brief Inertia-Scalar with primitive type double
+typedef Inertia<double,  1> InertiaD;
+//! \brief Inertia-Scalar with primitive type float
+typedef Inertia<float,  1> InertiaF;
+
 //! \brief Jerk-Vector
 template <typename PrimType_, int Dimension_>
 using Jerk = Vector<PhysicalType::Jerk, PrimType_, Dimension_>;
-//! \brief 3D-Velocity-Vector with primitive type double
+//! \brief 3D-Jerk-Vector with primitive type double
 typedef Jerk<double, 3> Jerk3D;
-//! \brief 3D-Velocity-Vector with primitive type float
+//! \brief 3D-Jerk-Vector with primitive type float
 typedef Jerk<float,  3> Jerk3F;
+
+//! \brief Mass-Vector
+template <typename PrimType_, int Dimension_>
+using Mass = Vector<PhysicalType::Mass, PrimType_, Dimension_>;
+//! \brief Mass-Scalar with primitive type double
+typedef Mass<double,  1> MassD;
+//! \brief Mass-Scalar with primitive type float
+typedef Mass<float,  1> MassF;
 
 //! \brief Momentum-Vector
 template <typename PrimType_, int Dimension_>
@@ -121,20 +137,24 @@ typedef VectorTypeless<double, 3> VectorTypeless3D;
 //! \brief 3D-Unitless-Vector with primitive type float
 typedef VectorTypeless<float,  3> VectorTypeless3F;
 
-//! \brief Vector without type (e.g. normal vector)
+//! \brief Time-Vector
 template <typename PrimType_, int Dimension_>
 using Time = Vector<PhysicalType::Time, PrimType_, Dimension_>;
-//! \brief 3D-Unitless-Vector with primitive type double
+//! \brief 3D-Time-Vector with primitive type double
 typedef Time<double, 3> Time3D;
-//! \brief 3D-Unitless-Vector with primitive type float
+//! \brief 3D-Time-Vector with primitive type float
 typedef Time<float,  3> Time3F;
+//! \brief Time-Scalar with primitive type double
+typedef Time<double,  1> TimeD;
+//! \brief Time-Scalar with primitive type float
+typedef Time<float,  1> TimeF;
 
-//! \brief Vector without type (e.g. normal vector)
+//! \brief Velocity-Vector
 template <typename PrimType_, int Dimension_>
 using Velocity = Vector<PhysicalType::Velocity, PrimType_, Dimension_>;
-//! \brief 3D-Unitless-Vector with primitive type double
+//! \brief 3D-Velocity-Vector with primitive type double
 typedef Velocity<double, 3> Velocity3D;
-//! \brief 3D-Unitless-Vector with primitive type float
+//! \brief 3D-Velocity-Vector with primitive type float
 typedef Velocity<float,  3> Velocity3F;
 
 } // namespace
