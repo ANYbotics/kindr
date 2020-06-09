@@ -323,6 +323,20 @@ TYPED_TEST(AngleAxisSingleTest, testComparisonEqual){
   ASSERT_EQ(false, rot==this->angleAxisGeneric2);
 }
 
+// Test comparison (inequality)
+TYPED_TEST(AngleAxisSingleTest, testComparisonNotEqual){
+  typedef typename TestFixture::AngleAxis AngleAxis;
+  typedef typename TestFixture::Scalar Scalar;
+  AngleAxis rot;
+
+  // Check equality comparison
+  rot = this->angleAxisGeneric1;
+  ASSERT_EQ(false, rot!=this->angleAxisGeneric1);
+  ASSERT_EQ(false, rot!=this->angleAxisGeneric1Plus2Pi);
+  ASSERT_EQ(false, rot!=this->angleAxisGeneric1Minus2Pi);
+  ASSERT_EQ(true, rot!=this->angleAxisGeneric2);
+}
+
 // Test  getDisparityAngle
 TYPED_TEST(AngleAxisSingleTest, testGetDisparityAngle){
   typedef typename TestFixture::AngleAxis AngleAxis;

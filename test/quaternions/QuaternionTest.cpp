@@ -245,17 +245,26 @@ TYPED_TEST (QuaternionsSingleTest, testQuaternionSingleInversion) {
   ASSERT_NEAR(testQuat2.z(),this->quat1.z(),1e-6);
 }
 
-// Testing of Quaternion comparison
-TYPED_TEST (QuaternionsSingleTest, testQuaternionSingleComparison) {
+// Testing of Quaternion comparison (equality)
+TYPED_TEST (QuaternionsSingleTest, testQuaternionSingleEqualityComparison) {
   typedef typename TestFixture::Quaternion Quaternion;
-  typedef typename TestFixture::QuaternionScalar QuaternionScalar;
-  typedef typename TestFixture::EigenQuat EigenQuat;
   Quaternion testQuat;
 
   // Check equality comparison
   testQuat = this->quat1;
   ASSERT_EQ(testQuat==this->quat1,true);
   ASSERT_EQ(testQuat==this->quat2,false);
+}
+
+// Testing of Quaternion comparison (inequality)
+TYPED_TEST (QuaternionsSingleTest, testQuaternionSingleInequalityComparison) {
+  typedef typename TestFixture::Quaternion Quaternion;
+  Quaternion testQuat;
+
+  // Check inequality comparison
+  testQuat = this->quat1;
+  ASSERT_EQ(testQuat!=this->quat1,false);
+  ASSERT_EQ(testQuat!=this->quat2,true);
 }
 
 // Testing of Norm and Normalization
@@ -536,17 +545,26 @@ TYPED_TEST (UnitQuaternionsSingleTest, testUnitQuaternionSingleInversion) {
   ASSERT_NEAR(testQuat2.z(),this->eigenQuat1Conj.z(),1e-6);
 }
 
-// Testing of UnitQuaternion comparison
-TYPED_TEST (UnitQuaternionsSingleTest, testUnitQuaternionSingleComparison) {
+// Testing of UnitQuaternion comparison (equality)
+TYPED_TEST (UnitQuaternionsSingleTest, testUnitQuaternionSingleEqualityComparison) {
   typedef typename TestFixture::UnitQuaternion UnitQuaternion;
-  typedef typename TestFixture::UnitQuaternionScalar UnitQuaternionScalar;
-  typedef typename TestFixture::EigenQuat EigenQuat;
   UnitQuaternion testQuat;
 
   // Check equality comparison
   testQuat = this->quat1;
   ASSERT_EQ(testQuat==this->quat1,true);
   ASSERT_EQ(testQuat==this->quat2,false);
+}
+
+// Testing of UnitQuaternion comparison (inequality)
+TYPED_TEST (UnitQuaternionsSingleTest, testUnitQuaternionSingleInequalityComparison) {
+  typedef typename TestFixture::UnitQuaternion UnitQuaternion;
+  UnitQuaternion testQuat;
+
+  // Check inequality comparison
+  testQuat = this->quat1;
+  ASSERT_EQ(testQuat!=this->quat1,false);
+  ASSERT_EQ(testQuat!=this->quat2,true);
 }
 
 // Testing of Norm and Normalization for UnitQuaternion

@@ -306,6 +306,20 @@ TYPED_TEST(EulerAnglesZyxSingleTest, testComparisonEqual){
   ASSERT_EQ(false, rot==this->rotEulerAnglesZyxV2);
 }
 
+/* Test comparison (inequality)
+ *
+ */
+TYPED_TEST(EulerAnglesZyxSingleTest, testComparisonNotEqual){
+  typedef typename TestFixture::EulerAnglesZyx EulerAnglesZyx;
+  typedef typename TestFixture::Scalar Scalar;
+  EulerAnglesZyx rot;
+
+  // Check equality comparison
+  rot = this->rotEulerAnglesZyxV1;
+  ASSERT_EQ(false, rot!=this->rotEulerAnglesZyxV1);
+  ASSERT_EQ(true, rot!=this->rotEulerAnglesZyxV2);
+}
+
 /* Test  getDisparityAngle
  * Assumes conversion between EulerAnglesZyx and RotationQuaternion is correct.
  */

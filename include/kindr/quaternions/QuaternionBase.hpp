@@ -139,13 +139,22 @@ class QuaternionBase {
 //    return quat_internal::MultiplicationTraits<Derived_, OtherDerived_>::mult(this->derived(), static_cast<Derived_>(other));
 //  }
 
-  /*! \brief compares the quaternion with another quaternion
+  /*! \brief compares the quaternion with another quaternion for equality
    * \param other   other quaternion
    * \returns true if the quaternions are equal
    */
   template<typename OtherDerived_>
   bool operator ==(const QuaternionBase<OtherDerived_>& other) const {
     return quat_internal::ComparisonTraits<Derived_>::isEqual(this->derived(), static_cast<Derived_>(other)); // cast to Quaternion
+  }
+
+  /*! \brief compares the quaternion with another quaternion for inequality
+   * \param other   other quaternion
+   * \returns true if the quaternions are not equal
+   */
+  template<typename OtherDerived_>
+  bool operator !=(const QuaternionBase<OtherDerived_>& other) const {
+    return !(*this == other);
   }
 
   /*! \brief prints the coefficients of the quaternion

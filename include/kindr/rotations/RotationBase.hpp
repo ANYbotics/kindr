@@ -251,12 +251,20 @@ class RotationBase {
     return internal::MultiplicationTraits<RotationBase<Derived_>,RotationBase<OtherDerived_>>::mult(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
   }
 
-  /*! \brief Compares two rotations.
+  /*! \brief Equality comparison of two rotations.
    *  \returns true if the rotations are exactly equal
    */
   template<typename OtherDerived_>
   bool operator ==(const RotationBase<OtherDerived_>& other) const { // todo: may be optimized
     return internal::ComparisonTraits<RotationBase<Derived_>, RotationBase<OtherDerived_>>::isEqual(this->derived().getUnique(), other.derived().getUnique()); // the type conversion must already take place here to ensure the specialised isequal function is called more often
+  }
+
+  /*! \brief Inequality comparison of two rotations.
+  *   \returns true if the rotations are not exactly equal
+  */
+  template<typename OtherDerived_>
+  bool operator !=(const RotationBase<OtherDerived_>& other) const {
+    return !(*this == other);
   }
 
   /*! \brief Gets the disparity angle between two rotations for comparison.

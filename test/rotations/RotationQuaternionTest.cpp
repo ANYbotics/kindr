@@ -434,7 +434,7 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionSetters){
 }
 
 // Test Rotation Quaternion comparison (equality)
-TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionComparison){
+TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionEqualityComparison){
   typedef typename TestFixture::RotationQuaternion RotationQuaternion;
   typedef typename TestFixture::Scalar Scalar;
   RotationQuaternion rotQuat;
@@ -444,6 +444,19 @@ TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionComparison){
   ASSERT_EQ(rotQuat==this->rotQuat1,true);
   ASSERT_EQ(rotQuat==this->rotQuat2,false);
 }
+
+// Test Rotation Quaternion comparison (inequality)
+TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionInequalityComparison){
+  typedef typename TestFixture::RotationQuaternion RotationQuaternion;
+  typedef typename TestFixture::Scalar Scalar;
+  RotationQuaternion rotQuat;
+
+  // Check inequality comparison
+  rotQuat = this->rotQuat1;
+  ASSERT_EQ(rotQuat!=this->rotQuat1,false);
+  ASSERT_EQ(rotQuat!=this->rotQuat2,true);
+}
+
 
 // Test Rotation Quaternion isNear
 TYPED_TEST(RotationQuaternionSingleTest, testRotationQuaternionIsNear){

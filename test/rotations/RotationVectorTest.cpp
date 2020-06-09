@@ -301,6 +301,21 @@ TYPED_TEST(RotationVectorSingleTest, testComparisonEqual){
   ASSERT_EQ(false, rot==this->rotRotationVectorV2);
 }
 
+/* Test comparison (inequality)
+ *
+ */
+TYPED_TEST(RotationVectorSingleTest, testComparisonNotEqual){
+  typedef typename TestFixture::RotationVector RotationVector;
+  typedef typename TestFixture::Scalar Scalar;
+  RotationVector rot;
+
+  // Check inequality comparison
+  rot = this->rotRotationVectorV1;
+  ASSERT_EQ(false, rot!=this->rotRotationVectorV1);
+  ASSERT_EQ(true, rot!=this->rotRotationVectorV2);
+}
+
+
 /* Test  getDisparityAngle
  * Assumes conversion between RotationVector and RotationQuaternion is correct.
  */

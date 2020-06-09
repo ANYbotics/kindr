@@ -109,6 +109,25 @@ TYPED_TEST(HomogeneousTransformationTest, testComparisonEqual)
   ASSERT_FALSE(poseBToA == poseCToA);
 }
 
+TYPED_TEST(HomogeneousTransformationTest, testComparisonNotEqual)
+{
+  typedef typename TestFixture::Pose Pose;
+  typedef typename TestFixture::Position Position;
+  typedef typename TestFixture::Rotation Rotation;
+  typedef typename TestFixture::Scalar Scalar;
+  Position positionAToBInA(1.0,2.0,3.0);
+  Position positionAToCInA(1.0,2.0,4.0);
+  Rotation rotationBToA(kindr::EulerAnglesZyx<Scalar>(0.5, -0.9, 1.2));
+  Rotation rotationCToA(kindr::EulerAnglesZyx<Scalar>(0.5, -0.9, 1.2));
+  Pose poseBToA(positionAToBInA, rotationBToA);
+  Pose poseBToA2(positionAToBInA, rotationBToA);
+  Pose poseCToA(positionAToCInA, rotationCToA);
+
+  // Check inequality comparison
+  ASSERT_FALSE(poseBToA != poseBToA2);
+  ASSERT_TRUE(poseBToA != poseCToA);
+}
+
 
 TYPED_TEST(HomogeneousTransformationTest, testTransform)
 {

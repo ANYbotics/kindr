@@ -418,9 +418,15 @@ class EulerAnglesXyz : public RotationBase<EulerAnglesXyz<PrimType_>> {
 
   /*! \brief Equivalence operator.
    *  This is explicitly specified, because Eigen::Matrix provides also an operator==.
-   *  \returns true if two rotations are similar.
+   *  \returns true if two rotations are equal.
    */
   using RotationBase<EulerAnglesXyz<PrimType_>>::operator==;
+
+  /*! \brief Inequivalence operator.
+   *  This is explicitly specified, because Eigen::Matrix provides also an operator!=.
+   *  \returns true if two rotations are not equal.
+   */
+  using RotationBase<EulerAnglesXyz<PrimType_>>::operator!=;
 
   /*! \brief Used for printing the object with std::cout.
    *  \returns std::stream object

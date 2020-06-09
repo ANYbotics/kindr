@@ -139,12 +139,20 @@ class PoseBase {
     return internal::MultiplicationTraits<PoseBase<Derived_>,PoseBase<OtherDerived_>>::mult(this->derived(), other.derived()); // todo: 1. ok? 2. may be optimized
   }
 
-  /*! \brief Compares two poses.
+  /*! \brief Compares two poses for equality.
    *  \returns true if the poses are exactly equal
    */
   template<typename OtherDerived_>
   bool operator ==(const PoseBase<OtherDerived_>& other) const {
     return internal::ComparisonTraits<PoseBase<Derived_>,PoseBase<OtherDerived_>>::isEqual(*this, other);
+  }
+
+  /*! \brief Compares two poses for inequality.
+   *  \returns true if the poses are not exactly equal
+   */
+  template<typename OtherDerived_>
+  bool operator !=(const PoseBase<OtherDerived_>& other) const {
+    return !(*this == other);
   }
 
   /*! \brief Sets the pose to identity

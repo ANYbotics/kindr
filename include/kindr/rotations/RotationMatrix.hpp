@@ -249,9 +249,16 @@ class RotationMatrix : public RotationBase<RotationMatrix<PrimType_>>, private E
 
   /*! \brief Equivalence operator.
    *  This is explicitly specified, because Eigen::Matrix provides also an operator==.
-   *  \returns true if two rotations are similar.
+   *  \returns true if two rotations are equal.
    */
   using RotationBase<RotationMatrix<PrimType_>>::operator==; // otherwise ambiguous RotationBase and Eigen
+
+  /*! \brief Inequivalence operator.
+   *  This is explicitly specified, because Eigen::Matrix provides also an operator!=.
+   *  \returns true if two rotations are not equal.
+   */
+  using RotationBase<RotationMatrix<PrimType_>>::operator!=; // otherwise ambiguous RotationBase and Eigen
+
 
   /*! \brief Used for printing the object with std::cout.
    *  \returns std::stream object

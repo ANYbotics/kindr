@@ -291,6 +291,20 @@ TYPED_TEST(RotationMatrixSingleTest, testComparisonEqual){
   ASSERT_EQ(false, rot==this->rotGeneric2);
 }
 
+/* Test comparison (inequality)
+ *
+ */
+TYPED_TEST(RotationMatrixSingleTest, testComparisonNotEqual){
+  typedef typename TestFixture::RotationMatrix RotationMatrix;
+  typedef typename TestFixture::Scalar Scalar;
+  RotationMatrix rot;
+
+  // Check inequality comparison
+  rot = this->rotGeneric1;
+  ASSERT_EQ(false, rot!=this->rotGeneric1);
+  ASSERT_EQ(true, rot!=this->rotGeneric2);
+}
+
 /* Test  getDisparityAngle
  * Assumes conversion between RotationMatrix and RotationQuaternion is correct.
  */
