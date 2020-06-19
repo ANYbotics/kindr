@@ -221,3 +221,45 @@ TYPED_TEST(RotationQuaternionDiffTest, testFiniteDifference)
     }
   }
 }
+
+TYPED_TEST(RotationQuaternionDiffTest, testMultiplication)
+{
+  typedef typename TestFixture::RotationDiff RotationDiff;
+  RotationDiff rotDiff1(1.0, 0.0, 0.0, 0.0);
+  for (auto rotation : this->rotations) {
+    RotationDiff testRotation = rotDiff1 * rotation;
+    RotationDiff testRotation1 = rotation * rotDiff1;
+    ASSERT_EQ(testRotation.w(), rotation.w());
+    ASSERT_EQ(testRotation.x(), rotation.x());
+    ASSERT_EQ(testRotation.y(), rotation.y());
+    ASSERT_EQ(testRotation.z(), rotation.z());
+    ASSERT_EQ(testRotation1.w(), rotation.w());
+    ASSERT_EQ(testRotation1.x(), rotation.x());
+    ASSERT_EQ(testRotation1.y(), rotation.y());
+    ASSERT_EQ(testRotation1.z(), rotation.z());
+  }
+
+  RotationDiff rotDiff2(0.0, 5.0, 0.0, 0.0);
+  auto testRotationDiff0 = rotDiff2 * this->rotations[1];
+  ASSERT_NEAR(testRotationDiff0.w(), -4.472, 1e-2);
+  ASSERT_NEAR(testRotationDiff0.x(), 2.236, 1e-2);
+  ASSERT_NEAR(testRotationDiff0.y(), 0.0, 1e-2);
+  ASSERT_NEAR(testRotationDiff0.z(), 0.0, 1e-2);
+  auto testRotationDiff1 = this->rotations[1] * rotDiff2;
+  ASSERT_NEAR(testRotationDiff1.w(), -4.472, 1e-2);
+  ASSERT_NEAR(testRotationDiff1.x(), 2.236, 1e-2);
+  ASSERT_NEAR(testRotationDiff1.y(), 0.0, 1e-2);
+  ASSERT_NEAR(testRotationDiff1.z(), 0.0, 1e-2);
+
+  RotationDiff rotDiff3(0.0, 5.0, 1.0, 0.0);
+  auto testRotationDiff2 = rotDiff3 * this->rotations[1];
+  ASSERT_NEAR(testRotationDiff2.w(), -4.472, 1e-2);
+  ASSERT_NEAR(testRotationDiff2.x(), 2.236, 1e-2);
+  ASSERT_NEAR(testRotationDiff2.y(), 0.447, 1e-2);
+  ASSERT_NEAR(testRotationDiff2.z(), -0.894, 1e-2);
+  auto testRotationDiff3 = this->rotations[1] * rotDiff3;
+  ASSERT_NEAR(testRotationDiff3.w(), -4.472, 1e-2);
+  ASSERT_NEAR(testRotationDiff3.x(), 2.236, 1e-2);
+  ASSERT_NEAR(testRotationDiff3.y(), 0.447, 1e-2);
+  ASSERT_NEAR(testRotationDiff3.z(), 0.894, 1e-2);
+}

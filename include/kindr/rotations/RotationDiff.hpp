@@ -41,6 +41,12 @@ template<typename PrimType_>
 class GlobalAngularVelocity;
 
 template<typename PrimType_>
+class RotationDiffBase;
+
+template<typename PrimType_>
+class RotationQuaternion;
+
+template<typename PrimType_>
 class RotationQuaternionDiff;
 
 template<typename PrimType_>
@@ -52,6 +58,22 @@ class EulerAnglesZyxDiff;
 template<typename PrimType_>
 class EulerAnglesXyzDiff;
 
+
+template<typename Left_, typename Right_>
+inline static Right_ operator*(const RotationBase<Left_>& lhs, const RotationDiffBase<Right_>& rhs) {
+  return Right_(RotationQuaternionDiff<typename Right_::Scalar>(
+      (RotationQuaternion<typename Left_::Scalar>(lhs.derived())).toImplementation() *
+          (RotationQuaternionDiff<typename Right_::Scalar>(rhs.derived())).toImplementation()
+  ));
+}
+
+template<typename Left_, typename Right_>
+inline static Left_ operator*(const RotationDiffBase<Left_>& lhs, const RotationBase<Right_>& rhs) {
+  return Left_(RotationQuaternionDiff<typename Left_::Scalar>(
+      (RotationQuaternionDiff<typename Left_::Scalar>(lhs.derived())).toImplementation() *
+          (RotationQuaternion<typename Right_::Scalar>(rhs.derived())).toImplementation()
+  ));
+}
 
 /*!
  * \brief Gets the 3x3 Jacobian of the exponential map.
