@@ -39,7 +39,28 @@
 namespace kindr {
 
 /*! \class EulerAnglesZyx
- *  \brief Implementation of Euler angles (Z-Y'-X'' / yaw-pitch-roll) rotation based on Eigen::Matrix<Scalar, 3, 1>
+ *  \brief Implementation of Euler angles (intrinsic Z-Y'-X'', a.k.a. extrinsic x-y-z, a.k.a. yaw-pitch-roll angles) rotation.
+ *
+ *  A vector (yaw, pitch, roll) of intrinsic Z-Y'-X'' Euler angles represents the following sequence of rotations from child to parent:
+ *
+ *      rotationChildToParent = R_z(yaw) R_y(pitch) R_x(roll)
+ *                            = [ cos(yaw)  -sin(yaw)  0 ] [ cos(pitch)   0  sin(pitch) ] [ 1  0         0          ]
+ *                              [ sin(yaw)  cos(yaw)   0 ] [ 0            1  0          ] [ 0  cos(roll) -sin(roll) ]
+ *                              [ 0         0          1 ] [ -sin(pitch)  0  cos(pitch) ] [ 0  sin(roll) cos(roll)  ]
+ *
+ *  where R_k(angle) is the rotation matrix of a positive rotation of @c angle around the k-axis. Starting from the parent frame and
+ *  applying active rotations, we first rotate the frame x-y-z by @c yaw around the z-axis to obtain a frame x'-y'-z', then by @c pitch
+ *  around the y'-axis to obtain x''-y''-z'', and finally by @c roll around the x''-axis to obtain the child frame x'''-y'''-z'''.
+ *
+ *  @note This definition by intrinsic Z-Y'-X'' rotations is equivalent to (i.e. yields the same rotation matrix as) the definition by
+ *  extrinsic x-y-z rotations where rotations are applied in the reverse order and using the fixed axes of the parent frame. This matches
+ *  the convention used in the URDF documentation <https://wiki.ros.org/urdf/XML/joint>: "rotation around fixed axis: first roll around x,
+ *  then pitch around y and finally yaw around z".
+ *
+ *  See also:
+ *  - Section "Euler Angles ZYX <=> Rotation Matrix" in https://github.com/ANYbotics/kindr/blob/master/doc/cheatsheet/cheatsheet_latest.pdf
+ *  - https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Rotation_matrices
+ *  - https://en.wikipedia.org/wiki/Active_and_passive_transformation
  *
  *  The following typedefs are provided for convenience:
  *   - \ref EulerAnglesZyxAD "EulerAnglesZyxD" for active rotation and double primitive type
