@@ -169,6 +169,13 @@ class RotationVector : public RotationBase<RotationVector<PrimType_>> {
     return *this;
   }
 
+  /*! \brief Get identity rotation.
+   *  \returns identity rotation
+   */
+  static RotationVector Identity() {
+    return RotationVector(Base::Zero());
+  }
+
   /*! \brief Returns the rotation vector.
    *  \returns the rotation vector (scalar)
    */

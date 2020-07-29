@@ -191,6 +191,13 @@ class GlobalAngularVelocity : public RotationDiffBase<GlobalAngularVelocity<Prim
      Base::setZero();
      return *this;
    }
+
+   /*! \brief Get zero element.
+    * \returns zero element
+    */
+   static GlobalAngularVelocity Zero() {
+     return GlobalAngularVelocity(Implementation::Zero());
+   }
  };
 
 

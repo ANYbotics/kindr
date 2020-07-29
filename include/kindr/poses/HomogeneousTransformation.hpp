@@ -125,6 +125,13 @@ class HomogeneousTransformation : public PoseBase<HomogeneousTransformation<Prim
     rotation_.setIdentity();
     return *this;
   }
+
+  /*! \brief Get identity pose.
+   *  \returns identity pose
+   */
+  static HomogeneousTransformation Identity() {
+    return HomogeneousTransformation(Position::Zero(), Rotation::Identity());
+  }
 };
 
 template <typename PrimType_>

@@ -152,6 +152,13 @@ class RotationMatrixDiff : public RotationDiffBase<RotationMatrixDiff<PrimType_>
     return *this;
   }
 
+  /*! \brief Get zero element.
+   *  \returns zero element
+   */
+  static RotationMatrixDiff Zero() {
+    return RotationMatrixDiff(Base::Zero());
+  }
+
   /*! \brief Used for printing the object with std::cout.
    *  \returns std::stream object
    */

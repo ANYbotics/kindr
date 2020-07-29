@@ -240,6 +240,13 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::
     return *this;
   }
 
+  /*! \brief Get zero element.
+   *  \returns zero element
+   */
+  static Quaternion Zero() {
+    return Quaternion();
+  }
+
   UnitQuaternion<PrimType_> toUnitQuaternion() const {
     return UnitQuaternion<PrimType_>(this->Base::normalized());
   }
@@ -472,6 +479,24 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType_>> {
 
   Scalar norm() const {
     return unitQuternion_.norm();
+  }
+
+  /*! \brief Sets unit quaternion to identity.
+   *  \returns reference
+   */
+  UnitQuaternion& setIdentity() {
+    this->w() = Scalar(0.0);
+    this->x() = Scalar(0.0);
+    this->y() = Scalar(0.0);
+    this->z() = Scalar(0.0);
+    return *this;
+  }
+
+  /*! \brief Get identity unit quaternion.
+   *  \returns identity unit quaternion
+   */
+  static UnitQuaternion Identity() {
+    return UnitQuaternion(Implementation::Identity());
   }
 
   const Implementation& toImplementation() const {

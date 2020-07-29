@@ -225,6 +225,12 @@ class EulerAnglesXyzDiff : public RotationDiffBase<EulerAnglesXyzDiff<PrimType_>
      return *this;
    }
 
+   /*! \brief Get zero element.
+    *  \returns zero element
+    */
+   static EulerAnglesXyzDiff Zero() {
+     return EulerAnglesXyzDiff(Base::Zero());
+   }
 
    using RotationDiffBase<EulerAnglesXyzDiff<PrimType_>>::operator+; // otherwise ambiguous RotationDiffBase and Eigen
 

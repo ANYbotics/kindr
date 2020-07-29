@@ -185,6 +185,13 @@ class LocalAngularVelocity : public RotationDiffBase<LocalAngularVelocity<PrimTy
     Base::setZero();
     return *this;
   }
+
+  /*! \brief Get zero element.
+   * \returns zero element
+   */
+  static LocalAngularVelocity Zero() {
+    return LocalAngularVelocity(Implementation::Zero());
+  }
 };
 
 /*! \brief Multiplication of an angular velocity with a scalar.

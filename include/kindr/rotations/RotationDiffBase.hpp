@@ -116,7 +116,10 @@ class RotationDiffBase {
    */
   Derived_& setZero();
 
-
+  /*! \brief Get zero element.
+   *  \returns zero element
+   */
+  static Derived_ Zero();
 
   /*! \brief Addition of two time derivatives.
    *  \returns sum of the two time derivatives.

@@ -214,6 +214,11 @@ class RotationBase {
    */
   Derived_& setIdentity();
 
+  /*! \brief Get identity rotation.
+   *  \returns identity rotation
+   */
+  static Derived_ Identity();
+
   /*! \brief Sets the rotation to a random one.
    * \return  reference to modified rotation
    */

@@ -94,6 +94,13 @@ class Twist : public PoseDiffBase<Twist<PrimType_, PositionDiff_, RotationDiff_>
     RotationDiff::setZero();
     return *this;
   }
+
+  /*! \brief Get zero twist
+   *  \returns zero twist
+   */
+  static Twist Zero() {
+    return Twist(PositionDiff::Zero(), RotationDiff::Zero());
+  }
 };
 
 template<typename PrimType_>

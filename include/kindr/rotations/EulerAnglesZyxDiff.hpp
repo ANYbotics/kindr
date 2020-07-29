@@ -227,6 +227,13 @@ class EulerAnglesZyxDiff : public RotationDiffBase<EulerAnglesZyxDiff<PrimType_>
      return *this;
    }
 
+   /*! \brief Get zero element.
+    *  \returns zero element
+    */
+   static EulerAnglesZyxDiff Zero() {
+     return EulerAnglesZyxDiff(Base::Zero());
+   }
+
    /*! \brief Addition of two angular velocities.
     */
    using RotationDiffBase<EulerAnglesZyxDiff<PrimType_>>::operator+; // otherwise ambiguous EulerAnglesDiffBase and Eigen

@@ -174,6 +174,13 @@ class RotationQuaternionDiff : public RotationDiffBase<RotationQuaternionDiff<Pr
     return *this;
   }
 
+  /*! \brief Get zero element.
+   *  \returns zero element
+   */
+  static RotationQuaternionDiff Zero() {
+    return RotationQuaternionDiff(Base::Zero());
+  }
+
   /*! \brief Used for printing the object with std::cout.
    *  \returns std::stream object
    */

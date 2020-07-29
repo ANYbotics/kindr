@@ -245,6 +245,13 @@ class AngleAxis : public RotationBase<AngleAxis<PrimType_>> {
     return *this;
   }
 
+  /*! \brief Get identity rotation.
+   *  \returns identity rotation
+   */
+  static AngleAxis Identity() {
+    return AngleAxis(Base::Identity());
+  }
+
   /*! \brief Returns a unique angle axis rotation with angle in [0,pi].
    *  This function is used to compare different rotations.
    *  \returns copy of the angle axis rotation which is unique

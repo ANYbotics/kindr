@@ -224,6 +224,13 @@ class RotationMatrix : public RotationBase<RotationMatrix<PrimType_>>, private E
     return *this;
   }
 
+  /*! \brief Get identity rotation.
+   *  \returns identity rotation
+   */
+  static RotationMatrix Identity() {
+    return RotationMatrix(Base::Identity());
+  }
+
   /*! \brief Returns a unique matrix rotation.
    *  A rotation matrix is always unique.
    *  This function is used to compare different rotations.

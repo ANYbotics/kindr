@@ -326,6 +326,13 @@ class RotationQuaternion : public RotationBase<RotationQuaternion<PrimType_>> {
     return *this;
   }
 
+  /*! \brief Get identity rotation.
+   *  \returns identity rotation
+   */
+  static RotationQuaternion Identity() {
+    return RotationQuaternion(Implementation::Identity());
+  }
+
   /*! \brief Returns a unique quaternion rotation with w > 0.
    *  This function is used to compare different rotations.
    *  \returns copy of the quaternion rotation which is unique

@@ -249,6 +249,13 @@ class EulerAnglesXyz : public RotationBase<EulerAnglesXyz<PrimType_>> {
     return *this;
   }
 
+  /*! \brief Get identity rotation.
+   * \returns identity rotation
+   */
+  static EulerAnglesXyz Identity() {
+    return EulerAnglesXyz(Base::Zero());
+  }
+
   /*! \brief Returns a unique Euler angles rotation with angles in [-pi,pi),[-pi/2,pi/2),[-pi,pi).
    *  This function is used to compare different rotations.
    *  \returns copy of the Euler angles rotation which is unique
