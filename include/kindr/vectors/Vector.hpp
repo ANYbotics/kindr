@@ -148,13 +148,6 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
     return *this;
   }
 
-  /*! \brief Get zero vector
-   * \returns zero vector
-   */
-  static Vector<PhysicalType_, PrimType_, Dimension_> Zero() {
-    return Vector<PhysicalType_, PrimType_, Dimension_>(Implementation::Zero());
-  }
-
   /*! \brief Get random element.
    * \returns random element
    */
