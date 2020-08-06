@@ -121,6 +121,12 @@ class TwistLinearVelocityRotationQuaternionDiff: public Twist<PrimType_,
     Base(positionDiff, rotationDiff) {
   }
 
+  /*! \brief Get zero twist
+   *  \returns zero twist
+   */
+  static TwistLinearVelocityRotationQuaternionDiff Zero() {
+    return TwistLinearVelocityRotationQuaternionDiff(PositionDiff::Zero(), RotationDiff::Zero());
+  }
 };
 
 
@@ -175,6 +181,12 @@ class TwistLinearVelocityLocalAngularVelocity: public Twist<PrimType_,
     this->getRotationalVelocity().toImplementation() = vector6.template tail<3>();
   }
 
+  /*! \brief Get zero twist
+   *  \returns zero twist
+   */
+  static TwistLinearVelocityLocalAngularVelocity Zero() {
+    return TwistLinearVelocityLocalAngularVelocity(PositionDiff::Zero(), RotationDiff::Zero());
+  }
 };
 
 typedef TwistLinearVelocityLocalAngularVelocity<double> TwistLinearVelocityLocalAngularVelocityD;
@@ -231,6 +243,12 @@ class TwistLinearVelocityGlobalAngularVelocity: public Twist<PrimType_,
     this->getRotationalVelocity().toImplementation() = vector6.template tail<3>();
   }
 
+  /*! \brief Get zero twist
+   *  \returns zero twist
+   */
+  static TwistLinearVelocityGlobalAngularVelocity Zero() {
+    return TwistLinearVelocityGlobalAngularVelocity(PositionDiff::Zero(), RotationDiff::Zero());
+  }
 };
 
 
