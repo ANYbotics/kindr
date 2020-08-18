@@ -111,7 +111,7 @@ class EulerAnglesZyx : public RotationBase<EulerAnglesZyx<PrimType_>> {
   }
 
   /*! \brief Constructor using Eigen::Matrix.
-   *  \param other   Eigen::Matrix<PrimType_,3,1> [roll; pitch; yaw]
+   *  \param other   Eigen::Matrix<PrimType_,3,1> [yaw; pitch; roll]
    */
   explicit EulerAnglesZyx(const Base& other)
     : zyx_(other) {
