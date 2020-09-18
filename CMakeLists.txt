@@ -28,20 +28,27 @@ cmake_minimum_required (VERSION 2.8)
 
 project(kindr)
 
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+# Check if catkin package should be built.
+if(NOT USE_CMAKE)
+  find_package(catkin QUIET)
+  message(STATUS "Setting pure CMake build to false as not specified.")
+  set(USE_CMAKE false CACHE BOOL "Choose whether to build with CMake." FORCE)
+  set_property(CACHE USE_CMAKE PROPERTY STRINGS "True" "False")
+endif()
 
-find_package(Eigen REQUIRED)
-include_directories(include)
-include_directories(${EIGEN_INCLUDE_DIR})
-
-# Ensure Eigen version is at least 3.2
-if(${EIGEN_WORLD_VERSION} LESS "3" OR (${EIGEN_WORLD_VERSION} EQUAL "3" AND
-   ${EIGEN_MAJOR_VERSION} LESS "2"))
-  message(FATAL_ERROR "Eigen must be of version 3.2 or higher. Detected version
-          ${EIGEN_WORLD_VERSION}.${EIGEN_MAJOR_VERSION}.${EIGEN_MINOR_VERSION}")
+if(catkin_FOUND AND NOT USE_CMAKE)
+  message(STATUS "Building kindr as a catkin package.")
+  set(BUILD_CATKIN_PACKAGE true)
+  set(BUILD_TEST false)
 else()
- message(STATUS "Using Eigen of version ${EIGEN_WORLD_VERSION}.${EIGEN_MAJOR_VERSION}.${EIGEN_MINOR_VERSION} from ${EIGEN_INCLUDE_DIR}")
+  message(STATUS "Building kindr as a cmake package.")
+  set(BUILD_CATKIN_PACKAGE false)
+endif()
+
+# Configure CMake.
+if(NOT BUILD_CATKIN_PACKAGE)
+  set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+  set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 endif()
 
 # Noisily default to Release build
@@ -54,6 +61,20 @@ endif()
 
 add_definitions(-std=c++11)
 
+find_package(Eigen3 REQUIRED)
+
+# Init catkin package.
+if(BUILD_CATKIN_PACKAGE)
+  catkin_package(
+    INCLUDE_DIRS
+      include
+      ${EIGEN3_INCLUDE_DIR}
+  )
+endif()
+
+include_directories(include)
+include_directories(${EIGEN3_INCLUDE_DIR})
+
 # Don't build tests if not specified.
 if(NOT BUILD_TEST)
   message(STATUS "Setting build-tests to false as not specified.")
@@ -62,23 +83,17 @@ if(NOT BUILD_TEST)
     "True" "False")
 endif()
 
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/gtest/" AND BUILD_TEST)
+if(BUILD_TEST AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/gtest/")
 	message(STATUS "Building GTests!")
 	option(BUILD_GTEST "build gtest" ON)
 	add_subdirectory(gtest gtest)
 	enable_testing()
 endif()
 
-# Add CMake module path
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
-
-
 install(DIRECTORY include/kindr DESTINATION include)
 
 # Add unit tests
-if(BUILD_GTEST)
-	add_subdirectory(test)
-endif()
+add_subdirectory(test)
 
 # Add Doxygen documentation
 add_subdirectory(doc/doxygen)
@@ -114,7 +129,7 @@ configure_file(kindrConfig.cmake.in
 # 2- installation build #
 
 # Change the include location for the case of an install location
-set(kindr_include_dirs ${CMAKE_INSTALL_PREFIX}/include ${EIGEN_INCLUDE_DIR})
+set(kindr_include_dirs ${CMAKE_INSTALL_PREFIX}/include ${EIGEN3_INCLUDE_DIR})
 
 
 # We put the generated file for installation in a different repository (i.e., ./CMakeFiles/)

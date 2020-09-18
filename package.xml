@@ -17,15 +17,14 @@
   <author>Christian Gehring</author>
   <author>Hannes Sommer</author>
 
-  <buildtool_depend>cmake</buildtool_depend>
+  <buildtool_depend>catkin</buildtool_depend>
   <depend>eigen</depend>
-  <exec_depend>catkin</exec_depend>
   <doc_depend>doxygen</doc_depend>
   <doc_depend>texlive-latex-base</doc_depend>
+  <test_depend>gtest</test_depend>
+<!--   <test_depend>cmake_code_coverage</test_depend> -->
 
   <export>
-    <!-- Specify that this is not really a ROS package-->
-    <build_type>cmake</build_type>
   </export>
 
 </package>

@@ -1,6 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
-from __future__ import print_function
 
 import os
 import sys
@@ -21,7 +20,7 @@ def main(argv=sys.argv[1:]):
       try:
           if os.path.isfile(file_path):
               os.unlink(file_path)
-      except Exception, e:
+      except Exception as e:
           print(e)
     
     commands = []

@@ -28,13 +28,12 @@ cmake_minimum_required (VERSION 2.8)
 
 add_definitions(-std=c++11)
 
-find_package(Eigen REQUIRED)
+find_package(Eigen3 REQUIRED)
 
-include_directories(${EIGEN_INCLUDE_DIRS})
+include_directories(${EIGEN3_INCLUDE_DIR})
 include_directories(../include)
 
- 
-if (BUILD_GTEST)
+
 ################################
 # Unit Tests
 ################################
@@ -46,35 +45,45 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 include_directories(test)
 
 # This macro globs all tests to a list so we can run them post-build.
-macro(add_gtest target)
-  set(sources  ${ARGV})
-  LIST(REMOVE_ITEM sources ${target})
-  add_executable(${target} ${sources})
-  message("Building test for " ${sources})
-  set(UNIT_TEST_TARGETS ${UNIT_TEST_TARGETS} ${target})
-  target_link_libraries(${target} gtest gtest_main pthread)
-  add_test(${target} ${target})
-endmacro(add_gtest)
+macro(_add_gtest target)
+	set(sources  ${ARGV})
+	LIST(REMOVE_ITEM sources ${target})
+	if(BUILD_CATKIN_PACKAGE AND CATKIN_ENABLE_TESTING)
+		catkin_add_gtest(${target} ${sources})
+		target_include_directories(${target} PRIVATE include)
+		target_link_libraries(${target} gtest_main)
+		find_package(cmake_code_coverage QUIET)
+		if(cmake_code_coverage_FOUND)
+		  add_gtest_coverage(TEST_BUILD_TARGETS ${target})
+		endif(cmake_code_coverage_FOUND)
+	elseif(BUILD_GTEST)
+		add_executable(${target} ${sources})
+		message("Building test for " ${sources})
+		set(UNIT_TEST_TARGETS ${UNIT_TEST_TARGETS} ${target})
+		target_link_libraries(${target} gtest gtest_main pthread)
+		add_test(${target} ${target})
+	endif()
+endmacro(_add_gtest)
 
 set(COMMON_SRCS
-      test_main.cpp 
+      test_main.cpp
       common/CommonTest.cpp
 )
-add_gtest(runUnitTestsCommon ${COMMON_SRCS})
+_add_gtest(runUnitTestsCommon ${COMMON_SRCS})
 
 
 set(LINEARALGEBRA_SRCS
-      test_main.cpp 
+      test_main.cpp
       linear_algebra/SkewMatrixFromVectorTest.cpp
 			linear_algebra/PseudoInverseTest.cpp
 	)
-add_gtest(runUnitTestsLinearAlgebra ${LINEARALGEBRA_SRCS})
+_add_gtest(runUnitTestsLinearAlgebra ${LINEARALGEBRA_SRCS})
 
 set(QUATERNIONS_SRCS
 	test_main.cpp
 	quaternions/QuaternionTest.cpp
 )
-add_gtest( runUnitTestsQuaternions ${QUATERNIONS_SRCS} )
+_add_gtest( runUnitTestsQuaternions ${QUATERNIONS_SRCS} )
 
 set(ROTATION_SRCS
 	test_main.cpp
@@ -89,7 +98,7 @@ set(ROTATION_SRCS
 	rotations/ConventionTest.cpp
 
 )
-add_gtest( runUnitTestsRotation ${ROTATION_SRCS})
+_add_gtest( runUnitTestsRotation ${ROTATION_SRCS})
 
 
 set(ROTATIONDIFF_SRCS
@@ -102,20 +111,20 @@ set(ROTATIONDIFF_SRCS
 	rotations/EulerAnglesZyxDiffTest.cpp
 	rotations/EulerAnglesXyzDiffTest.cpp
 )
-add_gtest( runUnitTestsRotationDiff ${ROTATIONDIFF_SRCS})
+_add_gtest( runUnitTestsRotationDiff ${ROTATIONDIFF_SRCS})
 
 set(POSITIONS_SRCS
 	test_main.cpp
 
 )
-add_gtest( runUnitTestsPositions  ${POSITIONS_SRCS})
+_add_gtest( runUnitTestsPositions  ${POSITIONS_SRCS})
 
 set(POSES_SRCS
 	test_main.cpp
 	poses/PositionTest.cpp
 	poses/HomogeneousTransformationTest.cpp
 )
-add_gtest( runUnitTestsPose  ${POSES_SRCS})
+_add_gtest( runUnitTestsPose  ${POSES_SRCS})
 
 set(POSESDIFF_SRCS
 	test_main.cpp
@@ -123,13 +132,13 @@ set(POSESDIFF_SRCS
 	poses/PositionDiffTest.cpp
 	poses/TwistWithAngularVelocityTest.cpp
 )
-add_gtest( runUnitTestsPoseDiff  ${POSESDIFF_SRCS})
+_add_gtest( runUnitTestsPoseDiff  ${POSESDIFF_SRCS})
 
 set(VECTOR_SRCS
 	test_main.cpp
 	vectors/VectorsTest.cpp
 )
-add_gtest( runUnitTestsVector  ${VECTOR_SRCS})
+_add_gtest( runUnitTestsVector  ${VECTOR_SRCS})
 
 set(PHYS_QUANT_SRCS
 	test_main.cpp
@@ -137,15 +146,16 @@ set(PHYS_QUANT_SRCS
 	phys_quant/WrenchTest.cpp
 	phys_quant/ScalarTest.cpp
 )
-add_gtest( runUnitTestsPhysQuant  ${PHYS_QUANT_SRCS})
+_add_gtest( runUnitTestsPhysQuant  ${PHYS_QUANT_SRCS})
 
 # Run all unit tests post-build.
-add_custom_target(run_tests ALL
-                  DEPENDS ${UNIT_TEST_TARGETS}
-)
-add_custom_command(TARGET run_tests
-                   COMMENT "Running tests"
-                   POST_BUILD COMMAND ${PROJECT_SOURCE_DIR}/test/run_tests.py ${CMAKE_BINARY_DIR} ${UNIT_TEST_TARGETS}
-                   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-)
+if(NOT TARGET run_tests)
+  add_custom_target(run_tests ALL
+                    DEPENDS ${UNIT_TEST_TARGETS}
+  )
+  add_custom_command(TARGET run_tests
+                     COMMENT "Running tests"
+                     POST_BUILD COMMAND ${PROJECT_SOURCE_DIR}/test/run_tests.py ${CMAKE_BINARY_DIR} ${UNIT_TEST_TARGETS}
+                     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+  )
 endif()

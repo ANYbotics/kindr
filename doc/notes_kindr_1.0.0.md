@@ -33,7 +33,7 @@
 # RBDL
 
 * Convention: not consistent (mostly Hamiltonian)
-* Convention tests can be found in the unit tests of package kindr_rbdl in repo romo.
+* Conversion tests can be found in the unit tests of package rbdl in the monorepo.
 * RBDL's RigidBodyDynamics::Math::Quaternion has the same convention as kindr, but the resulting rotation matrix from toMatrix() is inverted!
 * RBDL's rotation of RigidBodyDynamics::Math::SpatialTransform has the same convention as kindr
 * Attention: RBDL inverts the quaternion in the generalized coordinates!
