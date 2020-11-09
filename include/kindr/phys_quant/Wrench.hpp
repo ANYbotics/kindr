@@ -39,7 +39,7 @@
 
 namespace kindr {
 
-//!
+//! Wrench, i.e. generalized 6D force in screw algebra.
 template <typename PrimType_>
 class Wrench6 : public WrenchBase<Wrench6<PrimType_>> {
 public:
@@ -115,10 +115,20 @@ public:
     return vector;
   }
 
+  /*! \brief Set wrench to zero
+   *  \returns reference
+   */
   Wrench6& setZero() {
     force_.setZero();
     torque_.setZero();
     return *this;
+  }
+
+  /*! \brief Get zero wrench
+   *  \returns zero wrench
+   */
+  static Wrench6 Zero() {
+    return Wrench6(Force::Zero(), Torque::Zero());
   }
 
   /*! \brief Assignment operator.

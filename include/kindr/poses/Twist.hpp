@@ -36,6 +36,7 @@
 
 namespace kindr {
 
+//! Twist, i.e. generalized 6D velocity in screw algebra.
 template<typename PrimType_, typename PositionDiff_, typename RotationDiff_>
 class Twist : public PoseDiffBase<Twist<PrimType_, PositionDiff_, RotationDiff_> >, private PositionDiff_, private RotationDiff_ {
  public:
