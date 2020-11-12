@@ -37,14 +37,11 @@
 
 template <typename PrimType_>
 struct WrenchTest : public ::testing::Test {
-  typedef kindr::Wrench6<PrimType_> Wrench;
+  typedef kindr::Wrench<PrimType_> Wrench;
   typedef typename Wrench::Scalar Scalar;
   typedef typename Wrench::Force Force;
   typedef typename Wrench::Torque Torque;
   typedef typename Wrench::Vector3 Vector3;
-
-
-
 };
 
 typedef ::testing::Types<

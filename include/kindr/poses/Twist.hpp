@@ -40,7 +40,6 @@ namespace kindr {
 template<typename PrimType_, typename PositionDiff_, typename RotationDiff_>
 class Twist : public PoseDiffBase<Twist<PrimType_, PositionDiff_, RotationDiff_> >, private PositionDiff_, private RotationDiff_ {
  public:
-
   typedef PrimType_ Scalar;
   typedef PositionDiff_ PositionDiff;
   typedef RotationDiff_ RotationDiff;
@@ -130,11 +129,10 @@ class TwistLinearVelocityRotationQuaternionDiff: public Twist<PrimType_,
   }
 };
 
-
 typedef TwistLinearVelocityRotationQuaternionDiff<double> TwistLinearVelocityRotationQuaternionDiffD;
 typedef TwistLinearVelocityRotationQuaternionDiff<float> TwistLinearVelocityRotationQuaternionDiffF;
 
-
+//! Body twist, i.e. twist where the angular velocity is expressed in the local body frame.
 template<typename PrimType_>
 class TwistLinearVelocityLocalAngularVelocity: public Twist<PrimType_,
                                                            Velocity<PrimType_, 3>,
@@ -197,6 +195,7 @@ typedef TwistLinearVelocityLocalAngularVelocity<float> TwistLinearVelocityLocalA
 typedef TwistLinearVelocityLocalAngularVelocity<double> TwistLocalD;
 typedef TwistLinearVelocityLocalAngularVelocity<float> TwistLocalF;
 
+//! Spatial twist, i.e. twist where the angular velocity is expressed in the global parent frame.
 template<typename PrimType_>
 class TwistLinearVelocityGlobalAngularVelocity: public Twist<PrimType_,
                                                            Velocity<PrimType_, 3>,
@@ -252,14 +251,11 @@ class TwistLinearVelocityGlobalAngularVelocity: public Twist<PrimType_,
   }
 };
 
-
-
 typedef TwistLinearVelocityGlobalAngularVelocity<double> TwistLinearVelocityGlobalAngularVelocityD;
 typedef TwistLinearVelocityGlobalAngularVelocity<float> TwistLinearVelocityGlobalAngularVelocityF;
 typedef TwistLinearVelocityGlobalAngularVelocity<double> TwistLinearVelocityGlobalAngularVelocityPD;
 typedef TwistLinearVelocityGlobalAngularVelocity<float> TwistLinearVelocityGlobalAngularVelocityPF;
 typedef TwistLinearVelocityGlobalAngularVelocity<double> TwistGlobalD;
 typedef TwistLinearVelocityGlobalAngularVelocity<float> TwistGlobalF;
-
 
 } // namespace kindr
