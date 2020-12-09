@@ -338,10 +338,8 @@ class Vector : public VectorBase<Vector<PhysicalType_, PrimType_, Dimension_> >,
    * \param other   other vector
    * \returns reference
    */
-  Vector<PhysicalType_, PrimType_, Dimension_> & operator=(const Vector<PhysicalType_, PrimType_, Dimension_>& other) { // (The assignment of a static to a dynamic vector does not work because the amount of parameters must be one and SFINAE leads to two parameters. Workaround: cast the static vector into a dynamic one, then assign.)
-    this->toImplementation() = other.toImplementation();
-    return *this;
-  }
+  // (The assignment of a static to a dynamic vector does not work because the amount of parameters must be one and SFINAE leads to two parameters. Workaround: cast the static vector into a dynamic one, then assign.)
+  Vector<PhysicalType_, PrimType_, Dimension_> & operator=(const Vector<PhysicalType_, PrimType_, Dimension_>& other) = default;
 
   /*! \brief Addition of two vectors.
    * \param other   other vector

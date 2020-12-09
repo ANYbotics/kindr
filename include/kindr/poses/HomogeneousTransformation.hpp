@@ -73,11 +73,7 @@ class HomogeneousTransformation : public PoseBase<HomogeneousTransformation<Prim
    *  \param other   other transformation
    *  \returns reference
    */
-  HomogeneousTransformation& operator =(const HomogeneousTransformation& other) {
-    position_ = Position(other.getPosition());
-    rotation_ = Rotation(other.getRotation());
-    return *this;
-  }
+  HomogeneousTransformation& operator =(const HomogeneousTransformation& other) = default;
 
   inline Position_ & getPosition() {
     return position_;

@@ -126,13 +126,7 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::
     return *this;
   }
 
-  Quaternion& operator =(const Quaternion<PrimType_>& other) {
-    this->w() = other.w();
-    this->x() = other.x();
-    this->y() = other.y();
-    this->z() = other.z();
-    return *this;
-  }
+  Quaternion& operator =(const Quaternion<PrimType_>& other) = default;
 
   Quaternion& operator =(const UnitQuaternion<PrimType_>& other) {
     *this = Quaternion(other.toImplementation());
@@ -360,13 +354,7 @@ class UnitQuaternion : public UnitQuaternionBase<UnitQuaternion<PrimType_>> {
     KINDR_ASSERT_SCALAR_NEAR_DBG(std::runtime_error, norm(), static_cast<Scalar>(1.0), static_cast<Scalar>(1e-2), "Input quaternion has not unit length.");
   }
 
-  UnitQuaternion& operator =(const UnitQuaternion<PrimType_>& other) {
-	    this->w() = other.w();
-	    this->x() = other.x();
-	    this->y() = other.y();
-	    this->z() = other.z();
-	    return *this;
-  }
+  UnitQuaternion& operator =(const UnitQuaternion<PrimType_>& other) = default;
 
   template<typename PrimTypeIn_>
   UnitQuaternion& operator ()(const UnitQuaternion<PrimTypeIn_>& other) {

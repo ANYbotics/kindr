@@ -68,9 +68,7 @@ class Wrench : public WrenchBase<Wrench<PrimType_>> {
     torque_(Torque(wrench.tail(3))) {
   }
 
-  virtual ~Wrench() {
-
-  }
+  virtual ~Wrench() = default;
 
   //! Get resultant force of the wrench
   inline Force & getForce() {
@@ -145,11 +143,7 @@ class Wrench : public WrenchBase<Wrench<PrimType_>> {
      * \param other   other vector
      * \returns reference
      */
-  Wrench & operator=(const Wrench& other) {
-    this->getForce() = other.getForce();
-    this->getTorque() = other.getTorque();
-    return *this;
-  }
+  Wrench & operator=(const Wrench& other) = default;
 
   /*! \brief Addition of two vectors.
    * \param other   other vector
