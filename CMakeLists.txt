@@ -96,7 +96,10 @@ install(DIRECTORY include/kindr DESTINATION include)
 add_subdirectory(test)
 
 # Add Doxygen documentation
-add_subdirectory(doc/doxygen)
+option(GENERATE_DOC "Generate Doxygen documentation" OFF)
+if(GENERATE_DOC)
+	add_subdirectory(doc/doxygen)
+endif()
 
 # Install catkin package.xml
 #install(FILES package.xml DESTINATION share/kindr)
