@@ -52,7 +52,7 @@ class UnitQuaternion;
  * \see rm::rotations::RotationQuaternion for quaternions that represent a rotation
  */
 template<typename PrimType_>
-class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, private Eigen::Quaternion<PrimType_> {
+class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, public Eigen::Quaternion<PrimType_> {
  private:
   typedef Eigen::Quaternion<PrimType_> Base;
  public:
