@@ -116,7 +116,7 @@ And to your *package.xml*:
 
 ### Building the documentation
 
-Build the documentation with [Doxygen](www.doxygen.org):
+Build the documentation with [Doxygen](https://www.doxygen.nl/):
 ```bash
 mkdir build
 cd build
