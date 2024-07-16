@@ -23,10 +23,14 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Project configuration
-cmake_minimum_required (VERSION 2.8)
-
+cmake_minimum_required(VERSION 3.5.1)
 project(kindr)
+
+
+
+if("$ENV{ROS_VERSION}" STREQUAL "1" OR USE_CMAKE)
+
+
 
 # Check if catkin package should be built.
 if(NOT USE_CMAKE)
@@ -156,4 +160,49 @@ configure_file(
 if (NOT TARGET uninstall)
   add_custom_target(uninstall
     COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
+endif()
+
+
+
+else() # ROS version 2
+
+
+set(CMAKE_CXX_STANDARD 14)
+
+find_package(ament_cmake REQUIRED)
+find_package(Eigen3 REQUIRED)
+
+add_library(
+  ${PROJECT_NAME}
+  INTERFACE
+)
+target_include_directories(
+  ${PROJECT_NAME}
+  INTERFACE
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>" "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
+  ${EIGEN3_INCLUDE_DIR}
+)
+ament_target_dependencies(${PROJECT_NAME} Eigen3)
+
+# Add Doxygen documentation
+add_subdirectory(doc/doxygen)
+
+install(DIRECTORY include/ DESTINATION include/${PROJECT_NAME})
+install(
+  TARGETS ${PROJECT_NAME}
+  EXPORT export_${PROJECT_NAME}
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
+if(BUILD_TESTING)
+  add_subdirectory(test)
+endif()
+
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
+ament_export_dependencies(Eigen3)
+
+ament_package()
+
 endif()

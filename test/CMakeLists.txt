@@ -24,7 +24,9 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # Project configuration
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 3.5.1)
+
+if("$ENV{ROS_VERSION}" STREQUAL "1" OR USE_CMAKE)
 
 add_definitions(-std=c++11)
 
@@ -158,4 +160,48 @@ if(NOT TARGET run_tests)
                      POST_BUILD COMMAND ${PROJECT_SOURCE_DIR}/test/run_tests.py ${CMAKE_BINARY_DIR} ${UNIT_TEST_TARGETS}
                      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
   )
+endif()
+
+
+else() # ROS version 2
+
+
+find_package(ament_cmake_gtest REQUIRED)
+ament_add_gtest(test_${PROJECT_NAME}
+	test_main.cpp
+	common/CommonTest.cpp
+	linear_algebra/SkewMatrixFromVectorTest.cpp
+	linear_algebra/PseudoInverseTest.cpp
+	quaternions/QuaternionTest.cpp
+	rotations/RotationMatrixTest.cpp
+	rotations/RotationQuaternionTest.cpp
+	rotations/RotationVectorTest.cpp
+	rotations/AngleAxisTest.cpp
+	rotations/RotationMatrixTest.cpp
+	rotations/EulerAnglesZyxTest.cpp
+	rotations/EulerAnglesXyzTest.cpp
+	rotations/RotationTest.cpp
+	rotations/ConventionTest.cpp
+	rotations/RotationDiffTest.cpp
+	rotations/LocalAngularVelocityTest.cpp
+	rotations/GlobalAngularVelocityTest.cpp
+	rotations/RotationQuaternionDiffTest.cpp
+	rotations/RotationMatrixDiffTest.cpp
+	rotations/EulerAnglesZyxDiffTest.cpp
+	rotations/EulerAnglesXyzDiffTest.cpp
+	poses/PositionTest.cpp
+	poses/HomogeneousTransformationTest.cpp
+	poses/PoseDiffTest.cpp
+	poses/PositionDiffTest.cpp
+	poses/TwistWithAngularVelocityTest.cpp
+	vectors/VectorsTest.cpp
+	phys_quant/ForceTest.cpp
+	phys_quant/WrenchTest.cpp
+	phys_quant/ScalarTest.cpp
+)
+target_include_directories(test_${PROJECT_NAME} PRIVATE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>")
+target_link_libraries(test_${PROJECT_NAME} ${PROJECT_NAME})
+ament_target_dependencies(test_${PROJECT_NAME} Eigen3)
+
+
 endif()
