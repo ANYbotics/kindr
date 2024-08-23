@@ -2,7 +2,7 @@
 <package format="3">
 
   <name>kindr</name>
-  <version>1.3.21</version>
+  <version>1.3.22</version>
   <description>Kinematics and Dynamics for Robotics</description>
   <author email="bloeschm@ethz.ch">Michael Bloesch</author>
   <author>Remo Diethelm</author>
@@ -19,7 +19,7 @@
   <depend>eigen</depend>
   <test_depend condition="$ROS_VERSION == 2">ament_cmake_gtest</test_depend>
   <test_depend condition="$ROS_VERSION == 1">gtest</test_depend>
-  <test_depend condition="$ROS_VERSION == 1">cmake_code_coverage</test_depend>
+<!--   <test_depend condition="$ROS_VERSION == 1">cmake_code_coverage</test_depend> -->
   <doc_depend>doxygen</doc_depend>
   <doc_depend>texlive-latex-base</doc_depend>
   <export>
