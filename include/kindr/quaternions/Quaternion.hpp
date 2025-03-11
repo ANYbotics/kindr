@@ -165,6 +165,7 @@ class Quaternion : public QuaternionBase<Quaternion<PrimType_>>, public Eigen::Q
   }
 
   using QuaternionBase<Quaternion<PrimType_>>::operator==;
+  using QuaternionBase<Quaternion<PrimType_>>::operator!=;
   using QuaternionBase<Quaternion<PrimType_>>::operator*;
 
   inline Scalar w() const {

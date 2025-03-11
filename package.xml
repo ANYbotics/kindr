@@ -10,19 +10,20 @@
   <author>Paul Furgale</author>
   <author>Christian Gehring</author>
   <author>Hannes Sommer</author>
+
+  
   <maintainer email="rdiethelm@anybotics.com">Remo Diethelm</maintainer>
   <maintainer email="pleemann@anybotics.com">Philipp Leemann</maintainer>
   <license>BSD</license>
   <url type="repository">https://github.com/anybotics/kindr</url>
-  <buildtool_depend condition="$ROS_VERSION == 1">catkin</buildtool_depend>
-  <buildtool_depend condition="$ROS_VERSION == 2">ament_cmake</buildtool_depend>
   <depend>eigen</depend>
-  <test_depend condition="$ROS_VERSION == 2">ament_cmake_gtest</test_depend>
-  <test_depend condition="$ROS_VERSION == 1">gtest</test_depend>
-<!--   <test_depend condition="$ROS_VERSION == 1">cmake_code_coverage</test_depend> -->
+  <buildtool_depend>cmake</buildtool_depend>
   <doc_depend>doxygen</doc_depend>
   <doc_depend>texlive-latex-base</doc_depend>
+  <test_depend>gtest</test_depend>
+
   <export>
-    <build_type condition="$ROS_VERSION == 2">ament_cmake</build_type>
+    <!-- Specify that this is not really a ROS package-->
+    <build_type>cmake</build_type>
   </export>
 </package>
