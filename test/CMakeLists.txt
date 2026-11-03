@@ -24,7 +24,7 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # Project configuration
-cmake_minimum_required(VERSION 3.16.3)
+cmake_minimum_required(VERSION 3.28)
 
 if("$ENV{ROS_VERSION}" STREQUAL "1" OR USE_CMAKE)
 
